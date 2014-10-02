@@ -1,2 +1,6 @@
-arduino_device_interface
-========================
+DeviceInterface
+---------------
+
+
+Author: Peter Polidoro
+
