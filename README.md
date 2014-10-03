@@ -9,7 +9,7 @@ License:
 
     BSD
 
-##Installation:
+##Installation
 
 This library and its dependencies can be installed together or
 separately.
