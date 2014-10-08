@@ -11,6 +11,7 @@ Command::Command(char *name="")
 {
   setName(name);
   callback_attached_ = false;
+  reserved_ = false;
 }
 
 void Command::setName(char *name)
@@ -37,13 +38,34 @@ void Command::attachCallback(Callback callback)
 {
   callback_ = callback;
   callback_attached_ = true;
+  reserved_ = false;
 }
 
 void Command::callback()
 {
-  if (callback_attached_)
+  if ((callback_attached_) && (!isReserved()))
   {
     (*callback_)();
+  }
+}
+
+void Command::attachReservedCallback(ReservedCallback callback)
+{
+  reserved_callback_ = callback;
+  callback_attached_ = true;
+  reserved_ = true;
+}
+
+boolean Command::isReserved()
+{
+  return reserved_;
+}
+
+void Command::reservedCallback(DeviceInterface *dev_int)
+{
+  if ((callback_attached_) && (isReserved()))
+  {
+    (dev_int->*reserved_callback_)();
   }
 }
 
@@ -53,12 +75,15 @@ DeviceInterface::DeviceInterface(Stream &stream)
   model_number_ = 0;
   serial_number_ = 0;
   firmware_number_ = 0;
-  // Command get_device_info_cmd("getDevInfo");
-  // addCommand(get_device_info_cmd);
-  // Command get_commands_cmd("getCmds");
-  // addCommand(get_commands_cmd);
-  // Command get_response_codes_cmd("getRspCodes");
-  // addCommand(get_response_codes_cmd);
+  Command get_device_info_cmd("getDeviceInfo");
+  get_device_info_cmd.attachReservedCallback(&DeviceInterface::getDeviceInfoCallback);
+  addCommand(get_device_info_cmd);
+  Command get_commands_cmd("getCommands");
+  get_commands_cmd.attachReservedCallback(&DeviceInterface::getCommandsCallback);
+  addCommand(get_commands_cmd);
+  Command get_response_codes_cmd("getResponseCodes");
+  get_response_codes_cmd.attachReservedCallback(&DeviceInterface::getResponseCodesCallback);
+  addCommand(get_response_codes_cmd);
 }
 
 void DeviceInterface::setMessageStream(Stream &stream)
@@ -181,41 +206,33 @@ void DeviceInterface::processArrayMessage(Parser::JsonArray &json_array)
 
 void DeviceInterface::processCommand(char *command_str)
 {
-  if (String(command_str).compareTo(String(CMD_GET_DEVICE_INFO)) == 0)
-  {
-    response["cmd_id"] = CMD_GET_DEVICE_INFO;
-    getDeviceInfoCallback();
-    return;
-  }
   int command_id = String(command_str).toInt();
   int command_index;
-  if ((command_id > 0) && (command_id < RESERVED_COMMAND_COUNT))
+  if (String(command_str).compareTo(String("0")) == 0)
   {
-    response["cmd_id"] = command_id;
-    switch (command_id)
-    {
-      case CMD_GET_COMMANDS:
-        getCommandsCallback();
-        break;
-      case CMD_GET_RESPONSE_CODES:
-        getResponseCodesCallback();
-        break;
-    }
-    return;
+    command_index = 0;
+    response["cmd_id"] = 0;
   }
-  else if (command_id >= RESERVED_COMMAND_COUNT)
+  else if (command_id > 0)
   {
+    command_index = command_id;
     response["cmd_id"] = command_id;
-    command_index = command_id - RESERVED_COMMAND_COUNT;
   }
   else
   {
-    response["cmd"] = command_str;
     command_index = getCommandIndex(command_str);
+    response["cmd"] = command_str;
   }
   if ((command_index >= 0) && (command_index < command_vector_.size()))
   {
-    command_vector_[command_index].callback();
+    if (command_vector_[command_index].isReserved())
+    {
+      command_vector_[command_index].reservedCallback(this);
+    }
+    else
+    {
+      command_vector_[command_index].callback();
+    }
   }
   else
   {
@@ -264,9 +281,12 @@ void DeviceInterface::getCommandsCallback()
        ++it)
   {
     int command_index = std::distance(command_vector_.begin(),it);
-    char* command_name = it->getName();
-    int command_id = command_index + RESERVED_COMMAND_COUNT;
-    response[command_name] = command_id;
+    if (!command_vector_[command_index].isReserved())
+    {
+      char* command_name = it->getName();
+      int command_id = command_index;
+      response[command_name] = command_id;
+    }
   }
 }
 

@@ -34,7 +34,7 @@ Or for more information on installing libraries, see:
 
 ###Install This Library and its Dependencies Separately
 
-Clone this repository into the directory DeviceInterface:
+####Clone This Repository into the Directory 'DeviceInterface'
 
 ```shell
 git clone https://github.com/JaneliaSciComp/arduino_device_interface.git DeviceInterface
@@ -50,7 +50,7 @@ Or for more information on installing libraries, see:
 
 <http://arduino.cc/en/Guide/Libraries>
 
-####Download and install the Arduino library dependencies if necessary:
+####Download and Install the Arduino Library Dependencies
 
 Streaming:
 

@@ -37,14 +37,6 @@ enum ResponseCodes
     SUCCESS=1,
   };
 
-enum ReservedCommands
-  {
-    CMD_GET_DEVICE_INFO=0,
-    CMD_GET_COMMANDS=1,
-    CMD_GET_RESPONSE_CODES=2,
-    RESERVED_COMMAND_COUNT=3,
-  };
-
 enum MessageType
   {
     OBJECT_MESSAGE,
@@ -56,20 +48,29 @@ extern "C" {
   typedef void (*Callback)(void);
 }
 
+class DeviceInterface;
+typedef void (DeviceInterface::*ReservedCallback)(void);
+
 class Command
 {
 public:
   Command(char *name);
   void setName(char *name);
-  boolean compareName(char *name_to_compare);
-  char* getName();
-  void printName();
   void attachCallback(Callback callback);
-  void callback();
 private:
   char name_[CMD_NAME_LENGTH_MAX];
   Callback callback_;
   boolean callback_attached_;
+  boolean compareName(char *name_to_compare);
+  char* getName();
+  void printName();
+  void callback();
+  ReservedCallback reserved_callback_;
+  boolean reserved_;
+  void attachReservedCallback(ReservedCallback callback);
+  boolean isReserved();
+  void reservedCallback(DeviceInterface *dev_int);
+  friend class DeviceInterface;
 };
 
 class DeviceInterface
