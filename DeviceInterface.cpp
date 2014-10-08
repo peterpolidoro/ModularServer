@@ -7,16 +7,42 @@
 // ----------------------------------------------------------------------------
 #include "DeviceInterface.h"
 
+Parameter::Parameter(char *name="")
+{
+  setName(name);
+}
+
+void Parameter::setName(char *name)
+{
+  strncpy(name_,name,PARAMETER_NAME_LENGTH_MAX);
+}
+
+void Parameter::setUnits(char *units)
+{
+  strncpy(units_,units,PARAMETER_UNITS_LENGTH_MAX);
+}
+
+boolean Parameter::compareName(char *name_to_compare)
+{
+  return String(name_).equalsIgnoreCase(name_to_compare);
+}
+
+char* Parameter::getName()
+{
+  return name_;
+}
+
 Command::Command(char *name="")
 {
   setName(name);
   callback_attached_ = false;
   reserved_ = false;
+  parameter_count_ = 0;
 }
 
 void Command::setName(char *name)
 {
-  strncpy(name_,name,CMD_NAME_LENGTH_MAX);
+  strncpy(name_,name,COMMAND_NAME_LENGTH_MAX);
 }
 
 boolean Command::compareName(char *name_to_compare)
@@ -39,6 +65,40 @@ void Command::attachCallback(Callback callback)
   callback_ = callback;
   callback_attached_ = true;
   reserved_ = false;
+}
+
+void Command::addParameter(Parameter parameter)
+{
+  char* name = parameter.getName();
+  if (String(name).length() > 0)
+  {
+    int parameter_index = getParameterIndex(name);
+    if (parameter_index < 0)
+    {
+      parameter_vector_.push_back(parameter);
+      parameter_count_++;
+    }
+    else
+    {
+      parameter_vector_[parameter_index] = Parameter(name);
+    }
+  }
+}
+
+int Command::getParameterIndex(char *parameter_name)
+{
+  int parameter_index = -1;
+  for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
+       it != parameter_vector_.end();
+       ++it)
+  {
+      if (it->compareName(parameter_name))
+      {
+        parameter_index = std::distance(parameter_vector_.begin(),it);
+        break;
+      }
+    }
+  return parameter_index;
 }
 
 void Command::callback()
@@ -177,15 +237,15 @@ void DeviceInterface::processMessage()
   }
 }
 
-void DeviceInterface::addCommand(Command cmd)
+void DeviceInterface::addCommand(Command command)
 {
-  char* name = cmd.getName();
+  char* name = command.getName();
   if (String(name).length() > 0)
   {
     int command_index = getCommandIndex(name);
     if (command_index < 0)
     {
-      command_vector_.push_back(cmd);
+      command_vector_.push_back(command);
     }
     else
     {
@@ -196,7 +256,7 @@ void DeviceInterface::addCommand(Command cmd)
 
 void DeviceInterface::setName(char *name)
 {
-  strncpy(name_,name,CMD_NAME_LENGTH_MAX);
+  strncpy(name_,name,COMMAND_NAME_LENGTH_MAX);
 }
 
 void DeviceInterface::setModelNumber(int model_number)
@@ -215,8 +275,14 @@ void DeviceInterface::processObjectMessage(Parser::JsonObject &json_object)
 
 void DeviceInterface::processArrayMessage(Parser::JsonArray &json_array)
 {
-  char* cmd = json_array[0];
-  processCommand(cmd);
+  int array_elements = countJsonArrayElements(json_array);
+  char* command = json_array[0];
+  if (array_elements > 0)
+  {
+    int argument_count = array_elements - 1;
+    response["arg_count"] = argument_count;
+  }
+  processCommand(command);
 }
 
 void DeviceInterface::processCommand(char *command_str)
@@ -272,6 +338,16 @@ int DeviceInterface::getCommandIndex(char *command_name)
   return command_index;
 }
 
+int DeviceInterface::countJsonArrayElements(Parser::JsonArray &json_array)
+{
+  int elements_count = 0;
+  for (Parser::JsonArrayIterator i=json_array.begin(); i!=json_array.end(); ++i)
+  {
+    elements_count++;
+  }
+  return elements_count;
+}
+
 void DeviceInterface::getDeviceInfoCallback()
 {
   response["name"] = name_;
@@ -305,7 +381,7 @@ void DeviceInterface::getResponseCodesCallback()
 void DeviceInterface::getHelp()
 {
   response["name"] = name_;
-  Generator::JsonArray<JSON_COMMANDS_COUNT> commands;
+  Generator::JsonArray<JSON_COMMANDS_COUNT_MAX> commands;
   for (std::vector<Command>::iterator it = command_vector_.begin();
        it != command_vector_.end();
        ++it)
