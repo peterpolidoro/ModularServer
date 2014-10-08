@@ -1,5 +1,6 @@
 #include "Streaming.h"
 #include "JsonParser.h"
+#include "StandardCplusplus.h"
 #include "DeviceInterface.h"
 
 int led_pin = 13;
@@ -20,18 +21,17 @@ void setup()
 
   Command led_on_cmd("setLedOn");
   led_on_cmd.attachCallback(setLedOnCallback);
-  deviceInterface.addCommand(led_on_cmd);
+  device_interface.addCommand(led_on_cmd);
 
   Command led_off_cmd("setLedOff");
   led_off_cmd.attachCallback(setLedOffCallback);
-  deviceInterface.addCommand(led_off_cmd);
+  device_interface.addCommand(led_off_cmd);
 
   Serial.begin(9600);
   delay(1000);
-  deviceInterface.printAllCommandNames();
 }
 
 void loop()
 {
-  deviceInterface.processMessage();
+  device_interface.processMessage();
 }

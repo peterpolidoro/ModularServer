@@ -30,7 +30,7 @@ python symlinks.py --install
 ```
 Or for more information on installing libraries, see:
 
-[http://arduino.cc/en/Guide/Libraries](http://arduino.cc/en/Guide/Libraries)
+<http://arduino.cc/en/Guide/Libraries>
 
 ###Install This Library and its Dependencies Separately
 
@@ -48,16 +48,20 @@ python symlink.py --install
 ```
 Or for more information on installing libraries, see:
 
-[http://arduino.cc/en/Guide/Libraries](http://arduino.cc/en/Guide/Libraries)
+<http://arduino.cc/en/Guide/Libraries>
 
 ####Download and install the Arduino library dependencies if necessary:
 
 Streaming:
 
-[http://arduiniana.org/libraries/streaming/](http://arduiniana.org/libraries/streaming/)
+<http://arduiniana.org/libraries/streaming/>
 
 ArduinoJson:
 
-[https://github.com/bblanchon/ArduinoJson](https://github.com/bblanchon/ArduinoJson)
+<https://github.com/bblanchon/ArduinoJson>
+
+StandardCplusplus:
+
+<https://github.com/maniacbug/StandardCplusplus>
 
 
