@@ -72,6 +72,7 @@ void Command::reservedCallback(DeviceInterface *dev_int)
 DeviceInterface::DeviceInterface(Stream &stream)
 {
   stream_ = &stream;
+  setName("");
   model_number_ = 0;
   serial_number_ = 0;
   firmware_number_ = 0;
@@ -84,6 +85,9 @@ DeviceInterface::DeviceInterface(Stream &stream)
   Command get_response_codes_cmd("getResponseCodes");
   get_response_codes_cmd.attachReservedCallback(&DeviceInterface::getResponseCodesCallback);
   addCommand(get_response_codes_cmd);
+  Command get_help_cmd("?");
+  get_help_cmd.attachReservedCallback(&DeviceInterface::getHelp);
+  addCommand(get_help_cmd);
 }
 
 void DeviceInterface::setMessageStream(Stream &stream)
@@ -143,6 +147,25 @@ void DeviceInterface::processMessage()
       }
       if (message_type_ == COMMAND_LINE_MESSAGE)
       {
+        int status = response["status"];
+        switch (status)
+        {
+          case ERROR:
+            response["status"] = "error";
+            break;
+          case SUCCESS:
+            response["status"] = "success";
+            break;
+        }
+        if (response.containsKey("command"))
+        {
+          // Make help response a little less cluttered
+          if (strcmp(response["command"],"?") == 0)
+          {
+            response.remove("command");
+            response.remove("status");
+          }
+        }
         response.prettyPrintTo(*stream_);
       }
       else
@@ -171,6 +194,11 @@ void DeviceInterface::addCommand(Command cmd)
   }
 }
 
+void DeviceInterface::setName(char *name)
+{
+  strncpy(name_,name,CMD_NAME_LENGTH_MAX);
+}
+
 void DeviceInterface::setModelNumber(int model_number)
 {
   model_number_ = model_number;
@@ -180,19 +208,6 @@ void DeviceInterface::setFirmwareNumber(int firmware_number)
 {
   firmware_number_ = firmware_number;
 }
-
-// Command DeviceInterface::getCommandByName(char *name)
-// {
-//   int command_index = getCommandIndex(name);
-//   if (command_index >= 0)
-//   {
-//     return command_vector_[command_index];
-//   }
-//   else
-//   {
-//     return Command(name);
-//   }
-// }
 
 void DeviceInterface::processObjectMessage(Parser::JsonObject &json_object)
 {
@@ -221,7 +236,7 @@ void DeviceInterface::processCommand(char *command_str)
   else
   {
     command_index = getCommandIndex(command_str);
-    response["cmd"] = command_str;
+    response["command"] = command_str;
   }
   if ((command_index >= 0) && (command_index < command_vector_.size()))
   {
@@ -257,18 +272,9 @@ int DeviceInterface::getCommandIndex(char *command_name)
   return command_index;
 }
 
-void DeviceInterface::printAllCommandNames()
-{
-  for (std::vector<Command>::iterator it = command_vector_.begin();
-       it != command_vector_.end();
-       ++it)
-  {
-    it->printName();
-  }
-}
-
 void DeviceInterface::getDeviceInfoCallback()
 {
+  response["name"] = name_;
   response["model_number"] = model_number_;
   response["serial_number"] = serial_number_;
   response["firmware_number"] = firmware_number_;
@@ -294,6 +300,24 @@ void DeviceInterface::getResponseCodesCallback()
 {
   response["rsp_success"] = SUCCESS;
   response["rsp_error"] = ERROR;
+}
+
+void DeviceInterface::getHelp()
+{
+  response["name"] = name_;
+  Generator::JsonArray<JSON_COMMANDS_COUNT> commands;
+  for (std::vector<Command>::iterator it = command_vector_.begin();
+       it != command_vector_.end();
+       ++it)
+  {
+    int command_index = std::distance(command_vector_.begin(),it);
+    if (!command_vector_[command_index].isReserved())
+    {
+      char* command_name = it->getName();
+      commands.add(command_name);
+    }
+  }
+  response["commands"] = commands;
 }
 
 DeviceInterface device_interface(Serial);

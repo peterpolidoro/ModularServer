@@ -9,6 +9,66 @@ License:
 
     BSD
 
+##Example Usage
+
+###Arduino Firmware
+
+[See example firmware](./Examples)
+
+###Host Computer Interface
+
+####Python
+
+<https://github.com/JaneliaSciComp/python_arduino_device>
+
+####Matlab
+
+<https://github.com/JaneliaSciComp/matlab_arduino_device>
+
+####Arduino Serial Monitor
+
+Open the Serial Monitor in the Arduino IDE.
+
+Set the baud rate to match the value in your Arduino sketch.
+
+Set the line ending to 'Newline'.
+
+Type a single question mark ? into the input field and press the
+'Send' button or press the 'Enter' key.
+
+Example Response for '?' command in ./Examples/LedController.ino:
+
+```json
+{
+  "commands": [
+    "setLedOn",
+    "setLedOff",
+    "getLedPin"
+  ],
+  "name": "arduino_led_controller"
+}
+```
+
+"commands" is an array of user commands. To execute a command, simply
+type it into the input field and press the 'Send' button or press the
+'Enter' key.
+
+Example Command for ./Examples/simple.ino:
+
+```json
+setLedOn
+```
+Example Response for 'setLedOn' command in ./Examples/LedController.ino:
+
+```json
+{
+  "command": "setLedOn",
+  "status": "success"
+}
+```
+
+Notice that the LED on the Arduino board has turned ON.
+
 ##Installation
 
 This library and its dependencies can be installed together or

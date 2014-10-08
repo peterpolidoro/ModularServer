@@ -27,9 +27,11 @@ const char JSON_ARRAY_START_CHAR = '[';
 const int MESSAGE_LENGTH_MAX = 257;
 
 const int CMD_NAME_LENGTH_MAX = 32;
+const int DEVICE_NAME_LENGTH_MAX = 32;
 
 const int JSON_PARSER_SIZE = 32;
 const int JSON_RESPONSE_SIZE = 32;
+const int JSON_COMMANDS_COUNT = 32;
 
 enum ResponseCodes
   {
@@ -80,10 +82,9 @@ public:
   void setMessageStream(Stream &stream);
   void processMessage();
   void addCommand(Command cmd);
+  void setName(char *name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
-  // Command getCommandByName(char *name);
-  void printAllCommandNames();
   Generator::JsonObject<JSON_RESPONSE_SIZE> response;
 private:
   Stream *stream_;
@@ -91,6 +92,7 @@ private:
   Parser::JsonParser<JSON_PARSER_SIZE> parser_;
   MessageType message_type_;
   std::vector<Command> command_vector_;
+  char name_[DEVICE_NAME_LENGTH_MAX];
   int model_number_;
   int serial_number_;
   int firmware_number_;
@@ -103,6 +105,7 @@ private:
   void getDeviceInfoCallback();
   void getCommandsCallback();
   void getResponseCodesCallback();
+  void getHelp();
 };
 
 extern DeviceInterface device_interface;
