@@ -1,5 +1,5 @@
-arduino_device_interface
-------------------------
+LedController
+-------------
 
 Authors:
 
@@ -9,24 +9,13 @@ License:
 
     BSD
 
-##Example Usage
-
-###Arduino Firmware
-
-[Arduino Sketch Examples](./Examples)
-
 ###Host Computer Interface
-
-For more detailed host computer interface information, see example
-sketch README files.
-
-[LedController](./Example/LedController)
 
 ####Arduino Serial Monitor
 
 Open the Serial Monitor in the Arduino IDE.
 
-Set the baud rate to match the value in your Arduino sketch.
+Set the baud rate to match the value in the Arduino sketch (9600).
 
 Set the line ending to 'Newline'.
 
@@ -38,9 +27,39 @@ press the 'Enter' key.
 ?
 ```
 
-The response will contain a field named "commands", which is an array
-of user commands. To execute a command, simply type it into the input
-field and press the 'Send' button or press the 'Enter' key.
+Example Response:
+
+```json
+{
+  "commands": [
+    "setLedOn",
+    "setLedOff",
+    "getLedPin",
+    "blinkLed"
+  ],
+  "name": "arduino_led_controller"
+}
+```
+
+"commands" is an array of user commands. To execute a command, simply
+type it into the input field and press the 'Send' button or press the
+'Enter' key.
+
+Example Command:
+
+```shell
+setLedOn
+```
+Example Response:
+
+```json
+{
+  "command": "setLedOn",
+  "status": "success"
+}
+```
+
+Notice that the LED on the Arduino board has turned ON.
 
 ####Python
 

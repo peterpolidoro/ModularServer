@@ -7,128 +7,6 @@
 // ----------------------------------------------------------------------------
 #include "DeviceInterface.h"
 
-Parameter::Parameter(char *name="")
-{
-  setName(name);
-}
-
-void Parameter::setName(char *name)
-{
-  strncpy(name_,name,PARAMETER_NAME_LENGTH_MAX);
-}
-
-void Parameter::setUnits(char *units)
-{
-  strncpy(units_,units,PARAMETER_UNITS_LENGTH_MAX);
-}
-
-boolean Parameter::compareName(char *name_to_compare)
-{
-  return String(name_).equalsIgnoreCase(name_to_compare);
-}
-
-char* Parameter::getName()
-{
-  return name_;
-}
-
-Command::Command(char *name="")
-{
-  setName(name);
-  callback_attached_ = false;
-  reserved_ = false;
-  parameter_count_ = 0;
-}
-
-void Command::setName(char *name)
-{
-  strncpy(name_,name,COMMAND_NAME_LENGTH_MAX);
-}
-
-boolean Command::compareName(char *name_to_compare)
-{
-  return String(name_).equalsIgnoreCase(name_to_compare);
-}
-
-char* Command::getName()
-{
-  return name_;
-}
-
-void Command::printName()
-{
-  Serial << name_ << endl;
-}
-
-void Command::attachCallback(Callback callback)
-{
-  callback_ = callback;
-  callback_attached_ = true;
-  reserved_ = false;
-}
-
-void Command::addParameter(Parameter parameter)
-{
-  char* name = parameter.getName();
-  if (String(name).length() > 0)
-  {
-    int parameter_index = getParameterIndex(name);
-    if (parameter_index < 0)
-    {
-      parameter_vector_.push_back(parameter);
-      parameter_count_++;
-    }
-    else
-    {
-      parameter_vector_[parameter_index] = Parameter(name);
-    }
-  }
-}
-
-int Command::getParameterIndex(char *parameter_name)
-{
-  int parameter_index = -1;
-  for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
-       it != parameter_vector_.end();
-       ++it)
-  {
-      if (it->compareName(parameter_name))
-      {
-        parameter_index = std::distance(parameter_vector_.begin(),it);
-        break;
-      }
-    }
-  return parameter_index;
-}
-
-void Command::callback()
-{
-  if ((callback_attached_) && (!isReserved()))
-  {
-    (*callback_)();
-  }
-}
-
-void Command::attachReservedCallback(ReservedCallback callback)
-{
-  reserved_callback_ = callback;
-  callback_attached_ = true;
-  reserved_ = true;
-}
-
-boolean Command::isReserved()
-{
-  return reserved_;
-}
-
-void Command::reservedCallback(DeviceInterface *dev_int)
-{
-  if ((callback_attached_) && (isReserved()))
-  {
-    (dev_int->*reserved_callback_)();
-  }
-}
-
 DeviceInterface::DeviceInterface(Stream &stream)
 {
   stream_ = &stream;
@@ -145,9 +23,9 @@ DeviceInterface::DeviceInterface(Stream &stream)
   Command get_response_codes_cmd("getResponseCodes");
   get_response_codes_cmd.attachReservedCallback(&DeviceInterface::getResponseCodesCallback);
   addCommand(get_response_codes_cmd);
-  Command get_help_cmd("?");
-  get_help_cmd.attachReservedCallback(&DeviceInterface::getHelp);
-  addCommand(get_help_cmd);
+  Command help_cmd("?");
+  help_cmd.attachReservedCallback(&DeviceInterface::help);
+  addCommand(help_cmd);
 }
 
 void DeviceInterface::setMessageStream(Stream &stream)
@@ -242,7 +120,7 @@ void DeviceInterface::addCommand(Command command)
   char* name = command.getName();
   if (String(name).length() > 0)
   {
-    int command_index = getCommandIndex(name);
+    int command_index = getCommandIndexByName(name);
     if (command_index < 0)
     {
       command_vector_.push_back(command);
@@ -275,20 +153,67 @@ void DeviceInterface::processObjectMessage(Parser::JsonObject &json_object)
 
 void DeviceInterface::processArrayMessage(Parser::JsonArray &json_array)
 {
-  int array_elements = countJsonArrayElements(json_array);
-  char* command = json_array[0];
-  if (array_elements > 0)
+  char* command_str = json_array[0];
+  int command_index = processCommandString(command_str);
+  if (!(command_index < 0))
   {
-    int argument_count = array_elements - 1;
-    response["arg_count"] = argument_count;
+    int array_elements_count = countJsonArrayElements(json_array);
+    int argument_count = array_elements_count - 1;
+    if ((argument_count == 1) && (String((char*)json_array[1]).equals("?")))
+    {
+      response["help"] = "You want help!";
+    }
+    else if (argument_count != command_vector_[command_index].parameter_count_)
+    {
+      response["status"] = ERROR;
+      response["err_msg"] = "Incorrect number of arguments.";
+    }
+    else
+    {
+      createArgumentsObjectFromArrayMessage(command_index,json_array);
+      executeCommand(command_index);
+    }
   }
-  processCommand(command);
 }
 
-void DeviceInterface::processCommand(char *command_str)
+void DeviceInterface::createArgumentsObjectFromArrayMessage(int command_index, Parser::JsonArray &json_array)
 {
+  arguments = Generator::JsonObject<JSON_ARGUMENTS_SIZE>();
+  int parameter_index = 0;
+  for (Parser::JsonArrayIterator i=json_array.begin(); i!=json_array.end(); ++i)
+  {
+    if (i!=json_array.begin())
+    {
+      char *parameter_name = command_vector_[command_index].parameter_vector_[parameter_index].getName();
+      // int parameter_type = char;
+      // arguments[parameter_name] = *i;
+      arguments[parameter_name] = (char*)*i;
+      // arguments[parameter_name] = typeid(int).name();
+      // arguments[parameter_name] = (parameter_type*)*i;
+      parameter_index++;
+    }
+  }
+  // arguments["test"] = 7;
+  // arguments["test"] = 8;
+  arguments.prettyPrintTo(*stream_);
+}
+
+void DeviceInterface::executeCommand(int command_index)
+{
+  if (command_vector_[command_index].isReserved())
+  {
+    command_vector_[command_index].reservedCallback(this);
+  }
+  else
+  {
+    command_vector_[command_index].callback();
+  }
+}
+
+int DeviceInterface::processCommandString(char *command_str)
+{
+  int command_index = -1;
   int command_id = String(command_str).toInt();
-  int command_index;
   if (String(command_str).compareTo(String("0")) == 0)
   {
     command_index = 0;
@@ -301,28 +226,19 @@ void DeviceInterface::processCommand(char *command_str)
   }
   else
   {
-    command_index = getCommandIndex(command_str);
+    command_index = getCommandIndexByName(command_str);
     response["command"] = command_str;
   }
-  if ((command_index >= 0) && (command_index < command_vector_.size()))
-  {
-    if (command_vector_[command_index].isReserved())
-    {
-      command_vector_[command_index].reservedCallback(this);
-    }
-    else
-    {
-      command_vector_[command_index].callback();
-    }
-  }
-  else
+  if ((command_index < 0) || (command_index >= command_vector_.size()))
   {
     response["status"] = ERROR;
     response["err_msg"] = "Unknown command.";
+    command_index = -1;
   }
+  return command_index;
 }
 
-int DeviceInterface::getCommandIndex(char *command_name)
+int DeviceInterface::getCommandIndexByName(char *command_name)
 {
   int command_index = -1;
   for (std::vector<Command>::iterator it = command_vector_.begin();
@@ -378,7 +294,7 @@ void DeviceInterface::getResponseCodesCallback()
   response["rsp_error"] = ERROR;
 }
 
-void DeviceInterface::getHelp()
+void DeviceInterface::help()
 {
   response["name"] = name_;
   Generator::JsonArray<JSON_COMMANDS_COUNT_MAX> commands;

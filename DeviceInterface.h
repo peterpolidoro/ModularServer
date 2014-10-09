@@ -18,6 +18,8 @@
 #include "JsonGenerator.h"
 #include "StandardCplusplus.h"
 #include "vector"
+#include "Parameter.h"
+#include "Command.h"
 
 using namespace ArduinoJson;
 
@@ -26,13 +28,12 @@ const char JSON_OBJECT_START_CHAR = '{';
 const char JSON_ARRAY_START_CHAR = '[';
 const int MESSAGE_LENGTH_MAX = 257;
 
-const int PARAMETER_NAME_LENGTH_MAX = 16;
-const int PARAMETER_UNITS_LENGTH_MAX = 8;
-const int COMMAND_NAME_LENGTH_MAX = 32;
 const int DEVICE_NAME_LENGTH_MAX = 32;
+const int ERROR_MESSAGE_LENGTH_MAX = 32;
 
 const int JSON_PARSER_SIZE = 32;
 const int JSON_RESPONSE_SIZE = 32;
+const int JSON_ARGUMENTS_SIZE = 32;
 const int JSON_COMMANDS_COUNT_MAX = 32;
 
 enum ResponseCodes
@@ -48,53 +49,6 @@ enum MessageType
     COMMAND_LINE_MESSAGE,
   };
 
-extern "C" {
-  typedef void (*Callback)(void);
-}
-
-class DeviceInterface;
-typedef void (DeviceInterface::*ReservedCallback)(void);
-
-class Parameter
-{
-public:
-  Parameter(char *name);
-  void setName(char *name);
-  void setUnits(char *units);
-private:
-  char name_[PARAMETER_NAME_LENGTH_MAX];
-  char units_[PARAMETER_UNITS_LENGTH_MAX];
-  boolean compareName(char *name_to_compare);
-  char* getName();
-  friend class Command;
-};
-
-class Command
-{
-public:
-  Command(char *name);
-  void setName(char *name);
-  void attachCallback(Callback callback);
-  void addParameter(Parameter parameter);
-private:
-  char name_[COMMAND_NAME_LENGTH_MAX];
-  Callback callback_;
-  boolean callback_attached_;
-  boolean compareName(char *name_to_compare);
-  char* getName();
-  void printName();
-  void callback();
-  ReservedCallback reserved_callback_;
-  boolean reserved_;
-  void attachReservedCallback(ReservedCallback callback);
-  boolean isReserved();
-  void reservedCallback(DeviceInterface *dev_int);
-  std::vector<Parameter> parameter_vector_;
-  int getParameterIndex(char *parameter_name);
-  int parameter_count_;
-  friend class DeviceInterface;
-};
-
 class DeviceInterface
 {
 public:
@@ -106,6 +60,7 @@ public:
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
   Generator::JsonObject<JSON_RESPONSE_SIZE> response;
+  Generator::JsonObject<JSON_ARGUMENTS_SIZE> arguments;
 private:
   Stream *stream_;
   char message_[MESSAGE_LENGTH_MAX];
@@ -119,14 +74,16 @@ private:
 
   void processObjectMessage(Parser::JsonObject &json_object);
   void processArrayMessage(Parser::JsonArray &json_array);
-  void processCommand(char *command_str);
-  int getCommandIndex(char *command_name);
+  int processCommandString(char *command_str);
+  int getCommandIndexByName(char *command_name);
   int countJsonArrayElements(Parser::JsonArray &json_array);
+  void createArgumentsObjectFromArrayMessage(int command_index, Parser::JsonArray &json_array);
+  void executeCommand(int command_index);
   // reserved commands
   void getDeviceInfoCallback();
   void getCommandsCallback();
   void getResponseCodesCallback();
-  void getHelp();
+  void help();
 };
 
 extern DeviceInterface device_interface;

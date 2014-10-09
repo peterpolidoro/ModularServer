@@ -2,16 +2,24 @@
 #include "JsonParser.h"
 #include "StandardCplusplus.h"
 #include "DeviceInterface.h"
+#include "NonBlockBlink.h"
+
+// See README.md for more information
 
 int led_pin = 13;
 
+// Callbacks must be non-blocking (avoid 'delay')
+NonBlockBlink non_block_blink(led_pin);
+
 void setLedOnCallback()
 {
+  non_block_blink.stop();
   digitalWrite(led_pin, HIGH);
 }
 
 void setLedOffCallback()
 {
+  non_block_blink.stop();
   digitalWrite(led_pin, LOW);
 }
 
@@ -22,14 +30,10 @@ void getLedPinCallback()
 
 void blinkLedCallback()
 {
-  int count = 10;
-  for (int i=0;i<count;i++)
-  {
-    digitalWrite(led_pin, HIGH);
-    delay(500);
-    digitalWrite(led_pin, LOW);
-    delay(500);
-  }
+  non_block_blink.duration_on = 1000;
+  non_block_blink.duration_off = 500;
+  non_block_blink.count = 4;
+  non_block_blink.start();
 }
 
 void setup()
@@ -61,10 +65,10 @@ void setup()
   device_interface.addCommand(blink_led_cmd);
 
   Serial.begin(9600);
-  delay(1000);
 }
 
 void loop()
 {
   device_interface.processMessage();
+  non_block_blink.update();
 }
