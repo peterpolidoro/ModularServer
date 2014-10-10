@@ -17,7 +17,7 @@ Command::Command(char *name="")
 
 void Command::setName(char *name)
 {
-  strncpy(name_,name,COMMAND_NAME_LENGTH_MAX);
+  strncpy(name_,name,COMMAND_NAME_STRING_LENGTH_MAX);
 }
 
 boolean Command::compareName(char *name_to_compare)
@@ -67,12 +67,12 @@ int Command::getParameterIndex(char *parameter_name)
        it != parameter_vector_.end();
        ++it)
   {
-      if (it->compareName(parameter_name))
-      {
-        parameter_index = std::distance(parameter_vector_.begin(),it);
-        break;
-      }
+    if (it->compareName(parameter_name))
+    {
+      parameter_index = std::distance(parameter_vector_.begin(),it);
+      break;
     }
+  }
   return parameter_index;
 }
 
@@ -102,4 +102,37 @@ void Command::reservedCallback(DeviceInterface *dev_int)
   {
     (dev_int->*reserved_callback_)();
   }
+}
+
+Generator::JsonArray<COMMAND_HELP_JSON_OBJECT_SIZE> Command::help()
+{
+  // Generator::JsonObject<COMMAND_HELP_JSON_OBJECT_SIZE> help_json_object;
+  // int parameter_count = 0;
+  // for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
+  //      it != parameter_vector_.end();
+  //      ++it)
+  // {
+  //   if (++parameter_count < COMMAND_HELP_JSON_OBJECT_SIZE)
+  //   {
+  //     help_json_object[it->getName()] = it->help();
+  //   }
+  // }
+  // help_json_object.printTo(help_string,COMMAND_HELP_STRING_LENGTH_MAX);
+  // return help_string;
+  help_json_array = Generator::JsonArray<COMMAND_HELP_JSON_OBJECT_SIZE>();
+  int parameter_index = 0;
+  for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
+       it != parameter_vector_.end();
+       ++it)
+  {
+    if (parameter_index < COMMAND_HELP_JSON_OBJECT_SIZE)
+    {
+      help_json_array.add(it->getName());
+      // help_json_array.add("test");
+      parameter_index++;
+    }
+  }
+  // char help_string[COMMAND_HELP_STRING_LENGTH_MAX];
+  // help_json_array.printTo(help_string,COMMAND_HELP_STRING_LENGTH_MAX);
+  return help_json_array;
 }

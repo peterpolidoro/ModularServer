@@ -30,9 +30,9 @@ void getLedPinCallback()
 
 void blinkLedCallback()
 {
-  non_block_blink.duration_on = 1000;
-  non_block_blink.duration_off = 500;
-  non_block_blink.count = 4;
+  non_block_blink.duration_on = (long)device_interface.arguments["duration_on"];
+  non_block_blink.duration_off = (long)device_interface.arguments["duration_off"];
+  non_block_blink.count = (long)device_interface.arguments["count"];
   non_block_blink.start();
 }
 
@@ -62,6 +62,8 @@ void setup()
   Parameter duration_off_prm = duration_on_prm;
   duration_off_prm.setName("duration_off");
   blink_led_cmd.addParameter(duration_off_prm);
+  Parameter count_prm("count");
+  blink_led_cmd.addParameter(count_prm);
   device_interface.addCommand(blink_led_cmd);
 
   Serial.begin(9600);

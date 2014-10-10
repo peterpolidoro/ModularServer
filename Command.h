@@ -10,9 +10,16 @@
 #include "Streaming.h"
 #include "StandardCplusplus.h"
 #include "vector"
+#include "JsonGenerator.h"
 #include "Parameter.h"
 
-const int COMMAND_NAME_LENGTH_MAX = 32;
+using namespace ArduinoJson;
+
+const int COMMAND_NAME_STRING_LENGTH_MAX = 32;
+// const int COMMAND_HELP_STRING_LENGTH_MAX = 257;
+
+const int COMMAND_HELP_JSON_OBJECT_SIZE = 8;
+
 
 class DeviceInterface;
 
@@ -27,7 +34,7 @@ public:
   void attachCallback(Callback callback);
   void addParameter(Parameter parameter);
 private:
-  char name_[COMMAND_NAME_LENGTH_MAX];
+  char name_[COMMAND_NAME_STRING_LENGTH_MAX];
   Callback callback_;
   boolean callback_attached_;
   boolean compareName(char *name_to_compare);
@@ -42,6 +49,8 @@ private:
   std::vector<Parameter> parameter_vector_;
   int getParameterIndex(char *parameter_name);
   int parameter_count_;
+  Generator::JsonArray<COMMAND_HELP_JSON_OBJECT_SIZE> help_json_array;
+  Generator::JsonArray<COMMAND_HELP_JSON_OBJECT_SIZE> help();
   friend class DeviceInterface;
 };
 

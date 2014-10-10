@@ -50,6 +50,7 @@ Example Command:
 ```shell
 setLedOn
 ```
+
 Example Response:
 
 ```json
@@ -61,11 +62,89 @@ Example Response:
 
 Notice that the LED on the Arduino board has turned ON.
 
+To get more information about a command, enter the command followed by
+a question mark ?
+
+Example Command:
+
+```shell
+blinkLed ?
+```
+
+Example Response:
+
+```json
+{
+  "command": "blinkLed",
+  "parameters": [
+    "duration_on",
+    "duration_off",
+    "count"
+  ],
+  "status": "success"
+}
+```
+
+The blinkLed command requires 3 parameters.
+
+Example Command:
+
+```shell
+blinkLed 500 200 20
+```
+
+Example Response:
+
+```json
+{
+  "command": "blinkLed",
+  "status": "success"
+}
+```
+
+Notice that the LED on the Arduino board has blinked 20 times, with an
+on duration of 500ms and an off duration of 200ms.
+
 ####Python
+
+Example Python session:
+
+```python
+from arduino_device import ArduinoDevice
+dev = ArduinoDevice() # Automatically finds device if one available
+dev.get_commands()
+['set_led_on', 'get_led_pin', 'blink_led', 'set_led_off']
+dev.set_led_on()
+dev.set_led_off()
+dev.blink_led("?")
+['duration_on', 'duration_off', 'count']
+dev.blink_led(500,200,20)
+```
+
+For more details on the Python interface:
 
 <https://github.com/JaneliaSciComp/python_arduino_device>
 
 ####Matlab
+
+Example Matlab session:
+
+```matlab
+% Linux and Mac OS X
+ls /dev/tty*
+serial_port = '/dev/ttyACM0'     % example Linux serial port
+serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
+% Windows
+getAvailableComPorts()
+serial_port = 'COM4'             % example Windows serial port
+dev = ArduinoDevice(serial_port) % creates a device object
+dev.open()                       % opens a serial connection to the device
+dev.getCommands()                % get device commands
+dev.close()                      % close serial connection
+delete(dev)                      % deletes the device
+```
+
+For more details on the Matlab interface:
 
 <https://github.com/JaneliaSciComp/matlab_arduino_device>
 

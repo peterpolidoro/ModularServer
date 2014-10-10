@@ -26,15 +26,16 @@ using namespace ArduinoJson;
 const char EOL = '\n';
 const char JSON_OBJECT_START_CHAR = '{';
 const char JSON_ARRAY_START_CHAR = '[';
-const int MESSAGE_LENGTH_MAX = 257;
+const int MESSAGE_STRING_LENGTH_MAX = 257;
 
-const int DEVICE_NAME_LENGTH_MAX = 32;
-const int ERROR_MESSAGE_LENGTH_MAX = 32;
+const int DEVICE_NAME_STRING_LENGTH_MAX = 64;
 
 const int JSON_PARSER_SIZE = 32;
-const int JSON_RESPONSE_SIZE = 32;
-const int JSON_ARGUMENTS_SIZE = 32;
-const int JSON_COMMANDS_COUNT_MAX = 32;
+const int RESPONSE_JSON_OBJECT_SIZE = 32;
+const int DEVICE_HELP_COMMANDS_JSON_OBJECT_SIZE = 32;
+
+const int ARGUMENTS_STRING_LENGTH_MAX = 257;
+const int ERROR_STRING_LENGTH_MAX = 257;
 
 enum ResponseCodes
   {
@@ -59,15 +60,15 @@ public:
   void setName(char *name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
-  Generator::JsonObject<JSON_RESPONSE_SIZE> response;
-  Generator::JsonObject<JSON_ARGUMENTS_SIZE> arguments;
+  Generator::JsonObject<RESPONSE_JSON_OBJECT_SIZE> response;
+  Parser::JsonObject arguments;
 private:
   Stream *stream_;
-  char message_[MESSAGE_LENGTH_MAX];
+  char message_[MESSAGE_STRING_LENGTH_MAX];
   Parser::JsonParser<JSON_PARSER_SIZE> parser_;
   MessageType message_type_;
   std::vector<Command> command_vector_;
-  char name_[DEVICE_NAME_LENGTH_MAX];
+  char name_[DEVICE_NAME_STRING_LENGTH_MAX];
   int model_number_;
   int serial_number_;
   int firmware_number_;
@@ -79,6 +80,7 @@ private:
   int countJsonArrayElements(Parser::JsonArray &json_array);
   void createArgumentsObjectFromArrayMessage(int command_index, Parser::JsonArray &json_array);
   void executeCommand(int command_index);
+  void commandHelp(int command_index);
   // reserved commands
   void getDeviceInfoCallback();
   void getCommandsCallback();

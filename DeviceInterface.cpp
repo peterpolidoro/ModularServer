@@ -37,13 +37,13 @@ void DeviceInterface::processMessage()
 {
   while (stream_->available() > 0)
   {
-    int message_length = stream_->readBytesUntil(EOL,message_,MESSAGE_LENGTH_MAX);
+    int message_length = stream_->readBytesUntil(EOL,message_,MESSAGE_STRING_LENGTH_MAX);
     if (message_length == 0)
     {
       continue;
     }
     message_[message_length] = '\0';
-    response = Generator::JsonObject<JSON_RESPONSE_SIZE>();
+    response = Generator::JsonObject<RESPONSE_JSON_OBJECT_SIZE>();
     if (message_[0] == JSON_OBJECT_START_CHAR)
     {
       message_type_ = OBJECT_MESSAGE;
@@ -66,7 +66,7 @@ void DeviceInterface::processMessage()
       {
         message_type_ = COMMAND_LINE_MESSAGE;
         String msg_str = String("[") + String(message_) + String("]");
-        msg_str.toCharArray(message_,MESSAGE_LENGTH_MAX);
+        msg_str.toCharArray(message_,MESSAGE_STRING_LENGTH_MAX);
       }
       Parser::JsonArray json_array = parser_.parse(message_);
       if (json_array.success())
@@ -134,7 +134,7 @@ void DeviceInterface::addCommand(Command command)
 
 void DeviceInterface::setName(char *name)
 {
-  strncpy(name_,name,COMMAND_NAME_LENGTH_MAX);
+  strncpy(name_,name,COMMAND_NAME_STRING_LENGTH_MAX);
 }
 
 void DeviceInterface::setModelNumber(int model_number)
@@ -161,41 +161,58 @@ void DeviceInterface::processArrayMessage(Parser::JsonArray &json_array)
     int argument_count = array_elements_count - 1;
     if ((argument_count == 1) && (String((char*)json_array[1]).equals("?")))
     {
-      response["help"] = "You want help!";
+      commandHelp(command_index);
     }
     else if (argument_count != command_vector_[command_index].parameter_count_)
     {
       response["status"] = ERROR;
-      response["err_msg"] = "Incorrect number of arguments.";
+      String error_message = "Incorrect number of arguments. ";
+      error_message += String(argument_count) + String(" given. ");
+      error_message += String(command_vector_[command_index].parameter_count_);
+      error_message += String(" needed.");
+      char error_str[ERROR_STRING_LENGTH_MAX];
+      error_message.toCharArray(error_str,ERROR_STRING_LENGTH_MAX);
+      response["err_msg"] = error_str;
     }
     else
     {
       createArgumentsObjectFromArrayMessage(command_index,json_array);
+      if (arguments.success())
+      {
       executeCommand(command_index);
+      }
+      else
+      {
+        response["status"] = ERROR;
+        response["err_msg"] = "Parsing JSON arguments string failed! Could be invalid JSON or too many tokens.";
+      }
     }
   }
 }
 
 void DeviceInterface::createArgumentsObjectFromArrayMessage(int command_index, Parser::JsonArray &json_array)
 {
-  arguments = Generator::JsonObject<JSON_ARGUMENTS_SIZE>();
   int parameter_index = 0;
+  String json_args_str = "{";
+  String json_arg_str_template = "\"{key}\":{value}";
+  String json_arg_str;
   for (Parser::JsonArrayIterator i=json_array.begin(); i!=json_array.end(); ++i)
   {
     if (i!=json_array.begin())
     {
-      char *parameter_name = command_vector_[command_index].parameter_vector_[parameter_index].getName();
-      // int parameter_type = char;
-      // arguments[parameter_name] = *i;
-      arguments[parameter_name] = (char*)*i;
-      // arguments[parameter_name] = typeid(int).name();
-      // arguments[parameter_name] = (parameter_type*)*i;
+      json_arg_str = json_arg_str_template;
+      char *argument_name = command_vector_[command_index].parameter_vector_[parameter_index].getName();
+      json_arg_str.replace("{key}",argument_name);
+      char* value_str = (char*)*i;
+      json_arg_str.replace("{value}",value_str);
+      json_args_str = json_args_str + json_arg_str + ",";
       parameter_index++;
     }
   }
-  // arguments["test"] = 7;
-  // arguments["test"] = 8;
-  arguments.prettyPrintTo(*stream_);
+  json_args_str = json_args_str + "}";
+  char arguments_string_[ARGUMENTS_STRING_LENGTH_MAX];
+  json_args_str.toCharArray(arguments_string_,ARGUMENTS_STRING_LENGTH_MAX);
+  arguments = parser_.parse(arguments_string_);
 }
 
 void DeviceInterface::executeCommand(int command_index)
@@ -208,6 +225,11 @@ void DeviceInterface::executeCommand(int command_index)
   {
     command_vector_[command_index].callback();
   }
+}
+
+void DeviceInterface::commandHelp(int command_index)
+{
+  response["parameters"] = command_vector_[command_index].help();
 }
 
 int DeviceInterface::processCommandString(char *command_str)
@@ -297,7 +319,7 @@ void DeviceInterface::getResponseCodesCallback()
 void DeviceInterface::help()
 {
   response["name"] = name_;
-  Generator::JsonArray<JSON_COMMANDS_COUNT_MAX> commands;
+  Generator::JsonArray<DEVICE_HELP_COMMANDS_JSON_OBJECT_SIZE> commands;
   for (std::vector<Command>::iterator it = command_vector_.begin();
        it != command_vector_.end();
        ++it)
