@@ -140,6 +140,21 @@ serial_port = 'COM4'             % example Windows serial port
 dev = ArduinoDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getCommands()                % get device commands
+Arduino Device Commands
+-----------------------
+setLedOn
+setLedOff
+getLedPin
+blinkLed
+dev.setLedOn()
+dev.setLedOff()
+dev.blinkLed()
+Error using ArduinoDevice/sendCmd (line 308)
+device responded with error, Incorrect number of arguments. 0 given. 3 needed.
+dev.blinkLed('?')
+ans = 
+'duration_on'    'duration_off'    'count'
+dev.blinkLed(500,200,20)
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```
