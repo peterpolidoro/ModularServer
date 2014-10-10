@@ -20,7 +20,7 @@ License:
 For more detailed host computer interface information, see example
 sketch README files.
 
-[LedController](./Example/LedController)
+[LedController](./Examples/LedController)
 
 ####Arduino Serial Monitor
 
@@ -41,6 +41,9 @@ press the 'Enter' key.
 The response will contain a field named "commands", which is an array
 of user commands. To execute a command, simply type it into the input
 field and press the 'Send' button or press the 'Enter' key.
+
+To get more information about a command, enter the command followed by
+a question mark ?
 
 ####Python
 
