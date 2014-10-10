@@ -62,6 +62,22 @@ Example Response:
 
 Notice that the LED on the Arduino board has turned ON.
 
+Example Command:
+
+```shell
+blinkLed
+```
+
+Example Response:
+
+```json
+{
+  "command": "blinkLed",
+  "status": "error",
+  "err_msg": "Incorrect number of arguments. 0 given. 3 needed."
+}
+```
+
 To get more information about a command, enter the command followed by
 a question mark ?
 
@@ -116,6 +132,8 @@ dev.get_commands()
 ['set_led_on', 'get_led_pin', 'blink_led', 'set_led_off']
 dev.set_led_on()
 dev.set_led_off()
+dev.blink_led()
+IOError: (from device) Incorrect number of arguments. 0 given. 3 needed.
 dev.blink_led("?")
 ['duration_on', 'duration_off', 'count']
 dev.blink_led(500,200,20)
@@ -152,7 +170,7 @@ dev.blinkLed()
 Error using ArduinoDevice/sendCmd (line 308)
 device responded with error, Incorrect number of arguments. 0 given. 3 needed.
 dev.blinkLed('?')
-ans = 
+ans =
 'duration_on'    'duration_off'    'count'
 dev.blinkLed(500,200,20)
 dev.close()                      % close serial connection
