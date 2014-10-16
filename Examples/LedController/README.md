@@ -74,7 +74,7 @@ Example Response:
 {
   "method": "blinkLed",
   "status": "error",
-  "err_msg": "Incorrect number of parameters. 0 given. 3 needed."
+  "error_message": "Incorrect number of parameters. 0 given. 3 needed."
 }
 ```
 
@@ -126,8 +126,8 @@ on duration of 500ms and an off duration of 200ms.
 Example Python session:
 
 ```python
-from arduino_device import ArduinoDevice
-dev = ArduinoDevice() # Automatically finds device if one available
+from remote_device import RemoteDevice
+dev = RemoteDevice() # Automatically finds device if one available
 dev.get_methods()
 ['set_led_on', 'get_led_pin', 'blink_led', 'set_led_off']
 dev.set_led_on()
@@ -141,7 +141,7 @@ dev.blink_led(500,200,20)
 
 For more details on the Python interface:
 
-<https://github.com/JaneliaSciComp/python_arduino_device>
+<https://github.com/JaneliaSciComp/python_remote_device>
 
 ####Matlab
 
@@ -155,11 +155,11 @@ serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
 % Windows
 getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
-dev = ArduinoDevice(serial_port) % creates a device object
+dev = RemoteDevice(serial_port)  % creates a device object
 dev.open()                       % opens a serial connection to the device
-dev.getMethods()                % get device methods
-Arduino Device Methods
------------------------
+dev.getMethods()                 % get device methods
+Remote Device Methods
+---------------------
 setLedOn
 setLedOff
 getLedPin
@@ -167,7 +167,7 @@ blinkLed
 dev.setLedOn()
 dev.setLedOff()
 dev.blinkLed()
-Error using ArduinoDevice/sendCmd (line 308)
+Error using RemoteDevice/sendCmd (line 308)
 device responded with error, Incorrect number of parameters. 0 given. 3 needed.
 dev.blinkLed('?')
 ans =
@@ -179,7 +179,7 @@ delete(dev)                      % deletes the device
 
 For more details on the Matlab interface:
 
-<https://github.com/JaneliaSciComp/matlab_arduino_device>
+<https://github.com/JaneliaSciComp/matlab_remote_device>
 
 ##Installation
 
@@ -206,10 +206,10 @@ Or for more information on installing libraries, see:
 
 ###Install This Library and its Dependencies Separately
 
-####Clone This Repository into the Directory 'DeviceInterface'
+####Clone This Repository into the Directory 'RemoteDevice'
 
 ```shell
-git clone https://github.com/JaneliaSciComp/arduino_device_interface.git DeviceInterface
+git clone https://github.com/JaneliaSciComp/arduino_remote_device.git RemoteDevice
 ```
 
 Install symbolic library link into the default sketchbook directory

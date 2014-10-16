@@ -55,8 +55,8 @@ void RemoteDevice::processRequest()
       else
       {
         response["status"] = ERROR;
-        response["err_msg"] = "Parsing JSON object request failed! Could be invalid JSON or too many tokens.";
-        response["received_msg"] = request_;
+        response["error_message"] = "Parsing JSON object request failed! Could be invalid JSON or too many tokens.";
+        response["received_request"] = request_;
       }
     }
     else
@@ -65,8 +65,8 @@ void RemoteDevice::processRequest()
       if (request_[0] != START_CHAR_JSON_ARRAY)
       {
         request_type_ = COMMAND_LINE_REQUEST;
-        String msg_string = String("[") + String(request_) + String("]");
-        msg_string.toCharArray(request_,STRING_LENGTH_REQUEST);
+        String request_string = String("[") + String(request_) + String("]");
+        request_string.toCharArray(request_,STRING_LENGTH_REQUEST);
       }
       Parser::JsonArray json_array = parser_.parse(request_);
       if (json_array.success())
@@ -76,8 +76,8 @@ void RemoteDevice::processRequest()
       else
       {
         response["status"] = ERROR;
-        response["err_msg"] = "Parsing JSON array request failed! Could be invalid JSON or too many tokens.";
-        response["received_msg"] = request_;
+        response["error_message"] = "Parsing JSON array request failed! Could be invalid JSON or too many tokens.";
+        response["received_request"] = request_;
       }
       if (!response.containsKey("status"))
       {
@@ -172,7 +172,7 @@ void RemoteDevice::processArrayRequest(Parser::JsonArray &json_array)
       error_request += String(" needed.");
       char error_str[STRING_LENGTH_ERROR];
       error_request.toCharArray(error_str,STRING_LENGTH_ERROR);
-      response["err_msg"] = error_str;
+      response["error_message"] = error_str;
     }
     else
     {
@@ -184,7 +184,7 @@ void RemoteDevice::processArrayRequest(Parser::JsonArray &json_array)
       else
       {
         response["status"] = ERROR;
-        response["err_msg"] = "Parsing JSON parameters string failed! Could be invalid JSON or too many tokens.";
+        response["error_message"] = "Parsing JSON parameters string failed! Could be invalid JSON or too many tokens.";
       }
     }
   }
@@ -239,12 +239,12 @@ int RemoteDevice::processMethodString(char *method_string)
   if (String(method_string).compareTo("0") == 0)
   {
     method_index = 0;
-    response["cmd_id"] = 0;
+    response["method_id"] = 0;
   }
   else if (method_id > 0)
   {
     method_index = method_id;
-    response["cmd_id"] = method_id;
+    response["method_id"] = method_id;
   }
   else
   {
@@ -254,7 +254,7 @@ int RemoteDevice::processMethodString(char *method_string)
   if ((method_index < 0) || (method_index >= method_vector_.size()))
   {
     response["status"] = ERROR;
-    response["err_msg"] = "Unknown method.";
+    response["error_message"] = "Unknown method.";
     method_index = -1;
   }
   return method_index;
@@ -312,8 +312,8 @@ void RemoteDevice::getMethodIdsCallback()
 
 void RemoteDevice::getResponseCodesCallback()
 {
-  response["rsp_success"] = SUCCESS;
-  response["rsp_error"] = ERROR;
+  response["response_success"] = SUCCESS;
+  response["response_error"] = ERROR;
 }
 
 void RemoteDevice::help()
