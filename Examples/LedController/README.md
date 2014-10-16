@@ -15,7 +15,7 @@ License:
 
 Open the Serial Monitor in the Arduino IDE.
 
-Set the baud rate to match the value in the Arduino sketch (9600).
+Set the baudrate to match the value in the Arduino sketch (9600).
 
 Set the line ending to 'Newline'.
 
@@ -31,7 +31,7 @@ Example Response:
 
 ```json
 {
-  "commands": [
+  "methods": [
     "setLedOn",
     "setLedOff",
     "getLedPin",
@@ -41,11 +41,11 @@ Example Response:
 }
 ```
 
-"commands" is an array of user commands. To execute a command, simply
+"methods" is an array of user methods. To execute a method, simply
 type it into the input field and press the 'Send' button or press the
 'Enter' key.
 
-Example Command:
+Example Method:
 
 ```shell
 setLedOn
@@ -55,14 +55,14 @@ Example Response:
 
 ```json
 {
-  "command": "setLedOn",
+  "method": "setLedOn",
   "status": "success"
 }
 ```
 
 Notice that the LED on the Arduino board has turned ON.
 
-Example Command:
+Example Method:
 
 ```shell
 blinkLed
@@ -72,16 +72,16 @@ Example Response:
 
 ```json
 {
-  "command": "blinkLed",
+  "method": "blinkLed",
   "status": "error",
-  "err_msg": "Incorrect number of arguments. 0 given. 3 needed."
+  "err_msg": "Incorrect number of parameters. 0 given. 3 needed."
 }
 ```
 
-To get more information about a command, enter the command followed by
+To get more information about a method, enter the method followed by
 a question mark ?
 
-Example Command:
+Example Method:
 
 ```shell
 blinkLed ?
@@ -91,7 +91,7 @@ Example Response:
 
 ```json
 {
-  "command": "blinkLed",
+  "method": "blinkLed",
   "parameters": [
     "duration_on",
     "duration_off",
@@ -101,9 +101,9 @@ Example Response:
 }
 ```
 
-The blinkLed command requires 3 parameters.
+The blinkLed method requires 3 parameters.
 
-Example Command:
+Example Method:
 
 ```shell
 blinkLed 500 200 20
@@ -113,7 +113,7 @@ Example Response:
 
 ```json
 {
-  "command": "blinkLed",
+  "method": "blinkLed",
   "status": "success"
 }
 ```
@@ -128,12 +128,12 @@ Example Python session:
 ```python
 from arduino_device import ArduinoDevice
 dev = ArduinoDevice() # Automatically finds device if one available
-dev.get_commands()
+dev.get_methods()
 ['set_led_on', 'get_led_pin', 'blink_led', 'set_led_off']
 dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
-IOError: (from device) Incorrect number of arguments. 0 given. 3 needed.
+IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
 dev.blink_led("?")
 ['duration_on', 'duration_off', 'count']
 dev.blink_led(500,200,20)
@@ -157,8 +157,8 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = ArduinoDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
-dev.getCommands()                % get device commands
-Arduino Device Commands
+dev.getMethods()                % get device methods
+Arduino Device Methods
 -----------------------
 setLedOn
 setLedOff
@@ -168,7 +168,7 @@ dev.setLedOn()
 dev.setLedOff()
 dev.blinkLed()
 Error using ArduinoDevice/sendCmd (line 308)
-device responded with error, Incorrect number of arguments. 0 given. 3 needed.
+device responded with error, Incorrect number of parameters. 0 given. 3 needed.
 dev.blinkLed('?')
 ans =
 'duration_on'    'duration_off'    'count'

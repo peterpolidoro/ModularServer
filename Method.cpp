@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-// Command.cpp
+// Method.cpp
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "Command.h"
+#include "Method.h"
 
-Command::Command(char *name="")
+Method::Method(char *name="")
 {
   setName(name);
   callback_attached_ = false;
@@ -15,34 +15,29 @@ Command::Command(char *name="")
   parameter_count_ = 0;
 }
 
-void Command::setName(char *name)
+void Method::setName(char *name)
 {
-  strncpy(name_,name,COMMAND_NAME_STRING_LENGTH_MAX);
+  strncpy(name_,name,STRING_LENGTH_METHOD_NAME);
 }
 
-boolean Command::compareName(char *name_to_compare)
+boolean Method::compareName(char *name_to_compare)
 {
   return String(name_).equalsIgnoreCase(name_to_compare);
 }
 
-char* Command::getName()
+char* Method::getName()
 {
   return name_;
 }
 
-void Command::printName()
-{
-  Serial << name_ << endl;
-}
-
-void Command::attachCallback(Callback callback)
+void Method::attachCallback(Callback callback)
 {
   callback_ = callback;
   callback_attached_ = true;
   reserved_ = false;
 }
 
-void Command::addParameter(Parameter parameter)
+void Method::addParameter(Parameter parameter)
 {
   char* name = parameter.getName();
   if (String(name).length() > 0)
@@ -60,7 +55,7 @@ void Command::addParameter(Parameter parameter)
   }
 }
 
-int Command::getParameterIndex(char *parameter_name)
+int Method::getParameterIndex(char *parameter_name)
 {
   int parameter_index = -1;
   for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
@@ -76,7 +71,7 @@ int Command::getParameterIndex(char *parameter_name)
   return parameter_index;
 }
 
-void Command::callback()
+void Method::callback()
 {
   if ((callback_attached_) && (!isReserved()))
   {
@@ -84,55 +79,55 @@ void Command::callback()
   }
 }
 
-void Command::attachReservedCallback(ReservedCallback callback)
+void Method::attachReservedCallback(ReservedCallback callback)
 {
   reserved_callback_ = callback;
   callback_attached_ = true;
   reserved_ = true;
 }
 
-boolean Command::isReserved()
+boolean Method::isReserved()
 {
   return reserved_;
 }
 
-void Command::reservedCallback(DeviceInterface *dev_int)
+void Method::reservedCallback(RemoteDevice *dev)
 {
   if ((callback_attached_) && (isReserved()))
   {
-    (dev_int->*reserved_callback_)();
+    (dev->*reserved_callback_)();
   }
 }
 
-Generator::JsonArray<COMMAND_HELP_JSON_OBJECT_SIZE> Command::help()
+Generator::JsonArray<JSON_OBJECT_SIZE_METHOD_HELP> Method::help()
 {
-  // Generator::JsonObject<COMMAND_HELP_JSON_OBJECT_SIZE> help_json_object;
+  // Generator::JsonObject<JSON_OBJECT_SIZE_METHOD_HELP> help_json_object;
   // int parameter_count = 0;
   // for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
   //      it != parameter_vector_.end();
   //      ++it)
   // {
-  //   if (++parameter_count < COMMAND_HELP_JSON_OBJECT_SIZE)
+  //   if (++parameter_count < JSON_OBJECT_SIZE_METHOD_HELP)
   //   {
   //     help_json_object[it->getName()] = it->help();
   //   }
   // }
-  // help_json_object.printTo(help_string,COMMAND_HELP_STRING_LENGTH_MAX);
+  // help_json_object.printTo(help_string,STRING_LENGTH_METHOD_HELP);
   // return help_string;
-  help_json_array = Generator::JsonArray<COMMAND_HELP_JSON_OBJECT_SIZE>();
+  help_json_array = Generator::JsonArray<JSON_OBJECT_SIZE_METHOD_HELP>();
   int parameter_index = 0;
   for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
        it != parameter_vector_.end();
        ++it)
   {
-    if (parameter_index < COMMAND_HELP_JSON_OBJECT_SIZE)
+    if (parameter_index < JSON_OBJECT_SIZE_METHOD_HELP)
     {
       help_json_array.add(it->getName());
       // help_json_array.add("test");
       parameter_index++;
     }
   }
-  // char help_string[COMMAND_HELP_STRING_LENGTH_MAX];
-  // help_json_array.printTo(help_string,COMMAND_HELP_STRING_LENGTH_MAX);
+  // char help_string[STRING_LENGTH_METHOD_HELP];
+  // help_json_array.printTo(help_string,STRING_LENGTH_METHOD_HELP);
   return help_json_array;
 }

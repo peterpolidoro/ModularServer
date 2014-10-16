@@ -1,5 +1,5 @@
-arduino_device_interface
-------------------------
+arduino_remote_device
+---------------------
 
 Authors:
 
@@ -47,11 +47,11 @@ a question mark ?
 
 ####Python
 
-<https://github.com/JaneliaSciComp/python_arduino_device>
+<https://github.com/JaneliaSciComp/python_remote_device>
 
 ####Matlab
 
-<https://github.com/JaneliaSciComp/matlab_arduino_device>
+<https://github.com/JaneliaSciComp/matlab_remote_device>
 
 ##Installation
 
@@ -78,10 +78,10 @@ Or for more information on installing libraries, see:
 
 ###Install This Library and its Dependencies Separately
 
-####Clone This Repository into the Directory 'DeviceInterface'
+####Clone This Repository into the Directory 'RemoteDevice'
 
 ```shell
-git clone https://github.com/JaneliaSciComp/arduino_device_interface.git DeviceInterface
+git clone https://github.com/JaneliaSciComp/arduino_remote_device.git RemoteDevice
 ```
 
 Install symbolic library link into the default sketchbook directory
