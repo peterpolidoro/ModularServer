@@ -16,8 +16,6 @@
 #include "Constants.h"
 
 
-using namespace ArduinoJson;
-
 class Command;
 class RemoteDevice;
 
@@ -33,8 +31,6 @@ private:
   boolean compareName(char *name_to_compare);
   char* getName();
   char* getUnits();
-  // Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP> help_json_object;
-  // Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP> help();
   friend class Method;
   friend class RemoteDevice;
 };

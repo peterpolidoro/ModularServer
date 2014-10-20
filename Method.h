@@ -15,8 +15,6 @@
 #include "Constants.h"
 
 
-using namespace ArduinoJson;
-
 class RemoteDevice;
 
 typedef void (*Callback)(void);
@@ -44,8 +42,6 @@ private:
   std::vector<Parameter> parameter_vector_;
   int getParameterIndex(char *parameter_name);
   int parameter_count_;
-  Generator::JsonArray<JSON_OBJECT_SIZE_METHOD_HELP> help_json_array;
-  Generator::JsonArray<JSON_OBJECT_SIZE_METHOD_HELP> help();
   friend class RemoteDevice;
 };
 

@@ -37,7 +37,12 @@ Example Response:
     "getLedPin",
     "blinkLed"
   ],
-  "name": "arduino_led_controller"
+  "device_info": {
+    "name": "led_controller",
+    "model_number": 1234,
+    "serial_number": 0,
+    "firmware_number": 1
+  }
 }
 ```
 
@@ -81,7 +86,7 @@ Example Response:
 To get more information about a method, enter the method followed by
 a question mark ?
 
-Example Method:
+Example Method Help:
 
 ```shell
 blinkLed ?
@@ -102,6 +107,30 @@ Example Response:
 ```
 
 The blinkLed method requires 3 parameters.
+
+To get more information about a parameter, enter the method followed
+by the parameter followed by a question mark ?
+
+Example Parameter Help:
+
+```shell
+blinkLed duration_on ?
+```
+
+Example Response:
+
+```json
+{
+  "method": "blinkLed",
+  "parameter": {
+    "name": "duration_on",
+    "position": 0,
+    "method": "blinkLed",
+    "units": "ms"
+  },
+  "status": "success"
+}
+```
 
 Example Method:
 
@@ -134,8 +163,10 @@ dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
 IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
-dev.blink_led("?")
+dev.blink_led('?')
 ['duration_on', 'duration_off', 'count']
+dev.blink_led('duration_on','?')
+{'method': 'blinkLed', 'name': 'duration_on', 'position': 0, 'units': 'ms'}
 dev.blink_led(500,200,20)
 ```
 

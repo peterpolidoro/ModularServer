@@ -7,6 +7,8 @@
 // ----------------------------------------------------------------------------
 #include "Parameter.h"
 
+using namespace ArduinoJson;
+
 Parameter::Parameter(char *name="")
 {
   setName(name);
@@ -37,23 +39,3 @@ char* Parameter::getUnits()
 {
   return units_;
 }
-
-// Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP> Parameter::help()
-// {
-//   help_json_object = Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP>();
-//   help_json_object["name"] = getName();
-//   if (strcmp(units_,"") != 0)
-//   {
-//     help_json_object["units"] = units_;
-//   }
-//   return help_json_object;
-//   // char help_string[STRING_LENGTH_PARAMETER_HELP];
-//   // help_json_object.printTo(help_string,STRING_LENGTH_PARAMETER_HELP);
-//   // String help = getName();
-//   // if (strcmp(units_,"") != 0){
-//   //   help += String(" (") + String(units_) + String(")");
-//   // }
-//   // char help_string[STRING_LENGTH_PARAMETER_HELP];
-//   // help.toCharArray(help_string,STRING_LENGTH_PARAMETER_HELP);
-//   // return help_string;
-// }

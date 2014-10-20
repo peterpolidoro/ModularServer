@@ -23,8 +23,6 @@
 #include "Constants.h"
 
 
-using namespace ArduinoJson;
-
 class RemoteDevice
 {
 public:
@@ -35,12 +33,12 @@ public:
   void setName(char *name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
-  Generator::JsonObject<JSON_OBJECT_SIZE_RESPONSE> response;
-  Parser::JsonObject parameters;
+  ArduinoJson::Generator::JsonObject<JSON_OBJECT_SIZE_RESPONSE> response;
+  ArduinoJson::Parser::JsonObject parameters;
 private:
   Stream *stream_ptr_;
   char request_[STRING_LENGTH_REQUEST];
-  Parser::JsonParser<JSON_PARSER_SIZE> parser_;
+  ArduinoJson::Parser::JsonParser<JSON_PARSER_SIZE> parser_;
   RequestType request_type_;
   std::vector<Method> method_vector_;
   char name_[STRING_LENGTH_DEVICE_NAME];
@@ -48,14 +46,22 @@ private:
   int serial_number_;
   int firmware_number_;
 
-  void processObjectRequest(Parser::JsonObject &json_object);
-  void processArrayRequest(Parser::JsonArray &json_array);
+  ArduinoJson::Generator::JsonArray<PARAMETER_COUNT_MAX> method_help_array_;
+  ArduinoJson::Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP> parameter_help_object_;
+  int parameter_count_;
+
+  void processObjectRequest(ArduinoJson::Parser::JsonObject &json_object);
+  void processArrayRequest(ArduinoJson::Parser::JsonArray &json_array);
   int processMethodString(char *method_string);
   int getMethodIndexByName(char *method_name);
-  int countJsonArrayElements(Parser::JsonArray &json_array);
-  void createParametersObject(int method_index, Parser::JsonArray &json_array);
+  int countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array);
+  void createParametersObject(int method_index, ArduinoJson::Parser::JsonArray &json_array);
   void executeMethod(int method_index);
   void methodHelp(int method_index);
+  int processParameterString(int method_index, char *parameter_string);
+  int getParameterIndexByName(int method_index, char *parameter_name);
+  void parameterHelp(int method_index, int parameter_index);
+
   // reserved methods
   void getDeviceInfoCallback();
   void getMethodIdsCallback();

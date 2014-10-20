@@ -38,12 +38,27 @@ press the 'Enter' key.
 ?
 ```
 
-The response will contain a field named "commands", which is an array
-of user commands. To execute a command, simply type it into the input
+The response will contain a field named "methods", which is an array
+of user methods. To execute a method, simply type it into the input
 field and press the 'Send' button or press the 'Enter' key.
 
-To get more information about a command, enter the command followed by
+To get more information about a method, enter the method followed by
 a question mark ?
+
+Example Method Help:
+
+```shell
+blinkLed ?
+```
+
+To get more information about a parameter, enter the method followed
+by the parameter followed by a question mark ?
+
+Example Parameter Help:
+
+```shell
+blinkLed duration_on ?
+```
 
 ####Python
 

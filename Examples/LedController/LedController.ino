@@ -42,6 +42,8 @@ void setup()
   pinMode(led_pin, OUTPUT);
 
   remote_device.setName("led_controller");
+  remote_device.setModelNumber(1234);
+  remote_device.setFirmwareNumber(1);
 
   Method led_on_method("setLedOn");
   led_on_method.attachCallback(setLedOnCallback);

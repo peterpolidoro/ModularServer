@@ -7,6 +7,9 @@
 // ----------------------------------------------------------------------------
 #include "RemoteDevice.h"
 
+
+using namespace ArduinoJson;
+
 RemoteDevice::RemoteDevice(Stream &stream)
 {
   setRequestStream(stream);
@@ -14,15 +17,19 @@ RemoteDevice::RemoteDevice(Stream &stream)
   model_number_ = 0;
   serial_number_ = 0;
   firmware_number_ = 0;
+
   Method get_device_info_method("getDeviceInfo");
   get_device_info_method.attachReservedCallback(&RemoteDevice::getDeviceInfoCallback);
   addMethod(get_device_info_method);
+
   Method get_methods_method("getMethodIds");
   get_methods_method.attachReservedCallback(&RemoteDevice::getMethodIdsCallback);
   addMethod(get_methods_method);
+
   Method get_response_codes_method("getResponseCodes");
   get_response_codes_method.attachReservedCallback(&RemoteDevice::getResponseCodesCallback);
   addMethod(get_response_codes_method);
+
   Method help_method("?");
   help_method.attachReservedCallback(&RemoteDevice::help);
   addMethod(help_method);
@@ -158,16 +165,21 @@ void RemoteDevice::processArrayRequest(Parser::JsonArray &json_array)
   if (!(method_index < 0))
   {
     int array_elements_count = countJsonArrayElements(json_array);
-    int argument_count = array_elements_count - 1;
-    if ((argument_count == 1) && (String((char*)json_array[1]).equals("?")))
+    int parameter_count = array_elements_count - 1;
+    if ((parameter_count == 1) && (String((char*)json_array[1]).equals("?")))
     {
       methodHelp(method_index);
     }
-    else if (argument_count != method_vector_[method_index].parameter_count_)
+    else if ((parameter_count == 2) && (String((char*)json_array[2]).equals("?")))
+    {
+      int parameter_index = processParameterString(method_index, json_array[1]);
+      parameterHelp(method_index, parameter_index);
+    }
+    else if (parameter_count != method_vector_[method_index].parameter_count_)
     {
       response["status"] = ERROR;
       String error_request = "Incorrect number of parameters. ";
-      error_request += String(argument_count) + String(" given. ");
+      error_request += String(parameter_count) + String(" given. ");
       error_request += String(method_vector_[method_index].parameter_count_);
       error_request += String(" needed.");
       char error_str[STRING_LENGTH_ERROR];
@@ -179,7 +191,7 @@ void RemoteDevice::processArrayRequest(Parser::JsonArray &json_array)
       createParametersObject(method_index,json_array);
       if (parameters.success())
       {
-      executeMethod(method_index);
+        executeMethod(method_index);
       }
       else
       {
@@ -200,12 +212,19 @@ void RemoteDevice::createParametersObject(int method_index, Parser::JsonArray &j
   {
     if (it!=json_array.begin())
     {
-      parameter_string = parameter_template;
+      if (parameter_index > 0)
+      {
+        parameter_string = String(",") + parameter_template;
+      }
+      else
+      {
+        parameter_string = parameter_template;
+      }
       char *parameter_name = method_vector_[method_index].parameter_vector_[parameter_index].getName();
       parameter_string.replace("{key}",parameter_name);
       char* value_char_array = (char*)*it;
       parameter_string.replace("{value}",value_char_array);
-      parameters_string = parameters_string + parameter_string + ",";
+      parameters_string += parameter_string;
       parameter_index++;
     }
   }
@@ -213,6 +232,7 @@ void RemoteDevice::createParametersObject(int method_index, Parser::JsonArray &j
   char parameters_char_array[STRING_LENGTH_PARAMETERS];
   parameters_string.toCharArray(parameters_char_array,STRING_LENGTH_PARAMETERS);
   parameters = parser_.parse(parameters_char_array);
+  parameter_count_ = parameter_index;
 }
 
 void RemoteDevice::executeMethod(int method_index)
@@ -229,7 +249,35 @@ void RemoteDevice::executeMethod(int method_index)
 
 void RemoteDevice::methodHelp(int method_index)
 {
-  response["parameters"] = method_vector_[method_index].help();
+  method_help_array_ = Generator::JsonArray<PARAMETER_COUNT_MAX>();
+  int parameter_index = 0;
+  std::vector<Parameter>& parameter_vector = method_vector_[method_index].parameter_vector_;
+  for (std::vector<Parameter>::iterator it = parameter_vector.begin();
+       it != parameter_vector.end();
+       ++it)
+  {
+    if (parameter_index < PARAMETER_COUNT_MAX)
+    {
+      method_help_array_.add(it->getName());
+      parameter_index++;
+    }
+  }
+  response["parameters"] = method_help_array_;
+}
+
+void RemoteDevice::parameterHelp(int method_index, int parameter_index)
+{
+  parameter_help_object_ = Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP>();
+  Parameter& parameter = method_vector_[method_index].parameter_vector_[parameter_index];
+  parameter_help_object_["name"] = parameter.getName();
+  parameter_help_object_["position"] = parameter_index;
+  parameter_help_object_["method"] = method_vector_[method_index].getName();
+  char* units = parameter.getUnits();
+  if (strcmp(units,"") != 0)
+  {
+    parameter_help_object_["units"] = units;
+  }
+  response["parameter"] = parameter_help_object_;
 }
 
 int RemoteDevice::processMethodString(char *method_string)
@@ -267,13 +315,56 @@ int RemoteDevice::getMethodIndexByName(char *method_name)
        it != method_vector_.end();
        ++it)
   {
-      if (it->compareName(method_name))
-      {
-        method_index = std::distance(method_vector_.begin(),it);
-        break;
-      }
+    if (it->compareName(method_name))
+    {
+      method_index = std::distance(method_vector_.begin(),it);
+      break;
     }
+  }
   return method_index;
+}
+
+int RemoteDevice::processParameterString(int method_index, char *parameter_string)
+{
+  int parameter_index = -1;
+  int parameter_id = String(parameter_string).toInt();
+  if (String(parameter_string).compareTo("0") == 0)
+  {
+    parameter_index = 0;
+  }
+  else if (parameter_id > 0)
+  {
+    parameter_index = parameter_id;
+  }
+  else
+  {
+    parameter_index = getParameterIndexByName(method_index, parameter_string);
+  }
+  std::vector<Parameter>& parameter_vector = method_vector_[method_index].parameter_vector_;
+  if ((parameter_index < 0) || (parameter_index >= parameter_vector.size()))
+  {
+    response["status"] = ERROR;
+    response["error_message"] = "Unknown parameter.";
+    parameter_index = -1;
+  }
+  return parameter_index;
+}
+
+int RemoteDevice::getParameterIndexByName(int method_index, char *parameter_name)
+{
+  int parameter_index = -1;
+  std::vector<Parameter>& parameter_vector = method_vector_[method_index].parameter_vector_;
+  for (std::vector<Parameter>::iterator it = parameter_vector.begin();
+       it != parameter_vector.end();
+       ++it)
+  {
+    if (it->compareName(parameter_name))
+    {
+      parameter_index = std::distance(parameter_vector.begin(),it);
+      break;
+    }
+  }
+  return parameter_index;
 }
 
 int RemoteDevice::countJsonArrayElements(Parser::JsonArray &json_array)
@@ -318,8 +409,13 @@ void RemoteDevice::getResponseCodesCallback()
 
 void RemoteDevice::help()
 {
-  response["name"] = name_;
-  Generator::JsonArray<JSON_OBJECT_SIZE_DEVICE_HELP> methods;
+  Generator::JsonObject<JSON_OBJECT_SIZE_DEVICE_INFO> device_info;
+  device_info["name"] = name_;
+  device_info["model_number"] = model_number_;
+  device_info["serial_number"] = serial_number_;
+  device_info["firmware_number"] = firmware_number_;
+  response["device_info"] = device_info;
+  Generator::JsonArray<METHOD_COUNT_MAX> methods;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();
        ++it)

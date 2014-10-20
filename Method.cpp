@@ -7,6 +7,9 @@
 // ----------------------------------------------------------------------------
 #include "Method.h"
 
+
+using namespace ArduinoJson;
+
 Method::Method(char *name="")
 {
   setName(name);
@@ -97,37 +100,4 @@ void Method::reservedCallback(RemoteDevice *dev)
   {
     (dev->*reserved_callback_)();
   }
-}
-
-Generator::JsonArray<JSON_OBJECT_SIZE_METHOD_HELP> Method::help()
-{
-  // Generator::JsonObject<JSON_OBJECT_SIZE_METHOD_HELP> help_json_object;
-  // int parameter_count = 0;
-  // for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
-  //      it != parameter_vector_.end();
-  //      ++it)
-  // {
-  //   if (++parameter_count < JSON_OBJECT_SIZE_METHOD_HELP)
-  //   {
-  //     help_json_object[it->getName()] = it->help();
-  //   }
-  // }
-  // help_json_object.printTo(help_string,STRING_LENGTH_METHOD_HELP);
-  // return help_string;
-  help_json_array = Generator::JsonArray<JSON_OBJECT_SIZE_METHOD_HELP>();
-  int parameter_index = 0;
-  for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
-       it != parameter_vector_.end();
-       ++it)
-  {
-    if (parameter_index < JSON_OBJECT_SIZE_METHOD_HELP)
-    {
-      help_json_array.add(it->getName());
-      // help_json_array.add("test");
-      parameter_index++;
-    }
-  }
-  // char help_string[STRING_LENGTH_METHOD_HELP];
-  // help_json_array.printTo(help_string,STRING_LENGTH_METHOD_HELP);
-  return help_json_array;
 }
