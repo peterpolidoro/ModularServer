@@ -61,11 +61,13 @@ void setup()
   blink_led_method.attachCallback(blinkLedCallback);
   Parameter duration_on_parameter("duration_on");
   duration_on_parameter.setUnits("ms");
+  duration_on_parameter.setRange((long)100,(long)2000);
   blink_led_method.addParameter(duration_on_parameter);
   Parameter duration_off_parameter = duration_on_parameter;
   duration_off_parameter.setName("duration_off");
   blink_led_method.addParameter(duration_off_parameter);
   Parameter count_parameter("count");
+  count_parameter.setRange((long)1,(long)100);
   blink_led_method.addParameter(count_parameter);
   remote_device.addMethod(blink_led_method);
 

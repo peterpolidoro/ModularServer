@@ -37,18 +37,31 @@ enum RequestType
     COMMAND_LINE_REQUEST,
   };
 
+enum ParameterType
+  {
+    LONG_PARAMETER,
+    DOUBLE_PARAMETER,
+    STRING_PARAMETER,
+  };
+
+union NumberType
+{
+  long l;
+  double d;
+};
+
 // Method
 const int STRING_LENGTH_METHOD_NAME = 32;
 
 // const int JSON_ARRAY_SIZE_METHOD_HELP = 16;
 // const int JSON_OBJECT_SIZE_METHOD_HELP_FULL = 32;
-const int PARAMETER_COUNT_MAX = 4;
+const int PARAMETER_COUNT_MAX = 8;
 
 // Parameter
 const int STRING_LENGTH_PARAMETER_NAME = 16;
 const int STRING_LENGTH_PARAMETER_UNITS = 8;
 const int STRING_LENGTH_PARAMETER_HELP = 64;
 
-const int JSON_OBJECT_SIZE_PARAMETER_HELP = 4;
+const int JSON_OBJECT_SIZE_PARAMETER_HELP = 8;
 
 #endif

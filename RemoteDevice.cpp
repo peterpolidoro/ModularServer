@@ -277,6 +277,26 @@ void RemoteDevice::parameterHelp(int method_index, int parameter_index)
   {
     parameter_help_object_["units"] = units;
   }
+  ParameterType type = parameter.getType();
+  switch (type)
+  {
+    case LONG_PARAMETER:
+      parameter_help_object_["type"] = "long";
+      if (parameter.rangeIsSet())
+      {
+        long min = parameter.getMin().l;
+        long max = parameter.getMax().l;
+        parameter_help_object_["min"] = min;
+        parameter_help_object_["max"] = max;
+      }
+      break;
+    case DOUBLE_PARAMETER:
+      parameter_help_object_["type"] = "double";
+      break;
+    case STRING_PARAMETER:
+      parameter_help_object_["type"] = "string";
+      break;
+  }
   response["parameter"] = parameter_help_object_;
 }
 

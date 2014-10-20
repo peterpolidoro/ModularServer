@@ -126,7 +126,10 @@ Example Response:
     "name": "duration_on",
     "position": 0,
     "method": "blinkLed",
-    "units": "ms"
+    "units": "ms",
+    "type": "long",
+    "min": 100,
+    "max": 2000
   },
   "status": "success"
 }
@@ -166,7 +169,13 @@ IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
 dev.blink_led('?')
 ['duration_on', 'duration_off', 'count']
 dev.blink_led('duration_on','?')
-{'method': 'blinkLed', 'name': 'duration_on', 'position': 0, 'units': 'ms'}
+{'max': 2000,
+ 'method': 'blinkLed',
+ 'min': 100,
+ 'name': 'duration_on',
+ 'position': 0,
+ 'type': 'long',
+ 'units': 'ms'}
 dev.blink_led(500,200,20)
 ```
 
