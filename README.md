@@ -17,8 +17,8 @@ License:
 
 ###Host Computer Interface
 
-For more detailed host computer interface information, see example
-sketch README files.
+For more detailed host computer interface information (Arduino Serial
+Monitor, Python, and Matlab) see example sketch README files:
 
 [LedController](./examples/LedController)
 
