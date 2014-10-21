@@ -18,6 +18,7 @@
 #include "JsonGenerator.h"
 #include "StandardCplusplus.h"
 #include "vector"
+#include "MemoryFree.h"
 #include "utility/Parameter.h"
 #include "utility/Method.h"
 #include "utility/Constants.h"
@@ -72,5 +73,9 @@ private:
   void help();
 };
 }
+
 extern RemoteDevice::RemoteDevice remote_device;
+
+void getMemoryFreeCallback();
+
 #endif

@@ -35,6 +35,10 @@ RemoteDevice::RemoteDevice(Stream &stream)
   Method help_method("?");
   help_method.attachReservedCallback(&RemoteDevice::help);
   addMethod(help_method);
+
+  Method get_memory_free_method("getMemoryFree");
+  get_memory_free_method.attachCallback(getMemoryFreeCallback);
+  addMethod(get_memory_free_method);
 }
 
 void RemoteDevice::setRequestStream(Stream &stream)
@@ -526,4 +530,10 @@ void RemoteDevice::help()
   response["methods"] = methods;
 }
 }
+
 RemoteDevice::RemoteDevice remote_device(Serial);
+
+void getMemoryFreeCallback()
+{
+  remote_device.response["memory_free"] = freeMemory();
+}
