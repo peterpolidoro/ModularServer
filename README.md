@@ -13,14 +13,14 @@ License:
 
 ###Arduino Firmware
 
-[Arduino Sketch Examples](./Examples)
+[Arduino Sketch Examples](./examples)
 
 ###Host Computer Interface
 
 For more detailed host computer interface information, see example
 sketch README files.
 
-[LedController](./Examples/LedController)
+[LedController](./examples/LedController)
 
 ####Arduino Serial Monitor
 

@@ -18,9 +18,9 @@
 #include "JsonGenerator.h"
 #include "StandardCplusplus.h"
 #include "vector"
-#include "Parameter.h"
-#include "Method.h"
-#include "Constants.h"
+#include "utility/Parameter.h"
+#include "utility/Method.h"
+#include "utility/Constants.h"
 
 
 class RemoteDevice
