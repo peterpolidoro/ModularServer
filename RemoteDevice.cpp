@@ -190,12 +190,12 @@ void RemoteDevice::processArrayRequest(Parser::JsonArray &json_array)
     }
     else
     {
-      createParametersObject(method_index,json_array);
-      if (parameters.success())
+      boolean parameters_ok = createParametersObject(method_index,json_array);
+      if (parameters_ok && parameters.success())
       {
         executeMethod(method_index);
       }
-      else
+      else if (parameters_ok)
       {
         response["status"] = ERROR;
         response["error_message"] = "Parsing JSON parameters string failed! Could be invalid JSON or too many tokens.";
@@ -204,7 +204,7 @@ void RemoteDevice::processArrayRequest(Parser::JsonArray &json_array)
   }
 }
 
-void RemoteDevice::createParametersObject(int method_index, Parser::JsonArray &json_array)
+boolean RemoteDevice::createParametersObject(int method_index, Parser::JsonArray &json_array)
 {
   int parameter_index = 0;
   String parameters_string = "{";
@@ -214,20 +214,27 @@ void RemoteDevice::createParametersObject(int method_index, Parser::JsonArray &j
   {
     if (it!=json_array.begin())
     {
-      if (parameter_index > 0)
+      if (checkParameter(method_index,parameter_index,*it))
       {
-        parameter_string = String(",") + parameter_template;
+        if (parameter_index > 0)
+        {
+          parameter_string = String(",") + parameter_template;
+        }
+        else
+        {
+          parameter_string = parameter_template;
+        }
+        char *parameter_name = method_vector_[method_index].parameter_vector_[parameter_index].getName();
+        parameter_string.replace("{key}",parameter_name);
+        char* value_char_array = (char*)*it;
+        parameter_string.replace("{value}",value_char_array);
+        parameters_string += parameter_string;
+        parameter_index++;
       }
       else
       {
-        parameter_string = parameter_template;
+        return false;
       }
-      char *parameter_name = method_vector_[method_index].parameter_vector_[parameter_index].getName();
-      parameter_string.replace("{key}",parameter_name);
-      char* value_char_array = (char*)*it;
-      parameter_string.replace("{value}",value_char_array);
-      parameters_string += parameter_string;
-      parameter_index++;
     }
   }
   parameters_string = parameters_string + "}";
@@ -235,6 +242,7 @@ void RemoteDevice::createParametersObject(int method_index, Parser::JsonArray &j
   parameters_string.toCharArray(parameters_char_array,STRING_LENGTH_PARAMETERS);
   parameters = parser_.parse(parameters_char_array);
   parameter_count_ = parameter_index;
+  return true;
 }
 
 void RemoteDevice::executeMethod(int method_index)
@@ -300,6 +308,62 @@ void RemoteDevice::parameterHelp(int method_index, int parameter_index)
       break;
   }
   response["parameter"] = parameter_help_object_;
+}
+
+boolean RemoteDevice::checkParameter(int method_index, int parameter_index, Parser::JsonValue json_value)
+{
+  boolean parameter_ok = true;
+  Parameter& parameter = method_vector_[method_index].parameter_vector_[parameter_index];
+  ParameterType type = parameter.getType();
+  String min_string = "";
+  String max_string = "";
+  switch (type)
+  {
+    case LONG_PARAMETER:
+      if (parameter.rangeIsSet())
+      {
+        long value = (long)json_value;
+        long min = parameter.getMin().l;
+        long max = parameter.getMax().l;
+        if ((value < min) || (value > max))
+        {
+          parameter_ok = false;
+          min_string = String(min);
+          max_string = String(max);
+        }
+      }
+      break;
+    case DOUBLE_PARAMETER:
+      // if (parameter.rangeIsSet())
+      // {
+      //   double value = (double)json_value;
+      //   double min = parameter.getMin().d;
+      //   double max = parameter.getMax().d;
+      //   if ((value < min) || (value > max))
+      //   {
+      //     parameter_ok = false;
+      //     min_string = String((double)min);
+      //     max_string = String((double)max);
+      //   }
+      // }
+      break;
+    case STRING_PARAMETER:
+      break;
+  }
+  if (!parameter_ok)
+  {
+    response["status"] = ERROR;
+    String error = String("Parameter value out of range. ");
+    error += min_string;
+    error += String(" <= ");
+    error += String(parameter.getName());
+    error += String(" <= ");
+    error += max_string;
+    char error_str[STRING_LENGTH_ERROR];
+    error.toCharArray(error_str,STRING_LENGTH_ERROR);
+    response["error_message"] = error_str;
+  }
+  return parameter_ok;
 }
 
 int RemoteDevice::processMethodString(char *method_string)

@@ -54,9 +54,6 @@ union NumberType
 
 // Method
 const int STRING_LENGTH_METHOD_NAME = 32;
-
-// const int JSON_ARRAY_SIZE_METHOD_HELP = 16;
-// const int JSON_OBJECT_SIZE_METHOD_HELP_FULL = 32;
 const int PARAMETER_COUNT_MAX = 8;
 
 // Parameter

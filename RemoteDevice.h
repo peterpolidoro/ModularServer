@@ -57,12 +57,13 @@ private:
   int processMethodString(char *method_string);
   int getMethodIndexByName(char *method_name);
   int countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array);
-  void createParametersObject(int method_index, ArduinoJson::Parser::JsonArray &json_array);
+  boolean createParametersObject(int method_index, ArduinoJson::Parser::JsonArray &json_array);
   void executeMethod(int method_index);
   void methodHelp(int method_index);
   int processParameterString(int method_index, char *parameter_string);
   int getParameterIndexByName(int method_index, char *parameter_name);
   void parameterHelp(int method_index, int parameter_index);
+  boolean checkParameter(int method_index, int parameter_index, ArduinoJson::Parser::JsonValue json_value);
 
   // reserved methods
   void getDeviceInfoCallback();
