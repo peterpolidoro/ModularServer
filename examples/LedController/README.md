@@ -213,6 +213,14 @@ dev.blinkLed('?')
 ans =
 'duration_on'    'duration_off'    'count'
 dev.blinkLed('duration_on','?')
+ans = 
+        name: 'duration_on'
+    position: 0
+      method: 'blinkLed'
+       units: 's'
+        type: 'double'
+         min: 0.1000
+         max: 2.5000
 dev.blinkLed(0.5,0.2,20)
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
