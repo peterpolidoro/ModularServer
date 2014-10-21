@@ -8,6 +8,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+namespace RemoteDevice
+{
 // RemoteDevice
 const char EOL = '\n';
 const char START_CHAR_JSON_OBJECT = '{';
@@ -63,5 +65,5 @@ const int STRING_LENGTH_PARAMETER_UNITS = 8;
 const int STRING_LENGTH_PARAMETER_HELP = 64;
 
 const int JSON_OBJECT_SIZE_PARAMETER_HELP = 8;
-
+}
 #endif

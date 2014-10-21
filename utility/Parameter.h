@@ -16,6 +16,8 @@
 #include "Constants.h"
 
 
+namespace RemoteDevice
+{
 class Command;
 class RemoteDevice;
 
@@ -48,4 +50,5 @@ private:
   friend class Method;
   friend class RemoteDevice;
 };
+}
 #endif

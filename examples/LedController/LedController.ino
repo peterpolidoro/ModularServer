@@ -6,6 +6,8 @@
 
 // See README.md for more information
 
+using namespace RemoteDevice;
+
 const int led_pin = 13;
 const int baudrate = 9600;
 

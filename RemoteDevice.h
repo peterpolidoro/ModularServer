@@ -23,6 +23,8 @@
 #include "utility/Constants.h"
 
 
+namespace RemoteDevice
+{
 class RemoteDevice
 {
 public:
@@ -68,6 +70,6 @@ private:
   void getResponseCodesCallback();
   void help();
 };
-
-extern RemoteDevice remote_device;
+}
+extern RemoteDevice::RemoteDevice remote_device;
 #endif

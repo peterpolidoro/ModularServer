@@ -10,6 +10,8 @@
 
 using namespace ArduinoJson;
 
+namespace RemoteDevice
+{
 RemoteDevice::RemoteDevice(Stream &stream)
 {
   setRequestStream(stream);
@@ -449,5 +451,5 @@ void RemoteDevice::help()
   }
   response["methods"] = methods;
 }
-
-RemoteDevice remote_device(Serial);
+}
+RemoteDevice::RemoteDevice remote_device(Serial);

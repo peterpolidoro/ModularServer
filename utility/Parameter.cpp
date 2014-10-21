@@ -9,6 +9,8 @@
 
 using namespace ArduinoJson;
 
+namespace RemoteDevice
+{
 Parameter::Parameter(char *name="")
 {
   setName(name);
@@ -96,4 +98,5 @@ char* Parameter::getName()
 char* Parameter::getUnits()
 {
   return units_;
+}
 }

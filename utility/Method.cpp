@@ -10,6 +10,8 @@
 
 using namespace ArduinoJson;
 
+namespace RemoteDevice
+{
 Method::Method(char *name="")
 {
   setName(name);
@@ -100,4 +102,5 @@ void Method::reservedCallback(RemoteDevice *dev)
   {
     (dev->*reserved_callback_)();
   }
+}
 }

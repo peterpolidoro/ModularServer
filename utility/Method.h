@@ -15,6 +15,8 @@
 #include "Constants.h"
 
 
+namespace RemoteDevice
+{
 class RemoteDevice;
 
 typedef void (*Callback)(void);
@@ -44,5 +46,5 @@ private:
   int parameter_count_;
   friend class RemoteDevice;
 };
-
+}
 #endif
