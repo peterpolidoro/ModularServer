@@ -302,6 +302,13 @@ void RemoteDevice::parameterHelp(int method_index, int parameter_index)
       break;
     case DOUBLE_PARAMETER:
       parameter_help_object_["type"] = "double";
+      if (parameter.rangeIsSet())
+      {
+        double min = parameter.getMin().d;
+        double max = parameter.getMax().d;
+        parameter_help_object_["min"].set<DOUBLE_DIGITS>(min);
+        parameter_help_object_["max"].set<DOUBLE_DIGITS>(max);
+      }
       break;
     case STRING_PARAMETER:
       parameter_help_object_["type"] = "string";
@@ -334,18 +341,21 @@ boolean RemoteDevice::checkParameter(int method_index, int parameter_index, Pars
       }
       break;
     case DOUBLE_PARAMETER:
-      // if (parameter.rangeIsSet())
-      // {
-      //   double value = (double)json_value;
-      //   double min = parameter.getMin().d;
-      //   double max = parameter.getMax().d;
-      //   if ((value < min) || (value > max))
-      //   {
-      //     parameter_ok = false;
-      //     min_string = String((double)min);
-      //     max_string = String((double)max);
-      //   }
-      // }
+      if (parameter.rangeIsSet())
+      {
+        double value = (double)json_value;
+        double min = parameter.getMin().d;
+        double max = parameter.getMax().d;
+        if ((value < min) || (value > max))
+        {
+          parameter_ok = false;
+          char temp_string[10];
+          dtostrf(min,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+          min_string = String(temp_string);
+          dtostrf(max,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+          max_string = String(temp_string);
+        }
+      }
       break;
     case STRING_PARAMETER:
       break;
@@ -353,7 +363,7 @@ boolean RemoteDevice::checkParameter(int method_index, int parameter_index, Pars
   if (!parameter_ok)
   {
     response["status"] = ERROR;
-    String error = String("Parameter value out of range. ");
+    String error = String("Parameter value out of range: ");
     error += min_string;
     error += String(" <= ");
     error += String(parameter.getName());

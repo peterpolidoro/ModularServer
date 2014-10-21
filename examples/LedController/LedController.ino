@@ -28,14 +28,14 @@ void setLedOffCallback()
 
 void getLedPinCallback()
 {
-  remote_device.response["result"] = led_pin;
+  remote_device.response["led_pin"] = led_pin;
 }
 
 void blinkLedCallback()
 {
-  non_block_blink.duration_on = (long)remote_device.parameters["duration_on"];
-  non_block_blink.duration_off = (long)remote_device.parameters["duration_off"];
-  non_block_blink.count = (long)remote_device.parameters["count"];
+  non_block_blink.setDurationOn((double)remote_device.parameters["duration_on"]);
+  non_block_blink.setDurationOff((double)remote_device.parameters["duration_off"]);
+  non_block_blink.setCount((long)remote_device.parameters["count"]);
   non_block_blink.start();
 }
 
@@ -62,14 +62,14 @@ void setup()
   Method blink_led_method("blinkLed");
   blink_led_method.attachCallback(blinkLedCallback);
   Parameter duration_on_parameter("duration_on");
-  duration_on_parameter.setUnits("ms");
-  duration_on_parameter.setRange((long)100,(long)2000);
+  duration_on_parameter.setUnits("s");
+  duration_on_parameter.setRange(0.1,2.5);
   blink_led_method.addParameter(duration_on_parameter);
   Parameter duration_off_parameter = duration_on_parameter;
   duration_off_parameter.setName("duration_off");
   blink_led_method.addParameter(duration_off_parameter);
   Parameter count_parameter("count");
-  count_parameter.setRange((long)1,(long)100);
+  count_parameter.setRange(1,100);
   blink_led_method.addParameter(count_parameter);
   remote_device.addMethod(blink_led_method);
 

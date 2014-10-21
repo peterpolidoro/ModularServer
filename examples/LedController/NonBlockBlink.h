@@ -17,13 +17,16 @@ class NonBlockBlink
 {
 public:
   NonBlockBlink(int led_pin);
-  unsigned int duration_on;
-  unsigned int duration_off;
-  unsigned int count;
   void start();
   void stop();
   void update();
+  void setDurationOn(double value);
+  void setDurationOff(double value);
+  void setCount(long value);
 private:
+  int duration_on_;
+  int duration_off_;
+  int count_;
   int led_pin_;
   int led_state_;
   boolean enabled_;

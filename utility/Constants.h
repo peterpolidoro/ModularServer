@@ -26,6 +26,8 @@ const int METHOD_COUNT_MAX = 32;
 const int STRING_LENGTH_PARAMETERS = 257;
 const int STRING_LENGTH_ERROR = 257;
 
+const int DOUBLE_DIGITS = 4;
+
 enum ResponseCodes
   {
     ERROR=0,

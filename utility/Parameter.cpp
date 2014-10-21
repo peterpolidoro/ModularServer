@@ -52,6 +52,14 @@ void Parameter::setRange(long min, long max)
   range_is_set_ = true;
 }
 
+void Parameter::setRange(int min, int max)
+{
+  min_.l = (long)min;
+  max_.l = (long)max;
+  setTypeLong();
+  range_is_set_ = true;
+}
+
 void Parameter::setRange(double min, double max)
 {
   min_.d = min;

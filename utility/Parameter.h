@@ -31,6 +31,7 @@ public:
   void setTypeDouble();
   void setTypeString();
   void setRange(long min, long max);
+  void setRange(int min, int max);
   void setRange(double min, double max);
   void removeRange();
 private:

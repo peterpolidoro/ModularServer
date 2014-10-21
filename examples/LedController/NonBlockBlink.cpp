@@ -10,19 +10,19 @@
 NonBlockBlink::NonBlockBlink(int led_pin) :
   led_pin_(led_pin)
 {
-  duration_on = 300;
-  duration_off = 500;
-  count = 10;
+  duration_on_ = 300;
+  duration_off_ = 500;
+  count_ = 10;
 }
 
 void NonBlockBlink::start()
 {
-  if (count > 0)
+  if (count_ > 0)
   {
     previous_time_ = millis();
     led_state_ = HIGH;
     digitalWrite(led_pin_, led_state_);
-    interval_ = duration_on;
+    interval_ = duration_on_;
     counter_ = 0;
     enabled_ = true;
   }
@@ -45,14 +45,14 @@ void NonBlockBlink::update()
       if (led_state_ == LOW)
       {
         led_state_ = HIGH;
-        interval_ = duration_on;
+        interval_ = duration_on_;
       }
       else
       {
         led_state_ = LOW;
-        interval_ = duration_off;
+        interval_ = duration_off_;
         counter_++;
-        if (counter_ >= count)
+        if (counter_ >= count_)
         {
           stop();
         }
@@ -61,4 +61,19 @@ void NonBlockBlink::update()
       digitalWrite(led_pin_, led_state_);
     }
   }
+}
+
+void NonBlockBlink::setDurationOn(double value)
+{
+  duration_on_ = (int)(value*1000);
+}
+
+void NonBlockBlink::setDurationOff(double value)
+{
+  duration_off_ = (int)(value*1000);
+}
+
+void NonBlockBlink::setCount(long value)
+{
+  count_ = (long)value;
 }

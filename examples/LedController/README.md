@@ -126,10 +126,10 @@ Example Response:
     "name": "duration_on",
     "position": 0,
     "method": "blinkLed",
-    "units": "ms",
-    "type": "long",
-    "min": 100,
-    "max": 2000
+    "units": "s",
+    "type": "double",
+    "min": 0.1000,
+    "max": 2.5000
   },
   "status": "success"
 }
@@ -138,7 +138,7 @@ Example Response:
 Example Method:
 
 ```shell
-blinkLed 500 200 20
+blinkLed 0.5 0.2 20
 ```
 
 Example Response:
@@ -169,14 +169,14 @@ IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
 dev.blink_led('?')
 ['duration_on', 'duration_off', 'count']
 dev.blink_led('duration_on','?')
-{'max': 2000,
+{'max': 2.5,
  'method': 'blinkLed',
- 'min': 100,
+ 'min': 0.1,
  'name': 'duration_on',
  'position': 0,
- 'type': 'long',
- 'units': 'ms'}
-dev.blink_led(500,200,20)
+ 'type': 'double',
+ 'units': 's'}
+dev.blink_led(0.5,0.2,20)
 ```
 
 For more details on the Python interface:
@@ -212,7 +212,8 @@ device responded with error, Incorrect number of parameters. 0 given. 3 needed.
 dev.blinkLed('?')
 ans =
 'duration_on'    'duration_off'    'count'
-dev.blinkLed(500,200,20)
+dev.blinkLed('duration_on','?')
+dev.blinkLed(0.5,0.2,20)
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```
