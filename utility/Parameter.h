@@ -13,6 +13,7 @@
 #include "WProgram.h"
 #endif
 #include "JsonGenerator.h"
+#include "Flash.h"
 #include "Constants.h"
 
 
@@ -24,9 +25,9 @@ class RemoteDevice;
 class Parameter
 {
 public:
-  Parameter(char *name);
-  void setName(char *name);
-  void setUnits(char *units);
+  Parameter(_FLASH_STRING& name);
+  void setName(_FLASH_STRING& name);
+  void setUnits(_FLASH_STRING& name);
   void setTypeLong();
   void setTypeDouble();
   void setTypeString();
@@ -35,15 +36,15 @@ public:
   void setRange(double min, double max);
   void removeRange();
 private:
-  char name_[STRING_LENGTH_PARAMETER_NAME];
-  char units_[STRING_LENGTH_PARAMETER_UNITS];
+  _FLASH_STRING *name_ptr_;
+  _FLASH_STRING *units_ptr_;
   ParameterType type_;
   NumberType min_;
   NumberType max_;
   boolean range_is_set_;
   boolean compareName(char *name_to_compare);
-  char* getName();
-  char* getUnits();
+  _FLASH_STRING* getNamePointer();
+  _FLASH_STRING* getUnitsPointer();
   ParameterType getType();
   boolean rangeIsSet();
   NumberType getMin();

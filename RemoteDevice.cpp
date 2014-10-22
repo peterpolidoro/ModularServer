@@ -12,31 +12,39 @@ using namespace ArduinoJson;
 
 namespace RemoteDevice
 {
+
+FLASH_STRING(default_device_name,"");
+FLASH_STRING(get_device_info_method_name,"getDeviceInfo");
+FLASH_STRING(get_method_ids_method_name,"getMethodIds");
+FLASH_STRING(get_response_codes_method_name,"getResponseCodes");
+FLASH_STRING(help_method_name,"?");
+FLASH_STRING(get_memory_free_method_name,"getMemoryFree");
+
 RemoteDevice::RemoteDevice(Stream &stream)
 {
   setRequestStream(stream);
-  setName("");
+  setName(default_device_name);
   model_number_ = 0;
   serial_number_ = 0;
   firmware_number_ = 0;
 
-  Method get_device_info_method("getDeviceInfo");
+  Method get_device_info_method(get_device_info_method_name);
   get_device_info_method.attachReservedCallback(&RemoteDevice::getDeviceInfoCallback);
   addMethod(get_device_info_method);
 
-  Method get_methods_method("getMethodIds");
-  get_methods_method.attachReservedCallback(&RemoteDevice::getMethodIdsCallback);
-  addMethod(get_methods_method);
+  Method get_method_ids_method(get_method_ids_method_name);
+  get_method_ids_method.attachReservedCallback(&RemoteDevice::getMethodIdsCallback);
+  addMethod(get_method_ids_method);
 
-  Method get_response_codes_method("getResponseCodes");
+  Method get_response_codes_method(get_response_codes_method_name);
   get_response_codes_method.attachReservedCallback(&RemoteDevice::getResponseCodesCallback);
   addMethod(get_response_codes_method);
 
-  Method help_method("?");
+  Method help_method(help_method_name);
   help_method.attachReservedCallback(&RemoteDevice::help);
   addMethod(help_method);
 
-  Method get_memory_free_method("getMemoryFree");
+  Method get_memory_free_method(get_memory_free_method_name);
   get_memory_free_method.attachCallback(getMemoryFreeCallback);
   addMethod(get_memory_free_method);
 }
@@ -130,24 +138,26 @@ void RemoteDevice::processRequest()
 
 void RemoteDevice::addMethod(Method method)
 {
-  char* name = method.getName();
-  if (String(name).length() > 0)
+  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
+  _FLASH_STRING* method_name_ptr = method.getNamePointer();
+  method_name_ptr->copy(method_name);
+  if (String(method_name).length() > 0)
   {
-    int method_index = getMethodIndexByName(name);
+    int method_index = getMethodIndexByName(method_name);
     if (method_index < 0)
     {
       method_vector_.push_back(method);
     }
     else
     {
-      method_vector_[method_index] = Method(name);
+      method_vector_[method_index] = Method(*method_name_ptr);
     }
   }
 }
 
-void RemoteDevice::setName(char *name)
+void RemoteDevice::setName(_FLASH_STRING& name)
 {
-  strncpy(name_,name,STRING_LENGTH_DEVICE_NAME);
+  name_ptr_ = &name;
 }
 
 void RemoteDevice::setModelNumber(int model_number)
@@ -214,6 +224,8 @@ boolean RemoteDevice::createParametersObject(int method_index, Parser::JsonArray
   String parameters_string = "{";
   String parameter_template = "\"{key}\":{value}";
   String parameter_string;
+  char parameter_name[PARAMETER_COUNT_MAX][STRING_LENGTH_PARAMETER_NAME] = {0};
+  _FLASH_STRING* parameter_name_ptr;
   for (Parser::JsonArrayIterator it=json_array.begin(); it!=json_array.end(); ++it)
   {
     if (it!=json_array.begin())
@@ -228,8 +240,9 @@ boolean RemoteDevice::createParametersObject(int method_index, Parser::JsonArray
         {
           parameter_string = parameter_template;
         }
-        char *parameter_name = method_vector_[method_index].parameter_vector_[parameter_index].getName();
-        parameter_string.replace("{key}",parameter_name);
+        parameter_name_ptr = method_vector_[method_index].parameter_vector_[parameter_index].getNamePointer();
+        parameter_name_ptr->copy(parameter_name[parameter_index]);
+        parameter_string.replace("{key}",parameter_name[parameter_index]);
         char* value_char_array = (char*)*it;
         parameter_string.replace("{value}",value_char_array);
         parameters_string += parameter_string;
@@ -242,8 +255,10 @@ boolean RemoteDevice::createParametersObject(int method_index, Parser::JsonArray
     }
   }
   parameters_string = parameters_string + "}";
+  // Serial << "parameters_string: " << parameters_string << endl;
   char parameters_char_array[STRING_LENGTH_PARAMETERS];
   parameters_string.toCharArray(parameters_char_array,STRING_LENGTH_PARAMETERS);
+  // Serial << "parameters_char_array: " << parameters_char_array << endl;
   parameters = parser_.parse(parameters_char_array);
   parameter_count_ = parameter_index;
   return true;
@@ -266,13 +281,19 @@ void RemoteDevice::methodHelp(int method_index)
   method_help_array_ = Generator::JsonArray<PARAMETER_COUNT_MAX>();
   int parameter_index = 0;
   std::vector<Parameter>& parameter_vector = method_vector_[method_index].parameter_vector_;
+  // char parameter_name[PARAMETER_COUNT_MAX][STRING_LENGTH_PARAMETER_NAME] = {0};
+  _FLASH_STRING* parameter_name_ptr;
   for (std::vector<Parameter>::iterator it = parameter_vector.begin();
        it != parameter_vector.end();
        ++it)
   {
     if (parameter_index < PARAMETER_COUNT_MAX)
     {
-      method_help_array_.add(it->getName());
+      parameter_name_ptr = it->getNamePointer();
+      parameter_name_ptr->copy(parameter_name_array_[parameter_index]);
+      // Serial << "parameter_name_array_[parameter_index]: " << parameter_name_array_[parameter_index] << endl;
+      // Serial << "parameter_name_ptr.length(): " << parameter_name_ptr->length() << endl;
+      method_help_array_.add(parameter_name_array_[parameter_index]);
       parameter_index++;
     }
   }
@@ -281,15 +302,25 @@ void RemoteDevice::methodHelp(int method_index)
 
 void RemoteDevice::parameterHelp(int method_index, int parameter_index)
 {
+  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
+  _FLASH_STRING* method_name_ptr = method_vector_[method_index].getNamePointer();
+  method_name_ptr->copy(method_name);
+
   parameter_help_object_ = Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP>();
   Parameter& parameter = method_vector_[method_index].parameter_vector_[parameter_index];
-  parameter_help_object_["name"] = parameter.getName();
+  char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+  _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+  parameter_name_ptr->copy(parameter_name);
+  char parameter_units[STRING_LENGTH_PARAMETER_UNITS] = {0};
+  _FLASH_STRING* parameter_units_ptr = parameter.getUnitsPointer();
+  parameter_units_ptr->copy(parameter_units);
+
+  parameter_help_object_["name"] = parameter_name;
   parameter_help_object_["position"] = parameter_index;
-  parameter_help_object_["method"] = method_vector_[method_index].getName();
-  char* units = parameter.getUnits();
-  if (strcmp(units,"") != 0)
+  parameter_help_object_["method"] = method_name;
+  if (strcmp(parameter_units,"") != 0)
   {
-    parameter_help_object_["units"] = units;
+    parameter_help_object_["units"] = parameter_units;
   }
   ParameterType type = parameter.getType();
   switch (type)
@@ -370,7 +401,10 @@ boolean RemoteDevice::checkParameter(int method_index, int parameter_index, Pars
     String error = String("Parameter value out of range: ");
     error += min_string;
     error += String(" <= ");
-    error += String(parameter.getName());
+    char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+    _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    parameter_name_ptr->copy(parameter_name);
+    error += String(parameter_name);
     error += String(" <= ");
     error += max_string;
     char error_str[STRING_LENGTH_ERROR];
@@ -479,7 +513,9 @@ int RemoteDevice::countJsonArrayElements(Parser::JsonArray &json_array)
 
 void RemoteDevice::getDeviceInfoCallback()
 {
-  response["name"] = name_;
+  char device_name[STRING_LENGTH_DEVICE_NAME] = {0};
+  name_ptr_->copy(device_name);
+  response["name"] = device_name;
   response["model_number"] = model_number_;
   response["serial_number"] = serial_number_;
   response["firmware_number"] = firmware_number_;
@@ -487,6 +523,8 @@ void RemoteDevice::getDeviceInfoCallback()
 
 void RemoteDevice::getMethodIdsCallback()
 {
+  char method_name[METHOD_COUNT_MAX][STRING_LENGTH_METHOD_NAME] = {0};
+  _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();
        ++it)
@@ -494,9 +532,10 @@ void RemoteDevice::getMethodIdsCallback()
     int method_index = std::distance(method_vector_.begin(),it);
     if (!method_vector_[method_index].isReserved())
     {
-      char* method_name = it->getName();
+      method_name_ptr = it->getNamePointer();
+      method_name_ptr->copy(method_name[method_index]);
       int method_id = method_index;
-      response[method_name] = method_id;
+      response[method_name[method_index]] = method_id;
     }
   }
 }
@@ -510,12 +549,16 @@ void RemoteDevice::getResponseCodesCallback()
 void RemoteDevice::help()
 {
   Generator::JsonObject<JSON_OBJECT_SIZE_DEVICE_INFO> device_info;
-  device_info["name"] = name_;
+  char device_name[STRING_LENGTH_DEVICE_NAME] = {0};
+  name_ptr_->copy(device_name);
+  device_info["name"] = device_name;
   device_info["model_number"] = model_number_;
   device_info["serial_number"] = serial_number_;
   device_info["firmware_number"] = firmware_number_;
   response["device_info"] = device_info;
   Generator::JsonArray<METHOD_COUNT_MAX> methods;
+  char method_name[METHOD_COUNT_MAX][STRING_LENGTH_METHOD_NAME] = {0};
+  _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();
        ++it)
@@ -523,8 +566,9 @@ void RemoteDevice::help()
     int method_index = std::distance(method_vector_.begin(),it);
     if (!method_vector_[method_index].isReserved())
     {
-      char* method_name = it->getName();
-      methods.add(method_name);
+      method_name_ptr = it->getNamePointer();
+      method_name_ptr->copy(method_name[method_index]);
+      methods.add(method_name[method_index]);
     }
   }
   response["methods"] = methods;

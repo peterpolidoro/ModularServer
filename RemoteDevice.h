@@ -19,6 +19,7 @@
 #include "StandardCplusplus.h"
 #include "vector"
 #include "MemoryFree.h"
+#include "Flash.h"
 #include "utility/Parameter.h"
 #include "utility/Method.h"
 #include "utility/Constants.h"
@@ -33,24 +34,26 @@ public:
   void setRequestStream(Stream &stream);
   void processRequest();
   void addMethod(Method method);
-  void setName(char *name);
+  void setName(_FLASH_STRING& name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
   ArduinoJson::Generator::JsonObject<JSON_OBJECT_SIZE_RESPONSE> response;
   ArduinoJson::Parser::JsonObject parameters;
+  // ArduinoJson::Parser::JsonValue getParameter(int parameter_index);
 private:
   Stream *stream_ptr_;
   char request_[STRING_LENGTH_REQUEST];
   ArduinoJson::Parser::JsonParser<JSON_PARSER_SIZE> parser_;
   RequestType request_type_;
   std::vector<Method> method_vector_;
-  char name_[STRING_LENGTH_DEVICE_NAME];
+  _FLASH_STRING *name_ptr_;
   int model_number_;
   int serial_number_;
   int firmware_number_;
 
   ArduinoJson::Generator::JsonArray<PARAMETER_COUNT_MAX> method_help_array_;
   ArduinoJson::Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP> parameter_help_object_;
+  char parameter_name_array_[PARAMETER_COUNT_MAX][STRING_LENGTH_PARAMETER_NAME];
   int parameter_count_;
 
   void processObjectRequest(ArduinoJson::Parser::JsonObject &json_object);

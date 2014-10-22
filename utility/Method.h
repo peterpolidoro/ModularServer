@@ -11,6 +11,7 @@
 #include "StandardCplusplus.h"
 #include "vector"
 #include "JsonGenerator.h"
+#include "Flash.h"
 #include "Parameter.h"
 #include "Constants.h"
 
@@ -25,16 +26,16 @@ typedef void (RemoteDevice::*ReservedCallback)(void);
 class Method
 {
 public:
-  Method(char *name);
-  void setName(char *name);
+  Method(_FLASH_STRING& name);
+  void setName(_FLASH_STRING& name);
   void attachCallback(Callback callback);
   void addParameter(Parameter parameter);
 private:
-  char name_[STRING_LENGTH_METHOD_NAME];
+  _FLASH_STRING *name_ptr_;
   Callback callback_;
   boolean callback_attached_;
   boolean compareName(char *name_to_compare);
-  char* getName();
+  _FLASH_STRING* getNamePointer();
   void callback();
   ReservedCallback reserved_callback_;
   boolean reserved_;

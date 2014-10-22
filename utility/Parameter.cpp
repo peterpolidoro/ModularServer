@@ -11,22 +11,25 @@ using namespace ArduinoJson;
 
 namespace RemoteDevice
 {
-Parameter::Parameter(char *name="")
+FLASH_STRING(default_parameter_name,"");
+FLASH_STRING(default_parameter_units,"");
+
+Parameter::Parameter(_FLASH_STRING& name=default_parameter_name)
 {
   setName(name);
-  setUnits("");
+  setUnits(default_parameter_units);
   setTypeLong();
   range_is_set_ = false;
 }
 
-void Parameter::setName(char *name)
+void Parameter::setName(_FLASH_STRING& name)
 {
-  strncpy(name_,name,STRING_LENGTH_PARAMETER_NAME);
+  name_ptr_ = &name;
 }
 
-void Parameter::setUnits(char *units)
+void Parameter::setUnits(_FLASH_STRING& units)
 {
-  strncpy(units_,units,STRING_LENGTH_PARAMETER_UNITS);
+  units_ptr_ = &units;
 }
 
 void Parameter::setTypeLong()
@@ -95,16 +98,18 @@ NumberType Parameter::getMax()
 
 boolean Parameter::compareName(char *name_to_compare)
 {
-  return String(name_).equalsIgnoreCase(name_to_compare);
+  char name[STRING_LENGTH_PARAMETER_NAME] = {0};
+  name_ptr_->copy(name);
+  return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-char* Parameter::getName()
+_FLASH_STRING* Parameter::getNamePointer()
 {
-  return name_;
+  return name_ptr_;
 }
 
-char* Parameter::getUnits()
+_FLASH_STRING* Parameter::getUnitsPointer()
 {
-  return units_;
+  return units_ptr_;
 }
 }

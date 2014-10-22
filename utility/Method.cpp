@@ -12,7 +12,9 @@ using namespace ArduinoJson;
 
 namespace RemoteDevice
 {
-Method::Method(char *name="")
+FLASH_STRING(default_method_name,"");
+
+Method::Method(_FLASH_STRING& name=default_method_name)
 {
   setName(name);
   callback_attached_ = false;
@@ -20,19 +22,21 @@ Method::Method(char *name="")
   parameter_count_ = 0;
 }
 
-void Method::setName(char *name)
+void Method::setName(_FLASH_STRING& name)
 {
-  strncpy(name_,name,STRING_LENGTH_METHOD_NAME);
+  name_ptr_ = &name;
 }
 
 boolean Method::compareName(char *name_to_compare)
 {
-  return String(name_).equalsIgnoreCase(name_to_compare);
+  char name[STRING_LENGTH_METHOD_NAME] = {0};
+  name_ptr_->copy(name);
+  return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-char* Method::getName()
+_FLASH_STRING* Method::getNamePointer()
 {
-  return name_;
+  return name_ptr_;
 }
 
 void Method::attachCallback(Callback callback)
@@ -44,10 +48,12 @@ void Method::attachCallback(Callback callback)
 
 void Method::addParameter(Parameter parameter)
 {
-  char* name = parameter.getName();
-  if (String(name).length() > 0)
+  char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+  _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+  parameter_name_ptr->copy(parameter_name);
+  if (String(parameter_name).length() > 0)
   {
-    int parameter_index = getParameterIndex(name);
+    int parameter_index = getParameterIndex(parameter_name);
     if (parameter_index < 0)
     {
       parameter_vector_.push_back(parameter);
@@ -55,7 +61,7 @@ void Method::addParameter(Parameter parameter)
     }
     else
     {
-      parameter_vector_[parameter_index] = Parameter(name);
+      parameter_vector_[parameter_index] = Parameter(*parameter_name_ptr);
     }
   }
 }
