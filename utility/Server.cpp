@@ -142,26 +142,7 @@ void Server::handleRequest()
   }
 }
 
-void Server::addMethod(Method method)
-{
-  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
-  _FLASH_STRING* method_name_ptr = method.getNamePointer();
-  method_name_ptr->copy(method_name);
-  if (String(method_name).length() > 0)
-  {
-    int method_index = findMethodIndexByName(method_name);
-    if (method_index < 0)
-    {
-      method_vector_.push_back(method);
-    }
-    else
-    {
-      method_vector_[method_index] = Method(*method_name_ptr);
-    }
-  }
-}
-
-void Server::setName(_FLASH_STRING& name)
+void Server::setName(_FLASH_STRING &name)
 {
   name_ptr_ = &name;
 }
@@ -176,7 +157,49 @@ void Server::setFirmwareNumber(int firmware_number)
   firmware_number_ = firmware_number;
 }
 
-Parser::JsonValue Server::getParameter(_FLASH_STRING& name)
+Method& Server::addMethod(_FLASH_STRING &method_name)
+{
+  int method_index = findMethodIndexByName(method_name);
+  if (method_index < 0)
+  {
+    method_vector_.push_back(Method(method_name));
+    return method_vector_.back();
+  }
+  else
+  {
+    method_vector_[method_index] = Method(method_name);
+    return method_vector_[method_index];
+  }
+}
+
+Method& Server::addMethod(Method method)
+{
+  method_vector_.push_back(method);
+  return method_vector_.back();
+}
+
+Parameter& Server::addParameter(_FLASH_STRING &parameter_name)
+{
+  int parameter_index = findParameterIndexByName(parameter_name);
+  if (parameter_index < 0)
+  {
+    parameter_vector_.push_back(Parameter(parameter_name));
+    return parameter_vector_.back();
+  }
+  else
+  {
+    parameter_vector_[parameter_index] = Parameter(parameter_name);
+    return parameter_vector_[parameter_index];
+  }
+}
+
+Parameter& Server::addParameter(Parameter parameter)
+{
+  parameter_vector_.push_back(parameter);
+  return parameter_vector_.back();
+}
+
+Parser::JsonValue Server::getParameterValue(_FLASH_STRING &name)
 {
   int parameter_index = findParameterIndexByName(name);
   return request_json_array_[parameter_index+1];
@@ -258,16 +281,16 @@ void Server::methodHelp()
 {
   method_help_array_ = Generator::JsonArray<PARAMETER_COUNT_MAX>();
   int parameter_index = 0;
-  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
+  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
   // char parameter_name[PARAMETER_COUNT_MAX][STRING_LENGTH_PARAMETER_NAME] = {0};
   _FLASH_STRING* parameter_name_ptr;
-  for (std::vector<Parameter>::iterator it = parameter_vector.begin();
-       it != parameter_vector.end();
+  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
+       it != parameter_ptr_vector.end();
        ++it)
   {
     if (parameter_index < PARAMETER_COUNT_MAX)
     {
-      parameter_name_ptr = it->getNamePointer();
+      parameter_name_ptr = (*it)->getNamePointer();
       parameter_name_ptr->copy(parameter_name_array_[parameter_index]);
       // Serial << "parameter_name_array_[parameter_index]: " << parameter_name_array_[parameter_index] << endl;
       // Serial << "parameter_name_ptr.length(): " << parameter_name_ptr->length() << endl;
@@ -285,7 +308,7 @@ void Server::parameterHelp(int parameter_index)
   method_name_ptr->copy(method_name);
 
   parameter_help_object_ = Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP>();
-  Parameter& parameter = method_vector_[request_method_index_].parameter_vector_[parameter_index];
+  Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
   char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
   _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
@@ -333,7 +356,7 @@ void Server::parameterHelp(int parameter_index)
 boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
 {
   boolean parameter_ok = true;
-  Parameter& parameter = method_vector_[request_method_index_].parameter_vector_[parameter_index];
+  Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
   ParameterType type = parameter.getType();
   String min_string = "";
   String max_string = "";
@@ -436,6 +459,22 @@ int Server::findMethodIndexByName(char *method_name)
   return method_index;
 }
 
+int Server::findMethodIndexByName(_FLASH_STRING &method_name)
+{
+  int method_index = -1;
+  for (std::vector<Method>::iterator it = method_vector_.begin();
+       it != method_vector_.end();
+       ++it)
+  {
+    if (it->compareName(method_name))
+    {
+      method_index = std::distance(method_vector_.begin(),it);
+      break;
+    }
+  }
+  return method_index;
+}
+
 int Server::processParameterString(char *parameter_string)
 {
   int parameter_index = -1;
@@ -452,8 +491,8 @@ int Server::processParameterString(char *parameter_string)
   {
     parameter_index = findParameterIndexByName(parameter_string);
   }
-  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
-  if ((parameter_index < 0) || (parameter_index >= parameter_vector.size()))
+  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+  if ((parameter_index < 0) || (parameter_index >= parameter_ptr_vector.size()))
   {
     response["status"] = ERROR;
     response["error_message"] = "Unknown parameter.";
@@ -465,14 +504,14 @@ int Server::processParameterString(char *parameter_string)
 int Server::findParameterIndexByName(const char *parameter_name)
 {
   int parameter_index = -1;
-  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
-  for (std::vector<Parameter>::iterator it = parameter_vector.begin();
-       it != parameter_vector.end();
+  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
+       it != parameter_ptr_vector.end();
        ++it)
   {
-    if (it->compareName(parameter_name))
+    if ((*it)->compareName(parameter_name))
     {
-      parameter_index = std::distance(parameter_vector.begin(),it);
+      parameter_index = std::distance(parameter_ptr_vector.begin(),it);
       break;
     }
   }
@@ -482,14 +521,14 @@ int Server::findParameterIndexByName(const char *parameter_name)
 int Server::findParameterIndexByName(_FLASH_STRING &parameter_name)
 {
   int parameter_index = -1;
-  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
-  for (std::vector<Parameter>::iterator it = parameter_vector.begin();
-       it != parameter_vector.end();
+  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
+       it != parameter_ptr_vector.end();
        ++it)
   {
-    if (it->compareName(parameter_name))
+    if ((*it)->compareName(parameter_name))
     {
-      parameter_index = std::distance(parameter_vector.begin(),it);
+      parameter_index = std::distance(parameter_ptr_vector.begin(),it);
       break;
     }
   }

@@ -33,11 +33,14 @@ public:
   Server(Stream &stream=Serial);
   void setRequestStream(Stream &stream);
   void handleRequest();
-  void addMethod(Method method);
-  void setName(_FLASH_STRING& name);
+  void setName(_FLASH_STRING &name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
-  ArduinoJson::Parser::JsonValue getParameter(_FLASH_STRING& name);
+  Method& addMethod(_FLASH_STRING &method_name);
+  Method& addMethod(Method method);
+  Parameter& addParameter(_FLASH_STRING &parameter_name);
+  Parameter& addParameter(Parameter parameter);
+  ArduinoJson::Parser::JsonValue getParameterValue(_FLASH_STRING &name);
   ArduinoJson::Generator::JsonObject<JSON_OBJECT_SIZE_RESPONSE> response;
 private:
   Stream *stream_ptr_;
@@ -46,6 +49,7 @@ private:
   ArduinoJson::Parser::JsonArray request_json_array_;
   RequestType request_type_;
   std::vector<Method> method_vector_;
+  std::vector<Parameter> parameter_vector_;
   _FLASH_STRING *name_ptr_;
   int model_number_;
   int serial_number_;
@@ -60,12 +64,13 @@ private:
   void processRequestArray();
   int processMethodString(char *method_string);
   int findMethodIndexByName(char *method_name);
+  int findMethodIndexByName(_FLASH_STRING &parameter_name);
   int countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array);
   void executeMethod();
   void methodHelp();
   int processParameterString(char *parameter_string);
   int findParameterIndexByName(const char *parameter_name);
-  int findParameterIndexByName(_FLASH_STRING& parameter_name);
+  int findParameterIndexByName(_FLASH_STRING &parameter_name);
   void parameterHelp(int parameter_index);
   boolean checkParameters();
   boolean checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value);

@@ -20,11 +20,14 @@ public:
   RemoteDevice(Stream &stream);
   void setServerStream(Stream &stream);
   void handleServerRequests();
-  void addMethod(Method method);
-  void setName(_FLASH_STRING& name);
+  void setName(_FLASH_STRING &device_name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
-  ArduinoJson::Parser::JsonValue getParameter(_FLASH_STRING& name);
+  Method& addMethod(_FLASH_STRING &method_name);
+  Method& addMethod(Method &method);
+  Parameter& addParameter(_FLASH_STRING &parameter_name);
+  Parameter& addParameter(Parameter &parameter);
+  ArduinoJson::Parser::JsonValue getParameterValue(_FLASH_STRING &parameter_name);
   template<typename T>
   void addToResponse(const char* key, T value)
   {

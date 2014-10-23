@@ -32,14 +32,9 @@ void RemoteDevice::handleServerRequests()
   server_.handleRequest();
 }
 
-void RemoteDevice::addMethod(Method method)
+void RemoteDevice::setName(_FLASH_STRING &device_name)
 {
-  server_.addMethod(method);
-}
-
-void RemoteDevice::setName(_FLASH_STRING& name)
-{
-  server_.setName(name);
+  server_.setName(device_name);
 }
 
 void RemoteDevice::setModelNumber(int model_number)
@@ -52,9 +47,29 @@ void RemoteDevice::setFirmwareNumber(int firmware_number)
   server_.setFirmwareNumber(firmware_number);
 }
 
-Parser::JsonValue RemoteDevice::getParameter(_FLASH_STRING& name)
+Method& RemoteDevice::addMethod(_FLASH_STRING &method_name)
 {
-  return server_.getParameter(name);
+  return server_.addMethod(method_name);
+}
+
+Method& RemoteDevice::addMethod(Method &method)
+{
+  return server_.addMethod(method);
+}
+
+Parameter& RemoteDevice::addParameter(_FLASH_STRING &parameter_name)
+{
+  return server_.addParameter(parameter_name);
+}
+
+Parameter& RemoteDevice::addParameter(Parameter &parameter)
+{
+  return server_.addParameter(parameter);
+}
+
+Parser::JsonValue RemoteDevice::getParameterValue(_FLASH_STRING &parameter_name)
+{
+  return server_.getParameterValue(parameter_name);
 }
 }
 

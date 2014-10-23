@@ -51,7 +51,7 @@ void Method::attachCallback(Callback callback)
   reserved_ = false;
 }
 
-void Method::addParameter(Parameter parameter)
+void Method::addParameter(Parameter &parameter)
 {
   char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
   _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
@@ -61,12 +61,8 @@ void Method::addParameter(Parameter parameter)
     int parameter_index = findParameterIndex(*parameter_name_ptr);
     if (parameter_index < 0)
     {
-      parameter_vector_.push_back(parameter);
+      parameter_ptr_vector_.push_back(&parameter);
       parameter_count_++;
-    }
-    else
-    {
-      parameter_vector_[parameter_index] = Parameter(*parameter_name_ptr);
     }
   }
 }
@@ -74,13 +70,13 @@ void Method::addParameter(Parameter parameter)
 int Method::findParameterIndex(_FLASH_STRING& parameter_name)
 {
   int parameter_index = -1;
-  for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
-       it != parameter_vector_.end();
+  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector_.begin();
+       it != parameter_ptr_vector_.end();
        ++it)
   {
-    if (it->compareName(parameter_name))
+    if ((*it)->compareName(parameter_name))
     {
-      parameter_index = std::distance(parameter_vector_.begin(),it);
+      parameter_index = std::distance(parameter_ptr_vector_.begin(),it);
       break;
     }
   }

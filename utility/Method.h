@@ -29,7 +29,7 @@ public:
   Method(_FLASH_STRING& name);
   void setName(_FLASH_STRING& name);
   void attachCallback(Callback callback);
-  void addParameter(Parameter parameter);
+  void addParameter(Parameter &parameter);
 private:
   _FLASH_STRING *name_ptr_;
   Callback callback_;
@@ -43,7 +43,7 @@ private:
   void attachReservedCallback(ReservedCallback callback);
   boolean isReserved();
   void reservedCallback(Server *server);
-  std::vector<Parameter> parameter_vector_;
+  std::vector<Parameter*> parameter_ptr_vector_;
   int findParameterIndex(_FLASH_STRING& parameter_name);
   int parameter_count_;
   friend class Server;
