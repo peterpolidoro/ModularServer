@@ -42,7 +42,8 @@ private:
   NumberType min_;
   NumberType max_;
   boolean range_is_set_;
-  boolean compareName(char *name_to_compare);
+  boolean compareName(const char *name_to_compare);
+  boolean compareName(_FLASH_STRING& name_to_compare);
   _FLASH_STRING* getNamePointer();
   _FLASH_STRING* getUnitsPointer();
   ParameterType getType();

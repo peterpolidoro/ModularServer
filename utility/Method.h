@@ -34,7 +34,8 @@ private:
   _FLASH_STRING *name_ptr_;
   Callback callback_;
   boolean callback_attached_;
-  boolean compareName(char *name_to_compare);
+  boolean compareName(const char *name_to_compare);
+  boolean compareName(_FLASH_STRING& name_to_compare);
   _FLASH_STRING* getNamePointer();
   void callback();
   ReservedCallback reserved_callback_;
@@ -43,7 +44,7 @@ private:
   boolean isReserved();
   void reservedCallback(Server *server);
   std::vector<Parameter> parameter_vector_;
-  int getParameterIndex(char *parameter_name);
+  int findParameterIndex(_FLASH_STRING& parameter_name);
   int parameter_count_;
   friend class Server;
 };

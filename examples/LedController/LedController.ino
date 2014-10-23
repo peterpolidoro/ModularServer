@@ -45,9 +45,9 @@ void getLedPinCallback()
 
 void blinkLedCallback()
 {
-  double duration_on = remote_device.getParameter("duration_on");
-  double duration_off = remote_device.getParameter("duration_off");
-  long count = remote_device.getParameter("count");
+  double duration_on = remote_device.getParameter(duration_on_parameter_name);
+  double duration_off = remote_device.getParameter(duration_off_parameter_name);
+  long count = remote_device.getParameter(count_parameter_name);
   non_block_blink.setDurationOn(duration_on);
   non_block_blink.setDurationOff(duration_off);
   non_block_blink.setCount(count);

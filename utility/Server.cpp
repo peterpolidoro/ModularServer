@@ -18,6 +18,9 @@ FLASH_STRING(get_device_info_method_name,"getDeviceInfo");
 FLASH_STRING(get_method_ids_method_name,"getMethodIds");
 FLASH_STRING(get_response_codes_method_name,"getResponseCodes");
 FLASH_STRING(help_method_name,"?");
+FLASH_STRING(object_request_error_message,"JSON object requests not supported. Must use compact JSON array format for requests.");
+FLASH_STRING(object_parse_error_message,"Parsing JSON object request failed! Could be invalid JSON or too many tokens.");
+FLASH_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
 
 Server::Server(Stream &stream)
 {
@@ -66,12 +69,18 @@ void Server::handleRequest()
       Parser::JsonObject json_object = parser_.parse(request_);
       if (json_object.success())
       {
-        processObjectRequest(json_object);
+        response["status"] = ERROR;
+        char error_message[STRING_LENGTH_ERROR] = {0};
+        object_request_error_message.copy(error_message);
+        response["error_message"] = error_message;
+        response["received_request"] = request_;
       }
       else
       {
         response["status"] = ERROR;
-        response["error_message"] = "Parsing JSON object request failed! Could be invalid JSON or too many tokens.";
+        char error_message[STRING_LENGTH_ERROR] = {0};
+        object_parse_error_message.copy(error_message);
+        response["error_message"] = error_message;
         response["received_request"] = request_;
       }
     }
@@ -84,15 +93,17 @@ void Server::handleRequest()
         String request_string = String("[") + String(request_) + String("]");
         request_string.toCharArray(request_,STRING_LENGTH_REQUEST);
       }
-      Parser::JsonArray json_array = parser_.parse(request_);
-      if (json_array.success())
+      request_json_array_ = parser_.parse(request_);
+      if (request_json_array_.success())
       {
-        processArrayRequest(json_array);
+        processRequestArray();
       }
       else
       {
         response["status"] = ERROR;
-        response["error_message"] = "Parsing JSON array request failed! Could be invalid JSON or too many tokens.";
+        char error_message[STRING_LENGTH_ERROR] = {0};
+        array_parse_error_message.copy(error_message);
+        response["error_message"] = error_message;
         response["received_request"] = request_;
       }
       if (!response.containsKey("status"))
@@ -138,7 +149,7 @@ void Server::addMethod(Method method)
   method_name_ptr->copy(method_name);
   if (String(method_name).length() > 0)
   {
-    int method_index = getMethodIndexByName(method_name);
+    int method_index = findMethodIndexByName(method_name);
     if (method_index < 0)
     {
       method_vector_.push_back(method);
@@ -165,33 +176,35 @@ void Server::setFirmwareNumber(int firmware_number)
   firmware_number_ = firmware_number;
 }
 
-void Server::processObjectRequest(Parser::JsonObject &json_object)
+Parser::JsonValue Server::getParameter(_FLASH_STRING& name)
 {
+  int parameter_index = findParameterIndexByName(name);
+  return request_json_array_[parameter_index+1];
 }
 
-void Server::processArrayRequest(Parser::JsonArray &json_array)
+void Server::processRequestArray()
 {
-  char* method_string = json_array[0];
-  int method_index = processMethodString(method_string);
-  if (!(method_index < 0))
+  char* method_string = request_json_array_[0];
+  request_method_index_ = processMethodString(method_string);
+  if (!(request_method_index_ < 0))
   {
-    int array_elements_count = countJsonArrayElements(json_array);
+    int array_elements_count = countJsonArrayElements(request_json_array_);
     int parameter_count = array_elements_count - 1;
-    if ((parameter_count == 1) && (String((char*)json_array[1]).equals("?")))
+    if ((parameter_count == 1) && (String((char*)request_json_array_[1]).equals("?")))
     {
-      methodHelp(method_index);
+      methodHelp();
     }
-    else if ((parameter_count == 2) && (String((char*)json_array[2]).equals("?")))
+    else if ((parameter_count == 2) && (String((char*)request_json_array_[2]).equals("?")))
     {
-      int parameter_index = processParameterString(method_index, json_array[1]);
-      parameterHelp(method_index, parameter_index);
+      int parameter_index = processParameterString(request_json_array_[1]);
+      parameterHelp(parameter_index);
     }
-    else if (parameter_count != method_vector_[method_index].parameter_count_)
+    else if (parameter_count != method_vector_[request_method_index_].parameter_count_)
     {
       response["status"] = ERROR;
       String error_request = "Incorrect number of parameters. ";
       error_request += String(parameter_count) + String(" given. ");
-      error_request += String(method_vector_[method_index].parameter_count_);
+      error_request += String(method_vector_[request_method_index_].parameter_count_);
       error_request += String(" needed.");
       char error_str[STRING_LENGTH_ERROR];
       error_request.toCharArray(error_str,STRING_LENGTH_ERROR);
@@ -199,48 +212,24 @@ void Server::processArrayRequest(Parser::JsonArray &json_array)
     }
     else
     {
-      boolean parameters_ok = createParametersObject(method_index,json_array);
-      if (parameters_ok && parameters.success())
+      boolean parameters_ok = checkParameters();
+      if (parameters_ok)
       {
-        executeMethod(method_index);
-      }
-      else if (parameters_ok)
-      {
-        response["status"] = ERROR;
-        response["error_message"] = "Parsing JSON parameters string failed! Could be invalid JSON or too many tokens.";
+        executeMethod();
       }
     }
   }
 }
 
-boolean Server::createParametersObject(int method_index, Parser::JsonArray &json_array)
+boolean Server::checkParameters()
 {
   int parameter_index = 0;
-  String parameters_string = "{";
-  String parameter_template = "\"{key}\":{value}";
-  String parameter_string;
-  char parameter_name[PARAMETER_COUNT_MAX][STRING_LENGTH_PARAMETER_NAME] = {0};
-  _FLASH_STRING* parameter_name_ptr;
-  for (Parser::JsonArrayIterator it=json_array.begin(); it!=json_array.end(); ++it)
+  for (Parser::JsonArrayIterator it=request_json_array_.begin(); it!=request_json_array_.end(); ++it)
   {
-    if (it!=json_array.begin())
+    if (it!=request_json_array_.begin())
     {
-      if (checkParameter(method_index,parameter_index,*it))
+      if (checkParameter(parameter_index,*it))
       {
-        if (parameter_index > 0)
-        {
-          parameter_string = String(",") + parameter_template;
-        }
-        else
-        {
-          parameter_string = parameter_template;
-        }
-        parameter_name_ptr = method_vector_[method_index].parameter_vector_[parameter_index].getNamePointer();
-        parameter_name_ptr->copy(parameter_name[parameter_index]);
-        parameter_string.replace("{key}",parameter_name[parameter_index]);
-        char* value_char_array = (char*)*it;
-        parameter_string.replace("{value}",value_char_array);
-        parameters_string += parameter_string;
         parameter_index++;
       }
       else
@@ -249,33 +238,27 @@ boolean Server::createParametersObject(int method_index, Parser::JsonArray &json
       }
     }
   }
-  parameters_string = parameters_string + "}";
-  // Serial << "parameters_string: " << parameters_string << endl;
-  char parameters_char_array[STRING_LENGTH_PARAMETERS];
-  parameters_string.toCharArray(parameters_char_array,STRING_LENGTH_PARAMETERS);
-  // Serial << "parameters_char_array: " << parameters_char_array << endl;
-  parameters = parser_.parse(parameters_char_array);
   parameter_count_ = parameter_index;
   return true;
 }
 
-void Server::executeMethod(int method_index)
+void Server::executeMethod()
 {
-  if (method_vector_[method_index].isReserved())
+  if (method_vector_[request_method_index_].isReserved())
   {
-    method_vector_[method_index].reservedCallback(this);
+    method_vector_[request_method_index_].reservedCallback(this);
   }
   else
   {
-    method_vector_[method_index].callback();
+    method_vector_[request_method_index_].callback();
   }
 }
 
-void Server::methodHelp(int method_index)
+void Server::methodHelp()
 {
   method_help_array_ = Generator::JsonArray<PARAMETER_COUNT_MAX>();
   int parameter_index = 0;
-  std::vector<Parameter>& parameter_vector = method_vector_[method_index].parameter_vector_;
+  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
   // char parameter_name[PARAMETER_COUNT_MAX][STRING_LENGTH_PARAMETER_NAME] = {0};
   _FLASH_STRING* parameter_name_ptr;
   for (std::vector<Parameter>::iterator it = parameter_vector.begin();
@@ -295,14 +278,14 @@ void Server::methodHelp(int method_index)
   response["parameters"] = method_help_array_;
 }
 
-void Server::parameterHelp(int method_index, int parameter_index)
+void Server::parameterHelp(int parameter_index)
 {
   char method_name[STRING_LENGTH_METHOD_NAME] = {0};
-  _FLASH_STRING* method_name_ptr = method_vector_[method_index].getNamePointer();
+  _FLASH_STRING* method_name_ptr = method_vector_[request_method_index_].getNamePointer();
   method_name_ptr->copy(method_name);
 
   parameter_help_object_ = Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP>();
-  Parameter& parameter = method_vector_[method_index].parameter_vector_[parameter_index];
+  Parameter& parameter = method_vector_[request_method_index_].parameter_vector_[parameter_index];
   char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
   _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
@@ -347,10 +330,10 @@ void Server::parameterHelp(int method_index, int parameter_index)
   response["parameter"] = parameter_help_object_;
 }
 
-boolean Server::checkParameter(int method_index, int parameter_index, Parser::JsonValue json_value)
+boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
 {
   boolean parameter_ok = true;
-  Parameter& parameter = method_vector_[method_index].parameter_vector_[parameter_index];
+  Parameter& parameter = method_vector_[request_method_index_].parameter_vector_[parameter_index];
   ParameterType type = parameter.getType();
   String min_string = "";
   String max_string = "";
@@ -425,7 +408,7 @@ int Server::processMethodString(char *method_string)
   }
   else
   {
-    method_index = getMethodIndexByName(method_string);
+    method_index = findMethodIndexByName(method_string);
     response["method"] = method_string;
   }
   if ((method_index < 0) || (method_index >= method_vector_.size()))
@@ -437,7 +420,7 @@ int Server::processMethodString(char *method_string)
   return method_index;
 }
 
-int Server::getMethodIndexByName(char *method_name)
+int Server::findMethodIndexByName(char *method_name)
 {
   int method_index = -1;
   for (std::vector<Method>::iterator it = method_vector_.begin();
@@ -453,7 +436,7 @@ int Server::getMethodIndexByName(char *method_name)
   return method_index;
 }
 
-int Server::processParameterString(int method_index, char *parameter_string)
+int Server::processParameterString(char *parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = String(parameter_string).toInt();
@@ -467,9 +450,9 @@ int Server::processParameterString(int method_index, char *parameter_string)
   }
   else
   {
-    parameter_index = getParameterIndexByName(method_index, parameter_string);
+    parameter_index = findParameterIndexByName(parameter_string);
   }
-  std::vector<Parameter>& parameter_vector = method_vector_[method_index].parameter_vector_;
+  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
   if ((parameter_index < 0) || (parameter_index >= parameter_vector.size()))
   {
     response["status"] = ERROR;
@@ -479,10 +462,27 @@ int Server::processParameterString(int method_index, char *parameter_string)
   return parameter_index;
 }
 
-int Server::getParameterIndexByName(int method_index, char *parameter_name)
+int Server::findParameterIndexByName(const char *parameter_name)
 {
   int parameter_index = -1;
-  std::vector<Parameter>& parameter_vector = method_vector_[method_index].parameter_vector_;
+  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
+  for (std::vector<Parameter>::iterator it = parameter_vector.begin();
+       it != parameter_vector.end();
+       ++it)
+  {
+    if (it->compareName(parameter_name))
+    {
+      parameter_index = std::distance(parameter_vector.begin(),it);
+      break;
+    }
+  }
+  return parameter_index;
+}
+
+int Server::findParameterIndexByName(_FLASH_STRING &parameter_name)
+{
+  int parameter_index = -1;
+  std::vector<Parameter>& parameter_vector = method_vector_[request_method_index_].parameter_vector_;
   for (std::vector<Parameter>::iterator it = parameter_vector.begin();
        it != parameter_vector.end();
        ++it)

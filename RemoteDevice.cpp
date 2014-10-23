@@ -52,12 +52,14 @@ void RemoteDevice::setFirmwareNumber(int firmware_number)
   server_.setFirmwareNumber(firmware_number);
 }
 
-Parser::JsonValue RemoteDevice::getParameter(const char* key)
+Parser::JsonValue RemoteDevice::getParameter(_FLASH_STRING& name)
 {
-  return server_.parameters[key];
+  return server_.getParameter(name);
 }
 }
+
 RemoteDevice::RemoteDevice remote_device(Serial);
+
 void getMemoryFreeCallback()
 {
   remote_device.addToResponse("memory_free", freeMemory());

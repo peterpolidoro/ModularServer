@@ -96,11 +96,16 @@ NumberType Parameter::getMax()
   return max_;
 }
 
-boolean Parameter::compareName(char *name_to_compare)
+boolean Parameter::compareName(const char *name_to_compare)
 {
   char name[STRING_LENGTH_PARAMETER_NAME] = {0};
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
+}
+
+boolean Parameter::compareName(_FLASH_STRING& name_to_compare)
+{
+  return (&name_to_compare == name_ptr_);
 }
 
 _FLASH_STRING* Parameter::getNamePointer()

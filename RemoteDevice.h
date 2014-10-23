@@ -24,7 +24,7 @@ public:
   void setName(_FLASH_STRING& name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
-  ArduinoJson::Parser::JsonValue getParameter(const char* key);
+  ArduinoJson::Parser::JsonValue getParameter(_FLASH_STRING& name);
   template<typename T>
   void addToResponse(const char* key, T value)
   {
@@ -34,6 +34,9 @@ private:
   Server server_;
 };
 }
+
 extern RemoteDevice::RemoteDevice remote_device;
+
 void getMemoryFreeCallback();
+
 #endif

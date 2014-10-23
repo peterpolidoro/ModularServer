@@ -27,11 +27,16 @@ void Method::setName(_FLASH_STRING& name)
   name_ptr_ = &name;
 }
 
-boolean Method::compareName(char *name_to_compare)
+boolean Method::compareName(const char *name_to_compare)
 {
   char name[STRING_LENGTH_METHOD_NAME] = {0};
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
+}
+
+boolean Method::compareName(_FLASH_STRING& name_to_compare)
+{
+  return (&name_to_compare == name_ptr_);
 }
 
 _FLASH_STRING* Method::getNamePointer()
@@ -53,7 +58,7 @@ void Method::addParameter(Parameter parameter)
   parameter_name_ptr->copy(parameter_name);
   if (String(parameter_name).length() > 0)
   {
-    int parameter_index = getParameterIndex(parameter_name);
+    int parameter_index = findParameterIndex(*parameter_name_ptr);
     if (parameter_index < 0)
     {
       parameter_vector_.push_back(parameter);
@@ -66,7 +71,7 @@ void Method::addParameter(Parameter parameter)
   }
 }
 
-int Method::getParameterIndex(char *parameter_name)
+int Method::findParameterIndex(_FLASH_STRING& parameter_name)
 {
   int parameter_index = -1;
   for (std::vector<Parameter>::iterator it = parameter_vector_.begin();
