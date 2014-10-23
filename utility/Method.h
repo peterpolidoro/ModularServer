@@ -18,10 +18,10 @@
 
 namespace RemoteDevice
 {
-class RemoteDevice;
+class Server;
 
 typedef void (*Callback)(void);
-typedef void (RemoteDevice::*ReservedCallback)(void);
+typedef void (Server::*ReservedCallback)(void);
 
 class Method
 {
@@ -41,11 +41,11 @@ private:
   boolean reserved_;
   void attachReservedCallback(ReservedCallback callback);
   boolean isReserved();
-  void reservedCallback(RemoteDevice *dev);
+  void reservedCallback(Server *server);
   std::vector<Parameter> parameter_vector_;
   int getParameterIndex(char *parameter_name);
   int parameter_count_;
-  friend class RemoteDevice;
+  friend class Server;
 };
 }
 #endif

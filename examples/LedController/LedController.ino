@@ -16,7 +16,6 @@ const int baudrate = 9600;
 // Callbacks must be non-blocking (avoid 'delay')
 NonBlockBlink non_block_blink(led_pin);
 
-
 FLASH_STRING(device_name,"led_controller");
 FLASH_STRING(led_on_method_name,"setLedOn");
 FLASH_STRING(led_off_method_name,"setLedOff");
@@ -26,7 +25,6 @@ FLASH_STRING(duration_on_parameter_name,"duration_on");
 FLASH_STRING(duration_off_parameter_name,"duration_off");
 FLASH_STRING(count_parameter_name,"count");
 FLASH_STRING(seconds_unit,"seconds");
-
 
 void setLedOnCallback()
 {
@@ -42,14 +40,17 @@ void setLedOffCallback()
 
 void getLedPinCallback()
 {
-  remote_device.response["led_pin"] = led_pin;
+  remote_device.addToResponse("led_pin", led_pin);
 }
 
 void blinkLedCallback()
 {
-  non_block_blink.setDurationOn((double)remote_device.parameters["duration_on"]);
-  non_block_blink.setDurationOff((double)remote_device.parameters["duration_off"]);
-  non_block_blink.setCount((long)remote_device.parameters["count"]);
+  double duration_on = remote_device.getParameter("duration_on");
+  double duration_off = remote_device.getParameter("duration_off");
+  long count = remote_device.getParameter("count");
+  non_block_blink.setDurationOn(duration_on);
+  non_block_blink.setDurationOff(duration_off);
+  non_block_blink.setCount(count);
   non_block_blink.start();
 }
 
@@ -93,6 +94,6 @@ void setup()
 
 void loop()
 {
-  remote_device.processRequest();
+  remote_device.handleServerRequests();
   non_block_blink.update();
 }

@@ -102,11 +102,11 @@ boolean Method::isReserved()
   return reserved_;
 }
 
-void Method::reservedCallback(RemoteDevice *dev)
+void Method::reservedCallback(Server *server)
 {
   if ((callback_attached_) && (isReserved()))
   {
-    (dev->*reserved_callback_)();
+    (server->*reserved_callback_)();
   }
 }
 }

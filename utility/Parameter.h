@@ -50,7 +50,7 @@ private:
   NumberType getMin();
   NumberType getMax();
   friend class Method;
-  friend class RemoteDevice;
+  friend class Server;
 };
 }
 #endif
