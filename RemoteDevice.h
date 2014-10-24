@@ -24,9 +24,9 @@ public:
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
   Method& createMethod(_FLASH_STRING &method_name);
-  Method& createMethod(Method &method);
+  Method& copyMethod(Method &method);
   Parameter& createParameter(_FLASH_STRING &parameter_name);
-  Parameter& createParameter(Parameter &parameter);
+  Parameter& copyParameter(Parameter &parameter);
   ArduinoJson::Parser::JsonValue getParameterValue(_FLASH_STRING &parameter_name);
   template<typename T>
   void addToResponse(const char* key, T value)

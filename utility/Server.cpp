@@ -169,7 +169,7 @@ Method& Server::createMethod(_FLASH_STRING &method_name)
   }
 }
 
-Method& Server::createMethod(Method method)
+Method& Server::copyMethod(Method method)
 {
   method_vector_.push_back(method);
   return method_vector_.back();
@@ -190,7 +190,7 @@ Parameter& Server::createParameter(_FLASH_STRING &parameter_name)
   }
 }
 
-Parameter& Server::createParameter(Parameter parameter)
+Parameter& Server::copyParameter(Parameter parameter)
 {
   parameter_vector_.push_back(parameter);
   return parameter_vector_.back();
