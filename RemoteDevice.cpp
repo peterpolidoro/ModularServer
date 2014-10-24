@@ -23,7 +23,7 @@ RemoteDevice::RemoteDevice(Stream &stream)
 
 void RemoteDevice::setServerStream(Stream &stream)
 {
-  server_.setRequestStream(stream);
+  server_.setStream(stream);
 }
 
 void RemoteDevice::handleServerRequests()

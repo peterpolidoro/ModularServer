@@ -19,26 +19,19 @@ const int STRING_LENGTH_REQUEST = 257;
 const int STRING_LENGTH_DEVICE_NAME = 32;
 
 const int JSON_PARSER_SIZE = 32;
-const int JSON_OBJECT_SIZE_RESPONSE = 32;
-const int JSON_OBJECT_SIZE_DEVICE_INFO = 4;
 const int METHOD_COUNT_MAX = 16;
 
-const int STRING_LENGTH_PARAMETERS = 257;
 const int STRING_LENGTH_ERROR = 257;
 
 const int DOUBLE_DIGITS = 4;
+
+const int RESPONSE_INDENT = 2;
+const int RESPONSE_DEPTH_MAX = 8;
 
 enum ResponseCodes
   {
     ERROR=0,
     SUCCESS=1,
-  };
-
-enum RequestType
-  {
-    OBJECT_REQUEST,
-    ARRAY_REQUEST,
-    COMMAND_LINE_REQUEST,
   };
 
 enum ParameterType
@@ -61,8 +54,6 @@ const int PARAMETER_COUNT_MAX = 5;
 // Parameter
 const int STRING_LENGTH_PARAMETER_NAME = 24;
 const int STRING_LENGTH_PARAMETER_UNITS = 8;
-const int STRING_LENGTH_PARAMETER_HELP = 64;
 
-const int JSON_OBJECT_SIZE_PARAMETER_HELP = 8;
 }
 #endif

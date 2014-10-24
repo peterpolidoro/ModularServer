@@ -31,7 +31,7 @@ public:
   template<typename T>
   void addToResponse(const char* key, T value)
   {
-    server_.response[key] = value;
+    server_.addToResponse(key,value);
   }
 private:
   Server server_;
