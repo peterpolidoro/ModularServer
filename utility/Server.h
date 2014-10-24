@@ -36,10 +36,10 @@ public:
   void setName(_FLASH_STRING &name);
   void setModelNumber(int model_number);
   void setFirmwareNumber(int firmware_number);
-  Method& addMethod(_FLASH_STRING &method_name);
-  Method& addMethod(Method method);
-  Parameter& addParameter(_FLASH_STRING &parameter_name);
-  Parameter& addParameter(Parameter parameter);
+  Method& createMethod(_FLASH_STRING &method_name);
+  Method& createMethod(Method method);
+  Parameter& createParameter(_FLASH_STRING &parameter_name);
+  Parameter& createParameter(Parameter parameter);
   ArduinoJson::Parser::JsonValue getParameterValue(_FLASH_STRING &name);
   ArduinoJson::Generator::JsonObject<JSON_OBJECT_SIZE_RESPONSE> response;
 private:

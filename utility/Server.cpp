@@ -29,22 +29,19 @@ Server::Server(Stream &stream)
   model_number_ = 0;
   serial_number_ = 0;
   firmware_number_ = 0;
+  request_method_index_ = -1;
 
-  Method get_device_info_method(get_device_info_method_name);
+  Method& get_device_info_method = createMethod(get_device_info_method_name);
   get_device_info_method.attachReservedCallback(&Server::getDeviceInfoCallback);
-  addMethod(get_device_info_method);
 
-  Method get_method_ids_method(get_method_ids_method_name);
+  Method& get_method_ids_method = createMethod(get_method_ids_method_name);
   get_method_ids_method.attachReservedCallback(&Server::getMethodIdsCallback);
-  addMethod(get_method_ids_method);
 
-  Method get_response_codes_method(get_response_codes_method_name);
+  Method& get_response_codes_method = createMethod(get_response_codes_method_name);
   get_response_codes_method.attachReservedCallback(&Server::getResponseCodesCallback);
-  addMethod(get_response_codes_method);
 
-  Method help_method(help_method_name);
+  Method& help_method = createMethod(help_method_name);
   help_method.attachReservedCallback(&Server::help);
-  addMethod(help_method);
 }
 
 void Server::setRequestStream(Stream &stream)
@@ -157,7 +154,7 @@ void Server::setFirmwareNumber(int firmware_number)
   firmware_number_ = firmware_number;
 }
 
-Method& Server::addMethod(_FLASH_STRING &method_name)
+Method& Server::createMethod(_FLASH_STRING &method_name)
 {
   int method_index = findMethodIndexByName(method_name);
   if (method_index < 0)
@@ -172,13 +169,13 @@ Method& Server::addMethod(_FLASH_STRING &method_name)
   }
 }
 
-Method& Server::addMethod(Method method)
+Method& Server::createMethod(Method method)
 {
   method_vector_.push_back(method);
   return method_vector_.back();
 }
 
-Parameter& Server::addParameter(_FLASH_STRING &parameter_name)
+Parameter& Server::createParameter(_FLASH_STRING &parameter_name)
 {
   int parameter_index = findParameterIndexByName(parameter_name);
   if (parameter_index < 0)
@@ -193,7 +190,7 @@ Parameter& Server::addParameter(_FLASH_STRING &parameter_name)
   }
 }
 
-Parameter& Server::addParameter(Parameter parameter)
+Parameter& Server::createParameter(Parameter parameter)
 {
   parameter_vector_.push_back(parameter);
   return parameter_vector_.back();
@@ -504,15 +501,18 @@ int Server::processParameterString(char *parameter_string)
 int Server::findParameterIndexByName(const char *parameter_name)
 {
   int parameter_index = -1;
-  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
-       it != parameter_ptr_vector.end();
-       ++it)
+  if (request_method_index_ >= 0)
   {
-    if ((*it)->compareName(parameter_name))
+    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+    for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
+         it != parameter_ptr_vector.end();
+         ++it)
     {
-      parameter_index = std::distance(parameter_ptr_vector.begin(),it);
-      break;
+      if ((*it)->compareName(parameter_name))
+      {
+        parameter_index = std::distance(parameter_ptr_vector.begin(),it);
+        break;
+      }
     }
   }
   return parameter_index;
@@ -521,15 +521,18 @@ int Server::findParameterIndexByName(const char *parameter_name)
 int Server::findParameterIndexByName(_FLASH_STRING &parameter_name)
 {
   int parameter_index = -1;
-  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
-       it != parameter_ptr_vector.end();
-       ++it)
+  if (request_method_index_ >= 0)
   {
-    if ((*it)->compareName(parameter_name))
+    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+    for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
+         it != parameter_ptr_vector.end();
+         ++it)
     {
-      parameter_index = std::distance(parameter_ptr_vector.begin(),it);
-      break;
+      if ((*it)->compareName(parameter_name))
+      {
+        parameter_index = std::distance(parameter_ptr_vector.begin(),it);
+        break;
+      }
     }
   }
   return parameter_index;

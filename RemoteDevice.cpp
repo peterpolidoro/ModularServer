@@ -17,9 +17,8 @@ RemoteDevice::RemoteDevice(Stream &stream)
 {
   server_ = Server(stream);
 
-  Method get_memory_free_method(get_memory_free_method_name);
+  Method& get_memory_free_method = createMethod(get_memory_free_method_name);
   get_memory_free_method.attachCallback(getMemoryFreeCallback);
-  addMethod(get_memory_free_method);
 }
 
 void RemoteDevice::setServerStream(Stream &stream)
@@ -47,24 +46,24 @@ void RemoteDevice::setFirmwareNumber(int firmware_number)
   server_.setFirmwareNumber(firmware_number);
 }
 
-Method& RemoteDevice::addMethod(_FLASH_STRING &method_name)
+Method& RemoteDevice::createMethod(_FLASH_STRING &method_name)
 {
-  return server_.addMethod(method_name);
+  return server_.createMethod(method_name);
 }
 
-Method& RemoteDevice::addMethod(Method &method)
+Method& RemoteDevice::createMethod(Method &method)
 {
-  return server_.addMethod(method);
+  return server_.createMethod(method);
 }
 
-Parameter& RemoteDevice::addParameter(_FLASH_STRING &parameter_name)
+Parameter& RemoteDevice::createParameter(_FLASH_STRING &parameter_name)
 {
-  return server_.addParameter(parameter_name);
+  return server_.createParameter(parameter_name);
 }
 
-Parameter& RemoteDevice::addParameter(Parameter &parameter)
+Parameter& RemoteDevice::createParameter(Parameter &parameter)
 {
-  return server_.addParameter(parameter);
+  return server_.createParameter(parameter);
 }
 
 Parser::JsonValue RemoteDevice::getParameterValue(_FLASH_STRING &parameter_name)

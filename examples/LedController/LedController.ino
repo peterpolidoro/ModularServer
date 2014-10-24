@@ -63,25 +63,25 @@ void setup()
   remote_device.setModelNumber(1234);
   remote_device.setFirmwareNumber(1);
 
-  Method led_on_method = remote_device.addMethod(led_on_method_name);
+  Method& led_on_method = remote_device.createMethod(led_on_method_name);
   led_on_method.attachCallback(setLedOnCallback);
 
-  Method led_off_method = remote_device.addMethod(led_off_method_name);
+  Method& led_off_method = remote_device.createMethod(led_off_method_name);
   led_off_method.attachCallback(setLedOffCallback);
 
-  Method get_led_pin_method = remote_device.addMethod(get_led_pin_method_name);
+  Method& get_led_pin_method = remote_device.createMethod(get_led_pin_method_name);
   get_led_pin_method.attachCallback(getLedPinCallback);
 
-  Method blink_led_method = remote_device.addMethod(blink_led_method_name);
+  Method& blink_led_method = remote_device.createMethod(blink_led_method_name);
   blink_led_method.attachCallback(blinkLedCallback);
-  Parameter duration_on_parameter = remote_device.addParameter(duration_on_parameter_name);
+  Parameter& duration_on_parameter = remote_device.createParameter(duration_on_parameter_name);
   duration_on_parameter.setUnits(seconds_unit);
   duration_on_parameter.setRange(0.1,2.5);
   blink_led_method.addParameter(duration_on_parameter);
-  Parameter duration_off_parameter = remote_device.addParameter(duration_on_parameter);
+  Parameter& duration_off_parameter = remote_device.createParameter(duration_on_parameter);
   duration_off_parameter.setName(duration_off_parameter_name);
   blink_led_method.addParameter(duration_off_parameter);
-  Parameter count_parameter = remote_device.addParameter(count_parameter_name);
+  Parameter& count_parameter = remote_device.createParameter(count_parameter_name);
   count_parameter.setRange(1,100);
   blink_led_method.addParameter(count_parameter);
 
