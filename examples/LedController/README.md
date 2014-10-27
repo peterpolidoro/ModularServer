@@ -302,10 +302,14 @@ dev.open()                       % opens a serial connection to the device
 dev.getMethods()                 % get device methods
 Remote Device Methods
 ---------------------
+getMemoryFree
 setLedOn
 setLedOff
 getLedPin
 blinkLed
+dev.getMemoryFree()
+ans =
+        4997
 dev.setLedOn()
 dev.setLedOff()
 dev.blinkLed()
