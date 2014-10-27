@@ -24,6 +24,7 @@ const int METHOD_COUNT_MAX = 16;
 const int STRING_LENGTH_ERROR = 257;
 
 const int DOUBLE_DIGITS = 4;
+const int STRING_LENGTH_DOUBLE = 36;
 
 const int RESPONSE_INDENT = 2;
 const int RESPONSE_DEPTH_MAX = 8;

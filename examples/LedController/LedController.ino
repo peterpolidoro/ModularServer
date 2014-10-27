@@ -78,8 +78,7 @@ void setup()
   duration_on_parameter.setUnits(seconds_unit);
   duration_on_parameter.setRange(0.1,2.5);
   blink_led_method.addParameter(duration_on_parameter);
-  Parameter& duration_off_parameter = remote_device.copyParameter(duration_on_parameter);
-  duration_off_parameter.setName(duration_off_parameter_name);
+  Parameter& duration_off_parameter = remote_device.copyParameter(duration_on_parameter,duration_off_parameter_name);
   blink_led_method.addParameter(duration_off_parameter);
   Parameter& count_parameter = remote_device.createParameter(count_parameter_name);
   count_parameter.setRange(1,100);

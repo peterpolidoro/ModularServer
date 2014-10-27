@@ -17,11 +17,14 @@ FLASH_STRING(default_device_name,"");
 FLASH_STRING(get_device_info_method_name,"getDeviceInfo");
 FLASH_STRING(get_method_ids_method_name,"getMethodIds");
 FLASH_STRING(get_response_codes_method_name,"getResponseCodes");
+FLASH_STRING(get_parameters_method_name,"getParameters");
 FLASH_STRING(help_method_name,"?");
+FLASH_STRING(verbose_help_method_name,"??");
 FLASH_STRING(object_request_error_message,"JSON object requests not supported. Must use compact JSON array format for requests.");
 FLASH_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
 
-Server::Server(Stream &stream)
+Server::Server(Stream &stream) :
+  response_(stream)
 {
   setStream(stream);
   setName(default_device_name);
@@ -30,7 +33,6 @@ Server::Server(Stream &stream)
   firmware_number_ = 0;
   request_method_index_ = -1;
   parameter_count_ = 0;
-  response_ = JsonPrinter(stream);
   error_ = false;
 
   Method& get_device_info_method = createMethod(get_device_info_method_name);
@@ -42,8 +44,14 @@ Server::Server(Stream &stream)
   Method& get_response_codes_method = createMethod(get_response_codes_method_name);
   get_response_codes_method.attachReservedCallback(&Server::getResponseCodesCallback);
 
+  Method& get_parameters_method = createMethod(get_parameters_method_name);
+  get_parameters_method.attachReservedCallback(&Server::getParametersCallback);
+
   Method& help_method = createMethod(help_method_name);
   help_method.attachReservedCallback(&Server::help);
+
+  Method& verbose_help_method = createMethod(verbose_help_method_name);
+  verbose_help_method.attachReservedCallback(&Server::verboseHelp);
 }
 
 void Server::setStream(Stream &stream)
@@ -66,10 +74,10 @@ void Server::handleRequest()
     response_.setCompactPrint();
     if (request_[0] == START_CHAR_JSON_OBJECT)
     {
-        response_.add("status",ERROR);
+        addToResponse("status",ERROR);
         char error_message[STRING_LENGTH_ERROR] = {0};
         object_request_error_message.copy(error_message);
-        response_.add("error_message",error_message);
+        addToResponse("error_message",error_message);
         error_ = true;
     }
     else
@@ -87,35 +95,17 @@ void Server::handleRequest()
       }
       else
       {
-        response_.add("status",ERROR);
+        addToResponse("status",ERROR);
         char error_message[STRING_LENGTH_ERROR] = {0};
         array_parse_error_message.copy(error_message);
-        response_.add("error_message",error_message);
-        response_.add("received_request",request_);
+        addToResponse("error_message",error_message);
+        addToResponse("received_request",request_);
         error_ = true;
       }
       if (!error_)
       {
-        response_.add("status",SUCCESS);
+        addToResponse("status",SUCCESS);
       }
-      // if (request_type_ == COMMAND_LINE_REQUEST)
-      // {
-      //   int status = response["status"];
-      //   if (response.containsKey("method"))
-      //   {
-      //     // Make help response a little less cluttered
-      //     if (strcmp(response["method"],"?") == 0)
-      //     {
-      //       response.remove("method");
-      //       response.remove("status");
-      //     }
-      //   }
-      //   response.prettyPrintTo(*stream_ptr_);
-      // }
-      // else
-      // {
-      //   // response.printTo(*stream_ptr_);
-      // }
     }
     response_.stopObject();
     *stream_ptr_ << endl;
@@ -152,9 +142,10 @@ Method& Server::createMethod(_FLASH_STRING &method_name)
   }
 }
 
-Method& Server::copyMethod(Method method)
+Method& Server::copyMethod(Method method,_FLASH_STRING &method_name)
 {
   method_vector_.push_back(method);
+  method_vector_.back().setName(method_name);
   return method_vector_.back();
 }
 
@@ -173,9 +164,10 @@ Parameter& Server::createParameter(_FLASH_STRING &parameter_name)
   }
 }
 
-Parameter& Server::copyParameter(Parameter parameter)
+Parameter& Server::copyParameter(Parameter parameter,_FLASH_STRING &parameter_name)
 {
   parameter_vector_.push_back(parameter);
+  parameter_vector_.back().setName(parameter_name);
   return parameter_vector_.back();
 }
 
@@ -195,23 +187,28 @@ void Server::processRequestArray()
     int parameter_count = array_elements_count - 1;
     if ((parameter_count == 1) && (String((char*)request_json_array_[1]).equals("?")))
     {
-      methodHelp();
+      methodHelp(request_method_index_);
+    }
+    else if ((parameter_count == 1) && (String((char*)request_json_array_[1]).equals("??")))
+    {
+      verboseMethodHelp(request_method_index_);
     }
     else if ((parameter_count == 2) && (String((char*)request_json_array_[2]).equals("?")))
     {
       int parameter_index = processParameterString(request_json_array_[1]);
-      parameterHelp(parameter_index);
+      Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
+      parameterHelp(parameter);
     }
     else if (parameter_count != method_vector_[request_method_index_].parameter_count_)
     {
-      response_.add("status",ERROR);
+      addToResponse("status",ERROR);
       String error_request = "Incorrect number of parameters. ";
       error_request += String(parameter_count) + String(" given. ");
       error_request += String(method_vector_[request_method_index_].parameter_count_);
       error_request += String(" needed.");
       char error_str[STRING_LENGTH_ERROR];
       error_request.toCharArray(error_str,STRING_LENGTH_ERROR);
-      response_.add("error_message",error_str);
+      addToResponse("error_message",error_str);
       error_ = true;
     }
     else
@@ -228,11 +225,13 @@ void Server::processRequestArray()
 boolean Server::checkParameters()
 {
   int parameter_index = 0;
-  for (Parser::JsonArrayIterator it=request_json_array_.begin(); it!=request_json_array_.end(); ++it)
+  for (Parser::JsonArrayIterator request_it=request_json_array_.begin();
+       request_it!=request_json_array_.end();
+       ++request_it)
   {
-    if (it!=request_json_array_.begin())
+    if (request_it!=request_json_array_.begin())
     {
-      if (checkParameter(parameter_index,*it))
+      if (checkParameter(parameter_index,*request_it))
       {
         parameter_index++;
       }
@@ -258,81 +257,93 @@ void Server::executeMethod()
   }
 }
 
-void Server::methodHelp()
+void Server::methodHelp(int method_index)
 {
   int parameter_index = 0;
-  response_.addKey("parameters");
+  addKeyToResponse("parameters");
   response_.startArray();
-  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[method_index].parameter_ptr_vector_;
   _FLASH_STRING* parameter_name_ptr;
   char parameter_name_char_array[STRING_LENGTH_PARAMETER_NAME];
-  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
-       it != parameter_ptr_vector.end();
-       ++it)
+  for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
+       param_ptr_it != parameter_ptr_vector.end();
+       ++param_ptr_it)
   {
     if (parameter_index < PARAMETER_COUNT_MAX)
     {
-      parameter_name_ptr = (*it)->getNamePointer();
+      parameter_name_ptr = (*param_ptr_it)->getNamePointer();
       parameter_name_ptr->copy(parameter_name_char_array);
-      // Serial << "parameter_name_array_[parameter_index]: " << parameter_name_array_[parameter_index] << endl;
-      // Serial << "parameter_name_ptr.length(): " << parameter_name_ptr->length() << endl;
-      response_.add(parameter_name_char_array);
+      addToResponse(parameter_name_char_array);
       parameter_index++;
     }
   }
   response_.stopArray();
 }
 
-void Server::parameterHelp(int parameter_index)
+void Server::verboseMethodHelp(int method_index)
 {
-  // char method_name[STRING_LENGTH_METHOD_NAME] = {0};
-  // _FLASH_STRING* method_name_ptr = method_vector_[request_method_index_].getNamePointer();
-  // method_name_ptr->copy(method_name);
+  int parameter_index = 0;
+  addKeyToResponse("parameters");
+  response_.startArray();
+  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[method_index].parameter_ptr_vector_;
+  for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
+       param_ptr_it != parameter_ptr_vector.end();
+       ++param_ptr_it)
+  {
+    if (parameter_index < PARAMETER_COUNT_MAX)
+    {
+      startResponseObject();
+      parameterHelp(**param_ptr_it);
+      stopResponseObject();
+    }
+  }
+  response_.stopArray();
+}
 
-  // parameter_help_object_ = Generator::JsonObject<JSON_OBJECT_SIZE_PARAMETER_HELP>();
-  // Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
-  // char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
-  // _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
-  // parameter_name_ptr->copy(parameter_name);
-  // char parameter_units[STRING_LENGTH_PARAMETER_UNITS] = {0};
-  // _FLASH_STRING* parameter_units_ptr = parameter.getUnitsPointer();
-  // parameter_units_ptr->copy(parameter_units);
+void Server::parameterHelp(Parameter &parameter)
+{
+  char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+  _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+  parameter_name_ptr->copy(parameter_name);
+  addKeyToResponse(parameter_name);
 
-  // parameter_help_object_["name"] = parameter_name;
-  // parameter_help_object_["position"] = parameter_index;
-  // parameter_help_object_["method"] = method_name;
-  // if (strcmp(parameter_units,"") != 0)
-  // {
-  //   parameter_help_object_["units"] = parameter_units;
-  // }
-  // ParameterType type = parameter.getType();
-  // switch (type)
-  // {
-  //   case LONG_PARAMETER:
-  //     parameter_help_object_["type"] = "long";
-  //     if (parameter.rangeIsSet())
-  //     {
-  //       long min = parameter.getMin().l;
-  //       long max = parameter.getMax().l;
-  //       parameter_help_object_["min"] = min;
-  //       parameter_help_object_["max"] = max;
-  //     }
-  //     break;
-  //   case DOUBLE_PARAMETER:
-  //     parameter_help_object_["type"] = "double";
-  //     if (parameter.rangeIsSet())
-  //     {
-  //       double min = parameter.getMin().d;
-  //       double max = parameter.getMax().d;
-  //       parameter_help_object_["min"].set<DOUBLE_DIGITS>(min);
-  //       parameter_help_object_["max"].set<DOUBLE_DIGITS>(max);
-  //     }
-  //     break;
-  //   case STRING_PARAMETER:
-  //     parameter_help_object_["type"] = "string";
-  //     break;
-  // }
-  // response_.add("parameter",parameter_help_object_);
+  startResponseObject();
+
+  char parameter_units[STRING_LENGTH_PARAMETER_UNITS] = {0};
+  _FLASH_STRING* parameter_units_ptr = parameter.getUnitsPointer();
+  parameter_units_ptr->copy(parameter_units);
+  if (strcmp(parameter_units,"") != 0)
+  {
+    addToResponse("units",parameter_units);
+  }
+  ParameterType type = parameter.getType();
+  switch (type)
+  {
+    case LONG_PARAMETER:
+      addToResponse("type","long");
+      if (parameter.rangeIsSet())
+      {
+        long min = parameter.getMin().l;
+        long max = parameter.getMax().l;
+        addToResponse("min",min);
+        addToResponse("max",max);
+      }
+      break;
+    case DOUBLE_PARAMETER:
+      addToResponse("type","double");
+      if (parameter.rangeIsSet())
+      {
+        double min = parameter.getMin().d;
+        double max = parameter.getMax().d;
+        addToResponse("min",min);
+        addToResponse("max",max);
+      }
+      break;
+    case STRING_PARAMETER:
+      addToResponse("type","string");
+      break;
+  }
+  stopResponseObject();
 }
 
 boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
@@ -367,7 +378,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
         if ((value < min) || (value > max))
         {
           parameter_ok = false;
-          char temp_string[10];
+          char temp_string[STRING_LENGTH_DOUBLE];
           dtostrf(min,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
           min_string = String(temp_string);
           dtostrf(max,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
@@ -380,7 +391,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   }
   if (!parameter_ok)
   {
-    response_.add("status",ERROR);
+    addToResponse("status",ERROR);
     String error = String("Parameter value out of range: ");
     error += min_string;
     error += String(" <= ");
@@ -392,7 +403,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
     error += max_string;
     char error_str[STRING_LENGTH_ERROR];
     error.toCharArray(error_str,STRING_LENGTH_ERROR);
-    response_.add("error_message",error_str);
+    addToResponse("error_message",error_str);
     error_ = true;
   }
   return parameter_ok;
@@ -405,22 +416,22 @@ int Server::processMethodString(char *method_string)
   if (String(method_string).compareTo("0") == 0)
   {
     method_index = 0;
-    response_.add("method_id",0);
+    addToResponse("method_id",0);
   }
   else if (method_id > 0)
   {
     method_index = method_id;
-    response_.add("method_id",method_id);
+    addToResponse("method_id",method_id);
   }
   else
   {
     method_index = findMethodIndex(method_string);
-    response_.add("method",method_string);
+    addToResponse("method",method_string);
   }
   if ((method_index < 0) || (method_index >= method_vector_.size()))
   {
-    response_.add("status",ERROR);
-    response_.add("error_message","Unknown method.");
+    addToResponse("status",ERROR);
+    addToResponse("error_message","Unknown method.");
     error_ = true;
     method_index = -1;
   }
@@ -430,13 +441,13 @@ int Server::processMethodString(char *method_string)
 int Server::findMethodIndex(char *method_name)
 {
   int method_index = -1;
-  for (std::vector<Method>::iterator it = method_vector_.begin();
-       it != method_vector_.end();
-       ++it)
+  for (std::vector<Method>::iterator method_it = method_vector_.begin();
+       method_it != method_vector_.end();
+       ++method_it)
   {
-    if (it->compareName(method_name))
+    if (method_it->compareName(method_name))
     {
-      method_index = std::distance(method_vector_.begin(),it);
+      method_index = std::distance(method_vector_.begin(),method_it);
       break;
     }
   }
@@ -446,13 +457,13 @@ int Server::findMethodIndex(char *method_name)
 int Server::findMethodIndex(_FLASH_STRING &method_name)
 {
   int method_index = -1;
-  for (std::vector<Method>::iterator it = method_vector_.begin();
-       it != method_vector_.end();
-       ++it)
+  for (std::vector<Method>::iterator method_it = method_vector_.begin();
+       method_it != method_vector_.end();
+       ++method_it)
   {
-    if (it->compareName(method_name))
+    if (method_it->compareName(method_name))
     {
-      method_index = std::distance(method_vector_.begin(),it);
+      method_index = std::distance(method_vector_.begin(),method_it);
       break;
     }
   }
@@ -478,8 +489,8 @@ int Server::processParameterString(char *parameter_string)
   std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
   if ((parameter_index < 0) || (parameter_index >= parameter_ptr_vector.size()))
   {
-    response_.add("status",ERROR);
-    response_.add("error_message","Unknown parameter.");
+    addToResponse("status",ERROR);
+    addToResponse("error_message","Unknown parameter.");
     error_ = true;
     parameter_index = -1;
   }
@@ -492,13 +503,13 @@ int Server::findParameterIndex(const char *parameter_name)
   if (request_method_index_ >= 0)
   {
     std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-    for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
-         it != parameter_ptr_vector.end();
-         ++it)
+    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
+         param_ptr_it != parameter_ptr_vector.end();
+         ++param_ptr_it)
     {
-      if ((*it)->compareName(parameter_name))
+      if ((*param_ptr_it)->compareName(parameter_name))
       {
-        parameter_index = std::distance(parameter_ptr_vector.begin(),it);
+        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
         break;
       }
     }
@@ -512,13 +523,13 @@ int Server::findParameterIndex(_FLASH_STRING &parameter_name)
   if (request_method_index_ >= 0)
   {
     std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-    for (std::vector<Parameter*>::iterator it = parameter_ptr_vector.begin();
-         it != parameter_ptr_vector.end();
-         ++it)
+    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
+         param_ptr_it != parameter_ptr_vector.end();
+         ++param_ptr_it)
     {
-      if ((*it)->compareName(parameter_name))
+      if ((*param_ptr_it)->compareName(parameter_name))
       {
-        parameter_index = std::distance(parameter_ptr_vector.begin(),it);
+        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
         break;
       }
     }
@@ -529,7 +540,9 @@ int Server::findParameterIndex(_FLASH_STRING &parameter_name)
 int Server::countJsonArrayElements(Parser::JsonArray &json_array)
 {
   int elements_count = 0;
-  for (Parser::JsonArrayIterator i=json_array.begin(); i!=json_array.end(); ++i)
+  for (Parser::JsonArrayIterator array_it=json_array.begin();
+       array_it!=json_array.end();
+       ++array_it)
   {
     elements_count++;
   }
@@ -540,15 +553,66 @@ void Server::getDeviceInfoCallback()
 {
   char device_name[STRING_LENGTH_DEVICE_NAME] = {0};
   name_ptr_->copy(device_name);
-  response_.add("name",device_name);
-  response_.add("model_number",model_number_);
-  response_.add("serial_number",serial_number_);
-  response_.add("firmware_number",firmware_number_);
+  addToResponse("name",device_name);
+  addToResponse("model_number",model_number_);
+  addToResponse("serial_number",serial_number_);
+  addToResponse("firmware_number",firmware_number_);
 }
 
 void Server::getMethodIdsCallback()
 {
-  char method_name[METHOD_COUNT_MAX][STRING_LENGTH_METHOD_NAME] = {0};
+  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
+  _FLASH_STRING* method_name_ptr;
+  for (std::vector<Method>::iterator method_it = method_vector_.begin();
+       method_it != method_vector_.end();
+       ++method_it)
+  {
+    int method_index = std::distance(method_vector_.begin(),method_it);
+    if (!method_vector_[method_index].isReserved())
+    {
+      method_name_ptr = method_it->getNamePointer();
+      method_name_ptr->copy(method_name);
+      int method_id = method_index;
+      addToResponse(method_name,method_id);
+    }
+  }
+}
+
+void Server::getResponseCodesCallback()
+{
+  addToResponse("response_success",SUCCESS);
+  addToResponse("response_error",ERROR);
+}
+
+void Server::getParametersCallback()
+{
+  int parameter_index = 0;
+  addKeyToResponse("parameters");
+  response_.startArray();
+  for (std::vector<Parameter>::iterator param_it = parameter_vector_.begin();
+       param_it != parameter_vector_.end();
+       ++param_it)
+  {
+    if (parameter_index < PARAMETER_COUNT_MAX)
+    {
+      startResponseObject();
+      parameterHelp(*param_it);
+      stopResponseObject();
+    }
+  }
+  response_.stopArray();
+}
+
+void Server::help()
+{
+  addKeyToResponse("device_info");
+  startResponseObject();
+  getDeviceInfoCallback();
+  stopResponseObject();
+
+  addKeyToResponse("methods");
+  startResponseArray();
+  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
   _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();
@@ -558,44 +622,76 @@ void Server::getMethodIdsCallback()
     if (!method_vector_[method_index].isReserved())
     {
       method_name_ptr = it->getNamePointer();
-      method_name_ptr->copy(method_name[method_index]);
-      int method_id = method_index;
-      response_.add(method_name[method_index],method_id);
+      method_name_ptr->copy(method_name);
+      addToResponse(method_name);
     }
   }
+  stopResponseArray();
 }
 
-void Server::getResponseCodesCallback()
+void Server::verboseHelp()
 {
-  response_.add("response_success",SUCCESS);
-  response_.add("response_error",ERROR);
+  addKeyToResponse("device_info");
+  startResponseObject();
+  getDeviceInfoCallback();
+  stopResponseObject();
+
+  addKeyToResponse("methods");
+  startResponseArray();
+  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
+  _FLASH_STRING* method_name_ptr;
+  for (std::vector<Method>::iterator it = method_vector_.begin();
+       it != method_vector_.end();
+       ++it)
+  {
+    int method_index = std::distance(method_vector_.begin(),it);
+    if (!method_vector_[method_index].isReserved())
+    {
+      method_name_ptr = it->getNamePointer();
+      method_name_ptr->copy(method_name);
+      startResponseObject();
+      addKeyToResponse(method_name);
+      startResponseObject();
+      methodHelp(method_index);
+      stopResponseObject();
+      stopResponseObject();
+    }
+  }
+  stopResponseArray();
 }
 
-void Server::help()
+void Server::addNullToResponse(const char* key)
 {
-  // Generator::JsonObject<JSON_OBJECT_SIZE_DEVICE_INFO> device_info;
-  // char device_name[STRING_LENGTH_DEVICE_NAME] = {0};
-  // name_ptr_->copy(device_name);
-  // device_info["name"] = device_name;
-  // device_info["model_number"] = model_number_;
-  // device_info["serial_number"] = serial_number_;
-  // device_info["firmware_number"] = firmware_number_;
-  // response_.add("device_info",device_info);
-  // Generator::JsonArray<METHOD_COUNT_MAX> methods;
-  // char method_name[METHOD_COUNT_MAX][STRING_LENGTH_METHOD_NAME] = {0};
-  // _FLASH_STRING* method_name_ptr;
-  // for (std::vector<Method>::iterator it = method_vector_.begin();
-  //      it != method_vector_.end();
-  //      ++it)
-  // {
-  //   int method_index = std::distance(method_vector_.begin(),it);
-  //   if (!method_vector_[method_index].isReserved())
-  //   {
-  //     method_name_ptr = it->getNamePointer();
-  //     method_name_ptr->copy(method_name[method_index]);
-  //     methods.add(method_name[method_index]);
-  //   }
-  // }
-  // response_.add("methods",methods);
+  response_.addNull(key);
+}
+
+void Server::addNullToResponse()
+{
+  response_.addNull();
+}
+
+void Server::addKeyToResponse(const char* key)
+{
+  response_.addKey(key);
+}
+
+void Server::startResponseObject()
+{
+  response_.startObject();
+}
+
+void Server::stopResponseObject()
+{
+  response_.stopObject();
+}
+
+void Server::startResponseArray()
+{
+  response_.startArray();
+}
+
+void Server::stopResponseArray()
+{
+  response_.stopArray();
 }
 }

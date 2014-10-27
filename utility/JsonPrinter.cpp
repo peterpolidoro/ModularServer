@@ -9,13 +9,24 @@
 
 namespace RemoteDevice
 {
+JsonDepthTracker::JsonDepthTracker()
+{
+  first_item_ = true;
+  inside_object_ = true;
+}
+
+JsonDepthTracker::JsonDepthTracker(boolean first_item, boolean inside_object) :
+  first_item_(first_item),
+  inside_object_(inside_object)
+{
+}
+
 JsonPrinter::JsonPrinter(Stream &stream)
 {
   setStream(stream);
   setCompactPrint();
-  items_count_ = 0;
   indent_level_ = 0;
-  object_mode_ = true;
+  jdt_vector_.reserve(RESPONSE_DEPTH_MAX);
 }
 
 void JsonPrinter::setStream(Stream &stream)
@@ -25,41 +36,43 @@ void JsonPrinter::setStream(Stream &stream)
 
 void JsonPrinter::startObject()
 {
-  items_count_ = 0;
+  if (jdt_vector_.size() > 0)
+  {
+    stopArrayItem();
+  }
   indent_level_++;
-  object_mode_ = true;
+  jdt_vector_.push_back(JsonDepthTracker(true,true));
   *stream_ptr_ << "{";
 }
 
 void JsonPrinter::stopObject()
 {
   indent_level_--;
-  if (pretty_print_ && (items_count_ > 0))
+  if (pretty_print_ && (!jdt_vector_.back().first_item_))
   {
     *stream_ptr_ << endl;
     indent();
   }
-  object_mode_ = false;
+  jdt_vector_.pop_back();
   *stream_ptr_ << "}";
 }
 
 void JsonPrinter::startArray()
 {
-  items_count_ = 0;
   indent_level_++;
-  object_mode_ = false;
+  jdt_vector_.push_back(JsonDepthTracker(true,false));
   *stream_ptr_ << "[";
 }
 
 void JsonPrinter::stopArray()
 {
   indent_level_--;
-  if (pretty_print_ && (items_count_ > 0))
+  if (pretty_print_ && (!jdt_vector_.back().first_item_))
   {
     *stream_ptr_ << endl;
     indent();
   }
-  object_mode_ = true;
+  jdt_vector_.pop_back();
   *stream_ptr_ << "]";
 }
 
@@ -137,45 +150,25 @@ void JsonPrinter::add<ResponseCodes>(ResponseCodes value)
   }
 }
 
-// void JsonPrinter::addEmptyItem(char *key) {
-//   addKey(key);
-//   *stream_ptr_ << "\"" << "\"";
-// }
+template <>
+void JsonPrinter::add<double>(double value)
+{
+  stopArrayItem();
+  char value_char_array[STRING_LENGTH_DOUBLE];
+  // dtostre(value,value_char_array,DOUBLE_DIGITS,0);
+  dtostrf(value,DOUBLE_DIGITS,DOUBLE_DIGITS,value_char_array);
+  *stream_ptr_ <<  value_char_array;
+}
 
-// void JsonPrinter::addDblItem(char *key, double value) {
-//   char valueStr[DP_STR_LEN];
-//   addKey(key);
-//   dtostre(value,valueStr,DP_DOUBLE_PREC,0);
-//   *stream_ptr_ <<  valueStr;
-// }
-
-// void JsonPrinter::addFltItem(char *key, float value) {
-//   char valueStr[DP_STR_LEN];
-//   addKey(key);
-//   dtostre((double)value, valueStr, DP_DOUBLE_PREC,0);
-//   *stream_ptr_ <<  valueStr;
-// }
-
-// void JsonPrinter::addLongTuple(char *key, uint8_t num, ...) {
-//   va_list args;
-//   long value;
-//   addKey(key);
-//   *stream_ptr_ << "(";
-//   va_start(args,num);
-//   for (uint8_t i=0; i<num; i++) {
-//     value = va_arg(args,long);
-//     *stream_ptr_ << _DEC(value);
-//     if (i < num-1) {
-//       *stream_ptr_ << ",";
-//     }
-//   }
-//   *stream_ptr_ << ")";
-// }
-
-// int JsonPrinter::length()
-// {
-//   return items_count_array_[depth_];
-// }
+template <>
+void JsonPrinter::add<float>(float value)
+{
+  stopArrayItem();
+  char value_char_array[STRING_LENGTH_DOUBLE];
+  // dtostre((double)value,value_char_array,DOUBLE_DIGITS,0);
+  dtostrf((double)value,DOUBLE_DIGITS,DOUBLE_DIGITS,value_char_array);
+  *stream_ptr_ <<  value_char_array;
+}
 
 void JsonPrinter::addKey(const char *key)
 {
@@ -183,23 +176,32 @@ void JsonPrinter::addKey(const char *key)
   *stream_ptr_ << "\"" << key << "\"" << ":";
 }
 
+void JsonPrinter::addNull()
+{
+  stopArrayItem();
+  *stream_ptr_ << "null";
+}
+
 void JsonPrinter::stopItem()
 {
-  if (items_count_ > 0)
+  if (!jdt_vector_.back().first_item_)
   {
     *stream_ptr_ << ",";
+  }
+  else
+  {
+    jdt_vector_.back().first_item_ = false;
   }
   if (pretty_print_)
   {
     *stream_ptr_ << endl;
   }
-  items_count_++;
   indent();
 }
 
 void JsonPrinter::stopArrayItem()
 {
-  if (!object_mode_)
+  if (!jdt_vector_.back().inside_object_)
   {
     stopItem();
   }

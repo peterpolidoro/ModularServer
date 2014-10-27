@@ -31,18 +31,21 @@ Example Response:
 
 ```json
 {
-  "methods": [
+  "method":"?",
+  "device_info":{
+    "name":"led_controller",
+    "model_number":1234,
+    "serial_number":0,
+    "firmware_number":1
+  },
+  "methods":[
+    "getMemoryFree",
     "setLedOn",
     "setLedOff",
     "getLedPin",
     "blinkLed"
   ],
-  "device_info": {
-    "name": "led_controller",
-    "model_number": 1234,
-    "serial_number": 0,
-    "firmware_number": 1
-  }
+  "status":success
 }
 ```
 
@@ -67,7 +70,62 @@ Example Response:
 
 Notice that the LED on the Arduino board has turned ON.
 
-Example Method:
+To get more verbose help about the Arduino device, including
+information about the parameters each method takes, type two question
+marks ?? into the input field and press the 'Send' button or press the
+'Enter' key.
+
+```shell
+??
+```
+
+Example Response:
+
+```json
+{
+  "method":"??",
+  "device_info":{
+    "name":"led_controller",
+    "model_number":1234,
+    "serial_number":0,
+    "firmware_number":1
+  },
+  "methods":[
+    {
+      "getMemoryFree":{
+        "parameters":[]
+      }
+    },
+    {
+      "setLedOn":{
+        "parameters":[]
+      }
+    },
+    {
+      "setLedOff":{
+        "parameters":[]
+      }
+    },
+    {
+      "getLedPin":{
+        "parameters":[]
+      }
+    },
+    {
+      "blinkLed":{
+        "parameters":[
+          "duration_on",
+          "duration_off",
+          "count"
+        ]
+      }
+    }
+  ],
+  "status":success
+}
+```
+
+Example Method with Parameters:
 
 ```shell
 blinkLed
@@ -108,8 +166,8 @@ Example Response:
 
 The blinkLed method requires 3 parameters.
 
-To get more information about a parameter, enter the method followed
-by the parameter followed by a question mark ?
+To get more information about a single method parameter, enter the
+method followed by the parameter followed by a question mark ?
 
 Example Parameter Help:
 
@@ -121,17 +179,14 @@ Example Response:
 
 ```json
 {
-  "method": "blinkLed",
-  "parameter": {
-    "name": "duration_on",
-    "position": 0,
-    "method": "blinkLed",
-    "units": "s",
-    "type": "double",
-    "min": 0.1000,
-    "max": 2.5000
+  "method":"blinkLed",
+  "duration_on":{
+    "units":"seconds",
+    "type":"double",
+    "min":0.1000,
+    "max":2.5000
   },
-  "status": "success"
+  "status":success
 }
 ```
 
@@ -153,6 +208,47 @@ Example Response:
 Notice that the LED on the Arduino board has blinked 20 times, with an
 on duration of 500ms and an off duration of 200ms.
 
+To get more information about all of the parameters a method takes,
+enter the method followed by two questions marks ??:
+
+```shell
+blinkLed ??
+```
+
+Example Response:
+
+```json
+{
+  "method":"blinkLed",
+  "parameters":[
+    {
+      "duration_on":{
+        "units":"seconds",
+        "type":"double",
+        "min":0.1000,
+        "max":2.5000
+      }
+    },
+    {
+      "duration_off":{
+        "units":"seconds",
+        "type":"double",
+        "min":0.1000,
+        "max":2.5000
+      }
+    },
+    {
+      "count":{
+        "type":"long",
+        "min":1,
+        "max":100
+      }
+    }
+  ],
+  "status":success
+}
+```
+
 ####Python
 
 Example Python session:
@@ -161,7 +257,9 @@ Example Python session:
 from remote_device import RemoteDevice
 dev = RemoteDevice() # Automatically finds device if one available
 dev.get_methods()
-['set_led_on', 'get_led_pin', 'blink_led', 'set_led_off']
+['get_memory_free', 'set_led_on', 'get_led_pin', 'blink_led', 'set_led_off']
+dev.get_memory_free()
+4997
 dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
@@ -169,14 +267,18 @@ IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
 dev.blink_led('?')
 ['duration_on', 'duration_off', 'count']
 dev.blink_led('duration_on','?')
-{'max': 2.5,
- 'method': 'blinkLed',
- 'min': 0.1,
- 'name': 'duration_on',
- 'position': 0,
- 'type': 'double',
- 'units': 's'}
+{'max': 2.5, 'min': 0.1, 'type': 'double', 'units': 'seconds'}
 dev.blink_led(0.5,0.2,20)
+dev.blink_led('??')
+[{'duration_on': {'max': 2.5,
+   'min': 0.1,
+   'type': 'double',
+   'units': 'seconds'}},
+ {'duration_off': {'max': 2.5,
+   'min': 0.1,
+   'type': 'double',
+   'units': 'seconds'}},
+ {'count': {'max': 100, 'min': 1, 'type': 'long'}}]
 ```
 
 For more details on the Python interface:
@@ -213,11 +315,9 @@ dev.blinkLed('?')
 ans =
 'duration_on'    'duration_off'    'count'
 dev.blinkLed('duration_on','?')
-ans = 
+ans =
         name: 'duration_on'
-    position: 0
-      method: 'blinkLed'
-       units: 's'
+       units: 'seconds'
         type: 'double'
          min: 0.1000
          max: 2.5000

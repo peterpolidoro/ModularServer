@@ -13,18 +13,26 @@
 #include "WProgram.h"
 #endif
 #include "Streaming.h"
+#include "StandardCplusplus.h"
+#include "vector"
 #include "Constants.h"
 
-// #include <stdarg.h>
-
-// #define DP_DOUBLE_PREC 12
-// #define DP_STR_LEN 30
 
 namespace RemoteDevice
 {
-class JsonPrinter {
- public:
-  JsonPrinter(Stream &stream=Serial);
+class JsonDepthTracker
+{
+public:
+  JsonDepthTracker();
+  JsonDepthTracker(boolean first_item, boolean inside_object);
+  boolean first_item_;
+  boolean inside_object_;
+};
+
+class JsonPrinter
+{
+public:
+  JsonPrinter(Stream &stream);
   void setStream(Stream &stream);
   void startObject();
   void stopObject();
@@ -41,17 +49,17 @@ class JsonPrinter {
     addKey(key);
     add(value);
   }
-  // void addEmptyItem(char *key);
-  // void addFltItem(char *key, float value);
-  // void addDblItem(char *key, double value);
-  // void addLongTuple(char *key, uint8_t num, ...);
-  // int length();
- private:
+  void addNull(const char *key)
+  {
+    addKey(key);
+    addNull();
+  }
+  void addNull();
+private:
   Stream *stream_ptr_;
-  int items_count_;
   boolean pretty_print_;
   int indent_level_;
-  boolean object_mode_;
+  std::vector<JsonDepthTracker> jdt_vector_;
   void indent();
   void stopItem();
   void stopArrayItem();

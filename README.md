@@ -42,8 +42,15 @@ The response will contain a field named "methods", which is an array
 of user methods. To execute a method, simply type it into the input
 field and press the 'Send' button or press the 'Enter' key.
 
-To get more information about a method, enter the method followed by
-a question mark ?
+To get more verbose help, including information about the parameters
+each method takes, type two questions marks:
+
+```shell
+??
+```
+
+To get more information about a single method, enter the method
+followed by a question mark ?
 
 Example Method Help:
 
@@ -51,8 +58,16 @@ Example Method Help:
 blinkLed ?
 ```
 
-To get more information about a parameter, enter the method followed
-by the parameter followed by a question mark ?
+To get more verbose help about the method, including more information
+about the parameters each method takes, type the method name followed
+by two questions marks:
+
+```shell
+blinkLed ??
+```
+
+To get more information about a single method parameter, enter the
+method followed by the parameter followed by a question mark ?
 
 Example Parameter Help:
 
