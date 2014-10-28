@@ -21,6 +21,7 @@ For more detailed host computer interface information (Arduino Serial
 Monitor, Python, and Matlab) see example sketch README files:
 
 [LedController](./examples/LedController)
+[StringController](./examples/StringController)
 
 ####Arduino Serial Monitor
 
