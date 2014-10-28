@@ -234,9 +234,39 @@ dev.getMethods()                 % get device methods
 Remote Device Methods
 ---------------------
 getMemoryFree
+echo
+length
+startsWith
+repeat
+charsAt
 dev.getMemoryFree()
 ans =
-        4997
+        4889
+dev.repeat
+Error using RemoteDevice/sendRequest (line 309)
+device responded with error, Incorrect number of parameters. 0 given. 2 needed.
+dev.repeat('?')
+ans = 
+    'string'    'count'
+dev.repeat('count','?')
+ans = 
+    type: 'long'
+     min: 1
+     max: 10
+dev.repeat('"I am a string to repeat."',23)
+Error using RemoteDevice/sendRequest (line 309)
+device responded with error, Parameter value out of range: 1 <= count <= 10
+dev.repeat('"I am a string to repeat."',4)
+ans =
+I am a string to repeat.
+I am a string to repeat.
+I am a string to repeat.
+I am a string to repeat.
+dev.charsAt('"I am an input string!"','[0,6,8]')
+ans =
+    x0x30_: 'I'
+    x0x36_: 'n'
+    x0x38_: 'i'
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```
