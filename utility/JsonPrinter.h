@@ -55,6 +55,12 @@ public:
     addNull();
   }
   void addNull();
+  void addBoolean(const char *key, boolean value)
+  {
+    addKey(key);
+    addBoolean(value);
+  }
+  void addBoolean(boolean value);
 private:
   Stream *stream_ptr_;
   boolean pretty_print_;

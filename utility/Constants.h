@@ -40,6 +40,8 @@ enum ParameterType
     LONG_PARAMETER,
     DOUBLE_PARAMETER,
     STRING_PARAMETER,
+    OBJECT_PARAMETER,
+    ARRAY_PARAMETER,
   };
 
 union NumberType

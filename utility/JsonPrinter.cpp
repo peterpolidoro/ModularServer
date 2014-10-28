@@ -115,6 +115,13 @@ void JsonPrinter::add<String&>(String &value)
 }
 
 template <>
+void JsonPrinter::add<unsigned char>(unsigned char value)
+{
+  stopArrayItem();
+  *stream_ptr_ <<  _DEC(value);
+}
+
+template <>
 void JsonPrinter::add<int>(int value)
 {
   stopArrayItem();
@@ -122,7 +129,35 @@ void JsonPrinter::add<int>(int value)
 }
 
 template <>
+void JsonPrinter::add<unsigned int>(unsigned int value)
+{
+  stopArrayItem();
+  *stream_ptr_ <<  _DEC(value);
+}
+
+template <>
 void JsonPrinter::add<long>(long value)
+{
+  stopArrayItem();
+  *stream_ptr_ <<  _DEC(value);
+}
+
+template <>
+void JsonPrinter::add<unsigned long>(unsigned long value)
+{
+  stopArrayItem();
+  *stream_ptr_ <<  _DEC(value);
+}
+
+template <>
+void JsonPrinter::add<long long>(long long value)
+{
+  stopArrayItem();
+  *stream_ptr_ <<  _DEC(value);
+}
+
+template <>
+void JsonPrinter::add<unsigned long long>(unsigned long long value)
 {
   stopArrayItem();
   *stream_ptr_ <<  _DEC(value);
@@ -180,6 +215,19 @@ void JsonPrinter::addNull()
 {
   stopArrayItem();
   *stream_ptr_ << "null";
+}
+
+void JsonPrinter::addBoolean(boolean value)
+{
+  stopArrayItem();
+  if (value)
+  {
+    *stream_ptr_ <<  "true";
+  }
+  else
+  {
+    *stream_ptr_ <<  "false";
+  }
 }
 
 void JsonPrinter::stopItem()

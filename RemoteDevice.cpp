@@ -80,6 +80,16 @@ void RemoteDevice::addNullToResponse()
   return server_.addNullToResponse();
 }
 
+void RemoteDevice::addBooleanToResponse(const char* key, boolean value)
+{
+  return server_.addBooleanToResponse(key,value);
+}
+
+void RemoteDevice::addBooleanToResponse(boolean value)
+{
+  return server_.addBooleanToResponse(value);
+}
+
 void RemoteDevice::addKeyToResponse(const char* key)
 {
   return server_.addKeyToResponse(key);

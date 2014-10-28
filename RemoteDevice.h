@@ -40,6 +40,8 @@ public:
   }
   void addNullToResponse(const char* key);
   void addNullToResponse();
+  void addBooleanToResponse(const char* key, boolean value);
+  void addBooleanToResponse(boolean value);
   void addKeyToResponse(const char* key);
   void startResponseObject();
   void stopResponseObject();

@@ -31,6 +31,8 @@ public:
   void setTypeLong();
   void setTypeDouble();
   void setTypeString();
+  void setTypeObject();
+  void setTypeArray();
   void setRange(long min, long max);
   void setRange(int min, int max);
   void setRange(double min, double max);

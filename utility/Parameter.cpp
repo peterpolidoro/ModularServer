@@ -47,6 +47,16 @@ void Parameter::setTypeString()
   type_ = STRING_PARAMETER;
 }
 
+void Parameter::setTypeObject()
+{
+  type_ = OBJECT_PARAMETER;
+}
+
+void Parameter::setTypeArray()
+{
+  type_ = ARRAY_PARAMETER;
+}
+
 void Parameter::setRange(long min, long max)
 {
   min_.l = min;

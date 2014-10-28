@@ -74,11 +74,11 @@ void Server::handleRequest()
     response_.setCompactPrint();
     if (request_[0] == START_CHAR_JSON_OBJECT)
     {
-        addToResponse("status",ERROR);
-        char error_message[STRING_LENGTH_ERROR] = {0};
-        object_request_error_message.copy(error_message);
-        addToResponse("error_message",error_message);
-        error_ = true;
+      addToResponse("status",ERROR);
+      char error_message[STRING_LENGTH_ERROR] = {0};
+      object_request_error_message.copy(error_message);
+      addToResponse("error_message",error_message);
+      error_ = true;
     }
     else
     {
@@ -320,35 +320,53 @@ void Server::parameterHelp(Parameter &parameter)
   switch (type)
   {
     case LONG_PARAMETER:
-      addToResponse("type","long");
-      if (parameter.rangeIsSet())
       {
-        long min = parameter.getMin().l;
-        long max = parameter.getMax().l;
-        addToResponse("min",min);
-        addToResponse("max",max);
+        addToResponse("type","long");
+        if (parameter.rangeIsSet())
+        {
+          long min = parameter.getMin().l;
+          long max = parameter.getMax().l;
+          addToResponse("min",min);
+          addToResponse("max",max);
+        }
+        break;
       }
-      break;
     case DOUBLE_PARAMETER:
-      addToResponse("type","double");
-      if (parameter.rangeIsSet())
       {
-        double min = parameter.getMin().d;
-        double max = parameter.getMax().d;
-        addToResponse("min",min);
-        addToResponse("max",max);
+        addToResponse("type","double");
+        if (parameter.rangeIsSet())
+        {
+          double min = parameter.getMin().d;
+          double max = parameter.getMax().d;
+          addToResponse("min",min);
+          addToResponse("max",max);
+        }
+        break;
       }
-      break;
     case STRING_PARAMETER:
-      addToResponse("type","string");
-      break;
+      {
+        addToResponse("type","string");
+        break;
+      }
+    case OBJECT_PARAMETER:
+      {
+        addToResponse("type","object");
+        break;
+      }
+    case ARRAY_PARAMETER:
+      {
+        addToResponse("type","array");
+        break;
+      }
   }
   stopResponseObject();
 }
 
 boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
 {
-  boolean parameter_ok = true;
+  boolean out_of_range = false;
+  boolean object_parse_unsuccessful = false;
+  boolean array_parse_unsuccessful = false;
   Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
   ParameterType type = parameter.getType();
   String min_string = "";
@@ -356,40 +374,62 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   switch (type)
   {
     case LONG_PARAMETER:
-      if (parameter.rangeIsSet())
       {
-        long value = (long)json_value;
-        long min = parameter.getMin().l;
-        long max = parameter.getMax().l;
-        if ((value < min) || (value > max))
+        if (parameter.rangeIsSet())
         {
-          parameter_ok = false;
-          min_string = String(min);
-          max_string = String(max);
+          long value = (long)json_value;
+          long min = parameter.getMin().l;
+          long max = parameter.getMax().l;
+          if ((value < min) || (value > max))
+          {
+            out_of_range = true;
+            min_string = String(min);
+            max_string = String(max);
+          }
         }
+        break;
       }
-      break;
     case DOUBLE_PARAMETER:
-      if (parameter.rangeIsSet())
       {
-        double value = (double)json_value;
-        double min = parameter.getMin().d;
-        double max = parameter.getMax().d;
-        if ((value < min) || (value > max))
+        if (parameter.rangeIsSet())
         {
-          parameter_ok = false;
-          char temp_string[STRING_LENGTH_DOUBLE];
-          dtostrf(min,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
-          min_string = String(temp_string);
-          dtostrf(max,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
-          max_string = String(temp_string);
+          double value = (double)json_value;
+          double min = parameter.getMin().d;
+          double max = parameter.getMax().d;
+          if ((value < min) || (value > max))
+          {
+            out_of_range = true;
+            char temp_string[STRING_LENGTH_DOUBLE];
+            dtostrf(min,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+            min_string = String(temp_string);
+            dtostrf(max,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+            max_string = String(temp_string);
+          }
         }
+        break;
       }
-      break;
     case STRING_PARAMETER:
       break;
+    case OBJECT_PARAMETER:
+      {
+        Parser::JsonObject json_object = json_value;
+        if (!json_object.success())
+        {
+          object_parse_unsuccessful = true;
+        }
+        break;
+      }
+    case ARRAY_PARAMETER:
+      {
+        Parser::JsonArray json_array = json_value;
+        if (!json_array.success())
+        {
+          array_parse_unsuccessful = true;
+        }
+        break;
+      }
   }
-  if (!parameter_ok)
+  if (out_of_range)
   {
     addToResponse("status",ERROR);
     String error = String("Parameter value out of range: ");
@@ -406,6 +446,33 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
     addToResponse("error_message",error_str);
     error_ = true;
   }
+  else if (object_parse_unsuccessful)
+  {
+    addToResponse("status",ERROR);
+    char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+    _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    parameter_name_ptr->copy(parameter_name);
+    String error = String(parameter_name);
+    error += String(" is not a valid JSON object.");
+    char error_str[STRING_LENGTH_ERROR];
+    error.toCharArray(error_str,STRING_LENGTH_ERROR);
+    addToResponse("error_message",error_str);
+    error_ = true;
+  }
+  else if (array_parse_unsuccessful)
+  {
+    addToResponse("status",ERROR);
+    char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+    _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    parameter_name_ptr->copy(parameter_name);
+    String error = String(parameter_name);
+    error += String(" is not a valid JSON array.");
+    char error_str[STRING_LENGTH_ERROR];
+    error.toCharArray(error_str,STRING_LENGTH_ERROR);
+    addToResponse("error_message",error_str);
+    error_ = true;
+  }
+  boolean parameter_ok = (!out_of_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
   return parameter_ok;
 }
 
@@ -668,6 +735,16 @@ void Server::addNullToResponse(const char* key)
 void Server::addNullToResponse()
 {
   response_.addNull();
+}
+
+void Server::addBooleanToResponse(const char* key, boolean value)
+{
+  response_.addBoolean(key,value);
+}
+
+void Server::addBooleanToResponse(boolean value)
+{
+  response_.addBoolean(value);
 }
 
 void Server::addKeyToResponse(const char* key)
