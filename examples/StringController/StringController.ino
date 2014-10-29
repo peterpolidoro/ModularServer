@@ -61,20 +61,20 @@ void charsAtCallback()
 {
   char* string = remote_device.getParameterValue(string_parameter_name);
   JsonArray index_array = remote_device.getParameterValue(index_array_parameter_name);
-  const int key_length = 12;
-  char key[key_length];
-  remote_device.addKeyToResponse("chars");
-  remote_device.startResponseObject();
+  remote_device.addKeyToResponse("result");
+  remote_device.startResponseArray();
   for (JsonArrayIterator index_it=index_array.begin();
        index_it != index_array.end();
        ++index_it)
   {
+    remote_device.startResponseObject();
     long index = *index_it;
+    remote_device.addToResponse("index",index);
     char c = String(string).charAt(index);
-    String(index).toCharArray(key,key_length);
-    remote_device.addToResponse(key,c);
+    remote_device.addToResponse("char",c);
+    remote_device.stopResponseObject();
   }
-  remote_device.stopResponseObject();
+  remote_device.stopResponseArray();
 }
 
 

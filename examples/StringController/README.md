@@ -65,7 +65,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4889,
+  "memory_free":4877,
   "status":success
 }
 ```
@@ -174,11 +174,20 @@ Example Response:
 ```json
 {
   "method":"charsAt",
-  "chars":{
-    "0":"I",
-    "6":"n",
-    "8":"i"
-  },
+  "result":[
+    {
+      "index":0,
+      "char":"I"
+    },
+    {
+      "index":6,
+      "char":"n"
+    },
+    {
+      "index":8,
+      "char":"i"
+    }
+  ],
   "status":success
 }
 ```
@@ -209,7 +218,9 @@ dev.repeat('"I am a string to repeat."',4)
  'I am a string to repeat.',
  'I am a string to repeat.']
 dev.chars_at('"I am an input string!"',[0,6,8])
-{'0': 'I', '6': 'n', '8': 'i'}
+[{'char': 'I', 'index': 0},
+ {'char': 'n', 'index': 6},
+ {'char': 'i', 'index': 8}]
 ```
 
 For more details on the Python interface:
@@ -246,10 +257,10 @@ dev.repeat
 Error using RemoteDevice/sendRequest (line 309)
 device responded with error, Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
-ans = 
+ans =
     'string'    'count'
 dev.repeat('count','?')
-ans = 
+ans =
     type: 'long'
      min: 1
      max: 10
@@ -264,9 +275,9 @@ I am a string to repeat.
 I am a string to repeat.
 dev.charsAt('"I am an input string!"','[0,6,8]')
 ans =
-    x0x30_: 'I'
-    x0x36_: 'n'
-    x0x38_: 'i'
+1x3 struct array with fields:
+    index
+    char
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```
