@@ -13,6 +13,9 @@
 namespace RemoteDevice
 {
 class Method;
+void getMemoryFreeCallback();
+void resetDefaultsCallback();
+void setSerialNumberCallback();
 
 class RemoteDevice
 {
@@ -20,16 +23,31 @@ public:
   RemoteDevice(Stream &stream);
   void setServerStream(Stream &stream);
   void handleServerRequests();
-  void setName(_FLASH_STRING &device_name);
-  void setModelNumber(int model_number);
-  void setFirmwareNumber(int firmware_number);
-  Method& createMethod(_FLASH_STRING &method_name);
-  Method& copyMethod(Method &method,_FLASH_STRING &method_name);
-  Parameter& createParameter(_FLASH_STRING &parameter_name);
-  Parameter& copyParameter(Parameter &parameter,_FLASH_STRING &parameter_name);
-  ArduinoJson::Parser::JsonValue getParameterValue(_FLASH_STRING &parameter_name);
+  void setName(const _FLASH_STRING &device_name);
+  void setModelNumber(unsigned int model_number);
+  void setFirmwareNumber(unsigned int firmware_number);
+  Method& createMethod(const _FLASH_STRING &method_name);
+  Method& copyMethod(Method &method,const _FLASH_STRING &method_name);
+  Parameter& createParameter(const _FLASH_STRING &parameter_name);
+  Parameter& copyParameter(Parameter &parameter,const _FLASH_STRING &parameter_name);
+  ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &parameter_name);
   template<typename T>
-  void addToResponse(const char* key, T value)
+  void createSavedVariable(const _FLASH_STRING &saved_variable_name, const T &default_value)
+  {
+    server_.createSavedVariable(saved_variable_name,default_value);
+  }
+  template<typename T>
+  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name, T value)
+  {
+    server_.setSavedVariableValue(saved_variable_name,value);
+  }
+  template<typename T>
+  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name, T &value)
+  {
+    server_.getSavedVariableValue(saved_variable_name,value);
+  }
+  template<typename T>
+  void addToResponse(const char *key, T value)
   {
     server_.addToResponse(key,value);
   }
@@ -38,22 +56,24 @@ public:
   {
     server_.addToResponse(value);
   }
-  void addNullToResponse(const char* key);
+  void addNullToResponse(const char *key);
   void addNullToResponse();
-  void addBooleanToResponse(const char* key, boolean value);
+  void addBooleanToResponse(const char *key, boolean value);
   void addBooleanToResponse(boolean value);
-  void addKeyToResponse(const char* key);
+  void addKeyToResponse(const char *key);
   void startResponseObject();
   void stopResponseObject();
   void startResponseArray();
   void stopResponseArray();
 private:
   Server server_;
+  void resetDefaults();
+  void setSerialNumber(unsigned int serial_number);
+  friend void resetDefaultsCallback();
+  friend void setSerialNumberCallback();
 };
 }
 
 extern RemoteDevice::RemoteDevice remote_device;
-
-void getMemoryFreeCallback();
 
 #endif

@@ -26,17 +26,17 @@ typedef void (Server::*ReservedCallback)(void);
 class Method
 {
 public:
-  Method(_FLASH_STRING& name);
-  void setName(_FLASH_STRING& name);
+  Method(const _FLASH_STRING &name);
+  void setName(const _FLASH_STRING &name);
   void attachCallback(Callback callback);
   void addParameter(Parameter &parameter);
 private:
-  _FLASH_STRING *name_ptr_;
+  const _FLASH_STRING *name_ptr_;
   Callback callback_;
   boolean callback_attached_;
   boolean compareName(const char *name_to_compare);
-  boolean compareName(_FLASH_STRING& name_to_compare);
-  _FLASH_STRING* getNamePointer();
+  boolean compareName(const _FLASH_STRING &name_to_compare);
+  const _FLASH_STRING* getNamePointer();
   void callback();
   ReservedCallback reserved_callback_;
   boolean reserved_;
@@ -44,7 +44,7 @@ private:
   boolean isReserved();
   void reservedCallback(Server *server);
   std::vector<Parameter*> parameter_ptr_vector_;
-  int findParameterIndex(_FLASH_STRING& parameter_name);
+  int findParameterIndex(const _FLASH_STRING &parameter_name);
   int parameter_count_;
   friend class Server;
 };

@@ -19,7 +19,7 @@ const int STRING_LENGTH_REQUEST = 257;
 const int STRING_LENGTH_DEVICE_NAME = 32;
 
 const int JSON_PARSER_SIZE = 32;
-const int METHOD_COUNT_MAX = 16;
+const int METHOD_COUNT_MAX = 24;
 
 const int STRING_LENGTH_ERROR = 257;
 
@@ -28,6 +28,12 @@ const int STRING_LENGTH_DOUBLE = 36;
 
 const int RESPONSE_INDENT = 2;
 const int RESPONSE_DEPTH_MAX = 8;
+
+const unsigned char EEPROM_INITIALIZED_VALUE = 123;
+
+const unsigned int SERIAL_NUMBER_MIN = 0;
+const unsigned int SERIAL_NUMBER_MAX = 65535;
+const unsigned int SERIAL_NUMBER_DEFAULT = 0;
 
 enum ResponseCodes
   {
@@ -52,7 +58,7 @@ union NumberType
 
 // Method
 const int STRING_LENGTH_METHOD_NAME = 32;
-const int PARAMETER_COUNT_MAX = 5;
+const int PARAMETER_COUNT_MAX = 6;
 
 // Parameter
 const int STRING_LENGTH_PARAMETER_NAME = 24;

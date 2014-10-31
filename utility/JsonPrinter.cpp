@@ -108,6 +108,13 @@ void JsonPrinter::add<char*>(char *value)
 }
 
 template <>
+void JsonPrinter::add<String>(String value)
+{
+  indent();
+  *stream_ptr_ << "\"" << value << "\"";
+}
+
+template <>
 void JsonPrinter::add<String&>(String &value)
 {
   indent();

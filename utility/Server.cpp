@@ -22,6 +22,8 @@ FLASH_STRING(help_method_name,"?");
 FLASH_STRING(verbose_help_method_name,"??");
 FLASH_STRING(object_request_error_message,"JSON object requests not supported. Must use compact JSON array format for requests.");
 FLASH_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
+FLASH_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
+FLASH_STRING(serial_number_saved_variable_name,"serial_number");
 
 Server::Server(Stream &stream) :
   response_(stream)
@@ -29,7 +31,6 @@ Server::Server(Stream &stream) :
   setStream(stream);
   setName(default_device_name);
   model_number_ = 0;
-  serial_number_ = 0;
   firmware_number_ = 0;
   request_method_index_ = -1;
   parameter_count_ = 0;
@@ -52,6 +53,16 @@ Server::Server(Stream &stream) :
 
   Method& verbose_help_method = createMethod(verbose_help_method_name);
   verbose_help_method.attachReservedCallback(&Server::verboseHelp);
+
+  eeprom_index_ = 0;
+  eeprom_initialized_index_ = eeprom_index_;
+  eeprom_init_name_ptr_ = &eeprom_initialized_saved_variable_name;
+  eeprom_uninitialized_ = true;
+  saved_variable_vector_.push_back(SavedVariable(*eeprom_init_name_ptr_,
+                                                 eeprom_index_,
+                                                 EEPROM_INITIALIZED_VALUE));
+  eeprom_index_ += sizeof(EEPROM_INITIALIZED_VALUE);
+  createSavedVariable(serial_number_saved_variable_name,SERIAL_NUMBER_DEFAULT);
 }
 
 void Server::setStream(Stream &stream)
@@ -61,6 +72,10 @@ void Server::setStream(Stream &stream)
 
 void Server::handleRequest()
 {
+  if (eeprom_uninitialized_)
+  {
+    initializeEeprom();
+  }
   while (stream_ptr_->available() > 0)
   {
     int request_length = stream_ptr_->readBytesUntil(EOL,request_,STRING_LENGTH_REQUEST);
@@ -112,22 +127,27 @@ void Server::handleRequest()
   }
 }
 
-void Server::setName(_FLASH_STRING &name)
+void Server::setName(const _FLASH_STRING &name)
 {
   name_ptr_ = &name;
 }
 
-void Server::setModelNumber(int model_number)
+void Server::setModelNumber(unsigned int model_number)
 {
   model_number_ = model_number;
 }
 
-void Server::setFirmwareNumber(int firmware_number)
+void Server::setSerialNumber(unsigned int serial_number)
+{
+  setSavedVariableValue(serial_number_saved_variable_name,serial_number);
+}
+
+void Server::setFirmwareNumber(unsigned int firmware_number)
 {
   firmware_number_ = firmware_number;
 }
 
-Method& Server::createMethod(_FLASH_STRING &method_name)
+Method& Server::createMethod(const _FLASH_STRING &method_name)
 {
   int method_index = findMethodIndex(method_name);
   if (method_index < 0)
@@ -142,14 +162,14 @@ Method& Server::createMethod(_FLASH_STRING &method_name)
   }
 }
 
-Method& Server::copyMethod(Method method,_FLASH_STRING &method_name)
+Method& Server::copyMethod(Method method,const _FLASH_STRING &method_name)
 {
   method_vector_.push_back(method);
   method_vector_.back().setName(method_name);
   return method_vector_.back();
 }
 
-Parameter& Server::createParameter(_FLASH_STRING &parameter_name)
+Parameter& Server::createParameter(const _FLASH_STRING &parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
   if (parameter_index < 0)
@@ -164,14 +184,14 @@ Parameter& Server::createParameter(_FLASH_STRING &parameter_name)
   }
 }
 
-Parameter& Server::copyParameter(Parameter parameter,_FLASH_STRING &parameter_name)
+Parameter& Server::copyParameter(Parameter parameter,const _FLASH_STRING &parameter_name)
 {
   parameter_vector_.push_back(parameter);
   parameter_vector_.back().setName(parameter_name);
   return parameter_vector_.back();
 }
 
-Parser::JsonValue Server::getParameterValue(_FLASH_STRING &name)
+Parser::JsonValue Server::getParameterValue(const _FLASH_STRING &name)
 {
   int parameter_index = findParameterIndex(name);
   return request_json_array_[parameter_index+1];
@@ -263,7 +283,7 @@ void Server::methodHelp(int method_index)
   addKeyToResponse("parameters");
   response_.startArray();
   std::vector<Parameter*>& parameter_ptr_vector = method_vector_[method_index].parameter_ptr_vector_;
-  _FLASH_STRING* parameter_name_ptr;
+  const _FLASH_STRING* parameter_name_ptr;
   char parameter_name_char_array[STRING_LENGTH_PARAMETER_NAME];
   for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
        param_ptr_it != parameter_ptr_vector.end();
@@ -303,14 +323,14 @@ void Server::verboseMethodHelp(int method_index)
 void Server::parameterHelp(Parameter &parameter)
 {
   char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
-  _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+  const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
   addKeyToResponse(parameter_name);
 
   startResponseObject();
 
   char parameter_units[STRING_LENGTH_PARAMETER_UNITS] = {0};
-  _FLASH_STRING* parameter_units_ptr = parameter.getUnitsPointer();
+  const _FLASH_STRING* parameter_units_ptr = parameter.getUnitsPointer();
   parameter_units_ptr->copy(parameter_units);
   if (strcmp(parameter_units,"") != 0)
   {
@@ -436,7 +456,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
     error += min_string;
     error += String(" <= ");
     char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
-    _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     error += String(parameter_name);
     error += String(" <= ");
@@ -450,7 +470,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   {
     addToResponse("status",ERROR);
     char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
-    _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     String error = String(parameter_name);
     error += String(" is not a valid JSON object.");
@@ -463,7 +483,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   {
     addToResponse("status",ERROR);
     char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
-    _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     String error = String(parameter_name);
     error += String(" is not a valid JSON array.");
@@ -521,7 +541,7 @@ int Server::findMethodIndex(char *method_name)
   return method_index;
 }
 
-int Server::findMethodIndex(_FLASH_STRING &method_name)
+int Server::findMethodIndex(const _FLASH_STRING &method_name)
 {
   int method_index = -1;
   for (std::vector<Method>::iterator method_it = method_vector_.begin();
@@ -584,7 +604,7 @@ int Server::findParameterIndex(const char *parameter_name)
   return parameter_index;
 }
 
-int Server::findParameterIndex(_FLASH_STRING &parameter_name)
+int Server::findParameterIndex(const _FLASH_STRING &parameter_name)
 {
   int parameter_index = -1;
   if (request_method_index_ >= 0)
@@ -622,14 +642,14 @@ void Server::getDeviceInfoCallback()
   name_ptr_->copy(device_name);
   addToResponse("name",device_name);
   addToResponse("model_number",model_number_);
-  addToResponse("serial_number",serial_number_);
+  addToResponse("serial_number",getSerialNumber());
   addToResponse("firmware_number",firmware_number_);
 }
 
 void Server::getMethodIdsCallback()
 {
   char method_name[STRING_LENGTH_METHOD_NAME] = {0};
-  _FLASH_STRING* method_name_ptr;
+  const _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator method_it = method_vector_.begin();
        method_it != method_vector_.end();
        ++method_it)
@@ -680,7 +700,7 @@ void Server::help()
   addKeyToResponse("methods");
   startResponseArray();
   char method_name[STRING_LENGTH_METHOD_NAME] = {0};
-  _FLASH_STRING* method_name_ptr;
+  const _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();
        ++it)
@@ -706,7 +726,7 @@ void Server::verboseHelp()
   addKeyToResponse("methods");
   startResponseArray();
   char method_name[STRING_LENGTH_METHOD_NAME] = {0};
-  _FLASH_STRING* method_name_ptr;
+  const _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();
        ++it)
@@ -727,7 +747,7 @@ void Server::verboseHelp()
   stopResponseArray();
 }
 
-void Server::addNullToResponse(const char* key)
+void Server::addNullToResponse(const char *key)
 {
   response_.addNull(key);
 }
@@ -737,7 +757,7 @@ void Server::addNullToResponse()
   response_.addNull();
 }
 
-void Server::addBooleanToResponse(const char* key, boolean value)
+void Server::addBooleanToResponse(const char *key, boolean value)
 {
   response_.addBoolean(key,value);
 }
@@ -747,7 +767,7 @@ void Server::addBooleanToResponse(boolean value)
   response_.addBoolean(value);
 }
 
-void Server::addKeyToResponse(const char* key)
+void Server::addKeyToResponse(const char *key)
 {
   response_.addKey(key);
 }
@@ -770,5 +790,43 @@ void Server::startResponseArray()
 void Server::stopResponseArray()
 {
   response_.stopArray();
+}
+
+int Server::findSavedVariableIndex(const _FLASH_STRING &saved_variable_name)
+{
+  int saved_variable_index = -1;
+  for (std::vector<SavedVariable>::iterator saved_variable_it = saved_variable_vector_.begin();
+       saved_variable_it != saved_variable_vector_.end();
+       ++saved_variable_it)
+  {
+    if (saved_variable_it->compareName(saved_variable_name))
+    {
+      saved_variable_index = std::distance(saved_variable_vector_.begin(),saved_variable_it);
+      break;
+    }
+  }
+  return saved_variable_index;
+}
+unsigned int Server::getSerialNumber()
+{
+  unsigned int serial_number;
+  getSavedVariableValue(serial_number_saved_variable_name,serial_number);
+  return serial_number;
+}
+
+void Server::resetDefaults()
+{
+  for (std::vector<SavedVariable>::iterator saved_variable_it = saved_variable_vector_.begin();
+       saved_variable_it != saved_variable_vector_.end();
+       ++saved_variable_it)
+  {
+    saved_variable_it->setDefaultValue();
+  }
+}
+
+void Server::initializeEeprom()
+{
+  saved_variable_vector_[eeprom_initialized_index_].setValue(EEPROM_INITIALIZED_VALUE);
+  eeprom_uninitialized_ = false;
 }
 }

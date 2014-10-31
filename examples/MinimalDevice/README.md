@@ -1,4 +1,4 @@
-LedController
+MinimalDevice
 -------------
 
 Authors:
@@ -33,19 +33,15 @@ Example Response:
 {
   "method":"?",
   "device_info":{
-    "name":"led_controller",
-    "model_number":1234,
+    "name":"minimal_device",
+    "model_number":1000,
     "serial_number":0,
     "firmware_number":1
   },
   "methods":[
     "getMemoryFree",
     "resetDefaults",
-    "setSerialNumber",
-    "setLedOn",
-    "setLedOff",
-    "getLedPin",
-    "blinkLed"
+    "setSerialNumber"
   ],
   "status":success
 }
@@ -58,33 +54,75 @@ type it into the input field and press the 'Send' button or press the
 Example Method:
 
 ```shell
-setLedOn
+getMemoryFree
 ```
 
 Example Response:
 
 ```json
 {
-  "method": "setLedOn",
-  "status": "success"
+  "method":"getMemoryFree",
+  "memory_free":4880,
+  "status":success
 }
 ```
 
-Notice that the LED on the Arduino board has turned ON.
+To get more verbose help about the Arduino device, including
+information about the parameters each method takes, type two question
+marks ?? into the input field and press the 'Send' button or press the
+'Enter' key.
+
+```shell
+??
+```
+
+Example Response:
+
+```json
+{
+  "method":"??",
+  "device_info":{
+    "name":"minimal_device",
+    "model_number":1000,
+    "serial_number":0,
+    "firmware_number":1
+  },
+  "methods":[
+    {
+      "getMemoryFree":{
+        "parameters":[]
+      }
+    },
+    {
+      "resetDefaults":{
+        "parameters":[]
+      }
+    },
+    {
+      "setSerialNumber":{
+        "parameters":[
+          "serial_number"
+        ]
+      }
+    }
+  ],
+  "status":success
+}
+```
 
 Example Method with Parameters:
 
 ```shell
-blinkLed
+setSerialNumber
 ```
 
 Example Response:
 
 ```json
 {
-  "method": "blinkLed",
-  "status": "error",
-  "error_message": "Incorrect number of parameters. 0 given. 3 needed."
+  "method":"setSerialNumber",
+  "status":error,
+  "error_message":"Incorrect number of parameters. 0 given. 1 needed."
 }
 ```
 
@@ -94,45 +132,42 @@ a question mark ?
 Example Method Help:
 
 ```shell
-blinkLed ?
+setSerialNumber ?
 ```
 
 Example Response:
 
 ```json
 {
-  "method": "blinkLed",
-  "parameters": [
-    "duration_on",
-    "duration_off",
-    "count"
+  "method":"setSerialNumber",
+  "parameters":[
+    "serial_number"
   ],
-  "status": "success"
+  "status":success
 }
 ```
 
-The blinkLed method requires 3 parameters.
-
-To get more information about a single method parameter, enter the
-method followed by the parameter followed by a question mark ?
-
-Example Parameter Help:
+To get more verbose information about all of the parameters a method
+takes, enter the method followed by two questions marks ??:
 
 ```shell
-blinkLed duration_on ?
+setSerialNumber ??
 ```
 
 Example Response:
 
 ```json
 {
-  "method":"blinkLed",
-  "duration_on":{
-    "units":"seconds",
-    "type":"double",
-    "min":0.1000,
-    "max":2.5000
-  },
+  "method":"setSerialNumber",
+  "parameters":[
+    {
+      "serial_number":{
+        "type":"long",
+        "min":0,
+        "max":65535
+      }
+    }
+  ],
   "status":success
 }
 ```
@@ -140,58 +175,36 @@ Example Response:
 Example Method:
 
 ```shell
-blinkLed 0.5 0.2 20
+setSerialNumber 32
 ```
 
 Example Response:
 
 ```json
 {
-  "method": "blinkLed",
-  "status": "success"
+  "method":"setSerialNumber",
+  "status":success
 }
 ```
 
-Notice that the LED on the Arduino board has blinked 20 times, with an
-on duration of 500ms and an off duration of 200ms.
+The serial number setting persists even after the device is powered
+off. The serial number is used to differentiate several identical
+devices connected to a single host machine at one time.
 
-To get more information about all of the parameters a method takes,
-enter the method followed by two questions marks ??:
+To reset the serial number to the default value, use the resetDefaults
+method.
+
+Example Method:
 
 ```shell
-blinkLed ??
+resetDefaults
 ```
 
 Example Response:
 
 ```json
 {
-  "method":"blinkLed",
-  "parameters":[
-    {
-      "duration_on":{
-        "units":"seconds",
-        "type":"double",
-        "min":0.1000,
-        "max":2.5000
-      }
-    },
-    {
-      "duration_off":{
-        "units":"seconds",
-        "type":"double",
-        "min":0.1000,
-        "max":2.5000
-      }
-    },
-    {
-      "count":{
-        "type":"long",
-        "min":1,
-        "max":100
-      }
-    }
-  ],
+  "method":"resetDefaults",
   "status":success
 }
 ```
@@ -204,34 +217,16 @@ Example Python session:
 from remote_device import RemoteDevice
 dev = RemoteDevice() # Automatically finds device if one available
 dev.get_methods()
-['get_memory_free',
- 'reset_defaults',
- 'set_serial_number',
- 'get_led_pin',
- 'set_led_on',
- 'blink_led',
- 'set_led_off']
+['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-4814
-dev.set_led_on()
-dev.set_led_off()
-dev.blink_led()
-IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
-dev.blink_led('?')
-['duration_on', 'duration_off', 'count']
-dev.blink_led('duration_on','?')
-{'max': 2.5, 'min': 0.1, 'type': 'double', 'units': 'seconds'}
-dev.blink_led(0.5,0.2,20)
-dev.blink_led('??')
-[{'duration_on': {'max': 2.5,
-   'min': 0.1,
-   'type': 'double',
-   'units': 'seconds'}},
- {'duration_off': {'max': 2.5,
-   'min': 0.1,
-   'type': 'double',
-   'units': 'seconds'}},
- {'count': {'max': 100, 'min': 1, 'type': 'long'}}]
+4880
+dev.set_serial_number()
+IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
+dev.set_serial_number('?')
+['serial_number']
+dev.set_serial_number('??')
+[{'serial_number': {'max': 65535, 'min': 0, 'type': 'long'}}]
+dev.set_serial_number(44)
 ```
 
 For more details on the Python interface:
@@ -253,32 +248,6 @@ serial_port = 'COM4'             % example Windows serial port
 dev = RemoteDevice(serial_port)  % creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getMethods()                 % get device methods
-Remote Device Methods
----------------------
-getMemoryFree
-setLedOn
-setLedOff
-getLedPin
-blinkLed
-dev.getMemoryFree()
-ans =
-        4814
-dev.setLedOn()
-dev.setLedOff()
-dev.blinkLed()
-Error using RemoteDevice/sendCmd (line 308)
-device responded with error, Incorrect number of parameters. 0 given. 3 needed.
-dev.blinkLed('?')
-ans =
-'duration_on'    'duration_off'    'count'
-dev.blinkLed('duration_on','?')
-ans =
-        name: 'duration_on'
-       units: 'seconds'
-        type: 'double'
-         min: 0.1000
-         max: 2.5000
-dev.blinkLed(0.5,0.2,20)
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```

@@ -14,7 +14,7 @@ namespace RemoteDevice
 {
 FLASH_STRING(default_method_name,"");
 
-Method::Method(_FLASH_STRING& name=default_method_name)
+Method::Method(const _FLASH_STRING &name=default_method_name)
 {
   setName(name);
   callback_attached_ = false;
@@ -22,7 +22,7 @@ Method::Method(_FLASH_STRING& name=default_method_name)
   parameter_count_ = 0;
 }
 
-void Method::setName(_FLASH_STRING& name)
+void Method::setName(const _FLASH_STRING &name)
 {
   name_ptr_ = &name;
 }
@@ -34,12 +34,12 @@ boolean Method::compareName(const char *name_to_compare)
   return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-boolean Method::compareName(_FLASH_STRING& name_to_compare)
+boolean Method::compareName(const _FLASH_STRING &name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
 }
 
-_FLASH_STRING* Method::getNamePointer()
+const _FLASH_STRING* Method::getNamePointer()
 {
   return name_ptr_;
 }
@@ -54,7 +54,7 @@ void Method::attachCallback(Callback callback)
 void Method::addParameter(Parameter &parameter)
 {
   char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
-  _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+  const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
   if (String(parameter_name).length() > 0)
   {
@@ -67,7 +67,7 @@ void Method::addParameter(Parameter &parameter)
   }
 }
 
-int Method::findParameterIndex(_FLASH_STRING& parameter_name)
+int Method::findParameterIndex(const _FLASH_STRING &parameter_name)
 {
   int parameter_index = -1;
   for (std::vector<Parameter*>::iterator it = parameter_ptr_vector_.begin();

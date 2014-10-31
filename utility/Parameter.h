@@ -25,29 +25,36 @@ class RemoteDevice;
 class Parameter
 {
 public:
-  Parameter(_FLASH_STRING& name);
-  void setName(_FLASH_STRING& name);
-  void setUnits(_FLASH_STRING& name);
+  Parameter(const _FLASH_STRING &name);
+  void setName(const _FLASH_STRING &name);
+  void setUnits(const _FLASH_STRING &name);
   void setTypeLong();
   void setTypeDouble();
   void setTypeString();
   void setTypeObject();
   void setTypeArray();
-  void setRange(long min, long max);
-  void setRange(int min, int max);
-  void setRange(double min, double max);
+  template<typename T>
+  void setRange(const T min, const T max)
+  {
+    min_.l = (long)min;
+    max_.l = (long)max;
+    setTypeLong();
+    range_is_set_ = true;
+  }
+  void setRange(const double min, const double max);
+  void setRange(const float min, const float max);
   void removeRange();
 private:
-  _FLASH_STRING *name_ptr_;
-  _FLASH_STRING *units_ptr_;
+  const _FLASH_STRING *name_ptr_;
+  const _FLASH_STRING *units_ptr_;
   ParameterType type_;
   NumberType min_;
   NumberType max_;
   boolean range_is_set_;
   boolean compareName(const char *name_to_compare);
-  boolean compareName(_FLASH_STRING& name_to_compare);
-  _FLASH_STRING* getNamePointer();
-  _FLASH_STRING* getUnitsPointer();
+  boolean compareName(const _FLASH_STRING &name_to_compare);
+  const _FLASH_STRING* getNamePointer();
+  const _FLASH_STRING* getUnitsPointer();
   ParameterType getType();
   boolean rangeIsSet();
   NumberType getMin();
