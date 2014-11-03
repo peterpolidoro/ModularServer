@@ -62,7 +62,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4880,
+  "memory_free":4874,
   "status":success
 }
 ```
@@ -219,7 +219,7 @@ dev = RemoteDevice() # Automatically finds device if one available
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-4880
+4874
 dev.set_serial_number()
 IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
 dev.set_serial_number('?')

@@ -13,6 +13,9 @@ License:
 
 ###Arduino Firmware
 
+This firmware requires at least 3.2KB of SRAM and 25.6KB of flash
+memory, so it needs Arduino Mega level resources.
+
 [Arduino Sketch Examples](./examples)
 
 ###Host Computer Interface
@@ -21,6 +24,8 @@ For more detailed host computer interface information (Arduino Serial
 Monitor, Python, and Matlab) see example sketch README files:
 
 [LedController](./examples/LedController)
+
+[MinimalDevice](./examples/MinimalDevice)
 
 [StringController](./examples/StringController)
 
@@ -57,7 +62,7 @@ followed by a question mark ?
 Example Method Help:
 
 ```shell
-blinkLed ?
+setSerialNumber ?
 ```
 
 To get more verbose help about the method, including more information
@@ -65,16 +70,7 @@ about the parameters each method takes, type the method name followed
 by two questions marks:
 
 ```shell
-blinkLed ??
-```
-
-To get more information about a single method parameter, enter the
-method followed by the parameter followed by a question mark ?
-
-Example Parameter Help:
-
-```shell
-blinkLed duration_on ?
+setSerialNumber ??
 ```
 
 ####Python
