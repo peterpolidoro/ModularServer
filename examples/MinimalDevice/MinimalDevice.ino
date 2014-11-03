@@ -5,25 +5,19 @@
 #include "MemoryFree.h"
 #include "Flash.h"
 #include "RemoteDevice.h"
+#include "Constants.h"
 
 // See README.md for more information
 
 using namespace RemoteDevice;
 
-const int baudrate = 9600;
-
-const int model_number = 1000;
-const int firmware_number = 1;
-
-FLASH_STRING(device_name,"minimal_device");
-
 void setup()
 {
-  remote_device.setName(device_name);
-  remote_device.setModelNumber(model_number);
-  remote_device.setFirmwareNumber(firmware_number);
+  remote_device.setName(constants::device_name);
+  remote_device.setModelNumber(constants::model_number);
+  remote_device.setFirmwareNumber(constants::firmware_number);
 
-  Serial.begin(baudrate);
+  Serial.begin(constants::baudrate);
 }
 
 void loop()

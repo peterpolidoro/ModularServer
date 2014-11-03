@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef JSON_PRINTER_H
-#define JSON_PRINTER_H
+#ifndef _JSON_PRINTER_H_
+#define _JSON_PRINTER_H_
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else

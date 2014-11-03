@@ -77,3 +77,5 @@ void NonBlockBlink::setCount(long value)
 {
   count_ = (long)value;
 }
+
+NonBlockBlink non_block_blink(constants::led_pin);

@@ -12,6 +12,7 @@
 #else
 #include "WProgram.h"
 #endif
+#include "Constants.h"
 
 class NonBlockBlink
 {
@@ -35,4 +36,6 @@ private:
   unsigned long current_time_;
   unsigned long previous_time_;
 };
+
+extern NonBlockBlink non_block_blink;
 #endif
