@@ -237,6 +237,17 @@ void JsonPrinter::addBoolean(boolean value)
   }
 }
 
+void JsonPrinter::indent()
+{
+  if (pretty_print_)
+  {
+    for (int i=0;i<(RESPONSE_INDENT*indent_level_);i++)
+    {
+      *stream_ptr_ << " ";
+    }
+  }
+}
+
 void JsonPrinter::stopItem()
 {
   if (!jdt_vector_.back().first_item_)
@@ -259,17 +270,6 @@ void JsonPrinter::stopArrayItem()
   if (!jdt_vector_.back().inside_object_)
   {
     stopItem();
-  }
-}
-
-void JsonPrinter::indent()
-{
-  if (pretty_print_)
-  {
-    for (int i=0;i<(RESPONSE_INDENT*indent_level_);i++)
-    {
-      *stream_ptr_ << " ";
-    }
   }
 }
 }

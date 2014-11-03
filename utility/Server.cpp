@@ -70,63 +70,6 @@ void Server::setStream(Stream &stream)
   stream_ptr_ = &stream;
 }
 
-void Server::handleRequest()
-{
-  if (eeprom_uninitialized_)
-  {
-    initializeEeprom();
-  }
-  while (stream_ptr_->available() > 0)
-  {
-    int request_length = stream_ptr_->readBytesUntil(EOL,request_,STRING_LENGTH_REQUEST);
-    if (request_length == 0)
-    {
-      continue;
-    }
-    request_[request_length] = '\0';
-    error_ = false;
-    response_.startObject();
-    response_.setCompactPrint();
-    if (request_[0] == START_CHAR_JSON_OBJECT)
-    {
-      addToResponse("status",ERROR);
-      char error_message[STRING_LENGTH_ERROR] = {0};
-      object_request_error_message.copy(error_message);
-      addToResponse("error_message",error_message);
-      error_ = true;
-    }
-    else
-    {
-      if (request_[0] != START_CHAR_JSON_ARRAY)
-      {
-        response_.setPrettyPrint();
-        String request_string = String("[") + String(request_) + String("]");
-        request_string.toCharArray(request_,STRING_LENGTH_REQUEST);
-      }
-      request_json_array_ = parser_.parse(request_);
-      if (request_json_array_.success())
-      {
-        processRequestArray();
-      }
-      else
-      {
-        addToResponse("status",ERROR);
-        char error_message[STRING_LENGTH_ERROR] = {0};
-        array_parse_error_message.copy(error_message);
-        addToResponse("error_message",error_message);
-        addToResponse("received_request",request_);
-        error_ = true;
-      }
-      if (!error_)
-      {
-        addToResponse("status",SUCCESS);
-      }
-    }
-    response_.stopObject();
-    *stream_ptr_ << endl;
-  }
-}
-
 void Server::setName(const _FLASH_STRING &name)
 {
   name_ptr_ = &name;
@@ -197,6 +140,118 @@ Parser::JsonValue Server::getParameterValue(const _FLASH_STRING &name)
   return request_json_array_[parameter_index+1];
 }
 
+void Server::addNullToResponse(const char *key)
+{
+  response_.addNull(key);
+}
+
+void Server::addNullToResponse()
+{
+  response_.addNull();
+}
+
+void Server::addBooleanToResponse(const char *key, boolean value)
+{
+  response_.addBoolean(key,value);
+}
+
+void Server::addBooleanToResponse(boolean value)
+{
+  response_.addBoolean(value);
+}
+
+void Server::addKeyToResponse(const char *key)
+{
+  response_.addKey(key);
+}
+
+void Server::startResponseObject()
+{
+  response_.startObject();
+}
+
+void Server::stopResponseObject()
+{
+  response_.stopObject();
+}
+
+void Server::startResponseArray()
+{
+  response_.startArray();
+}
+
+void Server::stopResponseArray()
+{
+  response_.stopArray();
+}
+
+void Server::resetDefaults()
+{
+  for (std::vector<SavedVariable>::iterator saved_variable_it = saved_variable_vector_.begin();
+       saved_variable_it != saved_variable_vector_.end();
+       ++saved_variable_it)
+  {
+    saved_variable_it->setDefaultValue();
+  }
+}
+
+void Server::handleRequest()
+{
+  if (eeprom_uninitialized_)
+  {
+    initializeEeprom();
+  }
+  while (stream_ptr_->available() > 0)
+  {
+    int request_length = stream_ptr_->readBytesUntil(EOL,request_,STRING_LENGTH_REQUEST);
+    if (request_length == 0)
+    {
+      continue;
+    }
+    request_[request_length] = '\0';
+    error_ = false;
+    response_.startObject();
+    response_.setCompactPrint();
+    if (request_[0] == START_CHAR_JSON_OBJECT)
+    {
+      addToResponse("status",ERROR);
+      char error_message[STRING_LENGTH_ERROR] = {0};
+      object_request_error_message.copy(error_message);
+      addToResponse("error_message",error_message);
+      error_ = true;
+    }
+    else
+    {
+      if (request_[0] != START_CHAR_JSON_ARRAY)
+      {
+        response_.setPrettyPrint();
+        String request_string = String("[") + String(request_) + String("]");
+        request_string.toCharArray(request_,STRING_LENGTH_REQUEST);
+      }
+      request_json_array_ = parser_.parse(request_);
+      if (request_json_array_.success())
+      {
+        processRequestArray();
+      }
+      else
+      {
+        addToResponse("status",ERROR);
+        char error_message[STRING_LENGTH_ERROR] = {0};
+        array_parse_error_message.copy(error_message);
+        addToResponse("error_message",error_message);
+        addToResponse("received_request",request_);
+        error_ = true;
+      }
+      if (!error_)
+      {
+        addToResponse("status",SUCCESS);
+      }
+    }
+    response_.stopObject();
+    *stream_ptr_ << endl;
+  }
+}
+
 void Server::processRequestArray()
 {
   char* method_string = request_json_array_[0];
@@ -242,27 +297,77 @@ void Server::processRequestArray()
   }
 }
 
-boolean Server::checkParameters()
+int Server::processMethodString(char *method_string)
 {
-  int parameter_index = 0;
-  for (Parser::JsonArrayIterator request_it=request_json_array_.begin();
-       request_it!=request_json_array_.end();
-       ++request_it)
+  int method_index = -1;
+  int method_id = String(method_string).toInt();
+  if (String(method_string).compareTo("0") == 0)
   {
-    if (request_it!=request_json_array_.begin())
+    method_index = 0;
+    addToResponse("method_id",0);
+  }
+  else if (method_id > 0)
+  {
+    method_index = method_id;
+    addToResponse("method_id",method_id);
+  }
+  else
+  {
+    method_index = findMethodIndex(method_string);
+    addToResponse("method",method_string);
+  }
+  if ((method_index < 0) || (method_index >= method_vector_.size()))
+  {
+    addToResponse("status",ERROR);
+    addToResponse("error_message","Unknown method.");
+    error_ = true;
+    method_index = -1;
+  }
+  return method_index;
+}
+
+int Server::findMethodIndex(char *method_name)
+{
+  int method_index = -1;
+  for (std::vector<Method>::iterator method_it = method_vector_.begin();
+       method_it != method_vector_.end();
+       ++method_it)
+  {
+    if (method_it->compareName(method_name))
     {
-      if (checkParameter(parameter_index,*request_it))
-      {
-        parameter_index++;
-      }
-      else
-      {
-        return false;
-      }
+      method_index = std::distance(method_vector_.begin(),method_it);
+      break;
     }
   }
-  parameter_count_ = parameter_index;
-  return true;
+  return method_index;
+}
+
+int Server::findMethodIndex(const _FLASH_STRING &method_name)
+{
+  int method_index = -1;
+  for (std::vector<Method>::iterator method_it = method_vector_.begin();
+       method_it != method_vector_.end();
+       ++method_it)
+  {
+    if (method_it->compareName(method_name))
+    {
+      method_index = std::distance(method_vector_.begin(),method_it);
+      break;
+    }
+  }
+  return method_index;
+}
+
+int Server::countJsonArrayElements(Parser::JsonArray &json_array)
+{
+  int elements_count = 0;
+  for (Parser::JsonArrayIterator array_it=json_array.begin();
+       array_it!=json_array.end();
+       ++array_it)
+  {
+    elements_count++;
+  }
+  return elements_count;
 }
 
 void Server::executeMethod()
@@ -318,6 +423,73 @@ void Server::verboseMethodHelp(int method_index)
     }
   }
   response_.stopArray();
+}
+
+int Server::processParameterString(char *parameter_string)
+{
+  int parameter_index = -1;
+  int parameter_id = String(parameter_string).toInt();
+  if (String(parameter_string).compareTo("0") == 0)
+  {
+    parameter_index = 0;
+  }
+  else if (parameter_id > 0)
+  {
+    parameter_index = parameter_id;
+  }
+  else
+  {
+    parameter_index = findParameterIndex(parameter_string);
+  }
+  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+  if ((parameter_index < 0) || (parameter_index >= parameter_ptr_vector.size()))
+  {
+    addToResponse("status",ERROR);
+    addToResponse("error_message","Unknown parameter.");
+    error_ = true;
+    parameter_index = -1;
+  }
+  return parameter_index;
+}
+
+int Server::findParameterIndex(const char *parameter_name)
+{
+  int parameter_index = -1;
+  if (request_method_index_ >= 0)
+  {
+    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
+         param_ptr_it != parameter_ptr_vector.end();
+         ++param_ptr_it)
+    {
+      if ((*param_ptr_it)->compareName(parameter_name))
+      {
+        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
+        break;
+      }
+    }
+  }
+  return parameter_index;
+}
+
+int Server::findParameterIndex(const _FLASH_STRING &parameter_name)
+{
+  int parameter_index = -1;
+  if (request_method_index_ >= 0)
+  {
+    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
+    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
+         param_ptr_it != parameter_ptr_vector.end();
+         ++param_ptr_it)
+    {
+      if ((*param_ptr_it)->compareName(parameter_name))
+      {
+        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
+        break;
+      }
+    }
+  }
+  return parameter_index;
 }
 
 void Server::parameterHelp(Parameter &parameter)
@@ -380,6 +552,29 @@ void Server::parameterHelp(Parameter &parameter)
       }
   }
   stopResponseObject();
+}
+
+boolean Server::checkParameters()
+{
+  int parameter_index = 0;
+  for (Parser::JsonArrayIterator request_it=request_json_array_.begin();
+       request_it!=request_json_array_.end();
+       ++request_it)
+  {
+    if (request_it!=request_json_array_.begin())
+    {
+      if (checkParameter(parameter_index,*request_it))
+      {
+        parameter_index++;
+      }
+      else
+      {
+        return false;
+      }
+    }
+  }
+  parameter_count_ = parameter_index;
+  return true;
 }
 
 boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
@@ -496,144 +691,33 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   return parameter_ok;
 }
 
-int Server::processMethodString(char *method_string)
+int Server::findSavedVariableIndex(const _FLASH_STRING &saved_variable_name)
 {
-  int method_index = -1;
-  int method_id = String(method_string).toInt();
-  if (String(method_string).compareTo("0") == 0)
+  int saved_variable_index = -1;
+  for (std::vector<SavedVariable>::iterator saved_variable_it = saved_variable_vector_.begin();
+       saved_variable_it != saved_variable_vector_.end();
+       ++saved_variable_it)
   {
-    method_index = 0;
-    addToResponse("method_id",0);
-  }
-  else if (method_id > 0)
-  {
-    method_index = method_id;
-    addToResponse("method_id",method_id);
-  }
-  else
-  {
-    method_index = findMethodIndex(method_string);
-    addToResponse("method",method_string);
-  }
-  if ((method_index < 0) || (method_index >= method_vector_.size()))
-  {
-    addToResponse("status",ERROR);
-    addToResponse("error_message","Unknown method.");
-    error_ = true;
-    method_index = -1;
-  }
-  return method_index;
-}
-
-int Server::findMethodIndex(char *method_name)
-{
-  int method_index = -1;
-  for (std::vector<Method>::iterator method_it = method_vector_.begin();
-       method_it != method_vector_.end();
-       ++method_it)
-  {
-    if (method_it->compareName(method_name))
+    if (saved_variable_it->compareName(saved_variable_name))
     {
-      method_index = std::distance(method_vector_.begin(),method_it);
+      saved_variable_index = std::distance(saved_variable_vector_.begin(),saved_variable_it);
       break;
     }
   }
-  return method_index;
+  return saved_variable_index;
 }
 
-int Server::findMethodIndex(const _FLASH_STRING &method_name)
+unsigned int Server::getSerialNumber()
 {
-  int method_index = -1;
-  for (std::vector<Method>::iterator method_it = method_vector_.begin();
-       method_it != method_vector_.end();
-       ++method_it)
-  {
-    if (method_it->compareName(method_name))
-    {
-      method_index = std::distance(method_vector_.begin(),method_it);
-      break;
-    }
-  }
-  return method_index;
+  unsigned int serial_number;
+  getSavedVariableValue(serial_number_saved_variable_name,serial_number);
+  return serial_number;
 }
 
-int Server::processParameterString(char *parameter_string)
+void Server::initializeEeprom()
 {
-  int parameter_index = -1;
-  int parameter_id = String(parameter_string).toInt();
-  if (String(parameter_string).compareTo("0") == 0)
-  {
-    parameter_index = 0;
-  }
-  else if (parameter_id > 0)
-  {
-    parameter_index = parameter_id;
-  }
-  else
-  {
-    parameter_index = findParameterIndex(parameter_string);
-  }
-  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-  if ((parameter_index < 0) || (parameter_index >= parameter_ptr_vector.size()))
-  {
-    addToResponse("status",ERROR);
-    addToResponse("error_message","Unknown parameter.");
-    error_ = true;
-    parameter_index = -1;
-  }
-  return parameter_index;
-}
-
-int Server::findParameterIndex(const char *parameter_name)
-{
-  int parameter_index = -1;
-  if (request_method_index_ >= 0)
-  {
-    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
-         param_ptr_it != parameter_ptr_vector.end();
-         ++param_ptr_it)
-    {
-      if ((*param_ptr_it)->compareName(parameter_name))
-      {
-        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
-        break;
-      }
-    }
-  }
-  return parameter_index;
-}
-
-int Server::findParameterIndex(const _FLASH_STRING &parameter_name)
-{
-  int parameter_index = -1;
-  if (request_method_index_ >= 0)
-  {
-    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
-         param_ptr_it != parameter_ptr_vector.end();
-         ++param_ptr_it)
-    {
-      if ((*param_ptr_it)->compareName(parameter_name))
-      {
-        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
-        break;
-      }
-    }
-  }
-  return parameter_index;
-}
-
-int Server::countJsonArrayElements(Parser::JsonArray &json_array)
-{
-  int elements_count = 0;
-  for (Parser::JsonArrayIterator array_it=json_array.begin();
-       array_it!=json_array.end();
-       ++array_it)
-  {
-    elements_count++;
-  }
-  return elements_count;
+  saved_variable_vector_[eeprom_initialized_index_].setValue(EEPROM_INITIALIZED_VALUE);
+  eeprom_uninitialized_ = false;
 }
 
 void Server::getDeviceInfoCallback()
@@ -745,88 +829,5 @@ void Server::verboseHelp()
     }
   }
   stopResponseArray();
-}
-
-void Server::addNullToResponse(const char *key)
-{
-  response_.addNull(key);
-}
-
-void Server::addNullToResponse()
-{
-  response_.addNull();
-}
-
-void Server::addBooleanToResponse(const char *key, boolean value)
-{
-  response_.addBoolean(key,value);
-}
-
-void Server::addBooleanToResponse(boolean value)
-{
-  response_.addBoolean(value);
-}
-
-void Server::addKeyToResponse(const char *key)
-{
-  response_.addKey(key);
-}
-
-void Server::startResponseObject()
-{
-  response_.startObject();
-}
-
-void Server::stopResponseObject()
-{
-  response_.stopObject();
-}
-
-void Server::startResponseArray()
-{
-  response_.startArray();
-}
-
-void Server::stopResponseArray()
-{
-  response_.stopArray();
-}
-
-int Server::findSavedVariableIndex(const _FLASH_STRING &saved_variable_name)
-{
-  int saved_variable_index = -1;
-  for (std::vector<SavedVariable>::iterator saved_variable_it = saved_variable_vector_.begin();
-       saved_variable_it != saved_variable_vector_.end();
-       ++saved_variable_it)
-  {
-    if (saved_variable_it->compareName(saved_variable_name))
-    {
-      saved_variable_index = std::distance(saved_variable_vector_.begin(),saved_variable_it);
-      break;
-    }
-  }
-  return saved_variable_index;
-}
-unsigned int Server::getSerialNumber()
-{
-  unsigned int serial_number;
-  getSavedVariableValue(serial_number_saved_variable_name,serial_number);
-  return serial_number;
-}
-
-void Server::resetDefaults()
-{
-  for (std::vector<SavedVariable>::iterator saved_variable_it = saved_variable_vector_.begin();
-       saved_variable_it != saved_variable_vector_.end();
-       ++saved_variable_it)
-  {
-    saved_variable_it->setDefaultValue();
-  }
-}
-
-void Server::initializeEeprom()
-{
-  saved_variable_vector_[eeprom_initialized_index_].setValue(EEPROM_INITIALIZED_VALUE);
-  eeprom_uninitialized_ = false;
 }
 }

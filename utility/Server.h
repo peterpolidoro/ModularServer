@@ -33,7 +33,6 @@ class Server
 public:
   Server(Stream &stream=Serial);
   void setStream(Stream &stream);
-  void handleRequest();
   void setName(const _FLASH_STRING &name);
   void setModelNumber(unsigned int model_number);
   void setSerialNumber(unsigned int serial_number);
@@ -98,6 +97,7 @@ public:
   void startResponseArray();
   void stopResponseArray();
   void resetDefaults();
+  void handleRequest();
 private:
   Stream *stream_ptr_;
   char request_[STRING_LENGTH_REQUEST];

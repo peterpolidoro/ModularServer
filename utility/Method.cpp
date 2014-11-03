@@ -27,23 +27,6 @@ void Method::setName(const _FLASH_STRING &name)
   name_ptr_ = &name;
 }
 
-boolean Method::compareName(const char *name_to_compare)
-{
-  char name[STRING_LENGTH_METHOD_NAME] = {0};
-  name_ptr_->copy(name);
-  return String(name).equalsIgnoreCase(name_to_compare);
-}
-
-boolean Method::compareName(const _FLASH_STRING &name_to_compare)
-{
-  return (&name_to_compare == name_ptr_);
-}
-
-const _FLASH_STRING* Method::getNamePointer()
-{
-  return name_ptr_;
-}
-
 void Method::attachCallback(Callback callback)
 {
   callback_ = callback;
@@ -67,20 +50,21 @@ void Method::addParameter(Parameter &parameter)
   }
 }
 
-int Method::findParameterIndex(const _FLASH_STRING &parameter_name)
+boolean Method::compareName(const char *name_to_compare)
 {
-  int parameter_index = -1;
-  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector_.begin();
-       it != parameter_ptr_vector_.end();
-       ++it)
-  {
-    if ((*it)->compareName(parameter_name))
-    {
-      parameter_index = std::distance(parameter_ptr_vector_.begin(),it);
-      break;
-    }
-  }
-  return parameter_index;
+  char name[STRING_LENGTH_METHOD_NAME] = {0};
+  name_ptr_->copy(name);
+  return String(name).equalsIgnoreCase(name_to_compare);
+}
+
+boolean Method::compareName(const _FLASH_STRING &name_to_compare)
+{
+  return (&name_to_compare == name_ptr_);
+}
+
+const _FLASH_STRING* Method::getNamePointer()
+{
+  return name_ptr_;
 }
 
 void Method::callback()
@@ -109,5 +93,21 @@ void Method::reservedCallback(Server *server)
   {
     (server->*reserved_callback_)();
   }
+}
+
+int Method::findParameterIndex(const _FLASH_STRING &parameter_name)
+{
+  int parameter_index = -1;
+  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector_.begin();
+       it != parameter_ptr_vector_.end();
+       ++it)
+  {
+    if ((*it)->compareName(parameter_name))
+    {
+      parameter_index = std::distance(parameter_ptr_vector_.begin(),it);
+      break;
+    }
+  }
+  return parameter_index;
 }
 }

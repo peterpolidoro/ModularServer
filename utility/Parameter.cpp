@@ -78,26 +78,6 @@ void Parameter::removeRange()
   range_is_set_ = false;
 }
 
-ParameterType Parameter::getType()
-{
-  return type_;
-}
-
-boolean Parameter::rangeIsSet()
-{
-  return range_is_set_;
-}
-
-NumberType Parameter::getMin()
-{
-  return min_;
-}
-
-NumberType Parameter::getMax()
-{
-  return max_;
-}
-
 boolean Parameter::compareName(const char *name_to_compare)
 {
   char name[STRING_LENGTH_PARAMETER_NAME] = {0};
@@ -118,5 +98,25 @@ const _FLASH_STRING* Parameter::getNamePointer()
 const _FLASH_STRING* Parameter::getUnitsPointer()
 {
   return units_ptr_;
+}
+
+ParameterType Parameter::getType()
+{
+  return type_;
+}
+
+boolean Parameter::rangeIsSet()
+{
+  return range_is_set_;
+}
+
+NumberType Parameter::getMin()
+{
+  return min_;
+}
+
+NumberType Parameter::getMax()
+{
+  return max_;
 }
 }
