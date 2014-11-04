@@ -34,7 +34,7 @@ Example Response:
   "method":"?",
   "device_info":{
     "name":"led_controller",
-    "model_number":1234,
+    "model_number":1001,
     "serial_number":0,
     "firmware_number":1
   },
@@ -137,24 +137,6 @@ Example Response:
 }
 ```
 
-Example Method:
-
-```shell
-blinkLed 0.5 0.2 20
-```
-
-Example Response:
-
-```json
-{
-  "method": "blinkLed",
-  "status": "success"
-}
-```
-
-Notice that the LED on the Arduino board has blinked 20 times, with an
-on duration of 500ms and an off duration of 200ms.
-
 To get more information about all of the parameters a method takes,
 enter the method followed by two questions marks ??:
 
@@ -196,6 +178,40 @@ Example Response:
 }
 ```
 
+Example Method:
+
+```shell
+blinkLed 3.0 0.2 20
+```
+
+Example Response:
+
+```json
+{
+  "method":"blinkLed",
+  "status":error,
+  "error_message":"Parameter value out of range: 0.1000 <= duration_on <= 2.5000"
+}
+```
+
+Example Method:
+
+```shell
+blinkLed 0.5 0.2 20
+```
+
+Example Response:
+
+```json
+{
+  "method": "blinkLed",
+  "status": "success"
+}
+```
+
+Notice that the LED on the Arduino board has blinked 20 times, with an
+on duration of 500ms and an off duration of 200ms.
+
 ####Python
 
 Example Python session:
@@ -203,6 +219,11 @@ Example Python session:
 ```python
 from remote_device import RemoteDevice
 dev = RemoteDevice() # Automatically finds device if one available
+dev.get_device_info()
+{'firmware_number': 1,
+ 'model_number': 1001,
+ 'name': 'led_controller',
+ 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
  'reset_defaults',
@@ -232,6 +253,9 @@ dev.blink_led('??')
    'type': 'double',
    'units': 'seconds'}},
  {'count': {'max': 100, 'min': 1, 'type': 'long'}}]
+dev.blink_led(3.0,0.2,20)
+IOError: (from device) Parameter value out of range: 0.1000 <= duration_on <= 2.5000
+dev.blink_led(0.5,0.2,20)
 ```
 
 For more details on the Python interface:
