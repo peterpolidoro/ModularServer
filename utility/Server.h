@@ -34,9 +34,9 @@ public:
   Server(Stream &stream=Serial);
   void setStream(Stream &stream);
   void setName(const _FLASH_STRING &name);
-  void setModelNumber(unsigned int model_number);
-  void setSerialNumber(unsigned int serial_number);
-  void setFirmwareNumber(unsigned int firmware_number);
+  void setModelNumber(const unsigned int model_number);
+  void setSerialNumber(const unsigned int serial_number);
+  void setFirmwareNumber(const unsigned int firmware_number);
   Method& createMethod(const _FLASH_STRING &method_name);
   Method& copyMethod(Method method,const _FLASH_STRING &method_name);
   Parameter& createParameter(const _FLASH_STRING &parameter_name);
@@ -89,14 +89,15 @@ public:
   }
   void addNullToResponse(const char *key);
   void addNullToResponse();
-  void addBooleanToResponse(const char *key, boolean value);
-  void addBooleanToResponse(boolean value);
+  void addBooleanToResponse(const char *key, const boolean value);
+  void addBooleanToResponse(const boolean value);
   void addKeyToResponse(const char *key);
   void startResponseObject();
   void stopResponseObject();
   void startResponseArray();
   void stopResponseArray();
   void resetDefaults();
+  void startServer(const int baudrate);
   void handleRequest();
 private:
   Stream *stream_ptr_;

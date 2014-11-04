@@ -10,17 +10,9 @@
 #include "JsonParser.h"
 #include "RemoteDevice.h"
 #include "Constants.h"
-#include "NonBlockBlink.h"
 
 
 namespace callbacks
 {
-void setLedOnCallback();
-
-void setLedOffCallback();
-
-void getLedPinCallback();
-
-void blinkLedCallback();
 }
 #endif

@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------------------
 #include "Callbacks.h"
 
+using namespace ArduinoJson::Parser;
 
 namespace callbacks
 {

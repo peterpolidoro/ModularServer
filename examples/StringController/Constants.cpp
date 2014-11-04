@@ -12,7 +12,7 @@ namespace constants
 {
 const int baudrate = 9600;
 
-const int model_number = 1235;
+const int model_number = 1002;
 const int firmware_number = 1;
 
 const int count_min = 1;

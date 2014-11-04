@@ -17,7 +17,7 @@ void setup()
   remote_device.setModelNumber(constants::model_number);
   remote_device.setFirmwareNumber(constants::firmware_number);
 
-  Serial.begin(constants::baudrate);
+  remote_device.startServer(constants::baudrate);
 }
 
 void loop()

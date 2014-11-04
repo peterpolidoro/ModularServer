@@ -13,7 +13,7 @@ namespace constants
 const int led_pin = 13;
 const int baudrate = 9600;
 
-const int model_number = 1234;
+const int model_number = 1001;
 const int firmware_number = 1;
 
 const double duration_min = 0.1;

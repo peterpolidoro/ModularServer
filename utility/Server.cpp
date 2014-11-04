@@ -75,17 +75,17 @@ void Server::setName(const _FLASH_STRING &name)
   name_ptr_ = &name;
 }
 
-void Server::setModelNumber(unsigned int model_number)
+void Server::setModelNumber(const unsigned int model_number)
 {
   model_number_ = model_number;
 }
 
-void Server::setSerialNumber(unsigned int serial_number)
+void Server::setSerialNumber(const unsigned int serial_number)
 {
   setSavedVariableValue(serial_number_saved_variable_name,serial_number);
 }
 
-void Server::setFirmwareNumber(unsigned int firmware_number)
+void Server::setFirmwareNumber(const unsigned int firmware_number)
 {
   firmware_number_ = firmware_number;
 }
@@ -150,12 +150,12 @@ void Server::addNullToResponse()
   response_.addNull();
 }
 
-void Server::addBooleanToResponse(const char *key, boolean value)
+void Server::addBooleanToResponse(const char *key, const boolean value)
 {
   response_.addBoolean(key,value);
 }
 
-void Server::addBooleanToResponse(boolean value)
+void Server::addBooleanToResponse(const boolean value)
 {
   response_.addBoolean(value);
 }
@@ -195,12 +195,17 @@ void Server::resetDefaults()
   }
 }
 
-void Server::handleRequest()
+void Server::startServer(const int baudrate)
 {
   if (eeprom_uninitialized_)
   {
     initializeEeprom();
   }
+  Serial.begin(baudrate);
+}
+
+void Server::handleRequest()
+{
   while (stream_ptr_->available() > 0)
   {
     int request_length = stream_ptr_->readBytesUntil(EOL,request_,STRING_LENGTH_REQUEST);

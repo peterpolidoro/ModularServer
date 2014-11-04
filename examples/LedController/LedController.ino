@@ -42,7 +42,7 @@ void setup()
   count_parameter.setRange(constants::count_min,constants::count_max);
   blink_led_method.addParameter(count_parameter);
 
-  Serial.begin(constants::baudrate);
+  remote_device.startServer(constants::baudrate);
 }
 
 void loop()

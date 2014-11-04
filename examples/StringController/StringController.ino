@@ -63,7 +63,7 @@ void setup()
   Method& get_starting_chars_count_method = remote_device.createMethod(constants::get_starting_chars_count_method_name);
   get_starting_chars_count_method.attachCallback(callbacks::getStartingCharsCountCallback);
 
-  Serial.begin(constants::baudrate);
+  remote_device.startServer(constants::baudrate);
 }
 
 void loop()

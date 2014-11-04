@@ -39,22 +39,17 @@ void RemoteDevice::setServerStream(Stream &stream)
   server_.setStream(stream);
 }
 
-void RemoteDevice::handleServerRequests()
-{
-  server_.handleRequest();
-}
-
 void RemoteDevice::setName(const _FLASH_STRING &device_name)
 {
   server_.setName(device_name);
 }
 
-void RemoteDevice::setModelNumber(unsigned int model_number)
+void RemoteDevice::setModelNumber(const unsigned int model_number)
 {
   server_.setModelNumber(model_number);
 }
 
-void RemoteDevice::setFirmwareNumber(unsigned int firmware_number)
+void RemoteDevice::setFirmwareNumber(const unsigned int firmware_number)
 {
   server_.setFirmwareNumber(firmware_number);
 }
@@ -94,12 +89,12 @@ void RemoteDevice::addNullToResponse()
   server_.addNullToResponse();
 }
 
-void RemoteDevice::addBooleanToResponse(const char *key, boolean value)
+void RemoteDevice::addBooleanToResponse(const char *key, const boolean value)
 {
   server_.addBooleanToResponse(key,value);
 }
 
-void RemoteDevice::addBooleanToResponse(boolean value)
+void RemoteDevice::addBooleanToResponse(const boolean value)
 {
   server_.addBooleanToResponse(value);
 }
@@ -129,12 +124,22 @@ void RemoteDevice::stopResponseArray()
   server_.stopResponseArray();
 }
 
+void RemoteDevice::startServer(const int baudrate)
+{
+  server_.startServer(baudrate);
+}
+
+void RemoteDevice::handleServerRequests()
+{
+  server_.handleRequest();
+}
+
 void RemoteDevice::resetDefaults()
 {
   server_.resetDefaults();
 }
 
-void RemoteDevice::setSerialNumber(unsigned int serial_number)
+void RemoteDevice::setSerialNumber(const unsigned int serial_number)
 {
   server_.setSerialNumber(serial_number);
 }

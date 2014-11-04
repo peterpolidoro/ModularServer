@@ -224,7 +224,7 @@ void JsonPrinter::addNull()
   *stream_ptr_ << "null";
 }
 
-void JsonPrinter::addBoolean(boolean value)
+void JsonPrinter::addBoolean(const boolean value)
 {
   stopArrayItem();
   if (value)
