@@ -276,6 +276,12 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = RemoteDevice(serial_port)  % creates a device object
 dev.open()                       % opens a serial connection to the device
+device_info = dev.getDeviceInfo()
+device_info = 
+               name: 'led_controller'
+       model_number: 1001
+      serial_number: 0
+    firmware_number: 1
 dev.getMethods()                 % get device methods
 Remote Device Methods
 ---------------------
@@ -303,6 +309,9 @@ ans =
         type: 'double'
          min: 0.1000
          max: 2.5000
+dev.blinkLed(3.0,0.2,20)
+Error using RemoteDevice/sendRequest (line 297)
+device responded with error, Parameter value out of range: 0.1000 <= duration_on <= 2.5000
 dev.blinkLed(0.5,0.2,20)
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
