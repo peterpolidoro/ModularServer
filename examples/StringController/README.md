@@ -139,7 +139,7 @@ Example Response:
       "count":{
         "type":"long",
         "min":1,
-        "max":10
+        "max":100
       }
     }
   ],
@@ -275,9 +275,9 @@ IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
 ['string', 'count']
 dev.repeat('count','?')
-{'max': 10, 'min': 1, 'type': 'long'}
-dev.repeat('"I am a string to repeat."',23)
-IOError: (from device) Parameter value out of range: 1 <= count <= 10
+{'max': 100, 'min': 1, 'type': 'long'}
+dev.repeat('"I am a string to repeat."',-1)
+IOError: (from device) Parameter value out of range: 1 <= count <= 100
 dev.repeat('"I am a string to repeat."',4)
 ['I am a string to repeat.',
  'I am a string to repeat.',
@@ -311,20 +311,31 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = RemoteDevice(serial_port)  % creates a device object
 dev.open()                       % opens a serial connection to the device
+device_info = dev.getDeviceInfo()
+device_info = 
+               name: 'string_controller'
+       model_number: 1002
+      serial_number: 0
+    firmware_number: 1
 dev.getMethods()                 % get device methods
 Remote Device Methods
 ---------------------
 getMemoryFree
+resetDefaults
+setSerialNumber
 echo
 length
 startsWith
 repeat
 charsAt
+startingChars
+setStartingCharsCount
+getStartingCharsCount
 dev.getMemoryFree()
 ans =
-        4889
-dev.repeat
-Error using RemoteDevice/sendRequest (line 309)
+        4726
+dev.repeat()
+Error using RemoteDevice/sendRequest (line 297)
 device responded with error, Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
 ans =
@@ -333,10 +344,10 @@ dev.repeat('count','?')
 ans =
     type: 'long'
      min: 1
-     max: 10
-dev.repeat('"I am a string to repeat."',23)
-Error using RemoteDevice/sendRequest (line 309)
-device responded with error, Parameter value out of range: 1 <= count <= 10
+     max: 100
+dev.repeat('"I am a string to repeat."',-1)
+Error using RemoteDevice/sendRequest (line 297)
+device responded with error, Parameter value out of range: 1 <= count <= 100
 dev.repeat('"I am a string to repeat."',4)
 ans =
 I am a string to repeat.
@@ -348,6 +359,12 @@ ans =
 1x3 struct array with fields:
     index
     char
+dev.getStartingCharsCount()
+ans =
+     5
+dev.startingChars('Fantastic!')
+ans =
+Fanta
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```
