@@ -248,6 +248,29 @@ serial_port = 'COM4'             % example Windows serial port
 dev = RemoteDevice(serial_port)  % creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getMethods()                 % get device methods
+Remote Device Methods
+---------------------
+getMemoryFree
+resetDefaults
+setSerialNumber
+dev.getMemoryFree()
+ans =
+        4874
+dev.setSerialNumber()
+Error using RemoteDevice/sendRequest (line 309)
+device responded with error, Incorrect number of parameters. 0 given. 1 needed.
+dev.setSerialNumber('?')
+ans =
+serial_number
+dev.setSerialNumber('serial_number','?')
+ans = 
+    type: 'long'
+     min: 0
+     max: 65535
+dev.setSerialNumber(-1)
+Error using RemoteDevice/sendRequest (line 309)
+device responded with error, Parameter value out of range: 0 <= serial_number <= 65535
+dev.setSerialNumber(13)
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```
