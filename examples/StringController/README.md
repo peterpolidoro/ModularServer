@@ -34,17 +34,22 @@ Example Response:
   "method":"?",
   "device_info":{
     "name":"string_controller",
-    "model_number":1235,
+    "model_number":1002,
     "serial_number":0,
     "firmware_number":1
   },
   "methods":[
     "getMemoryFree",
+    "resetDefaults",
+    "setSerialNumber",
     "echo",
     "length",
     "startsWith",
     "repeat",
-    "charsAt"
+    "charsAt",
+    "startingChars",
+    "setStartingCharsCount",
+    "getStartingCharsCount"
   ],
   "status":success
 }
@@ -65,7 +70,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4877,
+  "memory_free":4726,
   "status":success
 }
 ```
@@ -192,6 +197,52 @@ Example Response:
 }
 ```
 
+Example Method:
+
+```shell
+startingChars "Fantastic!"
+```
+
+Example Response:
+
+```json
+{
+  "method":"startingChars",
+  "starting_chars":  "Fa",
+  "status":success
+}
+```
+
+Example Method:
+
+```shell
+setStartingCharsCount 5
+```
+
+Example Response:
+
+```json
+{
+  "method":"setStartingCharsCount",
+  "status":success
+}
+```
+
+Example Method:
+
+```shell
+startingChars "Fantastic!"
+```
+
+Example Response:
+
+```json
+{
+  "method":"startingChars",
+  "starting_chars":  "Fanta",
+  "status":success
+}
+```
 
 ####Python
 
@@ -200,10 +251,25 @@ Example Python session:
 ```python
 from remote_device import RemoteDevice
 dev = RemoteDevice() # Automatically finds device if one available
+dev.get_device_info()
+{'firmware_number': 1,
+ 'model_number': 1002,
+ 'name': 'string_controller',
+ 'serial_number': 0}
 dev.get_methods()
-['starts_with', 'get_memory_free', 'repeat', 'echo', 'length', 'chars_at']
+['starts_with',
+ 'get_memory_free',
+ 'repeat',
+ 'reset_defaults',
+ 'starting_chars',
+ 'set_serial_number',
+ 'get_starting_chars_count',
+ 'set_starting_chars_count',
+ 'echo',
+ 'length',
+ 'chars_at']
 dev.get_memory_free()
-4889
+4726
 dev.repeat()
 IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
@@ -221,6 +287,10 @@ dev.chars_at('"I am an input string!"',[0,6,8])
 [{'char': 'I', 'index': 0},
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
+dev.get_starting_chars_count()
+5
+dev.starting_chars("Fantastic!")
+'Fanta'
 ```
 
 For more details on the Python interface:
