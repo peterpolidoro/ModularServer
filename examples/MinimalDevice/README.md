@@ -216,6 +216,11 @@ Example Python session:
 ```python
 from remote_device import RemoteDevice
 dev = RemoteDevice() # Automatically finds device if one available
+dev.get_device_info()
+{'firmware_number': 1,
+ 'model_number': 1000,
+ 'name': 'minimal_device',
+ 'serial_number': 0}
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
@@ -226,7 +231,9 @@ dev.set_serial_number('?')
 ['serial_number']
 dev.set_serial_number('??')
 [{'serial_number': {'max': 65535, 'min': 0, 'type': 'long'}}]
-dev.set_serial_number(44)
+dev.set_serial_number(-1)
+IOError: (from device) Parameter value out of range: 0 <= serial_number <= 65535
+dev.set_serial_number(12)
 ```
 
 For more details on the Python interface:
@@ -263,7 +270,7 @@ dev.setSerialNumber('?')
 ans =
 serial_number
 dev.setSerialNumber('serial_number','?')
-ans = 
+ans =
     type: 'long'
      min: 0
      max: 65535
