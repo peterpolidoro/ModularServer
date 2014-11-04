@@ -256,6 +256,7 @@ dev.getMethods()                 % get device methods
 Remote Device Methods
 ---------------------
 getMemoryFree
+resetDefaults
 setLedOn
 setLedOff
 getLedPin
