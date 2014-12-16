@@ -83,6 +83,17 @@ setSerialNumber ??
 
 ##Installation
 
+Andy Brown's Standard Template Library (STL) for AVR with C++ streams
+must be installed before compiling.
+
+See install instructions either here:
+
+<https://github.com/peterpolidoro/avr-stl>
+
+or here:
+
+<http://andybrown.me.uk/wk/2011/01/15/the-standard-template-library-stl-for-avr-with-c-streams/>
+
 This library and its dependencies can be installed together or
 separately.
 
@@ -131,10 +142,6 @@ Streaming:
 ArduinoJson:
 
 <https://github.com/bblanchon/ArduinoJson>
-
-StandardCplusplus:
-
-<https://github.com/maniacbug/StandardCplusplus>
 
 MemoryFree:
 

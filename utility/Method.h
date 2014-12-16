@@ -7,9 +7,9 @@
 // ----------------------------------------------------------------------------
 #ifndef _METHOD_H_
 #define _METHOD_H_
+#include <iterator>
+#include <vector>
 #include "Streaming.h"
-#include "StandardCplusplus.h"
-#include "vector"
 #include "JsonGenerator.h"
 #include "Flash.h"
 #include "Parameter.h"
