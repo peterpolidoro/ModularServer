@@ -14,6 +14,8 @@
 #endif
 #include <iterator>
 #include <vector>
+// Must include ArduinoJson for definition of "new"
+#include "ArduinoJson.h"
 #include "Streaming.h"
 #include "Constants.h"
 

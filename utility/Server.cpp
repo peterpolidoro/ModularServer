@@ -8,8 +8,6 @@
 #include "Server.h"
 
 
-using namespace ArduinoJson;
-
 namespace RemoteDevice
 {
 
@@ -134,10 +132,10 @@ Parameter& Server::copyParameter(Parameter parameter,const _FLASH_STRING &parame
   return parameter_vector_.back();
 }
 
-Parser::JsonValue Server::getParameterValue(const _FLASH_STRING &name)
+JsonVariant Server::getParameterValue(const _FLASH_STRING &name)
 {
   int parameter_index = findParameterIndex(name);
-  return request_json_array_[parameter_index+1];
+  return (*request_json_array_ptr_)[parameter_index+1];
 }
 
 void Server::addNullToResponse(const char *key)
@@ -233,8 +231,9 @@ void Server::handleRequest()
         String request_string = String("[") + String(request_) + String("]");
         request_string.toCharArray(request_,STRING_LENGTH_REQUEST);
       }
-      request_json_array_ = parser_.parse(request_);
-      if (request_json_array_.success())
+      JsonArray& request_json_array = static_json_buffer_.parseArray(request_);
+      request_json_array_ptr_ = &request_json_array;
+      if (request_json_array.success())
       {
         processRequestArray();
       }
@@ -259,23 +258,24 @@ void Server::handleRequest()
 
 void Server::processRequestArray()
 {
-  char* method_string = request_json_array_[0];
+  JsonArray& request_json_array = *request_json_array_ptr_;
+  const char* method_string = request_json_array[0];
   request_method_index_ = processMethodString(method_string);
   if (!(request_method_index_ < 0))
   {
-    int array_elements_count = countJsonArrayElements(request_json_array_);
+    int array_elements_count = countJsonArrayElements(request_json_array);
     int parameter_count = array_elements_count - 1;
-    if ((parameter_count == 1) && (String((char*)request_json_array_[1]).equals("?")))
+    if ((parameter_count == 1) && (String((const char*)request_json_array[1]).equals("?")))
     {
       methodHelp(request_method_index_);
     }
-    else if ((parameter_count == 1) && (String((char*)request_json_array_[1]).equals("??")))
+    else if ((parameter_count == 1) && (String((const char*)request_json_array[1]).equals("??")))
     {
       verboseMethodHelp(request_method_index_);
     }
-    else if ((parameter_count == 2) && (String((char*)request_json_array_[2]).equals("?")))
+    else if ((parameter_count == 2) && (String((const char*)request_json_array[2]).equals("?")))
     {
-      int parameter_index = processParameterString(request_json_array_[1]);
+      int parameter_index = processParameterString(request_json_array[1]);
       Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
       parameterHelp(parameter);
     }
@@ -302,7 +302,7 @@ void Server::processRequestArray()
   }
 }
 
-int Server::processMethodString(char *method_string)
+int Server::processMethodString(const char *method_string)
 {
   int method_index = -1;
   int method_id = String(method_string).toInt();
@@ -331,7 +331,7 @@ int Server::processMethodString(char *method_string)
   return method_index;
 }
 
-int Server::findMethodIndex(char *method_name)
+int Server::findMethodIndex(const char *method_name)
 {
   int method_index = -1;
   for (std::vector<Method>::iterator method_it = method_vector_.begin();
@@ -363,10 +363,10 @@ int Server::findMethodIndex(const _FLASH_STRING &method_name)
   return method_index;
 }
 
-int Server::countJsonArrayElements(Parser::JsonArray &json_array)
+int Server::countJsonArrayElements(JsonArray &json_array)
 {
   int elements_count = 0;
-  for (Parser::JsonArrayIterator array_it=json_array.begin();
+  for (JsonArray::iterator array_it=json_array.begin();
        array_it!=json_array.end();
        ++array_it)
   {
@@ -430,7 +430,7 @@ void Server::verboseMethodHelp(int method_index)
   response_.stopArray();
 }
 
-int Server::processParameterString(char *parameter_string)
+int Server::processParameterString(const char *parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = String(parameter_string).toInt();
@@ -561,12 +561,13 @@ void Server::parameterHelp(Parameter &parameter)
 
 boolean Server::checkParameters()
 {
+  JsonArray& request_json_array = *request_json_array_ptr_;
   int parameter_index = 0;
-  for (Parser::JsonArrayIterator request_it=request_json_array_.begin();
-       request_it!=request_json_array_.end();
+  for (JsonArray::iterator request_it=request_json_array.begin();
+       request_it!=request_json_array.end();
        ++request_it)
   {
-    if (request_it!=request_json_array_.begin())
+    if (request_it!=request_json_array.begin())
     {
       if (checkParameter(parameter_index,*request_it))
       {
@@ -582,7 +583,7 @@ boolean Server::checkParameters()
   return true;
 }
 
-boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
+boolean Server::checkParameter(int parameter_index, JsonVariant json_variant)
 {
   boolean out_of_range = false;
   boolean object_parse_unsuccessful = false;
@@ -597,7 +598,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
       {
         if (parameter.rangeIsSet())
         {
-          long value = (long)json_value;
+          long value = (long)json_variant;
           long min = parameter.getMin().l;
           long max = parameter.getMax().l;
           if ((value < min) || (value > max))
@@ -613,7 +614,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
       {
         if (parameter.rangeIsSet())
         {
-          double value = (double)json_value;
+          double value = (double)json_variant;
           double min = parameter.getMin().d;
           double max = parameter.getMax().d;
           if ((value < min) || (value > max))
@@ -632,7 +633,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
       break;
     case OBJECT_PARAMETER:
       {
-        Parser::JsonObject json_object = json_value;
+        JsonObject& json_object = json_variant;
         if (!json_object.success())
         {
           object_parse_unsuccessful = true;
@@ -641,7 +642,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
       }
     case ARRAY_PARAMETER:
       {
-        Parser::JsonArray json_array = json_value;
+        JsonArray& json_array = json_variant;
         if (!json_array.success())
         {
           array_parse_unsuccessful = true;

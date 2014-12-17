@@ -9,8 +9,9 @@
 #define _METHOD_H_
 #include <iterator>
 #include <vector>
+// Must include ArduinoJson for definition of "new"
+#include "ArduinoJson.h"
 #include "Streaming.h"
-#include "JsonGenerator.h"
 #include "Flash.h"
 #include "Parameter.h"
 #include "Constants.h"

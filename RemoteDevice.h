@@ -29,7 +29,7 @@ public:
   Method& copyMethod(Method &method,const _FLASH_STRING &method_name);
   Parameter& createParameter(const _FLASH_STRING &parameter_name);
   Parameter& copyParameter(Parameter &parameter,const _FLASH_STRING &parameter_name);
-  ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &parameter_name);
+  JsonVariant getParameterValue(const _FLASH_STRING &parameter_name);
   template<typename T>
   void createSavedVariable(const _FLASH_STRING &saved_variable_name, const T &default_value)
   {

@@ -7,8 +7,6 @@
 // ----------------------------------------------------------------------------
 #include "Parameter.h"
 
-using namespace ArduinoJson;
-
 namespace RemoteDevice
 {
 FLASH_STRING(default_parameter_name,"");

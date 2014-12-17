@@ -8,8 +8,6 @@
 #include "RemoteDevice.h"
 
 
-using namespace ArduinoJson;
-
 namespace RemoteDevice
 {
 
@@ -74,7 +72,7 @@ Parameter& RemoteDevice::copyParameter(Parameter &parameter,const _FLASH_STRING 
   return server_.copyParameter(parameter,parameter_name);
 }
 
-Parser::JsonValue RemoteDevice::getParameterValue(const _FLASH_STRING &parameter_name)
+JsonVariant RemoteDevice::getParameterValue(const _FLASH_STRING &parameter_name)
 {
   return server_.getParameterValue(parameter_name);
 }

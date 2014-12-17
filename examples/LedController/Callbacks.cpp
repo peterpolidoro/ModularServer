@@ -7,8 +7,6 @@
 // ----------------------------------------------------------------------------
 #include "Callbacks.h"
 
-using namespace ArduinoJson::Parser;
-
 namespace callbacks
 {
 // Callbacks must be non-blocking (avoid 'delay')
@@ -32,13 +30,14 @@ void getLedPinCallback()
 void blinkLedCallback()
 {
   // remote_device.getParameterValue must be cast to either:
-  // char*
+  // const char*
   // long
   // double
-  // JsonArray
-  // JsonObject
+  // JsonArray&
+  // JsonObject&
   //
-  // For more info read about ArduinoJson JsonParser JsonValues
+  // For more info read about ArduinoJson Decoding/Parsing
+  // https://github.com/bblanchon/ArduinoJson
   double duration_on = remote_device.getParameterValue(constants::duration_on_parameter_name);
   double duration_off = remote_device.getParameterValue(constants::duration_off_parameter_name);
   long count = remote_device.getParameterValue(constants::count_parameter_name);

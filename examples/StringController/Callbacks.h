@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 #ifndef CALLBACKS_H
 #define CALLBACKS_H
-#include "JsonParser.h"
+#include "ArduinoJson.h"
 #include "RemoteDevice.h"
 #include "Constants.h"
 

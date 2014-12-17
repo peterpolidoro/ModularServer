@@ -7,8 +7,6 @@
 // ----------------------------------------------------------------------------
 #include "Callbacks.h"
 
-using namespace ArduinoJson::Parser;
-
 namespace callbacks
 {
 // Callbacks must be non-blocking (avoid 'delay')

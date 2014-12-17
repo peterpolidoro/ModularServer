@@ -14,11 +14,11 @@ namespace RemoteDevice
 const char EOL = '\n';
 const char START_CHAR_JSON_OBJECT = '{';
 const char START_CHAR_JSON_ARRAY = '[';
-const int STRING_LENGTH_REQUEST = 257;
+const int STRING_LENGTH_REQUEST = 286;
 
 const int STRING_LENGTH_DEVICE_NAME = 32;
 
-const int JSON_PARSER_SIZE = 32;
+const int JSON_STATIC_BUFFER_SIZE = 254;
 const int METHOD_COUNT_MAX = 24;
 
 const int STRING_LENGTH_ERROR = 257;

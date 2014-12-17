@@ -7,41 +7,40 @@
 // ----------------------------------------------------------------------------
 #include "Callbacks.h"
 
-using namespace ArduinoJson::Parser;
-
 namespace callbacks
 {
 // Callbacks must be non-blocking (avoid 'delay')
 void echoCallback()
 {
   // remote_device.getParameterValue must be cast to either:
-  // char*
+  // const char*
   // long
   // double
-  // JsonArray
-  // JsonObject
+  // JsonArray&
+  // JsonObject&
   //
-  // For more info read about ArduinoJson JsonParser JsonValues
-  char* string = remote_device.getParameterValue(constants::string_parameter_name);
+  // For more info read about ArduinoJson Decoding/Parsing
+  // https://github.com/bblanchon/ArduinoJson
+  const char* string = remote_device.getParameterValue(constants::string_parameter_name);
   remote_device.addToResponse("echo", string);
 }
 
 void lengthCallback()
 {
-  char* string = remote_device.getParameterValue(constants::string_parameter_name);
+  const char* string = remote_device.getParameterValue(constants::string_parameter_name);
   remote_device.addToResponse("length", String(string).length());
 }
 
 void startsWithCallback()
 {
-  char* string = remote_device.getParameterValue(constants::string_parameter_name);
-  char* string2 = remote_device.getParameterValue(constants::string2_parameter_name);
+  const char* string = remote_device.getParameterValue(constants::string_parameter_name);
+  const char* string2 = remote_device.getParameterValue(constants::string2_parameter_name);
   remote_device.addBooleanToResponse("starts_with", String(string).startsWith(string2));
 }
 
 void repeatCallback()
 {
-  char* string = remote_device.getParameterValue(constants::string_parameter_name);
+  const char* string = remote_device.getParameterValue(constants::string_parameter_name);
   long count = remote_device.getParameterValue(constants::count_parameter_name);
   remote_device.addKeyToResponse("strings");
   remote_device.startResponseArray();
@@ -54,11 +53,11 @@ void repeatCallback()
 
 void charsAtCallback()
 {
-  char* string = remote_device.getParameterValue(constants::string_parameter_name);
-  JsonArray index_array = remote_device.getParameterValue(constants::index_array_parameter_name);
+  const char* string = remote_device.getParameterValue(constants::string_parameter_name);
+  JsonArray& index_array = remote_device.getParameterValue(constants::index_array_parameter_name);
   remote_device.addKeyToResponse("result");
   remote_device.startResponseArray();
-  for (JsonArrayIterator index_it=index_array.begin();
+  for (JsonArray::iterator index_it=index_array.begin();
        index_it != index_array.end();
        ++index_it)
   {
@@ -74,7 +73,7 @@ void charsAtCallback()
 
 void startingCharsCallback()
 {
-  char* string = remote_device.getParameterValue(constants::string_parameter_name);
+  const char* string = remote_device.getParameterValue(constants::string_parameter_name);
   int starting_chars_count;
   // remote_device.getSavedVariableValue type must match the saved variable default type
   remote_device.getSavedVariableValue(constants::starting_chars_count_name,starting_chars_count);

@@ -16,7 +16,7 @@
 #include <iterator>
 #include <vector>
 #include "Streaming.h"
-#include "JsonParser.h"
+#include "ArduinoJson.h"
 #include "MemoryFree.h"
 #include "Flash.h"
 #include "Parameter.h"
@@ -41,7 +41,7 @@ public:
   Method& copyMethod(Method method,const _FLASH_STRING &method_name);
   Parameter& createParameter(const _FLASH_STRING &parameter_name);
   Parameter& copyParameter(Parameter parameter,const _FLASH_STRING &parameter_name);
-  ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &name);
+  JsonVariant getParameterValue(const _FLASH_STRING &name);
   template<typename T>
   SavedVariable& createSavedVariable(const _FLASH_STRING &saved_variable_name, const T &default_value)
   {
@@ -102,8 +102,8 @@ public:
 private:
   Stream *stream_ptr_;
   char request_[STRING_LENGTH_REQUEST];
-  ArduinoJson::Parser::JsonParser<JSON_PARSER_SIZE> parser_;
-  ArduinoJson::Parser::JsonArray request_json_array_;
+  StaticJsonBuffer<JSON_STATIC_BUFFER_SIZE> static_json_buffer_;
+  JsonArray *request_json_array_ptr_;
   std::vector<Method> method_vector_;
   std::vector<Parameter> parameter_vector_;
   std::vector<SavedVariable> saved_variable_vector_;
@@ -120,19 +120,19 @@ private:
   unsigned int eeprom_initialized_index_;
 
   void processRequestArray();
-  int processMethodString(char *method_string);
-  int findMethodIndex(char *method_name);
+  int processMethodString(const char *method_string);
+  int findMethodIndex(const char *method_name);
   int findMethodIndex(const _FLASH_STRING &method_name);
-  int countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array);
+  int countJsonArrayElements(JsonArray &json_array);
   void executeMethod();
   void methodHelp(int method_index);
   void verboseMethodHelp(int method_index);
-  int processParameterString(char *parameter_string);
+  int processParameterString(const char *parameter_string);
   int findParameterIndex(const char *parameter_name);
   int findParameterIndex(const _FLASH_STRING &parameter_name);
   void parameterHelp(Parameter &parameter);
   boolean checkParameters();
-  boolean checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value);
+  boolean checkParameter(int parameter_index, JsonVariant json_variant);
   int findSavedVariableIndex(const _FLASH_STRING &saved_variable_name);
   unsigned int getSerialNumber();
   void initializeEeprom();
