@@ -128,7 +128,7 @@ Streaming:
 
 <http://arduiniana.org/libraries/streaming/>
 
-ArduinoJson:
+ArduinoJson (only works with version 3):
 
 <https://github.com/bblanchon/ArduinoJson>
 

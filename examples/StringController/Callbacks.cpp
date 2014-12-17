@@ -21,7 +21,7 @@ void echoCallback()
   // JsonArray
   // JsonObject
   //
-  // For more info read about ArduinoJson JsonParser JsonValues
+  // For more info read about ArduinoJson v3 JsonParser JsonValues
   char* string = remote_device.getParameterValue(constants::string_parameter_name);
   remote_device.addToResponse("echo", string);
 }
