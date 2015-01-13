@@ -6,6 +6,7 @@
 #include "Flash.h"
 #include "RemoteDevice.h"
 #include "Constants.h"
+#include "Callbacks.h"
 
 // See README.md for more information
 

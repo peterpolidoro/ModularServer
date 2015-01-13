@@ -12,6 +12,19 @@ using namespace ArduinoJson::Parser;
 namespace callbacks
 {
 // Callbacks must be non-blocking (avoid 'delay')
+//
+// remote_device.getParameterValue must be cast to either:
+// char*
+// long
+// double
+// JsonArray
+// JsonObject
+//
+// For more info read about ArduinoJson v3 JsonParser JsonValues
+//
+// remote_device.getSavedVariableValue type must match the saved variable default type
+// remote_device.setSavedVariableValue type must match the saved variable default type
+
 void setLedOnCallback()
 {
   non_block_blink.stop();
@@ -31,14 +44,6 @@ void getLedPinCallback()
 
 void blinkLedCallback()
 {
-  // remote_device.getParameterValue must be cast to either:
-  // char*
-  // long
-  // double
-  // JsonArray
-  // JsonObject
-  //
-  // For more info read about ArduinoJson v3 JsonParser JsonValues
   double duration_on = remote_device.getParameterValue(constants::duration_on_parameter_name);
   double duration_off = remote_device.getParameterValue(constants::duration_off_parameter_name);
   long count = remote_device.getParameterValue(constants::count_parameter_name);
