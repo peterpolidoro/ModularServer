@@ -14,10 +14,20 @@ using namespace RemoteDevice;
 
 void setup()
 {
+  // Pin Setup
+
+  // Device Info
   remote_device.setName(constants::device_name);
   remote_device.setModelNumber(constants::model_number);
   remote_device.setFirmwareNumber(constants::firmware_number);
 
+  // Saved Variables
+
+  // Parameters
+
+  // Methods
+
+  // Start Server
   remote_device.startServer(constants::baudrate);
 }
 

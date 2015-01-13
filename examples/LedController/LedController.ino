@@ -15,12 +15,25 @@ using namespace RemoteDevice;
 
 void setup()
 {
+  // Pin Setup
   pinMode(constants::led_pin, OUTPUT);
 
+  // Device Info
   remote_device.setName(constants::device_name);
   remote_device.setModelNumber(constants::model_number);
   remote_device.setFirmwareNumber(constants::firmware_number);
 
+  // Saved Variables
+
+  // Parameters
+  Parameter& duration_on_parameter = remote_device.createParameter(constants::duration_on_parameter_name);
+  duration_on_parameter.setUnits(constants::seconds_unit);
+  duration_on_parameter.setRange(constants::duration_min,constants::duration_max);
+  Parameter& duration_off_parameter = remote_device.copyParameter(duration_on_parameter,constants::duration_off_parameter_name);
+  Parameter& count_parameter = remote_device.createParameter(constants::count_parameter_name);
+  count_parameter.setRange(constants::count_min,constants::count_max);
+
+  // Methods
   Method& led_on_method = remote_device.createMethod(constants::led_on_method_name);
   led_on_method.attachCallback(callbacks::setLedOnCallback);
 
@@ -32,16 +45,11 @@ void setup()
 
   Method& blink_led_method = remote_device.createMethod(constants::blink_led_method_name);
   blink_led_method.attachCallback(callbacks::blinkLedCallback);
-  Parameter& duration_on_parameter = remote_device.createParameter(constants::duration_on_parameter_name);
-  duration_on_parameter.setUnits(constants::seconds_unit);
-  duration_on_parameter.setRange(constants::duration_min,constants::duration_max);
   blink_led_method.addParameter(duration_on_parameter);
-  Parameter& duration_off_parameter = remote_device.copyParameter(duration_on_parameter,constants::duration_off_parameter_name);
   blink_led_method.addParameter(duration_off_parameter);
-  Parameter& count_parameter = remote_device.createParameter(constants::count_parameter_name);
-  count_parameter.setRange(constants::count_min,constants::count_max);
   blink_led_method.addParameter(count_parameter);
 
+  // Start Server
   remote_device.startServer(constants::baudrate);
 }
 
