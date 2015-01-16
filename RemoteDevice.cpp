@@ -18,8 +18,8 @@ FLASH_STRING(reset_defaults_method_name,"resetDefaults");
 FLASH_STRING(set_serial_number_method_name,"setSerialNumber");
 FLASH_STRING(serial_number_parameter_name,"serial_number");
 
-RemoteDevice::RemoteDevice(Stream &stream) :
-  server_(stream)
+RemoteDevice::RemoteDevice(HardwareSerial &serial) :
+  server_(serial)
 {
   Method& get_memory_free_method = createMethod(get_memory_free_method_name);
   get_memory_free_method.attachCallback(getMemoryFreeCallback);
@@ -34,9 +34,9 @@ RemoteDevice::RemoteDevice(Stream &stream) :
   set_serial_number_method.addParameter(serial_number_parameter);
 }
 
-void RemoteDevice::setServerStream(Stream &stream)
+void RemoteDevice::setServerSerial(HardwareSerial &serial)
 {
-  server_.setStream(stream);
+  server_.setSerial(serial);
 }
 
 void RemoteDevice::setName(const _FLASH_STRING &device_name)

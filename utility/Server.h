@@ -31,8 +31,8 @@ namespace RemoteDevice
 class Server
 {
 public:
-  Server(Stream &stream=Serial);
-  void setStream(Stream &stream);
+  Server(HardwareSerial &serial=Serial);
+  void setSerial(HardwareSerial &serial);
   void setName(const _FLASH_STRING &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
@@ -100,7 +100,7 @@ public:
   void startServer(const int baudrate);
   void handleRequest();
 private:
-  Stream *stream_ptr_;
+  HardwareSerial *serial_ptr_;
   char request_[STRING_LENGTH_REQUEST];
   ArduinoJson::Parser::JsonParser<JSON_PARSER_SIZE> parser_;
   ArduinoJson::Parser::JsonArray request_json_array_;

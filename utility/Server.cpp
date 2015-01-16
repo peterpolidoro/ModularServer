@@ -25,10 +25,10 @@ FLASH_STRING(array_parse_error_message,"Parsing JSON array request failed! Could
 FLASH_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
 FLASH_STRING(serial_number_saved_variable_name,"serial_number");
 
-Server::Server(Stream &stream) :
-  response_(stream)
+Server::Server(HardwareSerial &serial) :
+  response_(serial)
 {
-  setStream(stream);
+  setSerial(serial);
   setName(default_device_name);
   model_number_ = 0;
   firmware_number_ = 0;
@@ -65,9 +65,9 @@ Server::Server(Stream &stream) :
   createSavedVariable(serial_number_saved_variable_name,SERIAL_NUMBER_DEFAULT);
 }
 
-void Server::setStream(Stream &stream)
+void Server::setSerial(HardwareSerial &serial)
 {
-  stream_ptr_ = &stream;
+  serial_ptr_ = &serial;
 }
 
 void Server::setName(const _FLASH_STRING &name)
@@ -201,14 +201,14 @@ void Server::startServer(const int baudrate)
   {
     initializeEeprom();
   }
-  Serial.begin(baudrate);
+  serial_ptr_->begin(baudrate);
 }
 
 void Server::handleRequest()
 {
-  while (stream_ptr_->available() > 0)
+  while (serial_ptr_->available() > 0)
   {
-    int request_length = stream_ptr_->readBytesUntil(EOL,request_,STRING_LENGTH_REQUEST);
+    int request_length = serial_ptr_->readBytesUntil(EOL,request_,STRING_LENGTH_REQUEST);
     if (request_length == 0)
     {
       continue;
@@ -253,7 +253,7 @@ void Server::handleRequest()
       }
     }
     response_.stopObject();
-    *stream_ptr_ << endl;
+    *serial_ptr_ << endl;
   }
 }
 

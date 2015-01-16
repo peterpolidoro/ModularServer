@@ -20,8 +20,8 @@ void setSerialNumberCallback();
 class RemoteDevice
 {
 public:
-  RemoteDevice(Stream &stream);
-  void setServerStream(Stream &stream);
+  RemoteDevice(HardwareSerial &serial);
+  void setServerSerial(HardwareSerial &serial);
   void setName(const _FLASH_STRING &device_name);
   void setModelNumber(const unsigned int model_number);
   void setFirmwareNumber(const unsigned int firmware_number);

@@ -32,8 +32,8 @@ public:
 class JsonPrinter
 {
 public:
-  JsonPrinter(Stream &stream);
-  void setStream(Stream &stream);
+  JsonPrinter(HardwareSerial &serial);
+  void setSerial(HardwareSerial &serial);
   void startObject();
   void stopObject();
   void startArray();
@@ -62,7 +62,7 @@ public:
   }
   void addBoolean(const boolean value);
 private:
-  Stream *stream_ptr_;
+  HardwareSerial *serial_ptr_;
   boolean pretty_print_;
   int indent_level_;
   std::vector<JsonDepthTracker> jdt_vector_;
