@@ -9,7 +9,7 @@
 
 using namespace ArduinoJson;
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 FLASH_STRING(default_parameter_name,"");
 FLASH_STRING(default_parameter_units,"");

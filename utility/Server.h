@@ -26,7 +26,7 @@
 #include "JsonPrinter.h"
 
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 class Server
 {

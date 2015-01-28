@@ -1,5 +1,5 @@
-arduino_remote_device
-=====================
+modular_device_arduino
+======================
 
 Authors:
 
@@ -75,11 +75,11 @@ setSerialNumber ??
 
 ####Python
 
-<https://github.com/JaneliaSciComp/python_remote_device>
+<https://github.com/JaneliaSciComp/modular_device_python>
 
 ####Matlab
 
-<https://github.com/JaneliaSciComp/matlab_remote_device>
+<https://github.com/JaneliaSciComp/modular_device_matlab>
 
 ##Installation
 
@@ -106,10 +106,10 @@ Or for more information on installing libraries, see:
 
 ###Install This Library and its Dependencies Separately
 
-####Clone This Repository into the Directory 'RemoteDevice'
+####Clone This Repository
 
 ```shell
-git clone https://github.com/JaneliaSciComp/arduino_remote_device.git RemoteDevice
+git clone https://github.com/JaneliaSciComp/modular_device_arduino.git
 ```
 
 Install symbolic library link into the default sketchbook directory

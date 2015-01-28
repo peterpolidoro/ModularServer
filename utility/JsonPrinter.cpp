@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 #include "JsonPrinter.h"
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 JsonDepthTracker::JsonDepthTracker()
 {

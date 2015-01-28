@@ -10,7 +10,7 @@
 
 using namespace ArduinoJson;
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 FLASH_STRING(default_method_name,"");
 

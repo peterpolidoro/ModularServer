@@ -1,5 +1,5 @@
 MinimalDevice
--------------
+=============
 
 Authors:
 
@@ -214,8 +214,8 @@ Example Response:
 Example Python session:
 
 ```python
-from remote_device import RemoteDevice
-dev = RemoteDevice() # Automatically finds device if one available
+from modular_device import ModularDevice
+dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
 {'firmware_number': 1,
  'model_number': 1000,
@@ -238,7 +238,7 @@ dev.set_serial_number(12)
 
 For more details on the Python interface:
 
-<https://github.com/JaneliaSciComp/python_remote_device>
+<https://github.com/JaneliaSciComp/modular_device_python>
 
 ####Matlab
 
@@ -252,16 +252,16 @@ serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
 % Windows
 getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
-dev = RemoteDevice(serial_port)  % creates a device object
+dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
-device_info = 
+device_info =
                name: 'minimal_device'
        model_number: 1000
       serial_number: 0
     firmware_number: 1
 dev.getMethods()                 % get device methods
-Remote Device Methods
+Modular Device Methods
 ---------------------
 getMemoryFree
 resetDefaults
@@ -270,7 +270,7 @@ dev.getMemoryFree()
 ans =
         4874
 dev.setSerialNumber()
-Error using RemoteDevice/sendRequest (line 309)
+Error using ModularDevice/sendRequest (line 309)
 device responded with error, Incorrect number of parameters. 0 given. 1 needed.
 dev.setSerialNumber('?')
 ans =
@@ -281,7 +281,7 @@ ans =
      min: 0
      max: 65535
 dev.setSerialNumber(-1)
-Error using RemoteDevice/sendRequest (line 309)
+Error using ModularDevice/sendRequest (line 309)
 device responded with error, Parameter value out of range: 0 <= serial_number <= 65535
 dev.setSerialNumber(13)
 dev.close()                      % close serial connection
@@ -290,7 +290,7 @@ delete(dev)                      % deletes the device
 
 For more details on the Matlab interface:
 
-<https://github.com/JaneliaSciComp/matlab_remote_device>
+<https://github.com/JaneliaSciComp/modular_device_matlab>
 
 ##Installation
 
@@ -317,10 +317,10 @@ Or for more information on installing libraries, see:
 
 ###Install This Library and its Dependencies Separately
 
-####Clone This Repository into the Directory 'RemoteDevice'
+####Clone This Repository
 
 ```shell
-git clone https://github.com/JaneliaSciComp/arduino_remote_device.git RemoteDevice
+git clone https://github.com/JaneliaSciComp/modular_device_arduino.git
 ```
 
 Install symbolic library link into the default sketchbook directory

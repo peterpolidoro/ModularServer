@@ -8,7 +8,7 @@
 #ifndef CALLBACKS_H
 #define CALLBACKS_H
 #include "JsonParser.h"
-#include "RemoteDevice.h"
+#include "ModularDevice.h"
 #include "Constants.h"
 
 

@@ -17,10 +17,10 @@
 #include "Constants.h"
 
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 class Command;
-class RemoteDevice;
+class ModularDevice;
 
 class Parameter
 {

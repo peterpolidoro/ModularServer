@@ -1,26 +1,26 @@
 // ----------------------------------------------------------------------------
-// RemoteDevice.h
+// ModularDevice.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef REMOTE_DEVICE_H
-#define REMOTE_DEVICE_H
+#ifndef MODULAR_DEVICE_H
+#define MODULAR_DEVICE_H
 #include "utility/Server.h"
 
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 class Method;
 void getMemoryFreeCallback();
 void resetDefaultsCallback();
 void setSerialNumberCallback();
 
-class RemoteDevice
+class ModularDevice
 {
 public:
-  RemoteDevice(HardwareSerial &serial);
+  ModularDevice(HardwareSerial &serial);
   void setServerSerial(HardwareSerial &serial);
   void setName(const _FLASH_STRING &device_name);
   void setModelNumber(const unsigned int model_number);
@@ -75,6 +75,6 @@ private:
 };
 }
 
-extern RemoteDevice::RemoteDevice remote_device;
+extern ModularDevice::ModularDevice modular_device;
 
 #endif

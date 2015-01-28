@@ -11,7 +11,7 @@
 #include "Flash.h"
 
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 class SavedVariable
 {

@@ -4,22 +4,22 @@
 #include "StandardCplusplus.h"
 #include "MemoryFree.h"
 #include "Flash.h"
-#include "RemoteDevice.h"
+#include "ModularDevice.h"
 #include "Constants.h"
 #include "Callbacks.h"
 
 // See README.md for more information
 
-using namespace RemoteDevice;
+using namespace ModularDevice;
 
 void setup()
 {
   // Pin Setup
 
   // Device Info
-  remote_device.setName(constants::device_name);
-  remote_device.setModelNumber(constants::model_number);
-  remote_device.setFirmwareNumber(constants::firmware_number);
+  modular_device.setName(constants::device_name);
+  modular_device.setModelNumber(constants::model_number);
+  modular_device.setFirmwareNumber(constants::firmware_number);
 
   // Saved Variables
 
@@ -28,10 +28,10 @@ void setup()
   // Methods
 
   // Start Server
-  remote_device.startServer(constants::baudrate);
+  modular_device.startServer(constants::baudrate);
 }
 
 void loop()
 {
-  remote_device.handleServerRequests();
+  modular_device.handleServerRequests();
 }

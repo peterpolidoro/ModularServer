@@ -18,7 +18,7 @@
 #include "Constants.h"
 
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 class JsonDepthTracker
 {

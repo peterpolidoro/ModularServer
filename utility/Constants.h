@@ -8,9 +8,9 @@
 #ifndef _CONSTANTS_H_
 #define _CONSTANTS_H_
 
-namespace RemoteDevice
+namespace ModularDevice
 {
-// RemoteDevice
+// ModularDevice
 const char EOL = '\n';
 const char START_CHAR_JSON_OBJECT = '{';
 const char START_CHAR_JSON_ARRAY = '[';

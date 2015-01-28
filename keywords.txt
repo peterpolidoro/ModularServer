@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map For RemoteDevice
+# Syntax Coloring Map For ModularDevice
 #######################################
 
 #######################################
@@ -31,7 +31,7 @@ removeRange	KEYWORD2
 # Instances (KEYWORD2)
 #######################################
 
-remote_device	KEYWORD2
+modular_device	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

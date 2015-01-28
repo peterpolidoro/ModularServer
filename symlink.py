@@ -60,7 +60,7 @@ def get_paths():
     Get source and destination paths for symbolic link
     """
     src_path = os.path.abspath(os.path.curdir)
-    dst_path = os.path.join(LIBDIR,os.path.split(src_path)[1])
+    dst_path = os.path.join(LIBDIR,"ModularDevice")
     return src_path, dst_path
 
 

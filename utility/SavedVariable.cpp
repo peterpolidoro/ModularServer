@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 #include "SavedVariable.h"
 
-namespace RemoteDevice
+namespace ModularDevice
 {
 void SavedVariable::setName(const _FLASH_STRING &name)
 {
