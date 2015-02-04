@@ -83,8 +83,16 @@ setSerialNumber ??
 
 ##Installation
 
-This library and its dependencies can be installed together or
-separately.
+###Install Latest Version of Arduino on your Host Machine
+
+<http://arduino.cc/en/Guide/HomePage>
+
+On linux, you may need to add yourself to the group 'dialout' in order
+to have write permissions on the USB port:
+
+```shell
+sudo usermod -aG dialout <myuser>
+```
 
 ###Install This Library and its Dependencies Together
 
@@ -130,12 +138,12 @@ Streaming:
 
 ArduinoJson (only works with version 3):
 
-<https://github.com/bblanchon/ArduinoJson>
+<https://github.com/peterpolidoro/ArduinoJson>
 
 StandardCplusplus:
 
-<https://github.com/maniacbug/StandardCplusplus>
+<https://github.com/peterpolidoro/StandardCplusplus>
 
 MemoryFree:
 
-<https://github.com/maniacbug/MemoryFree>
+<https://github.com/peterpolidoro/MemoryFree>
