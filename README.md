@@ -83,67 +83,6 @@ setSerialNumber ??
 
 ##Installation
 
-###Install Latest Version of Arduino on your Host Machine
-
-<http://arduino.cc/en/Guide/HomePage>
-
-On linux, you may need to add yourself to the group 'dialout' in order
-to have write permissions on the USB port:
-
-```shell
-sudo usermod -aG dialout <myuser>
-```
-
 ###Install This Library and its Dependencies Together
 
-Clone the arduino-libraries repository:
-
-```shell
-git clone https://github.com/JaneliaSciComp/arduino-libraries.git
-```
-
-Install symbolic library links into the default sketchbook directory
-using Python when running Linux or Mac OS X:
-
-```shell
-python symlinks.py --install
-```
-Or for more information on installing libraries, see:
-
-<http://arduino.cc/en/Guide/Libraries>
-
-###Install This Library and its Dependencies Separately
-
-####Clone This Repository
-
-```shell
-git clone https://github.com/JaneliaSciComp/modular_device_arduino.git
-```
-
-Install symbolic library link into the default sketchbook directory
-using Python when running Linux or Mac OS X:
-
-```shell
-python symlink.py --install
-```
-Or for more information on installing libraries, see:
-
-<http://arduino.cc/en/Guide/Libraries>
-
-####Download and Install the Arduino Library Dependencies
-
-Streaming:
-
-<http://arduiniana.org/libraries/streaming/>
-
-ArduinoJson (only works with version 3):
-
-<https://github.com/peterpolidoro/ArduinoJson>
-
-StandardCplusplus:
-
-<https://github.com/peterpolidoro/StandardCplusplus>
-
-MemoryFree:
-
-<https://github.com/peterpolidoro/MemoryFree>
+<https://github.com/JaneliaSciComp/arduino-libraries>
