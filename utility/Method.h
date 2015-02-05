@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _METHOD_H_
-#define _METHOD_H_
+#ifndef _MODULAR_DEVICE_METHOD_H_
+#define _MODULAR_DEVICE_METHOD_H_
 #include "Streaming.h"
 #include "StandardCplusplus.h"
 #include "vector"

@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _SERVER_H_
-#define _SERVER_H_
+#ifndef _MODULAR_DEVICE_SERVER_H_
+#define _MODULAR_DEVICE_SERVER_H_
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else

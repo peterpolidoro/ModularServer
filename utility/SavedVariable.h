@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _SAVED_VARIABLE_H_
-#define _SAVED_VARIABLE_H_
+#ifndef _MODULAR_DEVICE_SAVED_VARIABLE_H_
+#define _MODULAR_DEVICE_SAVED_VARIABLE_H_
 #include <EEPROM.h>
 #include "Flash.h"
 

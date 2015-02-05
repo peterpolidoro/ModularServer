@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _CONSTANTS_H_
-#define _CONSTANTS_H_
+#ifndef _MODULAR_DEVICE_CONSTANTS_H_
+#define _MODULAR_DEVICE_CONSTANTS_H_
 
 namespace ModularDevice
 {
