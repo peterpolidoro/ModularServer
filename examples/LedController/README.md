@@ -323,57 +323,6 @@ For more details on the Matlab interface:
 
 ##Installation
 
-This library and its dependencies can be installed together or
-separately.
-
 ###Install This Library and its Dependencies Together
 
-Clone the arduino-libraries repository:
-
-```shell
-git clone https://github.com/JaneliaSciComp/arduino-libraries.git
-```
-
-Install symbolic library links into the default sketchbook directory
-using Python when running Linux or Mac OS X:
-
-```shell
-python symlinks.py --install
-```
-Or for more information on installing libraries, see:
-
-<http://arduino.cc/en/Guide/Libraries>
-
-###Install This Library and its Dependencies Separately
-
-####Clone This Repository
-
-```shell
-git clone https://github.com/JaneliaSciComp/modular_device_arduino.git
-```
-
-Install symbolic library link into the default sketchbook directory
-using Python when running Linux or Mac OS X:
-
-```shell
-python symlink.py --install
-```
-Or for more information on installing libraries, see:
-
-<http://arduino.cc/en/Guide/Libraries>
-
-####Download and Install the Arduino Library Dependencies
-
-Streaming:
-
-<http://arduiniana.org/libraries/streaming/>
-
-ArduinoJson:
-
-<https://github.com/bblanchon/ArduinoJson>
-
-StandardCplusplus:
-
-<https://github.com/maniacbug/StandardCplusplus>
-
-
+<https://github.com/JaneliaSciComp/arduino-libraries>
