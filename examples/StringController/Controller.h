@@ -18,7 +18,10 @@ public:
   void setup();
   void update();
 
+  void setStoredString(String str);
+  String getStoredString();
 private:
+  String stored_string_;
 };
 
 extern Controller controller;

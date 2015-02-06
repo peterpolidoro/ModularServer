@@ -9,6 +9,7 @@
 
 Controller::Controller()
 {
+  stored_string_ = String("");
 }
 
 void Controller::setup()
@@ -69,6 +70,13 @@ void Controller::setup()
   ModularDevice::Method& get_starting_chars_count_method = modular_device.createMethod(constants::get_starting_chars_count_method_name);
   get_starting_chars_count_method.attachCallback(callbacks::getStartingCharsCountCallback);
 
+  ModularDevice::Method& set_stored_string_method = modular_device.createMethod(constants::set_stored_string_method_name);
+  set_stored_string_method.attachCallback(callbacks::setStoredStringCallback);
+  set_stored_string_method.addParameter(string_parameter);
+
+  ModularDevice::Method& get_stored_string_method = modular_device.createMethod(constants::get_stored_string_method_name);
+  get_stored_string_method.attachCallback(callbacks::getStoredStringCallback);
+
   // Start ModularDevice Server
   modular_device.startServer(constants::baudrate);
 }
@@ -76,6 +84,16 @@ void Controller::setup()
 void Controller::update()
 {
   modular_device.handleServerRequests();
+}
+
+void Controller::setStoredString(String str)
+{
+  stored_string_ = str;
+}
+
+String Controller::getStoredString()
+{
+  return stored_string_;
 }
 
 Controller controller;

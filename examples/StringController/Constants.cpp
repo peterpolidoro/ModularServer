@@ -31,6 +31,8 @@ FLASH_STRING(chars_at_method_name,"charsAt");
 FLASH_STRING(starting_chars_method_name,"startingChars");
 FLASH_STRING(set_starting_chars_count_method_name,"setStartingCharsCount");
 FLASH_STRING(get_starting_chars_count_method_name,"getStartingCharsCount");
+FLASH_STRING(set_stored_string_method_name,"setStoredString");
+FLASH_STRING(get_stored_string_method_name,"getStoredString");
 FLASH_STRING(string_parameter_name,"string");
 FLASH_STRING(string2_parameter_name,"string2");
 FLASH_STRING(count_parameter_name,"count");

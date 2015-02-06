@@ -10,6 +10,7 @@
 #include "JsonParser.h"
 #include "ModularDevice.h"
 #include "Constants.h"
+#include "Controller.h"
 
 
 namespace callbacks
@@ -29,5 +30,9 @@ void startingCharsCallback();
 void setStartingCharsCountCallback();
 
 void getStartingCharsCountCallback();
+
+void setStoredStringCallback();
+
+void getStoredStringCallback();
 }
 #endif

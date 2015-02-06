@@ -32,6 +32,8 @@ extern _FLASH_STRING chars_at_method_name;
 extern _FLASH_STRING starting_chars_method_name;
 extern _FLASH_STRING set_starting_chars_count_method_name;
 extern _FLASH_STRING get_starting_chars_count_method_name;
+extern _FLASH_STRING set_stored_string_method_name;
+extern _FLASH_STRING get_stored_string_method_name;
 extern _FLASH_STRING string_parameter_name;
 extern _FLASH_STRING string2_parameter_name;
 extern _FLASH_STRING count_parameter_name;

@@ -102,4 +102,15 @@ void getStartingCharsCountCallback()
   modular_device.getSavedVariableValue(constants::starting_chars_count_name,starting_chars_count);
   modular_device.addToResponse("starting_chars_count",starting_chars_count);
 }
+
+void setStoredStringCallback()
+{
+  char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  controller.setStoredString(String(string));
+}
+
+void getStoredStringCallback()
+{
+  modular_device.addToResponse("stored_string", controller.getStoredString());
+}
 }

@@ -10,6 +10,7 @@
 #include "JsonParser.h"
 #include "ModularDevice.h"
 #include "Constants.h"
+#include "Controller.h"
 #include "NonBlockBlink.h"
 
 
