@@ -540,6 +540,11 @@ void Server::parameterHelp(Parameter &parameter)
         }
         break;
       }
+    case BOOL_PARAMETER:
+      {
+        addToResponse("type","bool");
+        break;
+      }
     case STRING_PARAMETER:
       {
         addToResponse("type","string");
@@ -553,6 +558,11 @@ void Server::parameterHelp(Parameter &parameter)
     case ARRAY_PARAMETER:
       {
         addToResponse("type","array");
+        break;
+      }
+    case UNSPECIFIED_PARAMETER:
+      {
+        addToResponse("type","unspecified");
         break;
       }
   }
@@ -628,6 +638,8 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
         }
         break;
       }
+    case BOOL_PARAMETER:
+      break;
     case STRING_PARAMETER:
       break;
     case OBJECT_PARAMETER:
@@ -648,6 +660,8 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
         }
         break;
       }
+    case UNSPECIFIED_PARAMETER:
+      break;
   }
   if (out_of_range)
   {

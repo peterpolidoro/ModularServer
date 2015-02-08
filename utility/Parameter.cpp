@@ -18,7 +18,7 @@ Parameter::Parameter(const _FLASH_STRING &name=default_parameter_name)
 {
   setName(name);
   setUnits(default_parameter_units);
-  setTypeLong();
+  setTypeUnspecified();
   range_is_set_ = false;
 }
 
@@ -40,6 +40,11 @@ void Parameter::setTypeLong()
 void Parameter::setTypeDouble()
 {
   type_ = DOUBLE_PARAMETER;
+}
+
+void Parameter::setTypeBool()
+{
+  type_ = BOOL_PARAMETER;
 }
 
 void Parameter::setTypeString()
@@ -118,5 +123,10 @@ NumberType Parameter::getMin()
 NumberType Parameter::getMax()
 {
   return max_;
+}
+
+void Parameter::setTypeUnspecified()
+{
+  type_ = UNSPECIFIED_PARAMETER;
 }
 }

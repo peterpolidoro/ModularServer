@@ -30,6 +30,7 @@ public:
   void setUnits(const _FLASH_STRING &name);
   void setTypeLong();
   void setTypeDouble();
+  void setTypeBool();
   void setTypeString();
   void setTypeObject();
   void setTypeArray();
@@ -59,6 +60,7 @@ private:
   boolean rangeIsSet();
   NumberType getMin();
   NumberType getMax();
+  void setTypeUnspecified();
   friend class Method;
   friend class Server;
 };
