@@ -17,6 +17,7 @@ namespace callbacks
 // char*
 // long
 // double
+// bool
 // JsonArray
 // JsonObject
 //
