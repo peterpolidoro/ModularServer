@@ -38,6 +38,7 @@ extern _FLASH_STRING string_parameter_name;
 extern _FLASH_STRING string2_parameter_name;
 extern _FLASH_STRING count_parameter_name;
 extern _FLASH_STRING index_array_parameter_name;
+extern _FLASH_STRING double_echo_parameter_name;
 extern _FLASH_STRING starting_chars_count_name;
 }
 #endif

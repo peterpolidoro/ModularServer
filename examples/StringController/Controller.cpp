@@ -34,11 +34,14 @@ void Controller::setup()
   index_array_parameter.setTypeArray();
   ModularDevice::Parameter& starting_chars_count_parameter = modular_device.createParameter(constants::starting_chars_count_name);
   starting_chars_count_parameter.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
+  ModularDevice::Parameter& double_echo_parameter = modular_device.createParameter(constants::double_echo_parameter_name);
+  double_echo_parameter.setTypeBool();
 
   // Methods
   ModularDevice::Method& echo_method = modular_device.createMethod(constants::echo_method_name);
   echo_method.attachCallback(callbacks::echoCallback);
   echo_method.addParameter(string_parameter);
+  echo_method.addParameter(double_echo_parameter);
 
   ModularDevice::Method& length_method = modular_device.createMethod(constants::length_method_name);
   length_method.attachCallback(callbacks::lengthCallback);

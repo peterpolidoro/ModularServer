@@ -29,7 +29,16 @@ namespace callbacks
 void echoCallback()
 {
   char* string = modular_device.getParameterValue(constants::string_parameter_name);
-  modular_device.addToResponse("echo", string);
+  bool double_echo = modular_device.getParameterValue(constants::double_echo_parameter_name);
+  if (!double_echo)
+  {
+    modular_device.addToResponse("echo", string);
+  }
+  else
+  {
+    String echo = String(string) + String(string);
+    modular_device.addToResponse("echo", echo);
+  }
 }
 
 void lengthCallback()

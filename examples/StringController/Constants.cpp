@@ -37,5 +37,6 @@ FLASH_STRING(string_parameter_name,"string");
 FLASH_STRING(string2_parameter_name,"string2");
 FLASH_STRING(count_parameter_name,"count");
 FLASH_STRING(index_array_parameter_name,"index_array");
+FLASH_STRING(double_echo_parameter_name,"double_echo");
 FLASH_STRING(starting_chars_count_name,"starting_chars_count");
 }
