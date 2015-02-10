@@ -17,7 +17,9 @@ class SavedVariable
 {
 public:
   template<typename T>
-  SavedVariable(const _FLASH_STRING &name, const unsigned int eeprom_index, const T &default_value)
+  SavedVariable(const _FLASH_STRING &name,
+                const unsigned int eeprom_index,
+                const T &default_value)
   {
     setName(name);
     eeprom_index_ = eeprom_index;
@@ -62,6 +64,7 @@ public:
     return i;
   }
   void setDefaultValue();
+  int getSize();
 private:
   const _FLASH_STRING *name_ptr_;
   unsigned int eeprom_index_;

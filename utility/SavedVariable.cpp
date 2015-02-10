@@ -33,6 +33,10 @@ void SavedVariable::setDefaultValue()
   }
 }
 
+int SavedVariable::getSize()
+{
+  return size_;
+}
 boolean SavedVariable::compareName(const _FLASH_STRING &name_to_compare)
 {
   return (&name_to_compare == name_ptr_);

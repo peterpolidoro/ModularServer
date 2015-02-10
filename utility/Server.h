@@ -55,7 +55,7 @@ public:
       {
         saved_variable_vector_.back().setDefaultValue();
       }
-      eeprom_index_ += sizeof(default_value);
+      eeprom_index_ += saved_variable_vector_.back().getSize();
       return saved_variable_vector_.back();
     }
   }
