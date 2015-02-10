@@ -22,6 +22,9 @@ const int starting_chars_count_min = 1;
 const int starting_chars_count_max = 10;
 const int starting_chars_count_default = 2;
 
+const int index_array_element_min = 0;
+const int index_array_element_max = 10;
+
 FLASH_STRING(device_name,"string_controller");
 FLASH_STRING(echo_method_name,"echo");
 FLASH_STRING(length_method_name,"length");

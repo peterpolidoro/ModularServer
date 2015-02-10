@@ -49,6 +49,7 @@ private:
   const _FLASH_STRING *name_ptr_;
   const _FLASH_STRING *units_ptr_;
   ParameterType type_;
+  ParameterType array_element_type_;
   NumberType min_;
   NumberType max_;
   boolean range_is_set_;
@@ -57,10 +58,10 @@ private:
   const _FLASH_STRING* getNamePointer();
   const _FLASH_STRING* getUnitsPointer();
   ParameterType getType();
+  ParameterType getArrayElementType();
   boolean rangeIsSet();
   NumberType getMin();
   NumberType getMax();
-  void setTypeUnspecified();
   friend class Method;
   friend class Server;
 };

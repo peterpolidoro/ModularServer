@@ -18,7 +18,8 @@ Parameter::Parameter(const _FLASH_STRING &name=default_parameter_name)
 {
   setName(name);
   setUnits(default_parameter_units);
-  setTypeUnspecified();
+  type_ = LONG_PARAMETER;
+  array_element_type_ = LONG_PARAMETER;
   range_is_set_ = false;
 }
 
@@ -34,22 +35,50 @@ void Parameter::setUnits(const _FLASH_STRING &units)
 
 void Parameter::setTypeLong()
 {
-  type_ = LONG_PARAMETER;
+  if (type_ != ARRAY_PARAMETER)
+  {
+    type_ = LONG_PARAMETER;
+  }
+  else
+  {
+    array_element_type_ = LONG_PARAMETER;
+  }
 }
 
 void Parameter::setTypeDouble()
 {
-  type_ = DOUBLE_PARAMETER;
+  if (type_ != ARRAY_PARAMETER)
+  {
+    type_ = DOUBLE_PARAMETER;
+  }
+  else
+  {
+    array_element_type_ = DOUBLE_PARAMETER;
+  }
 }
 
 void Parameter::setTypeBool()
 {
-  type_ = BOOL_PARAMETER;
+  if (type_ != ARRAY_PARAMETER)
+  {
+    type_ = BOOL_PARAMETER;
+  }
+  else
+  {
+    array_element_type_ = BOOL_PARAMETER;
+  }
 }
 
 void Parameter::setTypeString()
 {
-  type_ = STRING_PARAMETER;
+  if (type_ != ARRAY_PARAMETER)
+  {
+    type_ = STRING_PARAMETER;
+  }
+  else
+  {
+    array_element_type_ = STRING_PARAMETER;
+  }
 }
 
 void Parameter::setTypeObject()
@@ -59,6 +88,7 @@ void Parameter::setTypeObject()
 
 void Parameter::setTypeArray()
 {
+  array_element_type_ = type_;
   type_ = ARRAY_PARAMETER;
 }
 
@@ -110,6 +140,11 @@ ParameterType Parameter::getType()
   return type_;
 }
 
+ParameterType Parameter::getArrayElementType()
+{
+  return array_element_type_;
+}
+
 boolean Parameter::rangeIsSet()
 {
   return range_is_set_;
@@ -123,10 +158,5 @@ NumberType Parameter::getMin()
 NumberType Parameter::getMax()
 {
   return max_;
-}
-
-void Parameter::setTypeUnspecified()
-{
-  type_ = UNSPECIFIED_PARAMETER;
 }
 }

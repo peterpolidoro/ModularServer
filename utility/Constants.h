@@ -49,7 +49,6 @@ enum ParameterType
     STRING_PARAMETER,
     OBJECT_PARAMETER,
     ARRAY_PARAMETER,
-    UNSPECIFIED_PARAMETER,
   };
 
 union NumberType

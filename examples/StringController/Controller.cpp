@@ -32,6 +32,7 @@ void Controller::setup()
   count_parameter.setRange(constants::count_min,constants::count_max);
   ModularDevice::Parameter& index_array_parameter = modular_device.createParameter(constants::index_array_parameter_name);
   index_array_parameter.setTypeArray();
+  index_array_parameter.setRange(constants::index_array_element_min,constants::index_array_element_max);
   ModularDevice::Parameter& starting_chars_count_parameter = modular_device.createParameter(constants::starting_chars_count_name);
   starting_chars_count_parameter.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
   ModularDevice::Parameter& double_echo_parameter = modular_device.createParameter(constants::double_echo_parameter_name);

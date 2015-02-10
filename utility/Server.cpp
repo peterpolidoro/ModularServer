@@ -558,11 +558,44 @@ void Server::parameterHelp(Parameter &parameter)
     case ARRAY_PARAMETER:
       {
         addToResponse("type","array");
-        break;
-      }
-    case UNSPECIFIED_PARAMETER:
-      {
-        addToResponse("type","unspecified");
+        ParameterType array_element_type = parameter.getArrayElementType();
+        switch (array_element_type)
+        {
+          case LONG_PARAMETER:
+            {
+              addToResponse("array_element_type","long");
+              if (parameter.rangeIsSet())
+              {
+                long min = parameter.getMin().l;
+                long max = parameter.getMax().l;
+                addToResponse("min",min);
+                addToResponse("max",max);
+              }
+              break;
+            }
+          case DOUBLE_PARAMETER:
+            {
+              addToResponse("array_element_type","double");
+              if (parameter.rangeIsSet())
+              {
+                double min = parameter.getMin().d;
+                double max = parameter.getMax().d;
+                addToResponse("min",min);
+                addToResponse("max",max);
+              }
+              break;
+            }
+          case BOOL_PARAMETER:
+            {
+              addToResponse("array_element_type","bool");
+              break;
+            }
+          case STRING_PARAMETER:
+            {
+              addToResponse("array_element_type","string");
+              break;
+            }
+        }
         break;
       }
   }
@@ -658,21 +691,95 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
         {
           array_parse_unsuccessful = true;
         }
+        else
+        {
+          ParameterType array_element_type = parameter.getArrayElementType();
+          switch (array_element_type)
+          {
+            case LONG_PARAMETER:
+              {
+                if (parameter.rangeIsSet())
+                {
+                  long value;
+                  long min = parameter.getMin().l;
+                  long max = parameter.getMax().l;
+                  for (Parser::JsonArrayIterator i=json_array.begin();
+                       i!=json_array.end();
+                       ++i)
+                  {
+                    value = (long)*i;
+                    if ((value < min) || (value > max))
+                    {
+                      out_of_range = true;
+                      min_string = String(min);
+                      max_string = String(max);
+                      break;
+                    }
+                  }
+                }
+                break;
+              }
+            case DOUBLE_PARAMETER:
+              {
+                if (parameter.rangeIsSet())
+                {
+                  double value;
+                  double min = parameter.getMin().d;
+                  double max = parameter.getMax().d;
+                  for (Parser::JsonArrayIterator i=json_array.begin();
+                       i!=json_array.end();
+                       ++i)
+                  {
+                    value = (double)*i;
+                    if ((value < min) || (value > max))
+                    {
+                      out_of_range = true;
+                      char temp_string[STRING_LENGTH_DOUBLE];
+                      dtostrf(min,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+                      min_string = String(temp_string);
+                      dtostrf(max,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+                      max_string = String(temp_string);
+                      break;
+                    }
+                  }
+                }
+                break;
+              }
+            case BOOL_PARAMETER:
+              {
+                break;
+              }
+            case STRING_PARAMETER:
+              {
+                break;
+              }
+          }
+        }
         break;
       }
-    case UNSPECIFIED_PARAMETER:
-      break;
   }
   if (out_of_range)
   {
     addToResponse("status",ERROR);
-    String error = String("Parameter value out of range: ");
+    String error;
+    if (type != ARRAY_PARAMETER)
+    {
+      error = String("Parameter value out of range: ");
+    }
+    else
+    {
+      error = String("Array parameter element value out of range: ");
+    }
     error += min_string;
     error += String(" <= ");
     char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
     const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     error += String(parameter_name);
+    if (type == ARRAY_PARAMETER)
+    {
+      error += String(" element");
+    }
     error += String(" <= ");
     error += max_string;
     char error_str[STRING_LENGTH_ERROR];

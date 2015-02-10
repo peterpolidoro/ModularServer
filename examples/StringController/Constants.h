@@ -23,6 +23,9 @@ extern const int starting_chars_count_min;
 extern const int starting_chars_count_max;
 extern const int starting_chars_count_default;
 
+extern const int index_array_element_min;
+extern const int index_array_element_max;
+
 extern _FLASH_STRING device_name;
 extern _FLASH_STRING echo_method_name;
 extern _FLASH_STRING length_method_name;
