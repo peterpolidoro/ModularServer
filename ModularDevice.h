@@ -31,19 +31,43 @@ public:
   Parameter& copyParameter(Parameter &parameter,const _FLASH_STRING &parameter_name);
   ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &parameter_name);
   template<typename T>
-  void createSavedVariable(const _FLASH_STRING &saved_variable_name, const T &default_value)
+  void createSavedVariable(const _FLASH_STRING &saved_variable_name,
+                           const T &default_value)
   {
     server_.createSavedVariable(saved_variable_name,default_value);
   }
   template<typename T>
-  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name, T value)
+  void createSavedVariable(const _FLASH_STRING &saved_variable_name,
+                           const T default_value[],
+                           const unsigned int array_length)
+  {
+    server_.createSavedVariable(saved_variable_name,default_value,array_length);
+  }
+  template<typename T>
+  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+                             const T &value)
   {
     server_.setSavedVariableValue(saved_variable_name,value);
   }
   template<typename T>
-  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name, T &value)
+  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+                             const T value[],
+                             const unsigned int array_index)
+  {
+    server_.setSavedVariableValue(saved_variable_name,value,array_index);
+  }
+  template<typename T>
+  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+                             T &value)
   {
     server_.getSavedVariableValue(saved_variable_name,value);
+  }
+  template<typename T>
+  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+                             T value[],
+                             const unsigned int array_index)
+  {
+    server_.getSavedVariableValue(saved_variable_name,value,array_index);
   }
   template<typename T>
   void addToResponse(const char *key, T value)
