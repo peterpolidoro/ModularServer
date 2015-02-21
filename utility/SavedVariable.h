@@ -35,7 +35,22 @@ public:
   {
     setName(name);
     eeprom_index_ = eeprom_index;
-    size_ = array_length*sizeof(T);
+    array_element_size_ = sizeof(T);
+    size_ = array_length*array_element_size_;
+    default_value_ptr_ = default_value;
+    array_length_ = array_length;
+  }
+  template<typename T>
+  SavedVariable(const _FLASH_STRING &name,
+                const unsigned int eeprom_index,
+                const T default_value[],
+                const unsigned int array_length,
+                const unsigned int array_element_size)
+  {
+    setName(name);
+    eeprom_index_ = eeprom_index;
+    array_element_size_ = array_element_size;
+    size_ = array_length*array_element_size_;
     default_value_ptr_ = default_value;
     array_length_ = array_length;
   }
@@ -70,8 +85,8 @@ public:
     if (array_index < array_length_)
     {
       const byte* p = (const byte*)(const void*)&value[array_index];
-      int ee = eeprom_index_ + array_index*sizeof(T);
-      for (i = 0; i < sizeof(T); i++)
+      int ee = eeprom_index_ + array_index*array_element_size_;
+      for (i = 0; i < array_element_size_; i++)
       {
         if(EEPROM.read(ee)==*p)
         {
@@ -110,8 +125,8 @@ public:
     if (array_index < array_length_)
     {
       byte* p = (byte*)(void*)&value[array_index];
-      int ee = eeprom_index_ + array_index*sizeof(T);
-      for (i = 0; i < sizeof(T); i++)
+      int ee = eeprom_index_ + array_index*array_element_size_;
+      for (i = 0; i < array_element_size_; i++)
       {
         if (i < size_)
         {
@@ -129,6 +144,7 @@ private:
   unsigned int size_;
   const void *default_value_ptr_;
   unsigned int array_length_;
+  unsigned int array_element_size_;
   boolean compareName(const _FLASH_STRING& name_to_compare);
   friend class Server;
 };

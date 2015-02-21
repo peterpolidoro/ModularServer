@@ -44,6 +44,17 @@ public:
     server_.createSavedVariable(saved_variable_name,default_value,array_length);
   }
   template<typename T>
+  void createSavedVariable(const _FLASH_STRING &saved_variable_name,
+                           const T default_value[],
+                           const unsigned int array_length,
+                           const unsigned int array_element_size)
+  {
+    server_.createSavedVariable(saved_variable_name,
+                                default_value,
+                                array_length,
+                                array_element_size);
+  }
+  template<typename T>
   void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
                              const T &value)
   {
