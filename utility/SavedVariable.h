@@ -40,20 +40,6 @@ public:
     default_value_ptr_ = default_value;
     array_length_ = array_length;
   }
-  template<typename T>
-  SavedVariable(const _FLASH_STRING &name,
-                const unsigned int eeprom_index,
-                const T default_value[],
-                const unsigned int array_length,
-                const unsigned int array_element_size)
-  {
-    setName(name);
-    eeprom_index_ = eeprom_index;
-    array_element_size_ = array_element_size;
-    size_ = array_length*array_element_size_;
-    default_value_ptr_ = default_value;
-    array_length_ = array_length;
-  }
   void setName(const _FLASH_STRING &name);
   template<typename T>
   int setValue(const T &value)

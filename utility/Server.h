@@ -85,30 +85,6 @@ public:
     }
   }
   template<typename T>
-  SavedVariable& createSavedVariable(const _FLASH_STRING &saved_variable_name,
-                                     const T default_value[],
-                                     const unsigned int array_length,
-                                     const unsigned int array_element_length)
-  {
-    int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-    if (saved_variable_index < 0)
-    {
-      saved_variable_vector_.push_back(SavedVariable(saved_variable_name,
-                                                     eeprom_index_,
-                                                     default_value,
-                                                     array_length,
-                                                     array_element_length));
-      unsigned char eeprom_init_value;
-      getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
-      if (eeprom_init_value != EEPROM_INITIALIZED_VALUE)
-      {
-        saved_variable_vector_.back().setDefaultValue();
-      }
-      eeprom_index_ += saved_variable_vector_.back().getSize();
-      return saved_variable_vector_.back();
-    }
-  }
-  template<typename T>
   void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
                              const T &value)
   {
