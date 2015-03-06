@@ -17,6 +17,7 @@
 #include "JsonParser.h"
 #include "StandardCplusplus.h"
 #include "vector"
+#include "Array.h"
 #include "MemoryFree.h"
 #include "Flash.h"
 #include "Parameter.h"

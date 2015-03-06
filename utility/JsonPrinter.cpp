@@ -26,7 +26,6 @@ JsonPrinter::JsonPrinter(HardwareSerial &serial)
   setSerial(serial);
   setCompactPrint();
   indent_level_ = 0;
-  jdt_vector_.reserve(RESPONSE_DEPTH_MAX);
 }
 
 void JsonPrinter::setSerial(HardwareSerial &serial)
@@ -36,43 +35,43 @@ void JsonPrinter::setSerial(HardwareSerial &serial)
 
 void JsonPrinter::startObject()
 {
-  if (jdt_vector_.size() > 0)
+  if (!jdt_array_.empty())
   {
     stopArrayItem();
   }
   indent_level_++;
-  jdt_vector_.push_back(JsonDepthTracker(true,true));
+  jdt_array_.push_back(JsonDepthTracker(true,true));
   *serial_ptr_ << "{";
 }
 
 void JsonPrinter::stopObject()
 {
   indent_level_--;
-  if (pretty_print_ && (!jdt_vector_.back().first_item_))
+  if (pretty_print_ && (!jdt_array_.back().first_item_))
   {
     *serial_ptr_ << endl;
     indent();
   }
-  jdt_vector_.pop_back();
+  jdt_array_.pop_back();
   *serial_ptr_ << "}";
 }
 
 void JsonPrinter::startArray()
 {
   indent_level_++;
-  jdt_vector_.push_back(JsonDepthTracker(true,false));
+  jdt_array_.push_back(JsonDepthTracker(true,false));
   *serial_ptr_ << "[";
 }
 
 void JsonPrinter::stopArray()
 {
   indent_level_--;
-  if (pretty_print_ && (!jdt_vector_.back().first_item_))
+  if (pretty_print_ && (!jdt_array_.back().first_item_))
   {
     *serial_ptr_ << endl;
     indent();
   }
-  jdt_vector_.pop_back();
+  jdt_array_.pop_back();
   *serial_ptr_ << "]";
 }
 
@@ -250,13 +249,13 @@ void JsonPrinter::indent()
 
 void JsonPrinter::stopItem()
 {
-  if (!jdt_vector_.back().first_item_)
+  if (!jdt_array_.back().first_item_)
   {
     *serial_ptr_ << ",";
   }
   else
   {
-    jdt_vector_.back().first_item_ = false;
+    jdt_array_.back().first_item_ = false;
   }
   if (pretty_print_)
   {
@@ -267,7 +266,7 @@ void JsonPrinter::stopItem()
 
 void JsonPrinter::stopArrayItem()
 {
-  if (!jdt_vector_.back().inside_object_)
+  if (!jdt_array_.back().inside_object_)
   {
     stopItem();
   }

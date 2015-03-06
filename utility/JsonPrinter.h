@@ -13,8 +13,7 @@
 #include "WProgram.h"
 #endif
 #include "Streaming.h"
-#include "StandardCplusplus.h"
-#include "vector"
+#include "Array.h"
 #include "Constants.h"
 
 
@@ -65,7 +64,7 @@ private:
   HardwareSerial *serial_ptr_;
   boolean pretty_print_;
   int indent_level_;
-  std::vector<JsonDepthTracker> jdt_vector_;
+  Array<JsonDepthTracker, RESPONSE_DEPTH_MAX> jdt_array_;
   void indent();
   void stopItem();
   void stopArrayItem();

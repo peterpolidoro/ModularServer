@@ -27,7 +27,7 @@ const int DOUBLE_DIGITS = 4;
 const int STRING_LENGTH_DOUBLE = 36;
 
 const int RESPONSE_INDENT = 2;
-const int RESPONSE_DEPTH_MAX = 8;
+enum {RESPONSE_DEPTH_MAX=8};
 
 const unsigned char EEPROM_INITIALIZED_VALUE = 123;
 
