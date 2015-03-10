@@ -36,7 +36,7 @@ void Method::attachCallback(Callback callback)
 
 void Method::addParameter(Parameter &parameter)
 {
-  char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
   const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
   if (String(parameter_name).length() > 0)
@@ -52,7 +52,7 @@ void Method::addParameter(Parameter &parameter)
 
 boolean Method::compareName(const char *name_to_compare)
 {
-  char name[STRING_LENGTH_METHOD_NAME] = {0};
+  char name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
 }

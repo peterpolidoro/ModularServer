@@ -55,7 +55,7 @@ public:
                                                      default_value));
       unsigned char eeprom_init_value;
       getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
-      if (eeprom_init_value != EEPROM_INITIALIZED_VALUE)
+      if (eeprom_init_value != constants::eeprom_initialized_value)
       {
         saved_variable_vector_.back().setDefaultValue();
       }
@@ -77,7 +77,7 @@ public:
                                                      array_length));
       unsigned char eeprom_init_value;
       getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
-      if (eeprom_init_value != EEPROM_INITIALIZED_VALUE)
+      if (eeprom_init_value != constants::eeprom_initialized_value)
       {
         saved_variable_vector_.back().setDefaultValue();
       }
@@ -151,8 +151,8 @@ public:
   void handleRequest();
 private:
   HardwareSerial *serial_ptr_;
-  char request_[STRING_LENGTH_REQUEST];
-  ArduinoJson::Parser::JsonParser<JSON_PARSER_SIZE> parser_;
+  char request_[constants::STRING_LENGTH_REQUEST];
+  ArduinoJson::Parser::JsonParser<constants::JSON_PARSER_SIZE> parser_;
   ArduinoJson::Parser::JsonArray request_json_array_;
   std::vector<Method> method_vector_;
   std::vector<Parameter> parameter_vector_;

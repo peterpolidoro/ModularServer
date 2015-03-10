@@ -18,8 +18,8 @@ Parameter::Parameter(const _FLASH_STRING &name=default_parameter_name)
 {
   setName(name);
   setUnits(default_parameter_units);
-  type_ = LONG_PARAMETER;
-  array_element_type_ = LONG_PARAMETER;
+  type_ = constants::LONG_PARAMETER;
+  array_element_type_ = constants::LONG_PARAMETER;
   range_is_set_ = false;
 }
 
@@ -35,61 +35,61 @@ void Parameter::setUnits(const _FLASH_STRING &units)
 
 void Parameter::setTypeLong()
 {
-  if (type_ != ARRAY_PARAMETER)
+  if (type_ != constants::ARRAY_PARAMETER)
   {
-    type_ = LONG_PARAMETER;
+    type_ = constants::LONG_PARAMETER;
   }
   else
   {
-    array_element_type_ = LONG_PARAMETER;
+    array_element_type_ = constants::LONG_PARAMETER;
   }
 }
 
 void Parameter::setTypeDouble()
 {
-  if (type_ != ARRAY_PARAMETER)
+  if (type_ != constants::ARRAY_PARAMETER)
   {
-    type_ = DOUBLE_PARAMETER;
+    type_ = constants::DOUBLE_PARAMETER;
   }
   else
   {
-    array_element_type_ = DOUBLE_PARAMETER;
+    array_element_type_ = constants::DOUBLE_PARAMETER;
   }
 }
 
 void Parameter::setTypeBool()
 {
-  if (type_ != ARRAY_PARAMETER)
+  if (type_ != constants::ARRAY_PARAMETER)
   {
-    type_ = BOOL_PARAMETER;
+    type_ = constants::BOOL_PARAMETER;
   }
   else
   {
-    array_element_type_ = BOOL_PARAMETER;
+    array_element_type_ = constants::BOOL_PARAMETER;
   }
 }
 
 void Parameter::setTypeString()
 {
-  if (type_ != ARRAY_PARAMETER)
+  if (type_ != constants::ARRAY_PARAMETER)
   {
-    type_ = STRING_PARAMETER;
+    type_ = constants::STRING_PARAMETER;
   }
   else
   {
-    array_element_type_ = STRING_PARAMETER;
+    array_element_type_ = constants::STRING_PARAMETER;
   }
 }
 
 void Parameter::setTypeObject()
 {
-  type_ = OBJECT_PARAMETER;
+  type_ = constants::OBJECT_PARAMETER;
 }
 
 void Parameter::setTypeArray()
 {
   array_element_type_ = type_;
-  type_ = ARRAY_PARAMETER;
+  type_ = constants::ARRAY_PARAMETER;
 }
 
 void Parameter::setRange(const double min, const double max)
@@ -115,7 +115,7 @@ void Parameter::removeRange()
 
 boolean Parameter::compareName(const char *name_to_compare)
 {
-  char name[STRING_LENGTH_PARAMETER_NAME] = {0};
+  char name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
 }
@@ -135,12 +135,12 @@ const _FLASH_STRING* Parameter::getUnitsPointer()
   return units_ptr_;
 }
 
-ParameterType Parameter::getType()
+constants::ParameterType Parameter::getType()
 {
   return type_;
 }
 
-ParameterType Parameter::getArrayElementType()
+constants::ParameterType Parameter::getArrayElementType()
 {
   return array_element_type_;
 }
@@ -150,12 +150,12 @@ boolean Parameter::rangeIsSet()
   return range_is_set_;
 }
 
-NumberType Parameter::getMin()
+constants::NumberType Parameter::getMin()
 {
   return min_;
 }
 
-NumberType Parameter::getMax()
+constants::NumberType Parameter::getMax()
 {
   return max_;
 }

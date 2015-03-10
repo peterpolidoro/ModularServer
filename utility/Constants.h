@@ -10,30 +10,17 @@
 
 namespace ModularDevice
 {
-// ModularDevice
-const char EOL = '\n';
-const char START_CHAR_JSON_OBJECT = '{';
-const char START_CHAR_JSON_ARRAY = '[';
-const int STRING_LENGTH_REQUEST = 257;
-
-const int STRING_LENGTH_DEVICE_NAME = 32;
-
-const int JSON_PARSER_SIZE = 32;
-const int METHOD_COUNT_MAX = 24;
-
-const int STRING_LENGTH_ERROR = 257;
-
-const int DOUBLE_DIGITS = 4;
-const int STRING_LENGTH_DOUBLE = 36;
-
-const int RESPONSE_INDENT = 2;
+namespace constants
+{
+enum{STRING_LENGTH_REQUEST=257};
+enum{STRING_LENGTH_ERROR=257};
+enum{STRING_LENGTH_DEVICE_NAME=32};
+enum{STRING_LENGTH_PARAMETER_NAME=24};
+enum{STRING_LENGTH_PARAMETER_UNITS=8};
+enum{STRING_LENGTH_METHOD_NAME=32};
+enum{STRING_LENGTH_DOUBLE=36};
+enum {JSON_PARSER_SIZE=32};
 enum {RESPONSE_DEPTH_MAX=8};
-
-const unsigned char EEPROM_INITIALIZED_VALUE = 123;
-
-const unsigned int SERIAL_NUMBER_MIN = 0;
-const unsigned int SERIAL_NUMBER_MAX = 65535;
-const unsigned int SERIAL_NUMBER_DEFAULT = 0;
 
 enum ResponseCodes
   {
@@ -57,13 +44,24 @@ union NumberType
   double d;
 };
 
-// Method
-const int STRING_LENGTH_METHOD_NAME = 32;
-const int PARAMETER_COUNT_MAX = 6;
+extern const char eol;
+extern const char start_char_json_object;
+extern const char start_char_json_array;
 
-// Parameter
-const int STRING_LENGTH_PARAMETER_NAME = 24;
-const int STRING_LENGTH_PARAMETER_UNITS = 8;
+extern const int method_count_max;
 
+extern const int double_digits;
+
+extern const int response_indent;
+
+extern const unsigned char eeprom_initialized_value;
+
+extern const unsigned int serial_number_min;
+extern const unsigned int serial_number_max;
+extern const unsigned int serial_number_default;
+
+extern const int parameter_count_max;
+
+}
 }
 #endif

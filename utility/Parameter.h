@@ -48,20 +48,20 @@ public:
 private:
   const _FLASH_STRING *name_ptr_;
   const _FLASH_STRING *units_ptr_;
-  ParameterType type_;
-  ParameterType array_element_type_;
-  NumberType min_;
-  NumberType max_;
+  constants::ParameterType type_;
+  constants::ParameterType array_element_type_;
+  constants::NumberType min_;
+  constants::NumberType max_;
   boolean range_is_set_;
   boolean compareName(const char *name_to_compare);
   boolean compareName(const _FLASH_STRING &name_to_compare);
   const _FLASH_STRING* getNamePointer();
   const _FLASH_STRING* getUnitsPointer();
-  ParameterType getType();
-  ParameterType getArrayElementType();
+  constants::ParameterType getType();
+  constants::ParameterType getArrayElementType();
   boolean rangeIsSet();
-  NumberType getMin();
-  NumberType getMax();
+  constants::NumberType getMin();
+  constants::NumberType getMax();
   friend class Method;
   friend class Server;
 };

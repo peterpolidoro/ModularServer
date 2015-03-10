@@ -60,9 +60,9 @@ Server::Server(HardwareSerial &serial) :
   eeprom_uninitialized_ = true;
   saved_variable_vector_.push_back(SavedVariable(*eeprom_init_name_ptr_,
                                                  eeprom_index_,
-                                                 EEPROM_INITIALIZED_VALUE));
-  eeprom_index_ += sizeof(EEPROM_INITIALIZED_VALUE);
-  createSavedVariable(serial_number_saved_variable_name,SERIAL_NUMBER_DEFAULT);
+                                                 constants::eeprom_initialized_value));
+  eeprom_index_ += sizeof(constants::eeprom_initialized_value);
+  createSavedVariable(serial_number_saved_variable_name,constants::serial_number_default);
 }
 
 void Server::setSerial(HardwareSerial &serial)
@@ -208,7 +208,7 @@ void Server::handleRequest()
 {
   while (serial_ptr_->available() > 0)
   {
-    int request_length = serial_ptr_->readBytesUntil(EOL,request_,STRING_LENGTH_REQUEST);
+    int request_length = serial_ptr_->readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
     if (request_length == 0)
     {
       continue;
@@ -217,21 +217,21 @@ void Server::handleRequest()
     error_ = false;
     response_.startObject();
     response_.setCompactPrint();
-    if (request_[0] == START_CHAR_JSON_OBJECT)
+    if (request_[0] == constants::start_char_json_object)
     {
-      addToResponse("status",ERROR);
-      char error_message[STRING_LENGTH_ERROR] = {0};
+      addToResponse("status",constants::ERROR);
+      char error_message[constants::STRING_LENGTH_ERROR] = {0};
       object_request_error_message.copy(error_message);
       addToResponse("error_message",error_message);
       error_ = true;
     }
     else
     {
-      if (request_[0] != START_CHAR_JSON_ARRAY)
+      if (request_[0] != constants::start_char_json_array)
       {
         response_.setPrettyPrint();
         String request_string = String("[") + String(request_) + String("]");
-        request_string.toCharArray(request_,STRING_LENGTH_REQUEST);
+        request_string.toCharArray(request_,constants::STRING_LENGTH_REQUEST);
       }
       request_json_array_ = parser_.parse(request_);
       if (request_json_array_.success())
@@ -240,8 +240,8 @@ void Server::handleRequest()
       }
       else
       {
-        addToResponse("status",ERROR);
-        char error_message[STRING_LENGTH_ERROR] = {0};
+        addToResponse("status",constants::ERROR);
+        char error_message[constants::STRING_LENGTH_ERROR] = {0};
         array_parse_error_message.copy(error_message);
         addToResponse("error_message",error_message);
         addToResponse("received_request",request_);
@@ -249,7 +249,7 @@ void Server::handleRequest()
       }
       if (!error_)
       {
-        addToResponse("status",SUCCESS);
+        addToResponse("status",constants::SUCCESS);
       }
     }
     response_.stopObject();
@@ -281,13 +281,13 @@ void Server::processRequestArray()
     }
     else if (parameter_count != method_vector_[request_method_index_].parameter_count_)
     {
-      addToResponse("status",ERROR);
+      addToResponse("status",constants::ERROR);
       String error_request = "Incorrect number of parameters. ";
       error_request += String(parameter_count) + String(" given. ");
       error_request += String(method_vector_[request_method_index_].parameter_count_);
       error_request += String(" needed.");
-      char error_str[STRING_LENGTH_ERROR];
-      error_request.toCharArray(error_str,STRING_LENGTH_ERROR);
+      char error_str[constants::STRING_LENGTH_ERROR];
+      error_request.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
       addToResponse("error_message",error_str);
       error_ = true;
     }
@@ -323,7 +323,7 @@ int Server::processMethodString(char *method_string)
   }
   if ((method_index < 0) || (method_index >= method_vector_.size()))
   {
-    addToResponse("status",ERROR);
+    addToResponse("status",constants::ERROR);
     addToResponse("error_message","Unknown method.");
     error_ = true;
     method_index = -1;
@@ -394,12 +394,12 @@ void Server::methodHelp(int method_index)
   response_.startArray();
   std::vector<Parameter*>& parameter_ptr_vector = method_vector_[method_index].parameter_ptr_vector_;
   const _FLASH_STRING* parameter_name_ptr;
-  char parameter_name_char_array[STRING_LENGTH_PARAMETER_NAME];
+  char parameter_name_char_array[constants::STRING_LENGTH_PARAMETER_NAME];
   for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
        param_ptr_it != parameter_ptr_vector.end();
        ++param_ptr_it)
   {
-    if (parameter_index < PARAMETER_COUNT_MAX)
+    if (parameter_index < constants::parameter_count_max)
     {
       parameter_name_ptr = (*param_ptr_it)->getNamePointer();
       parameter_name_ptr->copy(parameter_name_char_array);
@@ -420,7 +420,7 @@ void Server::verboseMethodHelp(int method_index)
        param_ptr_it != parameter_ptr_vector.end();
        ++param_ptr_it)
   {
-    if (parameter_index < PARAMETER_COUNT_MAX)
+    if (parameter_index < constants::parameter_count_max)
     {
       startResponseObject();
       parameterHelp(**param_ptr_it);
@@ -449,7 +449,7 @@ int Server::processParameterString(char *parameter_string)
   std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
   if ((parameter_index < 0) || (parameter_index >= parameter_ptr_vector.size()))
   {
-    addToResponse("status",ERROR);
+    addToResponse("status",constants::ERROR);
     addToResponse("error_message","Unknown parameter.");
     error_ = true;
     parameter_index = -1;
@@ -499,24 +499,24 @@ int Server::findParameterIndex(const _FLASH_STRING &parameter_name)
 
 void Server::parameterHelp(Parameter &parameter)
 {
-  char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
   const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
   addKeyToResponse(parameter_name);
 
   startResponseObject();
 
-  char parameter_units[STRING_LENGTH_PARAMETER_UNITS] = {0};
+  char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS] = {0};
   const _FLASH_STRING* parameter_units_ptr = parameter.getUnitsPointer();
   parameter_units_ptr->copy(parameter_units);
   if (strcmp(parameter_units,"") != 0)
   {
     addToResponse("units",parameter_units);
   }
-  ParameterType type = parameter.getType();
+  constants::ParameterType type = parameter.getType();
   switch (type)
   {
-    case LONG_PARAMETER:
+    case constants::LONG_PARAMETER:
       {
         addToResponse("type","long");
         if (parameter.rangeIsSet())
@@ -528,7 +528,7 @@ void Server::parameterHelp(Parameter &parameter)
         }
         break;
       }
-    case DOUBLE_PARAMETER:
+    case constants::DOUBLE_PARAMETER:
       {
         addToResponse("type","double");
         if (parameter.rangeIsSet())
@@ -540,28 +540,28 @@ void Server::parameterHelp(Parameter &parameter)
         }
         break;
       }
-    case BOOL_PARAMETER:
+    case constants::BOOL_PARAMETER:
       {
         addToResponse("type","bool");
         break;
       }
-    case STRING_PARAMETER:
+    case constants::STRING_PARAMETER:
       {
         addToResponse("type","string");
         break;
       }
-    case OBJECT_PARAMETER:
+    case constants::OBJECT_PARAMETER:
       {
         addToResponse("type","object");
         break;
       }
-    case ARRAY_PARAMETER:
+    case constants::ARRAY_PARAMETER:
       {
         addToResponse("type","array");
-        ParameterType array_element_type = parameter.getArrayElementType();
+        constants::ParameterType array_element_type = parameter.getArrayElementType();
         switch (array_element_type)
         {
-          case LONG_PARAMETER:
+          case constants::LONG_PARAMETER:
             {
               addToResponse("array_element_type","long");
               if (parameter.rangeIsSet())
@@ -573,7 +573,7 @@ void Server::parameterHelp(Parameter &parameter)
               }
               break;
             }
-          case DOUBLE_PARAMETER:
+          case constants::DOUBLE_PARAMETER:
             {
               addToResponse("array_element_type","double");
               if (parameter.rangeIsSet())
@@ -585,12 +585,12 @@ void Server::parameterHelp(Parameter &parameter)
               }
               break;
             }
-          case BOOL_PARAMETER:
+          case constants::BOOL_PARAMETER:
             {
               addToResponse("array_element_type","bool");
               break;
             }
-          case STRING_PARAMETER:
+          case constants::STRING_PARAMETER:
             {
               addToResponse("array_element_type","string");
               break;
@@ -631,12 +631,12 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   boolean object_parse_unsuccessful = false;
   boolean array_parse_unsuccessful = false;
   Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
-  ParameterType type = parameter.getType();
+  constants::ParameterType type = parameter.getType();
   String min_string = "";
   String max_string = "";
   switch (type)
   {
-    case LONG_PARAMETER:
+    case constants::LONG_PARAMETER:
       {
         if (parameter.rangeIsSet())
         {
@@ -652,7 +652,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
         }
         break;
       }
-    case DOUBLE_PARAMETER:
+    case constants::DOUBLE_PARAMETER:
       {
         if (parameter.rangeIsSet())
         {
@@ -662,20 +662,20 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
           if ((value < min) || (value > max))
           {
             out_of_range = true;
-            char temp_string[STRING_LENGTH_DOUBLE];
-            dtostrf(min,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+            char temp_string[constants::STRING_LENGTH_DOUBLE];
+            dtostrf(min,constants::double_digits,constants::double_digits,temp_string);
             min_string = String(temp_string);
-            dtostrf(max,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+            dtostrf(max,constants::double_digits,constants::double_digits,temp_string);
             max_string = String(temp_string);
           }
         }
         break;
       }
-    case BOOL_PARAMETER:
+    case constants::BOOL_PARAMETER:
       break;
-    case STRING_PARAMETER:
+    case constants::STRING_PARAMETER:
       break;
-    case OBJECT_PARAMETER:
+    case constants::OBJECT_PARAMETER:
       {
         Parser::JsonObject json_object = json_value;
         if (!json_object.success())
@@ -684,7 +684,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
         }
         break;
       }
-    case ARRAY_PARAMETER:
+    case constants::ARRAY_PARAMETER:
       {
         Parser::JsonArray json_array = json_value;
         if (!json_array.success())
@@ -693,10 +693,10 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
         }
         else
         {
-          ParameterType array_element_type = parameter.getArrayElementType();
+          constants::ParameterType array_element_type = parameter.getArrayElementType();
           switch (array_element_type)
           {
-            case LONG_PARAMETER:
+            case constants::LONG_PARAMETER:
               {
                 if (parameter.rangeIsSet())
                 {
@@ -719,7 +719,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
                 }
                 break;
               }
-            case DOUBLE_PARAMETER:
+            case constants::DOUBLE_PARAMETER:
               {
                 if (parameter.rangeIsSet())
                 {
@@ -734,10 +734,10 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
                     if ((value < min) || (value > max))
                     {
                       out_of_range = true;
-                      char temp_string[STRING_LENGTH_DOUBLE];
-                      dtostrf(min,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+                      char temp_string[constants::STRING_LENGTH_DOUBLE];
+                      dtostrf(min,constants::double_digits,constants::double_digits,temp_string);
                       min_string = String(temp_string);
-                      dtostrf(max,DOUBLE_DIGITS,DOUBLE_DIGITS,temp_string);
+                      dtostrf(max,constants::double_digits,constants::double_digits,temp_string);
                       max_string = String(temp_string);
                       break;
                     }
@@ -745,11 +745,11 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
                 }
                 break;
               }
-            case BOOL_PARAMETER:
+            case constants::BOOL_PARAMETER:
               {
                 break;
               }
-            case STRING_PARAMETER:
+            case constants::STRING_PARAMETER:
               {
                 break;
               }
@@ -760,9 +760,9 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   }
   if (out_of_range)
   {
-    addToResponse("status",ERROR);
+    addToResponse("status",constants::ERROR);
     String error;
-    if (type != ARRAY_PARAMETER)
+    if (type != constants::ARRAY_PARAMETER)
     {
       error = String("Parameter value out of range: ");
     }
@@ -772,44 +772,44 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
     }
     error += min_string;
     error += String(" <= ");
-    char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
     const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     error += String(parameter_name);
-    if (type == ARRAY_PARAMETER)
+    if (type == constants::ARRAY_PARAMETER)
     {
       error += String(" element");
     }
     error += String(" <= ");
     error += max_string;
-    char error_str[STRING_LENGTH_ERROR];
-    error.toCharArray(error_str,STRING_LENGTH_ERROR);
+    char error_str[constants::STRING_LENGTH_ERROR];
+    error.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
     addToResponse("error_message",error_str);
     error_ = true;
   }
   else if (object_parse_unsuccessful)
   {
-    addToResponse("status",ERROR);
-    char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+    addToResponse("status",constants::ERROR);
+    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
     const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     String error = String(parameter_name);
     error += String(" is not a valid JSON object.");
-    char error_str[STRING_LENGTH_ERROR];
-    error.toCharArray(error_str,STRING_LENGTH_ERROR);
+    char error_str[constants::STRING_LENGTH_ERROR];
+    error.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
     addToResponse("error_message",error_str);
     error_ = true;
   }
   else if (array_parse_unsuccessful)
   {
-    addToResponse("status",ERROR);
-    char parameter_name[STRING_LENGTH_PARAMETER_NAME] = {0};
+    addToResponse("status",constants::ERROR);
+    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
     const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     String error = String(parameter_name);
     error += String(" is not a valid JSON array.");
-    char error_str[STRING_LENGTH_ERROR];
-    error.toCharArray(error_str,STRING_LENGTH_ERROR);
+    char error_str[constants::STRING_LENGTH_ERROR];
+    error.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
     addToResponse("error_message",error_str);
     error_ = true;
   }
@@ -842,13 +842,13 @@ unsigned int Server::getSerialNumber()
 
 void Server::initializeEeprom()
 {
-  saved_variable_vector_[eeprom_initialized_index_].setValue(EEPROM_INITIALIZED_VALUE);
+  saved_variable_vector_[eeprom_initialized_index_].setValue(constants::eeprom_initialized_value);
   eeprom_uninitialized_ = false;
 }
 
 void Server::getDeviceInfoCallback()
 {
-  char device_name[STRING_LENGTH_DEVICE_NAME] = {0};
+  char device_name[constants::STRING_LENGTH_DEVICE_NAME] = {0};
   name_ptr_->copy(device_name);
   addToResponse("name",device_name);
   addToResponse("model_number",model_number_);
@@ -858,7 +858,7 @@ void Server::getDeviceInfoCallback()
 
 void Server::getMethodIdsCallback()
 {
-  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
+  char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator method_it = method_vector_.begin();
        method_it != method_vector_.end();
@@ -877,8 +877,8 @@ void Server::getMethodIdsCallback()
 
 void Server::getResponseCodesCallback()
 {
-  addToResponse("response_success",SUCCESS);
-  addToResponse("response_error",ERROR);
+  addToResponse("response_success",constants::SUCCESS);
+  addToResponse("response_error",constants::ERROR);
 }
 
 void Server::getParametersCallback()
@@ -890,7 +890,7 @@ void Server::getParametersCallback()
        param_it != parameter_vector_.end();
        ++param_it)
   {
-    if (parameter_index < PARAMETER_COUNT_MAX)
+    if (parameter_index < constants::parameter_count_max)
     {
       startResponseObject();
       parameterHelp(*param_it);
@@ -909,7 +909,7 @@ void Server::help()
 
   addKeyToResponse("methods");
   startResponseArray();
-  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
+  char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();
@@ -935,7 +935,7 @@ void Server::verboseHelp()
 
   addKeyToResponse("methods");
   startResponseArray();
-  char method_name[STRING_LENGTH_METHOD_NAME] = {0};
+  char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const _FLASH_STRING* method_name_ptr;
   for (std::vector<Method>::iterator it = method_vector_.begin();
        it != method_vector_.end();

@@ -170,7 +170,7 @@ void JsonPrinter::add<unsigned long long>(unsigned long long value)
 }
 
 template <>
-void JsonPrinter::add<ResponseCodes>(ResponseCodes value)
+void JsonPrinter::add<constants::ResponseCodes>(constants::ResponseCodes value)
 {
   stopArrayItem();
   if (!pretty_print_)
@@ -181,10 +181,10 @@ void JsonPrinter::add<ResponseCodes>(ResponseCodes value)
   {
     switch (value)
     {
-      case ERROR:
+      case constants::ERROR:
         *serial_ptr_ <<  "error";
         break;
-      case SUCCESS:
+      case constants::SUCCESS:
         *serial_ptr_ <<  "success";
         break;
     }
@@ -195,9 +195,9 @@ template <>
 void JsonPrinter::add<double>(double value)
 {
   stopArrayItem();
-  char value_char_array[STRING_LENGTH_DOUBLE];
-  // dtostre(value,value_char_array,DOUBLE_DIGITS,0);
-  dtostrf(value,DOUBLE_DIGITS,DOUBLE_DIGITS,value_char_array);
+  char value_char_array[constants::STRING_LENGTH_DOUBLE];
+  // dtostre(value,value_char_array,constants::double_digits,0);
+  dtostrf(value,constants::double_digits,constants::double_digits,value_char_array);
   *serial_ptr_ <<  value_char_array;
 }
 
@@ -205,9 +205,9 @@ template <>
 void JsonPrinter::add<float>(float value)
 {
   stopArrayItem();
-  char value_char_array[STRING_LENGTH_DOUBLE];
-  // dtostre((double)value,value_char_array,DOUBLE_DIGITS,0);
-  dtostrf((double)value,DOUBLE_DIGITS,DOUBLE_DIGITS,value_char_array);
+  char value_char_array[constants::STRING_LENGTH_DOUBLE];
+  // dtostre((double)value,value_char_array,constants::double_digits,0);
+  dtostrf((double)value,constants::double_digits,constants::double_digits,value_char_array);
   *serial_ptr_ <<  value_char_array;
 }
 
@@ -240,7 +240,7 @@ void JsonPrinter::indent()
 {
   if (pretty_print_)
   {
-    for (int i=0;i<(RESPONSE_INDENT*indent_level_);i++)
+    for (int i=0;i<(constants::response_indent*indent_level_);i++)
     {
       *serial_ptr_ << " ";
     }
