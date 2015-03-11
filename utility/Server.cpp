@@ -276,7 +276,7 @@ void Server::processRequestArray()
     else if ((parameter_count == 2) && (String((char*)request_json_array_[2]).equals("?")))
     {
       int parameter_index = processParameterString(request_json_array_[1]);
-      Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
+      Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_array_[parameter_index]);
       parameterHelp(parameter);
     }
     else if (parameter_count != method_vector_[request_method_index_].parameter_count_)
@@ -389,43 +389,30 @@ void Server::executeMethod()
 
 void Server::methodHelp(int method_index)
 {
-  int parameter_index = 0;
   addKeyToResponse("parameters");
   response_.startArray();
-  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[method_index].parameter_ptr_vector_;
+  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_vector_[method_index].parameter_ptr_array_;
   const _FLASH_STRING* parameter_name_ptr;
   char parameter_name_char_array[constants::STRING_LENGTH_PARAMETER_NAME];
-  for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
-       param_ptr_it != parameter_ptr_vector.end();
-       ++param_ptr_it)
+  for (int i=0; i<parameter_ptr_array.size(); ++i)
   {
-    if (parameter_index < constants::parameter_count_max)
-    {
-      parameter_name_ptr = (*param_ptr_it)->getNamePointer();
-      parameter_name_ptr->copy(parameter_name_char_array);
-      addToResponse(parameter_name_char_array);
-      parameter_index++;
-    }
+    parameter_name_ptr = parameter_ptr_array[i]->getNamePointer();
+    parameter_name_ptr->copy(parameter_name_char_array);
+    addToResponse(parameter_name_char_array);
   }
   response_.stopArray();
 }
 
 void Server::verboseMethodHelp(int method_index)
 {
-  int parameter_index = 0;
   addKeyToResponse("parameters");
   response_.startArray();
-  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[method_index].parameter_ptr_vector_;
-  for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
-       param_ptr_it != parameter_ptr_vector.end();
-       ++param_ptr_it)
+  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_vector_[method_index].parameter_ptr_array_;
+  for (int i=0; i<parameter_ptr_array.size(); ++i)
   {
-    if (parameter_index < constants::parameter_count_max)
-    {
-      startResponseObject();
-      parameterHelp(**param_ptr_it);
-      stopResponseObject();
-    }
+    startResponseObject();
+    parameterHelp(*(parameter_ptr_array[i]));
+    stopResponseObject();
   }
   response_.stopArray();
 }
@@ -446,8 +433,8 @@ int Server::processParameterString(char *parameter_string)
   {
     parameter_index = findParameterIndex(parameter_string);
   }
-  std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-  if ((parameter_index < 0) || (parameter_index >= parameter_ptr_vector.size()))
+  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_vector_[request_method_index_].parameter_ptr_array_;
+  if ((parameter_index < 0) || (parameter_index >= parameter_ptr_array.size()))
   {
     addToResponse("status",constants::ERROR);
     addToResponse("error_message","Unknown parameter.");
@@ -462,14 +449,12 @@ int Server::findParameterIndex(const char *parameter_name)
   int parameter_index = -1;
   if (request_method_index_ >= 0)
   {
-    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
-         param_ptr_it != parameter_ptr_vector.end();
-         ++param_ptr_it)
+    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_vector_[request_method_index_].parameter_ptr_array_;
+    for (int i=0; i<parameter_ptr_array.size(); ++i)
     {
-      if ((*param_ptr_it)->compareName(parameter_name))
+      if (parameter_ptr_array[i]->compareName(parameter_name))
       {
-        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
+        parameter_index = i;
         break;
       }
     }
@@ -482,14 +467,12 @@ int Server::findParameterIndex(const _FLASH_STRING &parameter_name)
   int parameter_index = -1;
   if (request_method_index_ >= 0)
   {
-    std::vector<Parameter*>& parameter_ptr_vector = method_vector_[request_method_index_].parameter_ptr_vector_;
-    for (std::vector<Parameter*>::iterator param_ptr_it = parameter_ptr_vector.begin();
-         param_ptr_it != parameter_ptr_vector.end();
-         ++param_ptr_it)
+    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_vector_[request_method_index_].parameter_ptr_array_;
+    for (int i=0; i<parameter_ptr_array.size(); ++i)
     {
-      if ((*param_ptr_it)->compareName(parameter_name))
+      if (parameter_ptr_array[i]->compareName(parameter_name))
       {
-        parameter_index = std::distance(parameter_ptr_vector.begin(),param_ptr_it);
+        parameter_index = i;
         break;
       }
     }
@@ -630,7 +613,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   boolean out_of_range = false;
   boolean object_parse_unsuccessful = false;
   boolean array_parse_unsuccessful = false;
-  Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_vector_[parameter_index]);
+  Parameter& parameter = *(method_vector_[request_method_index_].parameter_ptr_array_[parameter_index]);
   constants::ParameterType type = parameter.getType();
   String min_string = "";
   String max_string = "";
@@ -890,7 +873,7 @@ void Server::getParametersCallback()
        param_it != parameter_vector_.end();
        ++param_it)
   {
-    if (parameter_index < constants::parameter_count_max)
+    if (parameter_index < constants::METHOD_PARAMETER_COUNT_MAX)
     {
       startResponseObject();
       parameterHelp(*param_it);

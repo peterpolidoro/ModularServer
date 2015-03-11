@@ -26,7 +26,5 @@ const unsigned char eeprom_initialized_value = 123;
 const unsigned int serial_number_min = 0;
 const unsigned int serial_number_max = 65535;
 const unsigned int serial_number_default = 0;
-
-const int parameter_count_max = 6;
 }
 }

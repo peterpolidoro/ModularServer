@@ -21,6 +21,7 @@ enum{STRING_LENGTH_METHOD_NAME=32};
 enum{STRING_LENGTH_DOUBLE=36};
 enum {JSON_PARSER_SIZE=32};
 enum {RESPONSE_DEPTH_MAX=8};
+enum {METHOD_PARAMETER_COUNT_MAX=6};
 
 enum ResponseCodes
   {
@@ -59,9 +60,6 @@ extern const unsigned char eeprom_initialized_value;
 extern const unsigned int serial_number_min;
 extern const unsigned int serial_number_max;
 extern const unsigned int serial_number_default;
-
-extern const int parameter_count_max;
-
 }
 }
 #endif

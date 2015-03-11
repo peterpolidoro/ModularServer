@@ -64,7 +64,7 @@ private:
   HardwareSerial *serial_ptr_;
   boolean pretty_print_;
   int indent_level_;
-  Array<JsonDepthTracker, constants::RESPONSE_DEPTH_MAX> jdt_array_;
+  Array<JsonDepthTracker,constants::RESPONSE_DEPTH_MAX> jdt_array_;
   void indent();
   void stopItem();
   void stopArrayItem();

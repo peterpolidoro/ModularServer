@@ -240,7 +240,7 @@ void JsonPrinter::indent()
 {
   if (pretty_print_)
   {
-    for (int i=0;i<(constants::response_indent*indent_level_);i++)
+    for (int i=0; i<(constants::response_indent*indent_level_); ++i)
     {
       *serial_ptr_ << " ";
     }

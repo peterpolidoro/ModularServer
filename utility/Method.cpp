@@ -44,7 +44,7 @@ void Method::addParameter(Parameter &parameter)
     int parameter_index = findParameterIndex(*parameter_name_ptr);
     if (parameter_index < 0)
     {
-      parameter_ptr_vector_.push_back(&parameter);
+      parameter_ptr_array_.push_back(&parameter);
       parameter_count_++;
     }
   }
@@ -98,13 +98,11 @@ void Method::reservedCallback(Server *server)
 int Method::findParameterIndex(const _FLASH_STRING &parameter_name)
 {
   int parameter_index = -1;
-  for (std::vector<Parameter*>::iterator it = parameter_ptr_vector_.begin();
-       it != parameter_ptr_vector_.end();
-       ++it)
+  for (int i=0; i<parameter_ptr_array_.size(); ++i)
   {
-    if ((*it)->compareName(parameter_name))
+    if (parameter_ptr_array_[i]->compareName(parameter_name))
     {
-      parameter_index = std::distance(parameter_ptr_vector_.begin(),it);
+      parameter_index = i;
       break;
     }
   }

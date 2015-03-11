@@ -8,8 +8,7 @@
 #ifndef _MODULAR_DEVICE_METHOD_H_
 #define _MODULAR_DEVICE_METHOD_H_
 #include "Streaming.h"
-#include "StandardCplusplus.h"
-#include "vector"
+#include "Array.h"
 #include "JsonGenerator.h"
 #include "Flash.h"
 #include "Parameter.h"
@@ -43,7 +42,7 @@ private:
   void attachReservedCallback(ReservedCallback callback);
   boolean isReserved();
   void reservedCallback(Server *server);
-  std::vector<Parameter*> parameter_ptr_vector_;
+  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptr_array_;
   int findParameterIndex(const _FLASH_STRING &parameter_name);
   int parameter_count_;
   friend class Server;
