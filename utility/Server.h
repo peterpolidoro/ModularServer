@@ -45,98 +45,29 @@ public:
   ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &name);
   template<typename T>
   SavedVariable& createSavedVariable(const _FLASH_STRING &saved_variable_name,
-                                     const T &default_value)
-  {
-    int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-    if (saved_variable_index < 0)
-    {
-      saved_variable_vector_.push_back(SavedVariable(saved_variable_name,
-                                                     eeprom_index_,
-                                                     default_value));
-      unsigned char eeprom_init_value;
-      getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
-      if (eeprom_init_value != constants::eeprom_initialized_value)
-      {
-        saved_variable_vector_.back().setDefaultValue();
-      }
-      eeprom_index_ += saved_variable_vector_.back().getSize();
-      return saved_variable_vector_.back();
-    }
-  }
+                                     const T &default_value);
   template<typename T>
   SavedVariable& createSavedVariable(const _FLASH_STRING &saved_variable_name,
                                      const T default_value[],
-                                     const unsigned int array_length)
-  {
-    int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-    if (saved_variable_index < 0)
-    {
-      saved_variable_vector_.push_back(SavedVariable(saved_variable_name,
-                                                     eeprom_index_,
-                                                     default_value,
-                                                     array_length));
-      unsigned char eeprom_init_value;
-      getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
-      if (eeprom_init_value != constants::eeprom_initialized_value)
-      {
-        saved_variable_vector_.back().setDefaultValue();
-      }
-      eeprom_index_ += saved_variable_vector_.back().getSize();
-      return saved_variable_vector_.back();
-    }
-  }
+                                     const unsigned int array_length);
   template<typename T>
   void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
-                             const T &value)
-  {
-    int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-    if (saved_variable_index >= 0)
-    {
-      saved_variable_vector_[saved_variable_index].setValue(value);
-    }
-  }
+                             const T &value);
   template<typename T>
   void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
                              const T value[],
-                             const unsigned int array_index)
-  {
-    int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-    if (saved_variable_index >= 0)
-    {
-      saved_variable_vector_[saved_variable_index].setValue(value,array_index);
-    }
-  }
+                             const unsigned int array_index);
   template<typename T>
   void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
-                             T &value)
-  {
-    int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-    if (saved_variable_index >= 0)
-    {
-      saved_variable_vector_[saved_variable_index].getValue(value);
-    }
-  }
+                             T &value);
   template<typename T>
   void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
                              T value[],
-                             const unsigned int array_index)
-  {
-    int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-    if (saved_variable_index >= 0)
-    {
-      saved_variable_vector_[saved_variable_index].getValue(value,array_index);
-    }
-  }
+                             const unsigned int array_index);
   template<typename T>
-  void addToResponse(const char *key, T value)
-  {
-    response_.add(key,value);
-  }
+  void addToResponse(const char *key, T value);
   template<typename T>
-  void addToResponse(T value)
-  {
-    response_.add(value);
-  }
+  void addToResponse(T value);
   void addNullToResponse(const char *key);
   void addNullToResponse();
   void addBooleanToResponse(const char *key, const boolean value);
@@ -196,5 +127,6 @@ private:
   void verboseHelp();
 };
 }
+#include "ServerDefinitions.h"
 
 #endif

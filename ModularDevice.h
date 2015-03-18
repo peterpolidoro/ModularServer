@@ -32,53 +32,29 @@ public:
   ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &parameter_name);
   template<typename T>
   void createSavedVariable(const _FLASH_STRING &saved_variable_name,
-                           const T &default_value)
-  {
-    server_.createSavedVariable(saved_variable_name,default_value);
-  }
+                           const T &default_value);
   template<typename T>
   void createSavedVariable(const _FLASH_STRING &saved_variable_name,
                            const T default_value[],
-                           const unsigned int array_length)
-  {
-    server_.createSavedVariable(saved_variable_name,default_value,array_length);
-  }
+                           const unsigned int array_length);
   template<typename T>
   void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
-                             const T &value)
-  {
-    server_.setSavedVariableValue(saved_variable_name,value);
-  }
+                             const T &value);
   template<typename T>
   void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
                              const T value[],
-                             const unsigned int array_index)
-  {
-    server_.setSavedVariableValue(saved_variable_name,value,array_index);
-  }
+                             const unsigned int array_index);
   template<typename T>
   void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
-                             T &value)
-  {
-    server_.getSavedVariableValue(saved_variable_name,value);
-  }
+                             T &value);
   template<typename T>
   void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
                              T value[],
-                             const unsigned int array_index)
-  {
-    server_.getSavedVariableValue(saved_variable_name,value,array_index);
-  }
+                             const unsigned int array_index);
   template<typename T>
-  void addToResponse(const char *key, T value)
-  {
-    server_.addToResponse(key,value);
-  }
+  void addToResponse(const char *key, T value);
   template<typename T>
-  void addToResponse(T value)
-  {
-    server_.addToResponse(value);
-  }
+  void addToResponse(T value);
   void addNullToResponse(const char *key);
   void addNullToResponse();
   void addBooleanToResponse(const char *key, const boolean value);
@@ -98,6 +74,7 @@ private:
   friend void setSerialNumberCallback();
 };
 }
+#include "ModularDeviceDefinitions.h"
 
 extern ModularDevice::ModularDevice modular_device;
 
