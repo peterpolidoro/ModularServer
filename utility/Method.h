@@ -25,6 +25,7 @@ typedef void (Server::*ReservedCallback)(void);
 class Method
 {
 public:
+  Method();
   Method(const _FLASH_STRING &name);
   void setName(const _FLASH_STRING &name);
   void attachCallback(Callback callback);

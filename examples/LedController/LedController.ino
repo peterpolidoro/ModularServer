@@ -1,7 +1,6 @@
 #include <EEPROM.h>
 #include "Streaming.h"
 #include "JsonParser.h"
-#include "StandardCplusplus.h"
 #include "Array.h"
 #include "MemoryFree.h"
 #include "Flash.h"

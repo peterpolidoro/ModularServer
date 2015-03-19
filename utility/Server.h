@@ -15,8 +15,6 @@
 #include <Stream.h>
 #include "Streaming.h"
 #include "JsonParser.h"
-#include "StandardCplusplus.h"
-#include "vector"
 #include "Array.h"
 #include "MemoryFree.h"
 #include "Flash.h"
@@ -85,9 +83,9 @@ private:
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::Parser::JsonParser<constants::JSON_PARSER_SIZE> parser_;
   ArduinoJson::Parser::JsonArray request_json_array_;
-  std::vector<Method> method_vector_;
-  std::vector<Parameter> parameter_vector_;
-  std::vector<SavedVariable> saved_variable_vector_;
+  Array<Method,constants::METHOD_COUNT_MAX> method_array_;
+  Array<Parameter,constants::PARAMETER_COUNT_MAX> parameter_array_;
+  Array<SavedVariable,constants::SAVED_VARIABLE_COUNT_MAX> saved_variable_array_;
   const _FLASH_STRING *name_ptr_;
   unsigned int model_number_;
   unsigned int firmware_number_;

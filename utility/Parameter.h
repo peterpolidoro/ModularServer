@@ -25,6 +25,7 @@ class ModularDevice;
 class Parameter
 {
 public:
+  Parameter();
   Parameter(const _FLASH_STRING &name);
   void setName(const _FLASH_STRING &name);
   void setUnits(const _FLASH_STRING &name);

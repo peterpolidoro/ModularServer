@@ -9,6 +9,10 @@
 
 namespace ModularDevice
 {
+SavedVariable::SavedVariable()
+{
+}
+
 void SavedVariable::setName(const _FLASH_STRING &name)
 {
   name_ptr_ = &name;

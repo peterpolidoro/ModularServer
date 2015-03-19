@@ -14,7 +14,16 @@ namespace ModularDevice
 FLASH_STRING(default_parameter_name,"");
 FLASH_STRING(default_parameter_units,"");
 
-Parameter::Parameter(const _FLASH_STRING &name=default_parameter_name)
+Parameter::Parameter()
+{
+  setName(default_parameter_name);
+  setUnits(default_parameter_units);
+  type_ = constants::LONG_PARAMETER;
+  array_element_type_ = constants::LONG_PARAMETER;
+  range_is_set_ = false;
+}
+
+Parameter::Parameter(const _FLASH_STRING &name)
 {
   setName(name);
   setUnits(default_parameter_units);

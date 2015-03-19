@@ -16,6 +16,7 @@ namespace ModularDevice
 class SavedVariable
 {
 public:
+  SavedVariable();
   template<typename T>
   SavedVariable(const _FLASH_STRING &name,
                 const unsigned int eeprom_index,

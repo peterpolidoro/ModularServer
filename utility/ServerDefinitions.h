@@ -18,17 +18,17 @@ SavedVariable& Server::createSavedVariable(const _FLASH_STRING &saved_variable_n
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index < 0)
   {
-    saved_variable_vector_.push_back(SavedVariable(saved_variable_name,
-                                                   eeprom_index_,
-                                                   default_value));
+    saved_variable_array_.push_back(SavedVariable(saved_variable_name,
+                                                  eeprom_index_,
+                                                  default_value));
     unsigned char eeprom_init_value;
     getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
-      saved_variable_vector_.back().setDefaultValue();
+      saved_variable_array_.back().setDefaultValue();
     }
-    eeprom_index_ += saved_variable_vector_.back().getSize();
-    return saved_variable_vector_.back();
+    eeprom_index_ += saved_variable_array_.back().getSize();
+    return saved_variable_array_.back();
   }
 }
 
@@ -40,18 +40,18 @@ SavedVariable& Server::createSavedVariable(const _FLASH_STRING &saved_variable_n
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index < 0)
   {
-    saved_variable_vector_.push_back(SavedVariable(saved_variable_name,
-                                                   eeprom_index_,
-                                                   default_value,
-                                                   array_length));
+    saved_variable_array_.push_back(SavedVariable(saved_variable_name,
+                                                  eeprom_index_,
+                                                  default_value,
+                                                  array_length));
     unsigned char eeprom_init_value;
     getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
-      saved_variable_vector_.back().setDefaultValue();
+      saved_variable_array_.back().setDefaultValue();
     }
-    eeprom_index_ += saved_variable_vector_.back().getSize();
-    return saved_variable_vector_.back();
+    eeprom_index_ += saved_variable_array_.back().getSize();
+    return saved_variable_array_.back();
   }
 }
 
@@ -62,7 +62,7 @@ void Server::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_vector_[saved_variable_index].setValue(value);
+    saved_variable_array_[saved_variable_index].setValue(value);
   }
 }
 
@@ -74,7 +74,7 @@ void Server::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_vector_[saved_variable_index].setValue(value,array_index);
+    saved_variable_array_[saved_variable_index].setValue(value,array_index);
   }
 }
 
@@ -85,7 +85,7 @@ void Server::getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_vector_[saved_variable_index].getValue(value);
+    saved_variable_array_[saved_variable_index].getValue(value);
   }
 }
 
@@ -97,7 +97,7 @@ void Server::getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_vector_[saved_variable_index].getValue(value,array_index);
+    saved_variable_array_[saved_variable_index].getValue(value,array_index);
   }
 }
 

@@ -14,7 +14,15 @@ namespace ModularDevice
 {
 FLASH_STRING(default_method_name,"");
 
-Method::Method(const _FLASH_STRING &name=default_method_name)
+Method::Method()
+{
+  setName(default_method_name);
+  callback_attached_ = false;
+  reserved_ = false;
+  parameter_count_ = 0;
+}
+
+Method::Method(const _FLASH_STRING &name)
 {
   setName(name);
   callback_attached_ = false;
