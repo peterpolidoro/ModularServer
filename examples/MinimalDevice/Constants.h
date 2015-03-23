@@ -8,7 +8,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include "Flash.h"
-#include "ConstantVariables.h"
+#include "ConstantVariable.h"
 
 namespace constants
 {

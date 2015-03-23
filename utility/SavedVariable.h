@@ -9,7 +9,7 @@
 #define _MODULAR_DEVICE_SAVED_VARIABLE_H_
 #include <EEPROM.h>
 #include "Flash.h"
-#include "ConstantVariables.h"
+#include "ConstantVariable.h"
 
 
 namespace ModularDevice

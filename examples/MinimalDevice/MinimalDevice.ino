@@ -4,7 +4,7 @@
 #include "Array.h"
 #include "MemoryFree.h"
 #include "Flash.h"
-#include "ConstantVariables.h"
+#include "ConstantVariable.h"
 #include "ModularDevice.h"
 #include "Constants.h"
 #include "Callbacks.h"
