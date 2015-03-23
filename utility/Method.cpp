@@ -12,7 +12,7 @@ using namespace ArduinoJson;
 
 namespace ModularDevice
 {
-FLASH_STRING(default_method_name,"");
+CONSTANT_STRING(default_method_name,"");
 
 Method::Method()
 {
@@ -22,7 +22,7 @@ Method::Method()
   parameter_count_ = 0;
 }
 
-Method::Method(const _FLASH_STRING &name)
+Method::Method(const ConstantString &name)
 {
   setName(name);
   callback_attached_ = false;
@@ -30,7 +30,7 @@ Method::Method(const _FLASH_STRING &name)
   parameter_count_ = 0;
 }
 
-void Method::setName(const _FLASH_STRING &name)
+void Method::setName(const ConstantString &name)
 {
   name_ptr_ = &name;
 }
@@ -45,7 +45,7 @@ void Method::attachCallback(Callback callback)
 void Method::addParameter(Parameter &parameter)
 {
   char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
-  const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+  const ConstantString* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
   if (String(parameter_name).length() > 0)
   {
@@ -65,12 +65,12 @@ boolean Method::compareName(const char *name_to_compare)
   return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-boolean Method::compareName(const _FLASH_STRING &name_to_compare)
+boolean Method::compareName(const ConstantString &name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
 }
 
-const _FLASH_STRING* Method::getNamePointer()
+const ConstantString* Method::getNamePointer()
 {
   return name_ptr_;
 }
@@ -103,7 +103,7 @@ void Method::reservedCallback(Server *server)
   }
 }
 
-int Method::findParameterIndex(const _FLASH_STRING &parameter_name)
+int Method::findParameterIndex(const ConstantString &parameter_name)
 {
   int parameter_index = -1;
   for (int i=0; i<parameter_ptr_array_.size(); ++i)

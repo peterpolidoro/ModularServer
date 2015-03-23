@@ -13,7 +13,7 @@ SavedVariable::SavedVariable()
 {
 }
 
-void SavedVariable::setName(const _FLASH_STRING &name)
+void SavedVariable::setName(const ConstantString &name)
 {
   name_ptr_ = &name;
 }
@@ -41,7 +41,7 @@ int SavedVariable::getSize()
 {
   return size_;
 }
-boolean SavedVariable::compareName(const _FLASH_STRING &name_to_compare)
+boolean SavedVariable::compareName(const ConstantString &name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
 }

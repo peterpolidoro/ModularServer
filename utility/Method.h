@@ -11,6 +11,7 @@
 #include "Array.h"
 #include "JsonGenerator.h"
 #include "Flash.h"
+#include "ConstantVariables.h"
 #include "Parameter.h"
 #include "Constants.h"
 
@@ -26,17 +27,17 @@ class Method
 {
 public:
   Method();
-  Method(const _FLASH_STRING &name);
-  void setName(const _FLASH_STRING &name);
+  Method(const ConstantString &name);
+  void setName(const ConstantString &name);
   void attachCallback(Callback callback);
   void addParameter(Parameter &parameter);
 private:
-  const _FLASH_STRING *name_ptr_;
+  const ConstantString *name_ptr_;
   Callback callback_;
   boolean callback_attached_;
   boolean compareName(const char *name_to_compare);
-  boolean compareName(const _FLASH_STRING &name_to_compare);
-  const _FLASH_STRING* getNamePointer();
+  boolean compareName(const ConstantString &name_to_compare);
+  const ConstantString* getNamePointer();
   void callback();
   ReservedCallback reserved_callback_;
   boolean reserved_;
@@ -44,7 +45,7 @@ private:
   boolean isReserved();
   void reservedCallback(Server *server);
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptr_array_;
-  int findParameterIndex(const _FLASH_STRING &parameter_name);
+  int findParameterIndex(const ConstantString &parameter_name);
   int parameter_count_;
   friend class Server;
 };

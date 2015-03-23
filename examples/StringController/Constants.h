@@ -8,6 +8,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include "Flash.h"
+#include "ConstantVariables.h"
 
 namespace constants
 {
@@ -26,22 +27,22 @@ extern const int starting_chars_count_default;
 extern const int index_array_element_min;
 extern const int index_array_element_max;
 
-extern _FLASH_STRING device_name;
-extern _FLASH_STRING echo_method_name;
-extern _FLASH_STRING length_method_name;
-extern _FLASH_STRING starts_with_method_name;
-extern _FLASH_STRING repeat_method_name;
-extern _FLASH_STRING chars_at_method_name;
-extern _FLASH_STRING starting_chars_method_name;
-extern _FLASH_STRING set_starting_chars_count_method_name;
-extern _FLASH_STRING get_starting_chars_count_method_name;
-extern _FLASH_STRING set_stored_string_method_name;
-extern _FLASH_STRING get_stored_string_method_name;
-extern _FLASH_STRING string_parameter_name;
-extern _FLASH_STRING string2_parameter_name;
-extern _FLASH_STRING count_parameter_name;
-extern _FLASH_STRING index_array_parameter_name;
-extern _FLASH_STRING double_echo_parameter_name;
-extern _FLASH_STRING starting_chars_count_name;
+extern ConstantString device_name;
+extern ConstantString echo_method_name;
+extern ConstantString length_method_name;
+extern ConstantString starts_with_method_name;
+extern ConstantString repeat_method_name;
+extern ConstantString chars_at_method_name;
+extern ConstantString starting_chars_method_name;
+extern ConstantString set_starting_chars_count_method_name;
+extern ConstantString get_starting_chars_count_method_name;
+extern ConstantString set_stored_string_method_name;
+extern ConstantString get_stored_string_method_name;
+extern ConstantString string_parameter_name;
+extern ConstantString string2_parameter_name;
+extern ConstantString count_parameter_name;
+extern ConstantString index_array_parameter_name;
+extern ConstantString double_echo_parameter_name;
+extern ConstantString starting_chars_count_name;
 }
 #endif

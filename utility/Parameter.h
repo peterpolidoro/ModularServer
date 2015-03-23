@@ -14,6 +14,7 @@
 #endif
 #include "JsonGenerator.h"
 #include "Flash.h"
+#include "ConstantVariables.h"
 #include "Constants.h"
 
 
@@ -26,9 +27,9 @@ class Parameter
 {
 public:
   Parameter();
-  Parameter(const _FLASH_STRING &name);
-  void setName(const _FLASH_STRING &name);
-  void setUnits(const _FLASH_STRING &name);
+  Parameter(const ConstantString &name);
+  void setName(const ConstantString &name);
+  void setUnits(const ConstantString &name);
   void setTypeLong();
   void setTypeDouble();
   void setTypeBool();
@@ -47,17 +48,17 @@ public:
   void setRange(const float min, const float max);
   void removeRange();
 private:
-  const _FLASH_STRING *name_ptr_;
-  const _FLASH_STRING *units_ptr_;
+  const ConstantString *name_ptr_;
+  const ConstantString *units_ptr_;
   constants::ParameterType type_;
   constants::ParameterType array_element_type_;
   constants::NumberType min_;
   constants::NumberType max_;
   boolean range_is_set_;
   boolean compareName(const char *name_to_compare);
-  boolean compareName(const _FLASH_STRING &name_to_compare);
-  const _FLASH_STRING* getNamePointer();
-  const _FLASH_STRING* getUnitsPointer();
+  boolean compareName(const ConstantString &name_to_compare);
+  const ConstantString* getNamePointer();
+  const ConstantString* getUnitsPointer();
   constants::ParameterType getType();
   constants::ParameterType getArrayElementType();
   boolean rangeIsSet();

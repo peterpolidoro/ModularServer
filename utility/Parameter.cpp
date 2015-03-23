@@ -11,8 +11,8 @@ using namespace ArduinoJson;
 
 namespace ModularDevice
 {
-FLASH_STRING(default_parameter_name,"");
-FLASH_STRING(default_parameter_units,"");
+CONSTANT_STRING(default_parameter_name,"");
+CONSTANT_STRING(default_parameter_units,"");
 
 Parameter::Parameter()
 {
@@ -23,7 +23,7 @@ Parameter::Parameter()
   range_is_set_ = false;
 }
 
-Parameter::Parameter(const _FLASH_STRING &name)
+Parameter::Parameter(const ConstantString &name)
 {
   setName(name);
   setUnits(default_parameter_units);
@@ -32,12 +32,12 @@ Parameter::Parameter(const _FLASH_STRING &name)
   range_is_set_ = false;
 }
 
-void Parameter::setName(const _FLASH_STRING &name)
+void Parameter::setName(const ConstantString &name)
 {
   name_ptr_ = &name;
 }
 
-void Parameter::setUnits(const _FLASH_STRING &units)
+void Parameter::setUnits(const ConstantString &units)
 {
   units_ptr_ = &units;
 }
@@ -129,17 +129,17 @@ boolean Parameter::compareName(const char *name_to_compare)
   return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-boolean Parameter::compareName(const _FLASH_STRING &name_to_compare)
+boolean Parameter::compareName(const ConstantString &name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
 }
 
-const _FLASH_STRING* Parameter::getNamePointer()
+const ConstantString* Parameter::getNamePointer()
 {
   return name_ptr_;
 }
 
-const _FLASH_STRING* Parameter::getUnitsPointer()
+const ConstantString* Parameter::getUnitsPointer()
 {
   return units_ptr_;
 }

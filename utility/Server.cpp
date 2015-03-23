@@ -13,17 +13,17 @@ using namespace ArduinoJson;
 namespace ModularDevice
 {
 
-FLASH_STRING(default_device_name,"");
-FLASH_STRING(get_device_info_method_name,"getDeviceInfo");
-FLASH_STRING(get_method_ids_method_name,"getMethodIds");
-FLASH_STRING(get_response_codes_method_name,"getResponseCodes");
-FLASH_STRING(get_parameters_method_name,"getParameters");
-FLASH_STRING(help_method_name,"?");
-FLASH_STRING(verbose_help_method_name,"??");
-FLASH_STRING(object_request_error_message,"JSON object requests not supported. Must use compact JSON array format for requests.");
-FLASH_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
-FLASH_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
-FLASH_STRING(serial_number_saved_variable_name,"serial_number");
+CONSTANT_STRING(default_device_name,"");
+CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
+CONSTANT_STRING(get_method_ids_method_name,"getMethodIds");
+CONSTANT_STRING(get_response_codes_method_name,"getResponseCodes");
+CONSTANT_STRING(get_parameters_method_name,"getParameters");
+CONSTANT_STRING(help_method_name,"?");
+CONSTANT_STRING(verbose_help_method_name,"??");
+CONSTANT_STRING(object_request_error_message,"JSON object requests not supported. Must use compact JSON array format for requests.");
+CONSTANT_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
+CONSTANT_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
+CONSTANT_STRING(serial_number_saved_variable_name,"serial_number");
 
 Server::Server(HardwareSerial &serial) :
   response_(serial)
@@ -70,7 +70,7 @@ void Server::setSerial(HardwareSerial &serial)
   serial_ptr_ = &serial;
 }
 
-void Server::setName(const _FLASH_STRING &name)
+void Server::setName(const ConstantString &name)
 {
   name_ptr_ = &name;
 }
@@ -90,7 +90,7 @@ void Server::setFirmwareNumber(const unsigned int firmware_number)
   firmware_number_ = firmware_number;
 }
 
-Method& Server::createMethod(const _FLASH_STRING &method_name)
+Method& Server::createMethod(const ConstantString &method_name)
 {
   int method_index = findMethodIndex(method_name);
   if (method_index < 0)
@@ -105,14 +105,14 @@ Method& Server::createMethod(const _FLASH_STRING &method_name)
   }
 }
 
-Method& Server::copyMethod(Method method,const _FLASH_STRING &method_name)
+Method& Server::copyMethod(Method method,const ConstantString &method_name)
 {
   method_array_.push_back(method);
   method_array_.back().setName(method_name);
   return method_array_.back();
 }
 
-Parameter& Server::createParameter(const _FLASH_STRING &parameter_name)
+Parameter& Server::createParameter(const ConstantString &parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
   if (parameter_index < 0)
@@ -127,14 +127,14 @@ Parameter& Server::createParameter(const _FLASH_STRING &parameter_name)
   }
 }
 
-Parameter& Server::copyParameter(Parameter parameter,const _FLASH_STRING &parameter_name)
+Parameter& Server::copyParameter(Parameter parameter,const ConstantString &parameter_name)
 {
   parameter_array_.push_back(parameter);
   parameter_array_.back().setName(parameter_name);
   return parameter_array_.back();
 }
 
-Parser::JsonValue Server::getParameterValue(const _FLASH_STRING &name)
+Parser::JsonValue Server::getParameterValue(const ConstantString &name)
 {
   int parameter_index = findParameterIndex(name);
   return request_json_array_[parameter_index+1];
@@ -343,7 +343,7 @@ int Server::findMethodIndex(char *method_name)
   return method_index;
 }
 
-int Server::findMethodIndex(const _FLASH_STRING &method_name)
+int Server::findMethodIndex(const ConstantString &method_name)
 {
   int method_index = -1;
   for (int i=0; i<method_array_.size(); ++i)
@@ -386,7 +386,7 @@ void Server::methodHelp(int method_index)
   addKeyToResponse("parameters");
   response_.startArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
-  const _FLASH_STRING* parameter_name_ptr;
+  const ConstantString* parameter_name_ptr;
   char parameter_name_char_array[constants::STRING_LENGTH_PARAMETER_NAME];
   for (int i=0; i<parameter_ptr_array.size(); ++i)
   {
@@ -456,7 +456,7 @@ int Server::findParameterIndex(const char *parameter_name)
   return parameter_index;
 }
 
-int Server::findParameterIndex(const _FLASH_STRING &parameter_name)
+int Server::findParameterIndex(const ConstantString &parameter_name)
 {
   int parameter_index = -1;
   if (request_method_index_ >= 0)
@@ -477,14 +477,14 @@ int Server::findParameterIndex(const _FLASH_STRING &parameter_name)
 void Server::parameterHelp(Parameter &parameter)
 {
   char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
-  const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+  const ConstantString* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
   addKeyToResponse(parameter_name);
 
   startResponseObject();
 
   char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS] = {0};
-  const _FLASH_STRING* parameter_units_ptr = parameter.getUnitsPointer();
+  const ConstantString* parameter_units_ptr = parameter.getUnitsPointer();
   parameter_units_ptr->copy(parameter_units);
   if (strcmp(parameter_units,"") != 0)
   {
@@ -750,7 +750,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
     error += min_string;
     error += String(" <= ");
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
-    const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     error += String(parameter_name);
     if (type == constants::ARRAY_PARAMETER)
@@ -768,7 +768,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   {
     addToResponse("status",constants::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
-    const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     String error = String(parameter_name);
     error += String(" is not a valid JSON object.");
@@ -781,7 +781,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   {
     addToResponse("status",constants::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
-    const _FLASH_STRING* parameter_name_ptr = parameter.getNamePointer();
+    const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     String error = String(parameter_name);
     error += String(" is not a valid JSON array.");
@@ -794,7 +794,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   return parameter_ok;
 }
 
-int Server::findSavedVariableIndex(const _FLASH_STRING &saved_variable_name)
+int Server::findSavedVariableIndex(const ConstantString &saved_variable_name)
 {
   int saved_variable_index = -1;
   for (int i=0; i<saved_variable_array_.size(); ++i)
@@ -834,7 +834,7 @@ void Server::getDeviceInfoCallback()
 void Server::getMethodIdsCallback()
 {
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
-  const _FLASH_STRING* method_name_ptr;
+  const ConstantString* method_name_ptr;
   for (int i=0; i<method_array_.size(); ++i)
   {
     int method_index = i;
@@ -878,7 +878,7 @@ void Server::help()
   addKeyToResponse("methods");
   startResponseArray();
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
-  const _FLASH_STRING* method_name_ptr;
+  const ConstantString* method_name_ptr;
   for (int i=0; i<method_array_.size(); ++i)
   {
     int method_index = i;
@@ -902,7 +902,7 @@ void Server::verboseHelp()
   addKeyToResponse("methods");
   startResponseArray();
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
-  const _FLASH_STRING* method_name_ptr;
+  const ConstantString* method_name_ptr;
   for (int i=0; i<method_array_.size(); ++i)
   {
     int method_index = i;

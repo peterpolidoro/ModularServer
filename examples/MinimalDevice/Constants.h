@@ -8,6 +8,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include "Flash.h"
+#include "ConstantVariables.h"
 
 namespace constants
 {
@@ -16,6 +17,6 @@ extern const int baudrate;
 extern const int model_number;
 extern const int firmware_number;
 
-extern _FLASH_STRING device_name;
+extern ConstantString device_name;
 }
 #endif

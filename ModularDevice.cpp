@@ -13,10 +13,10 @@ using namespace ArduinoJson;
 namespace ModularDevice
 {
 
-FLASH_STRING(get_memory_free_method_name,"getMemoryFree");
-FLASH_STRING(reset_defaults_method_name,"resetDefaults");
-FLASH_STRING(set_serial_number_method_name,"setSerialNumber");
-FLASH_STRING(serial_number_parameter_name,"serial_number");
+CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
+CONSTANT_STRING(reset_defaults_method_name,"resetDefaults");
+CONSTANT_STRING(set_serial_number_method_name,"setSerialNumber");
+CONSTANT_STRING(serial_number_parameter_name,"serial_number");
 
 ModularDevice::ModularDevice(HardwareSerial &serial) :
   server_(serial)
@@ -39,7 +39,7 @@ void ModularDevice::setServerSerial(HardwareSerial &serial)
   server_.setSerial(serial);
 }
 
-void ModularDevice::setName(const _FLASH_STRING &device_name)
+void ModularDevice::setName(const ConstantString &device_name)
 {
   server_.setName(device_name);
 }
@@ -54,27 +54,27 @@ void ModularDevice::setFirmwareNumber(const unsigned int firmware_number)
   server_.setFirmwareNumber(firmware_number);
 }
 
-Method& ModularDevice::createMethod(const _FLASH_STRING &method_name)
+Method& ModularDevice::createMethod(const ConstantString &method_name)
 {
   return server_.createMethod(method_name);
 }
 
-Method& ModularDevice::copyMethod(Method &method,const _FLASH_STRING &method_name)
+Method& ModularDevice::copyMethod(Method &method,const ConstantString &method_name)
 {
   return server_.copyMethod(method,method_name);
 }
 
-Parameter& ModularDevice::createParameter(const _FLASH_STRING &parameter_name)
+Parameter& ModularDevice::createParameter(const ConstantString &parameter_name)
 {
   return server_.createParameter(parameter_name);
 }
 
-Parameter& ModularDevice::copyParameter(Parameter &parameter,const _FLASH_STRING &parameter_name)
+Parameter& ModularDevice::copyParameter(Parameter &parameter,const ConstantString &parameter_name)
 {
   return server_.copyParameter(parameter,parameter_name);
 }
 
-Parser::JsonValue ModularDevice::getParameterValue(const _FLASH_STRING &parameter_name)
+Parser::JsonValue ModularDevice::getParameterValue(const ConstantString &parameter_name)
 {
   return server_.getParameterValue(parameter_name);
 }

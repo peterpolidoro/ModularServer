@@ -18,6 +18,7 @@
 #include "Array.h"
 #include "MemoryFree.h"
 #include "Flash.h"
+#include "ConstantVariables.h"
 #include "Parameter.h"
 #include "Method.h"
 #include "SavedVariable.h"
@@ -32,34 +33,34 @@ class Server
 public:
   Server(HardwareSerial &serial=Serial);
   void setSerial(HardwareSerial &serial);
-  void setName(const _FLASH_STRING &name);
+  void setName(const ConstantString &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
   void setFirmwareNumber(const unsigned int firmware_number);
-  Method& createMethod(const _FLASH_STRING &method_name);
-  Method& copyMethod(Method method,const _FLASH_STRING &method_name);
-  Parameter& createParameter(const _FLASH_STRING &parameter_name);
-  Parameter& copyParameter(Parameter parameter,const _FLASH_STRING &parameter_name);
-  ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &name);
+  Method& createMethod(const ConstantString &method_name);
+  Method& copyMethod(Method method,const ConstantString &method_name);
+  Parameter& createParameter(const ConstantString &parameter_name);
+  Parameter& copyParameter(Parameter parameter,const ConstantString &parameter_name);
+  ArduinoJson::Parser::JsonValue getParameterValue(const ConstantString &name);
   template<typename T>
-  SavedVariable& createSavedVariable(const _FLASH_STRING &saved_variable_name,
+  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
                                      const T &default_value);
   template<typename T>
-  SavedVariable& createSavedVariable(const _FLASH_STRING &saved_variable_name,
+  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
                                      const T default_value[],
                                      const unsigned int array_length);
   template<typename T>
-  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void setSavedVariableValue(const ConstantString &saved_variable_name,
                              const T &value);
   template<typename T>
-  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void setSavedVariableValue(const ConstantString &saved_variable_name,
                              const T value[],
                              const unsigned int array_index);
   template<typename T>
-  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void getSavedVariableValue(const ConstantString &saved_variable_name,
                              T &value);
   template<typename T>
-  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void getSavedVariableValue(const ConstantString &saved_variable_name,
                              T value[],
                              const unsigned int array_index);
   template<typename T>
@@ -86,7 +87,7 @@ private:
   Array<Method,constants::METHOD_COUNT_MAX> method_array_;
   Array<Parameter,constants::PARAMETER_COUNT_MAX> parameter_array_;
   Array<SavedVariable,constants::SAVED_VARIABLE_COUNT_MAX> saved_variable_array_;
-  const _FLASH_STRING *name_ptr_;
+  const ConstantString *name_ptr_;
   unsigned int model_number_;
   unsigned int firmware_number_;
   int request_method_index_;
@@ -94,25 +95,25 @@ private:
   JsonPrinter response_;
   boolean error_;
   unsigned int eeprom_index_;
-  const _FLASH_STRING *eeprom_init_name_ptr_;
+  const ConstantString *eeprom_init_name_ptr_;
   boolean eeprom_uninitialized_;
   unsigned int eeprom_initialized_index_;
 
   void processRequestArray();
   int processMethodString(char *method_string);
   int findMethodIndex(char *method_name);
-  int findMethodIndex(const _FLASH_STRING &method_name);
+  int findMethodIndex(const ConstantString &method_name);
   int countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array);
   void executeMethod();
   void methodHelp(int method_index);
   void verboseMethodHelp(int method_index);
   int processParameterString(char *parameter_string);
   int findParameterIndex(const char *parameter_name);
-  int findParameterIndex(const _FLASH_STRING &parameter_name);
+  int findParameterIndex(const ConstantString &parameter_name);
   void parameterHelp(Parameter &parameter);
   boolean checkParameters();
   boolean checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value);
-  int findSavedVariableIndex(const _FLASH_STRING &saved_variable_name);
+  int findSavedVariableIndex(const ConstantString &saved_variable_name);
   unsigned int getSerialNumber();
   void initializeEeprom();
 

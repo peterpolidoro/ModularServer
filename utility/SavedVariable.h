@@ -9,6 +9,7 @@
 #define _MODULAR_DEVICE_SAVED_VARIABLE_H_
 #include <EEPROM.h>
 #include "Flash.h"
+#include "ConstantVariables.h"
 
 
 namespace ModularDevice
@@ -18,7 +19,7 @@ class SavedVariable
 public:
   SavedVariable();
   template<typename T>
-  SavedVariable(const _FLASH_STRING &name,
+  SavedVariable(const ConstantString &name,
                 const unsigned int eeprom_index,
                 const T &default_value)
   {
@@ -29,7 +30,7 @@ public:
     array_length_ = 0;
   }
   template<typename T>
-  SavedVariable(const _FLASH_STRING &name,
+  SavedVariable(const ConstantString &name,
                 const unsigned int eeprom_index,
                 const T default_value[],
                 const unsigned int array_length)
@@ -41,7 +42,7 @@ public:
     default_value_ptr_ = default_value;
     array_length_ = array_length;
   }
-  void setName(const _FLASH_STRING &name);
+  void setName(const ConstantString &name);
   template<typename T>
   int setValue(const T &value)
   {
@@ -126,13 +127,13 @@ public:
   void setDefaultValue();
   int getSize();
 private:
-  const _FLASH_STRING *name_ptr_;
+  const ConstantString *name_ptr_;
   unsigned int eeprom_index_;
   unsigned int size_;
   const void *default_value_ptr_;
   unsigned int array_length_;
   unsigned int array_element_size_;
-  boolean compareName(const _FLASH_STRING& name_to_compare);
+  boolean compareName(const ConstantString& name_to_compare);
   friend class Server;
 };
 }

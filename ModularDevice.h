@@ -22,33 +22,33 @@ class ModularDevice
 public:
   ModularDevice(HardwareSerial &serial);
   void setServerSerial(HardwareSerial &serial);
-  void setName(const _FLASH_STRING &device_name);
+  void setName(const ConstantString &device_name);
   void setModelNumber(const unsigned int model_number);
   void setFirmwareNumber(const unsigned int firmware_number);
-  Method& createMethod(const _FLASH_STRING &method_name);
-  Method& copyMethod(Method &method,const _FLASH_STRING &method_name);
-  Parameter& createParameter(const _FLASH_STRING &parameter_name);
-  Parameter& copyParameter(Parameter &parameter,const _FLASH_STRING &parameter_name);
-  ArduinoJson::Parser::JsonValue getParameterValue(const _FLASH_STRING &parameter_name);
+  Method& createMethod(const ConstantString &method_name);
+  Method& copyMethod(Method &method,const ConstantString &method_name);
+  Parameter& createParameter(const ConstantString &parameter_name);
+  Parameter& copyParameter(Parameter &parameter,const ConstantString &parameter_name);
+  ArduinoJson::Parser::JsonValue getParameterValue(const ConstantString &parameter_name);
   template<typename T>
-  void createSavedVariable(const _FLASH_STRING &saved_variable_name,
+  void createSavedVariable(const ConstantString &saved_variable_name,
                            const T &default_value);
   template<typename T>
-  void createSavedVariable(const _FLASH_STRING &saved_variable_name,
+  void createSavedVariable(const ConstantString &saved_variable_name,
                            const T default_value[],
                            const unsigned int array_length);
   template<typename T>
-  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void setSavedVariableValue(const ConstantString &saved_variable_name,
                              const T &value);
   template<typename T>
-  void setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void setSavedVariableValue(const ConstantString &saved_variable_name,
                              const T value[],
                              const unsigned int array_index);
   template<typename T>
-  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void getSavedVariableValue(const ConstantString &saved_variable_name,
                              T &value);
   template<typename T>
-  void getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+  void getSavedVariableValue(const ConstantString &saved_variable_name,
                              T value[],
                              const unsigned int array_index);
   template<typename T>

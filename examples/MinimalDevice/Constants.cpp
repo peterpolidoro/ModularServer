@@ -15,5 +15,5 @@ const int baudrate = 9600;
 const int model_number = 1000;
 const int firmware_number = 1;
 
-FLASH_STRING(device_name,"minimal_device");
+CONSTANT_STRING(device_name,"minimal_device");
 }

@@ -12,14 +12,14 @@
 namespace ModularDevice
 {
 template<typename T>
-void ModularDevice::createSavedVariable(const _FLASH_STRING &saved_variable_name,
+void ModularDevice::createSavedVariable(const ConstantString &saved_variable_name,
                                         const T &default_value)
 {
   server_.createSavedVariable(saved_variable_name,default_value);
 }
 
 template<typename T>
-void ModularDevice::createSavedVariable(const _FLASH_STRING &saved_variable_name,
+void ModularDevice::createSavedVariable(const ConstantString &saved_variable_name,
                                         const T default_value[],
                                         const unsigned int array_length)
 {
@@ -27,14 +27,14 @@ void ModularDevice::createSavedVariable(const _FLASH_STRING &saved_variable_name
 }
 
 template<typename T>
-void ModularDevice::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void ModularDevice::setSavedVariableValue(const ConstantString &saved_variable_name,
                                           const T &value)
 {
   server_.setSavedVariableValue(saved_variable_name,value);
 }
 
 template<typename T>
-void ModularDevice::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void ModularDevice::setSavedVariableValue(const ConstantString &saved_variable_name,
                                           const T value[],
                                           const unsigned int array_index)
 {
@@ -42,14 +42,14 @@ void ModularDevice::setSavedVariableValue(const _FLASH_STRING &saved_variable_na
 }
 
 template<typename T>
-void ModularDevice::getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void ModularDevice::getSavedVariableValue(const ConstantString &saved_variable_name,
                                           T &value)
 {
   server_.getSavedVariableValue(saved_variable_name,value);
 }
 
 template<typename T>
-void ModularDevice::getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void ModularDevice::getSavedVariableValue(const ConstantString &saved_variable_name,
                                           T value[],
                                           const unsigned int array_index)
 {

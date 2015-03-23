@@ -12,7 +12,7 @@
 namespace ModularDevice
 {
 template<typename T>
-SavedVariable& Server::createSavedVariable(const _FLASH_STRING &saved_variable_name,
+SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_name,
                                            const T &default_value)
 {
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
@@ -33,7 +33,7 @@ SavedVariable& Server::createSavedVariable(const _FLASH_STRING &saved_variable_n
 }
 
 template<typename T>
-SavedVariable& Server::createSavedVariable(const _FLASH_STRING &saved_variable_name,
+SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_name,
                                            const T default_value[],
                                            const unsigned int array_length)
 {
@@ -56,7 +56,7 @@ SavedVariable& Server::createSavedVariable(const _FLASH_STRING &saved_variable_n
 }
 
 template<typename T>
-void Server::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void Server::setSavedVariableValue(const ConstantString &saved_variable_name,
                                    const T &value)
 {
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
@@ -67,7 +67,7 @@ void Server::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
 }
 
 template<typename T>
-void Server::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void Server::setSavedVariableValue(const ConstantString &saved_variable_name,
                                    const T value[],
                                    const unsigned int array_index)
 {
@@ -79,7 +79,7 @@ void Server::setSavedVariableValue(const _FLASH_STRING &saved_variable_name,
 }
 
 template<typename T>
-void Server::getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
                                    T &value)
 {
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
@@ -90,7 +90,7 @@ void Server::getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
 }
 
 template<typename T>
-void Server::getSavedVariableValue(const _FLASH_STRING &saved_variable_name,
+void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
                                    T value[],
                                    const unsigned int array_index)
 {
