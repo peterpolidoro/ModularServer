@@ -8,7 +8,6 @@
 #ifndef _MODULAR_DEVICE_SAVED_VARIABLE_H_
 #define _MODULAR_DEVICE_SAVED_VARIABLE_H_
 #include <EEPROM.h>
-#include "Flash.h"
 #include "ConstantVariable.h"
 
 

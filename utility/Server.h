@@ -12,12 +12,10 @@
 #else
 #include "WProgram.h"
 #endif
-#include <Stream.h>
 #include "Streaming.h"
 #include "JsonParser.h"
 #include "Array.h"
 #include "MemoryFree.h"
-#include "Flash.h"
 #include "ConstantVariable.h"
 #include "Parameter.h"
 #include "Method.h"
