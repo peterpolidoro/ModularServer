@@ -13,7 +13,9 @@ using namespace ArduinoJson;
 namespace ModularDevice
 {
 
+#ifdef __AVR__
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
+#endif
 CONSTANT_STRING(reset_defaults_method_name,"resetDefaults");
 CONSTANT_STRING(set_serial_number_method_name,"setSerialNumber");
 CONSTANT_STRING(serial_number_parameter_name,"serial_number");
@@ -21,8 +23,10 @@ CONSTANT_STRING(serial_number_parameter_name,"serial_number");
 ModularDevice::ModularDevice(HardwareSerial &serial) :
   server_(serial)
 {
+#ifdef __AVR__
   Method& get_memory_free_method = createMethod(get_memory_free_method_name);
   get_memory_free_method.attachCallback(getMemoryFreeCallback);
+#endif
 
   Method& reset_defaults_method = createMethod(reset_defaults_method_name);
   reset_defaults_method.attachCallback(resetDefaultsCallback);
@@ -147,10 +151,12 @@ void ModularDevice::setSerialNumber(const unsigned int serial_number)
 
 ModularDevice::ModularDevice modular_device(Serial);
 
+#ifdef __AVR__
 void ModularDevice::getMemoryFreeCallback()
 {
   modular_device.addToResponse("memory_free", freeMemory());
 }
+#endif
 
 void ModularDevice::resetDefaultsCallback()
 {
