@@ -66,12 +66,10 @@ public:
   void stopResponseArray();
   void startServer(const int baudrate);
   void handleServerRequests();
-private:
-  Server server_;
   void resetDefaults();
   void setSerialNumber(const unsigned int serial_number);
-  friend void resetDefaultsCallback();
-  friend void setSerialNumberCallback();
+private:
+  Server server_;
 };
 }
 #include "ModularDeviceDefinitions.h"
