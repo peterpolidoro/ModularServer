@@ -31,12 +31,12 @@ public:
   Parameter& copyParameter(Parameter &parameter,const ConstantString &parameter_name);
   ArduinoJson::Parser::JsonValue getParameterValue(const ConstantString &parameter_name);
   template<typename T>
-  void createSavedVariable(const ConstantString &saved_variable_name,
-                           const T &default_value);
+  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
+                                     const T &default_value);
   template<typename T>
-  void createSavedVariable(const ConstantString &saved_variable_name,
-                           const T default_value[],
-                           const unsigned int array_length);
+  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
+                                     const T default_value[],
+                                     const unsigned int array_length);
   template<typename T>
   void setSavedVariableValue(const ConstantString &saved_variable_name,
                              const T &value);

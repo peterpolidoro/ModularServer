@@ -1,8 +1,6 @@
 // MinimalDevice
-#ifdef __AVR__
 #include "Flash.h"
 #include <EEPROM.h>
-#endif
 #include "Streaming.h"
 #include "JsonParser.h"
 #include "Array.h"

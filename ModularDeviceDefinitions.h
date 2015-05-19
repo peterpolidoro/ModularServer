@@ -12,18 +12,18 @@
 namespace ModularDevice
 {
 template<typename T>
-void ModularDevice::createSavedVariable(const ConstantString &saved_variable_name,
-                                        const T &default_value)
+SavedVariable& ModularDevice::createSavedVariable(const ConstantString &saved_variable_name,
+                                                  const T &default_value)
 {
-  server_.createSavedVariable(saved_variable_name,default_value);
+  return server_.createSavedVariable(saved_variable_name,default_value);
 }
 
 template<typename T>
-void ModularDevice::createSavedVariable(const ConstantString &saved_variable_name,
-                                        const T default_value[],
-                                        const unsigned int array_length)
+SavedVariable& ModularDevice::createSavedVariable(const ConstantString &saved_variable_name,
+                                                  const T default_value[],
+                                                  const unsigned int array_length)
 {
-  server_.createSavedVariable(saved_variable_name,default_value,array_length);
+  return server_.createSavedVariable(saved_variable_name,default_value,array_length);
 }
 
 template<typename T>
