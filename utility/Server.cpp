@@ -24,6 +24,9 @@ CONSTANT_STRING(object_request_error_message,"JSON object requests not supported
 CONSTANT_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
 CONSTANT_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
 CONSTANT_STRING(serial_number_saved_variable_name,"serial_number");
+CONSTANT_STRING(parameter_error_preamble_message,"Parameter value out of range: ");
+CONSTANT_STRING(array_parameter_error_preamble_message,"Array parameter element value out of range: ");
+
 
 Server::Server(HardwareSerial &serial) :
   response_(serial)
@@ -280,7 +283,7 @@ void Server::processRequestArray()
     else if (parameter_count != method_array_[request_method_index_].parameter_count_)
     {
       addToResponse("status",constants::ERROR);
-      String error_request = "Incorrect number of parameters. ";
+      String error_request = String("Incorrect number of parameters. ");
       error_request += String(parameter_count) + String(" given. ");
       error_request += String(method_array_[request_method_index_].parameter_count_);
       error_request += String(" needed.");
@@ -739,13 +742,16 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
   {
     addToResponse("status",constants::ERROR);
     String error;
+    char error_preamble[constants::STRING_LENGTH_ERROR_PREAMBLE] = {0};
     if (type != constants::ARRAY_PARAMETER)
     {
-      error = String("Parameter value out of range: ");
+      parameter_error_preamble_message.copy(error_preamble);
+      error = String(error_preamble);
     }
     else
     {
-      error = String("Array parameter element value out of range: ");
+      array_parameter_error_preamble_message.copy(error_preamble);
+      error = String(error_preamble);
     }
     error += min_string;
     error += String(" <= ");
