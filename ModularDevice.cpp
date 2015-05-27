@@ -33,6 +33,7 @@ ModularDevice::ModularDevice(HardwareSerial &serial) :
 
   Method& set_serial_number_method = createMethod(set_serial_number_method_name);
   set_serial_number_method.attachCallback(setSerialNumberCallback);
+
   Parameter& serial_number_parameter = modular_device.createParameter(serial_number_parameter_name);
   serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
   set_serial_number_method.addParameter(serial_number_parameter);
