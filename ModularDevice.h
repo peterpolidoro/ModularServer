@@ -60,6 +60,8 @@ public:
   void addBooleanToResponse(const char *key, const boolean value);
   void addBooleanToResponse(const boolean value);
   void addKeyToResponse(const char *key);
+  template<typename T>
+  void addErrorToResponse(T error);
   void startResponseObject();
   void stopResponseObject();
   void startResponseArray();

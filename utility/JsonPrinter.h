@@ -14,6 +14,7 @@
 #endif
 #include "Streaming.h"
 #include "Array.h"
+#include "ConstantVariable.h"
 #include "Constants.h"
 
 

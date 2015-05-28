@@ -67,6 +67,12 @@ void ModularDevice::addToResponse(T value)
 {
   server_.addToResponse(value);
 }
+
+template<typename T>
+void ModularDevice::addErrorToResponse(T error)
+{
+  server_.addErrorToResponse(error);
+}
 }
 
 #endif

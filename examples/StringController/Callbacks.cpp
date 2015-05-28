@@ -26,6 +26,8 @@ namespace callbacks
 // modular_device.getSavedVariableValue type must match the saved variable default type
 // modular_device.setSavedVariableValue type must match the saved variable default type
 
+CONSTANT_STRING(index_error,"Invalid index.");
+
 void echoCallback()
 {
   char* string = modular_device.getParameterValue(constants::string_parameter_name);
@@ -71,6 +73,17 @@ void charsAtCallback()
 {
   char* string = modular_device.getParameterValue(constants::string_parameter_name);
   JsonArray index_array = modular_device.getParameterValue(constants::index_array_parameter_name);
+  for (JsonArrayIterator index_it=index_array.begin();
+       index_it != index_array.end();
+       ++index_it)
+  {
+    long index = *index_it;
+    if (index >= String(string).length())
+    {
+      modular_device.addErrorToResponse(index_error);
+      return;
+    }
+  }
   modular_device.addKeyToResponse("result");
   modular_device.startResponseArray();
   for (JsonArrayIterator index_it=index_array.begin();

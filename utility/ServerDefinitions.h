@@ -112,6 +112,14 @@ void Server::addToResponse(T value)
 {
   response_.add(value);
 }
+
+template<typename T>
+void Server::addErrorToResponse(T error)
+{
+  addToResponse("status",constants::ERROR);
+  addToResponse("error_message",error);
+  error_ = true;
+}
 }
 
 #endif

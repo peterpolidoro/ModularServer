@@ -121,6 +121,13 @@ void JsonPrinter::add<String&>(String &value)
 }
 
 template <>
+void JsonPrinter::add<ConstantString>(ConstantString value)
+{
+  indent();
+  *serial_ptr_ << "\"" << value << "\"";
+}
+
+template <>
 void JsonPrinter::add<unsigned char>(unsigned char value)
 {
   stopArrayItem();
