@@ -61,7 +61,7 @@ public:
   void addBooleanToResponse(const boolean value);
   void addKeyToResponse(const char *key);
   template<typename T>
-  void addErrorToResponse(T error);
+  void sendErrorResponse(T error);
   void startResponseObject();
   void stopResponseObject();
   void startResponseArray();

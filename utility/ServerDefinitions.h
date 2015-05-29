@@ -114,7 +114,7 @@ void Server::addToResponse(T value)
 }
 
 template<typename T>
-void Server::addErrorToResponse(T error)
+void Server::sendErrorResponse(T error)
 {
   addToResponse("status",constants::ERROR);
   addToResponse("error_message",error);

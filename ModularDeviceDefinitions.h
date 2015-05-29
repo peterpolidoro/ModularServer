@@ -69,9 +69,9 @@ void ModularDevice::addToResponse(T value)
 }
 
 template<typename T>
-void ModularDevice::addErrorToResponse(T error)
+void ModularDevice::sendErrorResponse(T error)
 {
-  server_.addErrorToResponse(error);
+  server_.sendErrorResponse(error);
 }
 }
 

@@ -80,7 +80,7 @@ void charsAtCallback()
     long index = *index_it;
     if (index >= String(string).length())
     {
-      modular_device.addErrorToResponse(index_error);
+      modular_device.sendErrorResponse(index_error);
       return;
     }
   }
