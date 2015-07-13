@@ -75,14 +75,14 @@ setSerialNumber ??
 
 ####Python
 
-<https://github.com/JaneliaSciComp/modular_device_python>
+<https://github.com/janelia-modular-devices/modular_device_python>
 
 ####Matlab
 
-<https://github.com/JaneliaSciComp/modular_device_matlab>
+<https://github.com/janelia-modular-devices/modular_device_matlab>
 
 ##Installation
 
 ###Install This Library and its Dependencies Together
 
-<https://github.com/JaneliaSciComp/arduino-libraries>
+<https://github.com/janelia-modular-devices/arduino-libraries>

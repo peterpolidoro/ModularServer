@@ -238,7 +238,7 @@ dev.set_serial_number(12)
 
 For more details on the Python interface:
 
-<https://github.com/JaneliaSciComp/modular_device_python>
+<https://github.com/janelia-modular-devices/modular_device_python>
 
 ####Matlab
 
@@ -290,10 +290,10 @@ delete(dev)                      % deletes the device
 
 For more details on the Matlab interface:
 
-<https://github.com/JaneliaSciComp/modular_device_matlab>
+<https://github.com/janelia-modular-devices/modular_device_matlab>
 
 ##Installation
 
 ###Install This Library and its Dependencies Together
 
-<https://github.com/JaneliaSciComp/arduino-libraries>
+<https://github.com/janelia-modular-devices/arduino-libraries>
