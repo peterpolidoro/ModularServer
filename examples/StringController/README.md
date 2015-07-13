@@ -377,4 +377,4 @@ For more details on the Matlab interface:
 
 ###Install This Library and its Dependencies Together
 
-<https://github.com/janelia-modular-devices/arduino-libraries>
+<https://github.com/janelia-arduino/arduino-libraries>
