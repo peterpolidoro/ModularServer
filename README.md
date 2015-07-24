@@ -33,11 +33,11 @@ Monitor, Python, and Matlab) see example sketch README files:
 
 Open the Serial Monitor in the Arduino IDE.
 
-Set the baud rate to match the value in your Arduino sketch.
+Set the baud rate to 9600.
 
 Set the line ending to 'Newline'.
 
-To get help information about the Arduino device, type a single
+To get help information about the modular device, type a single
 question mark ? into the input field and press the 'Send' button or
 press the 'Enter' key.
 
