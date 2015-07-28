@@ -57,7 +57,7 @@ each method takes, type two questions marks:
 ```
 
 To get more information about a single method, enter the method
-followed by a question mark ?
+followed by a question mark '?'.
 
 Example Method Help:
 
@@ -67,7 +67,9 @@ setSerialNumber ?
 
 To get more verbose help about the method, including more information
 about the parameters each method takes, type the method name followed
-by two questions marks:
+by two questions marks '??'.
+
+Example Method Versbose Help:
 
 ```shell
 setSerialNumber ??
