@@ -13,9 +13,9 @@ namespace ModularDevice
 {
 namespace constants
 {
-enum{METHOD_COUNT_MAX=40};
-enum{PARAMETER_COUNT_MAX=17};
-enum{SAVED_VARIABLE_COUNT_MAX=11};
+enum{METHOD_COUNT_MAX=40}; //9 used internally
+enum{PARAMETER_COUNT_MAX=17}; // 1 used internally
+enum{SAVED_VARIABLE_COUNT_MAX=12}; // 2 used internally
 
 enum{STRING_LENGTH_REQUEST=257};
 enum{STRING_LENGTH_ERROR=257};
