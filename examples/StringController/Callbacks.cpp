@@ -53,7 +53,7 @@ void startsWithCallback()
 {
   char* string = modular_device.getParameterValue(constants::string_parameter_name);
   char* string2 = modular_device.getParameterValue(constants::string2_parameter_name);
-  modular_device.addBooleanToResponse("starts_with", String(string).startsWith(string2));
+  modular_device.addBoolToResponse("starts_with", String(string).startsWith(string2));
 }
 
 void repeatCallback()

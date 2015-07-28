@@ -24,9 +24,9 @@ class JsonDepthTracker
 {
 public:
   JsonDepthTracker();
-  JsonDepthTracker(boolean first_item, boolean inside_object);
-  boolean first_item_;
-  boolean inside_object_;
+  JsonDepthTracker(bool first_item, bool inside_object);
+  bool first_item_;
+  bool inside_object_;
 };
 
 class JsonPrinter
@@ -55,15 +55,15 @@ public:
     addNull();
   }
   void addNull();
-  void addBoolean(const char *key, const boolean value)
+  void addBool(const char *key, const bool value)
   {
     addKey(key);
-    addBoolean(value);
+    addBool(value);
   }
-  void addBoolean(const boolean value);
+  void addBool(const bool value);
 private:
   HardwareSerial *serial_ptr_;
-  boolean pretty_print_;
+  bool pretty_print_;
   int indent_level_;
   Array<JsonDepthTracker,constants::RESPONSE_DEPTH_MAX> jdt_array_;
   void indent();

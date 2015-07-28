@@ -94,14 +94,14 @@ void ModularDevice::addNullToResponse()
   server_.addNullToResponse();
 }
 
-void ModularDevice::addBooleanToResponse(const char *key, const boolean value)
+void ModularDevice::addBoolToResponse(const char *key, const bool value)
 {
-  server_.addBooleanToResponse(key,value);
+  server_.addBoolToResponse(key,value);
 }
 
-void ModularDevice::addBooleanToResponse(const boolean value)
+void ModularDevice::addBoolToResponse(const bool value)
 {
-  server_.addBooleanToResponse(value);
+  server_.addBoolToResponse(value);
 }
 
 void ModularDevice::addKeyToResponse(const char *key)

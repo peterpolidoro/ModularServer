@@ -57,8 +57,8 @@ public:
   void addToResponse(T value);
   void addNullToResponse(const char *key);
   void addNullToResponse();
-  void addBooleanToResponse(const char *key, const boolean value);
-  void addBooleanToResponse(const boolean value);
+  void addBoolToResponse(const char *key, const bool value);
+  void addBoolToResponse(const bool value);
   void addKeyToResponse(const char *key);
   template<typename T>
   void sendErrorResponse(T error);

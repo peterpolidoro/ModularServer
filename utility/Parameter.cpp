@@ -122,14 +122,14 @@ void Parameter::removeRange()
   range_is_set_ = false;
 }
 
-boolean Parameter::compareName(const char *name_to_compare)
+bool Parameter::compareName(const char *name_to_compare)
 {
   char name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-boolean Parameter::compareName(const ConstantString &name_to_compare)
+bool Parameter::compareName(const ConstantString &name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
 }
@@ -154,7 +154,7 @@ constants::ParameterType Parameter::getArrayElementType()
   return array_element_type_;
 }
 
-boolean Parameter::rangeIsSet()
+bool Parameter::rangeIsSet()
 {
   return range_is_set_;
 }

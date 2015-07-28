@@ -30,7 +30,7 @@ private:
   int count_;
   int led_pin_;
   int led_state_;
-  boolean enabled_;
+  bool enabled_;
   unsigned int interval_;
   int counter_;
   unsigned long current_time_;

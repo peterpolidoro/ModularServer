@@ -53,14 +53,14 @@ private:
   constants::ParameterType array_element_type_;
   constants::NumberType min_;
   constants::NumberType max_;
-  boolean range_is_set_;
-  boolean compareName(const char *name_to_compare);
-  boolean compareName(const ConstantString &name_to_compare);
+  bool range_is_set_;
+  bool compareName(const char *name_to_compare);
+  bool compareName(const ConstantString &name_to_compare);
   const ConstantString* getNamePointer();
   const ConstantString* getUnitsPointer();
   constants::ParameterType getType();
   constants::ParameterType getArrayElementType();
-  boolean rangeIsSet();
+  bool rangeIsSet();
   constants::NumberType getMin();
   constants::NumberType getMax();
   friend class Method;

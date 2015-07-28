@@ -33,15 +33,15 @@ public:
 private:
   const ConstantString *name_ptr_;
   Callback callback_;
-  boolean callback_attached_;
-  boolean compareName(const char *name_to_compare);
-  boolean compareName(const ConstantString &name_to_compare);
+  bool callback_attached_;
+  bool compareName(const char *name_to_compare);
+  bool compareName(const ConstantString &name_to_compare);
   const ConstantString* getNamePointer();
   void callback();
   ReservedCallback reserved_callback_;
-  boolean reserved_;
+  bool reserved_;
   void attachReservedCallback(ReservedCallback callback);
-  boolean isReserved();
+  bool isReserved();
   void reservedCallback(Server *server);
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptr_array_;
   int findParameterIndex(const ConstantString &parameter_name);

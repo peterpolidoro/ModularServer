@@ -15,7 +15,7 @@ JsonDepthTracker::JsonDepthTracker()
   inside_object_ = true;
 }
 
-JsonDepthTracker::JsonDepthTracker(boolean first_item, boolean inside_object) :
+JsonDepthTracker::JsonDepthTracker(bool first_item, bool inside_object) :
   first_item_(first_item),
   inside_object_(inside_object)
 {
@@ -218,6 +218,19 @@ void JsonPrinter::add<float>(float value)
   *serial_ptr_ <<  value_char_array;
 }
 
+template <>
+void JsonPrinter::add<bool>(bool value)
+{
+  if (value)
+  {
+    *serial_ptr_ <<  "true";
+  }
+  else
+  {
+    *serial_ptr_ <<  "false";
+  }
+}
+
 void JsonPrinter::addKey(const char *key)
 {
   stopItem();
@@ -230,7 +243,7 @@ void JsonPrinter::addNull()
   *serial_ptr_ << "null";
 }
 
-void JsonPrinter::addBoolean(const boolean value)
+void JsonPrinter::addBool(const bool value)
 {
   stopArrayItem();
   if (value)

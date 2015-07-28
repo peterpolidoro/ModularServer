@@ -67,8 +67,8 @@ public:
   void addToResponse(T value);
   void addNullToResponse(const char *key);
   void addNullToResponse();
-  void addBooleanToResponse(const char *key, const boolean value);
-  void addBooleanToResponse(const boolean value);
+  void addBoolToResponse(const char *key, const bool value);
+  void addBoolToResponse(const bool value);
   void addKeyToResponse(const char *key);
   template<typename T>
   void sendErrorResponse(T error);
@@ -93,10 +93,10 @@ private:
   int request_method_index_;
   int parameter_count_;
   JsonPrinter response_;
-  boolean error_;
+  bool error_;
   unsigned int eeprom_index_;
   const ConstantString *eeprom_init_name_ptr_;
-  boolean eeprom_uninitialized_;
+  bool eeprom_uninitialized_;
   unsigned int eeprom_initialized_index_;
 
   void processRequestArray();
@@ -111,8 +111,8 @@ private:
   int findParameterIndex(const char *parameter_name);
   int findParameterIndex(const ConstantString &parameter_name);
   void parameterHelp(Parameter &parameter);
-  boolean checkParameters();
-  boolean checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value);
+  bool checkParameters();
+  bool checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value);
   int findSavedVariableIndex(const ConstantString &saved_variable_name);
   unsigned int getSerialNumber();
   void initializeEeprom();

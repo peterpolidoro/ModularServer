@@ -58,14 +58,14 @@ void Method::addParameter(Parameter &parameter)
   }
 }
 
-boolean Method::compareName(const char *name_to_compare)
+bool Method::compareName(const char *name_to_compare)
 {
   char name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-boolean Method::compareName(const ConstantString &name_to_compare)
+bool Method::compareName(const ConstantString &name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
 }
@@ -90,7 +90,7 @@ void Method::attachReservedCallback(ReservedCallback callback)
   reserved_ = true;
 }
 
-boolean Method::isReserved()
+bool Method::isReserved()
 {
   return reserved_;
 }

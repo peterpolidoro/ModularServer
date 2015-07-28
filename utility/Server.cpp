@@ -153,14 +153,14 @@ void Server::addNullToResponse()
   response_.addNull();
 }
 
-void Server::addBooleanToResponse(const char *key, const boolean value)
+void Server::addBoolToResponse(const char *key, const bool value)
 {
-  response_.addBoolean(key,value);
+  response_.addBool(key,value);
 }
 
-void Server::addBooleanToResponse(const boolean value)
+void Server::addBoolToResponse(const bool value)
 {
-  response_.addBoolean(value);
+  response_.addBool(value);
 }
 
 void Server::addKeyToResponse(const char *key)
@@ -294,7 +294,7 @@ void Server::processRequestArray()
     }
     else
     {
-      boolean parameters_ok = checkParameters();
+      bool parameters_ok = checkParameters();
       if (parameters_ok)
       {
         executeMethod();
@@ -582,7 +582,7 @@ void Server::parameterHelp(Parameter &parameter)
   stopResponseObject();
 }
 
-boolean Server::checkParameters()
+bool Server::checkParameters()
 {
   int parameter_index = 0;
   for (Parser::JsonArrayIterator request_it=request_json_array_.begin();
@@ -605,11 +605,11 @@ boolean Server::checkParameters()
   return true;
 }
 
-boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
+bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
 {
-  boolean out_of_range = false;
-  boolean object_parse_unsuccessful = false;
-  boolean array_parse_unsuccessful = false;
+  bool out_of_range = false;
+  bool object_parse_unsuccessful = false;
+  bool array_parse_unsuccessful = false;
   Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
   constants::ParameterType type = parameter.getType();
   String min_string = "";
@@ -796,7 +796,7 @@ boolean Server::checkParameter(int parameter_index, Parser::JsonValue json_value
     addToResponse("error_message",error_str);
     error_ = true;
   }
-  boolean parameter_ok = (!out_of_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
+  bool parameter_ok = (!out_of_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
   return parameter_ok;
 }
 
