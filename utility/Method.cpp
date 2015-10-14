@@ -106,7 +106,7 @@ void Method::reservedCallback(Server *server)
 int Method::findParameterIndex(const ConstantString &parameter_name)
 {
   int parameter_index = -1;
-  for (int i=0; i<parameter_ptr_array_.size(); ++i)
+  for (unsigned int i=0; i<parameter_ptr_array_.size(); ++i)
   {
     if (parameter_ptr_array_[i]->compareName(parameter_name))
     {

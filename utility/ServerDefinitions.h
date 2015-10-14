@@ -21,7 +21,7 @@ SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_
     saved_variable_array_.push_back(SavedVariable(saved_variable_name,
                                                   eeprom_index_,
                                                   default_value));
-    unsigned char eeprom_init_value;
+    unsigned char eeprom_init_value = 0;
     getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {

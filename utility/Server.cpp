@@ -28,7 +28,7 @@ CONSTANT_STRING(parameter_error_preamble_message,"Parameter value out of range: 
 CONSTANT_STRING(array_parameter_error_preamble_message,"Array parameter element value out of range: ");
 
 
-Server::Server(HardwareSerial &serial) :
+Server::Server(GenericSerial &serial) :
   response_(serial)
 {
   setSerial(serial);
@@ -68,9 +68,9 @@ Server::Server(HardwareSerial &serial) :
   createSavedVariable(serial_number_saved_variable_name,constants::serial_number_default);
 }
 
-void Server::setSerial(HardwareSerial &serial)
+void Server::setSerial(GenericSerial &serial)
 {
-  serial_ptr_ = &serial;
+  generic_serial_ = serial;
 }
 
 void Server::setName(const ConstantString &name)
@@ -190,7 +190,7 @@ void Server::stopResponseArray()
 
 void Server::resetDefaults()
 {
-  for (int i=0; i<saved_variable_array_.size(); ++i)
+  for (unsigned int i=0; i<saved_variable_array_.size(); ++i)
   {
     saved_variable_array_[i].setDefaultValue();
   }
@@ -202,14 +202,14 @@ void Server::startServer(const int baudrate)
   {
     initializeEeprom();
   }
-  serial_ptr_->begin(baudrate);
+  generic_serial_.getSerial().begin(baudrate);
 }
 
 void Server::handleRequest()
 {
-  while (serial_ptr_->available() > 0)
+  while (generic_serial_.getSerial().available() > 0)
   {
-    int request_length = serial_ptr_->readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
+    int request_length = generic_serial_.getSerial().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
     if (request_length == 0)
     {
       continue;
@@ -254,7 +254,7 @@ void Server::handleRequest()
       }
     }
     response_.stopObject();
-    *serial_ptr_ << endl;
+    generic_serial_.getSerial() << endl;
   }
 }
 
@@ -322,7 +322,7 @@ int Server::processMethodString(char *method_string)
     method_index = findMethodIndex(method_string);
     addToResponse("method",method_string);
   }
-  if ((method_index < 0) || (method_index >= method_array_.size()))
+  if ((method_index < 0) || (method_index >= (int)method_array_.size()))
   {
     addToResponse("status",constants::ERROR);
     addToResponse("error_message","Unknown method.");
@@ -335,7 +335,7 @@ int Server::processMethodString(char *method_string)
 int Server::findMethodIndex(char *method_name)
 {
   int method_index = -1;
-  for (int i=0; i<method_array_.size(); ++i)
+  for (unsigned int i=0; i<method_array_.size(); ++i)
   {
     if (method_array_[i].compareName(method_name))
     {
@@ -349,7 +349,7 @@ int Server::findMethodIndex(char *method_name)
 int Server::findMethodIndex(const ConstantString &method_name)
 {
   int method_index = -1;
-  for (int i=0; i<method_array_.size(); ++i)
+  for (unsigned int i=0; i<method_array_.size(); ++i)
   {
     if (method_array_[i].compareName(method_name))
     {
@@ -391,7 +391,7 @@ void Server::methodHelp(int method_index)
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   const ConstantString* parameter_name_ptr;
   char parameter_name_char_array[constants::STRING_LENGTH_PARAMETER_NAME];
-  for (int i=0; i<parameter_ptr_array.size(); ++i)
+  for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
   {
     parameter_name_ptr = parameter_ptr_array[i]->getNamePointer();
     parameter_name_ptr->copy(parameter_name_char_array);
@@ -405,7 +405,7 @@ void Server::verboseMethodHelp(int method_index)
   addKeyToResponse("parameters");
   response_.startArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
-  for (int i=0; i<parameter_ptr_array.size(); ++i)
+  for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
   {
     startResponseObject();
     parameterHelp(*(parameter_ptr_array[i]));
@@ -431,7 +431,7 @@ int Server::processParameterString(char *parameter_string)
     parameter_index = findParameterIndex(parameter_string);
   }
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
-  if ((parameter_index < 0) || (parameter_index >= parameter_ptr_array.size()))
+  if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptr_array.size()))
   {
     addToResponse("status",constants::ERROR);
     addToResponse("error_message","Unknown parameter.");
@@ -447,7 +447,7 @@ int Server::findParameterIndex(const char *parameter_name)
   if (request_method_index_ >= 0)
   {
     Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
-    for (int i=0; i<parameter_ptr_array.size(); ++i)
+    for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
     {
       if (parameter_ptr_array[i]->compareName(parameter_name))
       {
@@ -465,7 +465,7 @@ int Server::findParameterIndex(const ConstantString &parameter_name)
   if (request_method_index_ >= 0)
   {
     Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
-    for (int i=0; i<parameter_ptr_array.size(); ++i)
+    for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
     {
       if (parameter_ptr_array[i]->compareName(parameter_name))
       {
@@ -573,6 +573,16 @@ void Server::parameterHelp(Parameter &parameter)
           case constants::STRING_PARAMETER:
             {
               addToResponse("array_element_type","string");
+              break;
+            }
+          case constants::OBJECT_PARAMETER:
+            {
+              addToResponse("array_element_type","object");
+              break;
+            }
+          case constants::ARRAY_PARAMETER:
+            {
+              addToResponse("array_element_type","array");
               break;
             }
         }
@@ -733,6 +743,14 @@ bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
               {
                 break;
               }
+            case constants::OBJECT_PARAMETER:
+              {
+                break;
+              }
+            case constants::ARRAY_PARAMETER:
+              {
+                break;
+              }
           }
         }
         break;
@@ -803,7 +821,7 @@ bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
 int Server::findSavedVariableIndex(const ConstantString &saved_variable_name)
 {
   int saved_variable_index = -1;
-  for (int i=0; i<saved_variable_array_.size(); ++i)
+  for (unsigned int i=0; i<saved_variable_array_.size(); ++i)
   {
     if (saved_variable_array_[i].compareName(saved_variable_name))
     {
@@ -841,7 +859,7 @@ void Server::getMethodIdsCallback()
 {
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const ConstantString* method_name_ptr;
-  for (int i=0; i<method_array_.size(); ++i)
+  for (unsigned int i=0; i<method_array_.size(); ++i)
   {
     int method_index = i;
     if (!method_array_[method_index].isReserved())
@@ -862,10 +880,9 @@ void Server::getResponseCodesCallback()
 
 void Server::getParametersCallback()
 {
-  int parameter_index = 0;
   addKeyToResponse("parameters");
   response_.startArray();
-  for (int i=0; i<parameter_array_.size(); ++i)
+  for (unsigned int i=0; i<parameter_array_.size(); ++i)
   {
     startResponseObject();
     parameterHelp(parameter_array_[i]);
@@ -885,7 +902,7 @@ void Server::help()
   startResponseArray();
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const ConstantString* method_name_ptr;
-  for (int i=0; i<method_array_.size(); ++i)
+  for (unsigned int i=0; i<method_array_.size(); ++i)
   {
     int method_index = i;
     if (!method_array_[method_index].isReserved())
@@ -909,7 +926,7 @@ void Server::verboseHelp()
   startResponseArray();
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const ConstantString* method_name_ptr;
-  for (int i=0; i<method_array_.size(); ++i)
+  for (unsigned int i=0; i<method_array_.size(); ++i)
   {
     int method_index = i;
     if (!method_array_[method_index].isReserved())

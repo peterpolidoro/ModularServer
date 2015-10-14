@@ -17,6 +17,7 @@
 #include "Array.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
+#include "GenericSerial.h"
 #include "Parameter.h"
 #include "Method.h"
 #include "SavedVariable.h"
@@ -29,8 +30,8 @@ namespace ModularDevice
 class Server
 {
 public:
-  Server(HardwareSerial &serial=Serial);
-  void setSerial(HardwareSerial &serial);
+  Server(GenericSerial &serial);
+  void setSerial(GenericSerial &serial);
   void setName(const ConstantString &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
@@ -80,7 +81,7 @@ public:
   void startServer(const int baudrate);
   void handleRequest();
 private:
-  HardwareSerial *serial_ptr_;
+  GenericSerial generic_serial_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::Parser::JsonParser<constants::JSON_PARSER_SIZE> parser_;
   ArduinoJson::Parser::JsonArray request_json_array_;

@@ -20,8 +20,8 @@ void setSerialNumberCallback();
 class ModularDevice
 {
 public:
-  ModularDevice(HardwareSerial &serial);
-  void setServerSerial(HardwareSerial &serial);
+  ModularDevice(GenericSerial &serial);
+  void setServerSerial(GenericSerial &serial);
   void setName(const ConstantString &device_name);
   void setModelNumber(const unsigned int model_number);
   void setFirmwareNumber(const unsigned int firmware_number);

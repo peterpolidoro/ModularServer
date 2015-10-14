@@ -15,6 +15,7 @@
 #include "Streaming.h"
 #include "Array.h"
 #include "ConstantVariable.h"
+#include "GenericSerial.h"
 #include "Constants.h"
 
 
@@ -32,8 +33,8 @@ public:
 class JsonPrinter
 {
 public:
-  JsonPrinter(HardwareSerial &serial);
-  void setSerial(HardwareSerial &serial);
+  JsonPrinter(GenericSerial &serial);
+  void setSerial(GenericSerial &serial);
   void startObject();
   void stopObject();
   void startArray();
@@ -62,7 +63,7 @@ public:
   }
   void addBool(const bool value);
 private:
-  HardwareSerial *serial_ptr_;
+  GenericSerial generic_serial_;
   bool pretty_print_;
   int indent_level_;
   Array<JsonDepthTracker,constants::RESPONSE_DEPTH_MAX> jdt_array_;

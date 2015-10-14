@@ -7,6 +7,7 @@
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
 #include "SavedVariable.h"
+#include "GenericSerial.h"
 #include "ModularDevice.h"
 #include "NonBlockBlink.h"
 #include "Constants.h"
