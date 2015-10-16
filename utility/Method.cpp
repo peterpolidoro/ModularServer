@@ -8,8 +8,6 @@
 #include "Method.h"
 
 
-using namespace ArduinoJson;
-
 namespace ModularDevice
 {
 CONSTANT_STRING(default_method_name,"");

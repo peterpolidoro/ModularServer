@@ -7,7 +7,6 @@
 // ----------------------------------------------------------------------------
 #include "Parameter.h"
 
-using namespace ArduinoJson;
 
 namespace ModularDevice
 {
