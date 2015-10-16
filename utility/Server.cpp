@@ -135,7 +135,7 @@ Parameter& Server::copyParameter(Parameter parameter,const ConstantString &param
   return parameter_array_.back();
 }
 
-Parser::JsonValue Server::getParameterValue(const ConstantString &name)
+ArduinoJson::Parser::JsonValue Server::getParameterValue(const ConstantString &name)
 {
   int parameter_index = findParameterIndex(name);
   return request_json_array_[parameter_index+1];
@@ -358,10 +358,10 @@ int Server::findMethodIndex(const ConstantString &method_name)
   return method_index;
 }
 
-int Server::countJsonArrayElements(Parser::JsonArray &json_array)
+int Server::countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array)
 {
   int elements_count = 0;
-  for (Parser::JsonArrayIterator array_it=json_array.begin();
+  for (ArduinoJson::Parser::JsonArrayIterator array_it=json_array.begin();
        array_it!=json_array.end();
        ++array_it)
   {
@@ -593,7 +593,7 @@ void Server::parameterHelp(Parameter &parameter)
 bool Server::checkParameters()
 {
   int parameter_index = 0;
-  for (Parser::JsonArrayIterator request_it=request_json_array_.begin();
+  for (ArduinoJson::Parser::JsonArrayIterator request_it=request_json_array_.begin();
        request_it!=request_json_array_.end();
        ++request_it)
   {
@@ -613,7 +613,7 @@ bool Server::checkParameters()
   return true;
 }
 
-bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
+bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value)
 {
   bool out_of_range = false;
   bool object_parse_unsuccessful = false;
@@ -665,7 +665,7 @@ bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
       break;
     case constants::OBJECT_PARAMETER:
       {
-        Parser::JsonObject json_object = json_value;
+        ArduinoJson::Parser::JsonObject json_object = json_value;
         if (!json_object.success())
         {
           object_parse_unsuccessful = true;
@@ -674,7 +674,7 @@ bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
       }
     case constants::ARRAY_PARAMETER:
       {
-        Parser::JsonArray json_array = json_value;
+        ArduinoJson::Parser::JsonArray json_array = json_value;
         if (!json_array.success())
         {
           array_parse_unsuccessful = true;
@@ -691,11 +691,11 @@ bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
                   long value;
                   long min = parameter.getMin().l;
                   long max = parameter.getMax().l;
-                  for (Parser::JsonArrayIterator i=json_array.begin();
-                       i!=json_array.end();
-                       ++i)
+                  for (ArduinoJson::Parser::JsonArrayIterator it=json_array.begin();
+                       it!=json_array.end();
+                       ++it)
                   {
-                    value = (long)*i;
+                    value = (long)*it;
                     if ((value < min) || (value > max))
                     {
                       out_of_range = true;
@@ -714,11 +714,11 @@ bool Server::checkParameter(int parameter_index, Parser::JsonValue json_value)
                   double value;
                   double min = parameter.getMin().d;
                   double max = parameter.getMax().d;
-                  for (Parser::JsonArrayIterator i=json_array.begin();
-                       i!=json_array.end();
-                       ++i)
+                  for (ArduinoJson::Parser::JsonArrayIterator it=json_array.begin();
+                       it!=json_array.end();
+                       ++it)
                   {
-                    value = (double)*i;
+                    value = (double)*it;
                     if ((value < min) || (value > max))
                     {
                       out_of_range = true;
