@@ -1,4 +1,4 @@
-#modular_device_arduino
+#ModularDevice
 
 Authors:
 
