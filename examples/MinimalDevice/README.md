@@ -36,7 +36,11 @@ Example Response:
     "name":"minimal_device",
     "model_number":1000,
     "serial_number":0,
-    "firmware_number":1
+    "firmware_version":{
+      "major":0,
+      "minor":1,
+      "patch":0
+    }
   },
   "methods":[
     "getMemoryFree",
@@ -62,7 +66,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4874,
+  "memory_free":4486,
   "status":success
 }
 ```
@@ -85,27 +89,29 @@ Example Response:
     "name":"minimal_device",
     "model_number":1000,
     "serial_number":0,
-    "firmware_number":1
+    "firmware_version":{
+      "major":0,
+      "minor":1,
+      "patch":0
+    }
   },
-  "methods":[
-    {
-      "getMemoryFree":{
-        "parameters":[]
-      }
+  "methods":{
+    "getMemoryFree":{
+      "parameters":{}
     },
-    {
-      "resetDefaults":{
-        "parameters":[]
-      }
+    "resetDefaults":{
+      "parameters":{}
     },
-    {
-      "setSerialNumber":{
-        "parameters":[
-          "serial_number"
-        ]
+    "setSerialNumber":{
+      "parameters":{
+        "serial_number":{
+          "type":"long",
+          "min":0,
+          "max":65535
+        }
       }
     }
-  ],
+  },
   "status":success
 }
 ```
@@ -159,15 +165,13 @@ Example Response:
 ```json
 {
   "method":"setSerialNumber",
-  "parameters":[
-    {
-      "serial_number":{
-        "type":"long",
-        "min":0,
-        "max":65535
-      }
+  "parameters":{
+    "serial_number":{
+      "type":"long",
+      "min":0,
+      "max":65535
     }
-  ],
+  },
   "status":success
 }
 ```
@@ -217,14 +221,14 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'firmware_number': 1,
+{'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'model_number': 1000,
  'name': 'minimal_device',
  'serial_number': 0}
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-4874
+4486
 dev.set_serial_number()
 IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
 dev.set_serial_number('?')
@@ -234,6 +238,8 @@ dev.set_serial_number('??')
 dev.set_serial_number(-1)
 IOError: (from device) Parameter value out of range: 0 <= serial_number <= 65535
 dev.set_serial_number(12)
+dev.send_json_get_json('["??"]')
+'{"status":1,"device_info":{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"method":"??","methods":{"setSerialNumber":{"parameters":{"serial_number":{"max":65535,"type":"long","min":0}}},"getMemoryFree":{"parameters":{}},"resetDefaults":{"parameters":{}}}}'
 ```
 
 For more details on the Python interface:
@@ -256,10 +262,15 @@ dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
 device_info =
-               name: 'minimal_device'
-       model_number: 1000
-      serial_number: 0
-    firmware_number: 1
+  name: 'minimal_device'
+  model_number: 1000
+  serial_number: 0
+  firmware_version: [1x1 struct]
+device_info.firmware_version
+ans =
+  major: 0
+  minor: 1
+  patch: 0
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
@@ -268,7 +279,7 @@ resetDefaults
 setSerialNumber
 dev.getMemoryFree()
 ans =
-        4874
+  4486
 dev.setSerialNumber()
 Error using ModularDevice/sendRequest (line 309)
 device responded with error, Incorrect number of parameters. 0 given. 1 needed.
@@ -277,9 +288,9 @@ ans =
 serial_number
 dev.setSerialNumber('serial_number','?')
 ans =
-    type: 'long'
-     min: 0
-     max: 65535
+  type: 'long'
+  min: 0
+  max: 65535
 dev.setSerialNumber(-1)
 Error using ModularDevice/sendRequest (line 309)
 device responded with error, Parameter value out of range: 0 <= serial_number <= 65535

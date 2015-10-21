@@ -3,6 +3,7 @@
 #include <EEPROM.h>
 #include "Streaming.h"
 #include "JsonParser.h"
+#include "JsonPrinter.h"
 #include "Array.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"

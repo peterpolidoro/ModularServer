@@ -35,7 +35,7 @@ public:
   void setName(const ConstantString &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
-  void setFirmwareNumber(const unsigned int firmware_number);
+  void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);
   Method& createMethod(const ConstantString &method_name);
   Method& copyMethod(Method method,const ConstantString &method_name);
   Parameter& createParameter(const ConstantString &parameter_name);
@@ -68,8 +68,6 @@ public:
   void addToResponse(T value);
   void addNullToResponse(const char *key);
   void addNullToResponse();
-  void addBoolToResponse(const char *key, const bool value);
-  void addBoolToResponse(const bool value);
   void addKeyToResponse(const char *key);
   template<typename T>
   void sendErrorResponse(T error);
@@ -90,7 +88,9 @@ private:
   Array<SavedVariable,constants::SAVED_VARIABLE_COUNT_MAX> saved_variable_array_;
   const ConstantString *name_ptr_;
   unsigned int model_number_;
-  unsigned int firmware_number_;
+  unsigned char firmware_major_;
+  unsigned char firmware_minor_;
+  unsigned char firmware_patch_;
   int request_method_index_;
   int parameter_count_;
   JsonPrinter response_;

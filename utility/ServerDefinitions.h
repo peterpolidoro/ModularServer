@@ -116,7 +116,7 @@ void Server::addToResponse(T value)
 template<typename T>
 void Server::sendErrorResponse(T error)
 {
-  addToResponse("status",constants::ERROR);
+  addToResponse("status",JsonPrinter::ERROR);
   addToResponse("error_message",error);
   error_ = true;
 }

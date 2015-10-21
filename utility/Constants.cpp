@@ -15,11 +15,7 @@ const char eol = '\n';
 const char start_char_json_object = '{';
 const char start_char_json_array = '[';
 
-const int method_count_max = 24;
-
-const int double_digits = 4;
-
-const int response_indent = 2;
+const unsigned char method_count_max = 24;
 
 const unsigned char eeprom_initialized_value = 123;
 

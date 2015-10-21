@@ -6,8 +6,8 @@ Arduino library.
 
 symlinks.py usage:
 
-    python symlinks.py --install  # Creates or refreshes links to the libraries
-    python symlinks.py --remove   # Removes links to the libraries
+    python symlink.py --install  # Creates or refreshes links to this library
+    python symlink.py --remove   # Removes link to this library
 
 Authors:
 Peter Polidoro polidorop@janelia.hhmi.org

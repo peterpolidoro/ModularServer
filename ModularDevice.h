@@ -24,7 +24,7 @@ public:
   void setServerSerial(GenericSerial &serial);
   void setName(const ConstantString &device_name);
   void setModelNumber(const unsigned int model_number);
-  void setFirmwareNumber(const unsigned int firmware_number);
+  void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);
   Method& createMethod(const ConstantString &method_name);
   Method& copyMethod(Method &method,const ConstantString &method_name);
   Parameter& createParameter(const ConstantString &parameter_name);
@@ -57,8 +57,6 @@ public:
   void addToResponse(T value);
   void addNullToResponse(const char *key);
   void addNullToResponse();
-  void addBoolToResponse(const char *key, const bool value);
-  void addBoolToResponse(const bool value);
   void addKeyToResponse(const char *key);
   template<typename T>
   void sendErrorResponse(T error);

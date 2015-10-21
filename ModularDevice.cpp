@@ -54,9 +54,9 @@ void ModularDevice::setModelNumber(const unsigned int model_number)
   server_.setModelNumber(model_number);
 }
 
-void ModularDevice::setFirmwareNumber(const unsigned int firmware_number)
+void ModularDevice::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
 {
-  server_.setFirmwareNumber(firmware_number);
+  server_.setFirmwareVersion(firmware_major,firmware_minor,firmware_patch);
 }
 
 Method& ModularDevice::createMethod(const ConstantString &method_name)
@@ -92,16 +92,6 @@ void ModularDevice::addNullToResponse(const char *key)
 void ModularDevice::addNullToResponse()
 {
   server_.addNullToResponse();
-}
-
-void ModularDevice::addBoolToResponse(const char *key, const bool value)
-{
-  server_.addBoolToResponse(key,value);
-}
-
-void ModularDevice::addBoolToResponse(const bool value)
-{
-  server_.addBoolToResponse(value);
 }
 
 void ModularDevice::addKeyToResponse(const char *key)

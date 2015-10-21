@@ -24,17 +24,9 @@ enum{STRING_LENGTH_DEVICE_NAME=32};
 enum{STRING_LENGTH_PARAMETER_NAME=24};
 enum{STRING_LENGTH_PARAMETER_UNITS=8};
 enum{STRING_LENGTH_METHOD_NAME=32};
-enum{STRING_LENGTH_DOUBLE=36};
 
 enum {JSON_PARSER_SIZE=32};
-enum {RESPONSE_DEPTH_MAX=8};
 enum {METHOD_PARAMETER_COUNT_MAX=6};
-
-enum ResponseCodes
-  {
-    ERROR=0,
-    SUCCESS=1,
-  };
 
 enum ParameterType
   {
@@ -56,11 +48,7 @@ extern const char eol;
 extern const char start_char_json_object;
 extern const char start_char_json_array;
 
-extern const int method_count_max;
-
-extern const int double_digits;
-
-extern const int response_indent;
+extern const unsigned char method_count_max;
 
 extern const unsigned char eeprom_initialized_value;
 

@@ -32,7 +32,9 @@ Server::Server(GenericSerial &serial) :
   setSerial(serial);
   setName(default_device_name);
   model_number_ = 0;
-  firmware_number_ = 0;
+  firmware_major_ = 0;
+  firmware_minor_ = 0;
+  firmware_patch_ = 0;
   request_method_index_ = -1;
   parameter_count_ = 0;
   error_ = false;
@@ -86,9 +88,11 @@ void Server::setSerialNumber(const unsigned int serial_number)
   setSavedVariableValue(serial_number_saved_variable_name,serial_number);
 }
 
-void Server::setFirmwareNumber(const unsigned int firmware_number)
+void Server::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
 {
-  firmware_number_ = firmware_number;
+  firmware_major_ = firmware_major;
+  firmware_minor_ = firmware_minor;
+  firmware_patch_ = firmware_patch;
 }
 
 Method& Server::createMethod(const ConstantString &method_name)
@@ -151,16 +155,6 @@ void Server::addNullToResponse()
   response_.addNull();
 }
 
-void Server::addBoolToResponse(const char *key, const bool value)
-{
-  response_.addBool(key,value);
-}
-
-void Server::addBoolToResponse(const bool value)
-{
-  response_.addBool(value);
-}
-
 void Server::addKeyToResponse(const char *key)
 {
   response_.addKey(key);
@@ -218,7 +212,7 @@ void Server::handleRequest()
     response_.setCompactPrint();
     if (request_[0] == constants::start_char_json_object)
     {
-      addToResponse("status",constants::ERROR);
+      addToResponse("status",JsonPrinter::ERROR);
       char error_message[constants::STRING_LENGTH_ERROR] = {0};
       object_request_error_message.copy(error_message);
       addToResponse("error_message",error_message);
@@ -239,7 +233,7 @@ void Server::handleRequest()
       }
       else
       {
-        addToResponse("status",constants::ERROR);
+        addToResponse("status",JsonPrinter::ERROR);
         char error_message[constants::STRING_LENGTH_ERROR] = {0};
         array_parse_error_message.copy(error_message);
         addToResponse("error_message",error_message);
@@ -248,7 +242,7 @@ void Server::handleRequest()
       }
       if (!error_)
       {
-        addToResponse("status",constants::SUCCESS);
+        addToResponse("status",JsonPrinter::SUCCESS);
       }
     }
     response_.stopObject();
@@ -272,7 +266,7 @@ void Server::processRequestArray()
     {
       verboseMethodHelp(request_method_index_);
     }
-    else if ((parameter_count == 2) && (String((char*)request_json_array_[2]).equals("?")))
+    else if ((parameter_count == 2) && (String((char*)request_json_array_[2]).equals("?") || String((char*)request_json_array_[2]).equals("??")))
     {
       int parameter_index = processParameterString(request_json_array_[1]);
       Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
@@ -280,7 +274,7 @@ void Server::processRequestArray()
     }
     else if (parameter_count != method_array_[request_method_index_].parameter_count_)
     {
-      addToResponse("status",constants::ERROR);
+      addToResponse("status",JsonPrinter::ERROR);
       String error_request = String("Incorrect number of parameters. ");
       error_request += String(parameter_count) + String(" given. ");
       error_request += String(method_array_[request_method_index_].parameter_count_);
@@ -322,7 +316,7 @@ int Server::processMethodString(char *method_string)
   }
   if ((method_index < 0) || (method_index >= (int)method_array_.size()))
   {
-    addToResponse("status",constants::ERROR);
+    addToResponse("status",JsonPrinter::ERROR);
     addToResponse("error_message","Unknown method.");
     error_ = true;
     method_index = -1;
@@ -401,15 +395,13 @@ void Server::methodHelp(int method_index)
 void Server::verboseMethodHelp(int method_index)
 {
   addKeyToResponse("parameters");
-  response_.startArray();
+  response_.startObject();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
   {
-    startResponseObject();
     parameterHelp(*(parameter_ptr_array[i]));
-    stopResponseObject();
   }
-  response_.stopArray();
+  response_.stopObject();
 }
 
 int Server::processParameterString(char *parameter_string)
@@ -431,7 +423,7 @@ int Server::processParameterString(char *parameter_string)
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptr_array.size()))
   {
-    addToResponse("status",constants::ERROR);
+    addToResponse("status",JsonPrinter::ERROR);
     addToResponse("error_message","Unknown parameter.");
     error_ = true;
     parameter_index = -1;
@@ -650,10 +642,10 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
           if ((value < min) || (value > max))
           {
             out_of_range = true;
-            char temp_string[constants::STRING_LENGTH_DOUBLE];
-            dtostrf(min,constants::double_digits,constants::double_digits,temp_string);
+            char temp_string[JsonPrinter::STRING_LENGTH_DOUBLE];
+            dtostrf(min,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
             min_string = String(temp_string);
-            dtostrf(max,constants::double_digits,constants::double_digits,temp_string);
+            dtostrf(max,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
             max_string = String(temp_string);
           }
         }
@@ -722,10 +714,10 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
                     if ((value < min) || (value > max))
                     {
                       out_of_range = true;
-                      char temp_string[constants::STRING_LENGTH_DOUBLE];
-                      dtostrf(min,constants::double_digits,constants::double_digits,temp_string);
+                      char temp_string[JsonPrinter::STRING_LENGTH_DOUBLE];
+                      dtostrf(min,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
                       min_string = String(temp_string);
-                      dtostrf(max,constants::double_digits,constants::double_digits,temp_string);
+                      dtostrf(max,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
                       max_string = String(temp_string);
                       break;
                     }
@@ -756,7 +748,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
   }
   if (out_of_range)
   {
-    addToResponse("status",constants::ERROR);
+    addToResponse("status",JsonPrinter::ERROR);
     String error;
     char error_preamble[constants::STRING_LENGTH_ERROR_PREAMBLE] = {0};
     if (type != constants::ARRAY_PARAMETER)
@@ -788,7 +780,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
   }
   else if (object_parse_unsuccessful)
   {
-    addToResponse("status",constants::ERROR);
+    addToResponse("status",JsonPrinter::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
@@ -801,7 +793,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
   }
   else if (array_parse_unsuccessful)
   {
-    addToResponse("status",constants::ERROR);
+    addToResponse("status",JsonPrinter::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
@@ -850,7 +842,12 @@ void Server::getDeviceInfoCallback()
   addToResponse("name",device_name);
   addToResponse("model_number",model_number_);
   addToResponse("serial_number",getSerialNumber());
-  addToResponse("firmware_number",firmware_number_);
+  addKeyToResponse("firmware_version");
+  startResponseObject();
+  addToResponse("major",firmware_major_);
+  addToResponse("minor",firmware_minor_);
+  addToResponse("patch",firmware_patch_);
+  stopResponseObject();
 }
 
 void Server::getMethodIdsCallback()
@@ -872,8 +869,8 @@ void Server::getMethodIdsCallback()
 
 void Server::getResponseCodesCallback()
 {
-  addToResponse("response_success",constants::SUCCESS);
-  addToResponse("response_error",constants::ERROR);
+  addToResponse("response_success",JsonPrinter::SUCCESS);
+  addToResponse("response_error",JsonPrinter::ERROR);
 }
 
 void Server::getParametersCallback()
@@ -921,7 +918,7 @@ void Server::verboseHelp()
   stopResponseObject();
 
   addKeyToResponse("methods");
-  startResponseArray();
+  startResponseObject();
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const ConstantString* method_name_ptr;
   for (unsigned int i=0; i<method_array_.size(); ++i)
@@ -931,14 +928,13 @@ void Server::verboseHelp()
     {
       method_name_ptr = method_array_[i].getNamePointer();
       method_name_ptr->copy(method_name);
-      startResponseObject();
       addKeyToResponse(method_name);
       startResponseObject();
-      methodHelp(method_index);
-      stopResponseObject();
+      // methodHelp(method_index);
+      verboseMethodHelp(method_index);
       stopResponseObject();
     }
   }
-  stopResponseArray();
+  stopResponseObject();
 }
 }
