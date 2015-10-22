@@ -84,19 +84,9 @@ Parser::JsonValue ModularDevice::getParameterValue(const ConstantString &paramet
   return server_.getParameterValue(parameter_name);
 }
 
-void ModularDevice::addNullToResponse(const char *key)
-{
-  server_.addNullToResponse(key);
-}
-
 void ModularDevice::addNullToResponse()
 {
   server_.addNullToResponse();
-}
-
-void ModularDevice::addKeyToResponse(const char *key)
-{
-  server_.addKeyToResponse(key);
 }
 
 void ModularDevice::startResponseObject()

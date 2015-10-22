@@ -101,16 +101,28 @@ void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
   }
 }
 
-template<typename T>
-void Server::addToResponse(const char *key, T value)
+template<typename K>
+void Server::addKeyToResponse(K key)
 {
-  response_.add(key,value);
+  response_.addKey(key);
 }
 
 template<typename T>
 void Server::addToResponse(T value)
 {
   response_.add(value);
+}
+
+template<typename K, typename T>
+void Server::addToResponse(K key, T value)
+{
+  response_.add(key,value);
+}
+
+template<typename K>
+void Server::addNullToResponse(K key)
+{
+  response_.addNull(key);
 }
 
 template<typename T>

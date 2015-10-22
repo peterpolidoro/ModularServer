@@ -56,16 +56,28 @@ void ModularDevice::getSavedVariableValue(const ConstantString &saved_variable_n
   server_.getSavedVariableValue(saved_variable_name,value,array_index);
 }
 
-template<typename T>
-void ModularDevice::addToResponse(const char *key, T value)
+template<typename K>
+void ModularDevice::addKeyToResponse(K key)
 {
-  server_.addToResponse(key,value);
+  server_.addKeyToResponse(key);
 }
 
 template<typename T>
 void ModularDevice::addToResponse(T value)
 {
   server_.addToResponse(value);
+}
+
+template<typename K, typename T>
+void ModularDevice::addToResponse(K key, T value)
+{
+  server_.addToResponse(key,value);
+}
+
+template<typename K>
+void ModularDevice::addNullToResponse(K key)
+{
+  server_.addNullToResponse(key);
 }
 
 template<typename T>

@@ -62,13 +62,15 @@ public:
   void getSavedVariableValue(const ConstantString &saved_variable_name,
                              T value[],
                              const unsigned int array_index);
-  template<typename T>
-  void addToResponse(const char *key, T value);
+  template<typename K>
+  void addKeyToResponse(K key);
   template<typename T>
   void addToResponse(T value);
-  void addNullToResponse(const char *key);
+  template<typename K, typename T>
+  void addToResponse(K key, T value);
   void addNullToResponse();
-  void addKeyToResponse(const char *key);
+  template<typename K>
+  void addNullToResponse(K key);
   template<typename T>
   void sendErrorResponse(T error);
   void startResponseObject();

@@ -65,7 +65,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4486,
+  "memory_free":4705,
   "status":success
 }
 ```
@@ -83,37 +83,36 @@ Example Response:
 
 ```json
 {
-  "status": 1,
-  "device_info": {
-    "serial_number": 0,
-    "firmware_version": {
-      "major": 0,
-      "minor": 1,
-      "patch": 0
-    },
-    "name": "minimal_device",
-    "model_number": 1000
-  },
-  "method": "??",
-  "methods": {
-    "setSerialNumber": {
-      "parameters": {
-        "serial_number": {
-          "max": 65535,
-          "type": "long",
-          "min": 0
-        }
-      }
-    },
-    "getMemoryFree": {
-      "parameters": {
-      }
-    },
-    "resetDefaults": {
-      "parameters": {
-      }
+  "method":"??",
+  "device_info":{
+    "name":"minimal_device",
+    "model_number":1000,
+    "serial_number":0,
+    "firmware_version":{
+      "major":0,
+      "minor":1,
+      "patch":0
     }
-  }
+  },
+  "methods":{
+    "getMemoryFree":{
+      "parameters":[]
+    },
+    "resetDefaults":{
+      "parameters":[]
+    },
+    "setSerialNumber":{
+      "parameters":[
+        {
+          "name":"serial_number",
+          "type":"long",
+          "min":0,
+          "max":65535
+        }
+      ]
+    }
+  },
+  "status":success
 }
 ```
 
@@ -166,13 +165,14 @@ Example Response:
 ```json
 {
   "method":"setSerialNumber",
-  "parameters":{
-    "serial_number":{
+  "parameters":[
+    {
+      "name":"serial_number",
       "type":"long",
       "min":0,
       "max":65535
     }
-  },
+  ],
   "status":success
 }
 ```
@@ -229,13 +229,15 @@ dev.get_device_info()
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-4486
+4705
 dev.set_serial_number()
 IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
 dev.set_serial_number('?')
 ['serial_number']
 dev.set_serial_number('??')
-{'serial_number': {'max': 65535, 'min': 0, 'type': 'long'}}
+[{'max': 65535, 'min': 0, 'name': 'serial_number', 'type': 'long'}]
+dev.set_serial_number('serial_number','?')
+{'max': 65535, 'min': 0, 'name': 'serial_number', 'type': 'long'}
 dev.set_serial_number(-1)
 IOError: (from device) Parameter value out of range: 0 <= serial_number <= 65535
 dev.set_serial_number(12)
@@ -280,13 +282,19 @@ resetDefaults
 setSerialNumber
 dev.getMemoryFree()
 ans =
-  4486
+  4705
 dev.setSerialNumber()
 Error using ModularDevice/sendRequest (line 309)
 device responded with error, Incorrect number of parameters. 0 given. 1 needed.
 dev.setSerialNumber('?')
 ans =
 serial_number
+dev.setSerialNumber('??')
+ans =
+  name: 'serial_number'
+  type: 'long'
+  min: 0
+  max: 65535
 dev.setSerialNumber('serial_number','?')
 ans =
   type: 'long'

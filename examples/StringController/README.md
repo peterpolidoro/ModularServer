@@ -75,7 +75,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4301,
+  "memory_free":4492,
   "status":success
 }
 ```
@@ -134,15 +134,41 @@ Example Response:
 ```json
 {
   "method":"repeat",
-  "parameters":{
-    "string":{
+  "parameters":[
+    {
+      "name":"string",
       "type":"string"
     },
-    "count":{
+    {
+      "name":"count",
       "type":"long",
       "min":1,
       "max":100
     }
+  ],
+  "status":success
+}
+```
+
+To get more information about just one of the parameters a method takes,
+enter the method followed by the parameter followed by one question mark ?:
+
+Example Parameter Help:
+
+```shell
+repeat count ?
+```
+
+Example Response:
+
+```json
+{
+  "method":"repeat",
+  "parameter":{
+    "name":"count",
+    "type":"long",
+    "min":1,
+    "max":100
   },
   "status":success
 }
@@ -270,13 +296,16 @@ dev.get_methods()
  'length',
  'chars_at']
 dev.get_memory_free()
-4301
+4492
 dev.repeat()
 IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
 ['string', 'count']
+dev.repeat('??')
+[{'name': 'string', 'type': 'string'},
+ {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}]
 dev.repeat('count','?')
-{'max': 100, 'min': 1, 'type': 'long'}
+{'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
 dev.repeat('"I am a string to repeat."',-1)
 IOError: (from device) Parameter value out of range: 1 <= count <= 100
 dev.repeat('"I am a string to repeat."',4)
@@ -334,7 +363,7 @@ setStartingCharsCount
 getStartingCharsCount
 dev.getMemoryFree()
 ans =
-  4301
+  4492
 dev.repeat()
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Incorrect number of parameters. 0 given. 2 needed.
@@ -343,9 +372,13 @@ ans =
   'string'    'count'
 dev.repeat('count','?')
 ans =
+  name: 'count'
   type: 'long'
   min: 1
   max: 100
+dev.repeat('??')
+ans =
+  [1x1 struct] [1x1 struct]
 dev.repeat('"I am a string to repeat."',-1)
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Parameter value out of range: 1 <= count <= 100

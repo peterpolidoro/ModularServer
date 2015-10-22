@@ -130,7 +130,8 @@ Example Response:
 ```json
 {
   "method":"blinkLed",
-  "duration_on":{
+  "parameter":{
+    "name":"duration_on",
     "units":"seconds",
     "type":"double",
     "min":0.1000,
@@ -152,25 +153,28 @@ Example Response:
 ```json
 {
   "method":"blinkLed",
-  "parameters":{
-    "duration_on":{
+  "parameters":[
+    {
+      "name":"duration_on",
       "units":"seconds",
       "type":"double",
       "min":0.1000,
       "max":2.5000
     },
-    "duration_off":{
+    {
+      "name":"duration_off",
       "units":"seconds",
       "type":"double",
       "min":0.1000,
       "max":2.5000
     },
-    "count":{
+    {
+      "name":"count",
       "type":"long",
       "min":1,
       "max":100
     }
-  },
+  ],
   "status":success
 }
 ```
@@ -230,7 +234,7 @@ dev.get_methods()
  'blink_led',
  'set_led_off']
 dev.get_memory_free()
-4790
+4621
 dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
@@ -238,18 +242,20 @@ IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
 dev.blink_led('?')
 ['duration_on', 'duration_off', 'count']
 dev.blink_led('duration_on','?')
-{'max': 2.5, 'min': 0.1, 'type': 'double', 'units': 'seconds'}
+{'name':'duration_on','max': 2.5, 'min': 0.1, 'type': 'double', 'units': 'seconds'}
 dev.blink_led(0.5,0.2,20)
 dev.blink_led('??')
-{'duration_on': {'max': 2.5,
-   'min': 0.1,
-   'type': 'double',
-   'units': 'seconds'}},
- {'duration_off': {'max': 2.5,
-   'min': 0.1,
-   'type': 'double',
-   'units': 'seconds'}},
- {'count': {'max': 100, 'min': 1, 'type': 'long'}}
+[{'max': 2.5,
+  'min': 0.1,
+  'name': 'duration_on',
+  'type': 'double',
+  'units': 'seconds'},
+ {'max': 2.5,
+  'min': 0.1,
+  'name': 'duration_off',
+  'type': 'double',
+  'units': 'seconds'},
+ {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}]
 dev.blink_led(3.0,0.2,20)
 IOError: (from device) Parameter value out of range: 0.1000 <= duration_on <= 2.5000
 dev.blink_led(0.5,0.2,20)
@@ -290,7 +296,7 @@ getLedPin
 blinkLed
 dev.getMemoryFree()
 ans =
-  4402
+  4621
 dev.setLedOn()
 dev.setLedOff()
 dev.blinkLed()
@@ -306,6 +312,9 @@ ans =
   type: 'double'
   min: 0.1000
   max: 2.5000
+dev.blinkLed('??')
+ans =
+  [1x1 struct] [1x1 struct] [1x1 struct]
 dev.blinkLed(3.0,0.2,20)
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Parameter value out of range: 0.1000 <= duration_on <= 2.5000
