@@ -1,5 +1,4 @@
-MinimalDevice
-=============
+#MinimalDevice
 
 Authors:
 
@@ -9,9 +8,9 @@ License:
 
     BSD
 
-###Host Computer Interface
+##Host Computer Interface
 
-####Arduino Serial Monitor
+###Arduino Serial Monitor
 
 Open the Serial Monitor in the Arduino IDE.
 
@@ -55,7 +54,7 @@ Example Response:
 type it into the input field and press the 'Send' button or press the
 'Enter' key.
 
-Example Method:
+Example Method (This method only exists on AVR processors):
 
 ```shell
 getMemoryFree
@@ -84,35 +83,37 @@ Example Response:
 
 ```json
 {
-  "method":"??",
-  "device_info":{
-    "name":"minimal_device",
-    "model_number":1000,
-    "serial_number":0,
-    "firmware_version":{
-      "major":0,
-      "minor":1,
-      "patch":0
-    }
+  "status": 1,
+  "device_info": {
+    "serial_number": 0,
+    "firmware_version": {
+      "major": 0,
+      "minor": 1,
+      "patch": 0
+    },
+    "name": "minimal_device",
+    "model_number": 1000
   },
-  "methods":{
-    "getMemoryFree":{
-      "parameters":{}
-    },
-    "resetDefaults":{
-      "parameters":{}
-    },
-    "setSerialNumber":{
-      "parameters":{
-        "serial_number":{
-          "type":"long",
-          "min":0,
-          "max":65535
+  "method": "??",
+  "methods": {
+    "setSerialNumber": {
+      "parameters": {
+        "serial_number": {
+          "max": 65535,
+          "type": "long",
+          "min": 0
         }
       }
+    },
+    "getMemoryFree": {
+      "parameters": {
+      }
+    },
+    "resetDefaults": {
+      "parameters": {
+      }
     }
-  },
-  "status":success
+  }
 }
 ```
 
@@ -213,7 +214,7 @@ Example Response:
 }
 ```
 
-####Python
+###Python
 
 Example Python session:
 
@@ -246,7 +247,7 @@ For more details on the Python interface:
 
 <https://github.com/janelia-modular-devices/modular_device_python>
 
-####Matlab
+###Matlab
 
 Example Matlab session:
 
@@ -304,7 +305,5 @@ For more details on the Matlab interface:
 <https://github.com/janelia-modular-devices/modular_device_matlab>
 
 ##Installation
-
-###Install This Library and its Dependencies Together
 
 <https://github.com/janelia-arduino/arduino-libraries>
