@@ -10,11 +10,13 @@
 
 namespace constants
 {
-const int led_pin = 13;
-const int baudrate = 9600;
+const unsigned char led_pin = 13;
+const unsigned int baudrate = 9600;
 
-const int model_number = 1001;
-const int firmware_number = 1;
+const unsigned int model_number = 1001;
+const unsigned char firmware_major = 0;
+const unsigned char firmware_minor = 1;
+const unsigned char firmware_patch = 0;
 
 const double duration_min = 0.1;
 const double duration_max = 2.5;

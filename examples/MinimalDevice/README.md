@@ -235,7 +235,7 @@ IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
 dev.set_serial_number('?')
 ['serial_number']
 dev.set_serial_number('??')
-[{'serial_number': {'max': 65535, 'min': 0, 'type': 'long'}}]
+{'serial_number': {'max': 65535, 'min': 0, 'type': 'long'}}
 dev.set_serial_number(-1)
 IOError: (from device) Parameter value out of range: 0 <= serial_number <= 65535
 dev.set_serial_number(12)

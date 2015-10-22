@@ -11,10 +11,12 @@
 
 namespace constants
 {
-extern const int baudrate;
+extern const unsigned int baudrate;
 
-extern const int model_number;
-extern const int firmware_number;
+extern const unsigned int model_number;
+extern const unsigned char firmware_major;
+extern const unsigned char firmware_minor;
+extern const unsigned char firmware_patch;
 
 extern const int count_min;
 extern const int count_max;

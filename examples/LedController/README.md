@@ -1,5 +1,4 @@
-LedController
-=============
+#LedController
 
 Authors:
 
@@ -9,9 +8,9 @@ License:
 
     BSD
 
-###Host Computer Interface
+##Host Computer Interface
 
-####Arduino Serial Monitor
+###Arduino Serial Monitor
 
 Open the Serial Monitor in the Arduino IDE.
 
@@ -36,7 +35,11 @@ Example Response:
     "name":"led_controller",
     "model_number":1001,
     "serial_number":0,
-    "firmware_number":1
+    "firmware_version":{
+      "major":0,
+      "minor":1,
+      "patch":0
+    }
   },
   "methods":[
     "getMemoryFree",
@@ -149,31 +152,25 @@ Example Response:
 ```json
 {
   "method":"blinkLed",
-  "parameters":[
-    {
-      "duration_on":{
-        "units":"seconds",
-        "type":"double",
-        "min":0.1000,
-        "max":2.5000
-      }
+  "parameters":{
+    "duration_on":{
+      "units":"seconds",
+      "type":"double",
+      "min":0.1000,
+      "max":2.5000
     },
-    {
-      "duration_off":{
-        "units":"seconds",
-        "type":"double",
-        "min":0.1000,
-        "max":2.5000
-      }
+    "duration_off":{
+      "units":"seconds",
+      "type":"double",
+      "min":0.1000,
+      "max":2.5000
     },
-    {
-      "count":{
-        "type":"long",
-        "min":1,
-        "max":100
-      }
+    "count":{
+      "type":"long",
+      "min":1,
+      "max":100
     }
-  ],
+  },
   "status":success
 }
 ```
@@ -212,7 +209,7 @@ Example Response:
 Notice that the LED on the Arduino board has blinked 20 times, with an
 on duration of 500ms and an off duration of 200ms.
 
-####Python
+###Python
 
 Example Python session:
 
@@ -220,7 +217,7 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'firmware_number': 1,
+{'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'model_number': 1001,
  'name': 'led_controller',
  'serial_number': 0}
@@ -244,7 +241,7 @@ dev.blink_led('duration_on','?')
 {'max': 2.5, 'min': 0.1, 'type': 'double', 'units': 'seconds'}
 dev.blink_led(0.5,0.2,20)
 dev.blink_led('??')
-[{'duration_on': {'max': 2.5,
+{'duration_on': {'max': 2.5,
    'min': 0.1,
    'type': 'double',
    'units': 'seconds'}},
@@ -252,7 +249,7 @@ dev.blink_led('??')
    'min': 0.1,
    'type': 'double',
    'units': 'seconds'}},
- {'count': {'max': 100, 'min': 1, 'type': 'long'}}]
+ {'count': {'max': 100, 'min': 1, 'type': 'long'}}
 dev.blink_led(3.0,0.2,20)
 IOError: (from device) Parameter value out of range: 0.1000 <= duration_on <= 2.5000
 dev.blink_led(0.5,0.2,20)
@@ -262,7 +259,7 @@ For more details on the Python interface:
 
 <https://github.com/janelia-modular-devices/modular_device_python>
 
-####Matlab
+###Matlab
 
 Example Matlab session:
 
@@ -278,10 +275,10 @@ dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
 device_info =
-               name: 'led_controller'
-       model_number: 1001
-      serial_number: 0
-    firmware_number: 1
+  name: 'led_controller'
+  model_number: 1001
+  serial_number: 0
+  firmware_number: [1x1 struct]
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
@@ -293,7 +290,7 @@ getLedPin
 blinkLed
 dev.getMemoryFree()
 ans =
-        4790
+  4402
 dev.setLedOn()
 dev.setLedOff()
 dev.blinkLed()
@@ -304,11 +301,11 @@ ans =
 'duration_on'    'duration_off'    'count'
 dev.blinkLed('duration_on','?')
 ans =
-        name: 'duration_on'
-       units: 'seconds'
-        type: 'double'
-         min: 0.1000
-         max: 2.5000
+  name: 'duration_on'
+  units: 'seconds'
+  type: 'double'
+  min: 0.1000
+  max: 2.5000
 dev.blinkLed(3.0,0.2,20)
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Parameter value out of range: 0.1000 <= duration_on <= 2.5000
@@ -322,7 +319,5 @@ For more details on the Matlab interface:
 <https://github.com/janelia-modular-devices/modular_device_matlab>
 
 ##Installation
-
-###Install This Library and its Dependencies Together
 
 <https://github.com/janelia-arduino/arduino-libraries>

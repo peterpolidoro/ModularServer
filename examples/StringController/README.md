@@ -1,5 +1,4 @@
-StringController
-================
+#StringController
 
 Authors:
 
@@ -9,9 +8,9 @@ License:
 
     BSD
 
-###Host Computer Interface
+##Host Computer Interface
 
-####Arduino Serial Monitor
+###Arduino Serial Monitor
 
 Open the Serial Monitor in the Arduino IDE.
 
@@ -36,7 +35,11 @@ Example Response:
     "name":"string_controller",
     "model_number":1002,
     "serial_number":0,
-    "firmware_number":1
+    "firmware_version":{
+      "major":0,
+      "minor":1,
+      "patch":0
+    }
   },
   "methods":[
     "getMemoryFree",
@@ -49,7 +52,9 @@ Example Response:
     "charsAt",
     "startingChars",
     "setStartingCharsCount",
-    "getStartingCharsCount"
+    "getStartingCharsCount",
+    "setStoredString",
+    "getStoredString"
   ],
   "status":success
 }
@@ -70,7 +75,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4726,
+  "memory_free":4301,
   "status":success
 }
 ```
@@ -129,20 +134,16 @@ Example Response:
 ```json
 {
   "method":"repeat",
-  "parameters":[
-    {
-      "string":{
-        "type":"string"
-      }
+  "parameters":{
+    "string":{
+      "type":"string"
     },
-    {
-      "count":{
-        "type":"long",
-        "min":1,
-        "max":100
-      }
+    "count":{
+      "type":"long",
+      "min":1,
+      "max":100
     }
-  ],
+  },
   "status":success
 }
 ```
@@ -244,7 +245,7 @@ Example Response:
 }
 ```
 
-####Python
+###Python
 
 Example Python session:
 
@@ -252,7 +253,7 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'firmware_number': 1,
+{'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'model_number': 1002,
  'name': 'string_controller',
  'serial_number': 0}
@@ -269,7 +270,7 @@ dev.get_methods()
  'length',
  'chars_at']
 dev.get_memory_free()
-4726
+4301
 dev.repeat()
 IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
@@ -297,7 +298,7 @@ For more details on the Python interface:
 
 <https://github.com/janelia-modular-devices/modular_device_python>
 
-####Matlab
+###Matlab
 
 Example Matlab session:
 
@@ -313,10 +314,10 @@ dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
 device_info =
-               name: 'string_controller'
-       model_number: 1002
-      serial_number: 0
-    firmware_number: 1
+  name: 'string_controller'
+  model_number: 1002
+  serial_number: 0
+  firmware_version: [1x1 struct]
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
@@ -333,18 +334,18 @@ setStartingCharsCount
 getStartingCharsCount
 dev.getMemoryFree()
 ans =
-        4726
+  4301
 dev.repeat()
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
 ans =
-    'string'    'count'
+  'string'    'count'
 dev.repeat('count','?')
 ans =
-    type: 'long'
-     min: 1
-     max: 100
+  type: 'long'
+  min: 1
+  max: 100
 dev.repeat('"I am a string to repeat."',-1)
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Parameter value out of range: 1 <= count <= 100
@@ -374,7 +375,5 @@ For more details on the Matlab interface:
 <https://github.com/janelia-modular-devices/modular_device_matlab>
 
 ##Installation
-
-###Install This Library and its Dependencies Together
 
 <https://github.com/janelia-arduino/arduino-libraries>

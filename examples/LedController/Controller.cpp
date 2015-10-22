@@ -19,7 +19,7 @@ void Controller::setup()
   // Device Info
   modular_device.setName(constants::device_name);
   modular_device.setModelNumber(constants::model_number);
-  modular_device.setFirmwareNumber(constants::firmware_number);
+  modular_device.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
 
   // Saved Variables
 
