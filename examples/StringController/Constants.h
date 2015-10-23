@@ -14,6 +14,7 @@ namespace constants
 extern const unsigned int baudrate;
 
 extern const unsigned int model_number;
+
 extern const unsigned char firmware_major;
 extern const unsigned char firmware_minor;
 extern const unsigned char firmware_patch;
