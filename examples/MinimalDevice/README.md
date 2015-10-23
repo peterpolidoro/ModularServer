@@ -94,14 +94,17 @@ Example Response:
       "patch":0
     }
   },
-  "methods":{
-    "getMemoryFree":{
+  "methods":[
+    {
+      "name":"getMemoryFree",
       "parameters":[]
     },
-    "resetDefaults":{
+    {
+      "name":"resetDefaults",
       "parameters":[]
     },
-    "setSerialNumber":{
+    {
+      "name":"setSerialNumber",
       "parameters":[
         {
           "name":"serial_number",
@@ -111,7 +114,7 @@ Example Response:
         }
       ]
     }
-  },
+  ],
   "status":success
 }
 ```
@@ -242,7 +245,7 @@ dev.set_serial_number(-1)
 IOError: (from device) Parameter value out of range: 0 <= serial_number <= 65535
 dev.set_serial_number(12)
 dev.send_json_get_json('["??"]')
-'{"status":1,"device_info":{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"method":"??","methods":{"setSerialNumber":{"parameters":{"serial_number":{"max":65535,"type":"long","min":0}}},"getMemoryFree":{"parameters":{}},"resetDefaults":{"parameters":{}}}}'
+'{"status":1,"device_info":{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"method":"??","methods":[{"name":"getMemoryFree","parameters":[]},{"name":"resetDefaults","parameters":[]},{"name":"setSerialNumber","parameters":[{"max":65535,"type":"long","name":"serial_number","min":0}]}]}'
 ```
 
 For more details on the Python interface:

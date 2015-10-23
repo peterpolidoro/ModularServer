@@ -945,7 +945,7 @@ void Server::verboseHelp()
   stopResponseObject();
 
   addKeyToResponse(methods_constant_string);
-  startResponseObject();
+  startResponseArray();
   char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   const ConstantString* method_name_ptr;
   for (unsigned int i=0; i<method_array_.size(); ++i)
@@ -953,15 +953,14 @@ void Server::verboseHelp()
     int method_index = i;
     if (!method_array_[method_index].isReserved())
     {
+      startResponseObject();
       method_name_ptr = method_array_[i].getNamePointer();
       method_name_ptr->copy(method_name);
-      addKeyToResponse(method_name);
-      startResponseObject();
-      // methodHelp(method_index);
+      addToResponse(name_constant_string,method_name);
       verboseMethodHelp(method_index);
       stopResponseObject();
     }
   }
-  stopResponseObject();
+  stopResponseArray();
 }
 }
