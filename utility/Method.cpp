@@ -45,7 +45,7 @@ void Method::addParameter(Parameter &parameter)
   char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
   const ConstantString* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
-  if (String(parameter_name).length() > 0)
+  if (strlen(parameter_name) > 0)
   {
     int parameter_index = findParameterIndex(*parameter_name_ptr);
     if (parameter_index < 0)

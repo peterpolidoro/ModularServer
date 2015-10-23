@@ -75,7 +75,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4492,
+  "memory_free":4514,
   "status":success
 }
 ```
@@ -296,7 +296,7 @@ dev.get_methods()
  'length',
  'chars_at']
 dev.get_memory_free()
-4492
+4514
 dev.repeat()
 IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
@@ -363,7 +363,7 @@ setStartingCharsCount
 getStartingCharsCount
 dev.getMemoryFree()
 ans =
-  4492
+  4514
 dev.repeat()
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Incorrect number of parameters. 0 given. 2 needed.

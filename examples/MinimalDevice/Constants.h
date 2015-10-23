@@ -11,7 +11,6 @@
 
 namespace constants
 {
-
 extern const unsigned int baudrate;
 
 extern const unsigned int model_number;

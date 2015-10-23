@@ -234,7 +234,7 @@ dev.get_methods()
  'blink_led',
  'set_led_off']
 dev.get_memory_free()
-4621
+4643
 dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
@@ -296,7 +296,7 @@ getLedPin
 blinkLed
 dev.getMemoryFree()
 ans =
-  4621
+  4643
 dev.setLedOn()
 dev.setLedOff()
 dev.blinkLed()

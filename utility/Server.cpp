@@ -229,14 +229,15 @@ void Server::handleRequest()
     {
       continue;
     }
-    request_[request_length] = '\0';
+    request_[request_length] = 0;
     error_ = false;
     response_.startObject();
     response_.setCompactPrint();
     if (request_[0] == constants::start_char_json_object)
     {
       addToResponse(status_constant_string,JsonPrinter::ERROR);
-      char error_message[constants::STRING_LENGTH_ERROR] = {0};
+      char error_message[constants::STRING_LENGTH_ERROR];
+      error_message[0] = 0;
       object_request_error_message.copy(error_message);
       addToResponse(error_message_constant_string,error_message);
       error_ = true;
@@ -246,8 +247,13 @@ void Server::handleRequest()
       if (request_[0] != constants::start_char_json_array)
       {
         response_.setPrettyPrint();
-        String request_string = String("[") + String(request_) + String("]");
-        request_string.toCharArray(request_,constants::STRING_LENGTH_REQUEST);
+        char request[constants::STRING_LENGTH_REQUEST];
+        request[0] = 0;
+        strcat(request,"[");
+        strcat(request,request_);
+        strcat(request,"]");
+        request_[0] = 0;
+        strcat(request_,request);
       }
       request_json_array_ = parser_.parse(request_);
       if (request_json_array_.success())
@@ -257,7 +263,8 @@ void Server::handleRequest()
       else
       {
         addToResponse(status_constant_string,JsonPrinter::ERROR);
-        char error_message[constants::STRING_LENGTH_ERROR] = {0};
+        char error_message[constants::STRING_LENGTH_ERROR];
+        error_message[0] = 0;
         array_parse_error_message.copy(error_message);
         addToResponse(error_message_constant_string,error_message);
         addToResponse(received_request_constant_string,request_);
@@ -281,15 +288,15 @@ void Server::processRequestArray()
   {
     int array_elements_count = countJsonArrayElements(request_json_array_);
     int parameter_count = array_elements_count - 1;
-    if ((parameter_count == 1) && (String((char*)request_json_array_[1]).equals("?")))
+    if ((parameter_count == 1) && (strcmp(request_json_array_[1],"?") == 0))
     {
       methodHelp(request_method_index_);
     }
-    else if ((parameter_count == 1) && (String((char*)request_json_array_[1]).equals("??")))
+    else if ((parameter_count == 1) && (strcmp(request_json_array_[1],"??") == 0))
     {
       verboseMethodHelp(request_method_index_);
     }
-    else if ((parameter_count == 2) && (String((char*)request_json_array_[2]).equals("?") || String((char*)request_json_array_[2]).equals("??")))
+    else if ((parameter_count == 2) && (strcmp(request_json_array_[2],"?") == 0) || (strcmp(request_json_array_[2],"??") == 0))
     {
       int parameter_index = processParameterString(request_json_array_[1]);
       Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
@@ -299,14 +306,18 @@ void Server::processRequestArray()
     else if (parameter_count != method_array_[request_method_index_].parameter_count_)
     {
       addToResponse(status_constant_string,JsonPrinter::ERROR);
-      char incorrect_parameter_number[incorrect_parameter_number_constant_string.length()];
+      char incorrect_parameter_number[incorrect_parameter_number_constant_string.length()+1];
       incorrect_parameter_number_constant_string.copy(incorrect_parameter_number);
-      String error_request = String(incorrect_parameter_number);
-      error_request += String(parameter_count) + String(" given. ");
-      error_request += String(method_array_[request_method_index_].parameter_count_);
-      error_request += String(" needed.");
       char error_str[constants::STRING_LENGTH_ERROR];
-      error_request.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
+      error_str[0] = 0;
+      strcat(error_str,incorrect_parameter_number);
+      char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
+      dtostrf(parameter_count,0,0,parameter_count_str);
+      strcat(error_str,parameter_count_str);
+      strcat(error_str," given. ");
+      dtostrf(method_array_[request_method_index_].parameter_count_,0,0,parameter_count_str);
+      strcat(error_str,parameter_count_str);
+      strcat(error_str," needed.");
       addToResponse(error_message_constant_string,error_str);
       error_ = true;
     }
@@ -324,8 +335,8 @@ void Server::processRequestArray()
 int Server::processMethodString(char *method_string)
 {
   int method_index = -1;
-  int method_id = String(method_string).toInt();
-  if (String(method_string).compareTo("0") == 0)
+  int method_id = atoi(method_string);
+  if (strcmp(method_string,"0") == 0)
   {
     method_index = 0;
     addToResponse(method_id_constant_string,0);
@@ -433,8 +444,8 @@ void Server::verboseMethodHelp(int method_index)
 int Server::processParameterString(char *parameter_string)
 {
   int parameter_index = -1;
-  int parameter_id = String(parameter_string).toInt();
-  if (String(parameter_string).compareTo("0") == 0)
+  int parameter_id = atoi(parameter_string);
+  if (strcmp(parameter_string,"0") == 0)
   {
     parameter_index = 0;
   }
@@ -496,12 +507,14 @@ int Server::findParameterIndex(const ConstantString &parameter_name)
 void Server::parameterHelp(Parameter &parameter)
 {
   startResponseObject();
-  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
+  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
+  parameter_name[0] = 0;
   const ConstantString* parameter_name_ptr = parameter.getNamePointer();
   parameter_name_ptr->copy(parameter_name);
   addToResponse(name_constant_string,parameter_name);
 
-  char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS] = {0};
+  char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS];
+  parameter_units[0] = 0;
   const ConstantString* parameter_units_ptr = parameter.getUnitsPointer();
   parameter_units_ptr->copy(parameter_units);
   if (strcmp(parameter_units,"") != 0)
@@ -637,8 +650,10 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
   bool array_parse_unsuccessful = false;
   Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
   constants::ParameterType type = parameter.getType();
-  String min_string = "";
-  String max_string = "";
+  char min_str[JsonPrinter::STRING_LENGTH_DOUBLE];
+  min_str[0] = 0;
+  char max_str[JsonPrinter::STRING_LENGTH_DOUBLE];
+  max_str[0] = 0;
   switch (type)
   {
     case constants::LONG_PARAMETER:
@@ -651,8 +666,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
           if ((value < min) || (value > max))
           {
             out_of_range = true;
-            min_string = String(min);
-            max_string = String(max);
+            dtostrf(min,0,0,min_str);
+            dtostrf(max,0,0,max_str);
           }
         }
         break;
@@ -667,11 +682,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
           if ((value < min) || (value > max))
           {
             out_of_range = true;
-            char temp_string[JsonPrinter::STRING_LENGTH_DOUBLE];
-            dtostrf(min,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
-            min_string = String(temp_string);
-            dtostrf(max,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
-            max_string = String(temp_string);
+            dtostrf(min,0,JsonPrinter::DOUBLE_DIGITS,min_str);
+            dtostrf(max,0,JsonPrinter::DOUBLE_DIGITS,max_str);
           }
         }
         break;
@@ -716,8 +728,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
                     if ((value < min) || (value > max))
                     {
                       out_of_range = true;
-                      min_string = String(min);
-                      max_string = String(max);
+                      dtostrf(min,0,0,min_str);
+                      dtostrf(max,0,0,max_str);
                       break;
                     }
                   }
@@ -739,11 +751,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
                     if ((value < min) || (value > max))
                     {
                       out_of_range = true;
-                      char temp_string[JsonPrinter::STRING_LENGTH_DOUBLE];
-                      dtostrf(min,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
-                      min_string = String(temp_string);
-                      dtostrf(max,JsonPrinter::DOUBLE_DIGITS,JsonPrinter::DOUBLE_DIGITS,temp_string);
-                      max_string = String(temp_string);
+                      dtostrf(min,0,JsonPrinter::DOUBLE_DIGITS,min_str);
+                      dtostrf(max,0,JsonPrinter::DOUBLE_DIGITS,max_str);
                       break;
                     }
                   }
@@ -774,62 +783,61 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
   if (out_of_range)
   {
     addToResponse(status_constant_string,JsonPrinter::ERROR);
-    String error;
-    char error_preamble[constants::STRING_LENGTH_ERROR_PREAMBLE] = {0};
+    char error_str[constants::STRING_LENGTH_ERROR];
+    error_str[0] = 0;
     if (type != constants::ARRAY_PARAMETER)
     {
-      parameter_error_preamble_message.copy(error_preamble);
-      error = String(error_preamble);
+      parameter_error_preamble_message.copy(error_str);
     }
     else
     {
-      array_parameter_error_preamble_message.copy(error_preamble);
-      error = String(error_preamble);
+      array_parameter_error_preamble_message.copy(error_str);
     }
-    error += min_string;
-    error += String(" <= ");
-    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
+    strcat(error_str,min_str);
+    strcat(error_str," <= ");
+    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
+    parameter_name[0] = 0;
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
-    error += String(parameter_name);
+    strcat(error_str,parameter_name);
     if (type == constants::ARRAY_PARAMETER)
     {
-      error += String(" element");
+      strcat(error_str," element");
     }
-    error += String(" <= ");
-    error += max_string;
-    char error_str[constants::STRING_LENGTH_ERROR];
-    error.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
+    strcat(error_str," <= ");
+    strcat(error_str,max_str);
     addToResponse(error_message_constant_string,error_str);
     error_ = true;
   }
   else if (object_parse_unsuccessful)
   {
     addToResponse(status_constant_string,JsonPrinter::ERROR);
-    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
+    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
+    parameter_name[0] = 0;
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
-    String error = String(parameter_name);
-    char invalid_json_object[invalid_json_object_constant_string.length()];
-    invalid_json_object_constant_string.copy(invalid_json_object);
-    error += String(invalid_json_object);
     char error_str[constants::STRING_LENGTH_ERROR];
-    error.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
+    error_str[0] = 0;
+    strcat(error_str,parameter_name);
+    char invalid_json_object[invalid_json_object_constant_string.length()+1];
+    invalid_json_object_constant_string.copy(invalid_json_object);
+    strcat(error_str,invalid_json_object);
     addToResponse(error_message_constant_string,error_str);
     error_ = true;
   }
   else if (array_parse_unsuccessful)
   {
     addToResponse(status_constant_string,JsonPrinter::ERROR);
-    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
+    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
+    parameter_name[0] = 0;
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
-    String error = String(parameter_name);
-    char invalid_json_array[invalid_json_array_constant_string.length()];
-    invalid_json_array_constant_string.copy(invalid_json_array);
-    error += String(invalid_json_array);
     char error_str[constants::STRING_LENGTH_ERROR];
-    error.toCharArray(error_str,constants::STRING_LENGTH_ERROR);
+    error_str[0] = 0;
+    strcat(error_str,parameter_name);
+    char invalid_json_array[invalid_json_array_constant_string.length()+1];
+    invalid_json_array_constant_string.copy(invalid_json_array);
+    strcat(error_str,invalid_json_array);
     addToResponse(error_message_constant_string,error_str);
     error_ = true;
   }
@@ -866,7 +874,8 @@ void Server::initializeEeprom()
 
 void Server::getDeviceInfoCallback()
 {
-  char device_name[constants::STRING_LENGTH_DEVICE_NAME] = {0};
+  char device_name[constants::STRING_LENGTH_DEVICE_NAME];
+  device_name[0] = 0;
   name_ptr_->copy(device_name);
   addToResponse(name_constant_string,device_name);
   addToResponse(model_number_constant_string,model_number_);
@@ -881,7 +890,8 @@ void Server::getDeviceInfoCallback()
 
 void Server::getMethodIdsCallback()
 {
-  char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
+  char method_name[constants::STRING_LENGTH_METHOD_NAME];
+  method_name[0] = 0;
   const ConstantString* method_name_ptr;
   for (unsigned int i=0; i<method_array_.size(); ++i)
   {
@@ -922,7 +932,8 @@ void Server::help()
 
   addKeyToResponse(methods_constant_string);
   startResponseArray();
-  char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
+  char method_name[constants::STRING_LENGTH_METHOD_NAME];
+  method_name[0] = 0;
   const ConstantString* method_name_ptr;
   for (unsigned int i=0; i<method_array_.size(); ++i)
   {
@@ -946,7 +957,8 @@ void Server::verboseHelp()
 
   addKeyToResponse(methods_constant_string);
   startResponseArray();
-  char method_name[constants::STRING_LENGTH_METHOD_NAME] = {0};
+  char method_name[constants::STRING_LENGTH_METHOD_NAME];
+  method_name[0] = 0;
   const ConstantString* method_name_ptr;
   for (unsigned int i=0; i<method_array_.size(); ++i)
   {
