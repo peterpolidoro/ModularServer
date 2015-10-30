@@ -2,7 +2,8 @@
 #include "Flash.h"
 #include <EEPROM.h>
 #include "Streaming.h"
-#include "JsonParser.h"
+#include "ArduinoJson.h"
+#include "JsonSanitizer.h"
 #include "JsonPrinter.h"
 #include "Array.h"
 #include "MemoryFree.h"

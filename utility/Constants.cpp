@@ -12,8 +12,6 @@ namespace ModularDevice
 namespace constants
 {
 const char eol = '\n';
-const char start_char_json_object = '{';
-const char start_char_json_array = '[';
 
 const unsigned char method_count_max = 24;
 

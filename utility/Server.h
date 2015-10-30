@@ -13,7 +13,8 @@
 #include "WProgram.h"
 #endif
 #include "Streaming.h"
-#include "JsonParser.h"
+#include "ArduinoJson.h"
+#include "JsonSanitizer.h"
 #include "Array.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
@@ -40,7 +41,7 @@ public:
   Method& copyMethod(Method method,const ConstantString &method_name);
   Parameter& createParameter(const ConstantString &parameter_name);
   Parameter& copyParameter(Parameter parameter,const ConstantString &parameter_name);
-  ArduinoJson::Parser::JsonValue getParameterValue(const ConstantString &name);
+  ArduinoJson::JsonVariant getParameterValue(const ConstantString &name);
   template<typename T>
   SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
                                      const T &default_value);
@@ -81,10 +82,9 @@ public:
   void startServer(const int baudrate);
   void handleRequest();
 private:
-  GenericSerial generic_serial_;
+  GenericSerialBase *generic_serial_ptr_;
   char request_[constants::STRING_LENGTH_REQUEST];
-  ArduinoJson::Parser::JsonParser<constants::JSON_PARSER_SIZE> parser_;
-  ArduinoJson::Parser::JsonArray request_json_array_;
+  ArduinoJson::JsonArray *request_json_array_ptr_;
   Array<Method,constants::METHOD_COUNT_MAX> method_array_;
   Array<Parameter,constants::PARAMETER_COUNT_MAX> parameter_array_;
   Array<SavedVariable,constants::SAVED_VARIABLE_COUNT_MAX> saved_variable_array_;
@@ -103,19 +103,19 @@ private:
   unsigned int eeprom_initialized_index_;
 
   void processRequestArray();
-  int processMethodString(char *method_string);
-  int findMethodIndex(char *method_name);
+  int processMethodString(const char *method_string);
+  int findMethodIndex(const char *method_name);
   int findMethodIndex(const ConstantString &method_name);
-  int countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array);
+  int countJsonArrayElements(ArduinoJson::JsonArray &json_array);
   void executeMethod();
   void methodHelp(int method_index);
   void verboseMethodHelp(int method_index);
-  int processParameterString(char *parameter_string);
+  int processParameterString(const char *parameter_string);
   int findParameterIndex(const char *parameter_name);
   int findParameterIndex(const ConstantString &parameter_name);
   void parameterHelp(Parameter &parameter);
   bool checkParameters();
-  bool checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value);
+  bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
   int findSavedVariableIndex(const ConstantString &saved_variable_name);
   unsigned int getSerialNumber();
   void initializeEeprom();

@@ -7,21 +7,20 @@
 // ----------------------------------------------------------------------------
 #include "Callbacks.h"
 
-using namespace ArduinoJson::Parser;
 
 namespace callbacks
 {
 // Callbacks must be non-blocking (avoid 'delay')
 //
 // modular_device.getParameterValue must be cast to either:
-// char*
+// const char*
 // long
 // double
 // bool
-// JsonArray
-// JsonObject
+// ArduinoJson::JsonArray&
+// ArduinoJson::JsonObject&
 //
-// For more info read about ArduinoJson v3 JsonParser JsonValues
+// For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
 // modular_device.getSavedVariableValue type must match the saved variable default type
 // modular_device.setSavedVariableValue type must match the saved variable default type

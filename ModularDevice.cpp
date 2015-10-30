@@ -8,8 +8,6 @@
 #include "ModularDevice.h"
 
 
-using namespace ArduinoJson;
-
 namespace ModularDevice
 {
 
@@ -79,7 +77,7 @@ Parameter& ModularDevice::copyParameter(Parameter &parameter,const ConstantStrin
   return server_.copyParameter(parameter,parameter_name);
 }
 
-Parser::JsonValue ModularDevice::getParameterValue(const ConstantString &parameter_name)
+ArduinoJson::JsonVariant ModularDevice::getParameterValue(const ConstantString &parameter_name)
 {
   return server_.getParameterValue(parameter_name);
 }

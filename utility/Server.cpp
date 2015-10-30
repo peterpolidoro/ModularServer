@@ -103,7 +103,7 @@ Server::Server(GenericSerial &serial) :
 
 void Server::setSerial(GenericSerial &serial)
 {
-  generic_serial_ = serial;
+  generic_serial_ptr_ = &serial;
 }
 
 void Server::setName(const ConstantString &name)
@@ -172,10 +172,10 @@ Parameter& Server::copyParameter(Parameter parameter,const ConstantString &param
   return parameter_array_.back();
 }
 
-ArduinoJson::Parser::JsonValue Server::getParameterValue(const ConstantString &name)
+ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &name)
 {
   int parameter_index = findParameterIndex(name);
-  return request_json_array_[parameter_index+1];
+  return (*request_json_array_ptr_)[parameter_index+1];
 }
 
 void Server::addNullToResponse()
@@ -217,23 +217,33 @@ void Server::startServer(const int baudrate)
   {
     initializeEeprom();
   }
-  generic_serial_.getSerial().begin(baudrate);
+  generic_serial_ptr_->begin(baudrate);
 }
 
 void Server::handleRequest()
 {
-  while (generic_serial_.getSerial().available() > 0)
+  while (generic_serial_ptr_->getStream().available() > 0)
   {
-    int request_length = generic_serial_.getSerial().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
+    int request_length = generic_serial_ptr_->getStream().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
     if (request_length == 0)
     {
       continue;
     }
     request_[request_length] = 0;
-    error_ = false;
+    JsonSanitizer sanitizer(constants::JSON_TOKEN_MAX);
+    if (sanitizer.firstCharIsValidJson(request_))
+    {
+      response_.setCompactPrint();
+    }
+    else
+    {
+      response_.setPrettyPrint();
+    }
     response_.startObject();
-    response_.setCompactPrint();
-    if (request_[0] == constants::start_char_json_object)
+    error_ = false;
+    sanitizer.sanitize(request_,constants::STRING_LENGTH_REQUEST);
+    StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
+    if (sanitizer.firstCharIsValidJsonObject(request_))
     {
       addToResponse(status_constant_string,JsonPrinter::ERROR);
       char error_message[constants::STRING_LENGTH_ERROR];
@@ -244,19 +254,8 @@ void Server::handleRequest()
     }
     else
     {
-      if (request_[0] != constants::start_char_json_array)
-      {
-        response_.setPrettyPrint();
-        char request[constants::STRING_LENGTH_REQUEST];
-        request[0] = 0;
-        strcat(request,"[");
-        strcat(request,request_);
-        strcat(request,"]");
-        request_[0] = 0;
-        strcat(request_,request);
-      }
-      request_json_array_ = parser_.parse(request_);
-      if (request_json_array_.success())
+      request_json_array_ptr_ = &(json_buffer.parseArray(request_));
+      if (request_json_array_ptr_->success())
       {
         processRequestArray();
       }
@@ -276,29 +275,29 @@ void Server::handleRequest()
       }
     }
     response_.stopObject();
-    generic_serial_.getSerial() << endl;
+    generic_serial_ptr_->getStream() << endl;
   }
 }
 
 void Server::processRequestArray()
 {
-  char* method_string = request_json_array_[0];
+  const char* method_string = (*request_json_array_ptr_)[0];
   request_method_index_ = processMethodString(method_string);
   if (!(request_method_index_ < 0))
   {
-    int array_elements_count = countJsonArrayElements(request_json_array_);
+    int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
     int parameter_count = array_elements_count - 1;
-    if ((parameter_count == 1) && (strcmp(request_json_array_[1],"?") == 0))
+    if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"?") == 0))
     {
       methodHelp(request_method_index_);
     }
-    else if ((parameter_count == 1) && (strcmp(request_json_array_[1],"??") == 0))
+    else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"??") == 0))
     {
       verboseMethodHelp(request_method_index_);
     }
-    else if ((parameter_count == 2) && (strcmp(request_json_array_[2],"?") == 0) || (strcmp(request_json_array_[2],"??") == 0))
+    else if ((parameter_count == 2) && (strcmp((*request_json_array_ptr_)[2],"?") == 0) || (strcmp((*request_json_array_ptr_)[2],"??") == 0))
     {
-      int parameter_index = processParameterString(request_json_array_[1]);
+      int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
       addKeyToResponse(parameter_constant_string);
       parameterHelp(parameter);
@@ -332,7 +331,7 @@ void Server::processRequestArray()
   }
 }
 
-int Server::processMethodString(char *method_string)
+int Server::processMethodString(const char *method_string)
 {
   int method_index = -1;
   int method_id = atoi(method_string);
@@ -361,7 +360,7 @@ int Server::processMethodString(char *method_string)
   return method_index;
 }
 
-int Server::findMethodIndex(char *method_name)
+int Server::findMethodIndex(const char *method_name)
 {
   int method_index = -1;
   for (unsigned int i=0; i<method_array_.size(); ++i)
@@ -389,12 +388,12 @@ int Server::findMethodIndex(const ConstantString &method_name)
   return method_index;
 }
 
-int Server::countJsonArrayElements(ArduinoJson::Parser::JsonArray &json_array)
+int Server::countJsonArrayElements(ArduinoJson::JsonArray &json_array)
 {
   int elements_count = 0;
-  for (ArduinoJson::Parser::JsonArrayIterator array_it=json_array.begin();
-       array_it!=json_array.end();
-       ++array_it)
+  for (ArduinoJson::JsonArray::iterator it=json_array.begin();
+       it!=json_array.end();
+       ++it)
   {
     elements_count++;
   }
@@ -441,7 +440,7 @@ void Server::verboseMethodHelp(int method_index)
   response_.stopArray();
 }
 
-int Server::processParameterString(char *parameter_string)
+int Server::processParameterString(const char *parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = atoi(parameter_string);
@@ -623,13 +622,13 @@ void Server::parameterHelp(Parameter &parameter)
 bool Server::checkParameters()
 {
   int parameter_index = 0;
-  for (ArduinoJson::Parser::JsonArrayIterator request_it=request_json_array_.begin();
-       request_it!=request_json_array_.end();
-       ++request_it)
+  for (ArduinoJson::JsonArray::iterator it=request_json_array_ptr_->begin();
+       it!=request_json_array_ptr_->end();
+       ++it)
   {
-    if (request_it!=request_json_array_.begin())
+    if (it!=request_json_array_ptr_->begin())
     {
-      if (checkParameter(parameter_index,*request_it))
+      if (checkParameter(parameter_index,*it))
       {
         parameter_index++;
       }
@@ -643,7 +642,7 @@ bool Server::checkParameters()
   return true;
 }
 
-bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue json_value)
+bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value)
 {
   bool out_of_range = false;
   bool object_parse_unsuccessful = false;
@@ -694,7 +693,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
       break;
     case constants::OBJECT_PARAMETER:
       {
-        ArduinoJson::Parser::JsonObject json_object = json_value;
+        ArduinoJson::JsonObject& json_object = json_value;
         if (!json_object.success())
         {
           object_parse_unsuccessful = true;
@@ -703,7 +702,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
       }
     case constants::ARRAY_PARAMETER:
       {
-        ArduinoJson::Parser::JsonArray json_array = json_value;
+        ArduinoJson::JsonArray& json_array = json_value;
         if (!json_array.success())
         {
           array_parse_unsuccessful = true;
@@ -720,7 +719,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
                   long value;
                   long min = parameter.getMin().l;
                   long max = parameter.getMax().l;
-                  for (ArduinoJson::Parser::JsonArrayIterator it=json_array.begin();
+                  for (ArduinoJson::JsonArray::iterator it=json_array.begin();
                        it!=json_array.end();
                        ++it)
                   {
@@ -743,7 +742,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::Parser::JsonValue 
                   double value;
                   double min = parameter.getMin().d;
                   double max = parameter.getMax().d;
-                  for (ArduinoJson::Parser::JsonArrayIterator it=json_array.begin();
+                  for (ArduinoJson::JsonArray::iterator it=json_array.begin();
                        it!=json_array.end();
                        ++it)
                   {

@@ -65,7 +65,7 @@ Example Response:
 ```json
 {
   "method":"getMemoryFree",
-  "memory_free":4727,
+  "memory_free":4701,
   "status":success
 }
 ```
@@ -232,7 +232,7 @@ dev.get_device_info()
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-4727
+4701
 dev.set_serial_number()
 IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
 dev.set_serial_number('?')
@@ -285,7 +285,7 @@ resetDefaults
 setSerialNumber
 dev.getMemoryFree()
 ans =
-  4727
+  4701
 dev.setSerialNumber()
 Error using ModularDevice/sendRequest (line 309)
 device responded with error, Incorrect number of parameters. 0 given. 1 needed.

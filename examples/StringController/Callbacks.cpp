@@ -7,21 +7,20 @@
 // ----------------------------------------------------------------------------
 #include "Callbacks.h"
 
-using namespace ArduinoJson::Parser;
 
 namespace callbacks
 {
 // Callbacks must be non-blocking (avoid 'delay')
 //
 // modular_device.getParameterValue must be cast to either:
-// char*
+// const char*
 // long
 // double
 // bool
-// JsonArray
-// JsonObject
+// ArduinoJson::JsonArray&
+// ArduinoJson::JsonObject&
 //
-// For more info read about ArduinoJson v3 JsonParser JsonValues
+// For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
 // modular_device.getSavedVariableValue type must match the saved variable default type
 // modular_device.setSavedVariableValue type must match the saved variable default type
@@ -30,7 +29,7 @@ CONSTANT_STRING(index_error,"Invalid index.");
 
 void echoCallback()
 {
-  char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   bool double_echo = modular_device.getParameterValue(constants::double_echo_parameter_name);
   if (!double_echo)
   {
@@ -45,20 +44,20 @@ void echoCallback()
 
 void lengthCallback()
 {
-  char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   modular_device.addToResponse("length", String(string).length());
 }
 
 void startsWithCallback()
 {
-  char* string = modular_device.getParameterValue(constants::string_parameter_name);
-  char* string2 = modular_device.getParameterValue(constants::string2_parameter_name);
+  const char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  const char* string2 = modular_device.getParameterValue(constants::string2_parameter_name);
   modular_device.addToResponse("starts_with", (bool)String(string).startsWith(string2));
 }
 
 void repeatCallback()
 {
-  char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   long count = modular_device.getParameterValue(constants::count_parameter_name);
   modular_device.addKeyToResponse("strings");
   modular_device.startResponseArray();
@@ -71,13 +70,13 @@ void repeatCallback()
 
 void charsAtCallback()
 {
-  char* string = modular_device.getParameterValue(constants::string_parameter_name);
-  JsonArray index_array = modular_device.getParameterValue(constants::index_array_parameter_name);
-  for (JsonArrayIterator index_it=index_array.begin();
-       index_it != index_array.end();
-       ++index_it)
+  const char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  ArduinoJson::JsonArray& index_array = modular_device.getParameterValue(constants::index_array_parameter_name);
+  for (ArduinoJson::JsonArray::iterator it=index_array.begin();
+       it != index_array.end();
+       ++it)
   {
-    long index = *index_it;
+    long index = *it;
     if (index >= String(string).length())
     {
       modular_device.sendErrorResponse(index_error);
@@ -86,14 +85,14 @@ void charsAtCallback()
   }
   modular_device.addKeyToResponse("result");
   modular_device.startResponseArray();
-  for (JsonArrayIterator index_it=index_array.begin();
-       index_it != index_array.end();
-       ++index_it)
+  for (ArduinoJson::JsonArray::iterator it=index_array.begin();
+       it != index_array.end();
+       ++it)
   {
     modular_device.startResponseObject();
-    long index = *index_it;
+    long index = *it;
     modular_device.addToResponse("index",index);
-    char c = String(string).charAt(index);
+    char c = string[index];
     modular_device.addToResponse("char",c);
     modular_device.stopResponseObject();
   }
@@ -102,7 +101,7 @@ void charsAtCallback()
 
 void startingCharsCallback()
 {
-  char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   int starting_chars_count;
   // modular_device.getSavedVariableValue type must match the saved variable default type
   modular_device.getSavedVariableValue(constants::starting_chars_count_name,starting_chars_count);
@@ -128,7 +127,7 @@ void getStartingCharsCountCallback()
 
 void setStoredStringCallback()
 {
-  char* string = modular_device.getParameterValue(constants::string_parameter_name);
+  const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   controller.setStoredString(String(string));
 }
 

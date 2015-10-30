@@ -25,7 +25,7 @@ enum{STRING_LENGTH_PARAMETER_UNITS=8};
 enum{STRING_LENGTH_PARAMETER_COUNT=8};
 enum{STRING_LENGTH_METHOD_NAME=32};
 
-enum {JSON_PARSER_SIZE=32};
+enum {JSON_TOKEN_MAX=32};
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
 enum ParameterType
@@ -45,8 +45,6 @@ union NumberType
 };
 
 extern const char eol;
-extern const char start_char_json_object;
-extern const char start_char_json_array;
 
 extern const unsigned char method_count_max;
 

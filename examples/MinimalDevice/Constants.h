@@ -9,6 +9,7 @@
 #define CONSTANTS_H
 #include "ConstantVariable.h"
 
+
 namespace constants
 {
 extern const unsigned int baudrate;

@@ -29,7 +29,7 @@ public:
   Method& copyMethod(Method &method,const ConstantString &method_name);
   Parameter& createParameter(const ConstantString &parameter_name);
   Parameter& copyParameter(Parameter &parameter,const ConstantString &parameter_name);
-  ArduinoJson::Parser::JsonValue getParameterValue(const ConstantString &parameter_name);
+  ArduinoJson::JsonVariant getParameterValue(const ConstantString &parameter_name);
   template<typename T>
   SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
                                      const T &default_value);
