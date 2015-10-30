@@ -295,7 +295,9 @@ void Server::processRequestArray()
     {
       verboseMethodHelp(request_method_index_);
     }
-    else if ((parameter_count == 2) && (strcmp((*request_json_array_ptr_)[2],"?") == 0) || (strcmp((*request_json_array_ptr_)[2],"??") == 0))
+    else if ((parameter_count == 2) &&
+             ((strcmp((*request_json_array_ptr_)[2],"?") == 0) ||
+              (strcmp((*request_json_array_ptr_)[2],"??") == 0)))
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
