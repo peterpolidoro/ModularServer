@@ -56,7 +56,7 @@ Example Response:
     "setStoredString",
     "getStoredString"
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -76,7 +76,7 @@ Example Response:
 {
   "method":"getStoredString",
   "stored_string":"",
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -91,7 +91,7 @@ Example Response:
 ```json
 {
   "method":"repeat",
-  "status":error,
+  "status":"error",
   "error_message":"Incorrect number of parameters. 0 given. 2 needed."
 }
 ```
@@ -114,7 +114,7 @@ Example Response:
     "string",
     "count"
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -146,7 +146,7 @@ Example Response:
       "max":100
     }
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -170,7 +170,7 @@ Example Response:
     "min":1,
     "max":100
   },
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -191,7 +191,7 @@ Example Response:
     "I am a string to repeat.",
     "I am a string to repeat."
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -220,7 +220,7 @@ Example Response:
       "char":"i"
     }
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -236,7 +236,7 @@ Example Response:
 {
   "method":"startingChars",
   "starting_chars":  "Fa",
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -251,7 +251,7 @@ Example Response:
 ```json
 {
   "method":"setStartingCharsCount",
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -267,7 +267,7 @@ Example Response:
 {
   "method":"startingChars",
   "starting_chars":  "Fanta",
-  "status":success
+  "status":"success"
 }
 ```
 

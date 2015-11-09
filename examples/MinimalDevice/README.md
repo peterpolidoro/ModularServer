@@ -46,7 +46,7 @@ Example Response:
     "resetDefaults",
     "setSerialNumber"
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -66,7 +66,7 @@ Example Response:
 {
   "method":"getMemoryFree",
   "memory_free":4701,
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -115,7 +115,7 @@ Example Response:
       ]
     }
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -130,7 +130,7 @@ Example Response:
 ```json
 {
   "method":"setSerialNumber",
-  "status":error,
+  "status":"error",
   "error_message":"Incorrect number of parameters. 0 given. 1 needed."
 }
 ```
@@ -152,7 +152,7 @@ Example Response:
   "parameters":[
     "serial_number"
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -176,7 +176,7 @@ Example Response:
       "max":65535
     }
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -191,7 +191,7 @@ Example Response:
 ```json
 {
   "method":"setSerialNumber",
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -213,7 +213,7 @@ Example Response:
 ```json
 {
   "method":"resetDefaults",
-  "status":success
+  "status":"success"
 }
 ```
 

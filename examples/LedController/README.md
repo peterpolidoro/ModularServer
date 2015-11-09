@@ -50,7 +50,7 @@ Example Response:
     "getLedPin",
     "blinkLed"
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -137,7 +137,7 @@ Example Response:
     "min":0.1000,
     "max":2.5000
   },
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -175,7 +175,7 @@ Example Response:
       "max":100
     }
   ],
-  "status":success
+  "status":"success"
 }
 ```
 
@@ -190,7 +190,7 @@ Example Response:
 ```json
 {
   "method":"blinkLed",
-  "status":error,
+  "status":"error",
   "error_message":"Parameter value out of range: 0.1000 <= duration_on <= 2.5000"
 }
 ```
