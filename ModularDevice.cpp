@@ -24,6 +24,7 @@ ModularDevice::ModularDevice(GenericSerial &serial) :
 #ifdef __AVR__
   Method& get_memory_free_method = createMethod(get_memory_free_method_name);
   get_memory_free_method.attachCallback(getMemoryFreeCallback);
+  get_memory_free_method.setReturnTypeLong();
 #endif
 
   Method& reset_defaults_method = createMethod(reset_defaults_method_name);

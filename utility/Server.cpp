@@ -28,12 +28,14 @@ CONSTANT_STRING(status_constant_string,"status");
 CONSTANT_STRING(error_message_constant_string,"error_message");
 CONSTANT_STRING(name_constant_string,"name");
 CONSTANT_STRING(type_constant_string,"type");
+CONSTANT_STRING(returns_constant_string,"returns");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
 CONSTANT_STRING(received_request_constant_string,"received_request");
 CONSTANT_STRING(method_id_constant_string,"method_id");
 CONSTANT_STRING(method_constant_string,"method");
 CONSTANT_STRING(methods_constant_string,"methods");
-CONSTANT_STRING(parameter_constant_string,"parameter");
+CONSTANT_STRING(method_info_constant_string,"method_info");
+CONSTANT_STRING(parameter_info_constant_string,"parameter_info");
 CONSTANT_STRING(parameters_constant_string,"parameters");
 CONSTANT_STRING(unknown_method_constant_string,"Unknown method.");
 CONSTANT_STRING(unknown_parameter_constant_string,"Unknown parameter.");
@@ -283,10 +285,12 @@ void Server::processRequestArray()
     int parameter_count = array_elements_count - 1;
     if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"?") == 0))
     {
+      addKeyToResponse(method_info_constant_string);
       methodHelp(request_method_index_);
     }
     else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"??") == 0))
     {
+      addKeyToResponse(method_info_constant_string);
       verboseMethodHelp(request_method_index_);
     }
     else if ((parameter_count == 2) &&
@@ -295,7 +299,7 @@ void Server::processRequestArray()
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
-      addKeyToResponse(parameter_constant_string);
+      addKeyToResponse(parameter_info_constant_string);
       parameterHelp(parameter);
     }
     else if (parameter_count != method_array_[request_method_index_].parameter_count_)
@@ -410,6 +414,10 @@ void Server::executeMethod()
 
 void Server::methodHelp(int method_index)
 {
+  startResponseObject();
+  const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
+  addToResponse(name_constant_string,method_name_ptr);
+
   addKeyToResponse(parameters_constant_string);
   response_.startArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
@@ -422,10 +430,16 @@ void Server::methodHelp(int method_index)
     addToResponse(parameter_name_char_array);
   }
   response_.stopArray();
+  addToResponse(returns_constant_string,method_array_[method_index].getReturnType());
+  stopResponseObject();
 }
 
 void Server::verboseMethodHelp(int method_index)
 {
+  startResponseObject();
+  const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
+  addToResponse(name_constant_string,method_name_ptr);
+
   addKeyToResponse(parameters_constant_string);
   response_.startArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
@@ -434,6 +448,8 @@ void Server::verboseMethodHelp(int method_index)
     parameterHelp(*(parameter_ptr_array[i]));
   }
   response_.stopArray();
+  addToResponse(returns_constant_string,method_array_[method_index].getReturnType());
+  stopResponseObject();
 }
 
 int Server::processParameterString(const char *parameter_string)
@@ -879,17 +895,13 @@ void Server::getDeviceInfoCallback()
 
 void Server::getMethodIdsCallback()
 {
-  int method_index;
   const ConstantString* method_name_ptr;
-  int method_id;
-  for (unsigned int i=0; i<method_array_.size(); ++i)
+  for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {
-    method_index = i;
     if (!method_array_[method_index].isReserved())
     {
-      method_name_ptr = method_array_[i].getNamePointer();
-      method_id = method_index;
-      addToResponse(method_name_ptr,method_id);
+      method_name_ptr = method_array_[method_index].getNamePointer();
+      addToResponse(method_name_ptr,method_index);
     }
   }
 }
@@ -904,9 +916,9 @@ void Server::getParametersCallback()
 {
   addKeyToResponse(parameters_constant_string);
   response_.startArray();
-  for (unsigned int i=0; i<parameter_array_.size(); ++i)
+  for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
   {
-    parameterHelp(parameter_array_[i]);
+    parameterHelp(parameter_array_[parameter_index]);
   }
   response_.stopArray();
 }
@@ -920,14 +932,12 @@ void Server::help()
 
   addKeyToResponse(methods_constant_string);
   startResponseArray();
-  int method_index;
   const ConstantString* method_name_ptr;
-  for (unsigned int i=0; i<method_array_.size(); ++i)
+  for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {
-    method_index = i;
     if (!method_array_[method_index].isReserved())
     {
-      method_name_ptr = method_array_[i].getNamePointer();
+      method_name_ptr = method_array_[method_index].getNamePointer();
       addToResponse(method_name_ptr);
     }
   }
@@ -943,18 +953,11 @@ void Server::verboseHelp()
 
   addKeyToResponse(methods_constant_string);
   startResponseArray();
-  int method_index;
-  const ConstantString* method_name_ptr;
-  for (unsigned int i=0; i<method_array_.size(); ++i)
+  for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {
-    method_index = i;
     if (!method_array_[method_index].isReserved())
     {
-      startResponseObject();
-      method_name_ptr = method_array_[i].getNamePointer();
-      addToResponse(name_constant_string,method_name_ptr);
       verboseMethodHelp(method_index);
-      stopResponseObject();
     }
   }
   stopResponseArray();

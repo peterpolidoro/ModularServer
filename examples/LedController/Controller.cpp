@@ -40,6 +40,7 @@ void Controller::setup()
 
   ModularDevice::Method& get_led_pin_method = modular_device.createMethod(constants::get_led_pin_method_name);
   get_led_pin_method.attachCallback(callbacks::getLedPinCallback);
+  get_led_pin_method.setReturnTypeLong();
 
   ModularDevice::Method& blink_led_method = modular_device.createMethod(constants::blink_led_method_name);
   blink_led_method.attachCallback(callbacks::blinkLedCallback);

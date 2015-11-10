@@ -18,6 +18,7 @@ Method::Method()
   callback_attached_ = false;
   reserved_ = false;
   parameter_count_ = 0;
+  return_type_ = JsonPrinter::NULL_TYPE;
 }
 
 Method::Method(const ConstantString &name)
@@ -26,6 +27,7 @@ Method::Method(const ConstantString &name)
   callback_attached_ = false;
   reserved_ = false;
   parameter_count_ = 0;
+  return_type_ = JsonPrinter::NULL_TYPE;
 }
 
 void Method::setName(const ConstantString &name)
@@ -113,5 +115,45 @@ int Method::findParameterIndex(const ConstantString &parameter_name)
     }
   }
   return parameter_index;
+}
+
+void Method::setReturnTypeLong()
+{
+  return_type_ = JsonPrinter::LONG_TYPE;
+}
+
+void Method::setReturnTypeDouble()
+{
+  return_type_ = JsonPrinter::DOUBLE_TYPE;
+}
+
+void Method::setReturnTypeBool()
+{
+  return_type_ = JsonPrinter::BOOL_TYPE;
+}
+
+void Method::setReturnTypeNull()
+{
+  return_type_ = JsonPrinter::NULL_TYPE;
+}
+
+void Method::setReturnTypeString()
+{
+  return_type_ = JsonPrinter::STRING_TYPE;
+}
+
+void Method::setReturnTypeObject()
+{
+  return_type_ = JsonPrinter::OBJECT_TYPE;
+}
+
+void Method::setReturnTypeArray()
+{
+  return_type_ = JsonPrinter::ARRAY_TYPE;
+}
+
+JsonPrinter::JsonTypes Method::getReturnType()
+{
+  return return_type_;
 }
 }

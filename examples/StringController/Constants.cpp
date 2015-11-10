@@ -29,7 +29,26 @@ const int starting_chars_count_default = 2;
 const int index_array_element_min = 0;
 const int index_array_element_max = 10;
 
+CONSTANT_STRING(index_error,"Invalid index.");
+
 CONSTANT_STRING(device_name,"string_controller");
+
+CONSTANT_STRING(string_parameter_name,"string");
+CONSTANT_STRING(string2_parameter_name,"string2");
+CONSTANT_STRING(count_parameter_name,"count");
+CONSTANT_STRING(index_array_parameter_name,"index_array");
+CONSTANT_STRING(double_echo_parameter_name,"double_echo");
+CONSTANT_STRING(starting_chars_count_name,"starting_chars_count");
+
+CONSTANT_STRING(echo_return_name,"echo");
+CONSTANT_STRING(length_return_name,"length");
+CONSTANT_STRING(starts_with_return_name,"starts_with");
+CONSTANT_STRING(strings_return_name,"strings");
+CONSTANT_STRING(result_return_name,"result");
+CONSTANT_STRING(starting_chars_return_name,"starting_chars");
+CONSTANT_STRING(starting_chars_count_return_name,"starting_chars_count");
+CONSTANT_STRING(stored_string_return_name,"stored_string");
+
 CONSTANT_STRING(echo_method_name,"echo");
 CONSTANT_STRING(length_method_name,"length");
 CONSTANT_STRING(starts_with_method_name,"startsWith");
@@ -40,10 +59,4 @@ CONSTANT_STRING(set_starting_chars_count_method_name,"setStartingCharsCount");
 CONSTANT_STRING(get_starting_chars_count_method_name,"getStartingCharsCount");
 CONSTANT_STRING(set_stored_string_method_name,"setStoredString");
 CONSTANT_STRING(get_stored_string_method_name,"getStoredString");
-CONSTANT_STRING(string_parameter_name,"string");
-CONSTANT_STRING(string2_parameter_name,"string2");
-CONSTANT_STRING(count_parameter_name,"count");
-CONSTANT_STRING(index_array_parameter_name,"index_array");
-CONSTANT_STRING(double_echo_parameter_name,"double_echo");
-CONSTANT_STRING(starting_chars_count_name,"starting_chars_count");
 }

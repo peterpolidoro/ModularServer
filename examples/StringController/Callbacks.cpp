@@ -25,41 +25,39 @@ namespace callbacks
 // modular_device.getSavedVariableValue type must match the saved variable default type
 // modular_device.setSavedVariableValue type must match the saved variable default type
 
-CONSTANT_STRING(index_error,"Invalid index.");
-
 void echoCallback()
 {
   const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   bool double_echo = modular_device.getParameterValue(constants::double_echo_parameter_name);
   if (!double_echo)
   {
-    modular_device.addToResponse("echo", string);
+    modular_device.addToResponse(constants::echo_return_name, string);
   }
   else
   {
     String echo = String(string) + String(string);
-    modular_device.addToResponse("echo", echo);
+    modular_device.addToResponse(constants::echo_return_name, echo);
   }
 }
 
 void lengthCallback()
 {
   const char* string = modular_device.getParameterValue(constants::string_parameter_name);
-  modular_device.addToResponse("length", String(string).length());
+  modular_device.addToResponse(constants::length_return_name, String(string).length());
 }
 
 void startsWithCallback()
 {
   const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   const char* string2 = modular_device.getParameterValue(constants::string2_parameter_name);
-  modular_device.addToResponse("starts_with", (bool)String(string).startsWith(string2));
+  modular_device.addToResponse(constants::starts_with_return_name, (bool)String(string).startsWith(string2));
 }
 
 void repeatCallback()
 {
   const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   long count = modular_device.getParameterValue(constants::count_parameter_name);
-  modular_device.addKeyToResponse("strings");
+  modular_device.addKeyToResponse(constants::strings_return_name);
   modular_device.startResponseArray();
   for (int i=0; i < count; i++)
   {
@@ -79,11 +77,11 @@ void charsAtCallback()
     long index = *it;
     if (index >= String(string).length())
     {
-      modular_device.sendErrorResponse(index_error);
+      modular_device.sendErrorResponse(constants::index_error);
       return;
     }
   }
-  modular_device.addKeyToResponse("result");
+  modular_device.addKeyToResponse(constants::result_return_name);
   modular_device.startResponseArray();
   for (ArduinoJson::JsonArray::iterator it=index_array.begin();
        it != index_array.end();
@@ -105,7 +103,7 @@ void startingCharsCallback()
   int starting_chars_count;
   // modular_device.getSavedVariableValue type must match the saved variable default type
   modular_device.getSavedVariableValue(constants::starting_chars_count_name,starting_chars_count);
-  modular_device.addToResponse("starting_chars", String(string).substring(0,starting_chars_count));
+  modular_device.addToResponse(constants::starting_chars_return_name, String(string).substring(0,starting_chars_count));
 }
 
 void setStartingCharsCountCallback()
@@ -122,7 +120,7 @@ void getStartingCharsCountCallback()
   int starting_chars_count;
   // modular_device.getSavedVariableValue type must match the saved variable default type
   modular_device.getSavedVariableValue(constants::starting_chars_count_name,starting_chars_count);
-  modular_device.addToResponse("starting_chars_count",starting_chars_count);
+  modular_device.addToResponse(constants::starting_chars_count_return_name,starting_chars_count);
 }
 
 void setStoredStringCallback()
@@ -133,6 +131,6 @@ void setStoredStringCallback()
 
 void getStoredStringCallback()
 {
-  modular_device.addToResponse("stored_string", controller.getStoredString());
+  modular_device.addToResponse(constants::stored_string_return_name, controller.getStoredString());
 }
 }

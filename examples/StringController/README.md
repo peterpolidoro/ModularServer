@@ -110,10 +110,14 @@ Example Response:
 ```json
 {
   "method":"repeat",
-  "parameters":[
-    "string",
-    "count"
-  ],
+  "method_info":{
+    "name":"repeat",
+    "parameters":[
+      "string",
+      "count"
+    ],
+    "returns":"array"
+  },
   "status":"success"
 }
 ```
@@ -134,18 +138,22 @@ Example Response:
 ```json
 {
   "method":"repeat",
-  "parameters":[
-    {
-      "name":"string",
-      "type":"string"
-    },
-    {
-      "name":"count",
-      "type":"long",
-      "min":1,
-      "max":100
-    }
-  ],
+  "method_info":{
+    "name":"repeat",
+    "parameters":[
+      {
+        "name":"string",
+        "type":"string"
+      },
+      {
+        "name":"count",
+        "type":"long",
+        "min":1,
+        "max":100
+      }
+    ],
+    "returns":"array"
+  },
   "status":"success"
 }
 ```
@@ -164,7 +172,7 @@ Example Response:
 ```json
 {
   "method":"repeat",
-  "parameter":{
+  "parameter_info":{
     "name":"count",
     "type":"long",
     "min":1,
@@ -298,10 +306,12 @@ dev.get_methods()
 dev.repeat()
 IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
-['string', 'count']
+{'name': 'repeat', 'parameters': ['string', 'count'], 'returns': 'array'}
 dev.repeat('??')
-[{'name': 'string', 'type': 'string'},
- {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}]
+{'name': 'repeat',
+ 'parameters': [{'name': 'string', 'type': 'string'},
+  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+ 'returns': 'array'}
 dev.repeat('count','?')
 {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
 dev.repeat('"I am a string to repeat."',-1)
@@ -315,6 +325,8 @@ dev.chars_at('"I am an input string!"',[0,6,8])
 [{'char': 'I', 'index': 0},
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
+dev.get_starting_chars_count('?')
+{'name': 'getStartingCharsCount', 'parameters': [], 'returns': 'long'}
 dev.get_starting_chars_count()
 5
 dev.starting_chars("Fantastic!")
@@ -364,16 +376,24 @@ Error using ModularDevice/sendRequest (line 297)
 device responded with error, Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
 ans =
-  'string'    'count'
+  name: 'repeat'
+  parameters: {'string'    'count'}
+  returns: 'array'
 dev.repeat('count','?')
 ans =
   name: 'count'
   type: 'long'
   min: 1
   max: 100
-dev.repeat('??')
+method_info = dev.repeat('??')
 ans =
-  [1x1 struct] [1x1 struct]
+  name: 'repeat'
+  parameters: {[1x1 struct] [1x1 struct]}
+  returns: 'array'
+method_info.parameters{1}
+ans =
+  name: 'string'
+  type: 'string'
 dev.repeat('"I am a string to repeat."',-1)
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Parameter value out of range: 1 <= count <= 100

@@ -10,6 +10,7 @@
 #include "Streaming.h"
 #include "Array.h"
 #include "ConstantVariable.h"
+#include "JsonPrinter.h"
 #include "Parameter.h"
 #include "Constants.h"
 
@@ -29,6 +30,14 @@ public:
   void setName(const ConstantString &name);
   void attachCallback(Callback callback);
   void addParameter(Parameter &parameter);
+  void setReturnTypeLong();
+  void setReturnTypeDouble();
+  void setReturnTypeBool();
+  void setReturnTypeNull();
+  void setReturnTypeString();
+  void setReturnTypeObject();
+  void setReturnTypeArray();
+  JsonPrinter::JsonTypes getReturnType();
 private:
   const ConstantString *name_ptr_;
   Callback callback_;
@@ -45,6 +54,7 @@ private:
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptr_array_;
   int findParameterIndex(const ConstantString &parameter_name);
   int parameter_count_;
+  JsonPrinter::JsonTypes return_type_;
   friend class Server;
 };
 }

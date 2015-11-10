@@ -43,29 +43,35 @@ void Controller::setup()
   echo_method.attachCallback(callbacks::echoCallback);
   echo_method.addParameter(string_parameter);
   echo_method.addParameter(double_echo_parameter);
+  echo_method.setReturnTypeString();
 
   ModularDevice::Method& length_method = modular_device.createMethod(constants::length_method_name);
   length_method.attachCallback(callbacks::lengthCallback);
   length_method.addParameter(string_parameter);
+  length_method.setReturnTypeLong();
 
   ModularDevice::Method& starts_with_method = modular_device.createMethod(constants::starts_with_method_name);
   starts_with_method.attachCallback(callbacks::startsWithCallback);
   starts_with_method.addParameter(string_parameter);
   starts_with_method.addParameter(string2_parameter);
+  starts_with_method.setReturnTypeBool();
 
   ModularDevice::Method& repeat_method = modular_device.createMethod(constants::repeat_method_name);
   repeat_method.attachCallback(callbacks::repeatCallback);
   repeat_method.addParameter(string_parameter);
   repeat_method.addParameter(count_parameter);
+  repeat_method.setReturnTypeArray();
 
   ModularDevice::Method& chars_at_method = modular_device.createMethod(constants::chars_at_method_name);
   chars_at_method.attachCallback(callbacks::charsAtCallback);
   chars_at_method.addParameter(string_parameter);
   chars_at_method.addParameter(index_array_parameter);
+  chars_at_method.setReturnTypeArray();
 
   ModularDevice::Method& starting_chars_method = modular_device.createMethod(constants::starting_chars_method_name);
   starting_chars_method.attachCallback(callbacks::startingCharsCallback);
   starting_chars_method.addParameter(string_parameter);
+  starting_chars_method.setReturnTypeString();
 
   ModularDevice::Method& set_starting_chars_count_method = modular_device.createMethod(constants::set_starting_chars_count_method_name);
   set_starting_chars_count_method.attachCallback(callbacks::setStartingCharsCountCallback);
@@ -73,6 +79,7 @@ void Controller::setup()
 
   ModularDevice::Method& get_starting_chars_count_method = modular_device.createMethod(constants::get_starting_chars_count_method_name);
   get_starting_chars_count_method.attachCallback(callbacks::getStartingCharsCountCallback);
+  get_starting_chars_count_method.setReturnTypeLong();
 
   ModularDevice::Method& set_stored_string_method = modular_device.createMethod(constants::set_stored_string_method_name);
   set_stored_string_method.attachCallback(callbacks::setStoredStringCallback);
@@ -80,6 +87,7 @@ void Controller::setup()
 
   ModularDevice::Method& get_stored_string_method = modular_device.createMethod(constants::get_stored_string_method_name);
   get_stored_string_method.attachCallback(callbacks::getStoredStringCallback);
+  get_stored_string_method.setReturnTypeString();
 
   // Start ModularDevice Server
   modular_device.startServer(constants::baudrate);

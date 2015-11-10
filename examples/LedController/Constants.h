@@ -27,13 +27,17 @@ extern const long count_min;
 extern const long count_max;
 
 extern ConstantString device_name;
-extern ConstantString led_on_method_name;
-extern ConstantString led_off_method_name;
-extern ConstantString get_led_pin_method_name;
-extern ConstantString blink_led_method_name;
+
 extern ConstantString duration_on_parameter_name;
 extern ConstantString duration_off_parameter_name;
 extern ConstantString count_parameter_name;
 extern ConstantString seconds_unit;
+
+extern ConstantString led_pin_return_name;
+
+extern ConstantString led_on_method_name;
+extern ConstantString led_off_method_name;
+extern ConstantString get_led_pin_method_name;
+extern ConstantString blink_led_method_name;
 }
 #endif

@@ -104,13 +104,17 @@ Example Response:
 
 ```json
 {
-  "method": "blinkLed",
-  "parameters": [
-    "duration_on",
-    "duration_off",
-    "count"
-  ],
-  "status": "success"
+  "method":"blinkLed",
+  "method_info":{
+    "name":"blinkLed",
+    "parameters":[
+      "duration_on",
+      "duration_off",
+      "count"
+    ],
+    "returns":null
+  },
+  "status":"success"
 }
 ```
 
@@ -130,7 +134,7 @@ Example Response:
 ```json
 {
   "method":"blinkLed",
-  "parameter":{
+  "parameter_info":{
     "name":"duration_on",
     "units":"seconds",
     "type":"double",
@@ -153,28 +157,32 @@ Example Response:
 ```json
 {
   "method":"blinkLed",
-  "parameters":[
-    {
-      "name":"duration_on",
-      "units":"seconds",
-      "type":"double",
-      "min":0.1000,
-      "max":2.5000
-    },
-    {
-      "name":"duration_off",
-      "units":"seconds",
-      "type":"double",
-      "min":0.1000,
-      "max":2.5000
-    },
-    {
-      "name":"count",
-      "type":"long",
-      "min":1,
-      "max":100
-    }
-  ],
+  "method_info":{
+    "name":"blinkLed",
+    "parameters":[
+      {
+        "name":"duration_on",
+        "units":"seconds",
+        "type":"double",
+        "min":0.1000,
+        "max":2.5000
+      },
+      {
+        "name":"duration_off",
+        "units":"seconds",
+        "type":"double",
+        "min":0.1000,
+        "max":2.5000
+      },
+      {
+        "name":"count",
+        "type":"long",
+        "min":1,
+        "max":100
+      }
+    ],
+    "returns":null
+  },
   "status":"success"
 }
 ```
@@ -213,6 +221,42 @@ Example Response:
 Notice that the LED on the Arduino board has blinked 20 times, with an
 on duration of 500ms and an off duration of 200ms.
 
+Example Method:
+
+```shell
+getLedPin ?
+```
+
+Example Response:
+
+```json
+{
+  "method":"getLedPin",
+  "method_info":{
+    "name":"getLedPin",
+    "parameters":[],
+    "returns":"long"
+  },
+  "status":"success"
+}
+```
+
+Example Method:
+
+```shell
+getLedPin
+```
+
+Example Response:
+
+```json
+{
+  "method":"getLedPin",
+  "led_pin":13,
+  "status":"success"
+}
+```
+
 ###Python
 
 Example Python session:
@@ -238,25 +282,39 @@ dev.set_led_off()
 dev.blink_led()
 IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
 dev.blink_led('?')
-['duration_on', 'duration_off', 'count']
+{'name': 'blinkLed',
+ 'parameters': ['duration_on', 'duration_off', 'count'],
+ 'returns': None}
 dev.blink_led('duration_on','?')
-{'name':'duration_on','max': 2.5, 'min': 0.1, 'type': 'double', 'units': 'seconds'}
-dev.blink_led(0.5,0.2,20)
+{'max': 2.5,
+ 'min': 0.1,
+ 'name': 'duration_on',
+ 'type': 'double',
+ 'units': 'seconds'}
 dev.blink_led('??')
-[{'max': 2.5,
-  'min': 0.1,
-  'name': 'duration_on',
-  'type': 'double',
-  'units': 'seconds'},
- {'max': 2.5,
-  'min': 0.1,
-  'name': 'duration_off',
-  'type': 'double',
-  'units': 'seconds'},
- {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}]
+{'name': 'blinkLed',
+ 'parameters': [{'max': 2.5,
+   'min': 0.1,
+   'name': 'duration_on',
+   'type': 'double',
+   'units': 'seconds'},
+  {'max': 2.5,
+   'min': 0.1,
+   'name': 'duration_off',
+   'type': 'double',
+   'units': 'seconds'},
+  {'max': 100,
+   'min': 1,
+   'name': 'count',
+   'type': 'long'}],
+ 'returns': None}
+dev.blink_led(0.5,0.2,20)
 dev.blink_led(3.0,0.2,20)
 IOError: (from device) Parameter value out of range: 0.1000 <= duration_on <= 2.5000
-dev.blink_led(0.5,0.2,20)
+dev.get_led_pin('?')
+{'name': 'getLedPin', 'parameters': [], 'returns': 'long'}
+dev.get_led_pin()
+13
 ```
 
 For more details on the Python interface:
@@ -299,21 +357,38 @@ Error using ModularDevice/sendCmd (line 308)
 device responded with error, Incorrect number of parameters. 0 given. 3 needed.
 dev.blinkLed('?')
 ans =
-'duration_on'    'duration_off'    'count'
-dev.blinkLed('duration_on','?')
-ans =
+  name: 'blinkLed'
+  parameters: {'duration_on'    'duration_off'    'count'}
+  returns: []
+parameter_info = dev.blinkLed('duration_on','?')
+parameter_info =
   name: 'duration_on'
   units: 'seconds'
   type: 'double'
   min: 0.1000
   max: 2.5000
-dev.blinkLed('??')
-ans =
-  [1x1 struct] [1x1 struct] [1x1 struct]
+method_info = dev.blinkLed('??')
+method_info =
+  name: 'blinkLed'
+  parameters: {[1x1 struct] [1x1 struct] [1x1 struct]}
+  returns: []
+method_info.parameters{1}
+  name: 'duration_on'
+  units: 'seconds'
+  type: 'double'
+  min: 0.1000
+  max: 2.5000
 dev.blinkLed(3.0,0.2,20)
 Error using ModularDevice/sendRequest (line 297)
 device responded with error, Parameter value out of range: 0.1000 <= duration_on <= 2.5000
 dev.blinkLed(0.5,0.2,20)
+dev.getLedPin('?')
+  name: 'getLedPin'
+  parameters: []
+  returns: 'long'
+dev.getLedPin()
+ans =
+  13
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```
