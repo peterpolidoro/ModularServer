@@ -43,6 +43,7 @@ setSerialNumber	KEYWORD2
 #######################################
 
 modular_device	KEYWORD2
+controller	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
