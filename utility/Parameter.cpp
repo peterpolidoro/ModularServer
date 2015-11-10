@@ -17,8 +17,8 @@ Parameter::Parameter()
 {
   setName(default_parameter_name);
   setUnits(default_parameter_units);
-  type_ = constants::LONG_PARAMETER;
-  array_element_type_ = constants::LONG_PARAMETER;
+  type_ = JsonPrinter::LONG_TYPE;
+  array_element_type_ = JsonPrinter::LONG_TYPE;
   range_is_set_ = false;
 }
 
@@ -26,8 +26,8 @@ Parameter::Parameter(const ConstantString &name)
 {
   setName(name);
   setUnits(default_parameter_units);
-  type_ = constants::LONG_PARAMETER;
-  array_element_type_ = constants::LONG_PARAMETER;
+  type_ = JsonPrinter::LONG_TYPE;
+  array_element_type_ = JsonPrinter::LONG_TYPE;
   range_is_set_ = false;
 }
 
@@ -43,61 +43,61 @@ void Parameter::setUnits(const ConstantString &units)
 
 void Parameter::setTypeLong()
 {
-  if (type_ != constants::ARRAY_PARAMETER)
+  if (type_ != JsonPrinter::ARRAY_TYPE)
   {
-    type_ = constants::LONG_PARAMETER;
+    type_ = JsonPrinter::LONG_TYPE;
   }
   else
   {
-    array_element_type_ = constants::LONG_PARAMETER;
+    array_element_type_ = JsonPrinter::LONG_TYPE;
   }
 }
 
 void Parameter::setTypeDouble()
 {
-  if (type_ != constants::ARRAY_PARAMETER)
+  if (type_ != JsonPrinter::ARRAY_TYPE)
   {
-    type_ = constants::DOUBLE_PARAMETER;
+    type_ = JsonPrinter::DOUBLE_TYPE;
   }
   else
   {
-    array_element_type_ = constants::DOUBLE_PARAMETER;
+    array_element_type_ = JsonPrinter::DOUBLE_TYPE;
   }
 }
 
 void Parameter::setTypeBool()
 {
-  if (type_ != constants::ARRAY_PARAMETER)
+  if (type_ != JsonPrinter::ARRAY_TYPE)
   {
-    type_ = constants::BOOL_PARAMETER;
+    type_ = JsonPrinter::BOOL_TYPE;
   }
   else
   {
-    array_element_type_ = constants::BOOL_PARAMETER;
+    array_element_type_ = JsonPrinter::BOOL_TYPE;
   }
 }
 
 void Parameter::setTypeString()
 {
-  if (type_ != constants::ARRAY_PARAMETER)
+  if (type_ != JsonPrinter::ARRAY_TYPE)
   {
-    type_ = constants::STRING_PARAMETER;
+    type_ = JsonPrinter::STRING_TYPE;
   }
   else
   {
-    array_element_type_ = constants::STRING_PARAMETER;
+    array_element_type_ = JsonPrinter::STRING_TYPE;
   }
 }
 
 void Parameter::setTypeObject()
 {
-  type_ = constants::OBJECT_PARAMETER;
+  type_ = JsonPrinter::OBJECT_TYPE;
 }
 
 void Parameter::setTypeArray()
 {
   array_element_type_ = type_;
-  type_ = constants::ARRAY_PARAMETER;
+  type_ = JsonPrinter::ARRAY_TYPE;
 }
 
 void Parameter::setRange(const double min, const double max)
@@ -143,12 +143,12 @@ const ConstantString* Parameter::getUnitsPointer()
   return units_ptr_;
 }
 
-constants::ParameterType Parameter::getType()
+JsonPrinter::JsonTypes Parameter::getType()
 {
   return type_;
 }
 
-constants::ParameterType Parameter::getArrayElementType()
+JsonPrinter::JsonTypes Parameter::getArrayElementType()
 {
   return array_element_type_;
 }

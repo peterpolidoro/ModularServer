@@ -37,12 +37,6 @@ CONSTANT_STRING(parameter_constant_string,"parameter");
 CONSTANT_STRING(parameters_constant_string,"parameters");
 CONSTANT_STRING(unknown_method_constant_string,"Unknown method.");
 CONSTANT_STRING(unknown_parameter_constant_string,"Unknown parameter.");
-CONSTANT_STRING(long_constant_string,"long");
-CONSTANT_STRING(double_constant_string,"double");
-CONSTANT_STRING(bool_constant_string,"bool");
-CONSTANT_STRING(string_constant_string,"string");
-CONSTANT_STRING(object_constant_string,"object");
-CONSTANT_STRING(array_constant_string,"array");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");
 CONSTANT_STRING(model_number_constant_string,"model_number");
@@ -508,11 +502,8 @@ int Server::findParameterIndex(const ConstantString &parameter_name)
 void Server::parameterHelp(Parameter &parameter)
 {
   startResponseObject();
-  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-  parameter_name[0] = 0;
   const ConstantString* parameter_name_ptr = parameter.getNamePointer();
-  parameter_name_ptr->copy(parameter_name);
-  addToResponse(name_constant_string,parameter_name);
+  addToResponse(name_constant_string,parameter_name_ptr);
 
   char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS];
   parameter_units[0] = 0;
@@ -522,12 +513,12 @@ void Server::parameterHelp(Parameter &parameter)
   {
     addToResponse("units",parameter_units);
   }
-  constants::ParameterType type = parameter.getType();
+  JsonPrinter::JsonTypes type = parameter.getType();
   switch (type)
   {
-    case constants::LONG_PARAMETER:
+    case JsonPrinter::LONG_TYPE:
       {
-        addToResponse(type_constant_string,long_constant_string);
+        addToResponse(type_constant_string,JsonPrinter::LONG_TYPE);
         if (parameter.rangeIsSet())
         {
           long min = parameter.getMin().l;
@@ -537,9 +528,9 @@ void Server::parameterHelp(Parameter &parameter)
         }
         break;
       }
-    case constants::DOUBLE_PARAMETER:
+    case JsonPrinter::DOUBLE_TYPE:
       {
-        addToResponse(type_constant_string,double_constant_string);
+        addToResponse(type_constant_string,JsonPrinter::DOUBLE_TYPE);
         if (parameter.rangeIsSet())
         {
           double min = parameter.getMin().d;
@@ -549,30 +540,30 @@ void Server::parameterHelp(Parameter &parameter)
         }
         break;
       }
-    case constants::BOOL_PARAMETER:
+    case JsonPrinter::BOOL_TYPE:
       {
-        addToResponse(type_constant_string,bool_constant_string);
+        addToResponse(type_constant_string,JsonPrinter::BOOL_TYPE);
         break;
       }
-    case constants::STRING_PARAMETER:
+    case JsonPrinter::STRING_TYPE:
       {
-        addToResponse(type_constant_string,string_constant_string);
+        addToResponse(type_constant_string,JsonPrinter::STRING_TYPE);
         break;
       }
-    case constants::OBJECT_PARAMETER:
+    case JsonPrinter::OBJECT_TYPE:
       {
-        addToResponse(type_constant_string,object_constant_string);
+        addToResponse(type_constant_string,JsonPrinter::OBJECT_TYPE);
         break;
       }
-    case constants::ARRAY_PARAMETER:
+    case JsonPrinter::ARRAY_TYPE:
       {
-        addToResponse(type_constant_string,array_constant_string);
-        constants::ParameterType array_element_type = parameter.getArrayElementType();
+        addToResponse(type_constant_string,JsonPrinter::ARRAY_TYPE);
+        JsonPrinter::JsonTypes array_element_type = parameter.getArrayElementType();
         switch (array_element_type)
         {
-          case constants::LONG_PARAMETER:
+          case JsonPrinter::LONG_TYPE:
             {
-              addToResponse(array_element_type_constant_string,long_constant_string);
+              addToResponse(array_element_type_constant_string,JsonPrinter::LONG_TYPE);
               if (parameter.rangeIsSet())
               {
                 long min = parameter.getMin().l;
@@ -582,9 +573,9 @@ void Server::parameterHelp(Parameter &parameter)
               }
               break;
             }
-          case constants::DOUBLE_PARAMETER:
+          case JsonPrinter::DOUBLE_TYPE:
             {
-              addToResponse(array_element_type_constant_string,double_constant_string);
+              addToResponse(array_element_type_constant_string,JsonPrinter::DOUBLE_TYPE);
               if (parameter.rangeIsSet())
               {
                 double min = parameter.getMin().d;
@@ -594,24 +585,24 @@ void Server::parameterHelp(Parameter &parameter)
               }
               break;
             }
-          case constants::BOOL_PARAMETER:
+          case JsonPrinter::BOOL_TYPE:
             {
-              addToResponse(array_element_type_constant_string,bool_constant_string);
+              addToResponse(array_element_type_constant_string,JsonPrinter::BOOL_TYPE);
               break;
             }
-          case constants::STRING_PARAMETER:
+          case JsonPrinter::STRING_TYPE:
             {
-              addToResponse(array_element_type_constant_string,string_constant_string);
+              addToResponse(array_element_type_constant_string,JsonPrinter::STRING_TYPE);
               break;
             }
-          case constants::OBJECT_PARAMETER:
+          case JsonPrinter::OBJECT_TYPE:
             {
-              addToResponse(array_element_type_constant_string,object_constant_string);
+              addToResponse(array_element_type_constant_string,JsonPrinter::OBJECT_TYPE);
               break;
             }
-          case constants::ARRAY_PARAMETER:
+          case JsonPrinter::ARRAY_TYPE:
             {
-              addToResponse(array_element_type_constant_string,array_constant_string);
+              addToResponse(array_element_type_constant_string,JsonPrinter::ARRAY_TYPE);
               break;
             }
         }
@@ -650,14 +641,14 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
   Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
-  constants::ParameterType type = parameter.getType();
+  JsonPrinter::JsonTypes type = parameter.getType();
   char min_str[JsonPrinter::STRING_LENGTH_DOUBLE];
   min_str[0] = 0;
   char max_str[JsonPrinter::STRING_LENGTH_DOUBLE];
   max_str[0] = 0;
   switch (type)
   {
-    case constants::LONG_PARAMETER:
+    case JsonPrinter::LONG_TYPE:
       {
         if (parameter.rangeIsSet())
         {
@@ -673,7 +664,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
         }
         break;
       }
-    case constants::DOUBLE_PARAMETER:
+    case JsonPrinter::DOUBLE_TYPE:
       {
         if (parameter.rangeIsSet())
         {
@@ -689,11 +680,11 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
         }
         break;
       }
-    case constants::BOOL_PARAMETER:
+    case JsonPrinter::BOOL_TYPE:
       break;
-    case constants::STRING_PARAMETER:
+    case JsonPrinter::STRING_TYPE:
       break;
-    case constants::OBJECT_PARAMETER:
+    case JsonPrinter::OBJECT_TYPE:
       {
         ArduinoJson::JsonObject& json_object = json_value;
         if (!json_object.success())
@@ -702,7 +693,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
         }
         break;
       }
-    case constants::ARRAY_PARAMETER:
+    case JsonPrinter::ARRAY_TYPE:
       {
         ArduinoJson::JsonArray& json_array = json_value;
         if (!json_array.success())
@@ -711,10 +702,10 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
         }
         else
         {
-          constants::ParameterType array_element_type = parameter.getArrayElementType();
+          JsonPrinter::JsonTypes array_element_type = parameter.getArrayElementType();
           switch (array_element_type)
           {
-            case constants::LONG_PARAMETER:
+            case JsonPrinter::LONG_TYPE:
               {
                 if (parameter.rangeIsSet())
                 {
@@ -737,7 +728,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
                 }
                 break;
               }
-            case constants::DOUBLE_PARAMETER:
+            case JsonPrinter::DOUBLE_TYPE:
               {
                 if (parameter.rangeIsSet())
                 {
@@ -760,19 +751,19 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
                 }
                 break;
               }
-            case constants::BOOL_PARAMETER:
+            case JsonPrinter::BOOL_TYPE:
               {
                 break;
               }
-            case constants::STRING_PARAMETER:
+            case JsonPrinter::STRING_TYPE:
               {
                 break;
               }
-            case constants::OBJECT_PARAMETER:
+            case JsonPrinter::OBJECT_TYPE:
               {
                 break;
               }
-            case constants::ARRAY_PARAMETER:
+            case JsonPrinter::ARRAY_TYPE:
               {
                 break;
               }
@@ -786,7 +777,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     addToResponse(status_constant_string,JsonPrinter::ERROR);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
-    if (type != constants::ARRAY_PARAMETER)
+    if (type != JsonPrinter::ARRAY_TYPE)
     {
       parameter_error_preamble_message.copy(error_str);
     }
@@ -801,7 +792,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
     parameter_name_ptr->copy(parameter_name);
     strcat(error_str,parameter_name);
-    if (type == constants::ARRAY_PARAMETER)
+    if (type == JsonPrinter::ARRAY_TYPE)
     {
       strcat(error_str," element");
     }
@@ -875,10 +866,7 @@ void Server::initializeEeprom()
 
 void Server::getDeviceInfoCallback()
 {
-  char device_name[constants::STRING_LENGTH_DEVICE_NAME];
-  device_name[0] = 0;
-  name_ptr_->copy(device_name);
-  addToResponse(name_constant_string,device_name);
+  addToResponse(name_constant_string,name_ptr_);
   addToResponse(model_number_constant_string,model_number_);
   addToResponse(serial_number_constant_string,getSerialNumber());
   addKeyToResponse(firmware_version_constant_string);
@@ -891,18 +879,17 @@ void Server::getDeviceInfoCallback()
 
 void Server::getMethodIdsCallback()
 {
-  char method_name[constants::STRING_LENGTH_METHOD_NAME];
-  method_name[0] = 0;
+  int method_index;
   const ConstantString* method_name_ptr;
+  int method_id;
   for (unsigned int i=0; i<method_array_.size(); ++i)
   {
-    int method_index = i;
+    method_index = i;
     if (!method_array_[method_index].isReserved())
     {
       method_name_ptr = method_array_[i].getNamePointer();
-      method_name_ptr->copy(method_name);
-      int method_id = method_index;
-      addToResponse(method_name,method_id);
+      method_id = method_index;
+      addToResponse(method_name_ptr,method_id);
     }
   }
 }
@@ -933,17 +920,15 @@ void Server::help()
 
   addKeyToResponse(methods_constant_string);
   startResponseArray();
-  char method_name[constants::STRING_LENGTH_METHOD_NAME];
-  method_name[0] = 0;
+  int method_index;
   const ConstantString* method_name_ptr;
   for (unsigned int i=0; i<method_array_.size(); ++i)
   {
-    int method_index = i;
+    method_index = i;
     if (!method_array_[method_index].isReserved())
     {
       method_name_ptr = method_array_[i].getNamePointer();
-      method_name_ptr->copy(method_name);
-      addToResponse(method_name);
+      addToResponse(method_name_ptr);
     }
   }
   stopResponseArray();
@@ -958,18 +943,16 @@ void Server::verboseHelp()
 
   addKeyToResponse(methods_constant_string);
   startResponseArray();
-  char method_name[constants::STRING_LENGTH_METHOD_NAME];
-  method_name[0] = 0;
+  int method_index;
   const ConstantString* method_name_ptr;
   for (unsigned int i=0; i<method_array_.size(); ++i)
   {
-    int method_index = i;
+    method_index = i;
     if (!method_array_[method_index].isReserved())
     {
       startResponseObject();
       method_name_ptr = method_array_[i].getNamePointer();
-      method_name_ptr->copy(method_name);
-      addToResponse(name_constant_string,method_name);
+      addToResponse(name_constant_string,method_name_ptr);
       verboseMethodHelp(method_index);
       stopResponseObject();
     }

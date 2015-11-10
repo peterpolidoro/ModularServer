@@ -28,16 +28,6 @@ enum{STRING_LENGTH_METHOD_NAME=32};
 enum {JSON_TOKEN_MAX=32};
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
-enum ParameterType
-  {
-    LONG_PARAMETER,
-    DOUBLE_PARAMETER,
-    BOOL_PARAMETER,
-    STRING_PARAMETER,
-    OBJECT_PARAMETER,
-    ARRAY_PARAMETER,
-  };
-
 union NumberType
 {
   long l;
