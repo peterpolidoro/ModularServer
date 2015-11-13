@@ -32,7 +32,7 @@ class Server
 {
 public:
   Server(GenericSerial &serial);
-  void setSerial(GenericSerial &serial);
+  void addSlaveSerial(GenericSerial &serial);
   void setName(const ConstantString &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
@@ -82,7 +82,8 @@ public:
   void startServer(const int baudrate);
   void handleRequest();
 private:
-  GenericSerialBase *generic_serial_ptr_;
+  Array<GenericSerialBase*,constants::SLAVE_SERIAL_COUNT_MAX> slave_serial_ptr_array_;
+  unsigned char slave_serial_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray *request_json_array_ptr_;
   Array<Method,constants::METHOD_COUNT_MAX> method_array_;
@@ -119,6 +120,7 @@ private:
   int findSavedVariableIndex(const ConstantString &saved_variable_name);
   unsigned int getSerialNumber();
   void initializeEeprom();
+  void incrementSlaveSerial();
 
   // reserved methods
   void getDeviceInfoCallback();

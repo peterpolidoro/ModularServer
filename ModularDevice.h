@@ -21,7 +21,7 @@ class ModularDevice
 {
 public:
   ModularDevice(GenericSerial &serial);
-  void setServerSerial(GenericSerial &serial);
+  void addSlaveSerial(GenericSerial &serial);
   void setName(const ConstantString &device_name);
   void setModelNumber(const unsigned int model_number);
   void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);

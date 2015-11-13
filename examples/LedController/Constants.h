@@ -8,7 +8,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include "ConstantVariable.h"
-
+#include "GenericSerial.h"
 
 namespace constants
 {
@@ -20,6 +20,8 @@ extern const unsigned int model_number;
 extern const unsigned char firmware_major;
 extern const unsigned char firmware_minor;
 extern const unsigned char firmware_patch;
+
+extern GenericSerial slave_serial;
 
 extern const double duration_min;
 extern const double duration_max;

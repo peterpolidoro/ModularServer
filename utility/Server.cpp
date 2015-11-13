@@ -28,7 +28,7 @@ CONSTANT_STRING(status_constant_string,"status");
 CONSTANT_STRING(error_message_constant_string,"error_message");
 CONSTANT_STRING(name_constant_string,"name");
 CONSTANT_STRING(type_constant_string,"type");
-CONSTANT_STRING(returns_constant_string,"returns");
+CONSTANT_STRING(return_constant_string,"return");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
 CONSTANT_STRING(received_request_constant_string,"received_request");
 CONSTANT_STRING(method_id_constant_string,"method_id");
@@ -58,7 +58,7 @@ CONSTANT_STRING(invalid_json_array_constant_string," is not a valid JSON array."
 Server::Server(GenericSerial &serial) :
   response_(serial)
 {
-  setSerial(serial);
+  addSlaveSerial(serial);
   setName(default_device_name);
   model_number_ = 0;
   firmware_major_ = 0;
@@ -67,6 +67,7 @@ Server::Server(GenericSerial &serial) :
   request_method_index_ = -1;
   parameter_count_ = 0;
   error_ = false;
+  slave_serial_index_ = 0;
 
   Method& get_device_info_method = createMethod(get_device_info_method_name);
   get_device_info_method.attachReservedCallback(&Server::getDeviceInfoCallback);
@@ -97,9 +98,20 @@ Server::Server(GenericSerial &serial) :
   createSavedVariable(serial_number_saved_variable_name,constants::serial_number_default);
 }
 
-void Server::setSerial(GenericSerial &serial)
+void Server::addSlaveSerial(GenericSerial &serial)
 {
-  generic_serial_ptr_ = &serial;
+  bool serial_found = false;
+  for (unsigned int i=0;i<slave_serial_ptr_array_.size();++i)
+  {
+    if (slave_serial_ptr_array_[i] == &serial)
+    {
+      serial_found = true;
+    }
+  }
+  if (!serial_found)
+  {
+    slave_serial_ptr_array_.push_back(&serial);
+  }
 }
 
 void Server::setName(const ConstantString &name)
@@ -213,14 +225,17 @@ void Server::startServer(const int baudrate)
   {
     initializeEeprom();
   }
-  generic_serial_ptr_->begin(baudrate);
+  for (unsigned int i=0;i<slave_serial_ptr_array_.size();++i)
+  {
+    slave_serial_ptr_array_[i]->begin(baudrate);
+  }
 }
 
 void Server::handleRequest()
 {
-  while (generic_serial_ptr_->getStream().available() > 0)
+  while (slave_serial_ptr_array_[slave_serial_index_]->getStream().available() > 0)
   {
-    int request_length = generic_serial_ptr_->getStream().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
+    int request_length = slave_serial_ptr_array_[slave_serial_index_]->getStream().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
     if (request_length == 0)
     {
       continue;
@@ -271,8 +286,9 @@ void Server::handleRequest()
       }
     }
     response_.stopObject();
-    generic_serial_ptr_->getStream() << endl;
+    slave_serial_ptr_array_[slave_serial_index_]->getStream() << endl;
   }
+  incrementSlaveSerial();
 }
 
 void Server::processRequestArray()
@@ -430,7 +446,7 @@ void Server::methodHelp(int method_index)
     addToResponse(parameter_name_char_array);
   }
   response_.stopArray();
-  addToResponse(returns_constant_string,method_array_[method_index].getReturnType());
+  addToResponse(return_constant_string,method_array_[method_index].getReturnType());
   stopResponseObject();
 }
 
@@ -448,7 +464,7 @@ void Server::verboseMethodHelp(int method_index)
     parameterHelp(*(parameter_ptr_array[i]));
   }
   response_.stopArray();
-  addToResponse(returns_constant_string,method_array_[method_index].getReturnType());
+  addToResponse(return_constant_string,method_array_[method_index].getReturnType());
   stopResponseObject();
 }
 
@@ -878,6 +894,12 @@ void Server::initializeEeprom()
 {
   saved_variable_array_[eeprom_initialized_index_].setValue(constants::eeprom_initialized_value);
   eeprom_uninitialized_ = false;
+}
+
+void Server::incrementSlaveSerial()
+{
+  slave_serial_index_ = (slave_serial_index_ + 1) % slave_serial_ptr_array_.size();
+  response_.setSerial(*slave_serial_ptr_array_[slave_serial_index_]);
 }
 
 void Server::getDeviceInfoCallback()

@@ -17,6 +17,8 @@ enum{METHOD_COUNT_MAX=40}; //9 used internally
 enum{PARAMETER_COUNT_MAX=17}; // 1 used internally
 enum{SAVED_VARIABLE_COUNT_MAX=12}; // 2 used internally
 
+enum{SLAVE_SERIAL_COUNT_MAX=4};
+
 enum{STRING_LENGTH_REQUEST=257};
 enum{STRING_LENGTH_ERROR=257};
 enum{STRING_LENGTH_DEVICE_NAME=32};

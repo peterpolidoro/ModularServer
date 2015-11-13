@@ -116,7 +116,7 @@ Example Response:
       "string",
       "count"
     ],
-    "returns":"array"
+    "return":"array"
   },
   "status":"success"
 }
@@ -152,7 +152,7 @@ Example Response:
         "max":100
       }
     ],
-    "returns":"array"
+    "return":"array"
   },
   "status":"success"
 }
@@ -306,12 +306,12 @@ dev.get_methods()
 dev.repeat()
 IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
 dev.repeat('?')
-{'name': 'repeat', 'parameters': ['string', 'count'], 'returns': 'array'}
+{'name': 'repeat', 'parameters': ['string', 'count'], 'return': 'array'}
 dev.repeat('??')
 {'name': 'repeat',
  'parameters': [{'name': 'string', 'type': 'string'},
   {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
- 'returns': 'array'}
+ 'return': 'array'}
 dev.repeat('count','?')
 {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
 dev.repeat('"I am a string to repeat."',-1)
@@ -326,7 +326,7 @@ dev.chars_at('"I am an input string!"',[0,6,8])
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
 dev.get_starting_chars_count('?')
-{'name': 'getStartingCharsCount', 'parameters': [], 'returns': 'long'}
+{'name': 'getStartingCharsCount', 'parameters': [], 'return': 'long'}
 dev.get_starting_chars_count()
 5
 dev.starting_chars("Fantastic!")
@@ -378,7 +378,7 @@ dev.repeat('?')
 ans =
   name: 'repeat'
   parameters: {'string'    'count'}
-  returns: 'array'
+  return: 'array'
 dev.repeat('count','?')
 ans =
   name: 'count'
@@ -389,7 +389,7 @@ method_info = dev.repeat('??')
 ans =
   name: 'repeat'
   parameters: {[1x1 struct] [1x1 struct]}
-  returns: 'array'
+  return: 'array'
 method_info.parameters{1}
 ans =
   name: 'string'

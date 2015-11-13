@@ -38,9 +38,9 @@ ModularDevice::ModularDevice(GenericSerial &serial) :
   set_serial_number_method.addParameter(serial_number_parameter);
 }
 
-void ModularDevice::setServerSerial(GenericSerial &serial)
+void ModularDevice::addSlaveSerial(GenericSerial &serial)
 {
-  server_.setSerial(serial);
+  server_.addSlaveSerial(serial);
 }
 
 void ModularDevice::setName(const ConstantString &device_name)

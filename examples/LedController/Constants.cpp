@@ -20,6 +20,8 @@ const unsigned char firmware_major = 0;
 const unsigned char firmware_minor = 1;
 const unsigned char firmware_patch = 0;
 
+GenericSerial slave_serial(Serial2);
+
 const double duration_min = 0.1;
 const double duration_max = 2.5;
 const long count_min = 1;
