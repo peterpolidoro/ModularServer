@@ -39,7 +39,7 @@ void setLedOffCallback()
 
 void getLedPinCallback()
 {
-  modular_device.addToResponse(constants::led_pin_return_name,constants::led_pin);
+  modular_device.addResultToResponse(constants::led_pin);
 }
 
 void blinkLedCallback()

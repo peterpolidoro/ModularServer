@@ -40,15 +40,6 @@ extern ConstantString index_array_parameter_name;
 extern ConstantString double_echo_parameter_name;
 extern ConstantString starting_chars_count_name;
 
-extern ConstantString echo_return_name;
-extern ConstantString length_return_name;
-extern ConstantString starts_with_return_name;
-extern ConstantString strings_return_name;
-extern ConstantString result_return_name;
-extern ConstantString starting_chars_return_name;
-extern ConstantString starting_chars_count_return_name;
-extern ConstantString stored_string_return_name;
-
 extern ConstantString echo_method_name;
 extern ConstantString length_method_name;
 extern ConstantString starts_with_method_name;

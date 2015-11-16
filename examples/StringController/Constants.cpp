@@ -40,15 +40,6 @@ CONSTANT_STRING(index_array_parameter_name,"index_array");
 CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 CONSTANT_STRING(starting_chars_count_name,"starting_chars_count");
 
-CONSTANT_STRING(echo_return_name,"echo");
-CONSTANT_STRING(length_return_name,"length");
-CONSTANT_STRING(starts_with_return_name,"starts_with");
-CONSTANT_STRING(strings_return_name,"strings");
-CONSTANT_STRING(result_return_name,"result");
-CONSTANT_STRING(starting_chars_return_name,"starting_chars");
-CONSTANT_STRING(starting_chars_count_return_name,"starting_chars_count");
-CONSTANT_STRING(stored_string_return_name,"stored_string");
-
 CONSTANT_STRING(echo_method_name,"echo");
 CONSTANT_STRING(length_method_name,"length");
 CONSTANT_STRING(starts_with_method_name,"startsWith");

@@ -112,7 +112,7 @@ Example Response:
       "duration_off",
       "count"
     ],
-    "return":null
+    "result_type":null
   },
   "status":"success"
 }
@@ -181,7 +181,7 @@ Example Response:
         "max":100
       }
     ],
-    "return":null
+    "result_type":null
   },
   "status":"success"
 }
@@ -235,7 +235,7 @@ Example Response:
   "method_info":{
     "name":"getLedPin",
     "parameters":[],
-    "return":"long"
+    "result_type":"long"
   },
   "status":"success"
 }
@@ -252,7 +252,7 @@ Example Response:
 ```json
 {
   "method":"getLedPin",
-  "led_pin":13,
+  "result":13,
   "status":"success"
 }
 ```
@@ -284,7 +284,7 @@ IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
 dev.blink_led('?')
 {'name': 'blinkLed',
  'parameters': ['duration_on', 'duration_off', 'count'],
- 'return': None}
+ 'result_type': None}
 dev.blink_led('duration_on','?')
 {'max': 2.5,
  'min': 0.1,
@@ -307,12 +307,12 @@ dev.blink_led('??')
    'min': 1,
    'name': 'count',
    'type': 'long'}],
- 'return': None}
+ 'result_type': None}
 dev.blink_led(0.5,0.2,20)
 dev.blink_led(3.0,0.2,20)
 IOError: (from device) Parameter value out of range: 0.1000 <= duration_on <= 2.5000
 dev.get_led_pin('?')
-{'name': 'getLedPin', 'parameters': [], 'return': 'long'}
+{'name': 'getLedPin', 'parameters': [], 'result_type': 'long'}
 dev.get_led_pin()
 13
 ```
@@ -359,7 +359,7 @@ dev.blinkLed('?')
 ans =
   name: 'blinkLed'
   parameters: {'duration_on'    'duration_off'    'count'}
-  return: []
+  result_type: []
 parameter_info = dev.blinkLed('duration_on','?')
 parameter_info =
   name: 'duration_on'
@@ -371,7 +371,7 @@ method_info = dev.blinkLed('??')
 method_info =
   name: 'blinkLed'
   parameters: {[1x1 struct] [1x1 struct] [1x1 struct]}
-  return: []
+  result_type: []
 method_info.parameters{1}
   name: 'duration_on'
   units: 'seconds'
@@ -385,7 +385,7 @@ dev.blinkLed(0.5,0.2,20)
 dev.getLedPin('?')
   name: 'getLedPin'
   parameters: []
-  return: 'long'
+  result_type: 'long'
 dev.getLedPin()
 ans =
   13

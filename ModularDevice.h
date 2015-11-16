@@ -21,7 +21,7 @@ class ModularDevice
 {
 public:
   ModularDevice(GenericSerialBase &serial);
-  void addSlaveSerial(GenericSerialBase &serial);
+  void addServerSerial(GenericSerialBase &serial);
   void setName(const ConstantString &device_name);
   void setModelNumber(const unsigned int model_number);
   void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);
@@ -62,6 +62,9 @@ public:
   void addNullToResponse(K key);
   template<typename T>
   void sendErrorResponse(T error);
+  void addResultKeyToResponse();
+  template<typename T>
+  void addResultToResponse(T value);
   void startResponseObject();
   void stopResponseObject();
   void startResponseArray();

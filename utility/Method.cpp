@@ -10,11 +10,9 @@
 
 namespace ModularDevice
 {
-CONSTANT_STRING(default_method_name,"");
-
 Method::Method()
 {
-  setName(default_method_name);
+  setName(constants::empty_constant_string);
   callback_attached_ = false;
   reserved_ = false;
   parameter_count_ = 0;

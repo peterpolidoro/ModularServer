@@ -10,37 +10,29 @@
 
 namespace ModularDevice
 {
-
-#ifdef __AVR__
-CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
-#endif
-CONSTANT_STRING(reset_defaults_method_name,"resetDefaults");
-CONSTANT_STRING(set_serial_number_method_name,"setSerialNumber");
-CONSTANT_STRING(serial_number_parameter_name,"serial_number");
-
 ModularDevice::ModularDevice(GenericSerialBase &serial) :
   server_(serial)
 {
+  Parameter& serial_number_parameter = modular_device.createParameter(constants::serial_number_constant_string);
+  serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
+
 #ifdef __AVR__
-  Method& get_memory_free_method = createMethod(get_memory_free_method_name);
+  Method& get_memory_free_method = createMethod(constants::get_memory_free_method_name);
   get_memory_free_method.attachCallback(getMemoryFreeCallback);
   get_memory_free_method.setReturnTypeLong();
 #endif
 
-  Method& reset_defaults_method = createMethod(reset_defaults_method_name);
+  Method& reset_defaults_method = createMethod(constants::reset_defaults_method_name);
   reset_defaults_method.attachCallback(resetDefaultsCallback);
 
-  Method& set_serial_number_method = createMethod(set_serial_number_method_name);
+  Method& set_serial_number_method = createMethod(constants::set_serial_number_method_name);
   set_serial_number_method.attachCallback(setSerialNumberCallback);
-
-  Parameter& serial_number_parameter = modular_device.createParameter(serial_number_parameter_name);
-  serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
   set_serial_number_method.addParameter(serial_number_parameter);
 }
 
-void ModularDevice::addSlaveSerial(GenericSerialBase &serial)
+void ModularDevice::addServerSerial(GenericSerialBase &serial)
 {
-  server_.addSlaveSerial(serial);
+  server_.addServerSerial(serial);
 }
 
 void ModularDevice::setName(const ConstantString &device_name)
@@ -86,6 +78,11 @@ ArduinoJson::JsonVariant ModularDevice::getParameterValue(const ConstantString &
 void ModularDevice::addNullToResponse()
 {
   server_.addNullToResponse();
+}
+
+void ModularDevice::addResultKeyToResponse()
+{
+  server_.addResultKeyToResponse();
 }
 
 void ModularDevice::startResponseObject()
@@ -135,7 +132,7 @@ ModularDevice::ModularDevice modular_device(generic_serial);
 #ifdef __AVR__
 void ModularDevice::getMemoryFreeCallback()
 {
-  modular_device.addToResponse("memory_free", freeMemory());
+  modular_device.addResultToResponse(freeMemory());
 }
 #endif
 
@@ -146,6 +143,6 @@ void ModularDevice::resetDefaultsCallback()
 
 void ModularDevice::setSerialNumberCallback()
 {
-  unsigned int serial_number = (long)modular_device.getParameterValue(serial_number_parameter_name);
+  unsigned int serial_number = (long)modular_device.getParameterValue(constants::serial_number_constant_string);
   modular_device.setSerialNumber(serial_number);
 }

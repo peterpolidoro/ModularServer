@@ -10,13 +10,10 @@
 
 namespace ModularDevice
 {
-CONSTANT_STRING(default_parameter_name,"");
-CONSTANT_STRING(default_parameter_units,"");
-
 Parameter::Parameter()
 {
-  setName(default_parameter_name);
-  setUnits(default_parameter_units);
+  setName(constants::empty_constant_string);
+  setUnits(constants::empty_constant_string);
   type_ = JsonPrinter::LONG_TYPE;
   array_element_type_ = JsonPrinter::LONG_TYPE;
   range_is_set_ = false;
@@ -25,7 +22,7 @@ Parameter::Parameter()
 Parameter::Parameter(const ConstantString &name)
 {
   setName(name);
-  setUnits(default_parameter_units);
+  setUnits(constants::empty_constant_string);
   type_ = JsonPrinter::LONG_TYPE;
   array_element_type_ = JsonPrinter::LONG_TYPE;
   range_is_set_ = false;

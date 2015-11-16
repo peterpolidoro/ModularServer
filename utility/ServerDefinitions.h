@@ -128,9 +128,15 @@ void Server::addNullToResponse(K key)
 template<typename T>
 void Server::sendErrorResponse(T error)
 {
-  addToResponse("status",JsonPrinter::ERROR);
-  addToResponse("error_message",error);
+  addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
+  addToResponse(constants::error_message_constant_string,error);
   error_ = true;
+}
+
+template<typename T>
+void Server::addResultToResponse(T value)
+{
+  response_.add(constants::result_constant_string,value);
 }
 }
 

@@ -10,56 +10,11 @@
 
 namespace ModularDevice
 {
-
-CONSTANT_STRING(default_device_name,"");
-CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
-CONSTANT_STRING(get_method_ids_method_name,"getMethodIds");
-CONSTANT_STRING(get_response_codes_method_name,"getResponseCodes");
-CONSTANT_STRING(get_parameters_method_name,"getParameters");
-CONSTANT_STRING(help_method_name,"?");
-CONSTANT_STRING(verbose_help_method_name,"??");
-CONSTANT_STRING(object_request_error_message,"JSON object requests not supported. Must use compact JSON array format for requests.");
-CONSTANT_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
-CONSTANT_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
-CONSTANT_STRING(serial_number_saved_variable_name,"serial_number");
-CONSTANT_STRING(parameter_error_preamble_message,"Parameter value out of range: ");
-CONSTANT_STRING(array_parameter_error_preamble_message,"Array parameter element value out of range: ");
-CONSTANT_STRING(status_constant_string,"status");
-CONSTANT_STRING(error_message_constant_string,"error_message");
-CONSTANT_STRING(name_constant_string,"name");
-CONSTANT_STRING(type_constant_string,"type");
-CONSTANT_STRING(return_constant_string,"return");
-CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
-CONSTANT_STRING(received_request_constant_string,"received_request");
-CONSTANT_STRING(method_id_constant_string,"method_id");
-CONSTANT_STRING(method_constant_string,"method");
-CONSTANT_STRING(methods_constant_string,"methods");
-CONSTANT_STRING(method_info_constant_string,"method_info");
-CONSTANT_STRING(parameter_info_constant_string,"parameter_info");
-CONSTANT_STRING(parameters_constant_string,"parameters");
-CONSTANT_STRING(unknown_method_constant_string,"Unknown method.");
-CONSTANT_STRING(unknown_parameter_constant_string,"Unknown parameter.");
-CONSTANT_STRING(min_constant_string,"min");
-CONSTANT_STRING(max_constant_string,"max");
-CONSTANT_STRING(model_number_constant_string,"model_number");
-CONSTANT_STRING(serial_number_constant_string,"serial_number");
-CONSTANT_STRING(firmware_version_constant_string,"firmware_version");
-CONSTANT_STRING(major_constant_string,"major");
-CONSTANT_STRING(minor_constant_string,"minor");
-CONSTANT_STRING(patch_constant_string,"patch");
-CONSTANT_STRING(response_success_constant_string,"response_success");
-CONSTANT_STRING(response_error_constant_string,"response_error");
-CONSTANT_STRING(device_info_constant_string,"device_info");
-CONSTANT_STRING(incorrect_parameter_number_constant_string,"Incorrect number of parameters. ")
-CONSTANT_STRING(invalid_json_object_constant_string," is not a valid JSON object.")
-CONSTANT_STRING(invalid_json_array_constant_string," is not a valid JSON array.")
-
-
 Server::Server(GenericSerialBase &serial) :
   response_(serial)
 {
-  addSlaveSerial(serial);
-  setName(default_device_name);
+  addServerSerial(serial);
+  setName(constants::empty_constant_string);
   model_number_ = 0;
   firmware_major_ = 0;
   firmware_minor_ = 0;
@@ -67,50 +22,50 @@ Server::Server(GenericSerialBase &serial) :
   request_method_index_ = -1;
   parameter_count_ = 0;
   error_ = false;
-  slave_serial_index_ = 0;
+  server_serial_index_ = 0;
 
-  Method& get_device_info_method = createMethod(get_device_info_method_name);
+  Method& get_device_info_method = createMethod(constants::get_device_info_method_name);
   get_device_info_method.attachReservedCallback(&Server::getDeviceInfoCallback);
 
-  Method& get_method_ids_method = createMethod(get_method_ids_method_name);
+  Method& get_method_ids_method = createMethod(constants::get_method_ids_method_name);
   get_method_ids_method.attachReservedCallback(&Server::getMethodIdsCallback);
 
-  Method& get_response_codes_method = createMethod(get_response_codes_method_name);
+  Method& get_response_codes_method = createMethod(constants::get_response_codes_method_name);
   get_response_codes_method.attachReservedCallback(&Server::getResponseCodesCallback);
 
-  Method& get_parameters_method = createMethod(get_parameters_method_name);
+  Method& get_parameters_method = createMethod(constants::get_parameters_method_name);
   get_parameters_method.attachReservedCallback(&Server::getParametersCallback);
 
-  Method& help_method = createMethod(help_method_name);
+  Method& help_method = createMethod(constants::help_method_name);
   help_method.attachReservedCallback(&Server::help);
 
-  Method& verbose_help_method = createMethod(verbose_help_method_name);
+  Method& verbose_help_method = createMethod(constants::verbose_help_method_name);
   verbose_help_method.attachReservedCallback(&Server::verboseHelp);
 
   eeprom_index_ = 0;
   eeprom_initialized_index_ = eeprom_index_;
-  eeprom_init_name_ptr_ = &eeprom_initialized_saved_variable_name;
+  eeprom_init_name_ptr_ = &constants::eeprom_initialized_saved_variable_name;
   eeprom_uninitialized_ = true;
   saved_variable_array_.push_back(SavedVariable(*eeprom_init_name_ptr_,
                                                 eeprom_index_,
                                                 constants::eeprom_initialized_value));
   eeprom_index_ += sizeof(constants::eeprom_initialized_value);
-  createSavedVariable(serial_number_saved_variable_name,constants::serial_number_default);
+  createSavedVariable(constants::serial_number_constant_string,constants::serial_number_default);
 }
 
-void Server::addSlaveSerial(GenericSerialBase &serial)
+void Server::addServerSerial(GenericSerialBase &serial)
 {
   bool serial_found = false;
-  for (unsigned int i=0;i<slave_serial_ptr_array_.size();++i)
+  for (unsigned int i=0;i<server_serial_ptr_array_.size();++i)
   {
-    if (slave_serial_ptr_array_[i] == &serial)
+    if (server_serial_ptr_array_[i] == &serial)
     {
       serial_found = true;
     }
   }
   if (!serial_found)
   {
-    slave_serial_ptr_array_.push_back(&serial);
+    server_serial_ptr_array_.push_back(&serial);
   }
 }
 
@@ -126,7 +81,7 @@ void Server::setModelNumber(const unsigned int model_number)
 
 void Server::setSerialNumber(const unsigned int serial_number)
 {
-  setSavedVariableValue(serial_number_saved_variable_name,serial_number);
+  setSavedVariableValue(constants::serial_number_constant_string,serial_number);
 }
 
 void Server::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
@@ -191,6 +146,11 @@ void Server::addNullToResponse()
   response_.addNull();
 }
 
+void Server::addResultKeyToResponse()
+{
+  response_.addKey(constants::result_constant_string);
+}
+
 void Server::startResponseObject()
 {
   response_.startObject();
@@ -225,17 +185,17 @@ void Server::startServer(const int baudrate)
   {
     initializeEeprom();
   }
-  for (unsigned int i=0;i<slave_serial_ptr_array_.size();++i)
+  for (unsigned int i=0;i<server_serial_ptr_array_.size();++i)
   {
-    slave_serial_ptr_array_[i]->begin(baudrate);
+    server_serial_ptr_array_[i]->begin(baudrate);
   }
 }
 
 void Server::handleRequest()
 {
-  while (slave_serial_ptr_array_[slave_serial_index_]->getStream().available() > 0)
+  while (server_serial_ptr_array_[server_serial_index_]->getStream().available() > 0)
   {
-    int request_length = slave_serial_ptr_array_[slave_serial_index_]->getStream().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
+    int request_length = server_serial_ptr_array_[server_serial_index_]->getStream().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
     if (request_length == 0)
     {
       continue;
@@ -256,11 +216,8 @@ void Server::handleRequest()
     StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
     if (sanitizer.firstCharIsValidJsonObject(request_))
     {
-      addToResponse(status_constant_string,JsonPrinter::ERROR);
-      char error_message[constants::STRING_LENGTH_ERROR];
-      error_message[0] = 0;
-      object_request_error_message.copy(error_message);
-      addToResponse(error_message_constant_string,error_message);
+      addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
+      addToResponse(constants::error_message_constant_string,constants::object_request_error_message);
       error_ = true;
     }
     else
@@ -272,23 +229,20 @@ void Server::handleRequest()
       }
       else
       {
-        addToResponse(status_constant_string,JsonPrinter::ERROR);
-        char error_message[constants::STRING_LENGTH_ERROR];
-        error_message[0] = 0;
-        array_parse_error_message.copy(error_message);
-        addToResponse(error_message_constant_string,error_message);
-        addToResponse(received_request_constant_string,request_);
+        addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
+        addToResponse(constants::error_message_constant_string,constants::array_parse_error_message);
+        addToResponse(constants::received_request_constant_string,request_);
         error_ = true;
       }
       if (!error_)
       {
-        addToResponse(status_constant_string,JsonPrinter::SUCCESS);
+        addToResponse(constants::status_constant_string,JsonPrinter::SUCCESS);
       }
     }
     response_.stopObject();
-    slave_serial_ptr_array_[slave_serial_index_]->getStream() << endl;
+    server_serial_ptr_array_[server_serial_index_]->getStream() << endl;
   }
-  incrementSlaveSerial();
+  incrementServerSerial();
 }
 
 void Server::processRequestArray()
@@ -301,12 +255,12 @@ void Server::processRequestArray()
     int parameter_count = array_elements_count - 1;
     if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"?") == 0))
     {
-      addKeyToResponse(method_info_constant_string);
+      addKeyToResponse(constants::method_info_constant_string);
       methodHelp(request_method_index_);
     }
     else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"??") == 0))
     {
-      addKeyToResponse(method_info_constant_string);
+      addKeyToResponse(constants::method_info_constant_string);
       verboseMethodHelp(request_method_index_);
     }
     else if ((parameter_count == 2) &&
@@ -315,14 +269,14 @@ void Server::processRequestArray()
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
-      addKeyToResponse(parameter_info_constant_string);
+      addKeyToResponse(constants::parameter_info_constant_string);
       parameterHelp(parameter);
     }
     else if (parameter_count != method_array_[request_method_index_].parameter_count_)
     {
-      addToResponse(status_constant_string,JsonPrinter::ERROR);
-      char incorrect_parameter_number[incorrect_parameter_number_constant_string.length()+1];
-      incorrect_parameter_number_constant_string.copy(incorrect_parameter_number);
+      addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
+      char incorrect_parameter_number[constants::incorrect_parameter_number_constant_string.length()+1];
+      constants::incorrect_parameter_number_constant_string.copy(incorrect_parameter_number);
       char error_str[constants::STRING_LENGTH_ERROR];
       error_str[0] = 0;
       strcat(error_str,incorrect_parameter_number);
@@ -333,7 +287,7 @@ void Server::processRequestArray()
       dtostrf(method_array_[request_method_index_].parameter_count_,0,0,parameter_count_str);
       strcat(error_str,parameter_count_str);
       strcat(error_str," needed.");
-      addToResponse(error_message_constant_string,error_str);
+      addToResponse(constants::error_message_constant_string,error_str);
       error_ = true;
     }
     else
@@ -354,22 +308,22 @@ int Server::processMethodString(const char *method_string)
   if (strcmp(method_string,"0") == 0)
   {
     method_index = 0;
-    addToResponse(method_id_constant_string,0);
+    addToResponse(constants::method_id_constant_string,0);
   }
   else if (method_id > 0)
   {
     method_index = method_id;
-    addToResponse(method_id_constant_string,method_id);
+    addToResponse(constants::method_id_constant_string,method_id);
   }
   else
   {
     method_index = findMethodIndex(method_string);
-    addToResponse(method_constant_string,method_string);
+    addToResponse(constants::method_constant_string,method_string);
   }
   if ((method_index < 0) || (method_index >= (int)method_array_.size()))
   {
-    addToResponse(status_constant_string,JsonPrinter::ERROR);
-    addToResponse(error_message_constant_string,unknown_method_constant_string);
+    addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
+    addToResponse(constants::error_message_constant_string,constants::unknown_method_constant_string);
     error_ = true;
     method_index = -1;
   }
@@ -432,9 +386,9 @@ void Server::methodHelp(int method_index)
 {
   startResponseObject();
   const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
-  addToResponse(name_constant_string,method_name_ptr);
+  addToResponse(constants::name_constant_string,method_name_ptr);
 
-  addKeyToResponse(parameters_constant_string);
+  addKeyToResponse(constants::parameters_constant_string);
   response_.startArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   const ConstantString* parameter_name_ptr;
@@ -446,7 +400,7 @@ void Server::methodHelp(int method_index)
     addToResponse(parameter_name_char_array);
   }
   response_.stopArray();
-  addToResponse(return_constant_string,method_array_[method_index].getReturnType());
+  addToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
   stopResponseObject();
 }
 
@@ -454,9 +408,9 @@ void Server::verboseMethodHelp(int method_index)
 {
   startResponseObject();
   const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
-  addToResponse(name_constant_string,method_name_ptr);
+  addToResponse(constants::name_constant_string,method_name_ptr);
 
-  addKeyToResponse(parameters_constant_string);
+  addKeyToResponse(constants::parameters_constant_string);
   response_.startArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
@@ -464,7 +418,7 @@ void Server::verboseMethodHelp(int method_index)
     parameterHelp(*(parameter_ptr_array[i]));
   }
   response_.stopArray();
-  addToResponse(return_constant_string,method_array_[method_index].getReturnType());
+  addToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
   stopResponseObject();
 }
 
@@ -487,8 +441,8 @@ int Server::processParameterString(const char *parameter_string)
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptr_array.size()))
   {
-    addToResponse(status_constant_string,JsonPrinter::ERROR);
-    addToResponse(error_message_constant_string,unknown_parameter_constant_string);
+    addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
+    addToResponse(constants::error_message_constant_string,constants::unknown_parameter_constant_string);
     error_ = true;
     parameter_index = -1;
   }
@@ -535,7 +489,7 @@ void Server::parameterHelp(Parameter &parameter)
 {
   startResponseObject();
   const ConstantString* parameter_name_ptr = parameter.getNamePointer();
-  addToResponse(name_constant_string,parameter_name_ptr);
+  addToResponse(constants::name_constant_string,parameter_name_ptr);
 
   char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS];
   parameter_units[0] = 0;
@@ -543,98 +497,98 @@ void Server::parameterHelp(Parameter &parameter)
   parameter_units_ptr->copy(parameter_units);
   if (strcmp(parameter_units,"") != 0)
   {
-    addToResponse("units",parameter_units);
+    addToResponse(constants::units_constant_string,parameter_units);
   }
   JsonPrinter::JsonTypes type = parameter.getType();
   switch (type)
   {
     case JsonPrinter::LONG_TYPE:
       {
-        addToResponse(type_constant_string,JsonPrinter::LONG_TYPE);
+        addToResponse(constants::type_constant_string,JsonPrinter::LONG_TYPE);
         if (parameter.rangeIsSet())
         {
           long min = parameter.getMin().l;
           long max = parameter.getMax().l;
-          addToResponse(min_constant_string,min);
-          addToResponse(max_constant_string,max);
+          addToResponse(constants::min_constant_string,min);
+          addToResponse(constants::max_constant_string,max);
         }
         break;
       }
     case JsonPrinter::DOUBLE_TYPE:
       {
-        addToResponse(type_constant_string,JsonPrinter::DOUBLE_TYPE);
+        addToResponse(constants::type_constant_string,JsonPrinter::DOUBLE_TYPE);
         if (parameter.rangeIsSet())
         {
           double min = parameter.getMin().d;
           double max = parameter.getMax().d;
-          addToResponse(min_constant_string,min);
-          addToResponse(max_constant_string,max);
+          addToResponse(constants::min_constant_string,min);
+          addToResponse(constants::max_constant_string,max);
         }
         break;
       }
     case JsonPrinter::BOOL_TYPE:
       {
-        addToResponse(type_constant_string,JsonPrinter::BOOL_TYPE);
+        addToResponse(constants::type_constant_string,JsonPrinter::BOOL_TYPE);
         break;
       }
     case JsonPrinter::STRING_TYPE:
       {
-        addToResponse(type_constant_string,JsonPrinter::STRING_TYPE);
+        addToResponse(constants::type_constant_string,JsonPrinter::STRING_TYPE);
         break;
       }
     case JsonPrinter::OBJECT_TYPE:
       {
-        addToResponse(type_constant_string,JsonPrinter::OBJECT_TYPE);
+        addToResponse(constants::type_constant_string,JsonPrinter::OBJECT_TYPE);
         break;
       }
     case JsonPrinter::ARRAY_TYPE:
       {
-        addToResponse(type_constant_string,JsonPrinter::ARRAY_TYPE);
+        addToResponse(constants::type_constant_string,JsonPrinter::ARRAY_TYPE);
         JsonPrinter::JsonTypes array_element_type = parameter.getArrayElementType();
         switch (array_element_type)
         {
           case JsonPrinter::LONG_TYPE:
             {
-              addToResponse(array_element_type_constant_string,JsonPrinter::LONG_TYPE);
+              addToResponse(constants::array_element_type_constant_string,JsonPrinter::LONG_TYPE);
               if (parameter.rangeIsSet())
               {
                 long min = parameter.getMin().l;
                 long max = parameter.getMax().l;
-                addToResponse(min_constant_string,min);
-                addToResponse(max_constant_string,max);
+                addToResponse(constants::min_constant_string,min);
+                addToResponse(constants::max_constant_string,max);
               }
               break;
             }
           case JsonPrinter::DOUBLE_TYPE:
             {
-              addToResponse(array_element_type_constant_string,JsonPrinter::DOUBLE_TYPE);
+              addToResponse(constants::array_element_type_constant_string,JsonPrinter::DOUBLE_TYPE);
               if (parameter.rangeIsSet())
               {
                 double min = parameter.getMin().d;
                 double max = parameter.getMax().d;
-                addToResponse(min_constant_string,min);
-                addToResponse(max_constant_string,max);
+                addToResponse(constants::min_constant_string,min);
+                addToResponse(constants::max_constant_string,max);
               }
               break;
             }
           case JsonPrinter::BOOL_TYPE:
             {
-              addToResponse(array_element_type_constant_string,JsonPrinter::BOOL_TYPE);
+              addToResponse(constants::array_element_type_constant_string,JsonPrinter::BOOL_TYPE);
               break;
             }
           case JsonPrinter::STRING_TYPE:
             {
-              addToResponse(array_element_type_constant_string,JsonPrinter::STRING_TYPE);
+              addToResponse(constants::array_element_type_constant_string,JsonPrinter::STRING_TYPE);
               break;
             }
           case JsonPrinter::OBJECT_TYPE:
             {
-              addToResponse(array_element_type_constant_string,JsonPrinter::OBJECT_TYPE);
+              addToResponse(constants::array_element_type_constant_string,JsonPrinter::OBJECT_TYPE);
               break;
             }
           case JsonPrinter::ARRAY_TYPE:
             {
-              addToResponse(array_element_type_constant_string,JsonPrinter::ARRAY_TYPE);
+              addToResponse(constants::array_element_type_constant_string,JsonPrinter::ARRAY_TYPE);
               break;
             }
         }
@@ -806,16 +760,16 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   }
   if (out_of_range)
   {
-    addToResponse(status_constant_string,JsonPrinter::ERROR);
+    addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
     if (type != JsonPrinter::ARRAY_TYPE)
     {
-      parameter_error_preamble_message.copy(error_str);
+      constants::parameter_error_preamble_message.copy(error_str);
     }
     else
     {
-      array_parameter_error_preamble_message.copy(error_str);
+      constants::array_parameter_error_preamble_message.copy(error_str);
     }
     strcat(error_str,min_str);
     strcat(error_str," <= ");
@@ -830,12 +784,12 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     }
     strcat(error_str," <= ");
     strcat(error_str,max_str);
-    addToResponse(error_message_constant_string,error_str);
+    addToResponse(constants::error_message_constant_string,error_str);
     error_ = true;
   }
   else if (object_parse_unsuccessful)
   {
-    addToResponse(status_constant_string,JsonPrinter::ERROR);
+    addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
@@ -843,15 +797,15 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
     strcat(error_str,parameter_name);
-    char invalid_json_object[invalid_json_object_constant_string.length()+1];
-    invalid_json_object_constant_string.copy(invalid_json_object);
+    char invalid_json_object[constants::invalid_json_object_constant_string.length()+1];
+    constants::invalid_json_object_constant_string.copy(invalid_json_object);
     strcat(error_str,invalid_json_object);
-    addToResponse(error_message_constant_string,error_str);
+    addToResponse(constants::error_message_constant_string,error_str);
     error_ = true;
   }
   else if (array_parse_unsuccessful)
   {
-    addToResponse(status_constant_string,JsonPrinter::ERROR);
+    addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
     const ConstantString* parameter_name_ptr = parameter.getNamePointer();
@@ -859,10 +813,10 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
     strcat(error_str,parameter_name);
-    char invalid_json_array[invalid_json_array_constant_string.length()+1];
-    invalid_json_array_constant_string.copy(invalid_json_array);
+    char invalid_json_array[constants::invalid_json_array_constant_string.length()+1];
+    constants::invalid_json_array_constant_string.copy(invalid_json_array);
     strcat(error_str,invalid_json_array);
-    addToResponse(error_message_constant_string,error_str);
+    addToResponse(constants::error_message_constant_string,error_str);
     error_ = true;
   }
   bool parameter_ok = (!out_of_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
@@ -886,7 +840,7 @@ int Server::findSavedVariableIndex(const ConstantString &saved_variable_name)
 unsigned int Server::getSerialNumber()
 {
   unsigned int serial_number;
-  getSavedVariableValue(serial_number_saved_variable_name,serial_number);
+  getSavedVariableValue(constants::serial_number_constant_string,serial_number);
   return serial_number;
 }
 
@@ -896,22 +850,22 @@ void Server::initializeEeprom()
   eeprom_uninitialized_ = false;
 }
 
-void Server::incrementSlaveSerial()
+void Server::incrementServerSerial()
 {
-  slave_serial_index_ = (slave_serial_index_ + 1) % slave_serial_ptr_array_.size();
-  response_.setSerial(*slave_serial_ptr_array_[slave_serial_index_]);
+  server_serial_index_ = (server_serial_index_ + 1) % server_serial_ptr_array_.size();
+  response_.setSerial(*server_serial_ptr_array_[server_serial_index_]);
 }
 
 void Server::getDeviceInfoCallback()
 {
-  addToResponse(name_constant_string,name_ptr_);
-  addToResponse(model_number_constant_string,model_number_);
-  addToResponse(serial_number_constant_string,getSerialNumber());
-  addKeyToResponse(firmware_version_constant_string);
+  addToResponse(constants::name_constant_string,name_ptr_);
+  addToResponse(constants::model_number_constant_string,model_number_);
+  addToResponse(constants::serial_number_constant_string,getSerialNumber());
+  addKeyToResponse(constants::firmware_version_constant_string);
   startResponseObject();
-  addToResponse(major_constant_string,firmware_major_);
-  addToResponse(minor_constant_string,firmware_minor_);
-  addToResponse(patch_constant_string,firmware_patch_);
+  addToResponse(constants::major_constant_string,firmware_major_);
+  addToResponse(constants::minor_constant_string,firmware_minor_);
+  addToResponse(constants::patch_constant_string,firmware_patch_);
   stopResponseObject();
 }
 
@@ -930,13 +884,13 @@ void Server::getMethodIdsCallback()
 
 void Server::getResponseCodesCallback()
 {
-  addToResponse(response_success_constant_string,JsonPrinter::SUCCESS);
-  addToResponse(response_error_constant_string,JsonPrinter::ERROR);
+  addToResponse(constants::response_success_constant_string,JsonPrinter::SUCCESS);
+  addToResponse(constants::response_error_constant_string,JsonPrinter::ERROR);
 }
 
 void Server::getParametersCallback()
 {
-  addKeyToResponse(parameters_constant_string);
+  addKeyToResponse(constants::parameters_constant_string);
   response_.startArray();
   for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
   {
@@ -947,12 +901,12 @@ void Server::getParametersCallback()
 
 void Server::help()
 {
-  addKeyToResponse(device_info_constant_string);
+  addKeyToResponse(constants::device_info_constant_string);
   startResponseObject();
   getDeviceInfoCallback();
   stopResponseObject();
 
-  addKeyToResponse(methods_constant_string);
+  addKeyToResponse(constants::methods_constant_string);
   startResponseArray();
   const ConstantString* method_name_ptr;
   for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
@@ -968,12 +922,12 @@ void Server::help()
 
 void Server::verboseHelp()
 {
-  addKeyToResponse(device_info_constant_string);
+  addKeyToResponse(constants::device_info_constant_string);
   startResponseObject();
   getDeviceInfoCallback();
   stopResponseObject();
 
-  addKeyToResponse(methods_constant_string);
+  addKeyToResponse(constants::methods_constant_string);
   startResponseArray();
   for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {

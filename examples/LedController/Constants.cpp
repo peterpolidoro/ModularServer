@@ -34,8 +34,6 @@ CONSTANT_STRING(duration_off_parameter_name,"duration_off");
 CONSTANT_STRING(count_parameter_name,"count");
 CONSTANT_STRING(seconds_unit,"seconds");
 
-CONSTANT_STRING(led_pin_return_name,"led_pin");
-
 CONSTANT_STRING(led_on_method_name,"setLedOn");
 CONSTANT_STRING(led_off_method_name,"setLedOff");
 CONSTANT_STRING(get_led_pin_method_name,"getLedPin");

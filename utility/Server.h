@@ -32,7 +32,7 @@ class Server
 {
 public:
   Server(GenericSerialBase &serial);
-  void addSlaveSerial(GenericSerialBase &serial);
+  void addServerSerial(GenericSerialBase &serial);
   void setName(const ConstantString &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
@@ -74,6 +74,9 @@ public:
   void addNullToResponse(K key);
   template<typename T>
   void sendErrorResponse(T error);
+  void addResultKeyToResponse();
+  template<typename T>
+  void addResultToResponse(T value);
   void startResponseObject();
   void stopResponseObject();
   void startResponseArray();
@@ -82,8 +85,8 @@ public:
   void startServer(const int baudrate);
   void handleRequest();
 private:
-  Array<GenericSerialBase*,constants::SLAVE_SERIAL_COUNT_MAX> slave_serial_ptr_array_;
-  unsigned char slave_serial_index_;
+  Array<GenericSerialBase*,constants::SERVER_SERIAL_COUNT_MAX> server_serial_ptr_array_;
+  unsigned char server_serial_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray *request_json_array_ptr_;
   Array<Method,constants::METHOD_COUNT_MAX> method_array_;
@@ -120,7 +123,7 @@ private:
   int findSavedVariableIndex(const ConstantString &saved_variable_name);
   unsigned int getSerialNumber();
   void initializeEeprom();
-  void incrementSlaveSerial();
+  void incrementServerSerial();
 
   // reserved methods
   void getDeviceInfoCallback();

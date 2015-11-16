@@ -21,8 +21,8 @@ void Controller::setup()
   modular_device.setModelNumber(constants::model_number);
   modular_device.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
 
-  // Slave Serial
-  modular_device.addSlaveSerial(constants::generic_serial2);
+  // Server Serial
+  modular_device.addServerSerial(constants::generic_serial2);
 
   // Saved Variables
 
