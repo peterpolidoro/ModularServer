@@ -55,7 +55,7 @@ CONSTANT_STRING(invalid_json_object_constant_string," is not a valid JSON object
 CONSTANT_STRING(invalid_json_array_constant_string," is not a valid JSON array.")
 
 
-Server::Server(GenericSerial &serial) :
+Server::Server(GenericSerialBase &serial) :
   response_(serial)
 {
   addSlaveSerial(serial);
@@ -98,7 +98,7 @@ Server::Server(GenericSerial &serial) :
   createSavedVariable(serial_number_saved_variable_name,constants::serial_number_default);
 }
 
-void Server::addSlaveSerial(GenericSerial &serial)
+void Server::addSlaveSerial(GenericSerialBase &serial)
 {
   bool serial_found = false;
   for (unsigned int i=0;i<slave_serial_ptr_array_.size();++i)

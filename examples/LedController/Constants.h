@@ -21,7 +21,7 @@ extern const unsigned char firmware_major;
 extern const unsigned char firmware_minor;
 extern const unsigned char firmware_patch;
 
-extern GenericSerial slave_serial;
+extern GenericSerial1to3 generic_serial2;
 
 extern const double duration_min;
 extern const double duration_max;

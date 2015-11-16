@@ -31,8 +31,8 @@ namespace ModularDevice
 class Server
 {
 public:
-  Server(GenericSerial &serial);
-  void addSlaveSerial(GenericSerial &serial);
+  Server(GenericSerialBase &serial);
+  void addSlaveSerial(GenericSerialBase &serial);
   void setName(const ConstantString &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);

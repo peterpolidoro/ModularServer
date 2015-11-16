@@ -18,7 +18,7 @@ CONSTANT_STRING(reset_defaults_method_name,"resetDefaults");
 CONSTANT_STRING(set_serial_number_method_name,"setSerialNumber");
 CONSTANT_STRING(serial_number_parameter_name,"serial_number");
 
-ModularDevice::ModularDevice(GenericSerial &serial) :
+ModularDevice::ModularDevice(GenericSerialBase &serial) :
   server_(serial)
 {
 #ifdef __AVR__
@@ -38,7 +38,7 @@ ModularDevice::ModularDevice(GenericSerial &serial) :
   set_serial_number_method.addParameter(serial_number_parameter);
 }
 
-void ModularDevice::addSlaveSerial(GenericSerial &serial)
+void ModularDevice::addSlaveSerial(GenericSerialBase &serial)
 {
   server_.addSlaveSerial(serial);
 }
