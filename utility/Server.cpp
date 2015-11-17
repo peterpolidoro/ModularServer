@@ -240,7 +240,7 @@ void Server::handleRequest()
       }
     }
     response_.stopObject();
-    server_serial_ptr_array_[server_serial_index_]->getStream() << endl;
+    server_serial_ptr_array_[server_serial_index_]->getStream() << "\n";
   }
   incrementServerSerial();
 }
