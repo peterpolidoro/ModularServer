@@ -11,8 +11,6 @@ namespace ModularDevice
 {
 namespace constants
 {
-const char eol = '\n';
-
 const unsigned char method_count_max = 24;
 
 const unsigned char eeprom_initialized_value = 123;

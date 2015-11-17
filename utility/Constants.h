@@ -37,8 +37,6 @@ union NumberType
   double d;
 };
 
-extern const char eol;
-
 extern const unsigned char method_count_max;
 
 extern const unsigned char eeprom_initialized_value;

@@ -195,7 +195,7 @@ void Server::handleRequest()
 {
   while (server_serial_ptr_array_[server_serial_index_]->getStream().available() > 0)
   {
-    int request_length = server_serial_ptr_array_[server_serial_index_]->getStream().readBytesUntil(constants::eol,request_,constants::STRING_LENGTH_REQUEST);
+    int request_length = server_serial_ptr_array_[server_serial_index_]->getStream().readBytesUntil(JsonPrinter::EOL,request_,constants::STRING_LENGTH_REQUEST);
     if (request_length == 0)
     {
       continue;
@@ -660,8 +660,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
           if ((value < min) || (value > max))
           {
             out_of_range = true;
-            dtostrf(min,0,JsonPrinter::DOUBLE_DIGITS,min_str);
-            dtostrf(max,0,JsonPrinter::DOUBLE_DIGITS,max_str);
+            dtostrf(min,0,JsonPrinter::DOUBLE_DIGITS_DEFAULT,min_str);
+            dtostrf(max,0,JsonPrinter::DOUBLE_DIGITS_DEFAULT,max_str);
           }
         }
         break;
@@ -729,8 +729,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
                     if ((value < min) || (value > max))
                     {
                       out_of_range = true;
-                      dtostrf(min,0,JsonPrinter::DOUBLE_DIGITS,min_str);
-                      dtostrf(max,0,JsonPrinter::DOUBLE_DIGITS,max_str);
+                      dtostrf(min,0,JsonPrinter::DOUBLE_DIGITS_DEFAULT,min_str);
+                      dtostrf(max,0,JsonPrinter::DOUBLE_DIGITS_DEFAULT,max_str);
                       break;
                     }
                   }
