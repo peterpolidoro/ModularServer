@@ -138,8 +138,8 @@ Example Response:
     "name":"duration_on",
     "units":"seconds",
     "type":"double",
-    "min":0.1000,
-    "max":2.5000
+    "min":0.100000,
+    "max":2.500000
   },
   "status":"success"
 }
@@ -164,15 +164,15 @@ Example Response:
         "name":"duration_on",
         "units":"seconds",
         "type":"double",
-        "min":0.1000,
-        "max":2.5000
+        "min":0.100000,
+        "max":2.500000
       },
       {
         "name":"duration_off",
         "units":"seconds",
         "type":"double",
-        "min":0.1000,
-        "max":2.5000
+        "min":0.100000,
+        "max":2.500000
       },
       {
         "name":"count",
@@ -199,7 +199,7 @@ Example Response:
 {
   "method":"blinkLed",
   "status":"error",
-  "error_message":"Parameter value out of range: 0.1000 <= duration_on <= 2.5000"
+  "error_message":"Parameter value out of range: 0.100000 <= duration_on <= 2.500000"
 }
 ```
 
@@ -310,7 +310,7 @@ dev.blink_led('??')
  'result_type': None}
 dev.blink_led(0.5,0.2,20)
 dev.blink_led(3.0,0.2,20)
-IOError: (from device) Parameter value out of range: 0.1000 <= duration_on <= 2.5000
+IOError: (from device) Parameter value out of range: 0.100000 <= duration_on <= 2.500000
 dev.get_led_pin('?')
 {'name': 'getLedPin', 'parameters': [], 'result_type': 'long'}
 dev.get_led_pin()
@@ -365,8 +365,8 @@ parameter_info =
   name: 'duration_on'
   units: 'seconds'
   type: 'double'
-  min: 0.1000
-  max: 2.5000
+  min: 0.100000
+  max: 2.500000
 method_info = dev.blinkLed('??')
 method_info =
   name: 'blinkLed'
@@ -376,11 +376,11 @@ method_info.parameters{1}
   name: 'duration_on'
   units: 'seconds'
   type: 'double'
-  min: 0.1000
-  max: 2.5000
+  min: 0.100000
+  max: 2.500000
 dev.blinkLed(3.0,0.2,20)
 Error using ModularDevice/sendRequest (line 297)
-device responded with error, Parameter value out of range: 0.1000 <= duration_on <= 2.5000
+device responded with error, Parameter value out of range: 0.100000 <= duration_on <= 2.500000
 dev.blinkLed(0.5,0.2,20)
 dev.getLedPin('?')
   name: 'getLedPin'
