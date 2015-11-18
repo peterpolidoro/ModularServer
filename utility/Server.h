@@ -99,7 +99,7 @@ private:
   unsigned char firmware_patch_;
   int request_method_index_;
   int parameter_count_;
-  JsonPrinter response_;
+  JsonPrinter json_printer_;
   bool error_;
   unsigned int eeprom_index_;
   const ConstantString *eeprom_init_name_ptr_;

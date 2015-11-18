@@ -11,7 +11,7 @@
 namespace ModularDevice
 {
 Server::Server(GenericSerialBase &serial) :
-  response_(serial)
+  json_printer_(serial)
 {
   addServerSerial(serial);
   setName(constants::empty_constant_string);
@@ -143,32 +143,32 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &name)
 
 void Server::addNullToResponse()
 {
-  response_.addNull();
+  json_printer_.addNull();
 }
 
 void Server::addResultKeyToResponse()
 {
-  response_.addKey(constants::result_constant_string);
+  json_printer_.addKey(constants::result_constant_string);
 }
 
 void Server::beginResponseObject()
 {
-  response_.beginObject();
+  json_printer_.beginObject();
 }
 
 void Server::endResponseObject()
 {
-  response_.endObject();
+  json_printer_.endObject();
 }
 
 void Server::beginResponseArray()
 {
-  response_.beginArray();
+  json_printer_.beginArray();
 }
 
 void Server::endResponseArray()
 {
-  response_.endArray();
+  json_printer_.endArray();
 }
 
 void Server::resetDefaults()
@@ -204,13 +204,13 @@ void Server::handleRequest()
     JsonSanitizer sanitizer(constants::JSON_TOKEN_MAX);
     if (sanitizer.firstCharIsValidJson(request_))
     {
-      response_.setCompactPrint();
+      json_printer_.setCompactPrint();
     }
     else
     {
-      response_.setPrettyPrint();
+      json_printer_.setPrettyPrint();
     }
-    response_.beginObject();
+    json_printer_.beginObject();
     error_ = false;
     sanitizer.sanitize(request_,constants::STRING_LENGTH_REQUEST);
     StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
@@ -239,7 +239,7 @@ void Server::handleRequest()
         addToResponse(constants::status_constant_string,JsonPrinter::SUCCESS);
       }
     }
-    response_.endObject();
+    json_printer_.endObject();
     server_serial_ptr_array_[server_serial_index_]->getStream() << "\n";
   }
   incrementServerSerial();
@@ -389,7 +389,7 @@ void Server::methodHelp(int method_index)
   addToResponse(constants::name_constant_string,method_name_ptr);
 
   addKeyToResponse(constants::parameters_constant_string);
-  response_.beginArray();
+  json_printer_.beginArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   const ConstantString* parameter_name_ptr;
   char parameter_name_char_array[constants::STRING_LENGTH_PARAMETER_NAME];
@@ -399,7 +399,7 @@ void Server::methodHelp(int method_index)
     parameter_name_ptr->copy(parameter_name_char_array);
     addToResponse(parameter_name_char_array);
   }
-  response_.endArray();
+  json_printer_.endArray();
   addToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
   endResponseObject();
 }
@@ -411,13 +411,13 @@ void Server::verboseMethodHelp(int method_index)
   addToResponse(constants::name_constant_string,method_name_ptr);
 
   addKeyToResponse(constants::parameters_constant_string);
-  response_.beginArray();
+  json_printer_.beginArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
   {
     parameterHelp(*(parameter_ptr_array[i]));
   }
-  response_.endArray();
+  json_printer_.endArray();
   addToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
   endResponseObject();
 }
@@ -853,7 +853,7 @@ void Server::initializeEeprom()
 void Server::incrementServerSerial()
 {
   server_serial_index_ = (server_serial_index_ + 1) % server_serial_ptr_array_.size();
-  response_.setSerial(*server_serial_ptr_array_[server_serial_index_]);
+  json_printer_.setSerial(*server_serial_ptr_array_[server_serial_index_]);
 }
 
 void Server::getDeviceInfoCallback()
@@ -891,12 +891,12 @@ void Server::getResponseCodesCallback()
 void Server::getParametersCallback()
 {
   addKeyToResponse(constants::parameters_constant_string);
-  response_.beginArray();
+  json_printer_.beginArray();
   for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
   {
     parameterHelp(parameter_array_[parameter_index]);
   }
-  response_.endArray();
+  json_printer_.endArray();
 }
 
 void Server::help()
