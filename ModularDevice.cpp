@@ -85,24 +85,24 @@ void ModularDevice::addResultKeyToResponse()
   server_.addResultKeyToResponse();
 }
 
-void ModularDevice::startResponseObject()
+void ModularDevice::beginResponseObject()
 {
-  server_.startResponseObject();
+  server_.beginResponseObject();
 }
 
-void ModularDevice::stopResponseObject()
+void ModularDevice::endResponseObject()
 {
-  server_.stopResponseObject();
+  server_.endResponseObject();
 }
 
-void ModularDevice::startResponseArray()
+void ModularDevice::beginResponseArray()
 {
-  server_.startResponseArray();
+  server_.beginResponseArray();
 }
 
-void ModularDevice::stopResponseArray()
+void ModularDevice::endResponseArray()
 {
-  server_.stopResponseArray();
+  server_.endResponseArray();
 }
 
 void ModularDevice::startServer(const int baudrate)

@@ -77,10 +77,10 @@ public:
   void addResultKeyToResponse();
   template<typename T>
   void addResultToResponse(T value);
-  void startResponseObject();
-  void stopResponseObject();
-  void startResponseArray();
-  void stopResponseArray();
+  void beginResponseObject();
+  void endResponseObject();
+  void beginResponseArray();
+  void endResponseArray();
   void resetDefaults();
   void startServer(const int baudrate);
   void handleRequest();

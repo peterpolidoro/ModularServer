@@ -58,12 +58,12 @@ void repeatCallback()
   const char* string = modular_device.getParameterValue(constants::string_parameter_name);
   long count = modular_device.getParameterValue(constants::count_parameter_name);
   modular_device.addResultKeyToResponse();
-  modular_device.startResponseArray();
+  modular_device.beginResponseArray();
   for (int i=0; i < count; i++)
   {
     modular_device.addToResponse(string);
   }
-  modular_device.stopResponseArray();
+  modular_device.endResponseArray();
 }
 
 void charsAtCallback()
@@ -82,19 +82,19 @@ void charsAtCallback()
     }
   }
   modular_device.addResultKeyToResponse();
-  modular_device.startResponseArray();
+  modular_device.beginResponseArray();
   for (ArduinoJson::JsonArray::iterator it=index_array.begin();
        it != index_array.end();
        ++it)
   {
-    modular_device.startResponseObject();
+    modular_device.beginResponseObject();
     long index = *it;
     modular_device.addToResponse("index",index);
     char c = string[index];
     modular_device.addToResponse("char",c);
-    modular_device.stopResponseObject();
+    modular_device.endResponseObject();
   }
-  modular_device.stopResponseArray();
+  modular_device.endResponseArray();
 }
 
 void startingCharsCallback()

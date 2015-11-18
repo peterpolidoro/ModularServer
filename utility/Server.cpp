@@ -151,24 +151,24 @@ void Server::addResultKeyToResponse()
   response_.addKey(constants::result_constant_string);
 }
 
-void Server::startResponseObject()
+void Server::beginResponseObject()
 {
-  response_.startObject();
+  response_.beginObject();
 }
 
-void Server::stopResponseObject()
+void Server::endResponseObject()
 {
-  response_.stopObject();
+  response_.endObject();
 }
 
-void Server::startResponseArray()
+void Server::beginResponseArray()
 {
-  response_.startArray();
+  response_.beginArray();
 }
 
-void Server::stopResponseArray()
+void Server::endResponseArray()
 {
-  response_.stopArray();
+  response_.endArray();
 }
 
 void Server::resetDefaults()
@@ -210,7 +210,7 @@ void Server::handleRequest()
     {
       response_.setPrettyPrint();
     }
-    response_.startObject();
+    response_.beginObject();
     error_ = false;
     sanitizer.sanitize(request_,constants::STRING_LENGTH_REQUEST);
     StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
@@ -239,7 +239,7 @@ void Server::handleRequest()
         addToResponse(constants::status_constant_string,JsonPrinter::SUCCESS);
       }
     }
-    response_.stopObject();
+    response_.endObject();
     server_serial_ptr_array_[server_serial_index_]->getStream() << "\n";
   }
   incrementServerSerial();
@@ -384,12 +384,12 @@ void Server::executeMethod()
 
 void Server::methodHelp(int method_index)
 {
-  startResponseObject();
+  beginResponseObject();
   const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
   addToResponse(constants::name_constant_string,method_name_ptr);
 
   addKeyToResponse(constants::parameters_constant_string);
-  response_.startArray();
+  response_.beginArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   const ConstantString* parameter_name_ptr;
   char parameter_name_char_array[constants::STRING_LENGTH_PARAMETER_NAME];
@@ -399,27 +399,27 @@ void Server::methodHelp(int method_index)
     parameter_name_ptr->copy(parameter_name_char_array);
     addToResponse(parameter_name_char_array);
   }
-  response_.stopArray();
+  response_.endArray();
   addToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
-  stopResponseObject();
+  endResponseObject();
 }
 
 void Server::verboseMethodHelp(int method_index)
 {
-  startResponseObject();
+  beginResponseObject();
   const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
   addToResponse(constants::name_constant_string,method_name_ptr);
 
   addKeyToResponse(constants::parameters_constant_string);
-  response_.startArray();
+  response_.beginArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
   {
     parameterHelp(*(parameter_ptr_array[i]));
   }
-  response_.stopArray();
+  response_.endArray();
   addToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
-  stopResponseObject();
+  endResponseObject();
 }
 
 int Server::processParameterString(const char *parameter_string)
@@ -487,7 +487,7 @@ int Server::findParameterIndex(const ConstantString &parameter_name)
 
 void Server::parameterHelp(Parameter &parameter)
 {
-  startResponseObject();
+  beginResponseObject();
   const ConstantString* parameter_name_ptr = parameter.getNamePointer();
   addToResponse(constants::name_constant_string,parameter_name_ptr);
 
@@ -595,7 +595,7 @@ void Server::parameterHelp(Parameter &parameter)
         break;
       }
   }
-  stopResponseObject();
+  endResponseObject();
 }
 
 bool Server::checkParameters()
@@ -862,11 +862,11 @@ void Server::getDeviceInfoCallback()
   addToResponse(constants::model_number_constant_string,model_number_);
   addToResponse(constants::serial_number_constant_string,getSerialNumber());
   addKeyToResponse(constants::firmware_version_constant_string);
-  startResponseObject();
+  beginResponseObject();
   addToResponse(constants::major_constant_string,firmware_major_);
   addToResponse(constants::minor_constant_string,firmware_minor_);
   addToResponse(constants::patch_constant_string,firmware_patch_);
-  stopResponseObject();
+  endResponseObject();
 }
 
 void Server::getMethodIdsCallback()
@@ -891,23 +891,23 @@ void Server::getResponseCodesCallback()
 void Server::getParametersCallback()
 {
   addKeyToResponse(constants::parameters_constant_string);
-  response_.startArray();
+  response_.beginArray();
   for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
   {
     parameterHelp(parameter_array_[parameter_index]);
   }
-  response_.stopArray();
+  response_.endArray();
 }
 
 void Server::help()
 {
   addKeyToResponse(constants::device_info_constant_string);
-  startResponseObject();
+  beginResponseObject();
   getDeviceInfoCallback();
-  stopResponseObject();
+  endResponseObject();
 
   addKeyToResponse(constants::methods_constant_string);
-  startResponseArray();
+  beginResponseArray();
   const ConstantString* method_name_ptr;
   for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {
@@ -917,18 +917,18 @@ void Server::help()
       addToResponse(method_name_ptr);
     }
   }
-  stopResponseArray();
+  endResponseArray();
 }
 
 void Server::verboseHelp()
 {
   addKeyToResponse(constants::device_info_constant_string);
-  startResponseObject();
+  beginResponseObject();
   getDeviceInfoCallback();
-  stopResponseObject();
+  endResponseObject();
 
   addKeyToResponse(constants::methods_constant_string);
-  startResponseArray();
+  beginResponseArray();
   for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {
     if (!method_array_[method_index].isReserved())
@@ -936,6 +936,6 @@ void Server::verboseHelp()
       verboseMethodHelp(method_index);
     }
   }
-  stopResponseArray();
+  endResponseArray();
 }
 }

@@ -29,10 +29,10 @@ addKeyToResponse	KEYWORD2
 addToResponse	KEYWORD2
 addNullToResponse	KEYWORD2
 sendErrorResponse	KEYWORD2
-startResponseObject	KEYWORD2
-stopResponseObject	KEYWORD2
-startResponseArray	KEYWORD2
-stopResponseArray	KEYWORD2
+beginResponseObject	KEYWORD2
+endResponseObject	KEYWORD2
+beginResponseArray	KEYWORD2
+endResponseArray	KEYWORD2
 startServer	KEYWORD2
 handleServerRequests	KEYWORD2
 resetDefaults	KEYWORD2
