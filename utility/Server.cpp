@@ -196,13 +196,9 @@ void Server::handleRequest()
   while (server_serial_ptr_array_[server_serial_index_]->getStream().available() > 0)
   {
     int bytes_read = server_serial_ptr_array_[server_serial_index_]->getStream().readBytesUntil(JsonPrinter::EOL,request_,constants::STRING_LENGTH_REQUEST);
-    if (bytes_read == 0)
+    if ((bytes_read == 0) || (bytes_read == constants::STRING_LENGTH_REQUEST))
     {
       continue;
-    }
-    if (bytes_read == constants::STRING_LENGTH_REQUEST)
-    {
-      bytes_read--;
     }
     request_[bytes_read] = 0;
     JsonSanitizer sanitizer(constants::JSON_TOKEN_MAX);
