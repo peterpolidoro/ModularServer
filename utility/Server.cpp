@@ -11,7 +11,7 @@
 namespace ModularDevice
 {
 Server::Server(GenericSerialBase &serial) :
-  json_stream_(serial)
+  json_stream_(serial.getStream())
 {
   addServerSerial(serial);
   setName(constants::empty_constant_string);
@@ -853,7 +853,7 @@ void Server::initializeEeprom()
 void Server::incrementServerSerial()
 {
   server_serial_index_ = (server_serial_index_ + 1) % server_serial_ptr_array_.size();
-  json_stream_.setSerial(*server_serial_ptr_array_[server_serial_index_]);
+  json_stream_.setStream(server_serial_ptr_array_[server_serial_index_]->getStream());
 }
 
 void Server::getDeviceInfoCallback()
