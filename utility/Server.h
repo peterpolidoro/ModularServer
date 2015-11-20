@@ -23,7 +23,7 @@
 #include "Method.h"
 #include "SavedVariable.h"
 #include "Constants.h"
-#include "JsonPrinter.h"
+#include "JsonStream.h"
 
 
 namespace ModularDevice
@@ -99,7 +99,7 @@ private:
   unsigned char firmware_patch_;
   int request_method_index_;
   int parameter_count_;
-  JsonPrinter json_printer_;
+  JsonStream json_stream_;
   bool error_;
   unsigned int eeprom_index_;
   const ConstantString *eeprom_init_name_ptr_;

@@ -13,7 +13,7 @@
 #include "WProgram.h"
 #endif
 #include "ConstantVariable.h"
-#include "JsonPrinter.h"
+#include "JsonStream.h"
 #include "Constants.h"
 
 
@@ -49,8 +49,8 @@ public:
 private:
   const ConstantString *name_ptr_;
   const ConstantString *units_ptr_;
-  JsonPrinter::JsonTypes type_;
-  JsonPrinter::JsonTypes array_element_type_;
+  JsonStream::JsonTypes type_;
+  JsonStream::JsonTypes array_element_type_;
   constants::NumberType min_;
   constants::NumberType max_;
   bool range_is_set_;
@@ -58,8 +58,8 @@ private:
   bool compareName(const ConstantString &name_to_compare);
   const ConstantString* getNamePointer();
   const ConstantString* getUnitsPointer();
-  JsonPrinter::JsonTypes getType();
-  JsonPrinter::JsonTypes getArrayElementType();
+  JsonStream::JsonTypes getType();
+  JsonStream::JsonTypes getArrayElementType();
   bool rangeIsSet();
   constants::NumberType getMin();
   constants::NumberType getMax();

@@ -4,7 +4,7 @@
 #include "Streaming.h"
 #include "ArduinoJson.h"
 #include "JsonSanitizer.h"
-#include "JsonPrinter.h"
+#include "JsonStream.h"
 #include "Array.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"

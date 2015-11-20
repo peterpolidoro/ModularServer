@@ -104,31 +104,31 @@ void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
 template<typename K>
 void Server::addKeyToResponse(K key)
 {
-  json_printer_.addKey(key);
+  json_stream_.addKey(key);
 }
 
 template<typename T>
 void Server::addToResponse(T value)
 {
-  json_printer_.add(value);
+  json_stream_.add(value);
 }
 
 template<typename K, typename T>
 void Server::addToResponse(K key, T value)
 {
-  json_printer_.add(key,value);
+  json_stream_.add(key,value);
 }
 
 template<typename K>
 void Server::addNullToResponse(K key)
 {
-  json_printer_.addNull(key);
+  json_stream_.addNull(key);
 }
 
 template<typename T>
 void Server::sendErrorResponse(T error)
 {
-  addToResponse(constants::status_constant_string,JsonPrinter::ERROR);
+  addToResponse(constants::status_constant_string,JsonStream::ERROR);
   addToResponse(constants::error_message_constant_string,error);
   error_ = true;
 }
@@ -136,7 +136,7 @@ void Server::sendErrorResponse(T error)
 template<typename T>
 void Server::addResultToResponse(T value)
 {
-  json_printer_.add(constants::result_constant_string,value);
+  json_stream_.add(constants::result_constant_string,value);
 }
 }
 

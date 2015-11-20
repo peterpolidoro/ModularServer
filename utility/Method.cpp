@@ -16,7 +16,7 @@ Method::Method()
   callback_attached_ = false;
   reserved_ = false;
   parameter_count_ = 0;
-  return_type_ = JsonPrinter::NULL_TYPE;
+  return_type_ = JsonStream::NULL_TYPE;
 }
 
 Method::Method(const ConstantString &name)
@@ -25,7 +25,7 @@ Method::Method(const ConstantString &name)
   callback_attached_ = false;
   reserved_ = false;
   parameter_count_ = 0;
-  return_type_ = JsonPrinter::NULL_TYPE;
+  return_type_ = JsonStream::NULL_TYPE;
 }
 
 void Method::setName(const ConstantString &name)
@@ -117,40 +117,40 @@ int Method::findParameterIndex(const ConstantString &parameter_name)
 
 void Method::setReturnTypeLong()
 {
-  return_type_ = JsonPrinter::LONG_TYPE;
+  return_type_ = JsonStream::LONG_TYPE;
 }
 
 void Method::setReturnTypeDouble()
 {
-  return_type_ = JsonPrinter::DOUBLE_TYPE;
+  return_type_ = JsonStream::DOUBLE_TYPE;
 }
 
 void Method::setReturnTypeBool()
 {
-  return_type_ = JsonPrinter::BOOL_TYPE;
+  return_type_ = JsonStream::BOOL_TYPE;
 }
 
 void Method::setReturnTypeNull()
 {
-  return_type_ = JsonPrinter::NULL_TYPE;
+  return_type_ = JsonStream::NULL_TYPE;
 }
 
 void Method::setReturnTypeString()
 {
-  return_type_ = JsonPrinter::STRING_TYPE;
+  return_type_ = JsonStream::STRING_TYPE;
 }
 
 void Method::setReturnTypeObject()
 {
-  return_type_ = JsonPrinter::OBJECT_TYPE;
+  return_type_ = JsonStream::OBJECT_TYPE;
 }
 
 void Method::setReturnTypeArray()
 {
-  return_type_ = JsonPrinter::ARRAY_TYPE;
+  return_type_ = JsonStream::ARRAY_TYPE;
 }
 
-JsonPrinter::JsonTypes Method::getReturnType()
+JsonStream::JsonTypes Method::getReturnType()
 {
   return return_type_;
 }
