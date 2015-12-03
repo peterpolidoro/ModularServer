@@ -20,8 +20,8 @@ void setSerialNumberCallback();
 class ModularDevice
 {
 public:
-  ModularDevice(GenericSerialBase &serial);
-  void addServerSerial(GenericSerialBase &serial);
+  ModularDevice(Stream &stream);
+  void addServerStream(Stream &stream);
   void setName(const ConstantString &device_name);
   void setModelNumber(const unsigned int model_number);
   void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);
@@ -69,7 +69,8 @@ public:
   void endResponseObject();
   void beginResponseArray();
   void endResponseArray();
-  void startServer(const int baudrate);
+  void startServer();
+  void stopServer();
   void handleServerRequests();
   void resetDefaults();
   void setSerialNumber(const unsigned int serial_number);

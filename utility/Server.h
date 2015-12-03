@@ -18,7 +18,6 @@
 #include "Array.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
-#include "GenericSerial.h"
 #include "Parameter.h"
 #include "Method.h"
 #include "SavedVariable.h"
@@ -31,8 +30,8 @@ namespace ModularDevice
 class Server
 {
 public:
-  Server(GenericSerialBase &serial);
-  void addServerSerial(GenericSerialBase &serial);
+  Server(Stream &stream);
+  void addServerStream(Stream &stream);
   void setName(const ConstantString &name);
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
@@ -82,11 +81,12 @@ public:
   void beginResponseArray();
   void endResponseArray();
   void resetDefaults();
-  void startServer(const int baudrate);
+  void startServer();
+  void stopServer();
   void handleRequest();
 private:
-  Array<GenericSerialBase*,constants::SERVER_SERIAL_COUNT_MAX> server_serial_ptr_array_;
-  unsigned char server_serial_index_;
+  Array<Stream*,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptr_array_;
+  unsigned char server_stream_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray *request_json_array_ptr_;
   Array<Method,constants::METHOD_COUNT_MAX> method_array_;
@@ -105,6 +105,7 @@ private:
   const ConstantString *eeprom_init_name_ptr_;
   bool eeprom_uninitialized_;
   unsigned int eeprom_initialized_index_;
+  bool server_running_;
 
   void processRequestArray();
   int processMethodString(const char *method_string);
@@ -123,7 +124,7 @@ private:
   int findSavedVariableIndex(const ConstantString &saved_variable_name);
   unsigned int getSerialNumber();
   void initializeEeprom();
-  void incrementServerSerial();
+  void incrementServerStream();
 
   // reserved methods
   void getDeviceInfoCallback();

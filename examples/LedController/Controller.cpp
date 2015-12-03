@@ -21,8 +21,8 @@ void Controller::setup()
   modular_device.setModelNumber(constants::model_number);
   modular_device.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
 
-  // Server Serial
-  modular_device.addServerSerial(constants::generic_serial2);
+  // Add Server Streams
+  modular_device.addServerStream(constants::serial2);
 
   // Saved Variables
 
@@ -51,8 +51,12 @@ void Controller::setup()
   blink_led_method.addParameter(duration_off_parameter);
   blink_led_method.addParameter(count_parameter);
 
+  // Setup Streams
+  Serial.begin(constants::baudrate);
+  constants::serial2.begin(constants::baudrate);
+
   // Start ModularDevice Server
-  modular_device.startServer(constants::baudrate);
+  modular_device.startServer();
 }
 
 void Controller::update()

@@ -10,10 +10,10 @@
 
 namespace ModularDevice
 {
-Server::Server(GenericSerialBase &serial) :
-  json_stream_(serial.getStream())
+Server::Server(Stream &stream) :
+  json_stream_(stream)
 {
-  addServerSerial(serial);
+  addServerStream(stream);
   setName(constants::empty_constant_string);
   model_number_ = 0;
   firmware_major_ = 0;
@@ -22,7 +22,8 @@ Server::Server(GenericSerialBase &serial) :
   request_method_index_ = -1;
   parameter_count_ = 0;
   error_ = false;
-  server_serial_index_ = 0;
+  server_stream_index_ = 0;
+  server_running_ = false;
 
   Method& get_device_info_method = createMethod(constants::get_device_info_method_name);
   get_device_info_method.attachReservedCallback(&Server::getDeviceInfoCallback);
@@ -53,19 +54,19 @@ Server::Server(GenericSerialBase &serial) :
   createSavedVariable(constants::serial_number_constant_string,constants::serial_number_default);
 }
 
-void Server::addServerSerial(GenericSerialBase &serial)
+void Server::addServerStream(Stream &stream)
 {
-  bool serial_found = false;
-  for (unsigned int i=0;i<server_serial_ptr_array_.size();++i)
+  bool stream_found = false;
+  for (unsigned int i=0;i<server_stream_ptr_array_.size();++i)
   {
-    if (server_serial_ptr_array_[i] == &serial)
+    if (server_stream_ptr_array_[i] == &stream)
     {
-      serial_found = true;
+      stream_found = true;
     }
   }
-  if (!serial_found)
+  if (!stream_found)
   {
-    server_serial_ptr_array_.push_back(&serial);
+    server_stream_ptr_array_.push_back(&stream);
   }
 }
 
@@ -179,21 +180,23 @@ void Server::resetDefaults()
   }
 }
 
-void Server::startServer(const int baudrate)
+void Server::startServer()
 {
   if (eeprom_uninitialized_)
   {
     initializeEeprom();
   }
-  for (unsigned int i=0;i<server_serial_ptr_array_.size();++i)
-  {
-    server_serial_ptr_array_[i]->begin(baudrate);
-  }
+  server_running_ = true;
+}
+
+void Server::stopServer()
+{
+  server_running_ = false;
 }
 
 void Server::handleRequest()
 {
-  if (json_stream_.available() > 0)
+  if (server_running_ && (json_stream_.available() > 0))
   {
     int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
     if ((bytes_read != 0) && (bytes_read != constants::STRING_LENGTH_REQUEST))
@@ -239,10 +242,9 @@ void Server::handleRequest()
       }
       json_stream_.endObject();
       json_stream_.writeNewline();
-      server_serial_ptr_array_[server_serial_index_]->getStream() << "\n";
     }
   }
-  incrementServerSerial();
+  incrementServerStream();
 }
 
 void Server::processRequestArray()
@@ -531,6 +533,8 @@ void Server::parameterHelp(Parameter &parameter)
         addToResponse(constants::type_constant_string,JsonStream::BOOL_TYPE);
         break;
       }
+    case JsonStream::NULL_TYPE:
+      break;
     case JsonStream::STRING_TYPE:
       {
         addToResponse(constants::type_constant_string,JsonStream::STRING_TYPE);
@@ -576,6 +580,8 @@ void Server::parameterHelp(Parameter &parameter)
               addToResponse(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
               break;
             }
+          case JsonStream::NULL_TYPE:
+            break;
           case JsonStream::STRING_TYPE:
             {
               addToResponse(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
@@ -668,6 +674,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
       }
     case JsonStream::BOOL_TYPE:
       break;
+    case JsonStream::NULL_TYPE:
+      break;
     case JsonStream::STRING_TYPE:
       break;
     case JsonStream::OBJECT_TYPE:
@@ -738,21 +746,15 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
                 break;
               }
             case JsonStream::BOOL_TYPE:
-              {
-                break;
-              }
+              break;
+            case JsonStream::NULL_TYPE:
+              break;
             case JsonStream::STRING_TYPE:
-              {
-                break;
-              }
+              break;
             case JsonStream::OBJECT_TYPE:
-              {
-                break;
-              }
+              break;
             case JsonStream::ARRAY_TYPE:
-              {
-                break;
-              }
+              break;
           }
         }
         break;
@@ -850,10 +852,10 @@ void Server::initializeEeprom()
   eeprom_uninitialized_ = false;
 }
 
-void Server::incrementServerSerial()
+void Server::incrementServerStream()
 {
-  server_serial_index_ = (server_serial_index_ + 1) % server_serial_ptr_array_.size();
-  json_stream_.setStream(server_serial_ptr_array_[server_serial_index_]->getStream());
+  server_stream_index_ = (server_stream_index_ + 1) % server_stream_ptr_array_.size();
+  json_stream_.setStream(*server_stream_ptr_array_[server_stream_index_]);
 }
 
 void Server::getDeviceInfoCallback()

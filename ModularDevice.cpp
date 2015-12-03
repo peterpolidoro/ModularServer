@@ -10,8 +10,8 @@
 
 namespace ModularDevice
 {
-ModularDevice::ModularDevice(GenericSerialBase &serial) :
-  server_(serial)
+ModularDevice::ModularDevice(Stream &stream) :
+  server_(stream)
 {
   Parameter& serial_number_parameter = modular_device.createParameter(constants::serial_number_constant_string);
   serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
@@ -30,9 +30,9 @@ ModularDevice::ModularDevice(GenericSerialBase &serial) :
   set_serial_number_method.addParameter(serial_number_parameter);
 }
 
-void ModularDevice::addServerSerial(GenericSerialBase &serial)
+void ModularDevice::addServerStream(Stream &stream)
 {
-  server_.addServerSerial(serial);
+  server_.addServerStream(stream);
 }
 
 void ModularDevice::setName(const ConstantString &device_name)
@@ -105,9 +105,14 @@ void ModularDevice::endResponseArray()
   server_.endResponseArray();
 }
 
-void ModularDevice::startServer(const int baudrate)
+void ModularDevice::startServer()
 {
-  server_.startServer(baudrate);
+  server_.startServer();
+}
+
+void ModularDevice::stopServer()
+{
+  server_.stopServer();
 }
 
 void ModularDevice::handleServerRequests()
@@ -126,8 +131,7 @@ void ModularDevice::setSerialNumber(const unsigned int serial_number)
 }
 }
 
-GenericSerial generic_serial(Serial);
-ModularDevice::ModularDevice modular_device(generic_serial);
+ModularDevice::ModularDevice modular_device(Serial);
 
 #ifdef __AVR__
 void ModularDevice::getMemoryFreeCallback()

@@ -20,7 +20,7 @@ void Controller::setup()
   modular_device.setModelNumber(constants::model_number);
   modular_device.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
 
-  // Server Serial
+  // Add Server Streams
 
   // Saved Variables
 
@@ -28,8 +28,11 @@ void Controller::setup()
 
   // Methods
 
+  // Setup Streams
+  Serial.begin(constants::baudrate);
+
   // Start ModularDevice Server
-  modular_device.startServer(constants::baudrate);
+  modular_device.startServer();
 }
 
 void Controller::update()
