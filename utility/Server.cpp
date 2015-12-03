@@ -143,12 +143,12 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &name)
 
 void Server::addNullToResponse()
 {
-  json_stream_.addNull();
+  json_stream_.writeNull();
 }
 
 void Server::addResultKeyToResponse()
 {
-  json_stream_.addKey(constants::result_constant_string);
+  json_stream_.writeName(constants::result_constant_string);
 }
 
 void Server::beginResponseObject()
@@ -193,54 +193,54 @@ void Server::startServer(const int baudrate)
 
 void Server::handleRequest()
 {
-  while (server_serial_ptr_array_[server_serial_index_]->getStream().available() > 0)
+  if (json_stream_.available() > 0)
   {
-    int bytes_read = server_serial_ptr_array_[server_serial_index_]->getStream().readBytesUntil(JsonStream::EOL,request_,constants::STRING_LENGTH_REQUEST);
-    if ((bytes_read == 0) || (bytes_read == constants::STRING_LENGTH_REQUEST))
+    int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
+    if ((bytes_read != 0) && (bytes_read != constants::STRING_LENGTH_REQUEST))
     {
-      continue;
-    }
-    request_[bytes_read] = 0;
-    JsonSanitizer sanitizer(constants::JSON_TOKEN_MAX);
-    if (sanitizer.firstCharIsValidJson(request_))
-    {
-      json_stream_.setCompactPrint();
-    }
-    else
-    {
-      json_stream_.setPrettyPrint();
-    }
-    json_stream_.beginObject();
-    error_ = false;
-    sanitizer.sanitize(request_,constants::STRING_LENGTH_REQUEST);
-    StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
-    if (sanitizer.firstCharIsValidJsonObject(request_))
-    {
-      addToResponse(constants::status_constant_string,JsonStream::ERROR);
-      addToResponse(constants::error_message_constant_string,constants::object_request_error_message);
-      error_ = true;
-    }
-    else
-    {
-      request_json_array_ptr_ = &(json_buffer.parseArray(request_));
-      if (request_json_array_ptr_->success())
+      request_[bytes_read] = 0;
+      JsonSanitizer sanitizer(constants::JSON_TOKEN_MAX);
+      if (sanitizer.firstCharIsValidJson(request_))
       {
-        processRequestArray();
+        json_stream_.setCompactPrint();
       }
       else
       {
+        json_stream_.setPrettyPrint();
+      }
+      json_stream_.beginObject();
+      error_ = false;
+      sanitizer.sanitize(request_,constants::STRING_LENGTH_REQUEST);
+      StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
+      if (sanitizer.firstCharIsValidJsonObject(request_))
+      {
         addToResponse(constants::status_constant_string,JsonStream::ERROR);
-        addToResponse(constants::error_message_constant_string,constants::array_parse_error_message);
-        addToResponse(constants::received_request_constant_string,request_);
+        addToResponse(constants::error_message_constant_string,constants::object_request_error_message);
         error_ = true;
       }
-      if (!error_)
+      else
       {
-        addToResponse(constants::status_constant_string,JsonStream::SUCCESS);
+        request_json_array_ptr_ = &(json_buffer.parseArray(request_));
+        if (request_json_array_ptr_->success())
+        {
+          processRequestArray();
+        }
+        else
+        {
+          addToResponse(constants::status_constant_string,JsonStream::ERROR);
+          addToResponse(constants::error_message_constant_string,constants::array_parse_error_message);
+          addToResponse(constants::received_request_constant_string,request_);
+          error_ = true;
+        }
+        if (!error_)
+        {
+          addToResponse(constants::status_constant_string,JsonStream::SUCCESS);
+        }
       }
+      json_stream_.endObject();
+      json_stream_.writeNewline();
+      server_serial_ptr_array_[server_serial_index_]->getStream() << "\n";
     }
-    json_stream_.endObject();
-    server_serial_ptr_array_[server_serial_index_]->getStream() << "\n";
   }
   incrementServerSerial();
 }
