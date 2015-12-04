@@ -15,6 +15,8 @@ void Controller::setup()
 {
   // Pin Setup
   pinMode(constants::led_pin, OUTPUT);
+  pinMode(constants::serial2_rx_pin,INPUT);
+  digitalWrite(constants::serial2_rx_pin,HIGH);
 
   // Device Info
   modular_device.setName(constants::device_name);

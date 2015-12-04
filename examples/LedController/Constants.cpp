@@ -21,6 +21,7 @@ const unsigned char firmware_minor = 1;
 const unsigned char firmware_patch = 0;
 
 HardwareSerial& serial2 = Serial2;
+const unsigned char serial2_rx_pin = 17;
 
 const double duration_min = 0.1;
 const double duration_max = 2.5;
