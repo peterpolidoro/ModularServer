@@ -53,6 +53,7 @@ extern ConstantString get_parameters_method_name;
 extern ConstantString help_method_name;
 extern ConstantString verbose_help_method_name;
 extern ConstantString object_request_error_message;
+extern ConstantString request_too_long_error_message;
 extern ConstantString array_parse_error_message;
 extern ConstantString eeprom_initialized_saved_variable_name;
 extern ConstantString parameter_error_preamble_message;

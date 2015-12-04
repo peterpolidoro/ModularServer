@@ -199,9 +199,8 @@ void Server::handleRequest()
   if (server_running_ && (json_stream_.available() > 0))
   {
     int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
-    if ((bytes_read != 0) && (bytes_read != constants::STRING_LENGTH_REQUEST))
+    if (bytes_read > 0)
     {
-      request_[bytes_read] = 0;
       JsonSanitizer sanitizer(constants::JSON_TOKEN_MAX);
       if (sanitizer.firstCharIsValidJson(request_))
       {
@@ -240,6 +239,15 @@ void Server::handleRequest()
           writeToResponse(constants::status_constant_string,JsonStream::SUCCESS);
         }
       }
+      json_stream_.endObject();
+      json_stream_.writeNewline();
+    }
+    else if (bytes_read < 0)
+    {
+      json_stream_.setCompactPrint();
+      json_stream_.beginObject();
+      writeToResponse(constants::status_constant_string,JsonStream::ERROR);
+      writeToResponse(constants::error_message_constant_string,constants::request_too_long_error_message);
       json_stream_.endObject();
       json_stream_.writeNewline();
     }

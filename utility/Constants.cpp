@@ -27,6 +27,7 @@ CONSTANT_STRING(get_parameters_method_name,"getParameters");
 CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
 CONSTANT_STRING(object_request_error_message,"JSON object requests not supported. Must use compact JSON array format for requests.");
+CONSTANT_STRING(request_too_long_error_message,"Request length too long.");
 CONSTANT_STRING(array_parse_error_message,"Parsing JSON array request failed! Could be invalid JSON or too many tokens.");
 CONSTANT_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
 CONSTANT_STRING(parameter_error_preamble_message,"Parameter value out of range: ");
