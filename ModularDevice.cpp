@@ -75,14 +75,14 @@ ArduinoJson::JsonVariant ModularDevice::getParameterValue(const ConstantString &
   return server_.getParameterValue(parameter_name);
 }
 
-void ModularDevice::addNullToResponse()
+void ModularDevice::writeNullToResponse()
 {
-  server_.addNullToResponse();
+  server_.writeNullToResponse();
 }
 
-void ModularDevice::addResultKeyToResponse()
+void ModularDevice::writeResultKeyToResponse()
 {
-  server_.addResultKeyToResponse();
+  server_.writeResultKeyToResponse();
 }
 
 void ModularDevice::beginResponseObject()
@@ -136,7 +136,7 @@ ModularDevice::ModularDevice modular_device(Serial);
 #ifdef __AVR__
 void ModularDevice::getMemoryFreeCallback()
 {
-  modular_device.addResultToResponse(freeMemory());
+  modular_device.writeResultToResponse(freeMemory());
 }
 #endif
 

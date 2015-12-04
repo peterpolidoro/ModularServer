@@ -57,27 +57,27 @@ void ModularDevice::getSavedVariableValue(const ConstantString &saved_variable_n
 }
 
 template<typename K>
-void ModularDevice::addKeyToResponse(K key)
+void ModularDevice::writeKeyToResponse(K key)
 {
-  server_.addKeyToResponse(key);
+  server_.writeKeyToResponse(key);
 }
 
 template<typename T>
-void ModularDevice::addToResponse(T value)
+void ModularDevice::writeToResponse(T value)
 {
-  server_.addToResponse(value);
+  server_.writeToResponse(value);
 }
 
 template<typename K, typename T>
-void ModularDevice::addToResponse(K key, T value)
+void ModularDevice::writeToResponse(K key, T value)
 {
-  server_.addToResponse(key,value);
+  server_.writeToResponse(key,value);
 }
 
 template<typename K>
-void ModularDevice::addNullToResponse(K key)
+void ModularDevice::writeNullToResponse(K key)
 {
-  server_.addNullToResponse(key);
+  server_.writeNullToResponse(key);
 }
 
 template<typename T>
@@ -87,9 +87,9 @@ void ModularDevice::sendErrorResponse(T error)
 }
 
 template<typename T>
-void ModularDevice::addResultToResponse(T value)
+void ModularDevice::writeResultToResponse(T value)
 {
-  server_.addResultToResponse(value);
+  server_.writeResultToResponse(value);
 }
 
 }

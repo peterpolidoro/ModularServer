@@ -102,25 +102,25 @@ void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
 }
 
 template<typename K>
-void Server::addKeyToResponse(K key)
+void Server::writeKeyToResponse(K key)
 {
-  json_stream_.writeName(key);
+  json_stream_.writeKey(key);
 }
 
 template<typename T>
-void Server::addToResponse(T value)
+void Server::writeToResponse(T value)
 {
   json_stream_.write(value);
 }
 
 template<typename K, typename T>
-void Server::addToResponse(K key, T value)
+void Server::writeToResponse(K key, T value)
 {
   json_stream_.write(key,value);
 }
 
 template<typename K>
-void Server::addNullToResponse(K key)
+void Server::writeNullToResponse(K key)
 {
   json_stream_.writeNull(key);
 }
@@ -128,13 +128,13 @@ void Server::addNullToResponse(K key)
 template<typename T>
 void Server::sendErrorResponse(T error)
 {
-  addToResponse(constants::status_constant_string,JsonStream::ERROR);
-  addToResponse(constants::error_message_constant_string,error);
+  writeToResponse(constants::status_constant_string,JsonStream::ERROR);
+  writeToResponse(constants::error_message_constant_string,error);
   error_ = true;
 }
 
 template<typename T>
-void Server::addResultToResponse(T value)
+void Server::writeResultToResponse(T value)
 {
   json_stream_.write(constants::result_constant_string,value);
 }

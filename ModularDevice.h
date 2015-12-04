@@ -52,19 +52,19 @@ public:
                              T value[],
                              const unsigned int array_index);
   template<typename K>
-  void addKeyToResponse(K key);
+  void writeKeyToResponse(K key);
   template<typename T>
-  void addToResponse(T value);
+  void writeToResponse(T value);
   template<typename K, typename T>
-  void addToResponse(K key, T value);
-  void addNullToResponse();
+  void writeToResponse(K key, T value);
+  void writeNullToResponse();
   template<typename K>
-  void addNullToResponse(K key);
+  void writeNullToResponse(K key);
   template<typename T>
   void sendErrorResponse(T error);
-  void addResultKeyToResponse();
+  void writeResultKeyToResponse();
   template<typename T>
-  void addResultToResponse(T value);
+  void writeResultToResponse(T value);
   void beginResponseObject();
   void endResponseObject();
   void beginResponseArray();
