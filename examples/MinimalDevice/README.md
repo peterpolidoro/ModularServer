@@ -108,14 +108,17 @@ Example Response:
     {
       "name":"setSerialNumber",
       "parameters":[
-        {
-          "name":"serial_number",
-          "type":"long",
-          "min":0,
-          "max":65535
-        }
+        "serial_number"
       ],
       "result_type":null
+    }
+  ],
+  "parameters":[
+    {
+      "name":"serial_number",
+      "type":"long",
+      "min":0,
+      "max":65535
     }
   ],
   "status":"success"

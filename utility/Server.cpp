@@ -923,15 +923,6 @@ void Server::help()
     }
   }
   endResponseArray();
-
-  writeKeyToResponse(constants::parameters_constant_string);
-  beginResponseArray();
-  for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
-  {
-    const ConstantString& parameter_name = parameter_array_[parameter_index].getName();
-    writeToResponse(parameter_name);
-  }
-  endResponseArray();
 }
 
 void Server::verboseHelp()
