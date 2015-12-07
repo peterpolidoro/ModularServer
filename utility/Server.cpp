@@ -395,19 +395,16 @@ void Server::executeMethod()
 void Server::methodHelp(int method_index)
 {
   beginResponseObject();
-  const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
-  writeToResponse(constants::name_constant_string,method_name_ptr);
+  const ConstantString& method_name = method_array_[method_index].getName();
+  writeToResponse(constants::name_constant_string,method_name);
 
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
-  const ConstantString* parameter_name_ptr;
-  char parameter_name_char_array[constants::STRING_LENGTH_PARAMETER_NAME];
   for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
   {
-    parameter_name_ptr = parameter_ptr_array[i]->getNamePointer();
-    parameter_name_ptr->copy(parameter_name_char_array);
-    writeToResponse(parameter_name_char_array);
+    const ConstantString& parameter_name = parameter_ptr_array[i]->getName();
+    writeToResponse(parameter_name);
   }
   json_stream_.endArray();
   writeToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
@@ -417,8 +414,8 @@ void Server::methodHelp(int method_index)
 void Server::verboseMethodHelp(int method_index)
 {
   beginResponseObject();
-  const ConstantString* method_name_ptr = method_array_[method_index].getNamePointer();
-  writeToResponse(constants::name_constant_string,method_name_ptr);
+  const ConstantString& method_name = method_array_[method_index].getName();
+  writeToResponse(constants::name_constant_string,method_name);
 
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
@@ -498,13 +495,13 @@ int Server::findParameterIndex(const ConstantString &parameter_name)
 void Server::parameterHelp(Parameter &parameter)
 {
   beginResponseObject();
-  const ConstantString* parameter_name_ptr = parameter.getNamePointer();
-  writeToResponse(constants::name_constant_string,parameter_name_ptr);
+  const ConstantString& parameter_name = parameter.getName();
+  writeToResponse(constants::name_constant_string,parameter_name);
 
   char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS];
   parameter_units[0] = 0;
-  const ConstantString* parameter_units_ptr = parameter.getUnitsPointer();
-  parameter_units_ptr->copy(parameter_units);
+  const ConstantString& units = parameter.getUnits();
+  units.copy(parameter_units);
   if (strcmp(parameter_units,"") != 0)
   {
     writeToResponse(constants::units_constant_string,parameter_units);
@@ -785,8 +782,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     strcat(error_str," <= ");
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString* parameter_name_ptr = parameter.getNamePointer();
-    parameter_name_ptr->copy(parameter_name);
+    const ConstantString& name = parameter.getName();
+    name.copy(parameter_name);
     strcat(error_str,parameter_name);
     if (type == JsonStream::ARRAY_TYPE)
     {
@@ -802,8 +799,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::status_constant_string,JsonStream::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString* parameter_name_ptr = parameter.getNamePointer();
-    parameter_name_ptr->copy(parameter_name);
+    const ConstantString& name = parameter.getName();
+    name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
     strcat(error_str,parameter_name);
@@ -818,8 +815,8 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::status_constant_string,JsonStream::ERROR);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString* parameter_name_ptr = parameter.getNamePointer();
-    parameter_name_ptr->copy(parameter_name);
+    const ConstantString& name = parameter.getName();
+    name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
     strcat(error_str,parameter_name);
@@ -881,13 +878,12 @@ void Server::getDeviceInfoCallback()
 
 void Server::getMethodIdsCallback()
 {
-  const ConstantString* method_name_ptr;
   for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {
     if (!method_array_[method_index].isReserved())
     {
-      method_name_ptr = method_array_[method_index].getNamePointer();
-      writeToResponse(method_name_ptr,method_index);
+      const ConstantString& method_name = method_array_[method_index].getName();
+      writeToResponse(method_name,method_index);
     }
   }
 }
@@ -918,14 +914,22 @@ void Server::help()
 
   writeKeyToResponse(constants::methods_constant_string);
   beginResponseArray();
-  const ConstantString* method_name_ptr;
   for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
   {
     if (!method_array_[method_index].isReserved())
     {
-      method_name_ptr = method_array_[method_index].getNamePointer();
-      writeToResponse(method_name_ptr);
+      const ConstantString& method_name = method_array_[method_index].getName();
+      writeToResponse(method_name);
     }
+  }
+  endResponseArray();
+
+  writeKeyToResponse(constants::parameters_constant_string);
+  beginResponseArray();
+  for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
+  {
+    const ConstantString& parameter_name = parameter_array_[parameter_index].getName();
+    writeToResponse(parameter_name);
   }
   endResponseArray();
 }
@@ -943,8 +947,16 @@ void Server::verboseHelp()
   {
     if (!method_array_[method_index].isReserved())
     {
-      verboseMethodHelp(method_index);
+      methodHelp(method_index);
     }
+  }
+  endResponseArray();
+
+  writeKeyToResponse(constants::parameters_constant_string);
+  beginResponseArray();
+  for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
+  {
+    parameterHelp(parameter_array_[parameter_index]);
   }
   endResponseArray();
 }

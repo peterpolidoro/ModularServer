@@ -44,7 +44,7 @@ private:
   bool callback_attached_;
   bool compareName(const char *name_to_compare);
   bool compareName(const ConstantString &name_to_compare);
-  const ConstantString* getNamePointer();
+  const ConstantString& getName();
   void callback();
   ReservedCallback reserved_callback_;
   bool reserved_;

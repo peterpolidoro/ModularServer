@@ -43,11 +43,11 @@ void Method::attachCallback(Callback callback)
 void Method::addParameter(Parameter &parameter)
 {
   char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
-  const ConstantString* parameter_name_ptr = parameter.getNamePointer();
-  parameter_name_ptr->copy(parameter_name);
+  const ConstantString& name = parameter.getName();
+  name.copy(parameter_name);
   if (strlen(parameter_name) > 0)
   {
-    int parameter_index = findParameterIndex(*parameter_name_ptr);
+    int parameter_index = findParameterIndex(parameter_name);
     if (parameter_index < 0)
     {
       parameter_ptr_array_.push_back(&parameter);
@@ -68,9 +68,9 @@ bool Method::compareName(const ConstantString &name_to_compare)
   return (&name_to_compare == name_ptr_);
 }
 
-const ConstantString* Method::getNamePointer()
+const ConstantString& Method::getName()
 {
-  return name_ptr_;
+  return *name_ptr_;
 }
 
 void Method::callback()

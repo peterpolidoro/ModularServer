@@ -130,14 +130,14 @@ bool Parameter::compareName(const ConstantString &name_to_compare)
   return (&name_to_compare == name_ptr_);
 }
 
-const ConstantString* Parameter::getNamePointer()
+const ConstantString& Parameter::getName()
 {
-  return name_ptr_;
+  return *name_ptr_;
 }
 
-const ConstantString* Parameter::getUnitsPointer()
+const ConstantString& Parameter::getUnits()
 {
-  return units_ptr_;
+  return *units_ptr_;
 }
 
 JsonStream::JsonTypes Parameter::getType()
