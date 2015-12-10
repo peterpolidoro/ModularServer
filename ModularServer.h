@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// ModularDevice.h
+// ModularServer.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef MODULAR_DEVICE_H
-#define MODULAR_DEVICE_H
+#ifndef MODULAR_SERVER_H
+#define MODULAR_SERVER_H
 #include "utility/Server.h"
 
 
@@ -17,10 +17,10 @@ void getMemoryFreeCallback();
 void resetDefaultsCallback();
 void setSerialNumberCallback();
 
-class ModularDevice
+class ModularServer
 {
 public:
-  ModularDevice(Stream &stream);
+  ModularServer(Stream &stream);
   void addServerStream(Stream &stream);
   void setName(const ConstantString &device_name);
   void setModelNumber(const unsigned int model_number);
@@ -78,8 +78,8 @@ private:
   Server server_;
 };
 }
-#include "ModularDeviceDefinitions.h"
+#include "ModularServerDefinitions.h"
 
-extern ModularDevice::ModularDevice modular_device;
+extern ModularDevice::ModularServer modular_server;
 
 #endif

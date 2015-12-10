@@ -8,7 +8,7 @@
 #ifndef CALLBACKS_H
 #define CALLBACKS_H
 #include "ArduinoJson.h"
-#include "ModularDevice.h"
+#include "ModularServer.h"
 #include "Constants.h"
 #include "Controller.h"
 

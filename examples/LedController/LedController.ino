@@ -9,7 +9,7 @@
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
 #include "SavedVariable.h"
-#include "ModularDevice.h"
+#include "ModularServer.h"
 #include "NonBlockBlink.h"
 #include "Constants.h"
 #include "Callbacks.h"

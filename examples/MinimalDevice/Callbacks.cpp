@@ -12,7 +12,7 @@ namespace callbacks
 {
 // Callbacks must be non-blocking (avoid 'delay')
 //
-// modular_device.getParameterValue must be cast to either:
+// modular_server.getParameterValue must be cast to either:
 // const char*
 // long
 // double
@@ -22,7 +22,7 @@ namespace callbacks
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// modular_device.getSavedVariableValue type must match the saved variable default type
-// modular_device.setSavedVariableValue type must match the saved variable default type
+// modular_server.getSavedVariableValue type must match the saved variable default type
+// modular_server.setSavedVariableValue type must match the saved variable default type
 
 }

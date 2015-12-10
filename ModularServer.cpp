@@ -1,19 +1,19 @@
 // ----------------------------------------------------------------------------
-// ModularDevice.cpp
+// ModularServer.cpp
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "ModularDevice.h"
+#include "ModularServer.h"
 
 
 namespace ModularDevice
 {
-ModularDevice::ModularDevice(Stream &stream) :
+ModularServer::ModularServer(Stream &stream) :
   server_(stream)
 {
-  Parameter& serial_number_parameter = modular_device.createParameter(constants::serial_number_constant_string);
+  Parameter& serial_number_parameter = modular_server.createParameter(constants::serial_number_constant_string);
   serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
 
 #ifdef __AVR__
@@ -30,123 +30,123 @@ ModularDevice::ModularDevice(Stream &stream) :
   set_serial_number_method.addParameter(serial_number_parameter);
 }
 
-void ModularDevice::addServerStream(Stream &stream)
+void ModularServer::addServerStream(Stream &stream)
 {
   server_.addServerStream(stream);
 }
 
-void ModularDevice::setName(const ConstantString &device_name)
+void ModularServer::setName(const ConstantString &device_name)
 {
   server_.setName(device_name);
 }
 
-void ModularDevice::setModelNumber(const unsigned int model_number)
+void ModularServer::setModelNumber(const unsigned int model_number)
 {
   server_.setModelNumber(model_number);
 }
 
-void ModularDevice::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
+void ModularServer::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
 {
   server_.setFirmwareVersion(firmware_major,firmware_minor,firmware_patch);
 }
 
-Method& ModularDevice::createMethod(const ConstantString &method_name)
+Method& ModularServer::createMethod(const ConstantString &method_name)
 {
   return server_.createMethod(method_name);
 }
 
-Method& ModularDevice::copyMethod(Method &method,const ConstantString &method_name)
+Method& ModularServer::copyMethod(Method &method,const ConstantString &method_name)
 {
   return server_.copyMethod(method,method_name);
 }
 
-Parameter& ModularDevice::createParameter(const ConstantString &parameter_name)
+Parameter& ModularServer::createParameter(const ConstantString &parameter_name)
 {
   return server_.createParameter(parameter_name);
 }
 
-Parameter& ModularDevice::copyParameter(Parameter &parameter,const ConstantString &parameter_name)
+Parameter& ModularServer::copyParameter(Parameter &parameter,const ConstantString &parameter_name)
 {
   return server_.copyParameter(parameter,parameter_name);
 }
 
-ArduinoJson::JsonVariant ModularDevice::getParameterValue(const ConstantString &parameter_name)
+ArduinoJson::JsonVariant ModularServer::getParameterValue(const ConstantString &parameter_name)
 {
   return server_.getParameterValue(parameter_name);
 }
 
-void ModularDevice::writeNullToResponse()
+void ModularServer::writeNullToResponse()
 {
   server_.writeNullToResponse();
 }
 
-void ModularDevice::writeResultKeyToResponse()
+void ModularServer::writeResultKeyToResponse()
 {
   server_.writeResultKeyToResponse();
 }
 
-void ModularDevice::beginResponseObject()
+void ModularServer::beginResponseObject()
 {
   server_.beginResponseObject();
 }
 
-void ModularDevice::endResponseObject()
+void ModularServer::endResponseObject()
 {
   server_.endResponseObject();
 }
 
-void ModularDevice::beginResponseArray()
+void ModularServer::beginResponseArray()
 {
   server_.beginResponseArray();
 }
 
-void ModularDevice::endResponseArray()
+void ModularServer::endResponseArray()
 {
   server_.endResponseArray();
 }
 
-void ModularDevice::startServer()
+void ModularServer::startServer()
 {
   server_.startServer();
 }
 
-void ModularDevice::stopServer()
+void ModularServer::stopServer()
 {
   server_.stopServer();
 }
 
-void ModularDevice::handleServerRequests()
+void ModularServer::handleServerRequests()
 {
   server_.handleRequest();
 }
 
-void ModularDevice::resetDefaults()
+void ModularServer::resetDefaults()
 {
   server_.resetDefaults();
 }
 
-void ModularDevice::setSerialNumber(const unsigned int serial_number)
+void ModularServer::setSerialNumber(const unsigned int serial_number)
 {
   server_.setSerialNumber(serial_number);
 }
 }
 
-ModularDevice::ModularDevice modular_device(Serial);
+ModularDevice::ModularServer modular_server(Serial);
 
 #ifdef __AVR__
 void ModularDevice::getMemoryFreeCallback()
 {
-  modular_device.writeResultToResponse(freeMemory());
+  modular_server.writeResultToResponse(freeMemory());
 }
 #endif
 
 void ModularDevice::resetDefaultsCallback()
 {
-  modular_device.resetDefaults();
+  modular_server.resetDefaults();
 }
 
 void ModularDevice::setSerialNumberCallback()
 {
-  unsigned int serial_number = (long)modular_device.getParameterValue(constants::serial_number_constant_string);
-  modular_device.setSerialNumber(serial_number);
+  unsigned int serial_number = (long)modular_server.getParameterValue(constants::serial_number_constant_string);
+  modular_server.setSerialNumber(serial_number);
 }

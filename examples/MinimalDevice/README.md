@@ -18,7 +18,7 @@ Set the baudrate to match the value in the Arduino sketch (9600).
 
 Set the line ending to 'Newline'.
 
-To get help information about the Arduino device, type a single
+To get help information about the modular device, type a single
 question mark ? into the input field and press the 'Send' button or
 press the 'Enter' key.
 
@@ -70,7 +70,7 @@ Example Response:
 }
 ```
 
-To get more verbose help about the Arduino device, including
+To get more verbose help about the modular device, including
 information about the parameters each method takes, type two question
 marks ?? into the input field and press the 'Send' button or press the
 'Enter' key.

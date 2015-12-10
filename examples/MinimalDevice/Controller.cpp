@@ -16,9 +16,9 @@ void Controller::setup()
   // Pin Setup
 
   // Device Info
-  modular_device.setName(constants::device_name);
-  modular_device.setModelNumber(constants::model_number);
-  modular_device.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
+  modular_server.setName(constants::device_name);
+  modular_server.setModelNumber(constants::model_number);
+  modular_server.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
 
   // Add Server Streams
 
@@ -32,12 +32,12 @@ void Controller::setup()
   Serial.begin(constants::baudrate);
 
   // Start ModularDevice Server
-  modular_device.startServer();
+  modular_server.startServer();
 }
 
 void Controller::update()
 {
-  modular_device.handleServerRequests();
+  modular_server.handleServerRequests();
 }
 
 Controller controller;
