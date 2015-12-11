@@ -19,6 +19,9 @@ extern const unsigned char firmware_major;
 extern const unsigned char firmware_minor;
 extern const unsigned char firmware_patch;
 
+extern HardwareSerial& serial2;
+extern const unsigned char serial2_rx_pin;
+
 extern const int count_min;
 extern const int count_max;
 

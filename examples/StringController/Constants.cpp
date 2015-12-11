@@ -19,6 +19,9 @@ const unsigned char firmware_major = 0;
 const unsigned char firmware_minor = 1;
 const unsigned char firmware_patch = 0;
 
+HardwareSerial& serial2 = Serial2;
+const unsigned char serial2_rx_pin = 17;
+
 const int count_min = 1;
 const int count_max = 100;
 
