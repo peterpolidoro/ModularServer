@@ -57,7 +57,7 @@ void Controller::setup()
   Serial.begin(constants::baudrate);
   constants::serial2.begin(constants::baudrate);
 
-  // Start ModularDevice Server
+  // Start Modular Device Server
   modular_server.startServer();
 }
 

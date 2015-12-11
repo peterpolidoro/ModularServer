@@ -94,7 +94,7 @@ void Controller::setup()
   // Setup Streams
   Serial.begin(constants::baudrate);
 
-  // Start ModularDevice Server
+  // Start Modular Device Server
   modular_server.startServer();
 }
 

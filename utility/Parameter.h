@@ -19,9 +19,6 @@
 
 namespace ModularDevice
 {
-class Command;
-class ModularDevice;
-
 class Parameter
 {
 public:

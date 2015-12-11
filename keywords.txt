@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map For ModularDevice
+# Syntax Coloring Map For ModularServer
 #######################################
 
 #######################################
