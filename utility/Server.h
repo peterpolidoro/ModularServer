@@ -101,6 +101,7 @@ private:
   int parameter_count_;
   JsonStream json_stream_;
   bool error_;
+  bool result_in_response_;
   unsigned int eeprom_index_;
   const ConstantString *eeprom_init_name_ptr_;
   bool eeprom_uninitialized_;
@@ -117,7 +118,8 @@ private:
   void verboseMethodHelp(int method_index);
   int processParameterString(const char *parameter_string);
   int findParameterIndex(const char *parameter_name);
-  int findParameterIndex(const ConstantString &parameter_name);
+  int findMethodParameterIndex(const char *parameter_name);
+  int findMethodParameterIndex(const ConstantString &parameter_name);
   void parameterHelp(Parameter &parameter);
   bool checkParameters();
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);

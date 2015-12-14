@@ -128,8 +128,12 @@ void Server::writeNullToResponse(K key)
 template<typename T>
 void Server::sendErrorResponse(T error)
 {
-  writeToResponse(constants::status_constant_string,JsonStream::ERROR);
-  writeToResponse(constants::error_message_constant_string,error);
+  writeKeyToResponse(constants::error_constant_string);
+  beginResponseObject();
+  writeToResponse(constants::message_constant_string,constants::server_error_error_message);
+  writeToResponse(constants::data_constant_string,error);
+  writeToResponse(constants::code_constant_string,constants::server_error_error_code);
+  endResponseObject();
   error_ = true;
 }
 
@@ -137,6 +141,7 @@ template<typename T>
 void Server::writeResultToResponse(T value)
 {
   json_stream_.write(constants::result_constant_string,value);
+  result_in_response_ = true;
 }
 }
 
