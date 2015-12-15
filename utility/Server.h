@@ -110,16 +110,16 @@ private:
 
   void processRequestArray();
   int processMethodString(const char *method_string);
-  int findMethodIndex(const char *method_name);
-  int findMethodIndex(const ConstantString &method_name);
+  template<typename T>
+  int findMethodIndex(T method_name);
   int countJsonArrayElements(ArduinoJson::JsonArray &json_array);
   void executeMethod();
-  void methodHelp(int method_index);
-  void verboseMethodHelp(int method_index);
+  void methodHelp(bool verbose, int method_index);
   int processParameterString(const char *parameter_string);
   int findParameterIndex(const char *parameter_name);
-  int findMethodParameterIndex(const char *parameter_name);
-  int findMethodParameterIndex(const ConstantString &parameter_name);
+  int findParameterIndex(const ConstantString &parameter_name);
+  int findMethodParameterIndex(int method_index, const char *parameter_name);
+  int findMethodParameterIndex(int method_index, const ConstantString &parameter_name);
   void parameterHelp(Parameter &parameter);
   bool checkParameters();
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
@@ -127,6 +127,8 @@ private:
   unsigned int getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
+  void help(bool verbose);
+  void writeDeviceInfoToResponse();
 
   // reserved methods
   void getDeviceInfoCallback();

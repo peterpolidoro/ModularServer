@@ -30,33 +30,34 @@ Example Response:
 
 ```json
 {
-  "method":"?",
-  "device_info":{
-    "name":"string_controller",
-    "model_number":1002,
-    "serial_number":0,
-    "firmware_version":{
-      "major":0,
-      "minor":1,
-      "patch":0
-    }
-  },
-  "methods":[
-    "getMemoryFree",
-    "resetDefaults",
-    "setSerialNumber",
-    "echo",
-    "length",
-    "startsWith",
-    "repeat",
-    "charsAt",
-    "startingChars",
-    "setStartingCharsCount",
-    "getStartingCharsCount",
-    "setStoredString",
-    "getStoredString"
-  ],
-  "status":"success"
+  "id":"?",
+  "result":{
+    "device_info":{
+      "name":"string_controller",
+      "model_number":1002,
+      "serial_number":0,
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      }
+    },
+    "methods":[
+      "getMemoryFree",
+      "resetDefaults",
+      "setSerialNumber",
+      "echo",
+      "length",
+      "startsWith",
+      "repeat",
+      "charsAt",
+      "startingChars",
+      "setStartingCharsCount",
+      "getStartingCharsCount",
+      "setStoredString",
+      "getStoredString"
+    ]
+  }
 }
 ```
 
@@ -74,9 +75,8 @@ Example Response:
 
 ```json
 {
-  "method":"getStoredString",
-  "result":"",
-  "status":"success"
+  "id":"getStoredString",
+  "result":""
 }
 ```
 
@@ -90,9 +90,12 @@ Example Response:
 
 ```json
 {
-  "method":"repeat",
-  "status":"error",
-  "error_message":"Incorrect number of parameters. 0 given. 2 needed."
+  "id":"repeat",
+  "error":{
+    "message":"Invalid params",
+    "data":"Incorrect number of parameters. 0 given. 2 needed.",
+    "code":-32602
+  }
 }
 ```
 
@@ -109,16 +112,17 @@ Example Response:
 
 ```json
 {
-  "method":"repeat",
-  "method_info":{
-    "name":"repeat",
-    "parameters":[
-      "string",
-      "count"
-    ],
-    "result_type":"array"
-  },
-  "status":"success"
+  "id":"repeat",
+  "result":{
+    "method_info":{
+      "name":"repeat",
+      "parameters":[
+        "string",
+        "count"
+      ],
+      "result_type":"array"
+    }
+  }
 }
 ```
 
@@ -137,24 +141,25 @@ Example Response:
 
 ```json
 {
-  "method":"repeat",
-  "method_info":{
-    "name":"repeat",
-    "parameters":[
-      {
-        "name":"string",
-        "type":"string"
-      },
-      {
-        "name":"count",
-        "type":"long",
-        "min":1,
-        "max":100
-      }
-    ],
-    "result_type":"array"
-  },
-  "status":"success"
+  "id":"repeat",
+  "result":{
+    "method_info":{
+      "name":"repeat",
+      "parameters":[
+        {
+          "name":"string",
+          "type":"string"
+        },
+        {
+          "name":"count",
+          "type":"long",
+          "min":1,
+          "max":100
+        }
+      ],
+      "result_type":"array"
+    }
+  }
 }
 ```
 
@@ -171,14 +176,15 @@ Example Response:
 
 ```json
 {
-  "method":"repeat",
-  "parameter_info":{
-    "name":"count",
-    "type":"long",
-    "min":1,
-    "max":100
-  },
-  "status":"success"
+  "id":"repeat",
+  "result":{
+    "parameter_info":{
+      "name":"count",
+      "type":"long",
+      "min":1,
+      "max":100
+    }
+  }
 }
 ```
 
@@ -192,14 +198,13 @@ Example Response:
 
 ```json
 {
-  "method":"repeat",
+  "id":"repeat",
   "result":[
     "I am a string to repeat.",
     "I am a string to repeat.",
     "I am a string to repeat.",
     "I am a string to repeat."
-  ],
-  "status":"success"
+  ]
 }
 ```
 
@@ -213,7 +218,7 @@ Example Response:
 
 ```json
 {
-  "method":"charsAt",
+  "id":"charsAt",
   "result":[
     {
       "index":0,
@@ -227,8 +232,7 @@ Example Response:
       "index":8,
       "char":"i"
     }
-  ],
-  "status":"success"
+  ]
 }
 ```
 
@@ -242,9 +246,8 @@ Example Response:
 
 ```json
 {
-  "method":"startingChars",
-  "result":  "Fa",
-  "status":"success"
+  "id":"startingChars",
+  "result":"Fa"
 }
 ```
 
@@ -258,8 +261,8 @@ Example Response:
 
 ```json
 {
-  "method":"setStartingCharsCount",
-  "status":"success"
+  "id":"setStartingCharsCount",
+  "result":null
 }
 ```
 
@@ -273,9 +276,8 @@ Example Response:
 
 ```json
 {
-  "method":"startingChars",
-  "result":  "Fanta",
-  "status":"success"
+  "id":"startingChars",
+  "result":"Fanta"
 }
 ```
 

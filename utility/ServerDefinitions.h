@@ -128,13 +128,13 @@ void Server::writeNullToResponse(K key)
 template<typename T>
 void Server::sendErrorResponse(T error)
 {
+  error_ = true;
   writeKeyToResponse(constants::error_constant_string);
   beginResponseObject();
   writeToResponse(constants::message_constant_string,constants::server_error_error_message);
   writeToResponse(constants::data_constant_string,error);
   writeToResponse(constants::code_constant_string,constants::server_error_error_code);
   endResponseObject();
-  error_ = true;
 }
 
 template<typename T>
@@ -142,6 +142,21 @@ void Server::writeResultToResponse(T value)
 {
   json_stream_.write(constants::result_constant_string,value);
   result_in_response_ = true;
+}
+
+template<typename T>
+int Server::findMethodIndex(T method_name)
+{
+  int method_index = -1;
+  for (unsigned int i=0; i<method_array_.size(); ++i)
+  {
+    if (method_array_[i].compareName(method_name))
+    {
+      method_index = i;
+      break;
+    }
+  }
+  return method_index;
 }
 }
 

@@ -30,23 +30,24 @@ Example Response:
 
 ```json
 {
-  "method":"?",
-  "device_info":{
-    "name":"minimal_device",
-    "model_number":1000,
-    "serial_number":0,
-    "firmware_version":{
-      "major":0,
-      "minor":1,
-      "patch":0
-    }
-  },
-  "methods":[
-    "getMemoryFree",
-    "resetDefaults",
-    "setSerialNumber"
-  ],
-  "status":"success"
+  "id":"?",
+  "result":{
+    "device_info":{
+      "name":"minimal_device",
+      "model_number":1000,
+      "serial_number":0,
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      }
+    },
+    "methods":[
+      "getMemoryFree",
+      "resetDefaults",
+      "setSerialNumber"
+    ]
+  }
 }
 ```
 
@@ -64,9 +65,8 @@ Example Response:
 
 ```json
 {
-  "method":"getMemoryFree",
-  "result":5159,
-  "status":"success"
+  "id":"getMemoryFree",
+  "result":5146
 }
 ```
 
@@ -83,45 +83,46 @@ Example Response:
 
 ```json
 {
-  "method":"??",
-  "device_info":{
-    "name":"minimal_device",
-    "model_number":1000,
-    "serial_number":0,
-    "firmware_version":{
-      "major":0,
-      "minor":1,
-      "patch":0
-    }
-  },
-  "methods":[
-    {
-      "name":"getMemoryFree",
-      "parameters":[],
-      "result_type":"long"
+  "id":"??",
+  "result":{
+    "device_info":{
+      "name":"minimal_device",
+      "model_number":1000,
+      "serial_number":0,
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      }
     },
-    {
-      "name":"resetDefaults",
-      "parameters":[],
-      "result_type":null
-    },
-    {
-      "name":"setSerialNumber",
-      "parameters":[
-        "serial_number"
-      ],
-      "result_type":null
-    }
-  ],
-  "parameters":[
-    {
-      "name":"serial_number",
-      "type":"long",
-      "min":0,
-      "max":65535
-    }
-  ],
-  "status":"success"
+    "methods":[
+      {
+        "name":"getMemoryFree",
+        "parameters":[],
+        "result_type":"long"
+      },
+      {
+        "name":"resetDefaults",
+        "parameters":[],
+        "result_type":null
+      },
+      {
+        "name":"setSerialNumber",
+        "parameters":[
+          "serial_number"
+        ],
+        "result_type":null
+      }
+    ],
+    "parameters":[
+      {
+        "name":"serial_number",
+        "type":"long",
+        "min":0,
+        "max":65535
+      }
+    ]
+  }
 }
 ```
 
@@ -135,14 +136,22 @@ Example Response:
 
 ```json
 {
-  "method":"setSerialNumber",
-  "status":"error",
-  "error_message":"Incorrect number of parameters. 0 given. 1 needed."
+  "id":"setSerialNumber",
+  "error":{
+    "message":"Invalid params",
+    "data":"Incorrect number of parameters. 0 given. 1 needed.",
+    "code":-32602
+  }
 }
 ```
 
+When a method executes successfully, the response will contain a
+"result" field. In some cases the result may be null, but the method
+execution was still successful. When there is an error, there will not
+exist a "result" field, but there will exist an "error" field.
+
 To get more information about a method, enter the method followed by
-a question mark ?
+a question mark.
 
 Example Method Help:
 
@@ -154,20 +163,46 @@ Example Response:
 
 ```json
 {
-  "method":"setSerialNumber",
-  "method_info":{
-    "name":"setSerialNumber",
-    "parameters":[
-      "serial_number"
-    ],
-    "result_type":null
-  },
-  "status":"success"
+  "id":"setSerialNumber",
+  "result":{
+    "method_info":{
+      "name":"setSerialNumber",
+      "parameters":[
+        "serial_number"
+      ],
+      "result_type":null
+    }
+  }
+}
+```
+
+Or you can enter a question mark followed by the method.
+
+Example Method Help:
+
+```shell
+? setSerialNumber
+```
+
+Example Response:
+
+```json
+{
+  "id":"?",
+  "result":{
+    "method_info":{
+      "name":"setSerialNumber",
+      "parameters":[
+        "serial_number"
+      ],
+      "result_type":null
+    }
+  }
 }
 ```
 
 To get more verbose information about all of the parameters a method
-takes, enter the method followed by two questions marks ??:
+takes, enter the method followed by two questions marks.
 
 ```shell
 setSerialNumber ??
@@ -177,20 +212,21 @@ Example Response:
 
 ```json
 {
-  "method":"setSerialNumber",
-  "method_info":{
-    "name":"setSerialNumber",
-    "parameters":[
-      {
-        "name":"serial_number",
-        "type":"long",
-        "min":0,
-        "max":65535
-      }
-    ],
-    "result_type":null
-  },
-  "status":"success"
+  "id":"setSerialNumber",
+  "result":{
+    "method_info":{
+      "name":"setSerialNumber",
+      "parameters":[
+        {
+          "name":"serial_number",
+          "type":"long",
+          "min":0,
+          "max":65535
+        }
+      ],
+      "result_type":null
+    }
+  }
 }
 ```
 
@@ -204,14 +240,43 @@ Example Response:
 
 ```json
 {
-  "method":"setSerialNumber",
-  "status":"success"
+  "id":"setSerialNumber",
+  "result":null
 }
 ```
 
 The serial number setting persists even after the device is powered
 off. The serial number is used to differentiate several identical
 devices connected to a single host machine at one time.
+
+```shell
+?
+```
+
+Example Response:
+
+```json
+{
+  "id":"?",
+  "result":{
+    "device_info":{
+      "name":"minimal_device",
+      "model_number":1000,
+      "serial_number":32,
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      }
+    },
+    "methods":[
+      "getMemoryFree",
+      "resetDefaults",
+      "setSerialNumber"
+    ]
+  }
+}
+```
 
 To reset the serial number to the default value, use the resetDefaults
 method.
@@ -226,8 +291,37 @@ Example Response:
 
 ```json
 {
-  "method":"resetDefaults",
-  "status":"success"
+  "id":"resetDefaults",
+  "result":null
+}
+```
+
+```shell
+?
+```
+
+Example Response:
+
+```json
+{
+  "id":"?",
+  "result":{
+    "device_info":{
+      "name":"minimal_device",
+      "model_number":1000,
+      "serial_number":0,
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      }
+    },
+    "methods":[
+      "getMemoryFree",
+      "resetDefaults",
+      "setSerialNumber"
+    ]
+  }
 }
 ```
 
@@ -246,7 +340,7 @@ dev.get_device_info()
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-5159
+5146
 dev.set_serial_number()
 IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
 dev.set_serial_number('?')
@@ -304,7 +398,7 @@ resetDefaults
 setSerialNumber
 dev.getMemoryFree()
 ans =
-  5159
+  5146
 dev.setSerialNumber()
 Error using ModularDevice/sendRequest (line 309)
 device responded with error, Incorrect number of parameters. 0 given. 1 needed.

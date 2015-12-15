@@ -30,27 +30,28 @@ Example Response:
 
 ```json
 {
-  "method":"?",
-  "device_info":{
-    "name":"led_controller",
-    "model_number":1001,
-    "serial_number":0,
-    "firmware_version":{
-      "major":0,
-      "minor":1,
-      "patch":0
-    }
-  },
-  "methods":[
-    "getMemoryFree",
-    "resetDefaults",
-    "setSerialNumber",
-    "setLedOn",
-    "setLedOff",
-    "getLedPin",
-    "blinkLed"
-  ],
-  "status":"success"
+  "id":"?",
+  "result":{
+    "device_info":{
+      "name":"led_controller",
+      "model_number":1001,
+      "serial_number":0,
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      }
+    },
+    "methods":[
+      "getMemoryFree",
+      "resetDefaults",
+      "setSerialNumber",
+      "setLedOn",
+      "setLedOff",
+      "getLedPin",
+      "blinkLed"
+    ]
+  }
 }
 ```
 
@@ -68,8 +69,8 @@ Example Response:
 
 ```json
 {
-  "method": "setLedOn",
-  "status": "success"
+  "id":"setLedOn",
+  "result":null
 }
 ```
 
@@ -85,11 +86,19 @@ Example Response:
 
 ```json
 {
-  "method": "blinkLed",
-  "status": "error",
-  "error_message": "Incorrect number of parameters. 0 given. 3 needed."
+  "id":"blinkLed",
+  "error":{
+    "message":"Invalid params",
+    "data":"Incorrect number of parameters. 0 given. 3 needed.",
+    "code":-32602
+  }
 }
 ```
+
+When a method executes successfully, the response will contain a
+"result" field. In some cases the result may be null, but the method
+execution was still successful. When there is an error, there will not
+exist a "result" field, but there will exist an "error" field.
 
 To get more information about a method, enter the method followed by
 a question mark ?
@@ -104,17 +113,18 @@ Example Response:
 
 ```json
 {
-  "method":"blinkLed",
-  "method_info":{
-    "name":"blinkLed",
-    "parameters":[
-      "duration_on",
-      "duration_off",
-      "count"
-    ],
-    "result_type":null
-  },
-  "status":"success"
+  "id":"blinkLed",
+  "result":{
+    "method_info":{
+      "name":"blinkLed",
+      "parameters":[
+        "duration_on",
+        "duration_off",
+        "count"
+      ],
+      "result_type":null
+    }
+  }
 }
 ```
 
@@ -133,15 +143,16 @@ Example Response:
 
 ```json
 {
-  "method":"blinkLed",
-  "parameter_info":{
-    "name":"duration_on",
-    "units":"seconds",
-    "type":"double",
-    "min":0.100000,
-    "max":2.500000
-  },
-  "status":"success"
+  "id":"blinkLed",
+  "result":{
+    "parameter_info":{
+      "name":"duration_on",
+      "units":"seconds",
+      "type":"double",
+      "min":0.100000,
+      "max":2.500000
+    }
+  }
 }
 ```
 
@@ -156,35 +167,43 @@ Example Response:
 
 ```json
 {
-  "method":"blinkLed",
-  "method_info":{
-    "name":"blinkLed",
-    "parameters":[
-      {
-        "name":"duration_on",
-        "units":"seconds",
-        "type":"double",
-        "min":0.100000,
-        "max":2.500000
-      },
-      {
-        "name":"duration_off",
-        "units":"seconds",
-        "type":"double",
-        "min":0.100000,
-        "max":2.500000
-      },
-      {
-        "name":"count",
-        "type":"long",
-        "min":1,
-        "max":100
-      }
-    ],
-    "result_type":null
-  },
-  "status":"success"
+  "id":"blinkLed",
+  "result":{
+    "method_info":{
+      "name":"blinkLed",
+      "parameters":[
+        {
+          "name":"duration_on",
+          "units":"seconds",
+          "type":"double",
+          "min":0.100000,
+          "max":2.500000
+        },
+        {
+          "name":"duration_off",
+          "units":"seconds",
+          "type":"double",
+          "min":0.100000,
+          "max":2.500000
+        },
+        {
+          "name":"count",
+          "type":"long",
+          "min":1,
+          "max":100
+        }
+      ],
+      "result_type":null
+    }
+  }
 }
+```
+
+It works the same if the question marks are before or after the
+method.
+
+```shell
+?? blinkLed
 ```
 
 Example Method:
@@ -197,9 +216,12 @@ Example Response:
 
 ```json
 {
-  "method":"blinkLed",
-  "status":"error",
-  "error_message":"Parameter value out of range: 0.100000 <= duration_on <= 2.500000"
+  "id":"blinkLed",
+  "error":{
+    "message":"Invalid params",
+    "data":"Parameter value out of range: 0.100000 <= duration_on <= 2.500000",
+    "code":-32602
+  }
 }
 ```
 
@@ -213,8 +235,8 @@ Example Response:
 
 ```json
 {
-  "method": "blinkLed",
-  "status": "success"
+  "id":"blinkLed",
+  "result":null
 }
 ```
 
@@ -232,11 +254,7 @@ Example Response:
 ```json
 {
   "method":"getLedPin",
-  "method_info":{
-    "name":"getLedPin",
-    "parameters":[],
-    "result_type":"long"
-  },
+  "result":13,
   "status":"success"
 }
 ```
@@ -251,9 +269,8 @@ Example Response:
 
 ```json
 {
-  "method":"getLedPin",
-  "result":13,
-  "status":"success"
+  "id":"getLedPin",
+  "result":13
 }
 ```
 

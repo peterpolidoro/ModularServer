@@ -114,7 +114,7 @@ Method& Server::copyMethod(Method method,const ConstantString &method_name)
 
 Parameter& Server::createParameter(const ConstantString &parameter_name)
 {
-  int parameter_index = findMethodParameterIndex(parameter_name);
+  int parameter_index = findParameterIndex(parameter_name);
   if (parameter_index < 0)
   {
     parameter_array_.push_back(Parameter(parameter_name));
@@ -136,7 +136,8 @@ Parameter& Server::copyParameter(Parameter parameter,const ConstantString &param
 
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &name)
 {
-  int parameter_index = findMethodParameterIndex(name);
+  int parameter_index = findMethodParameterIndex(request_method_index_,name);
+  // index 0 is the method, index 1 is the first parameter
   return (*request_json_array_ptr_)[parameter_index+1];
 }
 
@@ -216,13 +217,13 @@ void Server::handleRequest()
       StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
       if (sanitizer.firstCharIsValidJsonObject(request_))
       {
+        error_ = true;
         writeKeyToResponse(constants::error_constant_string);
         beginResponseObject();
         writeToResponse(constants::message_constant_string,constants::server_error_error_message);
         writeToResponse(constants::data_constant_string,constants::object_request_error_data);
         writeToResponse(constants::code_constant_string,constants::server_error_error_code);
         endResponseObject();
-        error_ = true;
       }
       else
       {
@@ -233,13 +234,13 @@ void Server::handleRequest()
         }
         else
         {
+          error_ = true;
           writeKeyToResponse(constants::error_constant_string);
           beginResponseObject();
           writeToResponse(constants::message_constant_string,constants::parse_error_message);
           writeToResponse(constants::data_constant_string,request_);
           writeToResponse(constants::code_constant_string,constants::parse_error_code);
           endResponseObject();
-          error_ = true;
         }
         if (!error_ && !result_in_response_)
         {
@@ -253,6 +254,7 @@ void Server::handleRequest()
     {
       json_stream_.setCompactPrint();
       json_stream_.beginObject();
+      error_ = true;
       writeKeyToResponse(constants::error_constant_string);
       beginResponseObject();
       writeToResponse(constants::message_constant_string,constants::server_error_error_message);
@@ -280,61 +282,8 @@ void Server::processRequestArray()
       writeResultKeyToResponse();
       beginResponseObject();
       writeKeyToResponse(constants::method_info_constant_string);
-      methodHelp(request_method_index_);
+      methodHelp(false,request_method_index_);
       endResponseObject();
-    }
-    // ? method
-    // ?? method
-    // ? parameter
-    // ?? parameter
-    else if ((parameter_count == 1) &&
-        ((strcmp((*request_json_array_ptr_)[0],"?") == 0) ||
-         (strcmp((*request_json_array_ptr_)[0],"??") == 0)))
-    {
-      const char* param_string = (*request_json_array_ptr_)[1];
-      int method_index = findMethodIndex(param_string);
-      if (method_index >= 0)
-      {
-        writeResultKeyToResponse();
-        beginResponseObject();
-        writeKeyToResponse(constants::method_info_constant_string);
-        if (strcmp((*request_json_array_ptr_)[0],"?") == 0)
-        {
-          // ? method
-          methodHelp(method_index);
-        }
-        else
-        {
-          // ?? method
-          verboseMethodHelp(method_index);
-        }
-        endResponseObject();
-      }
-      else
-      {
-        // ? parameter
-        // ?? parameter
-        int parameter_index = findParameterIndex(param_string);
-        if (parameter_index >= 0)
-        {
-          writeResultKeyToResponse();
-          beginResponseObject();
-          writeKeyToResponse(constants::parameter_info_constant_string);
-          Parameter& parameter = parameter_array_[parameter_index];
-          parameterHelp(parameter);
-          endResponseObject();
-        }
-        else
-        {
-          // ? unknown
-          // ?? unknown
-          writeKeyToResponse(constants::error_constant_string);
-          beginResponseObject();
-          writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-          writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-          endResponseObject();
-        }
-      }
     }
     // method ??
     else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"??") == 0))
@@ -342,7 +291,7 @@ void Server::processRequestArray()
       writeResultKeyToResponse();
       beginResponseObject();
       writeKeyToResponse(constants::method_info_constant_string);
-      verboseMethodHelp(request_method_index_);
+      methodHelp(true,request_method_index_);
       endResponseObject();
     }
     // method parameter ?
@@ -359,8 +308,13 @@ void Server::processRequestArray()
       parameterHelp(parameter);
       endResponseObject();
     }
+    else if (method_array_[request_method_index_].isReserved())
+    {
+      executeMethod();
+    }
     else if (parameter_count != method_array_[request_method_index_].parameter_count_)
     {
+      error_ = true;
       writeKeyToResponse(constants::error_constant_string);
       beginResponseObject();
       writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
@@ -379,7 +333,6 @@ void Server::processRequestArray()
       writeToResponse(constants::data_constant_string,error_str);
       writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
       endResponseObject();
-      error_ = true;
     }
     else
     {
@@ -413,41 +366,13 @@ int Server::processMethodString(const char *method_string)
   }
   if ((method_index < 0) || (method_index >= (int)method_array_.size()))
   {
+    error_ = true;
     writeKeyToResponse(constants::error_constant_string);
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::method_not_found_error_message);
     writeToResponse(constants::code_constant_string,constants::method_not_found_error_code);
     endResponseObject();
-    error_ = true;
     method_index = -1;
-  }
-  return method_index;
-}
-
-int Server::findMethodIndex(const char *method_name)
-{
-  int method_index = -1;
-  for (unsigned int i=0; i<method_array_.size(); ++i)
-  {
-    if (method_array_[i].compareName(method_name))
-    {
-      method_index = i;
-      break;
-    }
-  }
-  return method_index;
-}
-
-int Server::findMethodIndex(const ConstantString &method_name)
-{
-  int method_index = -1;
-  for (unsigned int i=0; i<method_array_.size(); ++i)
-  {
-    if (method_array_[i].compareName(method_name))
-    {
-      method_index = i;
-      break;
-    }
   }
   return method_index;
 }
@@ -476,7 +401,7 @@ void Server::executeMethod()
   }
 }
 
-void Server::methodHelp(int method_index)
+void Server::methodHelp(bool verbose, int method_index)
 {
   beginResponseObject();
   const ConstantString& method_name = method_array_[method_index].getName();
@@ -487,26 +412,15 @@ void Server::methodHelp(int method_index)
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
   for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
   {
-    const ConstantString& parameter_name = parameter_ptr_array[i]->getName();
-    writeToResponse(parameter_name);
-  }
-  json_stream_.endArray();
-  writeToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
-  endResponseObject();
-}
-
-void Server::verboseMethodHelp(int method_index)
-{
-  beginResponseObject();
-  const ConstantString& method_name = method_array_[method_index].getName();
-  writeToResponse(constants::name_constant_string,method_name);
-
-  writeKeyToResponse(constants::parameters_constant_string);
-  json_stream_.beginArray();
-  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
-  for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
-  {
-    parameterHelp(*(parameter_ptr_array[i]));
+    if (verbose)
+    {
+      parameterHelp(*(parameter_ptr_array[i]));
+    }
+    else
+    {
+      const ConstantString& parameter_name = parameter_ptr_array[i]->getName();
+      writeToResponse(parameter_name);
+    }
   }
   json_stream_.endArray();
   writeToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
@@ -527,18 +441,18 @@ int Server::processParameterString(const char *parameter_string)
   }
   else
   {
-    parameter_index = findMethodParameterIndex(parameter_string);
+    parameter_index = findMethodParameterIndex(request_method_index_,parameter_string);
   }
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptr_array.size()))
   {
+    error_ = true;
     writeKeyToResponse(constants::error_constant_string);
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     writeToResponse(constants::data_constant_string,constants::parameter_not_found_error_data);
     writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
     endResponseObject();
-    error_ = true;
     parameter_index = -1;
   }
   return parameter_index;
@@ -558,12 +472,26 @@ int Server::findParameterIndex(const char *parameter_name)
   return parameter_index;
 }
 
-int Server::findMethodParameterIndex(const char *parameter_name)
+int Server::findParameterIndex(const ConstantString &parameter_name)
 {
   int parameter_index = -1;
-  if (request_method_index_ >= 0)
+  for (unsigned int i=0; i<parameter_array_.size(); ++i)
   {
-    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
+    if (parameter_array_[i].compareName(parameter_name))
+    {
+      parameter_index = i;
+      break;
+    }
+  }
+  return parameter_index;
+}
+
+int Server::findMethodParameterIndex(int method_index, const char *parameter_name)
+{
+  int parameter_index = -1;
+  if (method_index >= 0)
+  {
+    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
     for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
     {
       if (parameter_ptr_array[i]->compareName(parameter_name))
@@ -576,12 +504,12 @@ int Server::findMethodParameterIndex(const char *parameter_name)
   return parameter_index;
 }
 
-int Server::findMethodParameterIndex(const ConstantString &parameter_name)
+int Server::findMethodParameterIndex(int method_index, const ConstantString &parameter_name)
 {
   int parameter_index = -1;
-  if (request_method_index_ >= 0)
+  if (method_index >= 0)
   {
-    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
+    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
     for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
     {
       if (parameter_ptr_array[i]->compareName(parameter_name))
@@ -869,6 +797,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   }
   if (out_of_range)
   {
+    error_ = true;
     writeKeyToResponse(constants::error_constant_string);
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
@@ -898,10 +827,10 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::data_constant_string,error_str);
     writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
     endResponseObject();
-    error_ = true;
   }
   else if (object_parse_unsuccessful)
   {
+    error_ = true;
     writeKeyToResponse(constants::error_constant_string);
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
@@ -918,10 +847,10 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::data_constant_string,error_str);
     writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
     endResponseObject();
-    error_ = true;
   }
   else if (array_parse_unsuccessful)
   {
+    error_ = true;
     writeKeyToResponse(constants::error_constant_string);
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
@@ -938,7 +867,6 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::data_constant_string,error_str);
     writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
     endResponseObject();
-    error_ = true;
   }
   bool parameter_ok = (!out_of_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
   return parameter_ok;
@@ -977,9 +905,8 @@ void Server::incrementServerStream()
   json_stream_.setStream(*server_stream_ptr_array_[server_stream_index_]);
 }
 
-void Server::getDeviceInfoCallback()
+void Server::writeDeviceInfoToResponse()
 {
-  writeResultKeyToResponse();
   beginResponseObject();
   writeToResponse(constants::name_constant_string,name_ptr_);
   writeToResponse(constants::model_number_constant_string,model_number_);
@@ -991,6 +918,12 @@ void Server::getDeviceInfoCallback()
   writeToResponse(constants::patch_constant_string,firmware_patch_);
   endResponseObject();
   endResponseObject();
+}
+
+void Server::getDeviceInfoCallback()
+{
+  writeResultKeyToResponse();
+  writeDeviceInfoToResponse();
 }
 
 void Server::getMethodIdsCallback()
@@ -1022,56 +955,134 @@ void Server::getParametersCallback()
   endResponseObject();
 }
 
-void Server::help()
+void Server::help(bool verbose)
 {
-  writeResultKeyToResponse();
-  beginResponseObject();
-  writeKeyToResponse(constants::device_info_constant_string);
-  beginResponseObject();
-  getDeviceInfoCallback();
-  endResponseObject();
-
-  writeKeyToResponse(constants::methods_constant_string);
-  beginResponseArray();
-  for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
+  int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
+  int parameter_count = array_elements_count - 1;
+  bool param_error = true;
+  // ?
+  // ??
+  if (parameter_count == 0)
   {
-    if (!method_array_[method_index].isReserved())
+    param_error = false;
+    writeResultKeyToResponse();
+    beginResponseObject();
+    writeKeyToResponse(constants::device_info_constant_string);
+    writeDeviceInfoToResponse();
+
+    writeKeyToResponse(constants::methods_constant_string);
+    beginResponseArray();
+    // ?
+    if (!verbose)
     {
-      const ConstantString& method_name = method_array_[method_index].getName();
-      writeToResponse(method_name);
+      for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
+      {
+        if (!method_array_[method_index].isReserved())
+        {
+          const ConstantString& method_name = method_array_[method_index].getName();
+          writeToResponse(method_name);
+        }
+      }
+    }
+    // ??
+    else
+    {
+      for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
+      {
+        if (!method_array_[method_index].isReserved())
+        {
+          methodHelp(false,method_index);
+        }
+      }
+      endResponseArray();
+
+      writeKeyToResponse(constants::parameters_constant_string);
+      beginResponseArray();
+      for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
+      {
+        parameterHelp(parameter_array_[parameter_index]);
+      }
+    }
+    endResponseArray();
+    endResponseObject();
+  }
+  // ? method
+  // ? parameter
+  // ?? method
+  // ?? parameter
+  else if (parameter_count == 1)
+  {
+    const char* param_string = (*request_json_array_ptr_)[1];
+    int method_index = findMethodIndex(param_string);
+    bool method = false;
+    // ? method
+    if (method_index >= 0)
+    {
+      param_error = false;
+      method = true;
+      writeResultKeyToResponse();
+      beginResponseObject();
+      writeKeyToResponse(constants::method_info_constant_string);
+      methodHelp(verbose,method_index);
+      endResponseObject();
+    }
+    if (!method)
+    {
+      // ? parameter
+      // ?? parameter
+      int parameter_index = findParameterIndex(param_string);
+      if (parameter_index >= 0)
+      {
+        param_error = false;
+        writeResultKeyToResponse();
+        beginResponseObject();
+        writeKeyToResponse(constants::parameter_info_constant_string);
+        Parameter& parameter = parameter_array_[parameter_index];
+        parameterHelp(parameter);
+        endResponseObject();
+      }
     }
   }
-  endResponseArray();
-  endResponseObject();
+  // ? method parameter
+  // ?? method parameter
+  else if (parameter_count == 2)
+  {
+    const char* method_string = (*request_json_array_ptr_)[1];
+    int method_index = findMethodIndex(method_string);
+    int parameter_index = findMethodParameterIndex(method_index,(const char *)(*request_json_array_ptr_)[2]);
+    if (parameter_index >= 0)
+    {
+      param_error = false;
+      Parameter& parameter = *(method_array_[method_index].parameter_ptr_array_[parameter_index]);
+      writeResultKeyToResponse();
+      beginResponseObject();
+      writeKeyToResponse(constants::parameter_info_constant_string);
+      parameterHelp(parameter);
+      endResponseObject();
+    }
+  }
+  // ? unknown
+  // ?? unknown
+  // ? method unknown
+  // ?? method unknown
+  if (param_error)
+  {
+    error_ = true;
+    writeKeyToResponse(constants::error_constant_string);
+    beginResponseObject();
+    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
+    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
+    endResponseObject();
+  }
+}
+
+void Server::help()
+{
+  help(false);
 }
 
 void Server::verboseHelp()
 {
-  writeResultKeyToResponse();
-  beginResponseObject();
-  writeKeyToResponse(constants::device_info_constant_string);
-  beginResponseObject();
-  getDeviceInfoCallback();
-  endResponseObject();
-
-  writeKeyToResponse(constants::methods_constant_string);
-  beginResponseArray();
-  for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
-  {
-    if (!method_array_[method_index].isReserved())
-    {
-      methodHelp(method_index);
-    }
-  }
-  endResponseArray();
-
-  writeKeyToResponse(constants::parameters_constant_string);
-  beginResponseArray();
-  for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
-  {
-    parameterHelp(parameter_array_[parameter_index]);
-  }
-  endResponseArray();
-  endResponseObject();
+  help(true);
 }
 }
