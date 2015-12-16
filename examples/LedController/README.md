@@ -368,39 +368,52 @@ setLedOn
 setLedOff
 getLedPin
 blinkLed
-dev.setLedOn()
-dev.setLedOff()
-dev.blinkLed()
-Error using ModularDevice/sendCmd (line 308)
-device responded with error, Incorrect number of parameters. 0 given. 3 needed.
-dev.blinkLed('?')
+dev.setLedOn();
+dev.setLedOff();
+dev.blinkLed();
+Error using ModularDevice/sendRequest (line 301)
+(from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
+result = dev.blinkLed('?')
+result =
+  method_info: [1x1 struct]
+result.method_info
 ans =
   name: 'blinkLed'
   parameters: {'duration_on'    'duration_off'    'count'}
   result_type: []
-parameter_info = dev.blinkLed('duration_on','?')
-parameter_info =
+result = dev.blinkLed('duration_on','?')
+result =
+  parameter_info: [1x1 struct]
+result.parameter_info
+ans =
   name: 'duration_on'
   units: 'seconds'
   type: 'double'
   min: 0.100000
   max: 2.500000
-method_info = dev.blinkLed('??')
-method_info =
+result = dev.blinkLed('??')
+result =
+  method_info: [1x1 struct]
+result.method_info
+ans =
   name: 'blinkLed'
   parameters: {[1x1 struct] [1x1 struct] [1x1 struct]}
   result_type: []
-method_info.parameters{1}
+result.method_info.parameters{1}
   name: 'duration_on'
   units: 'seconds'
   type: 'double'
   min: 0.100000
   max: 2.500000
 dev.blinkLed(3.0,0.2,20)
-Error using ModularDevice/sendRequest (line 297)
-device responded with error, Parameter value out of range: 0.100000 <= duration_on <= 2.500000
-dev.blinkLed(0.5,0.2,20)
-dev.getLedPin('?')
+Error using ModularDevice/sendRequest (line 301)
+(from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
+dev.blinkLed(0.5,0.2,20);
+result = dev.getLedPin('?')
+result =
+  method_info: [1x1 struct]
+result.method_info
+ans =
   name: 'getLedPin'
   parameters: []
   result_type: 'long'

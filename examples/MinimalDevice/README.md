@@ -407,35 +407,44 @@ dev.getMemoryFree()
 ans =
   5146
 dev.setSerialNumber()
-Error using ModularDevice/sendRequest (line 309)
-device responded with error, Incorrect number of parameters. 0 given. 1 needed.
-dev.setSerialNumber('?')
+Error using ModularDevice/sendRequest (line 301)
+(from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
+result = dev.setSerialNumber('?')
+result =
+  method_info: [1x1 struct]
+result.method_info
 ans =
   name: 'setSerialNumber'
   parameters: 'serial_number'
   result_type: []
-method_info = dev.setSerialNumber('??')
-method_info =
+result = dev.setSerialNumber('??')
+result =
+  method_info: [1x1 struct]
+result.method_info =
   name: 'setSerialNumber'
   parameters: [1x1 struct]
   result_type: []
-method_info.parameters
+result.method_info.parameters
   name: 'serial_number'
   type: 'long'
   min: 0
   max: 65535
-parameter_info = dev.setSerialNumber('serial_number','?')
-parameter_info =
+result = dev.setSerialNumber('serial_number','?')
+result =
+  parameter_info: [1x1 struct]
+result.parameter_info =
   name: 'serial_number'
   type: 'long'
   min: 0
   max: 65535
 dev.setSerialNumber(-1)
-Error using ModularDevice/sendRequest (line 309)
-device responded with error, Parameter value out of range: 0 <= serial_number <= 65535
+Error using ModularDevice/sendRequest (line 301)
+(from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
 dev.setSerialNumber(13)
+ans =
+  []
 dev.close()                      % close serial connection
-delete(dev)                      % deletes the device
+clear dev
 ```
 
 For more details on the Matlab interface:
