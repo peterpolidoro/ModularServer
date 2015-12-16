@@ -306,18 +306,20 @@ dev.get_methods()
  'length',
  'chars_at']
 dev.repeat()
-IOError: (from device) Incorrect number of parameters. 0 given. 2 needed.
+IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
-{'name': 'repeat', 'parameters': ['string', 'count'], 'result_type': 'array'}
+{'method_info': {'name': 'repeat',
+  'parameters': ['string', 'count'],
+  'result_type': 'array'}}
 dev.repeat('??')
-{'name': 'repeat',
- 'parameters': [{'name': 'string', 'type': 'string'},
-  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
- 'result_type': 'array'}
+{'method_info': {'name': 'repeat',
+  'parameters': [{'name': 'string', 'type': 'string'},
+   {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+  'result_type': 'array'}}
 dev.repeat('count','?')
-{'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
+{'parameter_info': {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}}
 dev.repeat('"I am a string to repeat."',-1)
-IOError: (from device) Parameter value out of range: 1 <= count <= 100
+IOError: (from server) message: Invalid params, data: Parameter value out of range: 1 <= count <= 100, code: -32602
 dev.repeat('"I am a string to repeat."',4)
 ['I am a string to repeat.',
  'I am a string to repeat.',
@@ -328,7 +330,12 @@ dev.chars_at('"I am an input string!"',[0,6,8])
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
 dev.get_starting_chars_count('?')
-{'name': 'getStartingCharsCount', 'parameters': [], 'result_type': 'long'}
+{'method_info': {'name': 'getStartingCharsCount',
+  'parameters': [],
+  'result_type': 'long'}}
+dev.set_starting_chars_count(3)
+dev.call_server_method('set_starting_chars_count',7)
+dev.send_json_request('["set_starting_chars_count",5]')
 dev.get_starting_chars_count()
 5
 dev.starting_chars("Fantastic!")

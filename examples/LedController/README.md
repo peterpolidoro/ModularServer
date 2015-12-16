@@ -297,40 +297,41 @@ dev.get_methods()
 dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
-IOError: (from device) Incorrect number of parameters. 0 given. 3 needed.
+IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
 dev.blink_led('?')
-{'name': 'blinkLed',
- 'parameters': ['duration_on', 'duration_off', 'count'],
- 'result_type': None}
+{'method_info': {'name': 'blinkLed',
+  'parameters': ['duration_on', 'duration_off', 'count'],
+  'result_type': None}}
 dev.blink_led('duration_on','?')
-{'max': 2.5,
- 'min': 0.1,
- 'name': 'duration_on',
- 'type': 'double',
- 'units': 'seconds'}
+{'parameter_info': {'max': 2.5,
+  'min': 0.1,
+  'name': 'duration_on',
+  'type': 'double',
+  'units': 'seconds'}}
 dev.blink_led('??')
-{'name': 'blinkLed',
- 'parameters': [{'max': 2.5,
-   'min': 0.1,
-   'name': 'duration_on',
-   'type': 'double',
-   'units': 'seconds'},
-  {'max': 2.5,
-   'min': 0.1,
-   'name': 'duration_off',
-   'type': 'double',
-   'units': 'seconds'},
-  {'max': 100,
-   'min': 1,
-   'name': 'count',
-   'type': 'long'}],
- 'result_type': None}
+{'method_info': {'name': 'blinkLed',
+  'parameters': [{'max': 2.5,
+    'min': 0.1,
+    'name': 'duration_on',
+    'type': 'double',
+    'units': 'seconds'},
+   {'max': 2.5,
+    'min': 0.1,
+    'name': 'duration_off',
+    'type': 'double',
+    'units': 'seconds'},
+   {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+  'result_type': None}}
 dev.blink_led(0.5,0.2,20)
 dev.blink_led(3.0,0.2,20)
-IOError: (from device) Parameter value out of range: 0.100000 <= duration_on <= 2.500000
+IOError: (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.get_led_pin('?')
-{'name': 'getLedPin', 'parameters': [], 'result_type': 'long'}
+{'method_info': {'name': 'getLedPin', 'parameters': [], 'result_type': 'long'}}
 dev.get_led_pin()
+13
+dev.call_server_method("get_led_pin")
+13
+dev.send_json_request('["get_led_pin"]')
 13
 ```
 

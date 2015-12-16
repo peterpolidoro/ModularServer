@@ -342,23 +342,30 @@ dev.get_methods()
 dev.get_memory_free()
 5146
 dev.set_serial_number()
-IOError: (from device) Incorrect number of parameters. 0 given. 1 needed.
+IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.set_serial_number('?')
-{'name': 'setSerialNumber', 'parameters': ['serial_number'], 'result_type': None}
+{'method_info': {'name': 'setSerialNumber',
+  'parameters': ['serial_number'],
+  'result_type': None}}
 dev.set_serial_number('??')
-{'name': 'setSerialNumber',
- 'parameters': [{'max': 65535,
-   'min': 0,
-   'name': 'serial_number',
-   'type': 'long'}],
- 'result_type': None}
+{'method_info': {'name': 'setSerialNumber',
+  'parameters': [{'max': 65535,
+    'min': 0,
+    'name': 'serial_number',
+    'type': 'long'}],
+  'result_type': None}}
 dev.set_serial_number('serial_number','?')
-{'max': 65535, 'min': 0, 'name': 'serial_number', 'type': 'long'}
+{'parameter_info': {'max': 65535,
+  'min': 0,
+  'name': 'serial_number',
+  'type': 'long'}}
 dev.set_serial_number(-1)
-IOError: (from device) Parameter value out of range: 0 <= serial_number <= 65535
+IOError: (from server) message: Invalid params, data: Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
 dev.set_serial_number(12)
-dev.send_json_get_json('["??"]')
-'{"status":1,"device_info":{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"method":"??","methods":[{"result_type":"long","name":"getMemoryFree","parameters":[]},{"result_type":null,"name":"resetDefaults","parameters":[]},{"result_type":null,"name":"setSerialNumber","parameters":[{"max":65535,"type":"long","name":"serial_number","min":0}]}]}'
+result = dev.call_server_method('?')
+dev.convert_to_json(result)
+'{"device_info":{"serial_number":12,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"methods":["getMemoryFree","resetDefaults","setSerialNumber"]}'
+dev.send_json_request('["reset_defaults"]')
 ```
 
 For more details on the Python interface:
