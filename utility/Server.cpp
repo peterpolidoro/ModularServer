@@ -280,19 +280,13 @@ void Server::processRequestArray()
     if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"?") == 0))
     {
       writeResultKeyToResponse();
-      beginResponseObject();
-      writeKeyToResponse(constants::method_info_constant_string);
       methodHelp(false,request_method_index_);
-      endResponseObject();
     }
     // method ??
     else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"??") == 0))
     {
       writeResultKeyToResponse();
-      beginResponseObject();
-      writeKeyToResponse(constants::method_info_constant_string);
       methodHelp(true,request_method_index_);
-      endResponseObject();
     }
     // method parameter ?
     // method parameter ??
@@ -303,10 +297,7 @@ void Server::processRequestArray()
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
       writeResultKeyToResponse();
-      beginResponseObject();
-      writeKeyToResponse(constants::parameter_info_constant_string);
       parameterHelp(parameter);
-      endResponseObject();
     }
     else if (method_array_[request_method_index_].isReserved())
     {
@@ -1021,10 +1012,7 @@ void Server::help(bool verbose)
       param_error = false;
       method = true;
       writeResultKeyToResponse();
-      beginResponseObject();
-      writeKeyToResponse(constants::method_info_constant_string);
       methodHelp(verbose,method_index);
-      endResponseObject();
     }
     if (!method)
     {
@@ -1035,11 +1023,8 @@ void Server::help(bool verbose)
       {
         param_error = false;
         writeResultKeyToResponse();
-        beginResponseObject();
-        writeKeyToResponse(constants::parameter_info_constant_string);
         Parameter& parameter = parameter_array_[parameter_index];
         parameterHelp(parameter);
-        endResponseObject();
       }
     }
   }
@@ -1055,10 +1040,7 @@ void Server::help(bool verbose)
       param_error = false;
       Parameter& parameter = *(method_array_[method_index].parameter_ptr_array_[parameter_index]);
       writeResultKeyToResponse();
-      beginResponseObject();
-      writeKeyToResponse(constants::parameter_info_constant_string);
       parameterHelp(parameter);
-      endResponseObject();
     }
   }
   // ? unknown

@@ -86,8 +86,6 @@ extern ConstantString result_constant_string;
 extern ConstantString result_type_constant_string;
 extern ConstantString array_element_type_constant_string;
 extern ConstantString methods_constant_string;
-extern ConstantString method_info_constant_string;
-extern ConstantString parameter_info_constant_string;
 extern ConstantString parameters_constant_string;
 extern ConstantString min_constant_string;
 extern ConstantString max_constant_string;

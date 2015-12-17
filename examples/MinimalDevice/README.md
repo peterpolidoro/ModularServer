@@ -66,7 +66,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5146
+  "result":5154
 }
 ```
 
@@ -165,13 +165,11 @@ Example Response:
 {
   "id":"setSerialNumber",
   "result":{
-    "method_info":{
-      "name":"setSerialNumber",
-      "parameters":[
-        "serial_number"
-      ],
-      "result_type":null
-    }
+    "name":"setSerialNumber",
+    "parameters":[
+      "serial_number"
+    ],
+    "result_type":null
   }
 }
 ```
@@ -190,13 +188,11 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "method_info":{
-      "name":"setSerialNumber",
-      "parameters":[
-        "serial_number"
-      ],
-      "result_type":null
-    }
+    "name":"setSerialNumber",
+    "parameters":[
+      "serial_number"
+    ],
+    "result_type":null
   }
 }
 ```
@@ -214,18 +210,16 @@ Example Response:
 {
   "id":"setSerialNumber",
   "result":{
-    "method_info":{
-      "name":"setSerialNumber",
-      "parameters":[
-        {
-          "name":"serial_number",
-          "type":"long",
-          "min":0,
-          "max":65535
-        }
-      ],
-      "result_type":null
-    }
+    "name":"setSerialNumber",
+    "parameters":[
+      {
+        "name":"serial_number",
+        "type":"long",
+        "min":0,
+        "max":65535
+      }
+    ],
+    "result_type":null
   }
 }
 ```
@@ -340,25 +334,22 @@ dev.get_device_info()
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-5146
+5154
 dev.set_serial_number()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.set_serial_number('?')
-{'method_info': {'name': 'setSerialNumber',
-  'parameters': ['serial_number'],
-  'result_type': None}}
-dev.set_serial_number('??')
-{'method_info': {'name': 'setSerialNumber',
-  'parameters': [{'max': 65535,
-    'min': 0,
-    'name': 'serial_number',
-    'type': 'long'}],
-  'result_type': None}}
+{'name': 'setSerialNumber',
+ 'parameters': ['serial_number'],
+ 'result_type': None}
 dev.set_serial_number('serial_number','?')
-{'parameter_info': {'max': 65535,
-  'min': 0,
-  'name': 'serial_number',
-  'type': 'long'}}
+{'max': 65535, 'min': 0, 'name': 'serial_number', 'type': 'long'}
+dev.set_serial_number('??')
+{'name': 'setSerialNumber',
+ 'parameters': [{'max': 65535,
+   'min': 0,
+   'name': 'serial_number',
+   'type': 'long'}],
+ 'result_type': None}
 dev.set_serial_number(-1)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
 dev.set_serial_number(12)
@@ -405,34 +396,28 @@ resetDefaults
 setSerialNumber
 dev.getMemoryFree()
 ans =
-  5146
+  5154
 dev.setSerialNumber()
 Error using ModularDevice/sendRequest (line 301)
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
-result = dev.setSerialNumber('?')
-result =
-  method_info: [1x1 struct]
-result.method_info
+method_info = dev.setSerialNumber('?')
+method_info
 ans =
   name: 'setSerialNumber'
   parameters: 'serial_number'
   result_type: []
-result = dev.setSerialNumber('??')
-result =
-  method_info: [1x1 struct]
-result.method_info =
+method_info = dev.setSerialNumber('??')
+method_info =
   name: 'setSerialNumber'
   parameters: [1x1 struct]
   result_type: []
-result.method_info.parameters
+method_info.parameters
   name: 'serial_number'
   type: 'long'
   min: 0
   max: 65535
-result = dev.setSerialNumber('serial_number','?')
-result =
-  parameter_info: [1x1 struct]
-result.parameter_info =
+parameter_info = dev.setSerialNumber('serial_number','?')
+parameter_info =
   name: 'serial_number'
   type: 'long'
   min: 0

@@ -59,8 +59,6 @@ CONSTANT_STRING(result_constant_string,"result");
 CONSTANT_STRING(result_type_constant_string,"result_type");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
 CONSTANT_STRING(methods_constant_string,"methods");
-CONSTANT_STRING(method_info_constant_string,"method_info");
-CONSTANT_STRING(parameter_info_constant_string,"parameter_info");
 CONSTANT_STRING(parameters_constant_string,"parameters");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");
