@@ -114,14 +114,12 @@ Example Response:
 {
   "id":"repeat",
   "result":{
-    "method_info":{
-      "name":"repeat",
-      "parameters":[
-        "string",
-        "count"
-      ],
-      "result_type":"array"
-    }
+    "name":"repeat",
+    "parameters":[
+      "string",
+      "count"
+    ],
+    "result_type":"array"
   }
 }
 ```
@@ -143,22 +141,20 @@ Example Response:
 {
   "id":"repeat",
   "result":{
-    "method_info":{
-      "name":"repeat",
-      "parameters":[
-        {
-          "name":"string",
-          "type":"string"
-        },
-        {
-          "name":"count",
-          "type":"long",
-          "min":1,
-          "max":100
-        }
-      ],
-      "result_type":"array"
-    }
+    "name":"repeat",
+    "parameters":[
+      {
+        "name":"string",
+        "type":"string"
+      },
+      {
+        "name":"count",
+        "type":"long",
+        "min":1,
+        "max":100
+      }
+    ],
+    "result_type":"array"
   }
 }
 ```
@@ -178,12 +174,10 @@ Example Response:
 {
   "id":"repeat",
   "result":{
-    "parameter_info":{
-      "name":"count",
-      "type":"long",
-      "min":1,
-      "max":100
-    }
+    "name":"count",
+    "type":"long",
+    "min":1,
+    "max":100
   }
 }
 ```
@@ -288,11 +282,9 @@ Example Python session:
 ```python
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
-dev.get_device_info()
-{'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
- 'model_number': 1002,
- 'name': 'string_controller',
- 'serial_number': 0}
+device_info = dev.get_device_info()
+dev.convert_to_json(device_info)
+'{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"string_controller","model_number":1002}'
 dev.get_methods()
 ['starts_with',
  'get_memory_free',
@@ -308,16 +300,14 @@ dev.get_methods()
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
-{'method_info': {'name': 'repeat',
-  'parameters': ['string', 'count'],
-  'result_type': 'array'}}
+{'name': 'repeat', 'parameters': ['string', 'count'], 'result_type': 'array'}
 dev.repeat('??')
-{'method_info': {'name': 'repeat',
-  'parameters': [{'name': 'string', 'type': 'string'},
-   {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
-  'result_type': 'array'}}
+{'name': 'repeat',
+ 'parameters': [{'name': 'string', 'type': 'string'},
+  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+ 'result_type': 'array'}
 dev.repeat('count','?')
-{'parameter_info': {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}}
+{'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
 dev.repeat('"I am a string to repeat."',-1)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 1 <= count <= 100, code: -32602
 dev.repeat('"I am a string to repeat."',4)
@@ -330,15 +320,17 @@ dev.chars_at('"I am an input string!"',[0,6,8])
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
 dev.get_starting_chars_count('?')
-{'method_info': {'name': 'getStartingCharsCount',
-  'parameters': [],
-  'result_type': 'long'}}
+{'name': 'getStartingCharsCount', 'parameters': [], 'result_type': 'long'}
 dev.set_starting_chars_count(3)
 dev.call_server_method('set_starting_chars_count',7)
 dev.send_json_request('["set_starting_chars_count",5]')
 dev.get_starting_chars_count()
 5
-dev.starting_chars("Fantastic!")
+dev.starting_chars('Fantastic!')
+'Fanta'
+dev.call_server_method('starting_chars','Fantastic!')
+'Fanta'
+dev.send_json_request('["starting_chars","Fantastic!"]')
 'Fanta'
 ```
 
@@ -360,12 +352,10 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
-device_info = dev.getDeviceInfo()
-device_info =
-  name: 'string_controller'
-  model_number: 1002
-  serial_number: 0
-  firmware_version: [1x1 struct]
+device_info = dev.getDeviceInfo();
+json = dev.converToJson(device_info)
+json =
+  {"name":"string_controller","model_number":1002,"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0}}
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
@@ -380,9 +370,10 @@ charsAt
 startingChars
 setStartingCharsCount
 getStartingCharsCount
+setStoredString
+getStoredString
 dev.repeat()
-Error using ModularDevice/sendRequest (line 297)
-device responded with error, Incorrect number of parameters. 0 given. 2 needed.
+(from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
 ans =
   name: 'repeat'
@@ -394,17 +385,7 @@ ans =
   type: 'long'
   min: 1
   max: 100
-method_info = dev.repeat('??')
-ans =
-  name: 'repeat'
-  parameters: {[1x1 struct] [1x1 struct]}
-  result_type: 'array'
-method_info.parameters{1}
-ans =
-  name: 'string'
-  type: 'string'
 dev.repeat('"I am a string to repeat."',-1)
-Error using ModularDevice/sendRequest (line 297)
 device responded with error, Parameter value out of range: 1 <= count <= 100
 dev.repeat('"I am a string to repeat."',4)
 ans =
@@ -412,17 +393,22 @@ I am a string to repeat.
 I am a string to repeat.
 I am a string to repeat.
 I am a string to repeat.
-dev.charsAt('"I am an input string!"','[0,6,8]')
-ans =
-1x3 struct array with fields:
-    index
-    char
+chars_at = dev.charsAt('"I am an input string!"','[0,6,8]');
+json = dev.convertToJson(chars_at)
+json =
+  [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
 dev.getStartingCharsCount()
 ans =
      5
 dev.startingChars('Fantastic!')
 ans =
-Fanta
+  Fanta
+result = dev.callServerMethod('startingChars','Fantastic!')
+result =
+  Fanta
+result = dev.sendJsonRequest('["starting_chars","Fantastic!"]')
+result =
+  Fanta
 dev.close()                      % close serial connection
 delete(dev)                      % deletes the device
 ```

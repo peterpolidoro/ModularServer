@@ -398,7 +398,6 @@ dev.getMemoryFree()
 ans =
   5154
 dev.setSerialNumber()
-Error using ModularDevice/sendRequest (line 301)
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.setSerialNumber('?')
 method_info
@@ -409,9 +408,9 @@ ans =
 method_info = dev.setSerialNumber('??')
 method_info =
   name: 'setSerialNumber'
-  parameters: [1x1 struct]
+  parameters: {[1x1 struct]}
   result_type: []
-method_info.parameters
+method_info.parameters{1}
   name: 'serial_number'
   type: 'long'
   min: 0
@@ -423,12 +422,18 @@ parameter_info =
   min: 0
   max: 65535
 dev.setSerialNumber(-1)
-Error using ModularDevice/sendRequest (line 301)
 (from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
-dev.setSerialNumber(13)
+dev.setSerialNumber(13);
+result = dev.callServerMethod('?');
+result.device_info.serial_number
 ans =
-  []
-dev.close()                      % close serial connection
+  13
+result = dev.callServerMethod('?')
+json = dev.convertToJson(result)
+json =
+  '{"device_info":{"serial_number":12,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"methods":["getMemoryFree","resetDefaults","setSerialNumber"]}'
+dev.sendJsonRequest('["resetDefaults"]')
+dev.close()
 clear dev
 ```
 
