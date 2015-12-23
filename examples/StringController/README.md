@@ -353,7 +353,7 @@ serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo();
-json = dev.converToJson(device_info)
+json = dev.convertToJson(device_info)
 json =
   {"name":"string_controller","model_number":1002,"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0}}
 dev.getMethods()                 % get device methods
@@ -385,15 +385,15 @@ ans =
   type: 'long'
   min: 1
   max: 100
-dev.repeat('"I am a string to repeat."',-1)
+dev.repeat('I am a string to repeat.',-1)
 device responded with error, Parameter value out of range: 1 <= count <= 100
-dev.repeat('"I am a string to repeat."',4)
+dev.repeat('I am a string to repeat.',4)
 ans =
 I am a string to repeat.
 I am a string to repeat.
 I am a string to repeat.
 I am a string to repeat.
-chars_at = dev.charsAt('"I am an input string!"','[0,6,8]');
+chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =
   [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
@@ -406,7 +406,7 @@ ans =
 result = dev.callServerMethod('startingChars','Fantastic!')
 result =
   Fanta
-result = dev.sendJsonRequest('["starting_chars","Fantastic!"]')
+result = dev.sendJsonRequest('["startingChars","Fantastic!"]')
 result =
   Fanta
 dev.close()                      % close serial connection
