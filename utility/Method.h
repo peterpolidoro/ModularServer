@@ -20,7 +20,7 @@ namespace ModularDevice
 class Server;
 
 typedef void (*Callback)(void);
-typedef void (Server::*ReservedCallback)(void);
+typedef void (Server::*InternalCallback)(void);
 
 class Method
 {
@@ -38,24 +38,34 @@ public:
   void setReturnTypeObject();
   void setReturnTypeArray();
   JsonStream::JsonTypes getReturnType();
-private:
+protected:
   const ConstantString *name_ptr_;
   Callback callback_;
   bool callback_attached_;
+  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
+  int findParameterIndex(const ConstantString &parameter_name);
+  int parameter_count_;
+  JsonStream::JsonTypes return_type_;
+  void setup(const ConstantString &name)
   bool compareName(const char *name_to_compare);
   bool compareName(const ConstantString &name_to_compare);
   const ConstantString& getName();
   void callback();
-  ReservedCallback reserved_callback_;
-  bool reserved_;
-  void attachReservedCallback(ReservedCallback callback);
-  bool isReserved();
-  void reservedCallback(Server *server);
-  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptr_array_;
-  int findParameterIndex(const ConstantString &parameter_name);
-  int parameter_count_;
-  JsonStream::JsonTypes return_type_;
   friend class Server;
+};
+
+class InternalMethod : public Method
+{
+public:
+  InternalMethod();
+  InternalMethod(const ConstantString &name);
+  void attachCallback(InternalCallback callback);
+  void callback(Server *server);
+  void setPrivacy(bool is_private);
+  bool isPrivate();
+private:
+  InternalCallback internal_callback_;
+  bool private_;
 };
 }
 #endif

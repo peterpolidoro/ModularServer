@@ -10,20 +10,21 @@
 
 namespace ModularDevice
 {
+// Method
 Method::Method()
 {
-  setName(constants::empty_constant_string);
-  callback_attached_ = false;
-  reserved_ = false;
-  parameter_count_ = 0;
-  return_type_ = JsonStream::NULL_TYPE;
+  setup(constants::empty_constant_string);
 }
 
 Method::Method(const ConstantString &name)
 {
+  setup(name);
+}
+
+void Method::setup(const ConstantString &name)
+{
   setName(name);
   callback_attached_ = false;
-  reserved_ = false;
   parameter_count_ = 0;
   return_type_ = JsonStream::NULL_TYPE;
 }
@@ -37,7 +38,6 @@ void Method::attachCallback(Callback callback)
 {
   callback_ = callback;
   callback_attached_ = true;
-  reserved_ = false;
 }
 
 void Method::addParameter(Parameter &parameter)
@@ -50,7 +50,7 @@ void Method::addParameter(Parameter &parameter)
     int parameter_index = findParameterIndex(parameter_name);
     if (parameter_index < 0)
     {
-      parameter_ptr_array_.push_back(&parameter);
+      parameter_ptrs_.push_back(&parameter);
       parameter_count_++;
     }
   }
@@ -75,38 +75,18 @@ const ConstantString& Method::getName()
 
 void Method::callback()
 {
-  if ((callback_attached_) && (!isReserved()))
+  if (callback_attached_)
   {
     (*callback_)();
-  }
-}
-
-void Method::attachReservedCallback(ReservedCallback callback)
-{
-  reserved_callback_ = callback;
-  callback_attached_ = true;
-  reserved_ = true;
-}
-
-bool Method::isReserved()
-{
-  return reserved_;
-}
-
-void Method::reservedCallback(Server *server)
-{
-  if ((callback_attached_) && (isReserved()))
-  {
-    (server->*reserved_callback_)();
   }
 }
 
 int Method::findParameterIndex(const ConstantString &parameter_name)
 {
   int parameter_index = -1;
-  for (unsigned int i=0; i<parameter_ptr_array_.size(); ++i)
+  for (unsigned int i=0; i<parameter_ptrs_.size(); ++i)
   {
-    if (parameter_ptr_array_[i]->compareName(parameter_name))
+    if (parameter_ptrs_[i]->compareName(parameter_name))
     {
       parameter_index = i;
       break;
@@ -153,5 +133,42 @@ void Method::setReturnTypeArray()
 JsonStream::JsonTypes Method::getReturnType()
 {
   return return_type_;
+}
+
+// InternalMethod
+InternalMethod::InternalMethod()
+{
+  setup(constants::empty_constant_string);
+  private_ = false;
+}
+
+InternalMethod::InternalMethod(const ConstantString &name)
+{
+  setup(name);
+  private_ = false;
+}
+
+void InternalMethod::attachCallback(InternalCallback callback)
+{
+  internal_callback_ = callback;
+  callback_attached_ = true;
+}
+
+void InternalMethod::callback(Server *server)
+{
+  if (callback_attached_)
+  {
+    (server->*internal_callback_)();
+  }
+}
+
+void Method::setPrivacy(bool is_private)
+{
+  private_ = is_private;
+}
+
+bool Method::isPrivate()
+{
+  return private_;
 }
 }

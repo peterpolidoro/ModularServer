@@ -11,6 +11,45 @@
 
 namespace ModularDevice
 {
+template<size_t MAX_SIZE>
+void Server::setMethodStorageArray(Method (&methods)[MAX_SIZE])
+{
+  external_methods_.setStorageArray(methods);
+}
+
+template<size_t MAX_SIZE>
+void Server::setParameterStorageArray(Parameter (&parameters)[MAX_SIZE])
+{
+  external_parameters_.setStorageArray(parameters);
+}
+
+template<size_t MAX_SIZE>
+void Server::setSavedVariableStorageArray(SavedVariable (&saved_variables)[MAX_SIZE])
+{
+  external_saved_variables_.setStorageArray(saved_variables);
+}
+
+template<typename T>
+SavedVariable& Server::createInternalSavedVariable(const ConstantString &saved_variable_name,
+                                                   const T &default_value)
+{
+  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
+  if (saved_variable_index < 0)
+  {
+    internal_saved_variables_.push_back(SavedVariable(saved_variable_name,
+                                                      eeprom_index_,
+                                                      default_value));
+    unsigned char eeprom_init_value = 0;
+    getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
+    if (eeprom_init_value != constants::eeprom_initialized_value)
+    {
+      internal_saved_variables_.back().setDefaultValue();
+    }
+    eeprom_index_ += internal_saved_variables_.back().getSize();
+    return internal_saved_variables_.back();
+  }
+}
+
 template<typename T>
 SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_name,
                                            const T &default_value)
@@ -18,17 +57,17 @@ SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index < 0)
   {
-    saved_variable_array_.push_back(SavedVariable(saved_variable_name,
-                                                  eeprom_index_,
-                                                  default_value));
+    external_saved_variables_.push_back(SavedVariable(saved_variable_name,
+                                                      eeprom_index_,
+                                                      default_value));
     unsigned char eeprom_init_value = 0;
     getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
-      saved_variable_array_.back().setDefaultValue();
+      external_saved_variables_.back().setDefaultValue();
     }
-    eeprom_index_ += saved_variable_array_.back().getSize();
-    return saved_variable_array_.back();
+    eeprom_index_ += external_saved_variables_.back().getSize();
+    return external_saved_variables_.back();
   }
 }
 
@@ -40,18 +79,18 @@ SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index < 0)
   {
-    saved_variable_array_.push_back(SavedVariable(saved_variable_name,
-                                                  eeprom_index_,
-                                                  default_value,
-                                                  array_length));
+    external_saved_variables_.push_back(SavedVariable(saved_variable_name,
+                                                      eeprom_index_,
+                                                      default_value,
+                                                      array_length));
     unsigned char eeprom_init_value;
     getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
-      saved_variable_array_.back().setDefaultValue();
+      external_saved_variables_.back().setDefaultValue();
     }
-    eeprom_index_ += saved_variable_array_.back().getSize();
-    return saved_variable_array_.back();
+    eeprom_index_ += external_saved_variables_.back().getSize();
+    return external_saved_variables_.back();
   }
 }
 
@@ -62,7 +101,15 @@ void Server::setSavedVariableValue(const ConstantString &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_array_[saved_variable_index].setValue(value);
+    if (saved_variable_index < internal_saved_variables_.max_size())
+    {
+      internal_saved_variables_[saved_variable_index].setValue(value);
+    }
+    else
+    {
+      saved_variable_index -= internal_saved_variables_.max_size();
+      external_saved_variables_[saved_variable_index].setValue(value);
+    }
   }
 }
 
@@ -74,7 +121,15 @@ void Server::setSavedVariableValue(const ConstantString &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_array_[saved_variable_index].setValue(value,array_index);
+    if (saved_variable_index < internal_saved_variables_.max_size())
+    {
+      internal_saved_variables_[saved_variable_index].setValue(value,array_index);
+    }
+    else
+    {
+      saved_variable_index -= internal_saved_variables_.max_size();
+      external_saved_variables_[saved_variable_index].setValue(value,array_index);
+    }
   }
 }
 
@@ -85,7 +140,15 @@ void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_array_[saved_variable_index].getValue(value);
+    if (saved_variable_index < internal_saved_variables_.max_size())
+    {
+      internal_saved_variables_[saved_variable_index].getValue(value);
+    }
+    else
+    {
+      saved_variable_index -= internal_saved_variables_.max_size();
+      external_saved_variables_[saved_variable_index].getValue(value);
+    }
   }
 }
 
@@ -97,7 +160,15 @@ void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
   int saved_variable_index = findSavedVariableIndex(saved_variable_name);
   if (saved_variable_index >= 0)
   {
-    saved_variable_array_[saved_variable_index].getValue(value,array_index);
+    if (saved_variable_index < internal_saved_variables_.max_size())
+    {
+      internal_saved_variables_[saved_variable_index].getValue(value,array_index);
+    }
+    else
+    {
+      saved_variable_index -= internal_saved_variables_.max_size();
+      external_saved_variables_[saved_variable_index].getValue(value,array_index);
+    }
   }
 }
 
@@ -148,15 +219,74 @@ template<typename T>
 int Server::findMethodIndex(T method_name)
 {
   int method_index = -1;
-  for (unsigned int i=0; i<method_array_.size(); ++i)
+  for (unsigned int i=0; i<internal_methods_.size(); ++i)
   {
-    if (method_array_[i].compareName(method_name))
+    if (internal_methods_[i].compareName(method_name))
     {
       method_index = i;
-      break;
+      return method_index;
+    }
+  }
+  for (unsigned int i=0; i<external_methods_.size(); ++i)
+  {
+    if (external_methods_[i].compareName(method_name))
+    {
+      method_index = i + internal_methods_.max_size();
+      return method_index;
     }
   }
   return method_index;
+}
+
+template<typename T>
+int Server::findParameterIndex(T parameter_name)
+{
+  int parameter_index = -1;
+  for (unsigned int i=0; i<internal_parameters_.size(); ++i)
+  {
+    if (internal_parameters_[i].compareName(parameter_name))
+    {
+      parameter_index = i;
+      return parameter_index;
+    }
+  }
+  for (unsigned int i=0; i<external_parameters_.size(); ++i)
+  {
+    if (external_parameters_[i].compareName(parameter_name))
+    {
+      parameter_index = i + internal_parameters_.max_size();
+      return parameter_index;
+    }
+  }
+  return parameter_index;
+}
+
+template<typename T>
+int Server::findMethodParameterIndex(int method_index, T parameter_name)
+{
+  int parameter_index = -1;
+  if (method_index >= 0)
+  {
+    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
+    if (method_index < internal_methods_.max_size())
+    {
+      parameter_ptrs_ptr = &internal_methods_[method_index].parameter_ptrs_;
+    }
+    else
+    {
+      int index = method_index - internal_methods_.max_size();
+      parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
+    }
+    for (unsigned int i=0; i<parameter_ptrs_ptr->size(); ++i)
+    {
+      if ((*parameter_ptrs_ptr)[i]->compareName(parameter_name))
+      {
+        parameter_index = i;
+        return parameter_index;
+      }
+    }
+  }
+  return parameter_index;
 }
 }
 

@@ -26,45 +26,61 @@ Server::Server(Stream &stream) :
   server_stream_index_ = 0;
   server_running_ = false;
 
-  Method& get_device_info_method = createMethod(constants::get_device_info_method_name);
-  get_device_info_method.attachReservedCallback(&Server::getDeviceInfoCallback);
+  Parameter& serial_number_parameter = createInternalParameter(constants::serial_number_constant_string);
+  serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
 
-  Method& get_method_ids_method = createMethod(constants::get_method_ids_method_name);
-  get_method_ids_method.attachReservedCallback(&Server::getMethodIdsCallback);
+  InternalMethod& get_device_info_method = createInternalMethod(constants::get_device_info_method_name,true);
+  get_device_info_method.attachCallback(&Server::getDeviceInfoCallback);
 
-  Method& get_parameters_method = createMethod(constants::get_parameters_method_name);
-  get_parameters_method.attachReservedCallback(&Server::getParametersCallback);
+  InternalMethod& get_method_ids_method = createInternalMethod(constants::get_method_ids_method_name,true);
+  get_method_ids_method.attachCallback(&Server::getMethodIdsCallback);
 
-  Method& help_method = createMethod(constants::help_method_name);
-  help_method.attachReservedCallback(&Server::help);
+  InternalMethod& get_parameters_method = createInternalMethod(constants::get_parameters_method_name,true);
+  get_parameters_method.attachCallback(&Server::getParametersCallback);
 
-  Method& verbose_help_method = createMethod(constants::verbose_help_method_name);
-  verbose_help_method.attachReservedCallback(&Server::verboseHelp);
+  InternalMethod& help_method = createInternalMethod(constants::help_method_name,true);
+  help_method.attachCallback(&Server::helpCallback);
+
+  InternalMethod& verbose_help_method = createInternalMethod(constants::verbose_help_method_name,true);
+  verbose_help_method.attachCallback(&Server::verboseHelpCallback);
+
+#ifdef __AVR__
+  InternalMethod& get_memory_free_method = createInternalMethod(constants::get_memory_free_method_name);
+  get_memory_free_method.attachCallback(&Server::getMemoryFreeCallback);
+  get_memory_free_method.setReturnTypeLong();
+#endif
+
+  InternalMethod& reset_defaults_method = createInternalMethod(constants::reset_defaults_method_name);
+  reset_defaults_method.attachCallback(&Server::resetDefaultsCallback);
+
+  InternalMethod& set_serial_number_method = createInternalMethod(constants::set_serial_number_method_name);
+  set_serial_number_method.attachCallback(&Server::setSerialNumberCallback);
+  set_serial_number_method.addParameter(serial_number_parameter);
 
   eeprom_index_ = 0;
   eeprom_initialized_index_ = eeprom_index_;
   eeprom_init_name_ptr_ = &constants::eeprom_initialized_saved_variable_name;
   eeprom_uninitialized_ = true;
-  saved_variable_array_.push_back(SavedVariable(*eeprom_init_name_ptr_,
-                                                eeprom_index_,
-                                                constants::eeprom_initialized_value));
+  internal_saved_variables_.push_back(SavedVariable(*eeprom_init_name_ptr_,
+                                                    eeprom_index_,
+                                                    constants::eeprom_initialized_value));
   eeprom_index_ += sizeof(constants::eeprom_initialized_value);
-  createSavedVariable(constants::serial_number_constant_string,constants::serial_number_default);
+  createInternalSavedVariable(constants::serial_number_constant_string,constants::serial_number_default);
 }
 
 void Server::addServerStream(Stream &stream)
 {
   bool stream_found = false;
-  for (unsigned int i=0;i<server_stream_ptr_array_.size();++i)
+  for (unsigned int i=0;i<server_stream_ptrs_.size();++i)
   {
-    if (server_stream_ptr_array_[i] == &stream)
+    if (server_stream_ptrs_[i] == &stream)
     {
       stream_found = true;
     }
   }
   if (!stream_found)
   {
-    server_stream_ptr_array_.push_back(&stream);
+    server_stream_ptrs_.push_back(&stream);
   }
 }
 
@@ -90,48 +106,82 @@ void Server::setFirmwareVersion(const unsigned char firmware_major,const unsigne
   firmware_patch_ = firmware_patch;
 }
 
-Method& Server::createMethod(const ConstantString &method_name)
+InternalMethod& Server::createInternalMethod(const ConstantString &method_name, bool is_private)
 {
   int method_index = findMethodIndex(method_name);
-  if (method_index < 0)
+  if ((method_index < 0) || (method_index >= internal_methods_.max_size()))
   {
-    method_array_.push_back(Method(method_name));
-    return method_array_.back();
+    internal_methods_.push_back(InternalMethod(method_name));
+    internal_methods_.back().setPrivacy(is_private);
+    return internal_methods_.back();
   }
   else
   {
-    method_array_[method_index] = Method(method_name);
-    return method_array_[method_index];
+    internal_methods_[method_index] = Method(method_name);
+    internal_methods_[method_index].setPrivacy(is_private);
+    return internal_methods_[method_index];
+  }
+}
+
+Method& Server::createMethod(const ConstantString &method_name)
+{
+  int method_index = findMethodIndex(method_name);
+  if ((method_index < 0) || (method_index < internal_methods_.max_size()))
+  {
+    external_methods_.push_back(Method(method_name));
+    return external_methods_.back();
+  }
+  else
+  {
+    method_index -= internal_methods_.max_size();
+    external_methods_[method_index] = Method(method_name);
+    return external_methods_[method_index];
   }
 }
 
 Method& Server::copyMethod(Method method,const ConstantString &method_name)
 {
-  method_array_.push_back(method);
-  method_array_.back().setName(method_name);
-  return method_array_.back();
+  external_methods_.push_back(method);
+  external_methods_.back().setName(method_name);
+  return external_methods_.back();
+}
+
+Parameter& Server::createInternalParameter(const ConstantString &parameter_name)
+{
+  int parameter_index = findParameterIndex(parameter_name);
+  if ((parameter_index < 0) || (parameter_index >= internal_parameters_.max_size()))
+  {
+    internal_parameters_.push_back(Parameter(parameter_name));
+    return internal_parameters_.back();
+  }
+  else
+  {
+    internal_parameters_[parameter_index] = Parameter(parameter_name);
+    return internal_parameters_[parameter_index];
+  }
 }
 
 Parameter& Server::createParameter(const ConstantString &parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
-  if (parameter_index < 0)
+  if ((parameter_index < 0) || (parameter_index < internal_parameters_.max_size()))
   {
-    parameter_array_.push_back(Parameter(parameter_name));
-    return parameter_array_.back();
+    external_parameters_.push_back(Parameter(parameter_name));
+    return external_parameters_.back();
   }
   else
   {
-    parameter_array_[parameter_index] = Parameter(parameter_name);
-    return parameter_array_[parameter_index];
+    parameter_index -= internal_parameters_.max_size();
+    external_parameters_[parameter_index] = Parameter(parameter_name);
+    return external_parameters_[parameter_index];
   }
 }
 
 Parameter& Server::copyParameter(Parameter parameter,const ConstantString &parameter_name)
 {
-  parameter_array_.push_back(parameter);
-  parameter_array_.back().setName(parameter_name);
-  return parameter_array_.back();
+  external_parameters_.push_back(parameter);
+  external_parameters_.back().setName(parameter_name);
+  return external_parameters_.back();
 }
 
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &name)
@@ -174,9 +224,13 @@ void Server::endResponseArray()
 
 void Server::resetDefaults()
 {
-  for (unsigned int i=0; i<saved_variable_array_.size(); ++i)
+  for (unsigned int i=0; i<internal_saved_variables_.size(); ++i)
   {
-    saved_variable_array_[i].setDefaultValue();
+    internal_saved_variables_[i].setDefaultValue();
+  }
+  for (unsigned int i=0; i<external_saved_variables_.size(); ++i)
+  {
+    external_saved_variables_[i].setDefaultValue();
   }
 }
 
@@ -272,7 +326,7 @@ void Server::processRequestArray()
 {
   const char* method_string = (*request_json_array_ptr_)[0];
   request_method_index_ = processMethodString(method_string);
-  if (!(request_method_index_ < 0))
+  if (request_method_index_ >= 0)
   {
     int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
     int parameter_count = array_elements_count - 1;
@@ -295,15 +349,23 @@ void Server::processRequestArray()
               (strcmp((*request_json_array_ptr_)[2],"??") == 0)))
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
-      Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
+      if (request_method_index_ < internal_methods_.max_size())
+      {
+        Parameter& parameter = *(internal_methods_[request_method_index_].parameter_ptrs_[parameter_index]);
+      }
+      else
+      {
+        int index = request_method_index_ - internal_methods_.max_size();
+        Parameter& parameter = *(external_methods_[index].parameter_ptrs_[parameter_index]);
+      }
       writeResultKeyToResponse();
       parameterHelp(parameter);
     }
-    else if (method_array_[request_method_index_].isReserved())
+    else if (request_method_index_ < internal_methods_.max_size())
     {
       executeMethod();
     }
-    else if (parameter_count != method_array_[request_method_index_].parameter_count_)
+    else if (parameter_count != external_methods_[request_method_index_-internal_methods_.max_size()].parameter_count_)
     {
       error_ = true;
       writeKeyToResponse(constants::error_constant_string);
@@ -318,7 +380,7 @@ void Server::processRequestArray()
       dtostrf(parameter_count,0,0,parameter_count_str);
       strcat(error_str,parameter_count_str);
       strcat(error_str," given. ");
-      dtostrf(method_array_[request_method_index_].parameter_count_,0,0,parameter_count_str);
+      dtostrf(external_methods_[request_method_index_-internal_methods_.max_size()].parameter_count_,0,0,parameter_count_str);
       strcat(error_str,parameter_count_str);
       strcat(error_str," needed.");
       writeToResponse(constants::data_constant_string,error_str);
@@ -355,7 +417,7 @@ int Server::processMethodString(const char *method_string)
     method_index = findMethodIndex(method_string);
     writeToResponse(constants::id_constant_string,method_string);
   }
-  if ((method_index < 0) || (method_index >= (int)method_array_.size()))
+  if ((method_index < 0) || (method_index >= (int)internal_methods_.size()))
   {
     error_ = true;
     writeKeyToResponse(constants::error_constant_string);
@@ -382,39 +444,69 @@ int Server::countJsonArrayElements(ArduinoJson::JsonArray &json_array)
 
 void Server::executeMethod()
 {
-  if (method_array_[request_method_index_].isReserved())
+  if (request_method_index_ >= 0)
   {
-    method_array_[request_method_index_].reservedCallback(this);
-  }
-  else
-  {
-    method_array_[request_method_index_].callback();
+    if (request_method_index_ < internal_methods_.max_size())
+    {
+      internal_methods_[request_method_index_].callback(this);
+    }
+    else
+    {
+      int index = request_method_index_ - internal_methods_.max_size();
+      external_methods_[index].callback();
+    }
   }
 }
 
 void Server::methodHelp(bool verbose, int method_index)
 {
   beginResponseObject();
-  const ConstantString& method_name = method_array_[method_index].getName();
-  writeToResponse(constants::name_constant_string,method_name);
+  if (method_index < internal_methods_.max_size())
+  {
+    const ConstantString& method_name = internal_methods_[method_index].getName();
+    writeToResponse(constants::name_constant_string,method_name);
+  }
+  else
+  {
+    int index = method_index - internal_methods_.max_size();
+    const ConstantString& method_name = external_methods_[index].getName();
+    writeToResponse(constants::name_constant_string,method_name);
+  }
 
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
-  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
-  for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
+  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
+  if (method_index < internal_methods_.max_size())
+  {
+    parameter_ptrs_ptr = &internal_methods_[method_index].parameter_ptrs_;
+  }
+  else
+  {
+    int index = method_index - internal_methods_.max_size();
+    parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
+  }
+  for (unsigned int i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
     if (verbose)
     {
-      parameterHelp(*(parameter_ptr_array[i]));
+      parameterHelp(*((*parameter_ptrs_ptr)[i]));
     }
     else
     {
-      const ConstantString& parameter_name = parameter_ptr_array[i]->getName();
+      const ConstantString& parameter_name = (*parameter_ptrs_ptr)[i]->getName();
       writeToResponse(parameter_name);
     }
   }
   json_stream_.endArray();
-  writeToResponse(constants::result_type_constant_string,method_array_[method_index].getReturnType());
+  if (method_index < internal_methods_.max_size())
+  {
+    writeToResponse(constants::result_type_constant_string,internal_methods_[method_index].getReturnType());
+  }
+  else
+  {
+    int index = method_index - internal_methods_.max_size();
+    writeToResponse(constants::result_type_constant_string,external_methods_[index].getReturnType());
+  }
   endResponseObject();
 }
 
@@ -434,8 +526,17 @@ int Server::processParameterString(const char *parameter_string)
   {
     parameter_index = findMethodParameterIndex(request_method_index_,parameter_string);
   }
-  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[request_method_index_].parameter_ptr_array_;
-  if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptr_array.size()))
+  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
+  if  (method_index < internal_methods_.max_size())
+  {
+    parameter_ptrs_ptr = &internal_methods_[request_method_index_].parameter_ptrs_;
+  }
+  else
+  {
+    int index = method_index - internal_methods_.max_size();
+    parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
+  }
+  if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs.size()))
   {
     error_ = true;
     writeKeyToResponse(constants::error_constant_string);
@@ -449,69 +550,76 @@ int Server::processParameterString(const char *parameter_string)
   return parameter_index;
 }
 
-int Server::findParameterIndex(const char *parameter_name)
-{
-  int parameter_index = -1;
-  for (unsigned int i=0; i<parameter_array_.size(); ++i)
-  {
-    if (parameter_array_[i].compareName(parameter_name))
-    {
-      parameter_index = i;
-      break;
-    }
-  }
-  return parameter_index;
-}
+// int Server::findParameterIndex(const char *parameter_name)
+// {
+//   int parameter_index = -1;
+//   for (unsigned int i=0; i<internal_parameters_.size(); ++i)
+//   {
+//     if (internal_parameters_[i].compareName(parameter_name))
+//     {
+//       parameter_index = i;
+//       return parameter_index;
+//     }
+//   }
+// }
 
-int Server::findParameterIndex(const ConstantString &parameter_name)
-{
-  int parameter_index = -1;
-  for (unsigned int i=0; i<parameter_array_.size(); ++i)
-  {
-    if (parameter_array_[i].compareName(parameter_name))
-    {
-      parameter_index = i;
-      break;
-    }
-  }
-  return parameter_index;
-}
+// int Server::findParameterIndex(const ConstantString &parameter_name)
+// {
+//   int parameter_index = -1;
+//   for (unsigned int i=0; i<internal_parameters_.size(); ++i)
+//   {
+//     if (internal_parameters_[i].compareName(parameter_name))
+//     {
+//       parameter_index = i;
+//       return parameter_index;
+//     }
+//   }
+//   for (unsigned int i=0; i<external_parameters_.size(); ++i)
+//   {
+//     if (external_parameters_[i].compareName(parameter_name))
+//     {
+//       parameter_index = i + internal_parameters_.max_size();
+//       return parameter_index;
+//     }
+//   }
+//   return parameter_index;
+// }
 
-int Server::findMethodParameterIndex(int method_index, const char *parameter_name)
-{
-  int parameter_index = -1;
-  if (method_index >= 0)
-  {
-    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
-    for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
-    {
-      if (parameter_ptr_array[i]->compareName(parameter_name))
-      {
-        parameter_index = i;
-        break;
-      }
-    }
-  }
-  return parameter_index;
-}
+// int Server::findMethodParameterIndex(int method_index, const char *parameter_name)
+// {
+//   int parameter_index = -1;
+//   if (method_index >= 0)
+//   {
+//     Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptrs = internal_methods_[method_index].parameter_ptrs_;
+//     for (unsigned int i=0; i<parameter_ptrs.size(); ++i)
+//     {
+//       if (parameter_ptrs[i]->compareName(parameter_name))
+//       {
+//         parameter_index = i;
+//         break;
+//       }
+//     }
+//   }
+//   return parameter_index;
+// }
 
-int Server::findMethodParameterIndex(int method_index, const ConstantString &parameter_name)
-{
-  int parameter_index = -1;
-  if (method_index >= 0)
-  {
-    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptr_array = method_array_[method_index].parameter_ptr_array_;
-    for (unsigned int i=0; i<parameter_ptr_array.size(); ++i)
-    {
-      if (parameter_ptr_array[i]->compareName(parameter_name))
-      {
-        parameter_index = i;
-        break;
-      }
-    }
-  }
-  return parameter_index;
-}
+// int Server::findMethodParameterIndex(int method_index, const ConstantString &parameter_name)
+// {
+//   int parameter_index = -1;
+//   if (method_index >= 0)
+//   {
+//     Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptrs = internal_methods_[method_index].parameter_ptrs_;
+//     for (unsigned int i=0; i<parameter_ptrs.size(); ++i)
+//     {
+//       if (parameter_ptrs[i]->compareName(parameter_name))
+//       {
+//         parameter_index = i;
+//         break;
+//       }
+//     }
+//   }
+//   return parameter_index;
+// }
 
 void Server::parameterHelp(Parameter &parameter)
 {
@@ -658,7 +766,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   bool out_of_range = false;
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
-  Parameter& parameter = *(method_array_[request_method_index_].parameter_ptr_array_[parameter_index]);
+  Parameter& parameter = *(internal_methods_[request_method_index_].parameter_ptrs_[parameter_index]);
   JsonStream::JsonTypes type = parameter.getType();
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
   min_str[0] = 0;
@@ -866,12 +974,20 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
 int Server::findSavedVariableIndex(const ConstantString &saved_variable_name)
 {
   int saved_variable_index = -1;
-  for (unsigned int i=0; i<saved_variable_array_.size(); ++i)
+  for (unsigned int i=0; i<internal_saved_variables_.size(); ++i)
   {
-    if (saved_variable_array_[i].compareName(saved_variable_name))
+    if (internal_saved_variables_[i].compareName(saved_variable_name))
     {
       saved_variable_index = i;
-      break;
+      return saved_variable_index;
+    }
+  }
+  for (unsigned int i=0; i<external_saved_variables_.size(); ++i)
+  {
+    if (external_saved_variables_[i].compareName(saved_variable_name))
+    {
+      saved_variable_index = i + internal_saved_variables_.max_size();
+      return saved_variable_index;
     }
   }
   return saved_variable_index;
@@ -886,14 +1002,14 @@ unsigned int Server::getSerialNumber()
 
 void Server::initializeEeprom()
 {
-  saved_variable_array_[eeprom_initialized_index_].setValue(constants::eeprom_initialized_value);
+  internal_saved_variables_[eeprom_initialized_index_].setValue(constants::eeprom_initialized_value);
   eeprom_uninitialized_ = false;
 }
 
 void Server::incrementServerStream()
 {
-  server_stream_index_ = (server_stream_index_ + 1) % server_stream_ptr_array_.size();
-  json_stream_.setStream(*server_stream_ptr_array_[server_stream_index_]);
+  server_stream_index_ = (server_stream_index_ + 1) % server_stream_ptrs_.size();
+  json_stream_.setStream(*server_stream_ptrs_[server_stream_index_]);
 }
 
 void Server::writeDeviceInfoToResponse()
@@ -908,41 +1024,6 @@ void Server::writeDeviceInfoToResponse()
   writeToResponse(constants::minor_constant_string,firmware_minor_);
   writeToResponse(constants::patch_constant_string,firmware_patch_);
   endResponseObject();
-  endResponseObject();
-}
-
-void Server::getDeviceInfoCallback()
-{
-  writeResultKeyToResponse();
-  writeDeviceInfoToResponse();
-}
-
-void Server::getMethodIdsCallback()
-{
-  writeResultKeyToResponse();
-  beginResponseObject();
-  for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
-  {
-    if (!method_array_[method_index].isReserved())
-    {
-      const ConstantString& method_name = method_array_[method_index].getName();
-      writeToResponse(method_name,method_index);
-    }
-  }
-  endResponseObject();
-}
-
-void Server::getParametersCallback()
-{
-  writeResultKeyToResponse();
-  beginResponseObject();
-  writeKeyToResponse(constants::parameters_constant_string);
-  json_stream_.beginArray();
-  for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
-  {
-    parameterHelp(parameter_array_[parameter_index]);
-  }
-  json_stream_.endArray();
   endResponseObject();
 }
 
@@ -966,11 +1047,11 @@ void Server::help(bool verbose)
     // ?
     if (!verbose)
     {
-      for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
+      for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
-        if (!method_array_[method_index].isReserved())
+        if (!internal_methods_[method_index].isReserved())
         {
-          const ConstantString& method_name = method_array_[method_index].getName();
+          const ConstantString& method_name = internal_methods_[method_index].getName();
           writeToResponse(method_name);
         }
       }
@@ -978,9 +1059,9 @@ void Server::help(bool verbose)
     // ??
     else
     {
-      for (unsigned int method_index=0; method_index<method_array_.size(); ++method_index)
+      for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
-        if (!method_array_[method_index].isReserved())
+        if (!internal_methods_[method_index].isReserved())
         {
           methodHelp(false,method_index);
         }
@@ -989,9 +1070,9 @@ void Server::help(bool verbose)
 
       writeKeyToResponse(constants::parameters_constant_string);
       beginResponseArray();
-      for (unsigned int parameter_index=0; parameter_index<parameter_array_.size(); ++parameter_index)
+      for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
       {
-        parameterHelp(parameter_array_[parameter_index]);
+        parameterHelp(internal_parameters_[parameter_index]);
       }
     }
     endResponseArray();
@@ -1023,7 +1104,7 @@ void Server::help(bool verbose)
       {
         param_error = false;
         writeResultKeyToResponse();
-        Parameter& parameter = parameter_array_[parameter_index];
+        Parameter& parameter = internal_parameters_[parameter_index];
         parameterHelp(parameter);
       }
     }
@@ -1038,7 +1119,7 @@ void Server::help(bool verbose)
     if (parameter_index >= 0)
     {
       param_error = false;
-      Parameter& parameter = *(method_array_[method_index].parameter_ptr_array_[parameter_index]);
+      Parameter& parameter = *(internal_methods_[method_index].parameter_ptrs_[parameter_index]);
       writeResultKeyToResponse();
       parameterHelp(parameter);
     }
@@ -1058,13 +1139,66 @@ void Server::help(bool verbose)
   }
 }
 
-void Server::help()
+void Server::getDeviceInfoCallback()
+{
+  writeResultKeyToResponse();
+  writeDeviceInfoToResponse();
+}
+
+void Server::getMethodIdsCallback()
+{
+  writeResultKeyToResponse();
+  beginResponseObject();
+  for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
+  {
+    if (!internal_methods_[method_index].isReserved())
+    {
+      const ConstantString& method_name = internal_methods_[method_index].getName();
+      writeToResponse(method_name,method_index);
+    }
+  }
+  endResponseObject();
+}
+
+void Server::getParametersCallback()
+{
+  writeResultKeyToResponse();
+  beginResponseObject();
+  writeKeyToResponse(constants::parameters_constant_string);
+  json_stream_.beginArray();
+  for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+  {
+    parameterHelp(internal_parameters_[parameter_index]);
+  }
+  json_stream_.endArray();
+  endResponseObject();
+}
+
+void Server::helpCallback()
 {
   help(false);
 }
 
-void Server::verboseHelp()
+void Server::verboseHelpCallback()
 {
   help(true);
+}
+
+#ifdef __AVR__
+void Server::getMemoryFreeCallback()
+{
+  writeResultToResponse(freeMemory());
+}
+#endif
+
+void Server::resetDefaultsCallback()
+{
+  resetDefaults();
+}
+
+void Server::setSerialNumberCallback()
+{
+  unsigned int serial_number = (long)getParameterValue(constants::serial_number_constant_string);
+  setSerialNumber(serial_number);
 }
 }

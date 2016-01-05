@@ -16,6 +16,7 @@
 #include "ArduinoJson.h"
 #include "JsonSanitizer.h"
 #include "Array.h"
+#include "Vector.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
 #include "Parameter.h"
@@ -36,11 +37,17 @@ public:
   void setModelNumber(const unsigned int model_number);
   void setSerialNumber(const unsigned int serial_number);
   void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);
+  template <size_t MAX_SIZE>
+  void setMethodStorageArray(Method (&methods)[MAX_SIZE]);
   Method& createMethod(const ConstantString &method_name);
   Method& copyMethod(Method method,const ConstantString &method_name);
+  template <size_t MAX_SIZE>
+  void setParameterStorageArray(Parameter (&parameters)[MAX_SIZE]);
   Parameter& createParameter(const ConstantString &parameter_name);
   Parameter& copyParameter(Parameter parameter,const ConstantString &parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString &name);
+  template <size_t MAX_SIZE>
+  void setSavedVariableStorageArray(SavedVariable (&saved_variables)[MAX_SIZE]);
   template<typename T>
   SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
                                      const T &default_value);
@@ -85,13 +92,16 @@ public:
   void stopServer();
   void handleRequest();
 private:
-  Array<Stream*,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptr_array_;
+  Array<Stream*,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
   unsigned char server_stream_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray *request_json_array_ptr_;
-  Array<Method,constants::METHOD_COUNT_MAX> method_array_;
-  Array<Parameter,constants::PARAMETER_COUNT_MAX> parameter_array_;
-  Array<SavedVariable,constants::SAVED_VARIABLE_COUNT_MAX> saved_variable_array_;
+  Array<InternalMethod,constants::INTERNAL_METHOD_COUNT_MAX> internal_methods_;
+  Array<Parameter,constants::INTERNAL_PARAMETER_COUNT_MAX> internal_parameters_;
+  Array<SavedVariable,constants::INTERNAL_SAVED_VARIABLE_COUNT_MAX> internal_saved_variables_;
+  Vector<Method> external_methods_;
+  Vector<Parameter> external_parameters_;
+  Vector<SavedVariable> external_saved_variables_;
   const ConstantString *name_ptr_;
   unsigned int model_number_;
   unsigned char firmware_major_;
@@ -108,6 +118,11 @@ private:
   unsigned int eeprom_initialized_index_;
   bool server_running_;
 
+  InternalMethod& createInternalMethod(const ConstantString &method_name, bool is_private=false);
+  Parameter& createInternalParameter(const ConstantString &parameter_name);
+  template<typename T>
+  SavedVariable& createInternalSavedVariable(const ConstantString &saved_variable_name,
+                                             const T &default_value);
   void processRequestArray();
   int processMethodString(const char *method_string);
   template<typename T>
@@ -116,10 +131,14 @@ private:
   void executeMethod();
   void methodHelp(bool verbose, int method_index);
   int processParameterString(const char *parameter_string);
-  int findParameterIndex(const char *parameter_name);
-  int findParameterIndex(const ConstantString &parameter_name);
-  int findMethodParameterIndex(int method_index, const char *parameter_name);
-  int findMethodParameterIndex(int method_index, const ConstantString &parameter_name);
+  template<typename T>
+  int findParameterIndex(T parameter_name);
+  // int findParameterIndex(const char *parameter_name);
+  // int findParameterIndex(const ConstantString &parameter_name);
+  template<typename T>
+  int findMethodParameterIndex(int method_index, T parameter_name);
+  // int findMethodParameterIndex(int method_index, const char *parameter_name);
+  // int findMethodParameterIndex(int method_index, const ConstantString &parameter_name);
   void parameterHelp(Parameter &parameter);
   bool checkParameters();
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
@@ -130,13 +149,16 @@ private:
   void help(bool verbose);
   void writeDeviceInfoToResponse();
 
-  // reserved methods
+  // internal methods
   void getDeviceInfoCallback();
   void getMethodIdsCallback();
   void getResponseCodesCallback();
   void getParametersCallback();
-  void help();
-  void verboseHelp();
+  void helpCallback();
+  void verboseHelpCallback();
+  void getMemoryFreeCallback();
+  void resetDefaultsCallback();
+  void setSerialNumberCallback();
 };
 }
 #include "ServerDefinitions.h"

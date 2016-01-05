@@ -11,8 +11,6 @@ namespace ModularDevice
 {
 namespace constants
 {
-const unsigned char method_count_max = 24;
-
 const unsigned char eeprom_initialized_value = 123;
 
 const unsigned int serial_number_min = 0;

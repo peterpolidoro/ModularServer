@@ -13,21 +13,6 @@ namespace ModularDevice
 ModularServer::ModularServer(Stream &stream) :
   server_(stream)
 {
-  Parameter& serial_number_parameter = modular_server.createParameter(constants::serial_number_constant_string);
-  serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
-
-#ifdef __AVR__
-  Method& get_memory_free_method = createMethod(constants::get_memory_free_method_name);
-  get_memory_free_method.attachCallback(getMemoryFreeCallback);
-  get_memory_free_method.setReturnTypeLong();
-#endif
-
-  Method& reset_defaults_method = createMethod(constants::reset_defaults_method_name);
-  reset_defaults_method.attachCallback(resetDefaultsCallback);
-
-  Method& set_serial_number_method = createMethod(constants::set_serial_number_method_name);
-  set_serial_number_method.attachCallback(setSerialNumberCallback);
-  set_serial_number_method.addParameter(serial_number_parameter);
 }
 
 void ModularServer::addServerStream(Stream &stream)
@@ -131,22 +116,4 @@ void ModularServer::setSerialNumber(const unsigned int serial_number)
 }
 }
 
-ModularDevice::ModularServer modular_server(Serial);
-
-#ifdef __AVR__
-void ModularDevice::getMemoryFreeCallback()
-{
-  modular_server.writeResultToResponse(freeMemory());
-}
-#endif
-
-void ModularDevice::resetDefaultsCallback()
-{
-  modular_server.resetDefaults();
-}
-
-void ModularDevice::setSerialNumberCallback()
-{
-  unsigned int serial_number = (long)modular_server.getParameterValue(constants::serial_number_constant_string);
-  modular_server.setSerialNumber(serial_number);
-}
+// ModularDevice::ModularServer modular_server(Serial);
