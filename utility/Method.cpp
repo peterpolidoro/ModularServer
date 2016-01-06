@@ -162,12 +162,12 @@ void InternalMethod::callback(Server *server)
   }
 }
 
-void Method::setPrivacy(bool is_private)
+void InternalMethod::setPrivacy(bool is_private)
 {
   private_ = is_private;
 }
 
-bool Method::isPrivate()
+bool InternalMethod::isPrivate()
 {
   return private_;
 }

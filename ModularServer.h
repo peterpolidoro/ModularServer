@@ -17,6 +17,7 @@ class Method;
 class ModularServer
 {
 public:
+  ModularServer();
   ModularServer(Stream &stream);
   void addServerStream(Stream &stream);
   void setName(const ConstantString &device_name);
@@ -82,7 +83,5 @@ private:
 };
 }
 #include "ModularServerDefinitions.h"
-
-// extern ModularDevice::ModularServer modular_server;
 
 #endif

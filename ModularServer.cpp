@@ -10,6 +10,10 @@
 
 namespace ModularDevice
 {
+ModularServer::ModularServer()
+{
+}
+
 ModularServer::ModularServer(Stream &stream) :
   server_(stream)
 {
@@ -115,5 +119,3 @@ void ModularServer::setSerialNumber(const unsigned int serial_number)
   server_.setSerialNumber(serial_number);
 }
 }
-
-// ModularDevice::ModularServer modular_server(Serial);

@@ -31,6 +31,7 @@ namespace ModularDevice
 class Server
 {
 public:
+  Server();
   Server(Stream &stream);
   void addServerStream(Stream &stream);
   void setName(const ConstantString &name);
@@ -118,6 +119,7 @@ private:
   unsigned int eeprom_initialized_index_;
   bool server_running_;
 
+  void setup();
   InternalMethod& createInternalMethod(const ConstantString &method_name, bool is_private=false);
   Parameter& createInternalParameter(const ConstantString &parameter_name);
   template<typename T>
@@ -126,19 +128,15 @@ private:
   void processRequestArray();
   int processMethodString(const char *method_string);
   template<typename T>
-  int findMethodIndex(T method_name);
+  int findMethodIndex(T const&method_name);
   int countJsonArrayElements(ArduinoJson::JsonArray &json_array);
   void executeMethod();
   void methodHelp(bool verbose, int method_index);
   int processParameterString(const char *parameter_string);
   template<typename T>
-  int findParameterIndex(T parameter_name);
-  // int findParameterIndex(const char *parameter_name);
-  // int findParameterIndex(const ConstantString &parameter_name);
+  int findParameterIndex(T const&parameter_name);
   template<typename T>
-  int findMethodParameterIndex(int method_index, T parameter_name);
-  // int findMethodParameterIndex(int method_index, const char *parameter_name);
-  // int findMethodParameterIndex(int method_index, const ConstantString &parameter_name);
+  int findMethodParameterIndex(int method_index, T const&parameter_name);
   void parameterHelp(Parameter &parameter);
   bool checkParameters();
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);

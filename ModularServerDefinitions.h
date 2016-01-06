@@ -12,19 +12,19 @@
 namespace ModularDevice
 {
 template<size_t MAX_SIZE>
-void Server::setMethodStorageArray(Method (&methods)[MAX_SIZE])
+void ModularServer::setMethodStorageArray(Method (&methods)[MAX_SIZE])
 {
   server_.setMethodStorageArray(methods);
 }
 
 template<size_t MAX_SIZE>
-void Server::setParameterStorageArray(Parameter (&parameters)[MAX_SIZE])
+void ModularServer::setParameterStorageArray(Parameter (&parameters)[MAX_SIZE])
 {
   server_.setParameterStorageArray(parameters);
 }
 
 template<size_t MAX_SIZE>
-void Server::setSavedVariableStorageArray(SavedVariable (&saved_variables)[MAX_SIZE])
+void ModularServer::setSavedVariableStorageArray(SavedVariable (&saved_variables)[MAX_SIZE])
 {
   server_.setSavedVariableStorageArray(saved_variables);
 }

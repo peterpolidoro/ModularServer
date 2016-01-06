@@ -25,4 +25,6 @@ namespace callbacks
 // modular_server.getSavedVariableValue type must match the saved variable default type
 // modular_server.setSavedVariableValue type must match the saved variable default type
 
+ModularDevice::ModularServer& modular_server = controller.getModularServer();
+
 }

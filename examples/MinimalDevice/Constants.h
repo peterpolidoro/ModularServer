@@ -12,6 +12,13 @@
 
 namespace constants
 {
+// enum{METHOD_COUNT_MAX=31};
+// enum{PARAMETER_COUNT_MAX=16};
+// enum{SAVED_VARIABLE_COUNT_MAX=10};
+enum{METHOD_COUNT_MAX=1};
+enum{PARAMETER_COUNT_MAX=1};
+enum{SAVED_VARIABLE_COUNT_MAX=1};
+
 extern const unsigned int baudrate;
 
 extern const unsigned int model_number;

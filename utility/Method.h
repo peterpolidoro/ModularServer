@@ -46,7 +46,7 @@ protected:
   int findParameterIndex(const ConstantString &parameter_name);
   int parameter_count_;
   JsonStream::JsonTypes return_type_;
-  void setup(const ConstantString &name)
+  void setup(const ConstantString &name);
   bool compareName(const char *name_to_compare);
   bool compareName(const ConstantString &name_to_compare);
   const ConstantString& getName();

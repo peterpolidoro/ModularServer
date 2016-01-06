@@ -216,7 +216,7 @@ void Server::writeResultToResponse(T value)
 }
 
 template<typename T>
-int Server::findMethodIndex(T method_name)
+int Server::findMethodIndex(T const&method_name)
 {
   int method_index = -1;
   for (unsigned int i=0; i<internal_methods_.size(); ++i)
@@ -239,7 +239,7 @@ int Server::findMethodIndex(T method_name)
 }
 
 template<typename T>
-int Server::findParameterIndex(T parameter_name)
+int Server::findParameterIndex(T const&parameter_name)
 {
   int parameter_index = -1;
   for (unsigned int i=0; i<internal_parameters_.size(); ++i)
@@ -262,7 +262,7 @@ int Server::findParameterIndex(T parameter_name)
 }
 
 template<typename T>
-int Server::findMethodParameterIndex(int method_index, T parameter_name)
+int Server::findMethodParameterIndex(int method_index, T const&parameter_name)
 {
   int parameter_index = -1;
   if (method_index >= 0)

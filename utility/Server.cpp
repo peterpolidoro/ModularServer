@@ -10,10 +10,19 @@
 
 namespace ModularDevice
 {
-Server::Server(Stream &stream) :
-  json_stream_(stream)
+Server::Server()
+{
+  setup();
+}
+
+Server::Server(Stream &stream)
 {
   addServerStream(stream);
+  setup();
+}
+
+void Server::setup()
+{
   setName(constants::empty_constant_string);
   model_number_ = 0;
   firmware_major_ = 0;
@@ -82,6 +91,7 @@ void Server::addServerStream(Stream &stream)
   {
     server_stream_ptrs_.push_back(&stream);
   }
+  json_stream_.setStream(stream);
 }
 
 void Server::setName(const ConstantString &name)
@@ -117,7 +127,7 @@ InternalMethod& Server::createInternalMethod(const ConstantString &method_name, 
   }
   else
   {
-    internal_methods_[method_index] = Method(method_name);
+    internal_methods_[method_index] = InternalMethod(method_name);
     internal_methods_[method_index].setPrivacy(is_private);
     return internal_methods_[method_index];
   }
@@ -250,7 +260,7 @@ void Server::stopServer()
 
 void Server::handleRequest()
 {
-  if (server_running_ && (json_stream_.available() > 0))
+  if (server_running_ && (server_stream_ptrs_.size() > 0) && (json_stream_.available() > 0))
   {
     int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
     if (bytes_read > 0)
@@ -349,21 +359,55 @@ void Server::processRequestArray()
               (strcmp((*request_json_array_ptr_)[2],"??") == 0)))
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
+      Parameter* parameter_ptr;
       if (request_method_index_ < internal_methods_.max_size())
       {
-        Parameter& parameter = *(internal_methods_[request_method_index_].parameter_ptrs_[parameter_index]);
+        parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
       }
       else
       {
         int index = request_method_index_ - internal_methods_.max_size();
-        Parameter& parameter = *(external_methods_[index].parameter_ptrs_[parameter_index]);
+        parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
       }
       writeResultKeyToResponse();
-      parameterHelp(parameter);
+      parameterHelp(*parameter_ptr);
     }
     else if (request_method_index_ < internal_methods_.max_size())
     {
-      executeMethod();
+      if (internal_methods_[request_method_index_].isPrivate())
+      {
+        executeMethod();
+      }
+      else if (parameter_count != internal_methods_[request_method_index_].parameter_count_)
+      {
+        error_ = true;
+        writeKeyToResponse(constants::error_constant_string);
+        beginResponseObject();
+        writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
+        char incorrect_parameter_number[constants::incorrect_parameter_number_error_data.length()+1];
+        constants::incorrect_parameter_number_error_data.copy(incorrect_parameter_number);
+        char error_str[constants::STRING_LENGTH_ERROR];
+        error_str[0] = 0;
+        strcat(error_str,incorrect_parameter_number);
+        char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
+        dtostrf(parameter_count,0,0,parameter_count_str);
+        strcat(error_str,parameter_count_str);
+        strcat(error_str," given. ");
+        dtostrf(internal_methods_[request_method_index_].parameter_count_,0,0,parameter_count_str);
+        strcat(error_str,parameter_count_str);
+        strcat(error_str," needed.");
+        writeToResponse(constants::data_constant_string,error_str);
+        writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
+        endResponseObject();
+      }
+      else
+      {
+        bool parameters_ok = checkParameters();
+        if (parameters_ok)
+        {
+          executeMethod();
+        }
+      }
     }
     else if (parameter_count != external_methods_[request_method_index_-internal_methods_.max_size()].parameter_count_)
     {
@@ -417,7 +461,9 @@ int Server::processMethodString(const char *method_string)
     method_index = findMethodIndex(method_string);
     writeToResponse(constants::id_constant_string,method_string);
   }
-  if ((method_index < 0) || (method_index >= (int)internal_methods_.size()))
+  if ((method_index < 0) ||
+      ((method_index >= (int)internal_methods_.size()) && (method_index < (int)internal_methods_.max_size())) ||
+      (method_index >= (int)external_methods_.max_size()))
   {
     error_ = true;
     writeKeyToResponse(constants::error_constant_string);
@@ -446,11 +492,12 @@ void Server::executeMethod()
 {
   if (request_method_index_ >= 0)
   {
-    if (request_method_index_ < internal_methods_.max_size())
+    if (request_method_index_ < internal_methods_.size())
     {
       internal_methods_[request_method_index_].callback(this);
     }
-    else
+    else if ((request_method_index_ >= internal_methods_.max_size()) &&
+             (request_method_index_ < (internal_methods_.max_size() + external_methods_.size())))
     {
       int index = request_method_index_ - internal_methods_.max_size();
       external_methods_[index].callback();
@@ -527,16 +574,16 @@ int Server::processParameterString(const char *parameter_string)
     parameter_index = findMethodParameterIndex(request_method_index_,parameter_string);
   }
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
-  if  (method_index < internal_methods_.max_size())
+  if  (request_method_index_ < internal_methods_.max_size())
   {
     parameter_ptrs_ptr = &internal_methods_[request_method_index_].parameter_ptrs_;
   }
   else
   {
-    int index = method_index - internal_methods_.max_size();
+    int index = request_method_index_ - internal_methods_.max_size();
     parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
   }
-  if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs.size()))
+  if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs_ptr->size()))
   {
     error_ = true;
     writeKeyToResponse(constants::error_constant_string);
@@ -549,77 +596,6 @@ int Server::processParameterString(const char *parameter_string)
   }
   return parameter_index;
 }
-
-// int Server::findParameterIndex(const char *parameter_name)
-// {
-//   int parameter_index = -1;
-//   for (unsigned int i=0; i<internal_parameters_.size(); ++i)
-//   {
-//     if (internal_parameters_[i].compareName(parameter_name))
-//     {
-//       parameter_index = i;
-//       return parameter_index;
-//     }
-//   }
-// }
-
-// int Server::findParameterIndex(const ConstantString &parameter_name)
-// {
-//   int parameter_index = -1;
-//   for (unsigned int i=0; i<internal_parameters_.size(); ++i)
-//   {
-//     if (internal_parameters_[i].compareName(parameter_name))
-//     {
-//       parameter_index = i;
-//       return parameter_index;
-//     }
-//   }
-//   for (unsigned int i=0; i<external_parameters_.size(); ++i)
-//   {
-//     if (external_parameters_[i].compareName(parameter_name))
-//     {
-//       parameter_index = i + internal_parameters_.max_size();
-//       return parameter_index;
-//     }
-//   }
-//   return parameter_index;
-// }
-
-// int Server::findMethodParameterIndex(int method_index, const char *parameter_name)
-// {
-//   int parameter_index = -1;
-//   if (method_index >= 0)
-//   {
-//     Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptrs = internal_methods_[method_index].parameter_ptrs_;
-//     for (unsigned int i=0; i<parameter_ptrs.size(); ++i)
-//     {
-//       if (parameter_ptrs[i]->compareName(parameter_name))
-//       {
-//         parameter_index = i;
-//         break;
-//       }
-//     }
-//   }
-//   return parameter_index;
-// }
-
-// int Server::findMethodParameterIndex(int method_index, const ConstantString &parameter_name)
-// {
-//   int parameter_index = -1;
-//   if (method_index >= 0)
-//   {
-//     Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>& parameter_ptrs = internal_methods_[method_index].parameter_ptrs_;
-//     for (unsigned int i=0; i<parameter_ptrs.size(); ++i)
-//     {
-//       if (parameter_ptrs[i]->compareName(parameter_name))
-//       {
-//         parameter_index = i;
-//         break;
-//       }
-//     }
-//   }
-//   return parameter_index;
-// }
 
 void Server::parameterHelp(Parameter &parameter)
 {
@@ -766,8 +742,17 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   bool out_of_range = false;
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
-  Parameter& parameter = *(internal_methods_[request_method_index_].parameter_ptrs_[parameter_index]);
-  JsonStream::JsonTypes type = parameter.getType();
+  Parameter* parameter_ptr = NULL;
+  if  (request_method_index_ < internal_methods_.max_size())
+  {
+    parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
+  }
+  else
+  {
+    int index = request_method_index_ - internal_methods_.max_size();
+    parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
+  }
+  JsonStream::JsonTypes type = parameter_ptr->getType();
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
   min_str[0] = 0;
   char max_str[JsonStream::STRING_LENGTH_DOUBLE];
@@ -776,11 +761,11 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   {
     case JsonStream::LONG_TYPE:
       {
-        if (parameter.rangeIsSet())
+        if (parameter_ptr->rangeIsSet())
         {
           long value = (long)json_value;
-          long min = parameter.getMin().l;
-          long max = parameter.getMax().l;
+          long min = parameter_ptr->getMin().l;
+          long max = parameter_ptr->getMax().l;
           if ((value < min) || (value > max))
           {
             out_of_range = true;
@@ -792,11 +777,11 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
       }
     case JsonStream::DOUBLE_TYPE:
       {
-        if (parameter.rangeIsSet())
+        if (parameter_ptr->rangeIsSet())
         {
           double value = (double)json_value;
-          double min = parameter.getMin().d;
-          double max = parameter.getMax().d;
+          double min = parameter_ptr->getMin().d;
+          double max = parameter_ptr->getMax().d;
           if ((value < min) || (value > max))
           {
             out_of_range = true;
@@ -830,16 +815,16 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
         }
         else
         {
-          JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+          JsonStream::JsonTypes array_element_type = parameter_ptr->getArrayElementType();
           switch (array_element_type)
           {
             case JsonStream::LONG_TYPE:
               {
-                if (parameter.rangeIsSet())
+                if (parameter_ptr->rangeIsSet())
                 {
                   long value;
-                  long min = parameter.getMin().l;
-                  long max = parameter.getMax().l;
+                  long min = parameter_ptr->getMin().l;
+                  long max = parameter_ptr->getMax().l;
                   for (ArduinoJson::JsonArray::iterator it=json_array.begin();
                        it!=json_array.end();
                        ++it)
@@ -858,11 +843,11 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
               }
             case JsonStream::DOUBLE_TYPE:
               {
-                if (parameter.rangeIsSet())
+                if (parameter_ptr->rangeIsSet())
                 {
                   double value;
-                  double min = parameter.getMin().d;
-                  double max = parameter.getMax().d;
+                  double min = parameter_ptr->getMin().d;
+                  double max = parameter_ptr->getMax().d;
                   for (ArduinoJson::JsonArray::iterator it=json_array.begin();
                        it!=json_array.end();
                        ++it)
@@ -914,7 +899,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     strcat(error_str," <= ");
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString& name = parameter.getName();
+    const ConstantString& name = parameter_ptr->getName();
     name.copy(parameter_name);
     strcat(error_str,parameter_name);
     if (type == JsonStream::ARRAY_TYPE)
@@ -935,7 +920,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString& name = parameter.getName();
+    const ConstantString& name = parameter_ptr->getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
@@ -955,7 +940,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString& name = parameter.getName();
+    const ConstantString& name = parameter_ptr->getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
@@ -1008,8 +993,11 @@ void Server::initializeEeprom()
 
 void Server::incrementServerStream()
 {
-  server_stream_index_ = (server_stream_index_ + 1) % server_stream_ptrs_.size();
-  json_stream_.setStream(*server_stream_ptrs_[server_stream_index_]);
+  if (server_stream_ptrs_.size() > 0)
+  {
+    server_stream_index_ = (server_stream_index_ + 1) % server_stream_ptrs_.size();
+    json_stream_.setStream(*server_stream_ptrs_[server_stream_index_]);
+  }
 }
 
 void Server::writeDeviceInfoToResponse()
@@ -1049,11 +1037,16 @@ void Server::help(bool verbose)
     {
       for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
-        if (!internal_methods_[method_index].isReserved())
+        if (!internal_methods_[method_index].isPrivate())
         {
           const ConstantString& method_name = internal_methods_[method_index].getName();
           writeToResponse(method_name);
         }
+      }
+      for (unsigned int method_index=0; method_index<external_methods_.size(); ++method_index)
+      {
+        const ConstantString& method_name = external_methods_[method_index].getName();
+        writeToResponse(method_name);
       }
     }
     // ??
@@ -1061,10 +1054,15 @@ void Server::help(bool verbose)
     {
       for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
-        if (!internal_methods_[method_index].isReserved())
+        if (!internal_methods_[method_index].isPrivate())
         {
           methodHelp(false,method_index);
         }
+      }
+      for (unsigned int method_index=0; method_index<external_methods_.size(); ++method_index)
+      {
+        int index = method_index + internal_methods_.max_size();
+        methodHelp(false,index);
       }
       endResponseArray();
 
@@ -1073,6 +1071,10 @@ void Server::help(bool verbose)
       for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
       {
         parameterHelp(internal_parameters_[parameter_index]);
+      }
+      for (unsigned int parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
+      {
+        parameterHelp(external_parameters_[parameter_index]);
       }
     }
     endResponseArray();
@@ -1104,8 +1106,17 @@ void Server::help(bool verbose)
       {
         param_error = false;
         writeResultKeyToResponse();
-        Parameter& parameter = internal_parameters_[parameter_index];
-        parameterHelp(parameter);
+        Parameter* parameter_ptr = NULL;
+        if (parameter_index < internal_parameters_.max_size())
+        {
+          parameter_ptr = &internal_parameters_[parameter_index];
+        }
+        else
+        {
+          int index = parameter_index - internal_parameters_.max_size();
+          parameter_ptr = &external_parameters_[index];
+        }
+        parameterHelp(*parameter_ptr);
       }
     }
   }
@@ -1115,13 +1126,25 @@ void Server::help(bool verbose)
   {
     const char* method_string = (*request_json_array_ptr_)[1];
     int method_index = findMethodIndex(method_string);
-    int parameter_index = findMethodParameterIndex(method_index,(const char *)(*request_json_array_ptr_)[2]);
-    if (parameter_index >= 0)
+    if (method_index >= 0)
     {
-      param_error = false;
-      Parameter& parameter = *(internal_methods_[method_index].parameter_ptrs_[parameter_index]);
-      writeResultKeyToResponse();
-      parameterHelp(parameter);
+      int parameter_index = findMethodParameterIndex(method_index,(const char *)(*request_json_array_ptr_)[2]);
+      if (parameter_index >= 0)
+      {
+        param_error = false;
+        Parameter* parameter_ptr = NULL;
+        if (method_index < internal_methods_.max_size())
+        {
+          parameter_ptr = internal_methods_[method_index].parameter_ptrs_[parameter_index];
+        }
+        else
+        {
+          int index = method_index - internal_methods_.max_size();
+          parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
+        }
+        writeResultKeyToResponse();
+        parameterHelp(*parameter_ptr);
+      }
     }
   }
   // ? unknown
@@ -1151,11 +1174,16 @@ void Server::getMethodIdsCallback()
   beginResponseObject();
   for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
   {
-    if (!internal_methods_[method_index].isReserved())
+    if (!internal_methods_[method_index].isPrivate())
     {
       const ConstantString& method_name = internal_methods_[method_index].getName();
       writeToResponse(method_name,method_index);
     }
+  }
+  for (unsigned int method_index=0; method_index<external_methods_.size(); ++method_index)
+  {
+    const ConstantString& method_name = external_methods_[method_index].getName();
+    writeToResponse(method_name,method_index);
   }
   endResponseObject();
 }
@@ -1169,6 +1197,10 @@ void Server::getParametersCallback()
   for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
   {
     parameterHelp(internal_parameters_[parameter_index]);
+  }
+  for (unsigned int parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
+  {
+    parameterHelp(external_parameters_[parameter_index]);
   }
   json_stream_.endArray();
   endResponseObject();
