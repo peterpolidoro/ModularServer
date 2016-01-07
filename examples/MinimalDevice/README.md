@@ -66,7 +66,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5154
+  "result":6379
 }
 ```
 
@@ -334,7 +334,7 @@ dev.get_device_info()
 dev.get_methods()
 ['set_serial_number', 'get_memory_free', 'reset_defaults']
 dev.get_memory_free()
-5154
+6379
 dev.set_serial_number()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.set_serial_number('?')
@@ -396,7 +396,7 @@ resetDefaults
 setSerialNumber
 dev.getMemoryFree()
 ans =
-  5154
+  6379
 dev.setSerialNumber()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.setSerialNumber('?')

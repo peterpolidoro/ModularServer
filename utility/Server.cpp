@@ -463,7 +463,7 @@ int Server::processMethodString(const char *method_string)
   }
   if ((method_index < 0) ||
       ((method_index >= (int)internal_methods_.size()) && (method_index < (int)internal_methods_.max_size())) ||
-      (method_index >= (int)external_methods_.max_size()))
+      (method_index >= ((int)internal_methods_.max_size() + (int)external_methods_.size())))
   {
     error_ = true;
     writeKeyToResponse(constants::error_constant_string);
