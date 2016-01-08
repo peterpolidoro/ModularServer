@@ -1183,7 +1183,8 @@ void Server::getMethodIdsCallback()
   for (unsigned int method_index=0; method_index<external_methods_.size(); ++method_index)
   {
     const ConstantString& method_name = external_methods_[method_index].getName();
-    writeToResponse(method_name,method_index);
+    int index = method_index + internal_methods_.max_size();
+    writeToResponse(method_name,index);
   }
   endResponseObject();
 }
