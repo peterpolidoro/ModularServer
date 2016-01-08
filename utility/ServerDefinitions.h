@@ -12,21 +12,21 @@
 namespace ModularDevice
 {
 template<size_t MAX_SIZE>
-void Server::setMethodStorageArray(Method (&methods)[MAX_SIZE])
+void Server::setMethodStorage(Method (&methods)[MAX_SIZE])
 {
-  external_methods_.setStorageArray(methods);
+  external_methods_.setStorage(methods);
 }
 
 template<size_t MAX_SIZE>
-void Server::setParameterStorageArray(Parameter (&parameters)[MAX_SIZE])
+void Server::setParameterStorage(Parameter (&parameters)[MAX_SIZE])
 {
-  external_parameters_.setStorageArray(parameters);
+  external_parameters_.setStorage(parameters);
 }
 
 template<size_t MAX_SIZE>
-void Server::setSavedVariableStorageArray(SavedVariable (&saved_variables)[MAX_SIZE])
+void Server::setSavedVariableStorage(SavedVariable (&saved_variables)[MAX_SIZE])
 {
-  external_saved_variables_.setStorageArray(saved_variables);
+  external_saved_variables_.setStorage(saved_variables);
 }
 
 template<typename T>

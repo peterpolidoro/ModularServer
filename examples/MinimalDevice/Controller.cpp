@@ -23,10 +23,10 @@ void Controller::setup()
   // Add Server Streams
   modular_server_.addServerStream(Serial);
 
-  // Set Storage Arrays
-  modular_server_.setSavedVariableStorageArray(saved_variables_);
-  modular_server_.setParameterStorageArray(parameters_);
-  modular_server_.setMethodStorageArray(methods_);
+  // Set Storage
+  modular_server_.setSavedVariableStorage(saved_variables_);
+  modular_server_.setParameterStorage(parameters_);
+  modular_server_.setMethodStorage(methods_);
 
   // Saved Variables
 

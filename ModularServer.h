@@ -24,16 +24,16 @@ public:
   void setModelNumber(const unsigned int model_number);
   void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);
   template <size_t MAX_SIZE>
-  void setMethodStorageArray(Method (&methods)[MAX_SIZE]);
+  void setMethodStorage(Method (&methods)[MAX_SIZE]);
   Method& createMethod(const ConstantString &method_name);
   Method& copyMethod(Method &method,const ConstantString &method_name);
   template <size_t MAX_SIZE>
-  void setParameterStorageArray(Parameter (&parameters)[MAX_SIZE]);
+  void setParameterStorage(Parameter (&parameters)[MAX_SIZE]);
   Parameter& createParameter(const ConstantString &parameter_name);
   Parameter& copyParameter(Parameter &parameter,const ConstantString &parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString &parameter_name);
   template <size_t MAX_SIZE>
-  void setSavedVariableStorageArray(SavedVariable (&saved_variables)[MAX_SIZE]);
+  void setSavedVariableStorage(SavedVariable (&saved_variables)[MAX_SIZE]);
   template<typename T>
   SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
                                      const T &default_value);
