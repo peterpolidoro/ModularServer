@@ -12,9 +12,9 @@
 namespace constants
 {
 //MAX values must be >= 1, < RAM limit, <= created
-enum{METHOD_COUNT_MAX=4};
-enum{PARAMETER_COUNT_MAX=3};
 enum{SAVED_VARIABLE_COUNT_MAX=1};
+enum{PARAMETER_COUNT_MAX=3};
+enum{METHOD_COUNT_MAX=4};
 
 extern const unsigned char led_pin;
 extern const unsigned int baudrate;

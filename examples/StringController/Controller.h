@@ -23,9 +23,9 @@ public:
   String getStoredString();
 private:
   ModularDevice::ModularServer modular_server_;
-  ModularDevice::Method methods_[constants::METHOD_COUNT_MAX];
-  ModularDevice::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
   SavedVariable saved_variables_[constants::SAVED_VARIABLE_COUNT_MAX];
+  ModularDevice::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
+  ModularDevice::Method methods_[constants::METHOD_COUNT_MAX];
 
   String stored_string_;
 };

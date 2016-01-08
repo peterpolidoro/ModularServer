@@ -13,9 +13,9 @@
 namespace constants
 {
 //MAX values must be >= 1, < RAM limit, <= created
-enum{METHOD_COUNT_MAX=1};
-enum{PARAMETER_COUNT_MAX=1};
 enum{SAVED_VARIABLE_COUNT_MAX=1};
+enum{PARAMETER_COUNT_MAX=1};
+enum{METHOD_COUNT_MAX=1};
 
 extern const unsigned int baudrate;
 
