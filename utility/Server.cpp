@@ -119,7 +119,7 @@ void Server::setFirmwareVersion(const unsigned char firmware_major,const unsigne
 InternalMethod& Server::createInternalMethod(const ConstantString &method_name, bool is_private)
 {
   int method_index = findMethodIndex(method_name);
-  if ((method_index < 0) || (method_index >= internal_methods_.max_size()))
+  if ((method_index < 0) || (method_index >= (int)internal_methods_.max_size()))
   {
     internal_methods_.push_back(InternalMethod(method_name));
     internal_methods_.back().setPrivacy(is_private);
@@ -136,7 +136,7 @@ InternalMethod& Server::createInternalMethod(const ConstantString &method_name, 
 Method& Server::createMethod(const ConstantString &method_name)
 {
   int method_index = findMethodIndex(method_name);
-  if ((method_index < 0) || (method_index < internal_methods_.max_size()))
+  if ((method_index < 0) || (method_index < (int)internal_methods_.max_size()))
   {
     external_methods_.push_back(Method(method_name));
     return external_methods_.back();
@@ -159,7 +159,7 @@ Method& Server::copyMethod(Method method,const ConstantString &method_name)
 Parameter& Server::createInternalParameter(const ConstantString &parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
-  if ((parameter_index < 0) || (parameter_index >= internal_parameters_.max_size()))
+  if ((parameter_index < 0) || (parameter_index >= (int)internal_parameters_.max_size()))
   {
     internal_parameters_.push_back(Parameter(parameter_name));
     return internal_parameters_.back();
@@ -174,7 +174,7 @@ Parameter& Server::createInternalParameter(const ConstantString &parameter_name)
 Parameter& Server::createParameter(const ConstantString &parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
-  if ((parameter_index < 0) || (parameter_index < internal_parameters_.max_size()))
+  if ((parameter_index < 0) || (parameter_index < (int)internal_parameters_.max_size()))
   {
     external_parameters_.push_back(Parameter(parameter_name));
     return external_parameters_.back();
@@ -360,7 +360,7 @@ void Server::processRequestArray()
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter* parameter_ptr;
-      if (request_method_index_ < internal_methods_.max_size())
+      if (request_method_index_ < (int)internal_methods_.max_size())
       {
         parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
       }
@@ -372,7 +372,7 @@ void Server::processRequestArray()
       writeResultKeyToResponse();
       parameterHelp(*parameter_ptr);
     }
-    else if (request_method_index_ < internal_methods_.max_size())
+    else if (request_method_index_ < (int)internal_methods_.max_size())
     {
       if (internal_methods_[request_method_index_].isPrivate())
       {
@@ -492,12 +492,12 @@ void Server::executeMethod()
 {
   if (request_method_index_ >= 0)
   {
-    if (request_method_index_ < internal_methods_.size())
+    if (request_method_index_ < (int)internal_methods_.size())
     {
       internal_methods_[request_method_index_].callback(this);
     }
-    else if ((request_method_index_ >= internal_methods_.max_size()) &&
-             (request_method_index_ < (internal_methods_.max_size() + external_methods_.size())))
+    else if ((request_method_index_ >= (int)internal_methods_.max_size()) &&
+             (request_method_index_ < (int)(internal_methods_.max_size() + external_methods_.size())))
     {
       int index = request_method_index_ - internal_methods_.max_size();
       external_methods_[index].callback();
@@ -508,7 +508,7 @@ void Server::executeMethod()
 void Server::methodHelp(bool verbose, int method_index)
 {
   beginResponseObject();
-  if (method_index < internal_methods_.max_size())
+  if (method_index < (int)internal_methods_.max_size())
   {
     const ConstantString& method_name = internal_methods_[method_index].getName();
     writeToResponse(constants::name_constant_string,method_name);
@@ -523,7 +523,7 @@ void Server::methodHelp(bool verbose, int method_index)
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
-  if (method_index < internal_methods_.max_size())
+  if (method_index < (int)internal_methods_.max_size())
   {
     parameter_ptrs_ptr = &internal_methods_[method_index].parameter_ptrs_;
   }
@@ -545,7 +545,7 @@ void Server::methodHelp(bool verbose, int method_index)
     }
   }
   json_stream_.endArray();
-  if (method_index < internal_methods_.max_size())
+  if (method_index < (int)internal_methods_.max_size())
   {
     writeToResponse(constants::result_type_constant_string,internal_methods_[method_index].getReturnType());
   }
@@ -574,7 +574,7 @@ int Server::processParameterString(const char *parameter_string)
     parameter_index = findMethodParameterIndex(request_method_index_,parameter_string);
   }
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
-  if  (request_method_index_ < internal_methods_.max_size())
+  if  (request_method_index_ < (int)internal_methods_.max_size())
   {
     parameter_ptrs_ptr = &internal_methods_[request_method_index_].parameter_ptrs_;
   }
@@ -743,7 +743,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
   Parameter* parameter_ptr = NULL;
-  if  (request_method_index_ < internal_methods_.max_size())
+  if  (request_method_index_ < (int)internal_methods_.max_size())
   {
     parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
   }
@@ -1107,7 +1107,7 @@ void Server::help(bool verbose)
         param_error = false;
         writeResultKeyToResponse();
         Parameter* parameter_ptr = NULL;
-        if (parameter_index < internal_parameters_.max_size())
+        if (parameter_index < (int)internal_parameters_.max_size())
         {
           parameter_ptr = &internal_parameters_[parameter_index];
         }
@@ -1133,7 +1133,7 @@ void Server::help(bool verbose)
       {
         param_error = false;
         Parameter* parameter_ptr = NULL;
-        if (method_index < internal_methods_.max_size())
+        if (method_index < (int)internal_methods_.max_size())
         {
           parameter_ptr = internal_methods_[method_index].parameter_ptrs_[parameter_index];
         }

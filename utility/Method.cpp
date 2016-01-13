@@ -42,17 +42,12 @@ void Method::attachCallback(Callback callback)
 
 void Method::addParameter(Parameter &parameter)
 {
-  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
-  const ConstantString& name = parameter.getName();
-  name.copy(parameter_name);
-  if (strlen(parameter_name) > 0)
+  const ConstantString& parameter_name = parameter.getName();
+  int parameter_index = findParameterIndex(parameter_name);
+  if (parameter_index < 0)
   {
-    int parameter_index = findParameterIndex(parameter_name);
-    if (parameter_index < 0)
-    {
-      parameter_ptrs_.push_back(&parameter);
-      parameter_count_++;
-    }
+    parameter_ptrs_.push_back(&parameter);
+    parameter_count_++;
   }
 }
 

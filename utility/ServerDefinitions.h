@@ -46,8 +46,8 @@ SavedVariable& Server::createInternalSavedVariable(const ConstantString &saved_v
       internal_saved_variables_.back().setDefaultValue();
     }
     eeprom_index_ += internal_saved_variables_.back().getSize();
-    return internal_saved_variables_.back();
   }
+  return internal_saved_variables_.back();
 }
 
 template<typename T>
