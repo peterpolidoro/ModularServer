@@ -112,7 +112,7 @@ private:
   int parameter_count_;
   JsonStream json_stream_;
   bool error_;
-  bool result_in_response_;
+  bool result_key_in_response_;
   unsigned int eeprom_index_;
   const ConstantString *eeprom_init_name_ptr_;
   bool eeprom_uninitialized_;

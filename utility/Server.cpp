@@ -31,7 +31,7 @@ void Server::setup()
   request_method_index_ = -1;
   parameter_count_ = 0;
   error_ = false;
-  result_in_response_ = false;
+  result_key_in_response_ = false;
   server_stream_index_ = 0;
   server_running_ = false;
 
@@ -208,8 +208,12 @@ void Server::writeNullToResponse()
 
 void Server::writeResultKeyToResponse()
 {
-  json_stream_.writeKey(constants::result_constant_string);
-  result_in_response_ = true;
+  // Prevent multiple results in one response
+  if (!result_key_in_response_ && !error_)
+  {
+    result_key_in_response_ = true;
+    json_stream_.writeKey(constants::result_constant_string);
+  }
 }
 
 void Server::beginResponseObject()
@@ -276,7 +280,7 @@ void Server::handleRequest()
       }
       json_stream_.beginObject();
       error_ = false;
-      result_in_response_ = false;
+      result_key_in_response_ = false;
       sanitizer.sanitize(request_,constants::STRING_LENGTH_REQUEST);
       StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
       if (sanitizer.firstCharIsValidJsonObject(request_))
@@ -306,7 +310,7 @@ void Server::handleRequest()
           writeToResponse(constants::code_constant_string,constants::parse_error_code);
           endResponseObject();
         }
-        if (!error_ && !result_in_response_)
+        if (!error_ && !result_key_in_response_)
         {
           writeNullToResponse(constants::result_constant_string);
         }

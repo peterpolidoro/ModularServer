@@ -199,20 +199,28 @@ void Server::writeNullToResponse(K key)
 template<typename T>
 void Server::sendErrorResponse(T error)
 {
-  error_ = true;
-  writeKeyToResponse(constants::error_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::message_constant_string,constants::server_error_error_message);
-  writeToResponse(constants::data_constant_string,error);
-  writeToResponse(constants::code_constant_string,constants::server_error_error_code);
-  endResponseObject();
+  // Prevent multiple errors in one response
+  if (!error_)
+  {
+    error_ = true;
+    writeKeyToResponse(constants::error_constant_string);
+    beginResponseObject();
+    writeToResponse(constants::message_constant_string,constants::server_error_error_message);
+    writeToResponse(constants::data_constant_string,error);
+    writeToResponse(constants::code_constant_string,constants::server_error_error_code);
+    endResponseObject();
+  }
 }
 
 template<typename T>
 void Server::writeResultToResponse(T value)
 {
-  json_stream_.write(constants::result_constant_string,value);
-  result_in_response_ = true;
+  // Prevent multiple results in one response
+  if (!result_key_in_response_ && !error_)
+  {
+    result_key_in_response_ = true;
+    json_stream_.write(constants::result_constant_string,value);
+  }
 }
 
 template<typename T>
