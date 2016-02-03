@@ -1,4 +1,4 @@
-// LedController
+// BoardLedController
 #include "Flash.h"
 #include <EEPROM.h>
 #include "Streaming.h"

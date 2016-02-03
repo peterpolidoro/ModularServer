@@ -1,4 +1,4 @@
-#LedController
+#BoardLedController
 
 Authors:
 
@@ -33,7 +33,7 @@ Example Response:
   "id":"?",
   "result":{
     "device_info":{
-      "name":"led_controller",
+      "name":"board_led_controller",
       "model_number":1001,
       "serial_number":0,
       "firmware_version":{
@@ -281,7 +281,7 @@ dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
 {'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'model_number': 1001,
- 'name': 'led_controller',
+ 'name': 'board_led_controller',
  'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
@@ -355,7 +355,7 @@ dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
 device_info =
-  name: 'led_controller'
+  name: 'board_led_controller'
   model_number: 1001
   serial_number: 0
   firmware_number: [1x1 struct]

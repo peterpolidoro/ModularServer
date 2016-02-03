@@ -28,7 +28,7 @@ const double duration_max = 2.5;
 const long count_min = 1;
 const long count_max = 100;
 
-CONSTANT_STRING(device_name,"led_controller");
+CONSTANT_STRING(device_name,"board_led_controller");
 
 CONSTANT_STRING(duration_on_parameter_name,"duration_on");
 CONSTANT_STRING(duration_off_parameter_name,"duration_off");
