@@ -44,7 +44,7 @@ CONSTANT_STRING(get_method_ids_method_name,"getMethodIds");
 CONSTANT_STRING(get_parameters_method_name,"getParameters");
 CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
-CONSTANT_STRING(eeprom_initialized_saved_variable_name,"eeprom_initialized");
+CONSTANT_STRING(eeprom_initialized_field_name,"eeprom_initialized");
 CONSTANT_STRING(id_constant_string,"id");
 CONSTANT_STRING(error_constant_string,"error");
 CONSTANT_STRING(message_constant_string,"message");

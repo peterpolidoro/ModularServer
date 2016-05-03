@@ -19,11 +19,12 @@
 #include "Vector.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
+#include "JsonStream.h"
+
+#include "Field.h"
 #include "Parameter.h"
 #include "Method.h"
-#include "SavedVariable.h"
 #include "Constants.h"
-#include "JsonStream.h"
 
 
 namespace ModularDevice
@@ -48,28 +49,28 @@ public:
   Parameter& copyParameter(Parameter parameter,const ConstantString &parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString &name);
   template <size_t MAX_SIZE>
-  void setSavedVariableStorage(SavedVariable (&saved_variables)[MAX_SIZE]);
+  void setFieldStorage(Field (&fields)[MAX_SIZE]);
   template<typename T>
-  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
-                                     const T &default_value);
+  Field& createField(const ConstantString &field_name,
+                     T &storage,
+                     const T &default_value);
   template<typename T>
-  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
-                                     const T default_value[],
-                                     const unsigned int array_length);
+  Field& createField(const ConstantString &field_name,
+                     T &storage,
+                     const T default_value[],
+                     const unsigned int array_length);
   template<typename T>
-  void setSavedVariableValue(const ConstantString &saved_variable_name,
-                             const T &value);
+  void setFieldValue(const ConstantString &field_name,
+                     const T &value);
   template<typename T>
-  void setSavedVariableValue(const ConstantString &saved_variable_name,
-                             const T value[],
-                             const unsigned int array_index);
+  void setFieldValue(const ConstantString &field_name,
+                     const T value[],
+                     const unsigned int array_index);
   template<typename T>
-  void getSavedVariableValue(const ConstantString &saved_variable_name,
-                             T &value);
+  const T& getFieldValue(const ConstantString &field_name);
   template<typename T>
-  void getSavedVariableValue(const ConstantString &saved_variable_name,
-                             T value[],
-                             const unsigned int array_index);
+  const T& getFieldValue(const ConstantString &field_name,
+                         const unsigned int array_index);
   template<typename K>
   void writeKeyToResponse(K key);
   template<typename T>
@@ -97,12 +98,12 @@ private:
   unsigned char server_stream_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray *request_json_array_ptr_;
-  Array<InternalMethod,constants::INTERNAL_METHOD_COUNT_MAX> internal_methods_;
+  Array<Field,constants::INTERNAL_FIELD_COUNT_MAX> internal_fields_;
   Array<Parameter,constants::INTERNAL_PARAMETER_COUNT_MAX> internal_parameters_;
-  Array<SavedVariable,constants::INTERNAL_SAVED_VARIABLE_COUNT_MAX> internal_saved_variables_;
-  Vector<Method> external_methods_;
+  Array<InternalMethod,constants::INTERNAL_METHOD_COUNT_MAX> internal_methods_;
+  Vector<Field> external_fields_;
   Vector<Parameter> external_parameters_;
-  Vector<SavedVariable> external_saved_variables_;
+  Vector<Method> external_methods_;
   const ConstantString *name_ptr_;
   unsigned int model_number_;
   unsigned char firmware_major_;
@@ -123,8 +124,9 @@ private:
   InternalMethod& createInternalMethod(const ConstantString &method_name, bool is_private=false);
   Parameter& createInternalParameter(const ConstantString &parameter_name);
   template<typename T>
-  SavedVariable& createInternalSavedVariable(const ConstantString &saved_variable_name,
-                                             const T &default_value);
+  Field& createInternalField(const ConstantString &field_name,
+                             T &storage,
+                             const T &default_value);
   void processRequestArray();
   int processMethodString(const char *method_string);
   template<typename T>
@@ -140,7 +142,7 @@ private:
   void parameterHelp(Parameter &parameter);
   bool checkParameters();
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
-  int findSavedVariableIndex(const ConstantString &saved_variable_name);
+  int findFieldIndex(const ConstantString &field_name);
   unsigned int getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();

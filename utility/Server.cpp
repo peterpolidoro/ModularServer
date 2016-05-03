@@ -33,7 +33,16 @@ void Server::setup()
   error_ = false;
   result_key_in_response_ = false;
   server_stream_index_ = 0;
-  server_running_ = false;
+
+  eeprom_index_ = 0;
+  eeprom_initialized_index_ = eeprom_index_;
+  eeprom_init_name_ptr_ = &constants::eeprom_initialized_field_name;
+  eeprom_uninitialized_ = true;
+  internal_fields_.push_back(Field(*eeprom_init_name_ptr_,
+                                   eeprom_index_,
+                                   constants::eeprom_initialized_value));
+  eeprom_index_ += sizeof(constants::eeprom_initialized_value);
+  createInternalField(constants::serial_number_constant_string,constants::serial_number_default);
 
   Parameter& serial_number_parameter = createInternalParameter(constants::serial_number_constant_string);
   serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
@@ -66,15 +75,7 @@ void Server::setup()
   set_serial_number_method.attachCallback(&Server::setSerialNumberCallback);
   set_serial_number_method.addParameter(serial_number_parameter);
 
-  eeprom_index_ = 0;
-  eeprom_initialized_index_ = eeprom_index_;
-  eeprom_init_name_ptr_ = &constants::eeprom_initialized_saved_variable_name;
-  eeprom_uninitialized_ = true;
-  internal_saved_variables_.push_back(SavedVariable(*eeprom_init_name_ptr_,
-                                                    eeprom_index_,
-                                                    constants::eeprom_initialized_value));
-  eeprom_index_ += sizeof(constants::eeprom_initialized_value);
-  createInternalSavedVariable(constants::serial_number_constant_string,constants::serial_number_default);
+  server_running_ = false;
 }
 
 void Server::addServerStream(Stream &stream)
@@ -106,7 +107,7 @@ void Server::setModelNumber(const unsigned int model_number)
 
 void Server::setSerialNumber(const unsigned int serial_number)
 {
-  setSavedVariableValue(constants::serial_number_constant_string,serial_number);
+  setFieldValue(constants::serial_number_constant_string,serial_number);
 }
 
 void Server::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
@@ -238,13 +239,13 @@ void Server::endResponseArray()
 
 void Server::resetDefaults()
 {
-  for (unsigned int i=0; i<internal_saved_variables_.size(); ++i)
+  for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
-    internal_saved_variables_[i].setDefaultValue();
+    internal_fields_[i].setDefaultValue();
   }
-  for (unsigned int i=0; i<external_saved_variables_.size(); ++i)
+  for (unsigned int i=0; i<external_fields_.size(); ++i)
   {
-    external_saved_variables_[i].setDefaultValue();
+    external_fields_[i].setDefaultValue();
   }
 }
 
@@ -960,38 +961,38 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   return parameter_ok;
 }
 
-int Server::findSavedVariableIndex(const ConstantString &saved_variable_name)
+int Server::findFieldIndex(const ConstantString &field_name)
 {
-  int saved_variable_index = -1;
-  for (unsigned int i=0; i<internal_saved_variables_.size(); ++i)
+  int field_index = -1;
+  for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
-    if (internal_saved_variables_[i].compareName(saved_variable_name))
+    if (internal_fields_[i].compareName(field_name))
     {
-      saved_variable_index = i;
-      return saved_variable_index;
+      field_index = i;
+      return field_index;
     }
   }
-  for (unsigned int i=0; i<external_saved_variables_.size(); ++i)
+  for (unsigned int i=0; i<external_fields_.size(); ++i)
   {
-    if (external_saved_variables_[i].compareName(saved_variable_name))
+    if (external_fields_[i].compareName(field_name))
     {
-      saved_variable_index = i + internal_saved_variables_.max_size();
-      return saved_variable_index;
+      field_index = i + internal_fields_.max_size();
+      return field_index;
     }
   }
-  return saved_variable_index;
+  return field_index;
 }
 
 unsigned int Server::getSerialNumber()
 {
   unsigned int serial_number;
-  getSavedVariableValue(constants::serial_number_constant_string,serial_number);
+  getFieldValue(constants::serial_number_constant_string,serial_number);
   return serial_number;
 }
 
 void Server::initializeEeprom()
 {
-  internal_saved_variables_[eeprom_initialized_index_].setValue(constants::eeprom_initialized_value);
+  internal_fields_[eeprom_initialized_index_].setValue(constants::eeprom_initialized_value);
   eeprom_uninitialized_ = false;
 }
 

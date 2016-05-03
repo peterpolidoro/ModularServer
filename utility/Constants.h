@@ -14,9 +14,9 @@ namespace ModularDevice
 {
 namespace constants
 {
-enum{INTERNAL_METHOD_COUNT_MAX=8};
+enum{INTERNAL_FIELD_COUNT_MAX=2};
 enum{INTERNAL_PARAMETER_COUNT_MAX=1};
-enum{INTERNAL_SAVED_VARIABLE_COUNT_MAX=2};
+enum{INTERNAL_METHOD_COUNT_MAX=8};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
@@ -72,7 +72,7 @@ extern ConstantString get_method_ids_method_name;
 extern ConstantString get_parameters_method_name;
 extern ConstantString help_method_name;
 extern ConstantString verbose_help_method_name;
-extern ConstantString eeprom_initialized_saved_variable_name;
+extern ConstantString eeprom_initialized_field_name;
 extern ConstantString id_constant_string;
 extern ConstantString error_constant_string;
 extern ConstantString message_constant_string;

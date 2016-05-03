@@ -12,9 +12,9 @@
 namespace ModularDevice
 {
 template<size_t MAX_SIZE>
-void Server::setMethodStorage(Method (&methods)[MAX_SIZE])
+void Server::setFieldStorage(Field (&fields)[MAX_SIZE])
 {
-  external_methods_.setStorage(methods);
+  external_fields_.setStorage(fields);
 }
 
 template<size_t MAX_SIZE>
@@ -24,150 +24,151 @@ void Server::setParameterStorage(Parameter (&parameters)[MAX_SIZE])
 }
 
 template<size_t MAX_SIZE>
-void Server::setSavedVariableStorage(SavedVariable (&saved_variables)[MAX_SIZE])
+void Server::setMethodStorage(Method (&methods)[MAX_SIZE])
 {
-  external_saved_variables_.setStorage(saved_variables);
+  external_methods_.setStorage(methods);
 }
 
 template<typename T>
-SavedVariable& Server::createInternalSavedVariable(const ConstantString &saved_variable_name,
-                                                   const T &default_value)
+Field& Server::createInternalField(const ConstantString &field_name,
+                                   T &storage,
+                                   const T &default_value)
 {
-  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-  if (saved_variable_index < 0)
+  int field_index = findFieldIndex(field_name);
+  if (field_index < 0)
   {
-    internal_saved_variables_.push_back(SavedVariable(saved_variable_name,
-                                                      eeprom_index_,
-                                                      default_value));
+    internal_fields_.push_back(Field(field_name,
+                                     eeprom_index_,
+                                     default_value));
     unsigned char eeprom_init_value = 0;
-    getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
+    getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
-      internal_saved_variables_.back().setDefaultValue();
+      internal_fields_.back().setDefaultValue();
     }
-    eeprom_index_ += internal_saved_variables_.back().getSize();
+    eeprom_index_ += internal_fields_.back().getSize();
   }
-  return internal_saved_variables_.back();
+  return internal_fields_.back();
 }
 
 template<typename T>
-SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_name,
-                                           const T &default_value)
+Field& Server::createField(const ConstantString &field_name,
+                           const T &default_value)
 {
-  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-  if (saved_variable_index < 0)
+  int field_index = findFieldIndex(field_name);
+  if (field_index < 0)
   {
-    external_saved_variables_.push_back(SavedVariable(saved_variable_name,
-                                                      eeprom_index_,
-                                                      default_value));
+    external_fields_.push_back(Field(field_name,
+                                     eeprom_index_,
+                                     default_value));
     unsigned char eeprom_init_value = 0;
-    getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
+    getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
-      external_saved_variables_.back().setDefaultValue();
+      external_fields_.back().setDefaultValue();
     }
-    eeprom_index_ += external_saved_variables_.back().getSize();
-    return external_saved_variables_.back();
+    eeprom_index_ += external_fields_.back().getSize();
+    return external_fields_.back();
   }
 }
 
 template<typename T>
-SavedVariable& Server::createSavedVariable(const ConstantString &saved_variable_name,
-                                           const T default_value[],
-                                           const unsigned int array_length)
+Field& Server::createField(const ConstantString &field_name,
+                           const T default_value[],
+                           const unsigned int array_length)
 {
-  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-  if (saved_variable_index < 0)
+  int field_index = findFieldIndex(field_name);
+  if (field_index < 0)
   {
-    external_saved_variables_.push_back(SavedVariable(saved_variable_name,
-                                                      eeprom_index_,
-                                                      default_value,
-                                                      array_length));
+    external_fields_.push_back(Field(field_name,
+                                     eeprom_index_,
+                                     default_value,
+                                     array_length));
     unsigned char eeprom_init_value;
-    getSavedVariableValue(*eeprom_init_name_ptr_,eeprom_init_value);
+    getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
-      external_saved_variables_.back().setDefaultValue();
+      external_fields_.back().setDefaultValue();
     }
-    eeprom_index_ += external_saved_variables_.back().getSize();
-    return external_saved_variables_.back();
+    eeprom_index_ += external_fields_.back().getSize();
+    return external_fields_.back();
   }
 }
 
 template<typename T>
-void Server::setSavedVariableValue(const ConstantString &saved_variable_name,
-                                   const T &value)
+void Server::setFieldValue(const ConstantString &field_name,
+                           const T &value)
 {
-  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-  if (saved_variable_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if (field_index >= 0)
   {
-    if (saved_variable_index < internal_saved_variables_.max_size())
+    if (field_index < internal_fields_.max_size())
     {
-      internal_saved_variables_[saved_variable_index].setValue(value);
+      internal_fields_[field_index].setValue(value);
     }
     else
     {
-      saved_variable_index -= internal_saved_variables_.max_size();
-      external_saved_variables_[saved_variable_index].setValue(value);
-    }
-  }
-}
-
-template<typename T>
-void Server::setSavedVariableValue(const ConstantString &saved_variable_name,
-                                   const T value[],
-                                   const unsigned int array_index)
-{
-  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-  if (saved_variable_index >= 0)
-  {
-    if (saved_variable_index < internal_saved_variables_.max_size())
-    {
-      internal_saved_variables_[saved_variable_index].setValue(value,array_index);
-    }
-    else
-    {
-      saved_variable_index -= internal_saved_variables_.max_size();
-      external_saved_variables_[saved_variable_index].setValue(value,array_index);
+      field_index -= internal_fields_.max_size();
+      external_fields_[field_index].setValue(value);
     }
   }
 }
 
 template<typename T>
-void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
-                                   T &value)
+void Server::setFieldValue(const ConstantString &field_name,
+                           const T value[],
+                           const unsigned int array_index)
 {
-  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-  if (saved_variable_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if (field_index >= 0)
   {
-    if (saved_variable_index < internal_saved_variables_.max_size())
+    if (field_index < internal_fields_.max_size())
     {
-      internal_saved_variables_[saved_variable_index].getValue(value);
+      internal_fields_[field_index].setValue(value,array_index);
     }
     else
     {
-      saved_variable_index -= internal_saved_variables_.max_size();
-      external_saved_variables_[saved_variable_index].getValue(value);
+      field_index -= internal_fields_.max_size();
+      external_fields_[field_index].setValue(value,array_index);
     }
   }
 }
 
 template<typename T>
-void Server::getSavedVariableValue(const ConstantString &saved_variable_name,
-                                   T value[],
-                                   const unsigned int array_index)
+void Server::getFieldValue(const ConstantString &field_name,
+                           T &value)
 {
-  int saved_variable_index = findSavedVariableIndex(saved_variable_name);
-  if (saved_variable_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if (field_index >= 0)
   {
-    if (saved_variable_index < internal_saved_variables_.max_size())
+    if (field_index < internal_fields_.max_size())
     {
-      internal_saved_variables_[saved_variable_index].getValue(value,array_index);
+      internal_fields_[field_index].getValue(value);
     }
     else
     {
-      saved_variable_index -= internal_saved_variables_.max_size();
-      external_saved_variables_[saved_variable_index].getValue(value,array_index);
+      field_index -= internal_fields_.max_size();
+      external_fields_[field_index].getValue(value);
+    }
+  }
+}
+
+template<typename T>
+void Server::getFieldValue(const ConstantString &field_name,
+                           T value[],
+                           const unsigned int array_index)
+{
+  int field_index = findFieldIndex(field_name);
+  if (field_index >= 0)
+  {
+    if (field_index < internal_fields_.max_size())
+    {
+      internal_fields_[field_index].getValue(value,array_index);
+    }
+    else
+    {
+      field_index -= internal_fields_.max_size();
+      external_fields_[field_index].getValue(value,array_index);
     }
   }
 }
