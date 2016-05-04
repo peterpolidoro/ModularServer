@@ -25,13 +25,20 @@ public:
   Field();
   template<typename T>
   Field(const ConstantString &name,
-        const unsigned int eeprom_index,
         T &storage,
-        const T &default_value) : Parameter(name);
+        const T &default_value);
+  template<typename T>
+  Field(const ConstantString &name,
+        T &storage,
+        const T &default_value[],
+        const unsigned int array_length);
 private:
   SavedVariable saved_variable_;
+  const void *storage_ptr_;
   friend class Method;
   friend class Server;
 };
 }
+#include "FieldDefinitions.h"
+
 #endif
