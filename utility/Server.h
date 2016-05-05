@@ -52,25 +52,25 @@ public:
   void setFieldStorage(Field (&fields)[MAX_SIZE]);
   template<typename T>
   Field& createField(const ConstantString &field_name,
-                     T &storage,
                      const T &default_value);
   template<typename T>
   Field& createField(const ConstantString &field_name,
-                     T &storage,
                      const T default_value[],
                      const unsigned int array_length);
   template<typename T>
   void setFieldValue(const ConstantString &field_name,
                      const T &value);
   template<typename T>
-  void setFieldValue(const ConstantString &field_name,
-                     const T value[],
-                     const unsigned int array_index);
+  void setFieldElementValue(const ConstantString &field_name,
+                            const T &value,
+                            const unsigned int element_index);
   template<typename T>
-  const T& getFieldValue(const ConstantString &field_name);
+  void getFieldValue(const ConstantString &field_name,
+                     T &value);
   template<typename T>
-  const T& getFieldValue(const ConstantString &field_name,
-                         const unsigned int array_index);
+  void getFieldElementValue(const ConstantString &field_name,
+                            T &value,
+                            const unsigned int element_index);
   template<typename K>
   void writeKeyToResponse(K key);
   template<typename T>
@@ -114,7 +114,6 @@ private:
   JsonStream json_stream_;
   bool error_;
   bool result_key_in_response_;
-  unsigned int eeprom_index_;
   const ConstantString *eeprom_init_name_ptr_;
   bool eeprom_uninitialized_;
   unsigned int eeprom_initialized_index_;
@@ -125,7 +124,6 @@ private:
   Parameter& createInternalParameter(const ConstantString &parameter_name);
   template<typename T>
   Field& createInternalField(const ConstantString &field_name,
-                             T &storage,
                              const T &default_value);
   void processRequestArray();
   int processMethodString(const char *method_string);

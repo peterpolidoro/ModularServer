@@ -19,22 +19,18 @@
 
 namespace ModularDevice
 {
-class Field : public Parameter
+class Field : public Parameter, public SavedVariable
 {
 public:
   Field();
   template<typename T>
   Field(const ConstantString &name,
-        T &storage,
         const T &default_value);
   template<typename T>
   Field(const ConstantString &name,
-        T &storage,
-        const T &default_value[],
+        const T default_value[],
         const unsigned int array_length);
 private:
-  SavedVariable saved_variable_;
-  const void *storage_ptr_;
   friend class Method;
   friend class Server;
 };

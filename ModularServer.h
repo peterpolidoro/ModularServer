@@ -33,28 +33,28 @@ public:
   Parameter& copyParameter(Parameter &parameter,const ConstantString &parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString &parameter_name);
   template <size_t MAX_SIZE>
-  void setSavedVariableStorage(SavedVariable (&saved_variables)[MAX_SIZE]);
+  void setFieldStorage(Field (&fields)[MAX_SIZE]);
   template<typename T>
-  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
-                                     const T &default_value);
+  Field& createField(const ConstantString &field_name,
+                     const T &default_value);
   template<typename T>
-  SavedVariable& createSavedVariable(const ConstantString &saved_variable_name,
-                                     const T default_value[],
-                                     const unsigned int array_length);
+  Field& createField(const ConstantString &field_name,
+                     const T default_value[],
+                     const unsigned int array_length);
   template<typename T>
-  void setSavedVariableValue(const ConstantString &saved_variable_name,
-                             const T &value);
+  void setFieldValue(const ConstantString &field_name,
+                     const T &value);
   template<typename T>
-  void setSavedVariableValue(const ConstantString &saved_variable_name,
-                             const T value[],
-                             const unsigned int array_index);
+  void setFieldElementValue(const ConstantString &field_name,
+                            const T &value,
+                            const unsigned int element_index);
   template<typename T>
-  void getSavedVariableValue(const ConstantString &saved_variable_name,
-                             T &value);
+  void getFieldValue(const ConstantString &field_name,
+                     T &value);
   template<typename T>
-  void getSavedVariableValue(const ConstantString &saved_variable_name,
-                             T value[],
-                             const unsigned int array_index);
+  void getFieldElementValue(const ConstantString &field_name,
+                            T &value,
+                            const unsigned int element_index);
   template<typename K>
   void writeKeyToResponse(K key);
   template<typename T>

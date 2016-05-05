@@ -24,54 +24,54 @@ void ModularServer::setParameterStorage(Parameter (&parameters)[MAX_SIZE])
 }
 
 template<size_t MAX_SIZE>
-void ModularServer::setSavedVariableStorage(SavedVariable (&saved_variables)[MAX_SIZE])
+void ModularServer::setFieldStorage(Field (&fields)[MAX_SIZE])
 {
-  server_.setSavedVariableStorage(saved_variables);
+  server_.setFieldStorage(fields);
 }
 
 template<typename T>
-SavedVariable& ModularServer::createSavedVariable(const ConstantString &saved_variable_name,
-                                                  const T &default_value)
+Field& ModularServer::createField(const ConstantString &field_name,
+                                  const T &default_value)
 {
-  return server_.createSavedVariable(saved_variable_name,default_value);
+  return server_.createField(field_name,default_value);
 }
 
 template<typename T>
-SavedVariable& ModularServer::createSavedVariable(const ConstantString &saved_variable_name,
-                                                  const T default_value[],
-                                                  const unsigned int array_length)
+Field& ModularServer::createField(const ConstantString &field_name,
+                                  const T default_value[],
+                                  const unsigned int array_length)
 {
-  return server_.createSavedVariable(saved_variable_name,default_value,array_length);
+  return server_.createField(field_name,default_value,array_length);
 }
 
 template<typename T>
-void ModularServer::setSavedVariableValue(const ConstantString &saved_variable_name,
-                                          const T &value)
+void ModularServer::setFieldValue(const ConstantString &field_name,
+                                  const T &value)
 {
-  server_.setSavedVariableValue(saved_variable_name,value);
+  server_.setFieldValue(field_name,value);
 }
 
 template<typename T>
-void ModularServer::setSavedVariableValue(const ConstantString &saved_variable_name,
-                                          const T value[],
-                                          const unsigned int array_index)
+void ModularServer::setFieldElementValue(const ConstantString &field_name,
+                                         const T &value,
+                                         const unsigned int element_index)
 {
-  server_.setSavedVariableValue(saved_variable_name,value,array_index);
+  server_.setFieldElementValue(field_name,value,element_index);
 }
 
 template<typename T>
-void ModularServer::getSavedVariableValue(const ConstantString &saved_variable_name,
-                                          T &value)
+void ModularServer::getFieldValue(const ConstantString &field_name,
+                                  T &value)
 {
-  server_.getSavedVariableValue(saved_variable_name,value);
+  server_.getFieldValue(field_name,value);
 }
 
 template<typename T>
-void ModularServer::getSavedVariableValue(const ConstantString &saved_variable_name,
-                                          T value[],
-                                          const unsigned int array_index)
+void ModularServer::getFieldElementValue(const ConstantString &field_name,
+                                         T &value,
+                                         const unsigned int element_index)
 {
-  server_.getSavedVariableValue(saved_variable_name,value,array_index);
+  server_.getFieldElementValue(field_name,value,element_index);
 }
 
 template<typename K>

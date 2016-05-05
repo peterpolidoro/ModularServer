@@ -13,23 +13,19 @@ namespace ModularDevice
 {
 template<typename T>
 Field::Field(const ConstantString &name,
-             T &storage,
              const T &default_value) :
   Parameter(name),
-  saved_variable_(default_value)
+  SavedVariable(default_value)
 {
-  storage_ptr_ = &storage;
 }
 
 template<typename T>
 Field::Field(const ConstantString &name,
-             T &storage,
-             const T &default_value[],
+             const T default_value[],
              const unsigned int array_length) :
   Parameter(name),
-  saved_variable_(default_value,array_length)
+  SavedVariable(default_value,array_length)
 {
-  storage_ptr_ = &storage;
 }
 }
 

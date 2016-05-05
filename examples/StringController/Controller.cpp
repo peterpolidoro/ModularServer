@@ -26,12 +26,12 @@ void Controller::setup()
   modular_server_.addServerStream(constants::serial2);
 
   // Set Storage
-  modular_server_.setSavedVariableStorage(saved_variables_);
+  modular_server_.setFieldStorage(fields_);
   modular_server_.setParameterStorage(parameters_);
   modular_server_.setMethodStorage(methods_);
 
-  // Saved Variables
-  modular_server_.createSavedVariable(constants::starting_chars_count_name,constants::starting_chars_count_default);
+  // Fields
+  modular_server_.createField(constants::starting_chars_count_name,constants::starting_chars_count_default);
 
   // Parameters
   ModularDevice::Parameter& string_parameter = modular_server_.createParameter(constants::string_parameter_name);

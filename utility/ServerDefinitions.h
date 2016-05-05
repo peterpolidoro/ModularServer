@@ -31,22 +31,19 @@ void Server::setMethodStorage(Method (&methods)[MAX_SIZE])
 
 template<typename T>
 Field& Server::createInternalField(const ConstantString &field_name,
-                                   T &storage,
                                    const T &default_value)
 {
   int field_index = findFieldIndex(field_name);
   if (field_index < 0)
   {
     internal_fields_.push_back(Field(field_name,
-                                     eeprom_index_,
                                      default_value));
-    unsigned char eeprom_init_value = 0;
+    unsigned char eeprom_init_value;
     getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
       internal_fields_.back().setDefaultValue();
     }
-    eeprom_index_ += internal_fields_.back().getSize();
   }
   return internal_fields_.back();
 }
@@ -59,15 +56,13 @@ Field& Server::createField(const ConstantString &field_name,
   if (field_index < 0)
   {
     external_fields_.push_back(Field(field_name,
-                                     eeprom_index_,
                                      default_value));
-    unsigned char eeprom_init_value = 0;
+    unsigned char eeprom_init_value;
     getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
     if (eeprom_init_value != constants::eeprom_initialized_value)
     {
       external_fields_.back().setDefaultValue();
     }
-    eeprom_index_ += external_fields_.back().getSize();
     return external_fields_.back();
   }
 }
@@ -81,7 +76,6 @@ Field& Server::createField(const ConstantString &field_name,
   if (field_index < 0)
   {
     external_fields_.push_back(Field(field_name,
-                                     eeprom_index_,
                                      default_value,
                                      array_length));
     unsigned char eeprom_init_value;
@@ -90,7 +84,6 @@ Field& Server::createField(const ConstantString &field_name,
     {
       external_fields_.back().setDefaultValue();
     }
-    eeprom_index_ += external_fields_.back().getSize();
     return external_fields_.back();
   }
 }
@@ -115,21 +108,21 @@ void Server::setFieldValue(const ConstantString &field_name,
 }
 
 template<typename T>
-void Server::setFieldValue(const ConstantString &field_name,
-                           const T value[],
-                           const unsigned int array_index)
+void Server::setFieldElementValue(const ConstantString &field_name,
+                                  const T &value,
+                                  const unsigned int element_index)
 {
   int field_index = findFieldIndex(field_name);
   if (field_index >= 0)
   {
     if (field_index < internal_fields_.max_size())
     {
-      internal_fields_[field_index].setValue(value,array_index);
+      internal_fields_[field_index].setElementValue(value,element_index);
     }
     else
     {
       field_index -= internal_fields_.max_size();
-      external_fields_[field_index].setValue(value,array_index);
+      external_fields_[field_index].setElementValue(value,element_index);
     }
   }
 }
@@ -154,21 +147,21 @@ void Server::getFieldValue(const ConstantString &field_name,
 }
 
 template<typename T>
-void Server::getFieldValue(const ConstantString &field_name,
-                           T value[],
-                           const unsigned int array_index)
+void Server::getFieldElementValue(const ConstantString &field_name,
+                                  T &value,
+                                  const unsigned int element_index)
 {
   int field_index = findFieldIndex(field_name);
   if (field_index >= 0)
   {
     if (field_index < internal_fields_.max_size())
     {
-      internal_fields_[field_index].getValue(value,array_index);
+      internal_fields_[field_index].getElementValue(value,element_index);
     }
     else
     {
       field_index -= internal_fields_.max_size();
-      external_fields_[field_index].getValue(value,array_index);
+      external_fields_[field_index].getElementValue(value,element_index);
     }
   }
 }

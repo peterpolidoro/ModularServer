@@ -34,14 +34,11 @@ void Server::setup()
   result_key_in_response_ = false;
   server_stream_index_ = 0;
 
-  eeprom_index_ = 0;
-  eeprom_initialized_index_ = eeprom_index_;
+  eeprom_initialized_index_ = 0;
   eeprom_init_name_ptr_ = &constants::eeprom_initialized_field_name;
   eeprom_uninitialized_ = true;
   internal_fields_.push_back(Field(*eeprom_init_name_ptr_,
-                                   eeprom_index_,
                                    constants::eeprom_initialized_value));
-  eeprom_index_ += sizeof(constants::eeprom_initialized_value);
   createInternalField(constants::serial_number_constant_string,constants::serial_number_default);
 
   Parameter& serial_number_parameter = createInternalParameter(constants::serial_number_constant_string);
