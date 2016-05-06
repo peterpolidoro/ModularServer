@@ -66,8 +66,12 @@ void Server::setup()
   get_memory_free_method.setReturnTypeLong();
 #endif
 
-  InternalMethod& reset_field_defaults_method = createInternalMethod(constants::reset_field_defaults_method_name);
-  reset_field_defaults_method.attachCallback(&Server::resetFieldDefaultsCallback);
+  InternalMethod& get_field_values_method = createInternalMethod(constants::get_field_values_method_name);
+  get_field_values_method.attachCallback(&Server::getFieldValuesCallback);
+  get_field_values_method.setReturnTypeObject();
+
+  InternalMethod& set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
+  set_fields_to_defaults_method.attachCallback(&Server::setFieldsToDefaultsCallback);
 
   InternalMethod& set_serial_number_method = createInternalMethod(constants::set_serial_number_method_name);
   set_serial_number_method.attachCallback(&Server::setSerialNumberCallback);
@@ -235,7 +239,7 @@ void Server::endResponseArray()
   json_stream_.endArray();
 }
 
-void Server::resetFieldDefaults()
+void Server::setFieldsToDefaults()
 {
   for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
@@ -993,7 +997,7 @@ void Server::initializeEeprom()
   if (!eeprom_initialized_sv_.isDefaultValue())
   {
     eeprom_initialized_sv_.setDefaultValue();
-    resetFieldDefaults();
+    setFieldsToDefaults();
   }
   eeprom_initialized_ = true;
 }
@@ -1231,9 +1235,30 @@ void Server::getMemoryFreeCallback()
 }
 #endif
 
-void Server::resetFieldDefaultsCallback()
+void Server::getFieldValuesCallback()
 {
-  resetFieldDefaults();
+  writeResultKeyToResponse();
+  beginResponseObject();
+  int c_style_array[] = {5,3,1};
+  Array<int,3> array(c_style_array);
+  for (unsigned int i=0; i<internal_fields_.size(); ++i)
+  {
+    const ConstantString& name = internal_fields_[i].getName();
+    // writeKeyToResponse(name);
+    writeToResponse(name,array);
+  }
+  for (unsigned int i=0; i<external_fields_.size(); ++i)
+  {
+    const ConstantString& name = external_fields_[i].getName();
+    writeKeyToResponse(name);
+    writeToResponse(0);
+  }
+  endResponseObject();
+}
+
+void Server::setFieldsToDefaultsCallback()
+{
+  setFieldsToDefaults();
 }
 
 void Server::setSerialNumberCallback()

@@ -86,10 +86,22 @@ void ModularServer::writeToResponse(T value)
   server_.writeToResponse(value);
 }
 
+template<typename T, size_t N>
+void ModularServer::writeToResponse(T (&values)[N])
+{
+  server_.writeToResponse(values);
+}
+
 template<typename K, typename T>
 void ModularServer::writeToResponse(K key, T value)
 {
   server_.writeToResponse(key,value);
+}
+
+template<typename K, typename T, size_t N>
+void ModularServer::writeToResponse(K key, T (&values)[N])
+{
+  server_.writeToResponse(key,values);
 }
 
 template<typename K>

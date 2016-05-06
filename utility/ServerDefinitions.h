@@ -160,10 +160,22 @@ void Server::writeToResponse(T value)
   json_stream_.write(value);
 }
 
+template<typename T, size_t N>
+void Server::writeToResponse(T (&values)[N])
+{
+  json_stream_.write(values);
+}
+
 template<typename K, typename T>
 void Server::writeToResponse(K key, T value)
 {
   json_stream_.write(key,value);
+}
+
+template<typename K, typename T, size_t N>
+void Server::writeToResponse(K key, T (&values)[N])
+{
+  json_stream_.write(key,values);
 }
 
 template<typename K>

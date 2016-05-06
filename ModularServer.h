@@ -59,8 +59,12 @@ public:
   void writeKeyToResponse(K key);
   template<typename T>
   void writeToResponse(T value);
+  template<typename T, size_t N>
+  void writeToResponse(T (&values)[N]);
   template<typename K, typename T>
   void writeToResponse(K key, T value);
+  template<typename K, typename T, size_t N>
+  void writeToResponse(K key, T (&values)[N]);
   void writeNullToResponse();
   template<typename K>
   void writeNullToResponse(K key);
@@ -76,7 +80,7 @@ public:
   void startServer();
   void stopServer();
   void handleServerRequests();
-  void resetFieldDefaults();
+  void setFieldsToDefaults();
   void setSerialNumber(const unsigned int serial_number);
 private:
   Server server_;

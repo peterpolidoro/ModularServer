@@ -76,8 +76,12 @@ public:
   void writeKeyToResponse(K key);
   template<typename T>
   void writeToResponse(T value);
+  template<typename T, size_t N>
+  void writeToResponse(T (&values)[N]);
   template<typename K, typename T>
   void writeToResponse(K key, T value);
+  template<typename K, typename T, size_t N>
+  void writeToResponse(K key, T (&values)[N]);
   void writeNullToResponse();
   template<typename K>
   void writeNullToResponse(K key);
@@ -90,7 +94,7 @@ public:
   void endResponseObject();
   void beginResponseArray();
   void endResponseArray();
-  void resetFieldDefaults();
+  void setFieldsToDefaults();
   void startServer();
   void stopServer();
   void handleRequest();
@@ -155,7 +159,8 @@ private:
   void helpCallback();
   void verboseHelpCallback();
   void getMemoryFreeCallback();
-  void resetFieldDefaultsCallback();
+  void getFieldValuesCallback();
+  void setFieldsToDefaultsCallback();
   void setSerialNumberCallback();
 };
 }

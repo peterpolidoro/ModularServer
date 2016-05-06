@@ -27,7 +27,8 @@ CONSTANT_STRING(get_parameters_method_name,"getParameters");
 CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
-CONSTANT_STRING(reset_field_defaults_method_name,"resetFieldDefaults");
+CONSTANT_STRING(get_field_values_method_name,"getFieldValues");
+CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");
 CONSTANT_STRING(set_serial_number_method_name,"setSerialNumber");
 
 // Errors
