@@ -19,6 +19,7 @@
 #include "Vector.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
+#include "SavedVariable.h"
 #include "JsonStream.h"
 
 #include "Field.h"
@@ -89,7 +90,7 @@ public:
   void endResponseObject();
   void beginResponseArray();
   void endResponseArray();
-  void resetDefaults();
+  void resetFieldDefaults();
   void startServer();
   void stopServer();
   void handleRequest();
@@ -114,9 +115,8 @@ private:
   JsonStream json_stream_;
   bool error_;
   bool result_key_in_response_;
-  const ConstantString *eeprom_init_name_ptr_;
-  bool eeprom_uninitialized_;
-  unsigned int eeprom_initialized_index_;
+  bool eeprom_initialized_;
+  SavedVariable eeprom_initialized_sv_;
   bool server_running_;
 
   void setup();
@@ -155,7 +155,7 @@ private:
   void helpCallback();
   void verboseHelpCallback();
   void getMemoryFreeCallback();
-  void resetDefaultsCallback();
+  void resetFieldDefaultsCallback();
   void setSerialNumberCallback();
 };
 }

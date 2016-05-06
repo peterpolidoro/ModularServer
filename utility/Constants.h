@@ -14,7 +14,8 @@ namespace ModularDevice
 {
 namespace constants
 {
-enum{INTERNAL_FIELD_COUNT_MAX=2};
+//MAX values must be >= 1, >= created/copied count, < RAM limit
+enum{INTERNAL_FIELD_COUNT_MAX=1};
 enum{INTERNAL_PARAMETER_COUNT_MAX=1};
 enum{INTERNAL_METHOD_COUNT_MAX=8};
 
@@ -38,19 +39,26 @@ union NumberType
   double d;
 };
 
-extern const unsigned char eeprom_initialized_value;
+// Fields
+extern ConstantString serial_number_field_name;
 
 extern const unsigned int serial_number_min;
 extern const unsigned int serial_number_max;
 extern const unsigned int serial_number_default;
 
-extern const int parse_error_code;
-extern const int invalid_request_error_code;
-extern const int method_not_found_error_code;
-extern const int invalid_params_error_code;
-extern const int internal_error_error_code;
-extern const int server_error_error_code;
+// Parameters
 
+// Methods
+extern ConstantString get_device_info_method_name;
+extern ConstantString get_method_ids_method_name;
+extern ConstantString get_parameters_method_name;
+extern ConstantString help_method_name;
+extern ConstantString verbose_help_method_name;
+extern ConstantString get_memory_free_method_name;
+extern ConstantString reset_field_defaults_method_name;
+extern ConstantString set_serial_number_method_name;
+
+// Errors
 extern ConstantString parse_error_message;
 extern ConstantString invalid_request_error_message;
 extern ConstantString method_not_found_error_message;
@@ -66,13 +74,18 @@ extern ConstantString invalid_json_array_error_data;
 extern ConstantString parameter_error_error_data;
 extern ConstantString array_parameter_error_error_data;
 
+extern const int parse_error_code;
+extern const int invalid_request_error_code;
+extern const int method_not_found_error_code;
+extern const int invalid_params_error_code;
+extern const int internal_error_error_code;
+extern const int server_error_error_code;
+
+// Saved Variables
+extern const unsigned char eeprom_initialized_default_value;
+
+// Constant Strings
 extern ConstantString empty_constant_string;
-extern ConstantString get_device_info_method_name;
-extern ConstantString get_method_ids_method_name;
-extern ConstantString get_parameters_method_name;
-extern ConstantString help_method_name;
-extern ConstantString verbose_help_method_name;
-extern ConstantString eeprom_initialized_field_name;
 extern ConstantString id_constant_string;
 extern ConstantString error_constant_string;
 extern ConstantString message_constant_string;
@@ -89,18 +102,11 @@ extern ConstantString parameters_constant_string;
 extern ConstantString min_constant_string;
 extern ConstantString max_constant_string;
 extern ConstantString model_number_constant_string;
-extern ConstantString serial_number_constant_string;
 extern ConstantString firmware_version_constant_string;
 extern ConstantString major_constant_string;
 extern ConstantString minor_constant_string;
 extern ConstantString patch_constant_string;
-extern ConstantString response_success_constant_string;
-extern ConstantString response_error_constant_string;
 extern ConstantString device_info_constant_string;
-extern ConstantString get_memory_free_method_name;
-extern ConstantString reset_defaults_method_name;
-extern ConstantString set_serial_number_method_name;
-extern ConstantString memory_free_constant_string;
 }
 }
 #endif

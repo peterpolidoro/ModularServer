@@ -38,12 +38,6 @@ Field& Server::createInternalField(const ConstantString &field_name,
   {
     internal_fields_.push_back(Field(field_name,
                                      default_value));
-    unsigned char eeprom_init_value;
-    getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
-    if (eeprom_init_value != constants::eeprom_initialized_value)
-    {
-      internal_fields_.back().setDefaultValue();
-    }
   }
   return internal_fields_.back();
 }
@@ -57,12 +51,6 @@ Field& Server::createField(const ConstantString &field_name,
   {
     external_fields_.push_back(Field(field_name,
                                      default_value));
-    unsigned char eeprom_init_value;
-    getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
-    if (eeprom_init_value != constants::eeprom_initialized_value)
-    {
-      external_fields_.back().setDefaultValue();
-    }
     return external_fields_.back();
   }
 }
@@ -78,12 +66,6 @@ Field& Server::createField(const ConstantString &field_name,
     external_fields_.push_back(Field(field_name,
                                      default_value,
                                      array_length));
-    unsigned char eeprom_init_value;
-    getFieldValue(*eeprom_init_name_ptr_,eeprom_init_value);
-    if (eeprom_init_value != constants::eeprom_initialized_value)
-    {
-      external_fields_.back().setDefaultValue();
-    }
     return external_fields_.back();
   }
 }

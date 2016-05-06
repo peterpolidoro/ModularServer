@@ -26,5 +26,13 @@ extern const unsigned char firmware_minor;
 extern const unsigned char firmware_patch;
 
 extern ConstantString device_name;
+
+// Fields
+
+// Parameters
+
+// Methods
+
+// Errors
 }
 #endif

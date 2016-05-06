@@ -76,7 +76,7 @@ public:
   void startServer();
   void stopServer();
   void handleServerRequests();
-  void resetDefaults();
+  void resetFieldDefaults();
   void setSerialNumber(const unsigned int serial_number);
 private:
   Server server_;

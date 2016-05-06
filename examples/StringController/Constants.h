@@ -27,20 +27,15 @@ extern const unsigned char firmware_patch;
 extern HardwareSerial& serial2;
 extern const unsigned char serial2_rx_pin;
 
-extern const int count_min;
-extern const int count_max;
+extern ConstantString device_name;
+
+// Fields
 
 extern const int starting_chars_count_min;
 extern const int starting_chars_count_max;
 extern const int starting_chars_count_default;
 
-extern const int index_array_element_min;
-extern const int index_array_element_max;
-
-extern ConstantString index_error;
-
-extern ConstantString device_name;
-
+// Parameters
 extern ConstantString string_parameter_name;
 extern ConstantString string2_parameter_name;
 extern ConstantString count_parameter_name;
@@ -48,6 +43,12 @@ extern ConstantString index_array_parameter_name;
 extern ConstantString double_echo_parameter_name;
 extern ConstantString starting_chars_count_name;
 
+extern const int count_min;
+extern const int count_max;
+extern const int index_array_element_min;
+extern const int index_array_element_max;
+
+// Methods
 extern ConstantString echo_method_name;
 extern ConstantString length_method_name;
 extern ConstantString starts_with_method_name;
@@ -58,6 +59,9 @@ extern ConstantString set_starting_chars_count_method_name;
 extern ConstantString get_starting_chars_count_method_name;
 extern ConstantString set_stored_string_method_name;
 extern ConstantString get_stored_string_method_name;
+
+// Errors
+extern ConstantString index_error;
 
 }
 #endif

@@ -10,7 +10,8 @@
 
 namespace ModularDevice
 {
-Server::Server()
+Server::Server() :
+  eeprom_initialized_sv_(constants::eeprom_initialized_default_value)
 {
   setup();
 }
@@ -34,16 +35,16 @@ void Server::setup()
   result_key_in_response_ = false;
   server_stream_index_ = 0;
 
-  eeprom_initialized_index_ = 0;
-  eeprom_init_name_ptr_ = &constants::eeprom_initialized_field_name;
-  eeprom_uninitialized_ = true;
-  internal_fields_.push_back(Field(*eeprom_init_name_ptr_,
-                                   constants::eeprom_initialized_value));
-  createInternalField(constants::serial_number_constant_string,constants::serial_number_default);
+  eeprom_initialized_ = false;
 
-  Parameter& serial_number_parameter = createInternalParameter(constants::serial_number_constant_string);
+  // Fields
+  createInternalField(constants::serial_number_field_name,constants::serial_number_default);
+
+  // Parameters
+  Parameter& serial_number_parameter = createInternalParameter(constants::serial_number_field_name);
   serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
 
+  // Methods
   InternalMethod& get_device_info_method = createInternalMethod(constants::get_device_info_method_name,true);
   get_device_info_method.attachCallback(&Server::getDeviceInfoCallback);
 
@@ -65,8 +66,8 @@ void Server::setup()
   get_memory_free_method.setReturnTypeLong();
 #endif
 
-  InternalMethod& reset_defaults_method = createInternalMethod(constants::reset_defaults_method_name);
-  reset_defaults_method.attachCallback(&Server::resetDefaultsCallback);
+  InternalMethod& reset_field_defaults_method = createInternalMethod(constants::reset_field_defaults_method_name);
+  reset_field_defaults_method.attachCallback(&Server::resetFieldDefaultsCallback);
 
   InternalMethod& set_serial_number_method = createInternalMethod(constants::set_serial_number_method_name);
   set_serial_number_method.attachCallback(&Server::setSerialNumberCallback);
@@ -104,7 +105,7 @@ void Server::setModelNumber(const unsigned int model_number)
 
 void Server::setSerialNumber(const unsigned int serial_number)
 {
-  setFieldValue(constants::serial_number_constant_string,serial_number);
+  setFieldValue(constants::serial_number_field_name,serial_number);
 }
 
 void Server::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
@@ -234,7 +235,7 @@ void Server::endResponseArray()
   json_stream_.endArray();
 }
 
-void Server::resetDefaults()
+void Server::resetFieldDefaults()
 {
   for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
@@ -248,7 +249,7 @@ void Server::resetDefaults()
 
 void Server::startServer()
 {
-  if (eeprom_uninitialized_)
+  if (!eeprom_initialized_)
   {
     initializeEeprom();
   }
@@ -983,14 +984,18 @@ int Server::findFieldIndex(const ConstantString &field_name)
 unsigned int Server::getSerialNumber()
 {
   unsigned int serial_number;
-  getFieldValue(constants::serial_number_constant_string,serial_number);
+  getFieldValue(constants::serial_number_field_name,serial_number);
   return serial_number;
 }
 
 void Server::initializeEeprom()
 {
-  internal_fields_[eeprom_initialized_index_].setValue(constants::eeprom_initialized_value);
-  eeprom_uninitialized_ = false;
+  if (!eeprom_initialized_sv_.isDefaultValue())
+  {
+    eeprom_initialized_sv_.setDefaultValue();
+    resetFieldDefaults();
+  }
+  eeprom_initialized_ = true;
 }
 
 void Server::incrementServerStream()
@@ -1007,7 +1012,7 @@ void Server::writeDeviceInfoToResponse()
   beginResponseObject();
   writeToResponse(constants::name_constant_string,name_ptr_);
   writeToResponse(constants::model_number_constant_string,model_number_);
-  writeToResponse(constants::serial_number_constant_string,getSerialNumber());
+  writeToResponse(constants::serial_number_field_name,getSerialNumber());
   writeKeyToResponse(constants::firmware_version_constant_string);
   beginResponseObject();
   writeToResponse(constants::major_constant_string,firmware_major_);
@@ -1226,14 +1231,14 @@ void Server::getMemoryFreeCallback()
 }
 #endif
 
-void Server::resetDefaultsCallback()
+void Server::resetFieldDefaultsCallback()
 {
-  resetDefaults();
+  resetFieldDefaults();
 }
 
 void Server::setSerialNumberCallback()
 {
-  unsigned int serial_number = (long)getParameterValue(constants::serial_number_constant_string);
+  unsigned int serial_number = (long)getParameterValue(constants::serial_number_field_name);
   setSerialNumber(serial_number);
 }
 }

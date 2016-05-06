@@ -20,4 +20,12 @@ const unsigned char firmware_minor = 1;
 const unsigned char firmware_patch = 0;
 
 CONSTANT_STRING(device_name,"minimal_device");
+
+// Fields
+
+// Parameters
+
+// Methods
+
+// Errors
 }

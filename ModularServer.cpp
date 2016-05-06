@@ -109,9 +109,9 @@ void ModularServer::handleServerRequests()
   server_.handleRequest();
 }
 
-void ModularServer::resetDefaults()
+void ModularServer::resetFieldDefaults()
 {
-  server_.resetDefaults();
+  server_.resetFieldDefaults();
 }
 
 void ModularServer::setSerialNumber(const unsigned int serial_number)
