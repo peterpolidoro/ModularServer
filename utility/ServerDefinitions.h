@@ -11,25 +11,25 @@
 
 namespace ModularDevice
 {
-template<size_t MAX_SIZE>
+template <size_t MAX_SIZE>
 void Server::setFieldStorage(Field (&fields)[MAX_SIZE])
 {
   external_fields_.setStorage(fields);
 }
 
-template<size_t MAX_SIZE>
+template <size_t MAX_SIZE>
 void Server::setParameterStorage(Parameter (&parameters)[MAX_SIZE])
 {
   external_parameters_.setStorage(parameters);
 }
 
-template<size_t MAX_SIZE>
+template <size_t MAX_SIZE>
 void Server::setMethodStorage(Method (&methods)[MAX_SIZE])
 {
   external_methods_.setStorage(methods);
 }
 
-template<typename T>
+template <typename T>
 Field& Server::createInternalField(const ConstantString &field_name,
                                    const T &default_value)
 {
@@ -42,7 +42,7 @@ Field& Server::createInternalField(const ConstantString &field_name,
   return internal_fields_.back();
 }
 
-template<typename T>
+template <typename T>
 Field& Server::createField(const ConstantString &field_name,
                            const T &default_value)
 {
@@ -55,7 +55,7 @@ Field& Server::createField(const ConstantString &field_name,
   }
 }
 
-template<typename T>
+template <typename T>
 Field& Server::createField(const ConstantString &field_name,
                            const T default_value[],
                            const unsigned int array_length)
@@ -70,7 +70,7 @@ Field& Server::createField(const ConstantString &field_name,
   }
 }
 
-template<typename T>
+template <typename T>
 void Server::setFieldValue(const ConstantString &field_name,
                            const T &value)
 {
@@ -89,7 +89,7 @@ void Server::setFieldValue(const ConstantString &field_name,
   }
 }
 
-template<typename T>
+template <typename T>
 void Server::setFieldElementValue(const ConstantString &field_name,
                                   const T &value,
                                   const unsigned int element_index)
@@ -109,7 +109,7 @@ void Server::setFieldElementValue(const ConstantString &field_name,
   }
 }
 
-template<typename T>
+template <typename T>
 void Server::getFieldValue(const ConstantString &field_name,
                            T &value)
 {
@@ -128,7 +128,7 @@ void Server::getFieldValue(const ConstantString &field_name,
   }
 }
 
-template<typename T>
+template <typename T>
 void Server::getFieldElementValue(const ConstantString &field_name,
                                   T &value,
                                   const unsigned int element_index)
@@ -148,43 +148,43 @@ void Server::getFieldElementValue(const ConstantString &field_name,
   }
 }
 
-template<typename K>
+template <typename K>
 void Server::writeKeyToResponse(K key)
 {
   json_stream_.writeKey(key);
 }
 
-template<typename T>
+template <typename T>
 void Server::writeToResponse(T value)
 {
   json_stream_.write(value);
 }
 
-template<typename T, size_t N>
+template <typename T, size_t N>
 void Server::writeToResponse(T (&values)[N])
 {
   json_stream_.write(values);
 }
 
-template<typename K, typename T>
+template <typename K, typename T>
 void Server::writeToResponse(K key, T value)
 {
   json_stream_.write(key,value);
 }
 
-template<typename K, typename T, size_t N>
+template <typename K, typename T, size_t N>
 void Server::writeToResponse(K key, T (&values)[N])
 {
   json_stream_.write(key,values);
 }
 
-template<typename K>
+template <typename K>
 void Server::writeNullToResponse(K key)
 {
   json_stream_.writeNull(key);
 }
 
-template<typename T>
+template <typename T>
 void Server::sendErrorResponse(T error)
 {
   // Prevent multiple errors in one response
@@ -200,7 +200,7 @@ void Server::sendErrorResponse(T error)
   }
 }
 
-template<typename T>
+template <typename T>
 void Server::writeResultToResponse(T value)
 {
   // Prevent multiple results in one response
@@ -211,7 +211,7 @@ void Server::writeResultToResponse(T value)
   }
 }
 
-template<typename T>
+template <typename T>
 int Server::findMethodIndex(T const&method_name)
 {
   int method_index = -1;
@@ -234,7 +234,7 @@ int Server::findMethodIndex(T const&method_name)
   return method_index;
 }
 
-template<typename T>
+template <typename T>
 int Server::findParameterIndex(T const&parameter_name)
 {
   int parameter_index = -1;
@@ -257,7 +257,7 @@ int Server::findParameterIndex(T const&parameter_name)
   return parameter_index;
 }
 
-template<typename T>
+template <typename T>
 int Server::findMethodParameterIndex(int method_index, T const&parameter_name)
 {
   int parameter_index = -1;

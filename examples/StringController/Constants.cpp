@@ -26,9 +26,9 @@ CONSTANT_STRING(device_name,"string_controller");
 
 // Fields
 
-const int starting_chars_count_min = 1;
-const int starting_chars_count_max = 10;
-const int starting_chars_count_default = 2;
+const long starting_chars_count_min = 1;
+const long starting_chars_count_max = 10;
+const long starting_chars_count_default = 2;
 
 // Parameters
 CONSTANT_STRING(string_parameter_name,"string");

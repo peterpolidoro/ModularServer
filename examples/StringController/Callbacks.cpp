@@ -104,7 +104,7 @@ void charsAtCallback()
 void startingCharsCallback()
 {
   const char* string = modular_server.getParameterValue(constants::string_parameter_name);
-  int starting_chars_count;
+  long starting_chars_count;
   // modular_server.getFieldValue type must match the field default type
   modular_server.getFieldValue(constants::starting_chars_count_name,starting_chars_count);
   modular_server.writeResultToResponse(String(string).substring(0,starting_chars_count));

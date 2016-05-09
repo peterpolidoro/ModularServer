@@ -29,12 +29,12 @@ void ModularServer::setName(const ConstantString &device_name)
   server_.setName(device_name);
 }
 
-void ModularServer::setModelNumber(const unsigned int model_number)
+void ModularServer::setModelNumber(const long model_number)
 {
   server_.setModelNumber(model_number);
 }
 
-void ModularServer::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
+void ModularServer::setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch)
 {
   server_.setFirmwareVersion(firmware_major,firmware_minor,firmware_patch);
 }
@@ -114,7 +114,7 @@ void ModularServer::setFieldsToDefaults()
   server_.setFieldsToDefaults();
 }
 
-void ModularServer::setSerialNumber(const unsigned int serial_number)
+void ModularServer::setSerialNumber(const long serial_number)
 {
   server_.setSerialNumber(serial_number);
 }

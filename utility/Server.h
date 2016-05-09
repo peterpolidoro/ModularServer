@@ -37,9 +37,9 @@ public:
   Server(Stream &stream);
   void addServerStream(Stream &stream);
   void setName(const ConstantString &name);
-  void setModelNumber(const unsigned int model_number);
-  void setSerialNumber(const unsigned int serial_number);
-  void setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch);
+  void setModelNumber(const long model_number);
+  void setSerialNumber(const long serial_number);
+  void setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch);
   template <size_t MAX_SIZE>
   void setMethodStorage(Method (&methods)[MAX_SIZE]);
   Method& createMethod(const ConstantString &method_name);
@@ -51,44 +51,44 @@ public:
   ArduinoJson::JsonVariant getParameterValue(const ConstantString &name);
   template <size_t MAX_SIZE>
   void setFieldStorage(Field (&fields)[MAX_SIZE]);
-  template<typename T>
+  template <typename T>
   Field& createField(const ConstantString &field_name,
                      const T &default_value);
-  template<typename T>
+  template <typename T>
   Field& createField(const ConstantString &field_name,
                      const T default_value[],
                      const unsigned int array_length);
-  template<typename T>
+  template <typename T>
   void setFieldValue(const ConstantString &field_name,
                      const T &value);
-  template<typename T>
+  template <typename T>
   void setFieldElementValue(const ConstantString &field_name,
                             const T &value,
                             const unsigned int element_index);
-  template<typename T>
+  template <typename T>
   void getFieldValue(const ConstantString &field_name,
                      T &value);
-  template<typename T>
+  template <typename T>
   void getFieldElementValue(const ConstantString &field_name,
                             T &value,
                             const unsigned int element_index);
-  template<typename K>
+  template <typename K>
   void writeKeyToResponse(K key);
-  template<typename T>
+  template <typename T>
   void writeToResponse(T value);
-  template<typename T, size_t N>
+  template <typename T, size_t N>
   void writeToResponse(T (&values)[N]);
-  template<typename K, typename T>
+  template <typename K, typename T>
   void writeToResponse(K key, T value);
-  template<typename K, typename T, size_t N>
+  template <typename K, typename T, size_t N>
   void writeToResponse(K key, T (&values)[N]);
   void writeNullToResponse();
-  template<typename K>
+  template <typename K>
   void writeNullToResponse(K key);
-  template<typename T>
+  template <typename T>
   void sendErrorResponse(T error);
   void writeResultKeyToResponse();
-  template<typename T>
+  template <typename T>
   void writeResultToResponse(T value);
   void beginResponseObject();
   void endResponseObject();
@@ -110,10 +110,10 @@ private:
   Vector<Parameter> external_parameters_;
   Vector<Method> external_methods_;
   const ConstantString *name_ptr_;
-  unsigned int model_number_;
-  unsigned char firmware_major_;
-  unsigned char firmware_minor_;
-  unsigned char firmware_patch_;
+  long model_number_;
+  long firmware_major_;
+  long firmware_minor_;
+  long firmware_patch_;
   int request_method_index_;
   int parameter_count_;
   JsonStream json_stream_;
@@ -126,26 +126,26 @@ private:
   void setup();
   InternalMethod& createInternalMethod(const ConstantString &method_name, bool is_private=false);
   Parameter& createInternalParameter(const ConstantString &parameter_name);
-  template<typename T>
+  template <typename T>
   Field& createInternalField(const ConstantString &field_name,
                              const T &default_value);
   void processRequestArray();
   int processMethodString(const char *method_string);
-  template<typename T>
+  template <typename T>
   int findMethodIndex(T const&method_name);
   int countJsonArrayElements(ArduinoJson::JsonArray &json_array);
   void executeMethod();
   void methodHelp(bool verbose, int method_index);
   int processParameterString(const char *parameter_string);
-  template<typename T>
+  template <typename T>
   int findParameterIndex(T const&parameter_name);
-  template<typename T>
+  template <typename T>
   int findMethodParameterIndex(int method_index, T const&parameter_name);
   void parameterHelp(Parameter &parameter);
   bool checkParameters();
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
   int findFieldIndex(const ConstantString &field_name);
-  unsigned int getSerialNumber();
+  long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
   void help(bool verbose);

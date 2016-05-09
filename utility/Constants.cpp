@@ -14,9 +14,9 @@ namespace constants
 // Fields
 CONSTANT_STRING(serial_number_field_name,"serial_number");
 
-const unsigned int serial_number_min = 0;
-const unsigned int serial_number_max = 65535;
-const unsigned int serial_number_default = serial_number_min;
+const long serial_number_min = 0;
+const long serial_number_max = 65535;
+const long serial_number_default = serial_number_min;
 
 // Parameters
 

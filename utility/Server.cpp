@@ -102,22 +102,40 @@ void Server::setName(const ConstantString &name)
   name_ptr_ = &name;
 }
 
-void Server::setModelNumber(const unsigned int model_number)
+void Server::setModelNumber(const long model_number)
 {
   model_number_ = model_number;
 }
 
-void Server::setSerialNumber(const unsigned int serial_number)
+void Server::setSerialNumber(const long serial_number)
 {
   setFieldValue(constants::serial_number_field_name,serial_number);
 }
 
-void Server::setFirmwareVersion(const unsigned char firmware_major,const unsigned char firmware_minor,const unsigned char firmware_patch)
+void Server::setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch)
 {
   firmware_major_ = firmware_major;
   firmware_minor_ = firmware_minor;
   firmware_patch_ = firmware_patch;
 }
+
+template <>
+void Server::writeToResponse<Field>(Field field)
+{
+  const ConstantString& field_name = field.getName();
+  JsonStream::JsonTypes field_type = field.getType();
+  switch (field_type)
+  {
+    case JsonStream::LONG_TYPE:
+      {
+        long field_value;
+        getFieldValue(field_name,field_value);
+        writeToResponse(field_value);
+        break;
+      }
+  }
+}
+
 
 InternalMethod& Server::createInternalMethod(const ConstantString &method_name, bool is_private)
 {
@@ -985,9 +1003,9 @@ int Server::findFieldIndex(const ConstantString &field_name)
   return field_index;
 }
 
-unsigned int Server::getSerialNumber()
+long Server::getSerialNumber()
 {
-  unsigned int serial_number;
+  long serial_number;
   getFieldValue(constants::serial_number_field_name,serial_number);
   return serial_number;
 }
@@ -1239,19 +1257,19 @@ void Server::getFieldValuesCallback()
 {
   writeResultKeyToResponse();
   beginResponseObject();
-  int c_style_array[] = {5,3,1};
-  Array<int,3> array(c_style_array);
   for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
-    const ConstantString& name = internal_fields_[i].getName();
-    // writeKeyToResponse(name);
-    writeToResponse(name,array);
+    Field& field = internal_fields_[i];
+    const ConstantString& name = field.getName();
+    writeKeyToResponse(name);
+    writeToResponse(field);
   }
   for (unsigned int i=0; i<external_fields_.size(); ++i)
   {
-    const ConstantString& name = external_fields_[i].getName();
+    Field& field = external_fields_[i];
+    const ConstantString& name = field.getName();
     writeKeyToResponse(name);
-    writeToResponse(0);
+    writeToResponse(field);
   }
   endResponseObject();
 }
@@ -1263,7 +1281,7 @@ void Server::setFieldsToDefaultsCallback()
 
 void Server::setSerialNumberCallback()
 {
-  unsigned int serial_number = (long)getParameterValue(constants::serial_number_field_name);
+  long serial_number = getParameterValue(constants::serial_number_field_name);
   setSerialNumber(serial_number);
 }
 }

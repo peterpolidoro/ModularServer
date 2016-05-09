@@ -42,9 +42,9 @@ union NumberType
 // Fields
 extern ConstantString serial_number_field_name;
 
-extern const unsigned int serial_number_min;
-extern const unsigned int serial_number_max;
-extern const unsigned int serial_number_default;
+extern const long serial_number_min;
+extern const long serial_number_max;
+extern const long serial_number_default;
 
 // Parameters
 

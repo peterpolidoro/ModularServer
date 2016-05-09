@@ -31,9 +31,9 @@ extern ConstantString device_name;
 
 // Fields
 
-extern const int starting_chars_count_min;
-extern const int starting_chars_count_max;
-extern const int starting_chars_count_default;
+extern const long starting_chars_count_min;
+extern const long starting_chars_count_max;
+extern const long starting_chars_count_default;
 
 // Parameters
 extern ConstantString string_parameter_name;

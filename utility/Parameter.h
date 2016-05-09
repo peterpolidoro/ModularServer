@@ -32,7 +32,7 @@ public:
   void setTypeString();
   void setTypeObject();
   void setTypeArray();
-  template<typename T>
+  template <typename T>
   void setRange(const T min, const T max)
   {
     min_.l = (long)min;
