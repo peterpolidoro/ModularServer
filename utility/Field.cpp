@@ -148,50 +148,9 @@ bool Field::isDefaultValue()
   return saved_variable_.isDefaultValue();
 }
 
-// Parameter Methods
-bool Field::compareName(const char *name_to_compare)
+// Private
+Parameter& Field::getParameter()
 {
-  return parameter_.compareName(name_to_compare);
+  return parameter_;
 }
-
-bool Field::compareName(const ConstantString &name_to_compare)
-{
-  return parameter_.compareName(name_to_compare);
-}
-
-const ConstantString& Field::getName()
-{
-  return parameter_.getName();
-}
-
-const ConstantString& Field::getUnits()
-{
-  return parameter_.getUnits();
-}
-
-JsonStream::JsonTypes Field::getType()
-{
-  return parameter_.getType();
-}
-
-JsonStream::JsonTypes Field::getArrayElementType()
-{
-  return parameter_.getArrayElementType();
-}
-
-bool Field::rangeIsSet()
-{
-  return parameter_.rangeIsSet();
-}
-
-constants::NumberType Field::getMin()
-{
-  return parameter_.getMin();
-}
-
-constants::NumberType Field::getMax()
-{
-  return parameter_.getMax();
-}
-
 }

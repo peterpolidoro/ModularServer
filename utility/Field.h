@@ -54,18 +54,7 @@ public:
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;
-
-  // Parameter Methods
-  bool compareName(const char *name_to_compare);
-  bool compareName(const ConstantString &name_to_compare);
-  const ConstantString& getName();
-  const ConstantString& getUnits();
-  JsonStream::JsonTypes getType();
-  JsonStream::JsonTypes getArrayElementType();
-  bool rangeIsSet();
-  constants::NumberType getMin();
-  constants::NumberType getMax();
-
+  Parameter& getParameter();
   friend class Server;
 };
 }

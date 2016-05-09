@@ -19,6 +19,7 @@ const long serial_number_max = 65535;
 const long serial_number_default = serial_number_min;
 
 // Parameters
+CONSTANT_STRING(field_name_parameter_name,"field_name");
 
 // Methods
 CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
@@ -71,6 +72,7 @@ CONSTANT_STRING(result_type_constant_string,"result_type");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
 CONSTANT_STRING(methods_constant_string,"methods");
 CONSTANT_STRING(parameters_constant_string,"parameters");
+CONSTANT_STRING(fields_constant_string,"fields");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");
 CONSTANT_STRING(model_number_constant_string,"model_number");

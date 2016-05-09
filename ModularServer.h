@@ -81,7 +81,6 @@ public:
   void stopServer();
   void handleServerRequests();
   void setFieldsToDefaults();
-  void setSerialNumber(const long serial_number);
 private:
   Server server_;
 };

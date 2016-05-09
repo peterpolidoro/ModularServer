@@ -161,7 +161,6 @@ private:
   void getMemoryFreeCallback();
   void getFieldValuesCallback();
   void setFieldsToDefaultsCallback();
-  void setSerialNumberCallback();
 };
 }
 #include "ServerDefinitions.h"

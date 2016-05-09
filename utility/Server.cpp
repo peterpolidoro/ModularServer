@@ -38,11 +38,12 @@ void Server::setup()
   eeprom_initialized_ = false;
 
   // Fields
-  createInternalField(constants::serial_number_field_name,constants::serial_number_default);
+  Field& serial_number_field = createInternalField(constants::serial_number_field_name,constants::serial_number_default);
+  serial_number_field.setRange(constants::serial_number_min,constants::serial_number_max);
 
   // Parameters
-  Parameter& serial_number_parameter = createInternalParameter(constants::serial_number_field_name);
-  serial_number_parameter.setRange(constants::serial_number_min,constants::serial_number_max);
+  Parameter& field_name_parameter = createInternalParameter(constants::field_name_parameter_name);
+  field_name_parameter.setTypeString();
 
   // Methods
   InternalMethod& get_device_info_method = createInternalMethod(constants::get_device_info_method_name,true);
@@ -73,9 +74,9 @@ void Server::setup()
   InternalMethod& set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
   set_fields_to_defaults_method.attachCallback(&Server::setFieldsToDefaultsCallback);
 
-  InternalMethod& set_serial_number_method = createInternalMethod(constants::set_serial_number_method_name);
-  set_serial_number_method.attachCallback(&Server::setSerialNumberCallback);
-  set_serial_number_method.addParameter(serial_number_parameter);
+  // InternalMethod& set_serial_number_method = createInternalMethod(constants::set_serial_number_method_name);
+  // set_serial_number_method.attachCallback(&Server::setSerialNumberCallback);
+  // set_serial_number_method.addParameter(serial_number_parameter);
 
   server_running_ = false;
 }
@@ -107,11 +108,6 @@ void Server::setModelNumber(const long model_number)
   model_number_ = model_number;
 }
 
-void Server::setSerialNumber(const long serial_number)
-{
-  setFieldValue(constants::serial_number_field_name,serial_number);
-}
-
 void Server::setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch)
 {
   firmware_major_ = firmware_major;
@@ -122,8 +118,8 @@ void Server::setFirmwareVersion(const long firmware_major,const long firmware_mi
 template <>
 void Server::writeToResponse<Field>(Field field)
 {
-  const ConstantString& field_name = field.getName();
-  JsonStream::JsonTypes field_type = field.getType();
+  const ConstantString& field_name = field.getParameter().getName();
+  JsonStream::JsonTypes field_type = field.getParameter().getType();
   switch (field_type)
   {
     case JsonStream::LONG_TYPE:
@@ -986,7 +982,7 @@ int Server::findFieldIndex(const ConstantString &field_name)
   int field_index = -1;
   for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
-    if (internal_fields_[i].compareName(field_name))
+    if (internal_fields_[i].getParameter().compareName(field_name))
     {
       field_index = i;
       return field_index;
@@ -994,7 +990,7 @@ int Server::findFieldIndex(const ConstantString &field_name)
   }
   for (unsigned int i=0; i<external_fields_.size(); ++i)
   {
-    if (external_fields_[i].compareName(field_name))
+    if (external_fields_[i].getParameter().compareName(field_name))
     {
       field_index = i + internal_fields_.max_size();
       return field_index;
@@ -1059,11 +1055,11 @@ void Server::help(bool verbose)
     writeKeyToResponse(constants::device_info_constant_string);
     writeDeviceInfoToResponse();
 
-    writeKeyToResponse(constants::methods_constant_string);
-    beginResponseArray();
     // ?
     if (!verbose)
     {
+      writeKeyToResponse(constants::methods_constant_string);
+      beginResponseArray();
       for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
         if (!internal_methods_[method_index].isPrivate())
@@ -1077,10 +1073,41 @@ void Server::help(bool verbose)
         const ConstantString& method_name = external_methods_[method_index].getName();
         writeToResponse(method_name);
       }
+      endResponseArray();
+
+      writeKeyToResponse(constants::parameters_constant_string);
+      beginResponseArray();
+      for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+      {
+        const ConstantString& parameter_name = internal_parameters_[parameter_index].getName();
+        writeToResponse(parameter_name);
+      }
+      for (unsigned int parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
+      {
+        const ConstantString& parameter_name = external_parameters_[parameter_index].getName();
+        writeToResponse(parameter_name);
+      }
+      endResponseArray();
+
+      writeKeyToResponse(constants::fields_constant_string);
+      beginResponseArray();
+      for (unsigned int field_index=0; field_index<internal_fields_.size(); ++field_index)
+      {
+        const ConstantString& field_name = internal_fields_[field_index].getParameter().getName();
+        writeToResponse(field_name);
+      }
+      for (unsigned int field_index=0; field_index<external_fields_.size(); ++field_index)
+      {
+        const ConstantString& field_name = external_fields_[field_index].getParameter().getName();
+        writeToResponse(field_name);
+      }
+      endResponseArray();
     }
     // ??
     else
     {
+      writeKeyToResponse(constants::methods_constant_string);
+      beginResponseArray();
       for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
         if (!internal_methods_[method_index].isPrivate())
@@ -1105,8 +1132,20 @@ void Server::help(bool verbose)
       {
         parameterHelp(external_parameters_[parameter_index]);
       }
+      endResponseArray();
+
+      writeKeyToResponse(constants::fields_constant_string);
+      beginResponseArray();
+      for (unsigned int field_index=0; field_index<internal_fields_.size(); ++field_index)
+      {
+        parameterHelp(internal_fields_[field_index].getParameter());
+      }
+      for (unsigned int field_index=0; field_index<external_fields_.size(); ++field_index)
+      {
+        parameterHelp(external_fields_[field_index].getParameter());
+      }
+      endResponseArray();
     }
-    endResponseArray();
     endResponseObject();
   }
   // ? method
@@ -1260,14 +1299,14 @@ void Server::getFieldValuesCallback()
   for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
     Field& field = internal_fields_[i];
-    const ConstantString& name = field.getName();
+    const ConstantString& name = field.getParameter().getName();
     writeKeyToResponse(name);
     writeToResponse(field);
   }
   for (unsigned int i=0; i<external_fields_.size(); ++i)
   {
     Field& field = external_fields_[i];
-    const ConstantString& name = field.getName();
+    const ConstantString& name = field.getParameter().getName();
     writeKeyToResponse(name);
     writeToResponse(field);
   }
@@ -1279,9 +1318,4 @@ void Server::setFieldsToDefaultsCallback()
   setFieldsToDefaults();
 }
 
-void Server::setSerialNumberCallback()
-{
-  long serial_number = getParameterValue(constants::serial_number_field_name);
-  setSerialNumber(serial_number);
-}
 }

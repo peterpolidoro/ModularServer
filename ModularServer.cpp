@@ -113,9 +113,4 @@ void ModularServer::setFieldsToDefaults()
 {
   server_.setFieldsToDefaults();
 }
-
-void ModularServer::setSerialNumber(const long serial_number)
-{
-  server_.setSerialNumber(serial_number);
-}
 }

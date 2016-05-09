@@ -28,7 +28,7 @@ enum{STRING_LENGTH_ERROR=257};
 enum{STRING_LENGTH_DEVICE_NAME=32};
 enum{STRING_LENGTH_PARAMETER_NAME=24};
 enum{STRING_LENGTH_PARAMETER_UNITS=8};
-enum{STRING_LENGTH_PARAMETER_COUNT=8};
+enum{STRING_LENGTH_PARAMETER_COUNT=2};
 enum{STRING_LENGTH_METHOD_NAME=32};
 
 enum {JSON_TOKEN_MAX=32};
@@ -47,6 +47,7 @@ extern const long serial_number_max;
 extern const long serial_number_default;
 
 // Parameters
+extern ConstantString field_name_parameter_name;
 
 // Methods
 extern ConstantString get_device_info_method_name;
@@ -100,6 +101,7 @@ extern ConstantString result_type_constant_string;
 extern ConstantString array_element_type_constant_string;
 extern ConstantString methods_constant_string;
 extern ConstantString parameters_constant_string;
+extern ConstantString fields_constant_string;
 extern ConstantString min_constant_string;
 extern ConstantString max_constant_string;
 extern ConstantString model_number_constant_string;
