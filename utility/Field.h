@@ -13,6 +13,7 @@
 #include "WProgram.h"
 #endif
 #include "SavedVariable.h"
+#include "JsonStream.h"
 #include "Parameter.h"
 #include "Constants.h"
 
@@ -31,11 +32,15 @@ public:
         const T default_value[],
         const unsigned int array_length);
 
+  // Parameter Methods
+  void setRange(const long min, const long max);
+  void removeRange();
+
   // Saved Variable Methods
   template<typename T>
   void getDefaultValue(T &value);
   template<typename T>
-  void getDefaultElementValue(T &value, unsigned int element_index);
+  void getDefaultElementValue(T &value, const unsigned int element_index);
   template<typename T>
   void setValue(const T &value);
   template<typename T>
@@ -43,25 +48,16 @@ public:
   template<typename T>
   void getValue(T &value);
   template<typename T>
-  void getElementValue(T &value, unsigned int element_index);
+  void getElementValue(T &value, const unsigned int element_index);
   void setDefaultValue();
   bool isDefaultValue();
-
-  // Parameter Methods
-  template <typename T>
-  void setRange(const T min, const T max);
-  {
-    min_.l = (long)min;
-    max_.l = (long)max;
-    setTypeLong();
-    range_is_set_ = true;
-  }
-  void removeRange();
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;
 
   // Parameter Methods
+  bool compareName(const char *name_to_compare);
+  bool compareName(const ConstantString &name_to_compare);
   const ConstantString& getName();
   const ConstantString& getUnits();
   JsonStream::JsonTypes getType();

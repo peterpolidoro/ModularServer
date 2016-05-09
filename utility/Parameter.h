@@ -60,6 +60,7 @@ private:
   bool rangeIsSet();
   constants::NumberType getMin();
   constants::NumberType getMax();
+  friend class Field;
   friend class Method;
   friend class Server;
 };
