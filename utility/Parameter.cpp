@@ -97,6 +97,18 @@ void Parameter::setTypeArray()
   type_ = JsonStream::ARRAY_TYPE;
 }
 
+void Parameter::setTypeValue()
+{
+  if (type_ != JsonStream::ARRAY_TYPE)
+  {
+    type_ = JsonStream::VALUE_TYPE;
+  }
+  else
+  {
+    array_element_type_ = JsonStream::VALUE_TYPE;
+  }
+}
+
 void Parameter::setRange(const double min, const double max)
 {
   min_.d = min;

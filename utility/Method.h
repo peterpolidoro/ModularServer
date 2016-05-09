@@ -37,6 +37,7 @@ public:
   void setReturnTypeString();
   void setReturnTypeObject();
   void setReturnTypeArray();
+  void setReturnTypeValue();
   JsonStream::JsonTypes getReturnType();
 protected:
   const ConstantString *name_ptr_;

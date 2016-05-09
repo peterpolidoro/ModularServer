@@ -125,6 +125,11 @@ void Method::setReturnTypeArray()
   return_type_ = JsonStream::ARRAY_TYPE;
 }
 
+void Method::setReturnTypeValue()
+{
+  return_type_ = JsonStream::VALUE_TYPE;
+}
+
 JsonStream::JsonTypes Method::getReturnType()
 {
   return return_type_;
