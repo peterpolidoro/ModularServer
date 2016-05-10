@@ -28,9 +28,9 @@ CONSTANT_STRING(get_parameters_method_name,"getParameters");
 CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
-CONSTANT_STRING(get_field_values_method_name,"getFieldValues");
 CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");
-CONSTANT_STRING(set_serial_number_method_name,"setSerialNumber");
+CONSTANT_STRING(get_field_values_method_name,"getFieldValues");
+CONSTANT_STRING(get_field_value_method_name,"getFieldValue");
 
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");
@@ -41,6 +41,7 @@ CONSTANT_STRING(server_error_error_message,"Server error");
 CONSTANT_STRING(object_request_error_data,"JSON object requests not supported. Must use compact JSON array format for requests.");
 CONSTANT_STRING(request_length_error_data,"Request length too long.");
 CONSTANT_STRING(parameter_not_found_error_data,"Parameter not found");
+CONSTANT_STRING(field_not_found_error_data,"Field not found");
 CONSTANT_STRING(incorrect_parameter_number_error_data,"Incorrect number of parameters. ")
 CONSTANT_STRING(invalid_json_object_error_data," is not a valid JSON object.")
 CONSTANT_STRING(invalid_json_array_error_data," is not a valid JSON array.")

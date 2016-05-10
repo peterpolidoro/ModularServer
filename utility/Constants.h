@@ -56,9 +56,9 @@ extern ConstantString get_parameters_method_name;
 extern ConstantString help_method_name;
 extern ConstantString verbose_help_method_name;
 extern ConstantString get_memory_free_method_name;
-extern ConstantString get_field_values_method_name;
 extern ConstantString set_fields_to_defaults_method_name;
-extern ConstantString set_serial_number_method_name;
+extern ConstantString get_field_values_method_name;
+extern ConstantString get_field_value_method_name;
 
 // Errors
 extern ConstantString parse_error_message;
@@ -70,6 +70,7 @@ extern ConstantString server_error_error_message;
 extern ConstantString object_request_error_data;
 extern ConstantString request_length_error_data;
 extern ConstantString parameter_not_found_error_data;
+extern ConstantString field_not_found_error_data;
 extern ConstantString incorrect_parameter_number_error_data;
 extern ConstantString invalid_json_object_error_data;
 extern ConstantString invalid_json_array_error_data;

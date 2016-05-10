@@ -38,7 +38,6 @@ public:
   void addServerStream(Stream &stream);
   void setName(const ConstantString &name);
   void setModelNumber(const long model_number);
-  void setSerialNumber(const long serial_number);
   void setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch);
   template <size_t MAX_SIZE>
   void setMethodStorage(Method (&methods)[MAX_SIZE]);
@@ -161,8 +160,9 @@ private:
   void helpCallback();
   void verboseHelpCallback();
   void getMemoryFreeCallback();
-  void getFieldValuesCallback();
   void setFieldsToDefaultsCallback();
+  void getFieldValuesCallback();
+  void getFieldValueCallback();
 };
 }
 #include "ServerDefinitions.h"

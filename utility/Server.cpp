@@ -67,16 +67,17 @@ void Server::setup()
   get_memory_free_method.setReturnTypeLong();
 #endif
 
+  InternalMethod& set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
+  set_fields_to_defaults_method.attachCallback(&Server::setFieldsToDefaultsCallback);
+
   InternalMethod& get_field_values_method = createInternalMethod(constants::get_field_values_method_name);
   get_field_values_method.attachCallback(&Server::getFieldValuesCallback);
   get_field_values_method.setReturnTypeObject();
 
-  InternalMethod& set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
-  set_fields_to_defaults_method.attachCallback(&Server::setFieldsToDefaultsCallback);
-
-  // InternalMethod& set_serial_number_method = createInternalMethod(constants::set_serial_number_method_name);
-  // set_serial_number_method.attachCallback(&Server::setSerialNumberCallback);
-  // set_serial_number_method.addParameter(serial_number_parameter);
+  InternalMethod& get_field_value_method = createInternalMethod(constants::get_field_value_method_name);
+  get_field_value_method.attachCallback(&Server::getFieldValueCallback);
+  get_field_value_method.addParameter(field_name_parameter);
+  get_field_values_method.setReturnTypeValue();
 
   server_running_ = false;
 }
@@ -1315,6 +1316,11 @@ void Server::getMemoryFreeCallback()
 }
 #endif
 
+void Server::setFieldsToDefaultsCallback()
+{
+  setFieldsToDefaults();
+}
+
 void Server::getFieldValuesCallback()
 {
   writeResultKeyToResponse();
@@ -1336,9 +1342,32 @@ void Server::getFieldValuesCallback()
   endResponseObject();
 }
 
-void Server::setFieldsToDefaultsCallback()
+void Server::getFieldValueCallback()
 {
-  setFieldsToDefaults();
+  writeResultKeyToResponse();
+  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)internal_fields_.max_size()))
+  {
+    Field& field = internal_fields_[field_index];
+    writeToResponse(field);
+  }
+  else if (field_index >= (int)internal_fields_.max_size())
+  {
+    field_index -=  internal_parameters_.max_size();
+    Field& field = external_fields_[field_index];
+    writeToResponse(field);
+  }
+  else
+  {
+    error_ = true;
+    writeKeyToResponse(constants::error_constant_string);
+    beginResponseObject();
+    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
+    writeToResponse(constants::data_constant_string,constants::field_not_found_error_data);
+    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
+    endResponseObject();
+  }
 }
 
 }
