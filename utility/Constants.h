@@ -110,6 +110,9 @@ extern ConstantString major_constant_string;
 extern ConstantString minor_constant_string;
 extern ConstantString patch_constant_string;
 extern ConstantString device_info_constant_string;
+extern ConstantString value_constant_string;
+extern ConstantString board_constant_string;
+extern ConstantString board_type_constant_string;
 }
 }
 #endif

@@ -141,10 +141,12 @@ private:
   int findParameterIndex(T const&parameter_name);
   template <typename T>
   int findMethodParameterIndex(int method_index, T const&parameter_name);
-  void parameterHelp(Parameter &parameter);
+  void parameterHelp(Parameter &parameter, bool end_object=true);
+  void fieldHelp(Field &field);
   bool checkParameters();
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
-  int findFieldIndex(const ConstantString &field_name);
+  template <typename T>
+  int findFieldIndex(T const&field_name);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();

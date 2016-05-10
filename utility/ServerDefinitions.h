@@ -284,6 +284,30 @@ int Server::findMethodParameterIndex(int method_index, T const&parameter_name)
   }
   return parameter_index;
 }
+
+template <typename T>
+int Server::findFieldIndex(T const&field_name)
+{
+  int field_index = -1;
+  for (unsigned int i=0; i<internal_fields_.size(); ++i)
+  {
+    if (internal_fields_[i].getParameter().compareName(field_name))
+    {
+      field_index = i;
+      return field_index;
+    }
+  }
+  for (unsigned int i=0; i<external_fields_.size(); ++i)
+  {
+    if (external_fields_[i].getParameter().compareName(field_name))
+    {
+      field_index = i + internal_fields_.max_size();
+      return field_index;
+    }
+  }
+  return field_index;
+}
+
 }
 
 #endif

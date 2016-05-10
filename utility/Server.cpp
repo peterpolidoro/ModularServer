@@ -129,9 +129,15 @@ void Server::writeToResponse<Field>(Field field)
         writeToResponse(field_value);
         break;
       }
+    case JsonStream::BOOL_TYPE:
+      {
+        bool field_value;
+        getFieldValue(field_name,field_value);
+        writeToResponse(field_value);
+        break;
+      }
   }
 }
-
 
 InternalMethod& Server::createInternalMethod(const ConstantString &method_name, bool is_private)
 {
@@ -618,7 +624,7 @@ int Server::processParameterString(const char *parameter_string)
   return parameter_index;
 }
 
-void Server::parameterHelp(Parameter &parameter)
+void Server::parameterHelp(Parameter &parameter, bool end_object)
 {
   beginResponseObject();
   const ConstantString& parameter_name = parameter.getName();
@@ -731,7 +737,23 @@ void Server::parameterHelp(Parameter &parameter)
         }
         break;
       }
+    case JsonStream::VALUE_TYPE:
+      {
+        writeToResponse(constants::type_constant_string,JsonStream::VALUE_TYPE);
+        break;
+      }
   }
+  if (end_object)
+  {
+    endResponseObject();
+  }
+}
+
+void Server::fieldHelp(Field &field)
+{
+  parameterHelp(field.getParameter(),false);
+  writeKeyToResponse(constants::value_constant_string);
+  writeToResponse(field);
   endResponseObject();
 }
 
@@ -977,28 +999,6 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
   return parameter_ok;
 }
 
-int Server::findFieldIndex(const ConstantString &field_name)
-{
-  int field_index = -1;
-  for (unsigned int i=0; i<internal_fields_.size(); ++i)
-  {
-    if (internal_fields_[i].getParameter().compareName(field_name))
-    {
-      field_index = i;
-      return field_index;
-    }
-  }
-  for (unsigned int i=0; i<external_fields_.size(); ++i)
-  {
-    if (external_fields_[i].getParameter().compareName(field_name))
-    {
-      field_index = i + internal_fields_.max_size();
-      return field_index;
-    }
-  }
-  return field_index;
-}
-
 long Server::getSerialNumber()
 {
   long serial_number;
@@ -1030,6 +1030,7 @@ void Server::writeDeviceInfoToResponse()
   beginResponseObject();
   writeToResponse(constants::name_constant_string,name_ptr_);
   writeToResponse(constants::model_number_constant_string,model_number_);
+  writeToResponse(constants::board_constant_string,constants::board_type_constant_string);
   writeToResponse(constants::serial_number_field_name,getSerialNumber());
   writeKeyToResponse(constants::firmware_version_constant_string);
   beginResponseObject();
@@ -1138,11 +1139,11 @@ void Server::help(bool verbose)
       beginResponseArray();
       for (unsigned int field_index=0; field_index<internal_fields_.size(); ++field_index)
       {
-        parameterHelp(internal_fields_[field_index].getParameter());
+        fieldHelp(internal_fields_[field_index]);
       }
       for (unsigned int field_index=0; field_index<external_fields_.size(); ++field_index)
       {
-        parameterHelp(external_fields_[field_index].getParameter());
+        fieldHelp(external_fields_[field_index]);
       }
       endResponseArray();
     }
@@ -1150,28 +1151,28 @@ void Server::help(bool verbose)
   }
   // ? method
   // ? parameter
+  // ? field
   // ?? method
   // ?? parameter
+  // ?? field
   else if (parameter_count == 1)
   {
     const char* param_string = (*request_json_array_ptr_)[1];
     int method_index = findMethodIndex(param_string);
-    bool method = false;
-    // ? method
     if (method_index >= 0)
     {
+      // ? method
       param_error = false;
-      method = true;
       writeResultKeyToResponse();
       methodHelp(verbose,method_index);
     }
-    if (!method)
+    else
     {
-      // ? parameter
-      // ?? parameter
       int parameter_index = findParameterIndex(param_string);
       if (parameter_index >= 0)
       {
+        // ? parameter
+        // ?? parameter
         param_error = false;
         writeResultKeyToResponse();
         Parameter* parameter_ptr = NULL;
@@ -1185,6 +1186,28 @@ void Server::help(bool verbose)
           parameter_ptr = &external_parameters_[index];
         }
         parameterHelp(*parameter_ptr);
+      }
+      else
+      {
+        int field_index = findFieldIndex(param_string);
+        if (field_index >= 0)
+        {
+          // ? field
+          // ?? field
+          param_error = false;
+          writeResultKeyToResponse();
+          Field* field_ptr = NULL;
+          if (field_index < (int)internal_fields_.max_size())
+          {
+            field_ptr = &internal_fields_[field_index];
+          }
+          else
+          {
+            int index = field_index - internal_fields_.max_size();
+            field_ptr = &external_fields_[index];
+          }
+          fieldHelp(*field_ptr);
+        }
       }
     }
   }
