@@ -77,7 +77,7 @@ void Server::setup()
   InternalMethod& get_field_value_method = createInternalMethod(constants::get_field_value_method_name);
   get_field_value_method.attachCallback(&Server::getFieldValueCallback);
   get_field_value_method.addParameter(field_name_parameter);
-  get_field_values_method.setReturnTypeValue();
+  get_field_value_method.setReturnTypeValue();
 
   server_running_ = false;
 }
@@ -114,30 +114,6 @@ void Server::setFirmwareVersion(const long firmware_major,const long firmware_mi
   firmware_major_ = firmware_major;
   firmware_minor_ = firmware_minor;
   firmware_patch_ = firmware_patch;
-}
-
-template <>
-void Server::writeToResponse<Field>(Field field)
-{
-  const ConstantString& field_name = field.getParameter().getName();
-  JsonStream::JsonTypes field_type = field.getParameter().getType();
-  switch (field_type)
-  {
-    case JsonStream::LONG_TYPE:
-      {
-        long field_value;
-        getFieldValue(field_name,field_value);
-        writeToResponse(field_value);
-        break;
-      }
-    case JsonStream::BOOL_TYPE:
-      {
-        bool field_value;
-        getFieldValue(field_name,field_value);
-        writeToResponse(field_value);
-        break;
-      }
-  }
 }
 
 InternalMethod& Server::createInternalMethod(const ConstantString &method_name, bool is_private)
@@ -754,7 +730,9 @@ void Server::fieldHelp(Field &field)
 {
   parameterHelp(field.getParameter(),false);
   writeKeyToResponse(constants::value_constant_string);
-  writeToResponse(field);
+  writeFieldToResponse(field,false,false);
+  writeKeyToResponse(constants::default_value_constant_string);
+  writeFieldToResponse(field,false,true);
   endResponseObject();
 }
 
@@ -1040,6 +1018,47 @@ void Server::writeDeviceInfoToResponse()
   writeToResponse(constants::patch_constant_string,firmware_patch_);
   endResponseObject();
   endResponseObject();
+}
+
+void Server::writeFieldToResponse(Field &field, bool write_key, bool write_default)
+{
+  const ConstantString& field_name = field.getParameter().getName();
+  if (write_key)
+  {
+    writeKeyToResponse(field_name);
+  }
+  JsonStream::JsonTypes field_type = field.getParameter().getType();
+  switch (field_type)
+  {
+    case JsonStream::LONG_TYPE:
+      {
+        long field_value;
+        if (write_default)
+        {
+          getFieldDefaultValue(field_name,field_value);
+        }
+        else
+        {
+          getFieldValue(field_name,field_value);
+        }
+        writeToResponse(field_value);
+        break;
+      }
+    case JsonStream::BOOL_TYPE:
+      {
+        bool field_value;
+        if (write_default)
+        {
+          getFieldDefaultValue(field_name,field_value);
+        }
+        else
+        {
+          getFieldValue(field_name,field_value);
+        }
+        writeToResponse(field_value);
+        break;
+      }
+  }
 }
 
 void Server::help(bool verbose)
@@ -1328,16 +1347,12 @@ void Server::getFieldValuesCallback()
   for (unsigned int i=0; i<internal_fields_.size(); ++i)
   {
     Field& field = internal_fields_[i];
-    const ConstantString& name = field.getParameter().getName();
-    writeKeyToResponse(name);
-    writeToResponse(field);
+    writeFieldToResponse(field,true,false);
   }
   for (unsigned int i=0; i<external_fields_.size(); ++i)
   {
     Field& field = external_fields_[i];
-    const ConstantString& name = field.getParameter().getName();
-    writeKeyToResponse(name);
-    writeToResponse(field);
+    writeFieldToResponse(field,true,false);
   }
   endResponseObject();
 }
@@ -1350,13 +1365,13 @@ void Server::getFieldValueCallback()
   if ((field_index >= 0) && (field_index < (int)internal_fields_.max_size()))
   {
     Field& field = internal_fields_[field_index];
-    writeToResponse(field);
+    writeFieldToResponse(field,false,false);
   }
   else if (field_index >= (int)internal_fields_.max_size())
   {
     field_index -=  internal_parameters_.max_size();
     Field& field = external_fields_[field_index];
-    writeToResponse(field);
+    writeFieldToResponse(field,false,false);
   }
   else
   {

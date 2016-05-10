@@ -17,7 +17,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{INTERNAL_FIELD_COUNT_MAX=1};
 enum{INTERNAL_PARAMETER_COUNT_MAX=1};
-enum{INTERNAL_METHOD_COUNT_MAX=9};
+enum{INTERNAL_METHOD_COUNT_MAX=10};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
@@ -112,6 +112,7 @@ extern ConstantString minor_constant_string;
 extern ConstantString patch_constant_string;
 extern ConstantString device_info_constant_string;
 extern ConstantString value_constant_string;
+extern ConstantString default_value_constant_string;
 extern ConstantString board_constant_string;
 extern ConstantString board_type_constant_string;
 }

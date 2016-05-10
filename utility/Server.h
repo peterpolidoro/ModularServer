@@ -71,6 +71,13 @@ public:
   void getFieldElementValue(const ConstantString &field_name,
                             T &value,
                             const unsigned int element_index);
+  template <typename T>
+  void getFieldDefaultValue(const ConstantString &field_name,
+                            T &value);
+  template <typename T>
+  void getFieldDefaultElementValue(const ConstantString &field_name,
+                                   T &value,
+                                   const unsigned int element_index);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>
@@ -151,6 +158,7 @@ private:
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceInfoToResponse();
+  void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false);
 
   // internal methods
   void getDeviceInfoCallback();

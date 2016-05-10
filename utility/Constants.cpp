@@ -83,6 +83,7 @@ CONSTANT_STRING(minor_constant_string,"minor");
 CONSTANT_STRING(patch_constant_string,"patch");
 CONSTANT_STRING(device_info_constant_string,"device_info");
 CONSTANT_STRING(value_constant_string,"value");
+CONSTANT_STRING(default_value_constant_string,"default_value");
 CONSTANT_STRING(board_constant_string,"board");
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)

@@ -148,6 +148,45 @@ void Server::getFieldElementValue(const ConstantString &field_name,
   }
 }
 
+template <typename T>
+void Server::getFieldDefaultValue(const ConstantString &field_name,
+                                  T &value)
+{
+  int field_index = findFieldIndex(field_name);
+  if (field_index >= 0)
+  {
+    if (field_index < internal_fields_.max_size())
+    {
+      internal_fields_[field_index].getDefaultValue(value);
+    }
+    else
+    {
+      field_index -= internal_fields_.max_size();
+      external_fields_[field_index].getDefaultValue(value);
+    }
+  }
+}
+
+template <typename T>
+void Server::getFieldDefaultElementValue(const ConstantString &field_name,
+                                         T &value,
+                                         const unsigned int element_index)
+{
+  int field_index = findFieldIndex(field_name);
+  if (field_index >= 0)
+  {
+    if (field_index < internal_fields_.max_size())
+    {
+      internal_fields_[field_index].getDefaultElementValue(value,element_index);
+    }
+    else
+    {
+      field_index -= internal_fields_.max_size();
+      external_fields_[field_index].getDefaultElementValue(value,element_index);
+    }
+  }
+}
+
 template <typename K>
 void Server::writeKeyToResponse(K key)
 {
