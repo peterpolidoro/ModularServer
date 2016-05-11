@@ -153,12 +153,15 @@ private:
   bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
   template <typename T>
   int findFieldIndex(T const&field_name);
+  template <typename T>
+  Field& findField(T const&field_name, int *field_index_ptr);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceInfoToResponse();
   void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false);
+  void writeFieldErrorToResponse();
 
   // internal methods
   void getDeviceInfoCallback();
@@ -169,6 +172,7 @@ private:
   void verboseHelpCallback();
   void getMemoryFreeCallback();
   void setFieldsToDefaultsCallback();
+  void setFieldToDefaultCallback();
   void getFieldValuesCallback();
   void getFieldValueCallback();
 };

@@ -74,18 +74,11 @@ template <typename T>
 void Server::setFieldValue(const ConstantString &field_name,
                            const T &value)
 {
-  int field_index = findFieldIndex(field_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    if (field_index < internal_fields_.max_size())
-    {
-      internal_fields_[field_index].setValue(value);
-    }
-    else
-    {
-      field_index -= internal_fields_.max_size();
-      external_fields_[field_index].setValue(value);
-    }
+    field.setValue(value);
   }
 }
 
@@ -94,18 +87,11 @@ void Server::setFieldElementValue(const ConstantString &field_name,
                                   const T &value,
                                   const unsigned int element_index)
 {
-  int field_index = findFieldIndex(field_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    if (field_index < internal_fields_.max_size())
-    {
-      internal_fields_[field_index].setElementValue(value,element_index);
-    }
-    else
-    {
-      field_index -= internal_fields_.max_size();
-      external_fields_[field_index].setElementValue(value,element_index);
-    }
+    field.setElementValue(value,element_index);
   }
 }
 
@@ -113,18 +99,11 @@ template <typename T>
 void Server::getFieldValue(const ConstantString &field_name,
                            T &value)
 {
-  int field_index = findFieldIndex(field_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    if (field_index < internal_fields_.max_size())
-    {
-      internal_fields_[field_index].getValue(value);
-    }
-    else
-    {
-      field_index -= internal_fields_.max_size();
-      external_fields_[field_index].getValue(value);
-    }
+    field.getValue(value);
   }
 }
 
@@ -133,18 +112,11 @@ void Server::getFieldElementValue(const ConstantString &field_name,
                                   T &value,
                                   const unsigned int element_index)
 {
-  int field_index = findFieldIndex(field_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    if (field_index < internal_fields_.max_size())
-    {
-      internal_fields_[field_index].getElementValue(value,element_index);
-    }
-    else
-    {
-      field_index -= internal_fields_.max_size();
-      external_fields_[field_index].getElementValue(value,element_index);
-    }
+    field.getElementValue(value,element_index);
   }
 }
 
@@ -152,18 +124,11 @@ template <typename T>
 void Server::getFieldDefaultValue(const ConstantString &field_name,
                                   T &value)
 {
-  int field_index = findFieldIndex(field_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    if (field_index < internal_fields_.max_size())
-    {
-      internal_fields_[field_index].getDefaultValue(value);
-    }
-    else
-    {
-      field_index -= internal_fields_.max_size();
-      external_fields_[field_index].getDefaultValue(value);
-    }
+    field.getDefaultValue(value);
   }
 }
 
@@ -172,18 +137,11 @@ void Server::getFieldDefaultElementValue(const ConstantString &field_name,
                                          T &value,
                                          const unsigned int element_index)
 {
-  int field_index = findFieldIndex(field_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    if (field_index < internal_fields_.max_size())
-    {
-      internal_fields_[field_index].getDefaultElementValue(value,element_index);
-    }
-    else
-    {
-      field_index -= internal_fields_.max_size();
-      external_fields_[field_index].getDefaultElementValue(value,element_index);
-    }
+    field.getDefaultElementValue(value,element_index);
   }
 }
 
@@ -345,6 +303,26 @@ int Server::findFieldIndex(T const&field_name)
     }
   }
   return field_index;
+}
+
+template <typename T>
+Field& Server::findField(T const&field_name, int *field_index_ptr)
+{
+  int field_index = findFieldIndex(field_name);
+  *field_index_ptr = field_index;
+  if ((field_index >= 0) && (field_index < (int)internal_fields_.max_size()))
+  {
+    return internal_fields_[field_index];
+  }
+  else if (field_index >= (int)internal_fields_.max_size())
+  {
+    field_index -=  internal_parameters_.max_size();
+    return external_fields_[field_index];
+  }
+  else
+  {
+    return internal_fields_[0];
+  }
 }
 
 }

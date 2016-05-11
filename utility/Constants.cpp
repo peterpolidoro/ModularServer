@@ -29,6 +29,7 @@ CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
 CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");
+CONSTANT_STRING(set_field_to_default_method_name,"setFieldToDefault");
 CONSTANT_STRING(get_field_values_method_name,"getFieldValues");
 CONSTANT_STRING(get_field_value_method_name,"getFieldValue");
 

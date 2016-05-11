@@ -70,6 +70,10 @@ void Server::setup()
   InternalMethod& set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
   set_fields_to_defaults_method.attachCallback(&Server::setFieldsToDefaultsCallback);
 
+  InternalMethod& set_field_to_default_method = createInternalMethod(constants::set_field_to_default_method_name);
+  set_field_to_default_method.attachCallback(&Server::setFieldToDefaultCallback);
+  set_field_to_default_method.addParameter(field_name_parameter);
+
   InternalMethod& get_field_values_method = createInternalMethod(constants::get_field_values_method_name);
   get_field_values_method.attachCallback(&Server::getFieldValuesCallback);
   get_field_values_method.setReturnTypeObject();
@@ -1061,6 +1065,17 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
   }
 }
 
+void Server::writeFieldErrorToResponse()
+{
+  error_ = true;
+  writeKeyToResponse(constants::error_constant_string);
+  beginResponseObject();
+  writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
+  writeToResponse(constants::data_constant_string,constants::field_not_found_error_data);
+  writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
+  endResponseObject();
+}
+
 void Server::help(bool verbose)
 {
   int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
@@ -1340,6 +1355,21 @@ void Server::setFieldsToDefaultsCallback()
   setFieldsToDefaults();
 }
 
+void Server::setFieldToDefaultCallback()
+{
+  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    field.setDefaultValue();
+  }
+  else
+  {
+    writeFieldErrorToResponse();
+  }
+}
+
 void Server::getFieldValuesCallback()
 {
   writeResultKeyToResponse();
@@ -1361,27 +1391,15 @@ void Server::getFieldValueCallback()
 {
   writeResultKeyToResponse();
   const char* field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)internal_fields_.max_size()))
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
   {
-    Field& field = internal_fields_[field_index];
-    writeFieldToResponse(field,false,false);
-  }
-  else if (field_index >= (int)internal_fields_.max_size())
-  {
-    field_index -=  internal_parameters_.max_size();
-    Field& field = external_fields_[field_index];
     writeFieldToResponse(field,false,false);
   }
   else
   {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    writeToResponse(constants::data_constant_string,constants::field_not_found_error_data);
-    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-    endResponseObject();
+    writeFieldErrorToResponse();
   }
 }
 
