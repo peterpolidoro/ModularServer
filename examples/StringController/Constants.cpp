@@ -25,6 +25,7 @@ const unsigned char serial2_rx_pin = 17;
 CONSTANT_STRING(device_name,"string_controller");
 
 // Fields
+CONSTANT_STRING(starting_chars_count_field_name,"starting_chars_count");
 
 const long starting_chars_count_min = 1;
 const long starting_chars_count_max = 10;
@@ -36,7 +37,6 @@ CONSTANT_STRING(string2_parameter_name,"string2");
 CONSTANT_STRING(count_parameter_name,"count");
 CONSTANT_STRING(index_array_parameter_name,"index_array");
 CONSTANT_STRING(double_echo_parameter_name,"double_echo");
-CONSTANT_STRING(starting_chars_count_name,"starting_chars_count");
 
 const int count_min = 1;
 const int count_max = 100;

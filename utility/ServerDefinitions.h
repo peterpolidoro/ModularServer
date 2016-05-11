@@ -316,7 +316,7 @@ Field& Server::findField(T const&field_name, int *field_index_ptr)
   }
   else if (field_index >= (int)internal_fields_.max_size())
   {
-    field_index -=  internal_parameters_.max_size();
+    field_index -=  internal_fields_.max_size();
     return external_fields_[field_index];
   }
   else

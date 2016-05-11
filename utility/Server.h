@@ -175,6 +175,7 @@ private:
   void setFieldToDefaultCallback();
   void getFieldValuesCallback();
   void getFieldValueCallback();
+  void setFieldValueCallback();
 };
 }
 #include "ServerDefinitions.h"

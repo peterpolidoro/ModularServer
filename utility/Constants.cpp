@@ -20,6 +20,7 @@ const long serial_number_default = serial_number_min;
 
 // Parameters
 CONSTANT_STRING(field_name_parameter_name,"field_name");
+CONSTANT_STRING(field_value_parameter_name,"field_value");
 
 // Methods
 CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
@@ -32,6 +33,7 @@ CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");
 CONSTANT_STRING(set_field_to_default_method_name,"setFieldToDefault");
 CONSTANT_STRING(get_field_values_method_name,"getFieldValues");
 CONSTANT_STRING(get_field_value_method_name,"getFieldValue");
+CONSTANT_STRING(set_field_value_method_name,"setFieldValue");
 
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");

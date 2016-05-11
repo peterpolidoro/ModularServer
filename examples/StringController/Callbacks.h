@@ -27,10 +27,6 @@ void charsAtCallback();
 
 void startingCharsCallback();
 
-void setStartingCharsCountCallback();
-
-void getStartingCharsCountCallback();
-
 void setStoredStringCallback();
 
 void getStoredStringCallback();

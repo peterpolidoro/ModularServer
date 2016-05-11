@@ -45,6 +45,9 @@ void Server::setup()
   Parameter& field_name_parameter = createInternalParameter(constants::field_name_parameter_name);
   field_name_parameter.setTypeString();
 
+  Parameter& field_value_parameter = createInternalParameter(constants::field_value_parameter_name);
+  field_value_parameter.setTypeValue();
+
   // Methods
   InternalMethod& get_device_info_method = createInternalMethod(constants::get_device_info_method_name,true);
   get_device_info_method.attachCallback(&Server::getDeviceInfoCallback);
@@ -82,6 +85,11 @@ void Server::setup()
   get_field_value_method.attachCallback(&Server::getFieldValueCallback);
   get_field_value_method.addParameter(field_name_parameter);
   get_field_value_method.setReturnTypeValue();
+
+  InternalMethod& set_field_value_method = createInternalMethod(constants::set_field_value_method_name);
+  set_field_value_method.attachCallback(&Server::setFieldValueCallback);
+  set_field_value_method.addParameter(field_name_parameter);
+  set_field_value_method.addParameter(field_value_parameter);
 
   server_running_ = false;
 }
@@ -1396,6 +1404,37 @@ void Server::getFieldValueCallback()
   if (field_index >= 0)
   {
     writeFieldToResponse(field,false,false);
+  }
+  else
+  {
+    writeFieldErrorToResponse();
+  }
+}
+
+void Server::setFieldValueCallback()
+{
+  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  const ConstantString& field_name_cs = field.getParameter().getName();
+  if (field_index >= 0)
+  {
+    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    switch (field_type)
+    {
+      case JsonStream::LONG_TYPE:
+        {
+          long field_value = getParameterValue(constants::field_value_parameter_name);
+          setFieldValue(field_name_cs,field_value);
+          break;
+        }
+      case JsonStream::BOOL_TYPE:
+        {
+          bool field_value = getParameterValue(constants::field_value_parameter_name);
+          setFieldValue(field_name_cs,field_value);;
+          break;
+        }
+    }
   }
   else
   {

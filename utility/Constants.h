@@ -16,8 +16,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{INTERNAL_FIELD_COUNT_MAX=1};
-enum{INTERNAL_PARAMETER_COUNT_MAX=1};
-enum{INTERNAL_METHOD_COUNT_MAX=11};
+enum{INTERNAL_PARAMETER_COUNT_MAX=2};
+enum{INTERNAL_METHOD_COUNT_MAX=12};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
@@ -48,6 +48,7 @@ extern const long serial_number_default;
 
 // Parameters
 extern ConstantString field_name_parameter_name;
+extern ConstantString field_value_parameter_name;
 
 // Methods
 extern ConstantString get_device_info_method_name;
@@ -60,6 +61,7 @@ extern ConstantString set_fields_to_defaults_method_name;
 extern ConstantString set_field_to_default_method_name;
 extern ConstantString get_field_values_method_name;
 extern ConstantString get_field_value_method_name;
+extern ConstantString set_field_value_method_name;
 
 // Errors
 extern ConstantString parse_error_message;
