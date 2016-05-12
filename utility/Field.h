@@ -27,18 +27,48 @@ public:
   template <typename T>
   Field(const ConstantString &name,
         const T &default_value);
-  template <typename T>
+  // template <typename T>
+  // Field(const ConstantString &name,
+  //       const T default_value[],
+  //       const unsigned int array_length);
+  // template <typename T, size_t N>
+  // Field(const ConstantString &name,
+  //       const T (&default_value)[N]);
+  template <size_t N>
   Field(const ConstantString &name,
-        const T default_value[],
-        const unsigned int array_length);
+        const long (&default_value)[N]):
+    parameter_(name),
+    saved_variable_(default_value,N)
+  {
+    parameter_.setTypeLong();
+    parameter_.setTypeArray();
+  };
+  template <size_t N>
+  Field(const ConstantString &name,
+        const bool (&default_value)[N]) :
+    parameter_(name),
+    saved_variable_(default_value,N)
+  {
+    parameter_.setTypeBool();
+    parameter_.setTypeArray();
+  }
 
   // Parameter Methods
   void setRange(const long min, const long max);
-  void removeRange();
 
   // Saved Variable Methods
   template<typename T>
   void getDefaultValue(T &value);
+  template<size_t N>
+  void getDefaultValue(long (&value)[N])
+  {
+    saved_variable_.getDefaultValue(value);
+  };
+  template<size_t N>
+  void getDefaultValue(bool (&value)[N])
+  {
+    saved_variable_.getDefaultValue(value);
+  };
   template<typename T>
   void getDefaultElementValue(T &value, const unsigned int element_index);
   template<typename T>
@@ -47,10 +77,21 @@ public:
   void setElementValue(const T &value, const unsigned int element_index);
   template<typename T>
   void getValue(T &value);
+  template<size_t N>
+  void getValue(long (&value)[N])
+  {
+    saved_variable_.getValue(value);
+  };
+  template<size_t N>
+  void getValue(bool (&value)[N])
+  {
+    saved_variable_.getValue(value);
+  };
   template<typename T>
   void getElementValue(T &value, const unsigned int element_index);
   void setDefaultValue();
   bool isDefaultValue();
+  unsigned int getArrayLength();
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;

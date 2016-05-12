@@ -36,12 +36,11 @@ Field& ModularServer::createField(const ConstantString &field_name,
   return server_.createField(field_name,default_value);
 }
 
-template <typename T>
+template <typename T, size_t N>
 Field& ModularServer::createField(const ConstantString &field_name,
-                                  const T default_value[],
-                                  const unsigned int array_length)
+                                  const T (&default_value)[N])
 {
-  return server_.createField(field_name,default_value,array_length);
+  return server_.createField(field_name,default_value);
 }
 
 template <typename T>

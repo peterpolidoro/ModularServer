@@ -55,17 +55,15 @@ Field& Server::createField(const ConstantString &field_name,
   }
 }
 
-template <typename T>
+template <typename T, size_t N>
 Field& Server::createField(const ConstantString &field_name,
-                           const T default_value[],
-                           const unsigned int array_length)
+                           const T (&default_value)[N])
 {
   int field_index = findFieldIndex(field_name);
   if (field_index < 0)
   {
     external_fields_.push_back(Field(field_name,
-                                     default_value,
-                                     array_length));
+                                     default_value));
     return external_fields_.back();
   }
 }
@@ -107,6 +105,18 @@ void Server::getFieldValue(const ConstantString &field_name,
   }
 }
 
+template <typename T, size_t N>
+void Server::getFieldValue(const ConstantString &field_name,
+                           T (&value)[N])
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    field.getValue(value);
+  }
+}
+
 template <typename T>
 void Server::getFieldElementValue(const ConstantString &field_name,
                                   T &value,
@@ -123,6 +133,18 @@ void Server::getFieldElementValue(const ConstantString &field_name,
 template <typename T>
 void Server::getFieldDefaultValue(const ConstantString &field_name,
                                   T &value)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    field.getDefaultValue(value);
+  }
+}
+
+template <typename T, size_t N>
+void Server::getFieldDefaultValue(const ConstantString &field_name,
+                                  T (&value)[N])
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
@@ -163,6 +185,12 @@ void Server::writeToResponse(T (&values)[N])
   json_stream_.write(values);
 }
 
+template <typename T>
+void Server::writeToResponse(T *values, size_t N)
+{
+  json_stream_.write(values,N);
+}
+
 template <typename K, typename T>
 void Server::writeToResponse(K key, T value)
 {
@@ -173,6 +201,12 @@ template <typename K, typename T, size_t N>
 void Server::writeToResponse(K key, T (&values)[N])
 {
   json_stream_.write(key,values);
+}
+
+template <typename K, typename T>
+void Server::writeToResponse(K key, T *values, size_t N)
+{
+  json_stream_.write(key,values,N);
 }
 
 template <typename K>

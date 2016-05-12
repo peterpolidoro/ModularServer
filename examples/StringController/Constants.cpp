@@ -26,22 +26,30 @@ CONSTANT_STRING(device_name,"string_controller");
 
 // Fields
 CONSTANT_STRING(starting_chars_count_field_name,"starting_chars_count");
-
 const long starting_chars_count_min = 1;
 const long starting_chars_count_max = 10;
 const long starting_chars_count_default = 2;
 
+CONSTANT_STRING(test_bool_field_name,"test_bool");
+const bool test_bool_default = false;
+
+CONSTANT_STRING(test_long_array_field_name,"test_long_array");
+const long test_long_array_default[TEST_LONG_ARRAY_LENGTH] = {5,4,3,2};
+
 // Parameters
 CONSTANT_STRING(string_parameter_name,"string");
-CONSTANT_STRING(string2_parameter_name,"string2");
-CONSTANT_STRING(count_parameter_name,"count");
-CONSTANT_STRING(index_array_parameter_name,"index_array");
-CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 
+CONSTANT_STRING(string2_parameter_name,"string2");
+
+CONSTANT_STRING(count_parameter_name,"count");
 const int count_min = 1;
 const int count_max = 100;
+
+CONSTANT_STRING(index_array_parameter_name,"index_array");
 const int index_array_element_min = 0;
 const int index_array_element_max = 10;
+
+CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 
 // Methods
 CONSTANT_STRING(echo_method_name,"echo");
@@ -50,10 +58,9 @@ CONSTANT_STRING(starts_with_method_name,"startsWith");
 CONSTANT_STRING(repeat_method_name,"repeat");
 CONSTANT_STRING(chars_at_method_name,"charsAt");
 CONSTANT_STRING(starting_chars_method_name,"startingChars");
-CONSTANT_STRING(set_starting_chars_count_method_name,"setStartingCharsCount");
-CONSTANT_STRING(get_starting_chars_count_method_name,"getStartingCharsCount");
 CONSTANT_STRING(set_stored_string_method_name,"setStoredString");
 CONSTANT_STRING(get_stored_string_method_name,"getStoredString");
+CONSTANT_STRING(test_bool_method_name,"testBool");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

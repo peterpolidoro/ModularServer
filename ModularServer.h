@@ -37,10 +37,9 @@ public:
   template <typename T>
   Field& createField(const ConstantString &field_name,
                      const T &default_value);
-  template <typename T>
+  template <typename T, size_t N>
   Field& createField(const ConstantString &field_name,
-                     const T default_value[],
-                     const unsigned int array_length);
+                     const T (&default_value)[N]);
   template <typename T>
   void setFieldValue(const ConstantString &field_name,
                      const T &value);

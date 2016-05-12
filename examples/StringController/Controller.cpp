@@ -33,6 +33,8 @@ void Controller::setup()
   // Fields
   ModularDevice::Field& starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);
   // starting_chars_count_field.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
+  ModularDevice::Field& test_bool_field = modular_server_.createField(constants::test_bool_field_name,constants::test_bool_default);
+  ModularDevice::Field& test_long_array_field = modular_server_.createField(constants::test_long_array_field_name,constants::test_long_array_default);
 
   // Parameters
   ModularDevice::Parameter& string_parameter = modular_server_.createParameter(constants::string_parameter_name);
@@ -88,6 +90,10 @@ void Controller::setup()
   ModularDevice::Method& get_stored_string_method = modular_server_.createMethod(constants::get_stored_string_method_name);
   get_stored_string_method.attachCallback(callbacks::getStoredStringCallback);
   get_stored_string_method.setReturnTypeString();
+
+  ModularDevice::Method& test_bool_method = modular_server_.createMethod(constants::test_bool_method_name);
+  test_bool_method.attachCallback(callbacks::testBoolCallback);
+  test_bool_method.setReturnTypeBool();
 
   // Setup Streams
   Serial.begin(constants::baudrate);

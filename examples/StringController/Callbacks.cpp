@@ -120,4 +120,11 @@ void getStoredStringCallback()
 {
   modular_server.writeResultToResponse(controller.getStoredString());
 }
+
+void testBoolCallback()
+{
+  bool test_bool;
+  modular_server.getFieldValue(constants::test_bool_field_name,test_bool);
+  modular_server.writeResultToResponse(test_bool);
+}
 }

@@ -30,5 +30,7 @@ void startingCharsCallback();
 void setStoredStringCallback();
 
 void getStoredStringCallback();
+
+void testBoolCallback();
 }
 #endif

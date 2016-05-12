@@ -1070,6 +1070,62 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
         writeToResponse(field_value);
         break;
       }
+    case JsonStream::ARRAY_TYPE:
+      {
+        const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+        unsigned int array_length = field.getArrayLength();
+        switch (array_element_type)
+        {
+          case JsonStream::LONG_TYPE:
+            {
+              long field_value[array_length];
+              if (write_default)
+              {
+                for (int i;i<array_length;++i)
+                {
+                  long v;
+                  getFieldDefaultElementValue(field_name,v,i);
+                  field_value[i] = v;
+                }
+              }
+              else
+              {
+                for (int i;i<array_length;++i)
+                {
+                  long v;
+                  getFieldElementValue(field_name,v,i);
+                  field_value[i] = v;
+                }
+              }
+              writeToResponse(field_value,array_length);
+              break;
+            }
+          case JsonStream::BOOL_TYPE:
+            {
+              bool field_value[array_length];
+              if (write_default)
+              {
+                for (int i;i<array_length;++i)
+                {
+                  bool v;
+                  getFieldDefaultElementValue(field_name,v,i);
+                  field_value[i] = v;
+                }
+              }
+              else
+              {
+                for (int i;i<array_length;++i)
+                {
+                  bool v;
+                  getFieldElementValue(field_name,v,i);
+                  field_value[i] = v;
+                }
+              }
+              writeToResponse(field_value,array_length);
+              break;
+            }
+        }
+      }
   }
 }
 
