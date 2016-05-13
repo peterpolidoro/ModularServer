@@ -1604,33 +1604,55 @@ void Server::setFieldValueCallback()
 
 void Server::setFieldElementValueCallback()
 {
-  // const char* field_name = getParameterValue(constants::field_name_parameter_name);
-  // int field_index;
-  // Field& field = findField(field_name,&field_index);
-  // const ConstantString& field_name_cs = field.getParameter().getName();
-  // if (field_index >= 0)
-  // {
-  //   JsonStream::JsonTypes field_type = field.getParameter().getType();
-  //   switch (field_type)
-  //   {
-  //     case JsonStream::LONG_TYPE:
-  //       {
-  //         long field_value = getParameterValue(constants::field_value_parameter_name);
-  //         setFieldValue(field_name_cs,field_value);
-  //         break;
-  //       }
-  //     case JsonStream::BOOL_TYPE:
-  //       {
-  //         bool field_value = getParameterValue(constants::field_value_parameter_name);
-  //         setFieldValue(field_name_cs,field_value);;
-  //         break;
-  //       }
-  //   }
-  // }
-  // else
-  // {
-  //   writeFieldErrorToResponse(constants::field_not_found_error_data);
-  // }
+  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
+  if (field_element_index < 0)
+  {
+    writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+    return;
+  }
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  const ConstantString& field_name_cs = field.getParameter().getName();
+  if (field_index >= 0)
+  {
+    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    switch (field_type)
+    {
+      case JsonStream::LONG_TYPE:
+        {
+          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+          break;
+        }
+      case JsonStream::BOOL_TYPE:
+        {
+          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+          break;
+        }
+      case JsonStream::ARRAY_TYPE:
+        {
+          switch (field_type)
+          {
+            case JsonStream::LONG_TYPE:
+              {
+                long field_value = getParameterValue(constants::field_value_parameter_name);
+                setFieldElementValue(field_name_cs,field_value,field_element_index);
+                break;
+              }
+            case JsonStream::BOOL_TYPE:
+              {
+                bool field_value = getParameterValue(constants::field_value_parameter_name);
+                setFieldElementValue(field_name_cs,field_value,field_element_index);
+                break;
+              }
+          }
+        }
+    }
+  }
+  else
+  {
+    writeFieldErrorToResponse(constants::field_not_found_error_data);
+  }
 }
 
 }
