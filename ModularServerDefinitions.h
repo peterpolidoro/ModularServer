@@ -52,10 +52,10 @@ void ModularServer::setFieldValue(const ConstantString &field_name,
 
 template <typename T>
 void ModularServer::setFieldElementValue(const ConstantString &field_name,
-                                         const T &value,
-                                         const unsigned int element_index)
+                                         const unsigned int element_index,
+                                         const T &value)
 {
-  server_.setFieldElementValue(field_name,value,element_index);
+  server_.setFieldElementValue(field_name,element_index,value);
 }
 
 template <typename T>
@@ -67,10 +67,10 @@ void ModularServer::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 void ModularServer::getFieldElementValue(const ConstantString &field_name,
-                                         T &value,
-                                         const unsigned int element_index)
+                                         const unsigned int element_index,
+                                         T &value)
 {
-  server_.getFieldElementValue(field_name,value,element_index);
+  server_.getFieldElementValue(field_name,element_index,value);
 }
 
 template <typename K>

@@ -106,8 +106,8 @@ void Server::setup()
   InternalMethod& set_field_element_value_method = createInternalMethod(constants::set_field_element_value_method_name);
   set_field_element_value_method.attachCallback(&Server::setFieldElementValueCallback);
   set_field_element_value_method.addParameter(field_name_parameter);
-  set_field_element_value_method.addParameter(field_value_parameter);
   set_field_element_value_method.addParameter(field_element_index_parameter);
+  set_field_element_value_method.addParameter(field_value_parameter);
 
   server_running_ = false;
 }
@@ -1119,7 +1119,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                   for (int i;i<array_length;++i)
                   {
                     long v;
-                    getFieldDefaultElementValue(field_name,v,i);
+                    getFieldDefaultElementValue(field_name,i,v);
                     field_value[i] = v;
                   }
                 }
@@ -1128,7 +1128,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                   for (int i;i<array_length;++i)
                   {
                     long v;
-                    getFieldElementValue(field_name,v,i);
+                    getFieldElementValue(field_name,i,v);
                     field_value[i] = v;
                   }
                 }
@@ -1139,11 +1139,11 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                 long field_value;
                 if (write_default)
                 {
-                  getFieldDefaultElementValue(field_name,field_value,element_index);
+                  getFieldDefaultElementValue(field_name,element_index,field_value);
                 }
                 else
                 {
-                  getFieldElementValue(field_name,field_value,element_index);
+                  getFieldElementValue(field_name,element_index,field_value);
                 }
                 writeToResponse(field_value);
               }
@@ -1159,7 +1159,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                   for (int i;i<array_length;++i)
                   {
                     bool v;
-                    getFieldDefaultElementValue(field_name,v,i);
+                    getFieldDefaultElementValue(field_name,i,v);
                     field_value[i] = v;
                   }
                 }
@@ -1168,7 +1168,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                   for (int i;i<array_length;++i)
                   {
                     bool v;
-                    getFieldElementValue(field_name,v,i);
+                    getFieldElementValue(field_name,i,v);
                     field_value[i] = v;
                   }
                 }
@@ -1179,11 +1179,11 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                 bool field_value;
                 if (write_default)
                 {
-                  getFieldDefaultElementValue(field_name,field_value,element_index);
+                  getFieldDefaultElementValue(field_name,element_index,field_value);
                 }
                 else
                 {
-                  getFieldElementValue(field_name,field_value,element_index);
+                  getFieldElementValue(field_name,element_index,field_value);
                 }
                 writeToResponse(field_value);
               }
@@ -1631,18 +1631,19 @@ void Server::setFieldElementValueCallback()
         }
       case JsonStream::ARRAY_TYPE:
         {
-          switch (field_type)
+          JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+          switch (array_element_type)
           {
             case JsonStream::LONG_TYPE:
               {
                 long field_value = getParameterValue(constants::field_value_parameter_name);
-                setFieldElementValue(field_name_cs,field_value,field_element_index);
+                setFieldElementValue(field_name_cs,field_element_index,field_value);
                 break;
               }
             case JsonStream::BOOL_TYPE:
               {
                 bool field_value = getParameterValue(constants::field_value_parameter_name);
-                setFieldElementValue(field_name_cs,field_value,field_element_index);
+                setFieldElementValue(field_name_cs,field_element_index,field_value);
                 break;
               }
           }

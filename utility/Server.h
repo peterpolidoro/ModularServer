@@ -61,8 +61,8 @@ public:
                      const T &value);
   template <typename T>
   void setFieldElementValue(const ConstantString &field_name,
-                            const T &value,
-                            const unsigned int element_index);
+                            const unsigned int element_index,
+                            const T &value);
   template <typename T>
   void getFieldValue(const ConstantString &field_name,
                      T &value);
@@ -71,8 +71,8 @@ public:
                      T (&value)[N]);
   template <typename T>
   void getFieldElementValue(const ConstantString &field_name,
-                            T &value,
-                            const unsigned int element_index);
+                            const unsigned int element_index,
+                            T &value);
   template <typename T>
   void getFieldDefaultValue(const ConstantString &field_name,
                             T &value);
@@ -81,8 +81,8 @@ public:
                             T (&value)[N]);
   template <typename T>
   void getFieldDefaultElementValue(const ConstantString &field_name,
-                                   T &value,
-                                   const unsigned int element_index);
+                                   const unsigned int element_index,
+                                   T &value);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>

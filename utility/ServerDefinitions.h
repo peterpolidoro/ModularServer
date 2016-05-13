@@ -82,8 +82,8 @@ void Server::setFieldValue(const ConstantString &field_name,
 
 template <typename T>
 void Server::setFieldElementValue(const ConstantString &field_name,
-                                  const T &value,
-                                  const unsigned int element_index)
+                                  const unsigned int element_index,
+                                  const T &value)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
@@ -119,8 +119,8 @@ void Server::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 void Server::getFieldElementValue(const ConstantString &field_name,
-                                  T &value,
-                                  const unsigned int element_index)
+                                  const unsigned int element_index,
+                                  T &value)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
@@ -156,8 +156,8 @@ void Server::getFieldDefaultValue(const ConstantString &field_name,
 
 template <typename T>
 void Server::getFieldDefaultElementValue(const ConstantString &field_name,
-                                         T &value,
-                                         const unsigned int element_index)
+                                         const unsigned int element_index,
+                                         T &value)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
