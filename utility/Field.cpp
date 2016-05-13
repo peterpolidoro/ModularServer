@@ -32,28 +32,6 @@ Field::Field<bool>(const ConstantString &name,
   parameter_.setTypeBool();
 }
 
-// template <>
-// Field::Field<long>(const ConstantString &name,
-//                    const long default_value[],
-//                    const unsigned int array_length) :
-//   parameter_(name),
-//   saved_variable_(default_value,array_length)
-// {
-//   parameter_.setTypeLong();
-//   parameter_.setTypeArray();
-// }
-
-// template <>
-// Field::Field<bool>(const ConstantString &name,
-//                    const bool default_value[],
-//                    const unsigned int array_length) :
-//   parameter_(name),
-//   saved_variable_(default_value,array_length)
-// {
-//   parameter_.setTypeBool();
-//   parameter_.setTypeArray();
-// }
-
 // Parameter Methods
 void Field::setRange(const long min, const long max)
 {

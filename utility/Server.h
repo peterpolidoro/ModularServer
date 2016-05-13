@@ -169,8 +169,8 @@ private:
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceInfoToResponse();
-  void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false);
-  void writeFieldErrorToResponse();
+  void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false, int element_index=-1);
+  void writeFieldErrorToResponse(const ConstantString &error);
 
   // internal methods
   void getDeviceInfoCallback();
@@ -180,11 +180,14 @@ private:
   void helpCallback();
   void verboseHelpCallback();
   void getMemoryFreeCallback();
+  void getFieldDefaultValuesCallback();
   void setFieldsToDefaultsCallback();
   void setFieldToDefaultCallback();
   void getFieldValuesCallback();
   void getFieldValueCallback();
+  void getFieldElementValueCallback();
   void setFieldValueCallback();
+  void setFieldElementValueCallback();
 };
 }
 #include "ServerDefinitions.h"

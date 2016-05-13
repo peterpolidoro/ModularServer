@@ -16,8 +16,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{INTERNAL_FIELD_COUNT_MAX=1};
-enum{INTERNAL_PARAMETER_COUNT_MAX=2};
-enum{INTERNAL_METHOD_COUNT_MAX=12};
+enum{INTERNAL_PARAMETER_COUNT_MAX=3};
+enum{INTERNAL_METHOD_COUNT_MAX=14};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
@@ -49,6 +49,7 @@ extern const long serial_number_default;
 // Parameters
 extern ConstantString field_name_parameter_name;
 extern ConstantString field_value_parameter_name;
+extern ConstantString field_element_index_parameter_name;
 
 // Methods
 extern ConstantString get_device_info_method_name;
@@ -57,11 +58,14 @@ extern ConstantString get_parameters_method_name;
 extern ConstantString help_method_name;
 extern ConstantString verbose_help_method_name;
 extern ConstantString get_memory_free_method_name;
+extern ConstantString get_field_default_values_method_name;
 extern ConstantString set_fields_to_defaults_method_name;
 extern ConstantString set_field_to_default_method_name;
 extern ConstantString get_field_values_method_name;
 extern ConstantString get_field_value_method_name;
+extern ConstantString get_field_element_value_method_name;
 extern ConstantString set_field_value_method_name;
+extern ConstantString set_field_element_value_method_name;
 
 // Errors
 extern ConstantString parse_error_message;
@@ -70,10 +74,13 @@ extern ConstantString method_not_found_error_message;
 extern ConstantString invalid_params_error_message;
 extern ConstantString internal_error_error_message;
 extern ConstantString server_error_error_message;
+
 extern ConstantString object_request_error_data;
 extern ConstantString request_length_error_data;
 extern ConstantString parameter_not_found_error_data;
 extern ConstantString field_not_found_error_data;
+extern ConstantString field_not_array_type_error_data;
+extern ConstantString field_element_index_out_of_bounds_error_data;
 extern ConstantString incorrect_parameter_number_error_data;
 extern ConstantString invalid_json_object_error_data;
 extern ConstantString invalid_json_array_error_data;

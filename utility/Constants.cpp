@@ -21,6 +21,7 @@ const long serial_number_default = serial_number_min;
 // Parameters
 CONSTANT_STRING(field_name_parameter_name,"field_name");
 CONSTANT_STRING(field_value_parameter_name,"field_value");
+CONSTANT_STRING(field_element_index_parameter_name,"field_element_index");
 
 // Methods
 CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
@@ -29,11 +30,14 @@ CONSTANT_STRING(get_parameters_method_name,"getParameters");
 CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
+CONSTANT_STRING(get_field_default_values_method_name,"getFieldDefaultValues");
 CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");
 CONSTANT_STRING(set_field_to_default_method_name,"setFieldToDefault");
 CONSTANT_STRING(get_field_values_method_name,"getFieldValues");
 CONSTANT_STRING(get_field_value_method_name,"getFieldValue");
+CONSTANT_STRING(get_field_element_value_method_name,"getFieldElementValue");
 CONSTANT_STRING(set_field_value_method_name,"setFieldValue");
+CONSTANT_STRING(set_field_element_value_method_name,"setFieldElementValue");
 
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");
@@ -41,10 +45,13 @@ CONSTANT_STRING(invalid_request_error_message,"Invalid Request");
 CONSTANT_STRING(method_not_found_error_message,"Method not found");
 CONSTANT_STRING(invalid_params_error_message,"Invalid params");
 CONSTANT_STRING(server_error_error_message,"Server error");
+
 CONSTANT_STRING(object_request_error_data,"JSON object requests not supported. Must use compact JSON array format for requests.");
 CONSTANT_STRING(request_length_error_data,"Request length too long.");
 CONSTANT_STRING(parameter_not_found_error_data,"Parameter not found");
 CONSTANT_STRING(field_not_found_error_data,"Field not found");
+CONSTANT_STRING(field_not_array_type_error_data,"Field not array type");
+CONSTANT_STRING(field_element_index_out_of_bounds_error_data,"field_element_index out of bounds");
 CONSTANT_STRING(incorrect_parameter_number_error_data,"Incorrect number of parameters. ")
 CONSTANT_STRING(invalid_json_object_error_data," is not a valid JSON object.")
 CONSTANT_STRING(invalid_json_array_error_data," is not a valid JSON array.")

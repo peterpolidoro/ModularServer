@@ -27,13 +27,6 @@ public:
   template <typename T>
   Field(const ConstantString &name,
         const T &default_value);
-  // template <typename T>
-  // Field(const ConstantString &name,
-  //       const T default_value[],
-  //       const unsigned int array_length);
-  // template <typename T, size_t N>
-  // Field(const ConstantString &name,
-  //       const T (&default_value)[N]);
   template <size_t N>
   Field(const ConstantString &name,
         const long (&default_value)[N]):
