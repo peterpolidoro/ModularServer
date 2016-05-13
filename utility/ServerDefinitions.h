@@ -118,6 +118,28 @@ void Server::getFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
+void Server::getFieldValue(const ConstantString &field_name,
+                           T *values,
+                           size_t N)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    unsigned int array_length = field.getArrayLength();
+    if (array_length == N)
+    {
+      for (unsigned int i;i<array_length;++i)
+      {
+        T v;
+        getFieldElementValue(field_name,i,v);
+        values[i] = v;
+      }
+    }
+  }
+}
+
+template <typename T>
 void Server::getFieldElementValue(const ConstantString &field_name,
                                   const unsigned int element_index,
                                   T &value)
@@ -151,6 +173,28 @@ void Server::getFieldDefaultValue(const ConstantString &field_name,
   if (field_index >= 0)
   {
     field.getDefaultValue(value);
+  }
+}
+
+template <typename T>
+void Server::getFieldDefaultValue(const ConstantString &field_name,
+                                  T *values,
+                                  size_t N)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    unsigned int array_length = field.getArrayLength();
+    if (array_length == N)
+    {
+      for (unsigned int i;i<array_length;++i)
+      {
+        T v;
+        getFieldDefaultElementValue(field_name,i,v);
+        values[i] = v;
+      }
+    }
   }
 }
 
@@ -239,6 +283,28 @@ void Server::writeResultToResponse(T value)
   {
     result_key_in_response_ = true;
     json_stream_.write(constants::result_constant_string,value);
+  }
+}
+
+template <typename T, size_t N>
+void Server::writeResultToResponse(T (&values)[N])
+{
+  // Prevent multiple results in one response
+  if (!result_key_in_response_ && !error_)
+  {
+    result_key_in_response_ = true;
+    json_stream_.write(constants::result_constant_string,values);
+  }
+}
+
+template <typename T>
+void Server::writeResultToResponse(T *values, size_t N)
+{
+  // Prevent multiple results in one response
+  if (!result_key_in_response_ && !error_)
+  {
+    result_key_in_response_ = true;
+    json_stream_.write(constants::result_constant_string,values,N);
   }
 }
 

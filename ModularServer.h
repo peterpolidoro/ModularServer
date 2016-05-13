@@ -51,9 +51,25 @@ public:
   void getFieldValue(const ConstantString &field_name,
                      T &value);
   template <typename T>
+  void getFieldValue(const ConstantString &field_name,
+                     T *values,
+                     size_t N);
+  template <typename T>
   void getFieldElementValue(const ConstantString &field_name,
                             const unsigned int element_index,
                             T &value);
+  template <typename T>
+  void getFieldDefaultValue(const ConstantString &field_name,
+                            T &value);
+  template <typename T>
+  void getFieldDefaultValue(const ConstantString &field_name,
+                            T *values,
+                            size_t N);
+  template <typename T>
+  void getFieldDefaultElementValue(const ConstantString &field_name,
+                                   const unsigned int element_index,
+                                   T &value);
+  unsigned int getFieldArrayLength(const ConstantString &field_name);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>
@@ -62,8 +78,12 @@ public:
   void writeToResponse(T (&values)[N]);
   template <typename K, typename T>
   void writeToResponse(K key, T value);
+  template <typename T>
+  void writeToResponse(T *values, size_t N);
   template <typename K, typename T, size_t N>
   void writeToResponse(K key, T (&values)[N]);
+  template <typename K, typename T>
+  void writeToResponse(K key, T *values, size_t N);
   void writeNullToResponse();
   template <typename K>
   void writeNullToResponse(K key);
@@ -72,6 +92,10 @@ public:
   void writeResultKeyToResponse();
   template <typename T>
   void writeResultToResponse(T value);
+  template <typename T, size_t N>
+  void writeResultToResponse(T (&values)[N]);
+  template <typename T>
+  void writeResultToResponse(T *values, size_t N);
   void beginResponseObject();
   void endResponseObject();
   void beginResponseArray();

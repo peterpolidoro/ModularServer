@@ -127,4 +127,19 @@ void testBoolCallback()
   modular_server.getFieldValue(constants::test_bool_field_name,test_bool);
   modular_server.writeResultToResponse(test_bool);
 }
+
+void testLongArrayCallback()
+{
+  long test_long_array[constants::TEST_LONG_ARRAY_LENGTH];
+  modular_server.getFieldValue(constants::test_long_array_field_name,test_long_array);
+  modular_server.writeResultToResponse(test_long_array);
+}
+
+void testLongArrayVariableCallback()
+{
+  unsigned int array_length = modular_server.getFieldArrayLength(constants::test_long_array_field_name);
+  long test_long_array[array_length];
+  modular_server.getFieldValue(constants::test_long_array_field_name,test_long_array,array_length);
+  modular_server.writeResultToResponse(test_long_array,array_length);
+}
 }

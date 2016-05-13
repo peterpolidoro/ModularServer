@@ -231,6 +231,21 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &name)
   return (*request_json_array_ptr_)[parameter_index+1];
 }
 
+unsigned int Server::getFieldArrayLength(const ConstantString &field_name)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    return field.getArrayLength();
+  }
+  else
+  {
+    return 0;
+  }
+
+}
+
 void Server::writeNullToResponse()
 {
   json_stream_.writeNull();
@@ -1116,21 +1131,11 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                 long field_value[array_length];
                 if (write_default)
                 {
-                  for (int i;i<array_length;++i)
-                  {
-                    long v;
-                    getFieldDefaultElementValue(field_name,i,v);
-                    field_value[i] = v;
-                  }
+                  getFieldDefaultValue(field_name,field_value,array_length);
                 }
                 else
                 {
-                  for (int i;i<array_length;++i)
-                  {
-                    long v;
-                    getFieldElementValue(field_name,i,v);
-                    field_value[i] = v;
-                  }
+                  getFieldValue(field_name,field_value,array_length);
                 }
                 writeToResponse(field_value,array_length);
               }
@@ -1156,21 +1161,11 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                 bool field_value[array_length];
                 if (write_default)
                 {
-                  for (int i;i<array_length;++i)
-                  {
-                    bool v;
-                    getFieldDefaultElementValue(field_name,i,v);
-                    field_value[i] = v;
-                  }
+                  getFieldDefaultValue(field_name,field_value,array_length);
                 }
                 else
                 {
-                  for (int i;i<array_length;++i)
-                  {
-                    bool v;
-                    getFieldElementValue(field_name,i,v);
-                    field_value[i] = v;
-                  }
+                  getFieldValue(field_name,field_value,array_length);
                 }
                 writeToResponse(field_value,array_length);
               }

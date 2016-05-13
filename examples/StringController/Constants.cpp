@@ -61,6 +61,8 @@ CONSTANT_STRING(starting_chars_method_name,"startingChars");
 CONSTANT_STRING(set_stored_string_method_name,"setStoredString");
 CONSTANT_STRING(get_stored_string_method_name,"getStoredString");
 CONSTANT_STRING(test_bool_method_name,"testBool");
+CONSTANT_STRING(test_long_array_method_name,"testLongArray");
+CONSTANT_STRING(test_long_array_variable_method_name,"testLongArrayVariable");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

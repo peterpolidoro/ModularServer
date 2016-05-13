@@ -32,5 +32,9 @@ void setStoredStringCallback();
 void getStoredStringCallback();
 
 void testBoolCallback();
+
+void testLongArrayCallback();
+
+void testLongArrayVariableCallback();
 }
 #endif

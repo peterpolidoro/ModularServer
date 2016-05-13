@@ -95,6 +95,14 @@ void Controller::setup()
   test_bool_method.attachCallback(callbacks::testBoolCallback);
   test_bool_method.setReturnTypeBool();
 
+  ModularDevice::Method& test_long_array_method = modular_server_.createMethod(constants::test_long_array_method_name);
+  test_long_array_method.attachCallback(callbacks::testLongArrayCallback);
+  test_long_array_method.setReturnTypeArray();
+
+  ModularDevice::Method& test_long_array_variable_method = modular_server_.createMethod(constants::test_long_array_variable_method_name);
+  test_long_array_variable_method.attachCallback(callbacks::testLongArrayVariableCallback);
+  test_long_array_variable_method.setReturnTypeArray();
+
   // Setup Streams
   Serial.begin(constants::baudrate);
   constants::serial2.begin(constants::baudrate);

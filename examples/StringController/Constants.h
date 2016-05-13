@@ -14,7 +14,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{FIELD_COUNT_MAX=4};
 enum{PARAMETER_COUNT_MAX=5};
-enum{METHOD_COUNT_MAX=9};
+enum{METHOD_COUNT_MAX=11};
 
 extern const unsigned int baudrate;
 
@@ -68,6 +68,8 @@ extern ConstantString starting_chars_method_name;
 extern ConstantString set_stored_string_method_name;
 extern ConstantString get_stored_string_method_name;
 extern ConstantString test_bool_method_name;
+extern ConstantString test_long_array_method_name;
+extern ConstantString test_long_array_variable_method_name;
 
 // Errors
 extern ConstantString index_error;
