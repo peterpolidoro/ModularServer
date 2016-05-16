@@ -66,6 +66,16 @@ public:
   void getDefaultElementValue(T &value, const unsigned int element_index);
   template<typename T>
   void setValue(const T &value);
+  template<size_t N>
+  void setValue(const long (&value)[N])
+  {
+    saved_variable_.setValue(value);
+  };
+  template<size_t N>
+  void setValue(const bool (&value)[N])
+  {
+    saved_variable_.setValue(value);
+  };
   template<typename T>
   void setElementValue(const T &value, const unsigned int element_index);
   template<typename T>

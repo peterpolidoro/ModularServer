@@ -43,6 +43,12 @@ public:
   template <typename T>
   void setFieldValue(const ConstantString &field_name,
                      const T &value);
+  void setFieldValue(const ConstantString &field_name,
+                     ArduinoJson::JsonArray &value);
+  template <typename T>
+  void setFieldValue(const ConstantString &field_name,
+                     const T *value,
+                     const size_t N);
   template <typename T>
   void setFieldElementValue(const ConstantString &field_name,
                             const unsigned int element_index,
@@ -52,8 +58,8 @@ public:
                      T &value);
   template <typename T>
   void getFieldValue(const ConstantString &field_name,
-                     T *values,
-                     size_t N);
+                     T *value,
+                     const size_t N);
   template <typename T>
   void getFieldElementValue(const ConstantString &field_name,
                             const unsigned int element_index,
@@ -63,8 +69,8 @@ public:
                             T &value);
   template <typename T>
   void getFieldDefaultValue(const ConstantString &field_name,
-                            T *values,
-                            size_t N);
+                            T *value,
+                            const size_t N);
   template <typename T>
   void getFieldDefaultElementValue(const ConstantString &field_name,
                                    const unsigned int element_index,
@@ -75,15 +81,15 @@ public:
   template <typename T>
   void writeToResponse(T value);
   template <typename T, size_t N>
-  void writeToResponse(T (&values)[N]);
+  void writeToResponse(T (&value)[N]);
   template <typename K, typename T>
   void writeToResponse(K key, T value);
   template <typename T>
-  void writeToResponse(T *values, size_t N);
+  void writeToResponse(T *value, size_t N);
   template <typename K, typename T, size_t N>
-  void writeToResponse(K key, T (&values)[N]);
+  void writeToResponse(K key, T (&value)[N]);
   template <typename K, typename T>
-  void writeToResponse(K key, T *values, size_t N);
+  void writeToResponse(K key, T *value, size_t N);
   void writeNullToResponse();
   template <typename K>
   void writeNullToResponse(K key);
@@ -93,9 +99,9 @@ public:
   template <typename T>
   void writeResultToResponse(T value);
   template <typename T, size_t N>
-  void writeResultToResponse(T (&values)[N]);
+  void writeResultToResponse(T (&value)[N]);
   template <typename T>
-  void writeResultToResponse(T *values, size_t N);
+  void writeResultToResponse(T *value, size_t N);
   void beginResponseObject();
   void endResponseObject();
   void beginResponseArray();

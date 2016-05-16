@@ -121,25 +121,47 @@ void getStoredStringCallback()
   modular_server.writeResultToResponse(controller.getStoredString());
 }
 
-void testBoolCallback()
+void getBoolCallback()
 {
-  bool test_bool;
-  modular_server.getFieldValue(constants::test_bool_field_name,test_bool);
-  modular_server.writeResultToResponse(test_bool);
+  bool value;
+  modular_server.getFieldValue(constants::bool_field_name,value);
+  modular_server.writeResultToResponse(value);
 }
 
-void testLongArrayCallback()
+void getLongArrayCallback()
 {
-  long test_long_array[constants::TEST_LONG_ARRAY_LENGTH];
-  modular_server.getFieldValue(constants::test_long_array_field_name,test_long_array);
-  modular_server.writeResultToResponse(test_long_array);
+  long long_array[constants::LONG_ARRAY_LENGTH];
+  modular_server.getFieldValue(constants::long_array_field_name,long_array);
+  modular_server.writeResultToResponse(long_array);
 }
 
-void testLongArrayVariableCallback()
+void setLongArrayCallback()
 {
-  unsigned int array_length = modular_server.getFieldArrayLength(constants::test_long_array_field_name);
-  long test_long_array[array_length];
-  modular_server.getFieldValue(constants::test_long_array_field_name,test_long_array,array_length);
-  modular_server.writeResultToResponse(test_long_array,array_length);
+  // long long_array[constants::LONG_ARRAY_LENGTH];
+  // long_array[0] = 100;
+  // long_array[1] = 101;
+  // long_array[2] = 102;
+  // long_array[3] = 103;
+  // modular_server.setFieldValue(constants::long_array_field_name,long_array);
+
+  // unsigned int array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
+  // long long_array[array_length];
+  // long_array[0] = 100;
+  // long_array[1] = 101;
+  // long_array[2] = 102;
+  // long_array[3] = 103;
+  // modular_server.setFieldValue(constants::long_array_field_name,long_array,array_length);
+
+  ArduinoJson::JsonArray& long_array = modular_server.getParameterValue(constants::long_array_parameter_name);
+  modular_server.setFieldValue(constants::long_array_field_name,long_array);
+
+}
+
+void getLongArrayVariableCallback()
+{
+  unsigned int array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
+  long long_array[array_length];
+  modular_server.getFieldValue(constants::long_array_field_name,long_array,array_length);
+  modular_server.writeResultToResponse(long_array,array_length);
 }
 }

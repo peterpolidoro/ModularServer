@@ -31,10 +31,12 @@ void setStoredStringCallback();
 
 void getStoredStringCallback();
 
-void testBoolCallback();
+void getBoolCallback();
 
-void testLongArrayCallback();
+void getLongArrayCallback();
 
-void testLongArrayVariableCallback();
+void setLongArrayCallback();
+
+void getLongArrayVariableCallback();
 }
 #endif

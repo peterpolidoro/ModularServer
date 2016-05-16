@@ -114,6 +114,12 @@ void ModularServer::handleServerRequests()
   server_.handleRequest();
 }
 
+void ModularServer::setFieldValue(const ConstantString &field_name,
+                                  ArduinoJson::JsonArray &value)
+{
+  server_.setFieldValue(field_name,value);
+}
+
 void ModularServer::setFieldsToDefaults()
 {
   server_.setFieldsToDefaults();

@@ -30,11 +30,11 @@ const long starting_chars_count_min = 1;
 const long starting_chars_count_max = 10;
 const long starting_chars_count_default = 2;
 
-CONSTANT_STRING(test_bool_field_name,"test_bool");
-const bool test_bool_default = false;
+CONSTANT_STRING(bool_field_name,"bool");
+const bool bool_default = false;
 
-CONSTANT_STRING(test_long_array_field_name,"test_long_array");
-const long test_long_array_default[TEST_LONG_ARRAY_LENGTH] = {5,4,3,2};
+CONSTANT_STRING(long_array_field_name,"long_array");
+const long long_array_default[LONG_ARRAY_LENGTH] = {5,4,3,2};
 
 // Parameters
 CONSTANT_STRING(string_parameter_name,"string");
@@ -51,6 +51,8 @@ const int index_array_element_max = 10;
 
 CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 
+CONSTANT_STRING(long_array_parameter_name,"long_array");
+
 // Methods
 CONSTANT_STRING(echo_method_name,"echo");
 CONSTANT_STRING(length_method_name,"length");
@@ -60,9 +62,10 @@ CONSTANT_STRING(chars_at_method_name,"charsAt");
 CONSTANT_STRING(starting_chars_method_name,"startingChars");
 CONSTANT_STRING(set_stored_string_method_name,"setStoredString");
 CONSTANT_STRING(get_stored_string_method_name,"getStoredString");
-CONSTANT_STRING(test_bool_method_name,"testBool");
-CONSTANT_STRING(test_long_array_method_name,"testLongArray");
-CONSTANT_STRING(test_long_array_variable_method_name,"testLongArrayVariable");
+CONSTANT_STRING(get_bool_method_name,"getBool");
+CONSTANT_STRING(get_long_array_method_name,"getLongArray");
+CONSTANT_STRING(set_long_array_method_name,"setLongArray");
+CONSTANT_STRING(get_long_array_variable_method_name,"getLongArrayVariable");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

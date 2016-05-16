@@ -80,6 +80,39 @@ void Server::setFieldValue(const ConstantString &field_name,
   }
 }
 
+template <typename T, size_t N>
+void Server::setFieldValue(const ConstantString &field_name,
+                           const T (&value)[N])
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    field.setValue(value);
+  }
+}
+
+template <typename T>
+void Server::setFieldValue(const ConstantString &field_name,
+                           const T *value,
+                           const size_t N)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    unsigned int array_length = field.getArrayLength();
+    if (array_length >= N)
+    {
+      for (unsigned int i=0;i<N;++i)
+      {
+        T v = value[i];
+        setFieldElementValue(field_name,i,v);
+      }
+    }
+  }
+}
+
 template <typename T>
 void Server::setFieldElementValue(const ConstantString &field_name,
                                   const unsigned int element_index,
@@ -90,6 +123,22 @@ void Server::setFieldElementValue(const ConstantString &field_name,
   if (field_index >= 0)
   {
     field.setElementValue(value,element_index);
+  }
+}
+
+template <typename T>
+void Server::setAllFieldElementValues(const ConstantString &field_name,
+                                      const T &value)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    unsigned int array_length = field.getArrayLength();
+    for (unsigned int i=0;i<array_length;++i)
+    {
+      setFieldElementValue(field_name,i,value);
+    }
   }
 }
 
@@ -119,21 +168,21 @@ void Server::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 void Server::getFieldValue(const ConstantString &field_name,
-                           T *values,
-                           size_t N)
+                           T *value,
+                           const size_t N)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     unsigned int array_length = field.getArrayLength();
-    if (array_length == N)
+    if (array_length <= N)
     {
-      for (unsigned int i;i<array_length;++i)
+      for (unsigned int i=0;i<array_length;++i)
       {
         T v;
         getFieldElementValue(field_name,i,v);
-        values[i] = v;
+        value[i] = v;
       }
     }
   }
@@ -178,21 +227,21 @@ void Server::getFieldDefaultValue(const ConstantString &field_name,
 
 template <typename T>
 void Server::getFieldDefaultValue(const ConstantString &field_name,
-                                  T *values,
-                                  size_t N)
+                                  T *value,
+                                  const size_t N)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     unsigned int array_length = field.getArrayLength();
-    if (array_length == N)
+    if (array_length <= N)
     {
-      for (unsigned int i;i<array_length;++i)
+      for (unsigned int i=0;i<array_length;++i)
       {
         T v;
         getFieldDefaultElementValue(field_name,i,v);
-        values[i] = v;
+        value[i] = v;
       }
     }
   }
@@ -224,15 +273,15 @@ void Server::writeToResponse(T value)
 }
 
 template <typename T, size_t N>
-void Server::writeToResponse(T (&values)[N])
+void Server::writeToResponse(T (&value)[N])
 {
-  json_stream_.write(values);
+  json_stream_.write(value);
 }
 
 template <typename T>
-void Server::writeToResponse(T *values, size_t N)
+void Server::writeToResponse(T *value, size_t N)
 {
-  json_stream_.write(values,N);
+  json_stream_.write(value,N);
 }
 
 template <typename K, typename T>
@@ -242,15 +291,15 @@ void Server::writeToResponse(K key, T value)
 }
 
 template <typename K, typename T, size_t N>
-void Server::writeToResponse(K key, T (&values)[N])
+void Server::writeToResponse(K key, T (&value)[N])
 {
-  json_stream_.write(key,values);
+  json_stream_.write(key,value);
 }
 
 template <typename K, typename T>
-void Server::writeToResponse(K key, T *values, size_t N)
+void Server::writeToResponse(K key, T *value, size_t N)
 {
-  json_stream_.write(key,values,N);
+  json_stream_.write(key,value,N);
 }
 
 template <typename K>
@@ -287,24 +336,24 @@ void Server::writeResultToResponse(T value)
 }
 
 template <typename T, size_t N>
-void Server::writeResultToResponse(T (&values)[N])
+void Server::writeResultToResponse(T (&value)[N])
 {
   // Prevent multiple results in one response
   if (!result_key_in_response_ && !error_)
   {
     result_key_in_response_ = true;
-    json_stream_.write(constants::result_constant_string,values);
+    json_stream_.write(constants::result_constant_string,value);
   }
 }
 
 template <typename T>
-void Server::writeResultToResponse(T *values, size_t N)
+void Server::writeResultToResponse(T *value, size_t N)
 {
   // Prevent multiple results in one response
   if (!result_key_in_response_ && !error_)
   {
     result_key_in_response_ = true;
-    json_stream_.write(constants::result_constant_string,values,N);
+    json_stream_.write(constants::result_constant_string,value,N);
   }
 }
 

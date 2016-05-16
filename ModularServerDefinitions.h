@@ -51,6 +51,14 @@ void ModularServer::setFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
+void ModularServer::setFieldValue(const ConstantString &field_name,
+                                  const T *value,
+                                  const size_t N)
+{
+  server_.setFieldValue(field_name,value,N);
+}
+
+template <typename T>
 void ModularServer::setFieldElementValue(const ConstantString &field_name,
                                          const unsigned int element_index,
                                          const T &value)
@@ -67,10 +75,10 @@ void ModularServer::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 void ModularServer::getFieldValue(const ConstantString &field_name,
-                                  T *values,
-                                  size_t N)
+                                  T *value,
+                                  const size_t N)
 {
-  server_.getFieldValue(field_name,values,N);
+  server_.getFieldValue(field_name,value,N);
 }
 
 template <typename T>
@@ -90,10 +98,10 @@ void ModularServer::getFieldDefaultValue(const ConstantString &field_name,
 
 template <typename T>
 void ModularServer::getFieldDefaultValue(const ConstantString &field_name,
-                                         T *values,
-                                         size_t N)
+                                         T *value,
+                                         const size_t N)
 {
-  server_.getFieldDefaultValue(field_name,values,N);
+  server_.getFieldDefaultValue(field_name,value,N);
 }
 
 template <typename T>
@@ -117,15 +125,15 @@ void ModularServer::writeToResponse(T value)
 }
 
 template <typename T, size_t N>
-void ModularServer::writeToResponse(T (&values)[N])
+void ModularServer::writeToResponse(T (&value)[N])
 {
-  server_.writeToResponse(values);
+  server_.writeToResponse(value);
 }
 
 template <typename T>
-void ModularServer::writeToResponse(T *values, size_t N)
+void ModularServer::writeToResponse(T *value, size_t N)
 {
-  server_.writeToResponse(values);
+  server_.writeToResponse(value);
 }
 
 template <typename K, typename T>
@@ -135,15 +143,15 @@ void ModularServer::writeToResponse(K key, T value)
 }
 
 template <typename K, typename T, size_t N>
-void ModularServer::writeToResponse(K key, T (&values)[N])
+void ModularServer::writeToResponse(K key, T (&value)[N])
 {
-  server_.writeToResponse(key,values);
+  server_.writeToResponse(key,value);
 }
 
 template <typename K, typename T>
-void ModularServer::writeToResponse(K key, T *values, size_t N)
+void ModularServer::writeToResponse(K key, T *value, size_t N)
 {
-  server_.writeToResponse(key,values,N);
+  server_.writeToResponse(key,value,N);
 }
 
 template <typename K>
@@ -165,15 +173,15 @@ void ModularServer::writeResultToResponse(T value)
 }
 
 template <typename T, size_t N>
-void ModularServer::writeResultToResponse(T (&values)[N])
+void ModularServer::writeResultToResponse(T (&value)[N])
 {
-  server_.writeResultToResponse(values);
+  server_.writeResultToResponse(value);
 }
 
 template <typename T>
-void ModularServer::writeResultToResponse(T *values, size_t N)
+void ModularServer::writeResultToResponse(T *value, size_t N)
 {
-  server_.writeResultToResponse(values,N);
+  server_.writeResultToResponse(value,N);
 }
 }
 

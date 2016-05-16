@@ -109,6 +109,11 @@ void Server::setup()
   set_field_element_value_method.addParameter(field_element_index_parameter);
   set_field_element_value_method.addParameter(field_value_parameter);
 
+  InternalMethod& set_all_field_element_values_method = createInternalMethod(constants::set_all_field_element_values_method_name);
+  set_all_field_element_values_method.attachCallback(&Server::setAllFieldElementValuesCallback);
+  set_all_field_element_values_method.addParameter(field_name_parameter);
+  set_all_field_element_values_method.addParameter(field_value_parameter);
+
   server_running_ = false;
 }
 
@@ -224,11 +229,49 @@ Parameter& Server::copyParameter(Parameter parameter,const ConstantString &param
   return external_parameters_.back();
 }
 
-ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &name)
+ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &parameter_name)
 {
-  int parameter_index = findMethodParameterIndex(request_method_index_,name);
+  int parameter_index = findMethodParameterIndex(request_method_index_,parameter_name);
   // index 0 is the method, index 1 is the first parameter
   return (*request_json_array_ptr_)[parameter_index+1];
+}
+
+void Server::setFieldValue(const ConstantString &field_name,
+                           ArduinoJson::JsonArray &value)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    unsigned int array_length = field.getArrayLength();
+    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    unsigned int N = value.size();
+    if ((field_type == JsonStream::ARRAY_TYPE) && (array_length >= N))
+    {
+      JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+      switch (array_element_type)
+      {
+        case JsonStream::LONG_TYPE:
+          {
+            for (unsigned int i=0;i<N;++i)
+            {
+              long v = value[i];
+              setFieldElementValue(field_name,i,v);
+            }
+            break;
+          }
+        case JsonStream::BOOL_TYPE:
+          {
+            for (unsigned int i=0;i<N;++i)
+            {
+              bool v = value[i];
+              setFieldElementValue(field_name,i,v);
+            }
+            break;
+          }
+      }
+    }
+  }
 }
 
 unsigned int Server::getFieldArrayLength(const ConstantString &field_name)
@@ -1049,157 +1092,6 @@ void Server::incrementServerStream()
   }
 }
 
-void Server::writeDeviceInfoToResponse()
-{
-  beginResponseObject();
-  writeToResponse(constants::name_constant_string,name_ptr_);
-  writeToResponse(constants::model_number_constant_string,model_number_);
-  writeToResponse(constants::board_constant_string,constants::board_type_constant_string);
-  writeToResponse(constants::serial_number_field_name,getSerialNumber());
-  writeKeyToResponse(constants::firmware_version_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::major_constant_string,firmware_major_);
-  writeToResponse(constants::minor_constant_string,firmware_minor_);
-  writeToResponse(constants::patch_constant_string,firmware_patch_);
-  endResponseObject();
-  endResponseObject();
-}
-
-void Server::writeFieldToResponse(Field &field, bool write_key, bool write_default, int element_index)
-{
-  const ConstantString& field_name = field.getParameter().getName();
-  if (write_key)
-  {
-    writeKeyToResponse(field_name);
-  }
-  JsonStream::JsonTypes field_type = field.getParameter().getType();
-  switch (field_type)
-  {
-    case JsonStream::LONG_TYPE:
-      {
-        if (element_index >= 0)
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          return;
-        }
-        long field_value;
-        if (write_default)
-        {
-          getFieldDefaultValue(field_name,field_value);
-        }
-        else
-        {
-          getFieldValue(field_name,field_value);
-        }
-        writeToResponse(field_value);
-        break;
-      }
-    case JsonStream::BOOL_TYPE:
-      {
-        if (element_index >= 0)
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          return;
-        }
-        bool field_value;
-        if (write_default)
-        {
-          getFieldDefaultValue(field_name,field_value);
-        }
-        else
-        {
-          getFieldValue(field_name,field_value);
-        }
-        writeToResponse(field_value);
-        break;
-      }
-    case JsonStream::ARRAY_TYPE:
-      {
-        const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
-        unsigned int array_length = field.getArrayLength();
-        if (element_index >= (int)array_length)
-        {
-          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
-          return;
-        }
-        switch (array_element_type)
-        {
-          case JsonStream::LONG_TYPE:
-            {
-              if (element_index < 0)
-              {
-                long field_value[array_length];
-                if (write_default)
-                {
-                  getFieldDefaultValue(field_name,field_value,array_length);
-                }
-                else
-                {
-                  getFieldValue(field_name,field_value,array_length);
-                }
-                writeToResponse(field_value,array_length);
-              }
-              else
-              {
-                long field_value;
-                if (write_default)
-                {
-                  getFieldDefaultElementValue(field_name,element_index,field_value);
-                }
-                else
-                {
-                  getFieldElementValue(field_name,element_index,field_value);
-                }
-                writeToResponse(field_value);
-              }
-              break;
-            }
-          case JsonStream::BOOL_TYPE:
-            {
-              if (element_index < 0)
-              {
-                bool field_value[array_length];
-                if (write_default)
-                {
-                  getFieldDefaultValue(field_name,field_value,array_length);
-                }
-                else
-                {
-                  getFieldValue(field_name,field_value,array_length);
-                }
-                writeToResponse(field_value,array_length);
-              }
-              else
-              {
-                bool field_value;
-                if (write_default)
-                {
-                  getFieldDefaultElementValue(field_name,element_index,field_value);
-                }
-                else
-                {
-                  getFieldElementValue(field_name,element_index,field_value);
-                }
-                writeToResponse(field_value);
-              }
-              break;
-            }
-        }
-      }
-  }
-}
-
-void Server::writeFieldErrorToResponse(const ConstantString &error)
-{
-  error_ = true;
-  writeKeyToResponse(constants::error_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-  writeToResponse(constants::data_constant_string,error);
-  writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-  endResponseObject();
-}
-
 void Server::help(bool verbose)
 {
   int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
@@ -1412,6 +1304,158 @@ void Server::help(bool verbose)
   }
 }
 
+void Server::writeDeviceInfoToResponse()
+{
+  beginResponseObject();
+  writeToResponse(constants::name_constant_string,name_ptr_);
+  writeToResponse(constants::model_number_constant_string,model_number_);
+  writeToResponse(constants::board_constant_string,constants::board_type_constant_string);
+  writeToResponse(constants::serial_number_field_name,getSerialNumber());
+  writeKeyToResponse(constants::firmware_version_constant_string);
+  beginResponseObject();
+  writeToResponse(constants::major_constant_string,firmware_major_);
+  writeToResponse(constants::minor_constant_string,firmware_minor_);
+  writeToResponse(constants::patch_constant_string,firmware_patch_);
+  endResponseObject();
+  endResponseObject();
+}
+
+void Server::writeFieldToResponse(Field &field, bool write_key, bool write_default, int element_index)
+{
+  const ConstantString& field_name = field.getParameter().getName();
+  if (write_key)
+  {
+    writeKeyToResponse(field_name);
+  }
+  JsonStream::JsonTypes field_type = field.getParameter().getType();
+  switch (field_type)
+  {
+    case JsonStream::LONG_TYPE:
+      {
+        if (element_index >= 0)
+        {
+          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+          return;
+        }
+        long field_value;
+        if (write_default)
+        {
+          getFieldDefaultValue(field_name,field_value);
+        }
+        else
+        {
+          getFieldValue(field_name,field_value);
+        }
+        writeToResponse(field_value);
+        break;
+      }
+    case JsonStream::BOOL_TYPE:
+      {
+        if (element_index >= 0)
+        {
+          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+          return;
+        }
+        bool field_value;
+        if (write_default)
+        {
+          getFieldDefaultValue(field_name,field_value);
+        }
+        else
+        {
+          getFieldValue(field_name,field_value);
+        }
+        writeToResponse(field_value);
+        break;
+      }
+    case JsonStream::ARRAY_TYPE:
+      {
+        const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+        unsigned int array_length = field.getArrayLength();
+        if (element_index >= (int)array_length)
+        {
+          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+          return;
+        }
+        switch (array_element_type)
+        {
+          case JsonStream::LONG_TYPE:
+            {
+              if (element_index < 0)
+              {
+                long field_value[array_length];
+                if (write_default)
+                {
+                  getFieldDefaultValue(field_name,field_value,array_length);
+                }
+                else
+                {
+                  getFieldValue(field_name,field_value,array_length);
+                }
+                writeToResponse(field_value,array_length);
+              }
+              else
+              {
+                long field_value;
+                if (write_default)
+                {
+                  getFieldDefaultElementValue(field_name,element_index,field_value);
+                }
+                else
+                {
+                  getFieldElementValue(field_name,element_index,field_value);
+                }
+                writeToResponse(field_value);
+              }
+              break;
+            }
+          case JsonStream::BOOL_TYPE:
+            {
+              if (element_index < 0)
+              {
+                bool field_value[array_length];
+                if (write_default)
+                {
+                  getFieldDefaultValue(field_name,field_value,array_length);
+                }
+                else
+                {
+                  getFieldValue(field_name,field_value,array_length);
+                }
+                writeToResponse(field_value,array_length);
+              }
+              else
+              {
+                bool field_value;
+                if (write_default)
+                {
+                  getFieldDefaultElementValue(field_name,element_index,field_value);
+                }
+                else
+                {
+                  getFieldElementValue(field_name,element_index,field_value);
+                }
+                writeToResponse(field_value);
+              }
+              break;
+            }
+        }
+        break;
+      }
+  }
+}
+
+void Server::writeFieldErrorToResponse(const ConstantString &error)
+{
+  error_ = true;
+  writeKeyToResponse(constants::error_constant_string);
+  beginResponseObject();
+  writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
+  writeToResponse(constants::data_constant_string,error);
+  writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
+  endResponseObject();
+}
+
 void Server::getDeviceInfoCallback()
 {
   writeResultKeyToResponse();
@@ -1586,7 +1630,13 @@ void Server::setFieldValueCallback()
       case JsonStream::BOOL_TYPE:
         {
           bool field_value = getParameterValue(constants::field_value_parameter_name);
-          setFieldValue(field_name_cs,field_value);;
+          setFieldValue(field_name_cs,field_value);
+          break;
+        }
+      case JsonStream::ARRAY_TYPE:
+        {
+          ArduinoJson::JsonArray &field_value = getParameterValue(constants::field_value_parameter_name);
+          setFieldValue(field_name_cs,field_value);
           break;
         }
     }
@@ -1642,6 +1692,54 @@ void Server::setFieldElementValueCallback()
                 break;
               }
           }
+          break;
+        }
+    }
+  }
+  else
+  {
+    writeFieldErrorToResponse(constants::field_not_found_error_data);
+  }
+}
+
+void Server::setAllFieldElementValuesCallback()
+{
+  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  const ConstantString& field_name_cs = field.getParameter().getName();
+  if (field_index >= 0)
+  {
+    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    switch (field_type)
+    {
+      case JsonStream::LONG_TYPE:
+        {
+          break;
+        }
+      case JsonStream::BOOL_TYPE:
+        {
+          break;
+        }
+      case JsonStream::ARRAY_TYPE:
+        {
+          JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+          switch (array_element_type)
+          {
+            case JsonStream::LONG_TYPE:
+              {
+                long field_value = getParameterValue(constants::field_value_parameter_name);
+                setAllFieldElementValues(field_name_cs,field_value);
+                break;
+              }
+            case JsonStream::BOOL_TYPE:
+              {
+                bool field_value = getParameterValue(constants::field_value_parameter_name);
+                setAllFieldElementValues(field_name_cs,field_value);
+                break;
+              }
+          }
+          break;
         }
     }
   }

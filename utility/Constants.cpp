@@ -38,6 +38,7 @@ CONSTANT_STRING(get_field_value_method_name,"getFieldValue");
 CONSTANT_STRING(get_field_element_value_method_name,"getFieldElementValue");
 CONSTANT_STRING(set_field_value_method_name,"setFieldValue");
 CONSTANT_STRING(set_field_element_value_method_name,"setFieldElementValue");
+CONSTANT_STRING(set_all_field_element_values_method_name,"setAllFieldElementValues");
 
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");
