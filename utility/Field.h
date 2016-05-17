@@ -34,7 +34,7 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeLong();
-    parameter_.setTypeArray();
+    parameter_.setArrayLengthRange(N,N);
   };
   template <size_t N>
   Field(const ConstantString &name,
@@ -43,7 +43,7 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeBool();
-    parameter_.setTypeArray();
+    parameter_.setArrayLengthRange(N,N);
   }
 
   // Parameter Methods

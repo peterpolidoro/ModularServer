@@ -17,6 +17,7 @@ Parameter::Parameter()
   type_ = JsonStream::LONG_TYPE;
   array_element_type_ = JsonStream::LONG_TYPE;
   range_is_set_ = false;
+  array_length_range_is_set_ = false;
 }
 
 Parameter::Parameter(const ConstantString &name)
@@ -26,6 +27,7 @@ Parameter::Parameter(const ConstantString &name)
   type_ = JsonStream::LONG_TYPE;
   array_element_type_ = JsonStream::LONG_TYPE;
   range_is_set_ = false;
+  array_length_range_is_set_ = false;
 }
 
 void Parameter::setName(const ConstantString &name)
@@ -93,8 +95,11 @@ void Parameter::setTypeObject()
 
 void Parameter::setTypeArray()
 {
-  array_element_type_ = type_;
-  type_ = JsonStream::ARRAY_TYPE;
+  if (type_ != JsonStream::ARRAY_TYPE)
+  {
+    array_element_type_ = type_;
+    type_ = JsonStream::ARRAY_TYPE;
+  }
 }
 
 void Parameter::setTypeValue()
@@ -128,6 +133,20 @@ void Parameter::setRange(const float min, const float max)
 void Parameter::removeRange()
 {
   range_is_set_ = false;
+}
+
+void Parameter::setArrayLengthRange(const unsigned char array_length_min,
+                                    const unsigned char array_length_max)
+{
+  setTypeArray();
+  array_length_min_ = array_length_min;
+  array_length_max_ = array_length_max;
+  array_length_range_is_set_ = true;
+}
+
+void Parameter::removeArrayLengthRange()
+{
+  array_length_range_is_set_ = false;
 }
 
 bool Parameter::compareName(const char *name_to_compare)
@@ -176,4 +195,20 @@ constants::NumberType Parameter::getMax()
 {
   return max_;
 }
+
+unsigned char Parameter::getArrayLengthMin()
+{
+  return array_length_min_;
+}
+
+unsigned char Parameter::getArrayLengthMax()
+{
+  return array_length_max_;
+}
+
+bool Parameter::arrayLengthRangeIsSet()
+{
+  return array_length_range_is_set_;
+}
+
 }

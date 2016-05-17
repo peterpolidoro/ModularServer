@@ -58,6 +58,7 @@ CONSTANT_STRING(invalid_json_object_error_data," is not a valid JSON object.")
 CONSTANT_STRING(invalid_json_array_error_data," is not a valid JSON array.")
 CONSTANT_STRING(parameter_error_error_data,"Parameter value out of range: ");
 CONSTANT_STRING(array_parameter_error_error_data,"Array parameter element value out of range: ");
+CONSTANT_STRING(array_parameter_length_error_error_data,"Array parameter length out of range: ");
 
 const int parse_error_code = -32700;
 const int invalid_request_error_code = -32600;
@@ -87,6 +88,10 @@ CONSTANT_STRING(parameters_constant_string,"parameters");
 CONSTANT_STRING(fields_constant_string,"fields");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");
+CONSTANT_STRING(array_element_min_constant_string,"array_element_min");
+CONSTANT_STRING(array_element_max_constant_string,"array_element_max");
+CONSTANT_STRING(array_length_min_constant_string,"array_length_min");
+CONSTANT_STRING(array_length_max_constant_string,"array_length_max");
 CONSTANT_STRING(model_number_constant_string,"model_number");
 CONSTANT_STRING(firmware_version_constant_string,"firmware_version");
 CONSTANT_STRING(major_constant_string,"major");
@@ -95,6 +100,14 @@ CONSTANT_STRING(patch_constant_string,"patch");
 CONSTANT_STRING(device_info_constant_string,"device_info");
 CONSTANT_STRING(value_constant_string,"value");
 CONSTANT_STRING(default_value_constant_string,"default_value");
+CONSTANT_STRING(question_constant_string,"?");
+CONSTANT_STRING(question_double_constant_string,"??");
+CONSTANT_STRING(zero_constant_string,"0");
+CONSTANT_STRING(given_constant_string," given. ");
+CONSTANT_STRING(needed_constant_string," needed.");
+CONSTANT_STRING(less_than_equal_constant_string," <= ");
+CONSTANT_STRING(element_constant_string," element");
+CONSTANT_STRING(array_length_constant_string," array length");
 CONSTANT_STRING(board_constant_string,"board");
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)

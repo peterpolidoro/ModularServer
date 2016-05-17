@@ -38,7 +38,9 @@ void Controller::setup()
   ModularDevice::Parameter& duration_on_parameter = modular_server_.createParameter(constants::duration_on_parameter_name);
   duration_on_parameter.setUnits(constants::seconds_unit);
   duration_on_parameter.setRange(constants::duration_min,constants::duration_max);
+
   ModularDevice::Parameter& duration_off_parameter = modular_server_.copyParameter(duration_on_parameter,constants::duration_off_parameter_name);
+
   ModularDevice::Parameter& count_parameter = modular_server_.createParameter(constants::count_parameter_name);
   count_parameter.setRange(constants::count_min,constants::count_max);
 

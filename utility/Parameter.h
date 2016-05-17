@@ -44,6 +44,9 @@ public:
   void setRange(const double min, const double max);
   void setRange(const float min, const float max);
   void removeRange();
+  void setArrayLengthRange(const unsigned char array_length_min,
+                           const unsigned char array_length_max);
+  void removeArrayLengthRange();
 private:
   const ConstantString *name_ptr_;
   const ConstantString *units_ptr_;
@@ -52,6 +55,9 @@ private:
   constants::NumberType min_;
   constants::NumberType max_;
   bool range_is_set_;
+  unsigned char array_length_min_;
+  unsigned char array_length_max_;
+  bool array_length_range_is_set_;
   bool compareName(const char *name_to_compare);
   bool compareName(const ConstantString &name_to_compare);
   const ConstantString& getName();
@@ -61,6 +67,9 @@ private:
   bool rangeIsSet();
   constants::NumberType getMin();
   constants::NumberType getMax();
+  unsigned char getArrayLengthMin();
+  unsigned char getArrayLengthMax();
+  bool arrayLengthRangeIsSet();
   friend class Field;
   friend class Method;
   friend class Server;

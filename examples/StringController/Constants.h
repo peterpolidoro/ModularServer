@@ -42,6 +42,8 @@ extern const bool bool_default;
 extern ConstantString long_array_field_name;
 enum{LONG_ARRAY_LENGTH=4};
 extern const long long_array_default[LONG_ARRAY_LENGTH];
+extern const long long_array_element_min;
+extern const long long_array_element_max;
 
 // Parameters
 extern ConstantString string_parameter_name;
@@ -55,6 +57,8 @@ extern const int count_max;
 extern ConstantString index_array_parameter_name;
 extern const int index_array_element_min;
 extern const int index_array_element_max;
+extern const unsigned char index_array_length_min;
+extern const unsigned char index_array_length_max;
 
 extern ConstantString double_echo_parameter_name;
 

@@ -32,19 +32,26 @@ void Controller::setup()
 
   // Fields
   ModularDevice::Field& starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);
-  // starting_chars_count_field.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
+  starting_chars_count_field.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
+
   ModularDevice::Field& bool_field = modular_server_.createField(constants::bool_field_name,constants::bool_default);
+
   ModularDevice::Field& long_array_field = modular_server_.createField(constants::long_array_field_name,constants::long_array_default);
+  long_array_field.setRange(constants::long_array_element_min,constants::long_array_element_max);
 
   // Parameters
   ModularDevice::Parameter& string_parameter = modular_server_.createParameter(constants::string_parameter_name);
   string_parameter.setTypeString();
+
   ModularDevice::Parameter& string2_parameter = modular_server_.copyParameter(string_parameter,constants::string2_parameter_name);
+
   ModularDevice::Parameter& count_parameter = modular_server_.createParameter(constants::count_parameter_name);
   count_parameter.setRange(constants::count_min,constants::count_max);
+
   ModularDevice::Parameter& index_array_parameter = modular_server_.createParameter(constants::index_array_parameter_name);
-  index_array_parameter.setTypeArray();
   index_array_parameter.setRange(constants::index_array_element_min,constants::index_array_element_max);
+  index_array_parameter.setArrayLengthRange(constants::index_array_length_min,constants::index_array_length_max);
+
   ModularDevice::Parameter& double_echo_parameter = modular_server_.createParameter(constants::double_echo_parameter_name);
   double_echo_parameter.setTypeBool();
 

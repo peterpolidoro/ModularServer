@@ -48,10 +48,14 @@ const int count_max = 100;
 CONSTANT_STRING(index_array_parameter_name,"index_array");
 const int index_array_element_min = 0;
 const int index_array_element_max = 10;
+const unsigned char index_array_length_min = 1;
+const unsigned char index_array_length_max = 3;
 
 CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 
 CONSTANT_STRING(long_array_parameter_name,"long_array");
+const long long_array_element_min = -3;
+const long long_array_element_max = 10;
 
 // Methods
 CONSTANT_STRING(echo_method_name,"echo");

@@ -189,7 +189,8 @@ private:
   void parameterHelp(Parameter &parameter, bool end_object=true);
   void fieldHelp(Field &field);
   bool checkParameters();
-  bool checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value);
+  bool checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json_value);
+  bool checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonVariant &json_value);
   template <typename T>
   int findFieldIndex(T const&field_name);
   template <typename T>
@@ -199,6 +200,7 @@ private:
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceInfoToResponse();
+  void writeParameterOutOfRangeErrorToResponse(Parameter &parameter, char min_str[], char max_str[]);
   void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false, int element_index=-1);
   void writeFieldErrorToResponse(const ConstantString &error);
 

@@ -432,14 +432,18 @@ void Server::processRequestArray()
   {
     int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
     int parameter_count = array_elements_count - 1;
+    char question_str[constants::question_constant_string.length()+1];
+    constants::question_constant_string.copy(question_str);
+    char question_double_str[constants::question_double_constant_string.length()+1];
+    constants::question_double_constant_string.copy(question_double_str);
     // method ?
-    if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"?") == 0))
+    if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
     {
       writeResultKeyToResponse();
       methodHelp(false,request_method_index_);
     }
     // method ??
-    else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],"??") == 0))
+    else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
     {
       writeResultKeyToResponse();
       methodHelp(true,request_method_index_);
@@ -447,8 +451,8 @@ void Server::processRequestArray()
     // method parameter ?
     // method parameter ??
     else if ((parameter_count == 2) &&
-             ((strcmp((*request_json_array_ptr_)[2],"?") == 0) ||
-              (strcmp((*request_json_array_ptr_)[2],"??") == 0)))
+             ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
+              (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter* parameter_ptr;
@@ -484,10 +488,14 @@ void Server::processRequestArray()
         char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
         dtostrf(parameter_count,0,0,parameter_count_str);
         strcat(error_str,parameter_count_str);
-        strcat(error_str," given. ");
+        char given_str[constants::given_constant_string.length()+1];
+        constants::given_constant_string.copy(given_str);
+        strcat(error_str,given_str);
         dtostrf(internal_methods_[request_method_index_].parameter_count_,0,0,parameter_count_str);
         strcat(error_str,parameter_count_str);
-        strcat(error_str," needed.");
+        char needed_str[constants::needed_constant_string.length()+1];
+        constants::needed_constant_string.copy(needed_str);
+        strcat(error_str,needed_str);
         writeToResponse(constants::data_constant_string,error_str);
         writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
         endResponseObject();
@@ -515,10 +523,14 @@ void Server::processRequestArray()
       char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
       dtostrf(parameter_count,0,0,parameter_count_str);
       strcat(error_str,parameter_count_str);
-      strcat(error_str," given. ");
+      char given_str[constants::given_constant_string.length()+1];
+      constants::given_constant_string.copy(given_str);
+      strcat(error_str,given_str);
       dtostrf(external_methods_[request_method_index_-internal_methods_.max_size()].parameter_count_,0,0,parameter_count_str);
       strcat(error_str,parameter_count_str);
-      strcat(error_str," needed.");
+      char needed_str[constants::needed_constant_string.length()+1];
+      constants::needed_constant_string.copy(needed_str);
+      strcat(error_str,needed_str);
       writeToResponse(constants::data_constant_string,error_str);
       writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
       endResponseObject();
@@ -538,7 +550,9 @@ int Server::processMethodString(const char *method_string)
 {
   int method_index = -1;
   int method_id = atoi(method_string);
-  if (strcmp(method_string,"0") == 0)
+  char zero_str[constants::zero_constant_string.length()+1];
+  constants::zero_constant_string.copy(zero_str);
+  if (strcmp(method_string,zero_str) == 0)
   {
     method_index = 0;
     writeToResponse(constants::id_constant_string,0);
@@ -653,7 +667,9 @@ int Server::processParameterString(const char *parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = atoi(parameter_string);
-  if (strcmp(parameter_string,"0") == 0)
+  char zero_str[constants::zero_constant_string.length()+1];
+  constants::zero_constant_string.copy(zero_str);
+  if (strcmp(parameter_string,zero_str) == 0)
   {
     parameter_index = 0;
   }
@@ -699,7 +715,8 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
   parameter_units[0] = 0;
   const ConstantString& units = parameter.getUnits();
   units.copy(parameter_units);
-  if (strcmp(parameter_units,"") != 0)
+  char empty_str[] = {0};
+  if (strcmp(parameter_units,empty_str) != 0)
   {
     writeToResponse(constants::units_constant_string,parameter_units);
   }
@@ -760,8 +777,8 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
               {
                 long min = parameter.getMin().l;
                 long max = parameter.getMax().l;
-                writeToResponse(constants::min_constant_string,min);
-                writeToResponse(constants::max_constant_string,max);
+                writeToResponse(constants::array_element_min_constant_string,min);
+                writeToResponse(constants::array_element_max_constant_string,max);
               }
               break;
             }
@@ -772,8 +789,8 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
               {
                 double min = parameter.getMin().d;
                 double max = parameter.getMax().d;
-                writeToResponse(constants::min_constant_string,min);
-                writeToResponse(constants::max_constant_string,max);
+                writeToResponse(constants::array_element_min_constant_string,min);
+                writeToResponse(constants::array_element_max_constant_string,max);
               }
               break;
             }
@@ -799,6 +816,13 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
               writeToResponse(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
               break;
             }
+        }
+        if (parameter.arrayLengthRangeIsSet())
+        {
+          uint8_t array_length_min = parameter.getArrayLengthMin();
+          uint8_t array_length_max = parameter.getArrayLengthMax();
+          writeToResponse(constants::array_length_min_constant_string,array_length_min);
+          writeToResponse(constants::array_length_max_constant_string,array_length_max);
         }
         break;
       }
@@ -831,9 +855,20 @@ bool Server::checkParameters()
        it!=request_json_array_ptr_->end();
        ++it)
   {
+    // do not check method
     if (it!=request_json_array_ptr_->begin())
     {
-      if (checkParameter(parameter_index,*it))
+      Parameter* parameter_ptr = NULL;
+      if  (request_method_index_ < (int)internal_methods_.max_size())
+      {
+        parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
+      }
+      else
+      {
+        int index = request_method_index_ - internal_methods_.max_size();
+        parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
+      }
+      if (checkParameter(*parameter_ptr,*it))
       {
         parameter_index++;
       }
@@ -847,35 +882,26 @@ bool Server::checkParameters()
   return true;
 }
 
-bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_value)
+bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json_value)
 {
   bool out_of_range = false;
+  bool array_length_out_of_range = false;
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
-  Parameter* parameter_ptr = NULL;
-  if  (request_method_index_ < (int)internal_methods_.max_size())
-  {
-    parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
-  }
-  else
-  {
-    int index = request_method_index_ - internal_methods_.max_size();
-    parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
-  }
-  JsonStream::JsonTypes type = parameter_ptr->getType();
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
   min_str[0] = 0;
   char max_str[JsonStream::STRING_LENGTH_DOUBLE];
   max_str[0] = 0;
+  JsonStream::JsonTypes type = parameter.getType();
   switch (type)
   {
     case JsonStream::LONG_TYPE:
       {
-        if (parameter_ptr->rangeIsSet())
+        if (parameter.rangeIsSet())
         {
           long value = (long)json_value;
-          long min = parameter_ptr->getMin().l;
-          long max = parameter_ptr->getMax().l;
+          long min = parameter.getMin().l;
+          long max = parameter.getMax().l;
           if ((value < min) || (value > max))
           {
             out_of_range = true;
@@ -887,11 +913,11 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
       }
     case JsonStream::DOUBLE_TYPE:
       {
-        if (parameter_ptr->rangeIsSet())
+        if (parameter.rangeIsSet())
         {
           double value = (double)json_value;
-          double min = parameter_ptr->getMin().d;
-          double max = parameter_ptr->getMax().d;
+          double min = parameter.getMin().d;
+          double max = parameter.getMax().d;
           if ((value < min) || (value > max))
           {
             out_of_range = true;
@@ -925,71 +951,94 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
         }
         else
         {
-          JsonStream::JsonTypes array_element_type = parameter_ptr->getArrayElementType();
-          switch (array_element_type)
+          if (parameter.arrayLengthRangeIsSet())
           {
-            case JsonStream::LONG_TYPE:
-              {
-                if (parameter_ptr->rangeIsSet())
-                {
-                  long value;
-                  long min = parameter_ptr->getMin().l;
-                  long max = parameter_ptr->getMax().l;
-                  for (ArduinoJson::JsonArray::iterator it=json_array.begin();
-                       it!=json_array.end();
-                       ++it)
-                  {
-                    value = (long)*it;
-                    if ((value < min) || (value > max))
-                    {
-                      out_of_range = true;
-                      dtostrf(min,0,0,min_str);
-                      dtostrf(max,0,0,max_str);
-                      break;
-                    }
-                  }
-                }
-                break;
-              }
-            case JsonStream::DOUBLE_TYPE:
-              {
-                if (parameter_ptr->rangeIsSet())
-                {
-                  double value;
-                  double min = parameter_ptr->getMin().d;
-                  double max = parameter_ptr->getMax().d;
-                  for (ArduinoJson::JsonArray::iterator it=json_array.begin();
-                       it!=json_array.end();
-                       ++it)
-                  {
-                    value = (double)*it;
-                    if ((value < min) || (value > max))
-                    {
-                      out_of_range = true;
-                      dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
-                      dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
-                      break;
-                    }
-                  }
-                }
-                break;
-              }
-            case JsonStream::BOOL_TYPE:
+            unsigned char array_length = json_array.size();
+            unsigned char array_length_min = parameter.getArrayLengthMin();
+            unsigned char array_length_max = parameter.getArrayLengthMax();
+            if ((array_length < array_length_min) || (array_length > array_length_max))
+            {
+              array_length_out_of_range = true;
+              dtostrf(array_length_min,0,0,min_str);
+              dtostrf(array_length_max,0,0,max_str);
               break;
-            case JsonStream::NULL_TYPE:
-              break;
-            case JsonStream::STRING_TYPE:
-              break;
-            case JsonStream::OBJECT_TYPE:
-              break;
-            case JsonStream::ARRAY_TYPE:
-              break;
+            }
           }
+          for (ArduinoJson::JsonArray::iterator it=json_array.begin();
+               it!=json_array.end();
+               ++it)
+          {
+            checkArrayParameterElement(parameter,*it);
+          }
+          // JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+          // switch (array_element_type)
+          // {
+          //   case JsonStream::LONG_TYPE:
+          //     {
+          //       if (parameter.rangeIsSet())
+          //       {
+          //         long value;
+          //         long min = parameter.getMin().l;
+          //         long max = parameter.getMax().l;
+          //         for (ArduinoJson::JsonArray::iterator it=json_array.begin();
+          //              it!=json_array.end();
+          //              ++it)
+          //         {
+          //           value = (long)*it;
+          //           if ((value < min) || (value > max))
+          //           {
+          //             out_of_range = true;
+          //             dtostrf(min,0,0,min_str);
+          //             dtostrf(max,0,0,max_str);
+          //             break;
+          //           }
+          //         }
+          //       }
+          //       break;
+          //     }
+          //   case JsonStream::DOUBLE_TYPE:
+          //     {
+          //       if (parameter.rangeIsSet())
+          //       {
+          //         double value;
+          //         double min = parameter.getMin().d;
+          //         double max = parameter.getMax().d;
+          //         for (ArduinoJson::JsonArray::iterator it=json_array.begin();
+          //              it!=json_array.end();
+          //              ++it)
+          //         {
+          //           value = (double)*it;
+          //           if ((value < min) || (value > max))
+          //           {
+          //             out_of_range = true;
+          //             dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
+          //             dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
+          //             break;
+          //           }
+          //         }
+          //       }
+          //       break;
+          //     }
+          //   case JsonStream::BOOL_TYPE:
+          //     break;
+          //   case JsonStream::NULL_TYPE:
+          //     break;
+          //   case JsonStream::STRING_TYPE:
+          //     break;
+          //   case JsonStream::OBJECT_TYPE:
+          //     break;
+          //   case JsonStream::ARRAY_TYPE:
+          //     break;
+          // }
         }
         break;
       }
   }
   if (out_of_range)
+  {
+    writeParameterOutOfRangeErrorToResponse(parameter,min_str,max_str);
+  }
+  else if (array_length_out_of_range)
   {
     error_ = true;
     writeKeyToResponse(constants::error_constant_string);
@@ -997,26 +1046,20 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
-    if (type != JsonStream::ARRAY_TYPE)
-    {
-      constants::parameter_error_error_data.copy(error_str);
-    }
-    else
-    {
-      constants::array_parameter_error_error_data.copy(error_str);
-    }
+    constants::array_parameter_length_error_error_data.copy(error_str);
     strcat(error_str,min_str);
-    strcat(error_str," <= ");
+    char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
+    constants::less_than_equal_constant_string.copy(less_than_equal_str);
+    strcat(error_str,less_than_equal_str);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString& name = parameter_ptr->getName();
+    const ConstantString& name = parameter.getName();
     name.copy(parameter_name);
     strcat(error_str,parameter_name);
-    if (type == JsonStream::ARRAY_TYPE)
-    {
-      strcat(error_str," element");
-    }
-    strcat(error_str," <= ");
+    char array_length_str[constants::array_length_constant_string.length()+1];
+    constants::array_length_constant_string.copy(array_length_str);
+    strcat(error_str,array_length_str);
+    strcat(error_str,less_than_equal_str);
     strcat(error_str,max_str);
     writeToResponse(constants::data_constant_string,error_str);
     writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
@@ -1030,7 +1073,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString& name = parameter_ptr->getName();
+    const ConstantString& name = parameter.getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
@@ -1050,7 +1093,7 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = 0;
-    const ConstantString& name = parameter_ptr->getName();
+    const ConstantString& name = parameter.getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
@@ -1062,7 +1105,90 @@ bool Server::checkParameter(int parameter_index, ArduinoJson::JsonVariant &json_
     writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
     endResponseObject();
   }
-  bool parameter_ok = (!out_of_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
+  bool parameter_ok = (!out_of_range) && (!array_length_out_of_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
+  return parameter_ok;
+}
+
+bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonVariant &json_value)
+{
+  bool out_of_range = false;
+  char min_str[JsonStream::STRING_LENGTH_DOUBLE];
+  min_str[0] = 0;
+  char max_str[JsonStream::STRING_LENGTH_DOUBLE];
+  max_str[0] = 0;
+  JsonStream::JsonTypes type = parameter.getType();
+  switch (type)
+  {
+    case JsonStream::LONG_TYPE:
+      break;
+    case JsonStream::DOUBLE_TYPE:
+      break;
+    case JsonStream::BOOL_TYPE:
+      break;
+    case JsonStream::NULL_TYPE:
+      break;
+    case JsonStream::STRING_TYPE:
+      break;
+    case JsonStream::OBJECT_TYPE:
+      break;
+    case JsonStream::ARRAY_TYPE:
+      {
+        JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+        switch (array_element_type)
+        {
+          case JsonStream::LONG_TYPE:
+            {
+              if (parameter.rangeIsSet())
+              {
+                long value = json_value;
+                long min = parameter.getMin().l;
+                long max = parameter.getMax().l;
+                if ((value < min) || (value > max))
+                {
+                  out_of_range = true;
+                  dtostrf(min,0,0,min_str);
+                  dtostrf(max,0,0,max_str);
+                  break;
+                }
+              }
+              break;
+            }
+          case JsonStream::DOUBLE_TYPE:
+            {
+              if (parameter.rangeIsSet())
+              {
+                double value = json_value;
+                double min = parameter.getMin().d;
+                double max = parameter.getMax().d;
+                if ((value < min) || (value > max))
+                {
+                  out_of_range = true;
+                  dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
+                  dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
+                  break;
+                }
+              }
+              break;
+            }
+          case JsonStream::BOOL_TYPE:
+            break;
+          case JsonStream::NULL_TYPE:
+            break;
+          case JsonStream::STRING_TYPE:
+            break;
+          case JsonStream::OBJECT_TYPE:
+            break;
+          case JsonStream::ARRAY_TYPE:
+            break;
+        }
+      }
+      break;
+  }
+  if (out_of_range)
+  {
+    writeParameterOutOfRangeErrorToResponse(parameter,min_str,max_str);
+  }
+  bool parameter_ok = !out_of_range;
   return parameter_ok;
 }
 
@@ -1445,6 +1571,45 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
   }
 }
 
+void Server::writeParameterOutOfRangeErrorToResponse(Parameter &parameter, char min_str[], char max_str[])
+{
+  error_ = true;
+  writeKeyToResponse(constants::error_constant_string);
+  beginResponseObject();
+  writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
+  char error_str[constants::STRING_LENGTH_ERROR];
+  error_str[0] = 0;
+  JsonStream::JsonTypes type = parameter.getType();
+  if (type != JsonStream::ARRAY_TYPE)
+  {
+    constants::parameter_error_error_data.copy(error_str);
+  }
+  else
+  {
+    constants::array_parameter_error_error_data.copy(error_str);
+  }
+  strcat(error_str,min_str);
+  char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
+  constants::less_than_equal_constant_string.copy(less_than_equal_str);
+  strcat(error_str,less_than_equal_str);
+  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
+  parameter_name[0] = 0;
+  const ConstantString& name = parameter.getName();
+  name.copy(parameter_name);
+  strcat(error_str,parameter_name);
+  if (type == JsonStream::ARRAY_TYPE)
+  {
+    char element_str[constants::element_constant_string.length()+1];
+    constants::element_constant_string.copy(element_str);
+    strcat(error_str,element_str);
+  }
+  strcat(error_str,less_than_equal_str);
+  strcat(error_str,max_str);
+  writeToResponse(constants::data_constant_string,error_str);
+  writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
+  endResponseObject();
+}
+
 void Server::writeFieldErrorToResponse(const ConstantString &error)
 {
   error_ = true;
@@ -1618,6 +1783,12 @@ void Server::setFieldValueCallback()
   const ConstantString& field_name_cs = field.getParameter().getName();
   if (field_index >= 0)
   {
+    ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
+    bool parameter_ok = checkParameter(field.getParameter(),json_value);
+    if (!parameter_ok)
+    {
+      return;
+    }
     JsonStream::JsonTypes field_type = field.getParameter().getType();
     switch (field_type)
     {
@@ -1661,6 +1832,12 @@ void Server::setFieldElementValueCallback()
   const ConstantString& field_name_cs = field.getParameter().getName();
   if (field_index >= 0)
   {
+    ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
+    bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
+    if (!parameter_ok)
+    {
+      return;
+    }
     JsonStream::JsonTypes field_type = field.getParameter().getType();
     switch (field_type)
     {
@@ -1707,9 +1884,15 @@ void Server::setAllFieldElementValuesCallback()
   const char* field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
   Field& field = findField(field_name,&field_index);
+  ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
   const ConstantString& field_name_cs = field.getParameter().getName();
   if (field_index >= 0)
   {
+    bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
+    if (!parameter_ok)
+    {
+      return;
+    }
     JsonStream::JsonTypes field_type = field.getParameter().getType();
     switch (field_type)
     {
