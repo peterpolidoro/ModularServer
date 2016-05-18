@@ -15,6 +15,8 @@
 
 namespace callbacks
 {
+void getDoubledCallback();
+
 void getBoolCallback();
 
 void getLongArrayFixedCallback();

@@ -265,6 +265,19 @@ bool Server::setFieldValue(const ConstantString &field_name,
             }
             break;
           }
+        case JsonStream::DOUBLE_TYPE:
+          {
+            for (unsigned int i=0;i<N;++i)
+            {
+              double v = value[i];
+              success = setFieldElementValue(field_name,i,v);
+              if (!success)
+              {
+                return false;
+              }
+            }
+            break;
+          }
         case JsonStream::BOOL_TYPE:
           {
             for (unsigned int i=0;i<N;++i)
@@ -1437,6 +1450,25 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
         writeToResponse(field_value);
         break;
       }
+    case JsonStream::DOUBLE_TYPE:
+      {
+        if (element_index >= 0)
+        {
+          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+          return;
+        }
+        double field_value;
+        if (write_default)
+        {
+          getFieldDefaultValue(field_name,field_value);
+        }
+        else
+        {
+          getFieldValue(field_name,field_value);
+        }
+        writeToResponse(field_value);
+        break;
+      }
     case JsonStream::BOOL_TYPE:
       {
         if (element_index >= 0)
@@ -1485,6 +1517,36 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
               else
               {
                 long field_value;
+                if (write_default)
+                {
+                  getFieldDefaultElementValue(field_name,element_index,field_value);
+                }
+                else
+                {
+                  getFieldElementValue(field_name,element_index,field_value);
+                }
+                writeToResponse(field_value);
+              }
+              break;
+            }
+          case JsonStream::DOUBLE_TYPE:
+            {
+              if (element_index < 0)
+              {
+                double field_value[array_length];
+                if (write_default)
+                {
+                  getFieldDefaultValue(field_name,field_value,array_length);
+                }
+                else
+                {
+                  getFieldValue(field_name,field_value,array_length);
+                }
+                writeToResponse(field_value,array_length);
+              }
+              else
+              {
+                double field_value;
                 if (write_default)
                 {
                   getFieldDefaultElementValue(field_name,element_index,field_value);
@@ -1760,6 +1822,12 @@ void Server::setFieldValueCallback()
           setFieldValue(field_name_cs,field_value);
           break;
         }
+      case JsonStream::DOUBLE_TYPE:
+        {
+          double field_value = getParameterValue(constants::field_value_parameter_name);
+          setFieldValue(field_name_cs,field_value);
+          break;
+        }
       case JsonStream::BOOL_TYPE:
         {
           bool field_value = getParameterValue(constants::field_value_parameter_name);
@@ -1808,6 +1876,11 @@ void Server::setFieldElementValueCallback()
           writeFieldErrorToResponse(constants::field_not_array_type_error_data);
           break;
         }
+      case JsonStream::DOUBLE_TYPE:
+        {
+          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+          break;
+        }
       case JsonStream::BOOL_TYPE:
         {
           writeFieldErrorToResponse(constants::field_not_array_type_error_data);
@@ -1821,6 +1894,12 @@ void Server::setFieldElementValueCallback()
             case JsonStream::LONG_TYPE:
               {
                 long field_value = getParameterValue(constants::field_value_parameter_name);
+                setFieldElementValue(field_name_cs,field_element_index,field_value);
+                break;
+              }
+            case JsonStream::DOUBLE_TYPE:
+              {
+                double field_value = getParameterValue(constants::field_value_parameter_name);
                 setFieldElementValue(field_name_cs,field_element_index,field_value);
                 break;
               }
@@ -1862,6 +1941,10 @@ void Server::setAllFieldElementValuesCallback()
         {
           break;
         }
+      case JsonStream::DOUBLE_TYPE:
+        {
+          break;
+        }
       case JsonStream::BOOL_TYPE:
         {
           break;
@@ -1874,6 +1957,12 @@ void Server::setAllFieldElementValuesCallback()
             case JsonStream::LONG_TYPE:
               {
                 long field_value = getParameterValue(constants::field_value_parameter_name);
+                setAllFieldElementValues(field_name_cs,field_value);
+                break;
+              }
+            case JsonStream::DOUBLE_TYPE:
+              {
+                double field_value = getParameterValue(constants::field_value_parameter_name);
                 setAllFieldElementValues(field_name_cs,field_value);
                 break;
               }

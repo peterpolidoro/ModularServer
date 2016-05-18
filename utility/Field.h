@@ -38,6 +38,15 @@ public:
   };
   template <size_t N>
   Field(const ConstantString &name,
+        const double (&default_value)[N]) :
+    parameter_(name),
+    saved_variable_(default_value,N)
+  {
+    parameter_.setTypeDouble();
+    parameter_.setArrayLengthRange(N,N);
+  }
+  template <size_t N>
+  Field(const ConstantString &name,
         const bool (&default_value)[N]) :
     parameter_(name),
     saved_variable_(default_value,N)
@@ -48,12 +57,18 @@ public:
 
   // Parameter Methods
   void setRange(const long min, const long max);
+  void setRange(const double min, const double max);
 
   // Saved Variable Methods
   template<typename T>
   bool getDefaultValue(T &value);
   template<size_t N>
   bool getDefaultValue(long (&value)[N])
+  {
+    return saved_variable_.getDefaultValue(value);
+  };
+  template<size_t N>
+  bool getDefaultValue(double (&value)[N])
   {
     return saved_variable_.getDefaultValue(value);
   };
@@ -85,6 +100,24 @@ public:
     return true;
   };
   template<size_t N>
+  bool setValue(const double (&value)[N])
+  {
+    if (getArrayLength() != N)
+    {
+      return false;
+    }
+    bool success;
+    for (size_t i=0;i<N;++i)
+    {
+      success = setElementValue(value[i],i);
+      if (!success)
+      {
+        return false;
+      }
+    }
+    return true;
+  };
+  template<size_t N>
   bool setValue(const bool (&value)[N])
   {
     if (getArrayLength() != N)
@@ -99,6 +132,15 @@ public:
   bool getValue(T &value);
   template<size_t N>
   bool getValue(long (&value)[N])
+  {
+    if (getArrayLength() != N)
+    {
+      return false;
+    }
+    return saved_variable_.getValue(value);
+  };
+  template<size_t N>
+  bool getValue(double (&value)[N])
   {
     if (getArrayLength() != N)
     {

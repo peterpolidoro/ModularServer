@@ -29,6 +29,14 @@ namespace callbacks
 
 ModularDevice::ModularServer& modular_server = controller.getModularServer();
 
+void getDoubledCallback()
+{
+  double value;
+  modular_server.getFieldValue(constants::double_field_name,value);
+  value *= 2;
+  modular_server.writeResultToResponse(value);
+}
+
 void getBoolCallback()
 {
   bool value;

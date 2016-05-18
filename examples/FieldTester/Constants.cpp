@@ -25,6 +25,9 @@ const unsigned char serial2_rx_pin = 17;
 CONSTANT_STRING(device_name,"field_tester");
 
 // Fields
+CONSTANT_STRING(double_field_name,"double");
+const double double_default = 3.14159;
+
 CONSTANT_STRING(bool_field_name,"bool");
 const bool bool_default = false;
 
@@ -33,6 +36,11 @@ const long long_array_default[LONG_ARRAY_LENGTH] = {5,4,3,2};
 const long long_array_element_min = -3;
 const long long_array_element_max = 10;
 
+CONSTANT_STRING(double_array_field_name,"double_array");
+const double double_array_default[DOUBLE_ARRAY_LENGTH] = {-1.1,2.2,3.3};
+const double double_array_element_min = -33.333;
+const double double_array_element_max = 100.0;
+
 CONSTANT_STRING(bool_array_field_name,"bool_array");
 const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
 
@@ -40,6 +48,7 @@ const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
 CONSTANT_STRING(long_array_parameter_name,"long_array_parameter");
 
 // Methods
+CONSTANT_STRING(get_doubled_method_name,"getDoubled");
 CONSTANT_STRING(get_bool_method_name,"getBool");
 CONSTANT_STRING(get_long_array_fixed_method_name,"getLongArrayFixed");
 CONSTANT_STRING(get_long_array_variable_method_name,"getLongArrayVariable");

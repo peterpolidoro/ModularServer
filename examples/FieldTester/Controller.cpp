@@ -30,10 +30,15 @@ void Controller::setup()
   modular_server_.setMethodStorage(methods_);
 
   // Fields
+  ModularDevice::Field& double_field = modular_server_.createField(constants::double_field_name,constants::double_default);
+
   ModularDevice::Field& bool_field = modular_server_.createField(constants::bool_field_name,constants::bool_default);
 
   ModularDevice::Field& long_array_field = modular_server_.createField(constants::long_array_field_name,constants::long_array_default);
   long_array_field.setRange(constants::long_array_element_min,constants::long_array_element_max);
+
+  ModularDevice::Field& double_array_field = modular_server_.createField(constants::double_array_field_name,constants::double_array_default);
+  double_array_field.setRange(constants::double_array_element_min,constants::double_array_element_max);
 
   ModularDevice::Field& bool_array_field = modular_server_.createField(constants::bool_array_field_name,constants::bool_array_default);
 
@@ -43,6 +48,10 @@ void Controller::setup()
   long_array_parameter.setTypeArray();
 
   // Methods
+  ModularDevice::Method& get_doubled_method = modular_server_.createMethod(constants::get_doubled_method_name);
+  get_doubled_method.attachCallback(callbacks::getDoubledCallback);
+  get_doubled_method.setReturnTypeDouble();
+
   ModularDevice::Method& get_bool_method = modular_server_.createMethod(constants::get_bool_method_name);
   get_bool_method.attachCallback(callbacks::getBoolCallback);
   get_bool_method.setReturnTypeBool();
