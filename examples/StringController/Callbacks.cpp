@@ -120,48 +120,4 @@ void getStoredStringCallback()
 {
   modular_server.writeResultToResponse(controller.getStoredString());
 }
-
-void getBoolCallback()
-{
-  bool value;
-  modular_server.getFieldValue(constants::bool_field_name,value);
-  modular_server.writeResultToResponse(value);
-}
-
-void getLongArrayCallback()
-{
-  long long_array[constants::LONG_ARRAY_LENGTH];
-  modular_server.getFieldValue(constants::long_array_field_name,long_array);
-  modular_server.writeResultToResponse(long_array);
-}
-
-void setLongArrayCallback()
-{
-  // long long_array[constants::LONG_ARRAY_LENGTH];
-  // long_array[0] = 100;
-  // long_array[1] = 101;
-  // long_array[2] = 102;
-  // long_array[3] = 103;
-  // modular_server.setFieldValue(constants::long_array_field_name,long_array);
-
-  // unsigned int array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
-  // long long_array[array_length];
-  // long_array[0] = 100;
-  // long_array[1] = 101;
-  // long_array[2] = 102;
-  // long_array[3] = 103;
-  // modular_server.setFieldValue(constants::long_array_field_name,long_array,array_length);
-
-  ArduinoJson::JsonArray& long_array = modular_server.getParameterValue(constants::long_array_parameter_name);
-  modular_server.setFieldValue(constants::long_array_field_name,long_array);
-
-}
-
-void getLongArrayVariableCallback()
-{
-  unsigned int array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
-  long long_array[array_length];
-  modular_server.getFieldValue(constants::long_array_field_name,long_array,array_length);
-  modular_server.writeResultToResponse(long_array,array_length);
-}
 }

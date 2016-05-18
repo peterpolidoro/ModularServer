@@ -44,72 +44,72 @@ Field& ModularServer::createField(const ConstantString &field_name,
 }
 
 template <typename T>
-void ModularServer::setFieldValue(const ConstantString &field_name,
+bool ModularServer::setFieldValue(const ConstantString &field_name,
                                   const T &value)
 {
-  server_.setFieldValue(field_name,value);
+  return server_.setFieldValue(field_name,value);
 }
 
 template <typename T>
-void ModularServer::setFieldValue(const ConstantString &field_name,
+bool ModularServer::setFieldValue(const ConstantString &field_name,
                                   const T *value,
                                   const size_t N)
 {
-  server_.setFieldValue(field_name,value,N);
+  return server_.setFieldValue(field_name,value,N);
 }
 
 template <typename T>
-void ModularServer::setFieldElementValue(const ConstantString &field_name,
+bool ModularServer::setFieldElementValue(const ConstantString &field_name,
                                          const unsigned int element_index,
                                          const T &value)
 {
-  server_.setFieldElementValue(field_name,element_index,value);
+  return server_.setFieldElementValue(field_name,element_index,value);
 }
 
 template <typename T>
-void ModularServer::getFieldValue(const ConstantString &field_name,
+bool ModularServer::getFieldValue(const ConstantString &field_name,
                                   T &value)
 {
-  server_.getFieldValue(field_name,value);
+  return server_.getFieldValue(field_name,value);
 }
 
 template <typename T>
-void ModularServer::getFieldValue(const ConstantString &field_name,
+bool ModularServer::getFieldValue(const ConstantString &field_name,
                                   T *value,
                                   const size_t N)
 {
-  server_.getFieldValue(field_name,value,N);
+  return server_.getFieldValue(field_name,value,N);
 }
 
 template <typename T>
-void ModularServer::getFieldElementValue(const ConstantString &field_name,
+bool ModularServer::getFieldElementValue(const ConstantString &field_name,
                                          const unsigned int element_index,
                                          T &value)
 {
-  server_.getFieldElementValue(field_name,element_index,value);
+  return server_.getFieldElementValue(field_name,element_index,value);
 }
 
 template <typename T>
-void ModularServer::getFieldDefaultValue(const ConstantString &field_name,
+bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
                                          T &value)
 {
-  server_.getFieldDefaultValue(field_name,value);
+  return server_.getFieldDefaultValue(field_name,value);
 }
 
 template <typename T>
-void ModularServer::getFieldDefaultValue(const ConstantString &field_name,
+bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
                                          T *value,
                                          const size_t N)
 {
-  server_.getFieldDefaultValue(field_name,value,N);
+  return server_.getFieldDefaultValue(field_name,value,N);
 }
 
 template <typename T>
-void ModularServer::getFieldDefaultElementValue(const ConstantString &field_name,
+bool ModularServer::getFieldDefaultElementValue(const ConstantString &field_name,
                                                 const unsigned int element_index,
                                                 T &value)
 {
-  server_.getFieldDefaultElementValue(field_name,element_index,value);
+  return server_.getFieldDefaultElementValue(field_name,element_index,value);
 }
 
 template <typename K>

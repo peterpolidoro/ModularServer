@@ -51,47 +51,72 @@ public:
 
   // Saved Variable Methods
   template<typename T>
-  void getDefaultValue(T &value);
+  bool getDefaultValue(T &value);
   template<size_t N>
-  void getDefaultValue(long (&value)[N])
+  bool getDefaultValue(long (&value)[N])
   {
-    saved_variable_.getDefaultValue(value);
+    return saved_variable_.getDefaultValue(value);
   };
   template<size_t N>
-  void getDefaultValue(bool (&value)[N])
+  bool getDefaultValue(bool (&value)[N])
   {
-    saved_variable_.getDefaultValue(value);
-  };
-  template<typename T>
-  void getDefaultElementValue(T &value, const unsigned int element_index);
-  template<typename T>
-  void setValue(const T &value);
-  template<size_t N>
-  void setValue(const long (&value)[N])
-  {
-    saved_variable_.setValue(value);
-  };
-  template<size_t N>
-  void setValue(const bool (&value)[N])
-  {
-    saved_variable_.setValue(value);
+    return saved_variable_.getDefaultValue(value);
   };
   template<typename T>
-  void setElementValue(const T &value, const unsigned int element_index);
+  bool getDefaultElementValue(T &value, const unsigned int element_index);
   template<typename T>
-  void getValue(T &value);
+  bool setValue(const T &value);
   template<size_t N>
-  void getValue(long (&value)[N])
+  bool setValue(const long (&value)[N])
   {
-    saved_variable_.getValue(value);
+    if (getArrayLength() != N)
+    {
+      return false;
+    }
+    bool success;
+    for (size_t i=0;i<N;++i)
+    {
+      success = setElementValue(value[i],i);
+      if (!success)
+      {
+        return false;
+      }
+    }
+    return true;
   };
   template<size_t N>
-  void getValue(bool (&value)[N])
+  bool setValue(const bool (&value)[N])
   {
-    saved_variable_.getValue(value);
+    if (getArrayLength() != N)
+    {
+      return false;
+    }
+    return saved_variable_.setValue(value);
   };
   template<typename T>
-  void getElementValue(T &value, const unsigned int element_index);
+  bool setElementValue(const T &value, const unsigned int element_index);
+  template<typename T>
+  bool getValue(T &value);
+  template<size_t N>
+  bool getValue(long (&value)[N])
+  {
+    if (getArrayLength() != N)
+    {
+      return false;
+    }
+    return saved_variable_.getValue(value);
+  };
+  template<size_t N>
+  bool getValue(bool (&value)[N])
+  {
+    if (getArrayLength() != N)
+    {
+      return false;
+    }
+    return saved_variable_.getValue(value);
+  };
+  template<typename T>
+  bool getElementValue(T &value, const unsigned int element_index);
   void setDefaultValue();
   bool isDefaultValue();
   unsigned int getArrayLength();

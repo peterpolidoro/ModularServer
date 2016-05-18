@@ -15,20 +15,17 @@
 
 namespace callbacks
 {
-void echoCallback();
+void getBoolCallback();
 
-void lengthCallback();
+void getLongArrayFixedCallback();
 
-void startsWithCallback();
+void getLongArrayVariableCallback();
 
-void repeatCallback();
+void setLongArrayFixedCallback();
 
-void charsAtCallback();
+void setLongArrayVariableCallback();
 
-void startingCharsCallback();
+void setLongArrayParameterCallback();
 
-void setStoredStringCallback();
-
-void getStoredStringCallback();
 }
 #endif

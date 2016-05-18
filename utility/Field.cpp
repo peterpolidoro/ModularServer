@@ -40,75 +40,87 @@ void Field::setRange(const long min, const long max)
 
 // Saved Variable Methods
 template <>
-void Field::getDefaultValue<long>(long &value)
+bool Field::getDefaultValue<long>(long &value)
 {
-  saved_variable_.getDefaultValue(value);
+  return saved_variable_.getDefaultValue(value);
 }
 
 template <>
-void Field::getDefaultValue<bool>(bool &value)
+bool Field::getDefaultValue<bool>(bool &value)
 {
-  saved_variable_.getDefaultValue(value);
+  return saved_variable_.getDefaultValue(value);
 }
 
 template <>
-void Field::getDefaultElementValue<long>(long &value, const unsigned int element_index)
+bool Field::getDefaultElementValue<long>(long &value, const unsigned int element_index)
 {
-  saved_variable_.getDefaultElementValue(value,element_index);
+  return saved_variable_.getDefaultElementValue(value,element_index);
 }
 
 template <>
-void Field::getDefaultElementValue<bool>(bool &value, const unsigned int element_index)
+bool Field::getDefaultElementValue<bool>(bool &value, const unsigned int element_index)
 {
-  saved_variable_.getDefaultElementValue(value,element_index);
+  return saved_variable_.getDefaultElementValue(value,element_index);
 }
 
 template <>
-void Field::setValue<long>(const long &value)
+bool Field::setValue<long>(const long &value)
 {
-  saved_variable_.setValue(value);
+  long min = parameter_.getMin().l;
+  long max = parameter_.getMax().l;
+  if ((value < min) || (value > max))
+  {
+    return false;
+  }
+  return saved_variable_.setValue(value);
 }
 
 template <>
-void Field::setValue<bool>(const bool &value)
+bool Field::setValue<bool>(const bool &value)
 {
-  saved_variable_.setValue(value);
+  return saved_variable_.setValue(value);
 }
 
 template <>
-void Field::setElementValue<long>(const long &value, const unsigned int element_index)
+bool Field::setElementValue<long>(const long &value, const unsigned int element_index)
 {
-  saved_variable_.setElementValue(value,element_index);
+  long min = parameter_.getMin().l;
+  long max = parameter_.getMax().l;
+  if ((value < min) || (value > max))
+  {
+    return false;
+  }
+  return saved_variable_.setElementValue(value,element_index);
 }
 
 template <>
-void Field::setElementValue<bool>(const bool &value, const unsigned int element_index)
+bool Field::setElementValue<bool>(const bool &value, const unsigned int element_index)
 {
-  saved_variable_.setElementValue(value,element_index);
+  return saved_variable_.setElementValue(value,element_index);
 }
 
 template <>
-void Field::getValue<long>(long &value)
+bool Field::getValue<long>(long &value)
 {
-  saved_variable_.getValue(value);
+  return saved_variable_.getValue(value);
 }
 
 template <>
-void Field::getValue<bool>(bool &value)
+bool Field::getValue<bool>(bool &value)
 {
-  saved_variable_.getValue(value);
+  return saved_variable_.getValue(value);
 }
 
 template <>
-void Field::getElementValue<long>(long &value, const unsigned int element_index)
+bool Field::getElementValue<long>(long &value, const unsigned int element_index)
 {
-  saved_variable_.getElementValue(value,element_index);
+  return saved_variable_.getElementValue(value,element_index);
 }
 
 template <>
-void Field::getElementValue<bool>(bool &value, const unsigned int element_index)
+bool Field::getElementValue<bool>(bool &value, const unsigned int element_index)
 {
-  saved_variable_.getElementValue(value,element_index);
+  return saved_variable_.getElementValue(value,element_index);
 }
 
 void Field::setDefaultValue()

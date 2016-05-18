@@ -69,31 +69,39 @@ Field& Server::createField(const ConstantString &field_name,
 }
 
 template <typename T>
-void Server::setFieldValue(const ConstantString &field_name,
+bool Server::setFieldValue(const ConstantString &field_name,
                            const T &value)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.setValue(value);
+    return field.setValue(value);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T, size_t N>
-void Server::setFieldValue(const ConstantString &field_name,
+bool Server::setFieldValue(const ConstantString &field_name,
                            const T (&value)[N])
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.setValue(value);
+    return field.setValue(value);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T>
-void Server::setFieldValue(const ConstantString &field_name,
+bool Server::setFieldValue(const ConstantString &field_name,
                            const T *value,
                            const size_t N)
 {
@@ -101,20 +109,34 @@ void Server::setFieldValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
+    bool success;
     unsigned int array_length = field.getArrayLength();
     if (array_length >= N)
     {
       for (unsigned int i=0;i<N;++i)
       {
         T v = value[i];
-        setFieldElementValue(field_name,i,v);
+        success = setFieldElementValue(field_name,i,v);
+        if (!success)
+        {
+          return false;
+        }
       }
     }
+    else
+    {
+      return false;
+    }
   }
+  else
+  {
+    return false;
+  }
+  return true;
 }
 
 template <typename T>
-void Server::setFieldElementValue(const ConstantString &field_name,
+bool Server::setFieldElementValue(const ConstantString &field_name,
                                   const unsigned int element_index,
                                   const T &value)
 {
@@ -122,52 +144,74 @@ void Server::setFieldElementValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.setElementValue(value,element_index);
+    return field.setElementValue(value,element_index);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T>
-void Server::setAllFieldElementValues(const ConstantString &field_name,
+bool Server::setAllFieldElementValues(const ConstantString &field_name,
                                       const T &value)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
+    bool success;
     unsigned int array_length = field.getArrayLength();
     for (unsigned int i=0;i<array_length;++i)
     {
-      setFieldElementValue(field_name,i,value);
+      success = setFieldElementValue(field_name,i,value);
+      if (!success)
+      {
+        return false;
+      }
     }
   }
+  else
+  {
+    return false;
+  }
+  return true;
 }
 
 template <typename T>
-void Server::getFieldValue(const ConstantString &field_name,
+bool Server::getFieldValue(const ConstantString &field_name,
                            T &value)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.getValue(value);
+    return field.getValue(value);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T, size_t N>
-void Server::getFieldValue(const ConstantString &field_name,
+bool Server::getFieldValue(const ConstantString &field_name,
                            T (&value)[N])
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.getValue(value);
+    return field.getValue(value);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T>
-void Server::getFieldValue(const ConstantString &field_name,
+bool Server::getFieldValue(const ConstantString &field_name,
                            T *value,
                            const size_t N)
 {
@@ -178,18 +222,32 @@ void Server::getFieldValue(const ConstantString &field_name,
     unsigned int array_length = field.getArrayLength();
     if (array_length <= N)
     {
+      bool success;
       for (unsigned int i=0;i<array_length;++i)
       {
         T v;
-        getFieldElementValue(field_name,i,v);
+        success = getFieldElementValue(field_name,i,v);
+        if (!success)
+        {
+          return false;
+        }
         value[i] = v;
       }
     }
+    else
+    {
+      return false;
+    }
   }
+  else
+  {
+    return false;
+  }
+  return true;
 }
 
 template <typename T>
-void Server::getFieldElementValue(const ConstantString &field_name,
+bool Server::getFieldElementValue(const ConstantString &field_name,
                                   const unsigned int element_index,
                                   T &value)
 {
@@ -197,36 +255,48 @@ void Server::getFieldElementValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.getElementValue(value,element_index);
+    return field.getElementValue(value,element_index);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T>
-void Server::getFieldDefaultValue(const ConstantString &field_name,
+bool Server::getFieldDefaultValue(const ConstantString &field_name,
                                   T &value)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.getDefaultValue(value);
+    return field.getDefaultValue(value);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T, size_t N>
-void Server::getFieldDefaultValue(const ConstantString &field_name,
+bool Server::getFieldDefaultValue(const ConstantString &field_name,
                                   T (&value)[N])
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.getDefaultValue(value);
+    return field.getDefaultValue(value);
+  }
+  else
+  {
+    return false;
   }
 }
 
 template <typename T>
-void Server::getFieldDefaultValue(const ConstantString &field_name,
+bool Server::getFieldDefaultValue(const ConstantString &field_name,
                                   T *value,
                                   const size_t N)
 {
@@ -237,18 +307,32 @@ void Server::getFieldDefaultValue(const ConstantString &field_name,
     unsigned int array_length = field.getArrayLength();
     if (array_length <= N)
     {
+      bool success;
       for (unsigned int i=0;i<array_length;++i)
       {
         T v;
-        getFieldDefaultElementValue(field_name,i,v);
+        success = getFieldDefaultElementValue(field_name,i,v);
+        if (!success)
+        {
+          return false;
+        }
         value[i] = v;
       }
     }
+    else
+    {
+      return false;
+    }
   }
+  else
+  {
+    return false;
+  }
+  return true;
 }
 
 template <typename T>
-void Server::getFieldDefaultElementValue(const ConstantString &field_name,
+bool Server::getFieldDefaultElementValue(const ConstantString &field_name,
                                          const unsigned int element_index,
                                          T &value)
 {
@@ -256,7 +340,11 @@ void Server::getFieldDefaultElementValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    field.getDefaultElementValue(value,element_index);
+    return field.getDefaultElementValue(value,element_index);
+  }
+  else
+  {
+    return false;
   }
 }
 

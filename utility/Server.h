@@ -62,50 +62,50 @@ public:
   Field& createField(const ConstantString &field_name,
                      const T (&default_value)[N]);
   template <typename T>
-  void setFieldValue(const ConstantString &field_name,
+  bool setFieldValue(const ConstantString &field_name,
                      const T &value);
   template <typename T, size_t N>
-  void setFieldValue(const ConstantString &field_name,
+  bool setFieldValue(const ConstantString &field_name,
                      const T (&value)[N]);
   template <typename T>
-  void setFieldValue(const ConstantString &field_name,
+  bool setFieldValue(const ConstantString &field_name,
                      const T *value,
                      const size_t N);
-  void setFieldValue(const ConstantString &field_name,
+  bool setFieldValue(const ConstantString &field_name,
                      ArduinoJson::JsonArray &value);
   template <typename T>
-  void setFieldElementValue(const ConstantString &field_name,
+  bool setFieldElementValue(const ConstantString &field_name,
                             const unsigned int element_index,
                             const T &value);
   template <typename T>
-  void setAllFieldElementValues(const ConstantString &field_name,
+  bool setAllFieldElementValues(const ConstantString &field_name,
                                 const T &value);
   template <typename T>
-  void getFieldValue(const ConstantString &field_name,
+  bool getFieldValue(const ConstantString &field_name,
                      T &value);
   template <typename T, size_t N>
-  void getFieldValue(const ConstantString &field_name,
+  bool getFieldValue(const ConstantString &field_name,
                      T (&value)[N]);
   template <typename T>
-  void getFieldValue(const ConstantString &field_name,
+  bool getFieldValue(const ConstantString &field_name,
                      T *value,
                      const size_t N);
   template <typename T>
-  void getFieldElementValue(const ConstantString &field_name,
+  bool getFieldElementValue(const ConstantString &field_name,
                             const unsigned int element_index,
                             T &value);
   template <typename T>
-  void getFieldDefaultValue(const ConstantString &field_name,
+  bool getFieldDefaultValue(const ConstantString &field_name,
                             T &value);
   template <typename T, size_t N>
-  void getFieldDefaultValue(const ConstantString &field_name,
+  bool getFieldDefaultValue(const ConstantString &field_name,
                             T (&value)[N]);
   template <typename T>
-  void getFieldDefaultValue(const ConstantString &field_name,
+  bool getFieldDefaultValue(const ConstantString &field_name,
                             T *value,
                             const size_t N);
   template <typename T>
-  void getFieldDefaultElementValue(const ConstantString &field_name,
+  bool getFieldDefaultElementValue(const ConstantString &field_name,
                                    const unsigned int element_index,
                                    T &value);
   unsigned int getFieldArrayLength(const ConstantString &field_name);

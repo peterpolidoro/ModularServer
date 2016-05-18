@@ -236,7 +236,7 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &paramet
   return (*request_json_array_ptr_)[parameter_index+1];
 }
 
-void Server::setFieldValue(const ConstantString &field_name,
+bool Server::setFieldValue(const ConstantString &field_name,
                            ArduinoJson::JsonArray &value)
 {
   int field_index;
@@ -246,8 +246,9 @@ void Server::setFieldValue(const ConstantString &field_name,
     unsigned int array_length = field.getArrayLength();
     JsonStream::JsonTypes field_type = field.getParameter().getType();
     unsigned int N = value.size();
-    if ((field_type == JsonStream::ARRAY_TYPE) && (array_length >= N))
+    if ((field_type == JsonStream::ARRAY_TYPE) && (array_length == N))
     {
+      bool success;
       JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
       switch (array_element_type)
       {
@@ -256,7 +257,11 @@ void Server::setFieldValue(const ConstantString &field_name,
             for (unsigned int i=0;i<N;++i)
             {
               long v = value[i];
-              setFieldElementValue(field_name,i,v);
+              success = setFieldElementValue(field_name,i,v);
+              if (!success)
+              {
+                return false;
+              }
             }
             break;
           }
@@ -265,13 +270,26 @@ void Server::setFieldValue(const ConstantString &field_name,
             for (unsigned int i=0;i<N;++i)
             {
               bool v = value[i];
-              setFieldElementValue(field_name,i,v);
+              success = setFieldElementValue(field_name,i,v);
+              if (!success)
+              {
+                return false;
+              }
             }
             break;
           }
       }
     }
+    else
+    {
+      return false;
+    }
   }
+  else
+  {
+    return false;
+  }
+  return true;
 }
 
 unsigned int Server::getFieldArrayLength(const ConstantString &field_name)
@@ -968,68 +986,12 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
                it!=json_array.end();
                ++it)
           {
-            checkArrayParameterElement(parameter,*it);
+            bool parameter_ok = checkArrayParameterElement(parameter,*it);
+            if (!parameter_ok)
+            {
+              break;
+            }
           }
-          // JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
-          // switch (array_element_type)
-          // {
-          //   case JsonStream::LONG_TYPE:
-          //     {
-          //       if (parameter.rangeIsSet())
-          //       {
-          //         long value;
-          //         long min = parameter.getMin().l;
-          //         long max = parameter.getMax().l;
-          //         for (ArduinoJson::JsonArray::iterator it=json_array.begin();
-          //              it!=json_array.end();
-          //              ++it)
-          //         {
-          //           value = (long)*it;
-          //           if ((value < min) || (value > max))
-          //           {
-          //             out_of_range = true;
-          //             dtostrf(min,0,0,min_str);
-          //             dtostrf(max,0,0,max_str);
-          //             break;
-          //           }
-          //         }
-          //       }
-          //       break;
-          //     }
-          //   case JsonStream::DOUBLE_TYPE:
-          //     {
-          //       if (parameter.rangeIsSet())
-          //       {
-          //         double value;
-          //         double min = parameter.getMin().d;
-          //         double max = parameter.getMax().d;
-          //         for (ArduinoJson::JsonArray::iterator it=json_array.begin();
-          //              it!=json_array.end();
-          //              ++it)
-          //         {
-          //           value = (double)*it;
-          //           if ((value < min) || (value > max))
-          //           {
-          //             out_of_range = true;
-          //             dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
-          //             dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
-          //             break;
-          //           }
-          //         }
-          //       }
-          //       break;
-          //     }
-          //   case JsonStream::BOOL_TYPE:
-          //     break;
-          //   case JsonStream::NULL_TYPE:
-          //     break;
-          //   case JsonStream::STRING_TYPE:
-          //     break;
-          //   case JsonStream::OBJECT_TYPE:
-          //     break;
-          //   case JsonStream::ARRAY_TYPE:
-          //     break;
-          // }
         }
         break;
       }
