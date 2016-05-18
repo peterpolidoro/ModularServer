@@ -12,9 +12,9 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=5};
+enum{FIELD_COUNT_MAX=6};
 enum{PARAMETER_COUNT_MAX=1};
-enum{METHOD_COUNT_MAX=7};
+enum{METHOD_COUNT_MAX=8};
 
 extern const unsigned int baudrate;
 
@@ -30,7 +30,7 @@ extern const unsigned char serial2_rx_pin;
 extern ConstantString device_name;
 
 // Fields
-// Field values must be long, double, bool, long[], double[], bool[]
+// Field values must be long, double, bool, long[], double[], bool[], char[]
 extern ConstantString double_field_name;
 extern const double double_default;
 
@@ -53,6 +53,10 @@ extern ConstantString bool_array_field_name;
 enum{BOOL_ARRAY_LENGTH=2};
 extern const bool bool_array_default[BOOL_ARRAY_LENGTH];
 
+extern ConstantString char_array_field_name;
+enum{CHAR_ARRAY_LENGTH_MAX=10};
+extern const char char_array_default[CHAR_ARRAY_LENGTH_MAX];
+
 // Parameters
 extern ConstantString long_array_parameter_name;
 
@@ -64,6 +68,7 @@ extern ConstantString get_long_array_variable_method_name;
 extern ConstantString set_long_array_fixed_method_name;
 extern ConstantString set_long_array_variable_method_name;
 extern ConstantString set_long_array_parameter_method_name;
+extern ConstantString get_char_array_method_name;
 
 // Errors
 extern ConstantString index_error;

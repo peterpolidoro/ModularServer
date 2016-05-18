@@ -246,7 +246,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
     unsigned int array_length = field.getArrayLength();
     JsonStream::JsonTypes field_type = field.getParameter().getType();
     unsigned int N = value.size();
-    if ((field_type == JsonStream::ARRAY_TYPE) && (array_length == N))
+    if ((field_type == JsonStream::ARRAY_TYPE) && (array_length >= N))
     {
       bool success;
       JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
@@ -311,7 +311,27 @@ unsigned int Server::getFieldArrayLength(const ConstantString &field_name)
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    return field.getArrayLength();
+    JsonStream::JsonTypes field_element_type = field.getParameter().getArrayElementType();
+    if (field_element_type != JsonStream::STRING_TYPE)
+    {
+      return field.getArrayLength();
+    }
+    else
+    {
+      unsigned int max_array_length = field.getArrayLength();
+      unsigned int array_length = 1;
+      char value;
+      while (array_length < max_array_length)
+      {
+        field.getElementValue(value,array_length-1);
+        if (value == 0)
+        {
+          return array_length;
+        }
+        ++array_length;
+      }
+      return max_array_length;
+    }
   }
   else
   {

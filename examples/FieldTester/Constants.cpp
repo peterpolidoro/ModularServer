@@ -44,6 +44,9 @@ const double double_array_element_max = 100.0;
 CONSTANT_STRING(bool_array_field_name,"bool_array");
 const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
 
+CONSTANT_STRING(char_array_field_name,"char_array");
+const char char_array_default[CHAR_ARRAY_LENGTH_MAX] = "abcdef";
+
 // Parameters
 CONSTANT_STRING(long_array_parameter_name,"long_array_parameter");
 
@@ -55,6 +58,7 @@ CONSTANT_STRING(get_long_array_variable_method_name,"getLongArrayVariable");
 CONSTANT_STRING(set_long_array_fixed_method_name,"setLongArrayFixed");
 CONSTANT_STRING(set_long_array_variable_method_name,"setLongArrayVariable");
 CONSTANT_STRING(set_long_array_parameter_method_name,"setLongArrayParameter");
+CONSTANT_STRING(get_char_array_method_name,"getCharArray");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

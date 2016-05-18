@@ -54,10 +54,22 @@ public:
     parameter_.setTypeBool();
     parameter_.setArrayLengthRange(N,N);
   }
+  template <size_t N>
+  Field(const ConstantString &name,
+        const char (&default_value)[N]) :
+    parameter_(name),
+    saved_variable_(default_value,N)
+  {
+    parameter_.setTypeString();
+    parameter_.setArrayLengthRange(1,N);
+  }
 
-  // Parameter Methods
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
+
+private:
+  Parameter parameter_;
+  SavedVariable saved_variable_;
 
   // Saved Variable Methods
   template<typename T>
@@ -162,9 +174,6 @@ public:
   void setDefaultValue();
   bool isDefaultValue();
   unsigned int getArrayLength();
-private:
-  Parameter parameter_;
-  SavedVariable saved_variable_;
   Parameter& getParameter();
   friend class Server;
 };

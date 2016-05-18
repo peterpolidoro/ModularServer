@@ -41,7 +41,6 @@ Field::Field<bool>(const ConstantString &name,
   parameter_.setTypeBool();
 }
 
-// Parameter Methods
 void Field::setRange(const long min, const long max)
 {
   parameter_.setRange(min,max);
@@ -52,6 +51,7 @@ void Field::setRange(const double min, const double max)
   parameter_.setRange(min,max);
 }
 
+// Private
 // Saved Variable Methods
 template <>
 bool Field::getDefaultValue<long>(long &value)
@@ -85,6 +85,12 @@ bool Field::getDefaultElementValue<double>(double &value, const unsigned int ele
 
 template <>
 bool Field::getDefaultElementValue<bool>(bool &value, const unsigned int element_index)
+{
+  return saved_variable_.getDefaultElementValue(value,element_index);
+}
+
+template <>
+bool Field::getDefaultElementValue<char>(char &value, const unsigned int element_index)
 {
   return saved_variable_.getDefaultElementValue(value,element_index);
 }
@@ -162,6 +168,12 @@ bool Field::setElementValue<bool>(const bool &value, const unsigned int element_
 }
 
 template <>
+bool Field::setElementValue<char>(const char &value, const unsigned int element_index)
+{
+  return saved_variable_.setElementValue(value,element_index);
+}
+
+template <>
 bool Field::getValue<long>(long &value)
 {
   return saved_variable_.getValue(value);
@@ -197,6 +209,12 @@ bool Field::getElementValue<bool>(bool &value, const unsigned int element_index)
   return saved_variable_.getElementValue(value,element_index);
 }
 
+template <>
+bool Field::getElementValue<char>(char &value, const unsigned int element_index)
+{
+  return saved_variable_.getElementValue(value,element_index);
+}
+
 void Field::setDefaultValue()
 {
   saved_variable_.setDefaultValue();
@@ -212,7 +230,6 @@ unsigned int Field::getArrayLength()
   return saved_variable_.getArrayLength();
 }
 
-// Private
 Parameter& Field::getParameter()
 {
   return parameter_;

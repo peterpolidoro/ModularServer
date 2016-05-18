@@ -89,4 +89,12 @@ void setLongArrayParameterCallback()
   modular_server.writeResultToResponse(success);
 }
 
+void getCharArrayCallback()
+{
+  unsigned int array_length = modular_server.getFieldArrayLength(constants::char_array_field_name);
+  char char_array[array_length];
+  modular_server.getFieldValue(constants::char_array_field_name,char_array,array_length);
+  modular_server.writeResultToResponse(char_array,array_length);
+}
+
 }
