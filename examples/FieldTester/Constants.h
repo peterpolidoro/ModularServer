@@ -12,7 +12,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=2};
+enum{FIELD_COUNT_MAX=3};
 enum{PARAMETER_COUNT_MAX=1};
 enum{METHOD_COUNT_MAX=6};
 
@@ -39,6 +39,10 @@ enum{LONG_ARRAY_LENGTH=4};
 extern const long long_array_default[LONG_ARRAY_LENGTH];
 extern const long long_array_element_min;
 extern const long long_array_element_max;
+
+extern ConstantString bool_array_field_name;
+enum{BOOL_ARRAY_LENGTH=2};
+extern const bool bool_array_default[BOOL_ARRAY_LENGTH];
 
 // Parameters
 extern ConstantString long_array_parameter_name;

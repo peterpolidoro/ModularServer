@@ -33,6 +33,9 @@ const long long_array_default[LONG_ARRAY_LENGTH] = {5,4,3,2};
 const long long_array_element_min = -3;
 const long long_array_element_max = 10;
 
+CONSTANT_STRING(bool_array_field_name,"bool_array");
+const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
+
 // Parameters
 CONSTANT_STRING(long_array_parameter_name,"long_array_parameter");
 

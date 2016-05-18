@@ -35,6 +35,8 @@ void Controller::setup()
   ModularDevice::Field& long_array_field = modular_server_.createField(constants::long_array_field_name,constants::long_array_default);
   long_array_field.setRange(constants::long_array_element_min,constants::long_array_element_max);
 
+  ModularDevice::Field& bool_array_field = modular_server_.createField(constants::bool_array_field_name,constants::bool_array_default);
+
   // Parameters
   ModularDevice::Parameter& long_array_parameter = modular_server_.createParameter(constants::long_array_parameter_name);
   long_array_parameter.setTypeLong();
