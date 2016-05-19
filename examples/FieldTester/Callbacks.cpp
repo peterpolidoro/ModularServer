@@ -73,12 +73,11 @@ void setLongArrayFixedCallback()
 void setLongArrayVariableCallback()
 {
   size_t array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
-  long long_array[array_length];
+  long long_array[array_length-1];
   long_array[0] = -1;
   long_array[1] = -2;
   long_array[2] = 9;
-  long_array[3] = 8;
-  bool success = modular_server.setFieldValue(constants::long_array_field_name,long_array,array_length);
+  bool success = modular_server.setFieldValue(constants::long_array_field_name,long_array,array_length-1);
   modular_server.writeResultToResponse(success);
 }
 
@@ -94,7 +93,7 @@ void getCharArrayCallback()
   size_t array_length = modular_server.getFieldArrayLength(constants::char_array_field_name);
   char char_array[array_length];
   modular_server.getFieldValue(constants::char_array_field_name,char_array,array_length);
-  modular_server.writeResultToResponse(char_array,array_length);
+  modular_server.writeResultToResponse(char_array);
 }
 
 }

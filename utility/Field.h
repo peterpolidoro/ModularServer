@@ -34,7 +34,7 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeLong();
-    parameter_.setArrayLengthRange(N,N);
+    parameter_.setArrayLengthRange(1,N);
   };
   template <size_t N>
   Field(const ConstantString &name,
@@ -43,7 +43,7 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeDouble();
-    parameter_.setArrayLengthRange(N,N);
+    parameter_.setArrayLengthRange(1,N);
   }
   template <size_t N>
   Field(const ConstantString &name,
@@ -52,7 +52,7 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeBool();
-    parameter_.setArrayLengthRange(N,N);
+    parameter_.setArrayLengthRange(1,N);
   }
   template <size_t N>
   Field(const ConstantString &name,

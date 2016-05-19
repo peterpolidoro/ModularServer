@@ -111,21 +111,15 @@ bool Server::setFieldValue(const ConstantString &field_name,
   {
     bool success;
     size_t array_length = field.getArrayLength();
-    if (array_length >= N)
+    size_t array_length_min = min(array_length,N);
+    for (size_t i=0;i<array_length_min;++i)
     {
-      for (size_t i=0;i<N;++i)
+      T v = value[i];
+      success = setFieldElementValue(field_name,i,v);
+      if (!success)
       {
-        T v = value[i];
-        success = setFieldElementValue(field_name,i,v);
-        if (!success)
-        {
-          return false;
-        }
+        return false;
       }
-    }
-    else
-    {
-      return false;
     }
   }
   else
@@ -220,23 +214,17 @@ bool Server::getFieldValue(const ConstantString &field_name,
   if (field_index >= 0)
   {
     size_t array_length = field.getArrayLength();
-    if (array_length <= N)
+    size_t array_length_min = min(array_length,N);
+    bool success;
+    for (size_t i=0;i<array_length_min;++i)
     {
-      bool success;
-      for (size_t i=0;i<array_length;++i)
+      T v;
+      success = getFieldElementValue(field_name,i,v);
+      if (!success)
       {
-        T v;
-        success = getFieldElementValue(field_name,i,v);
-        if (!success)
-        {
-          return false;
-        }
-        value[i] = v;
+        return false;
       }
-    }
-    else
-    {
-      return false;
+      value[i] = v;
     }
   }
   else
@@ -305,23 +293,17 @@ bool Server::getFieldDefaultValue(const ConstantString &field_name,
   if (field_index >= 0)
   {
     size_t array_length = field.getArrayLength();
-    if (array_length <= N)
+    size_t array_length_min = min(array_length,N);
+    bool success;
+    for (size_t i=0;i<array_length_min;++i)
     {
-      bool success;
-      for (size_t i=0;i<array_length;++i)
+      T v;
+      success = getFieldDefaultElementValue(field_name,i,v);
+      if (!success)
       {
-        T v;
-        success = getFieldDefaultElementValue(field_name,i,v);
-        if (!success)
-        {
-          return false;
-        }
-        value[i] = v;
+        return false;
       }
-    }
-    else
-    {
-      return false;
+      value[i] = v;
     }
   }
   else

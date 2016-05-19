@@ -245,16 +245,17 @@ bool Server::setFieldValue(const ConstantString &field_name,
   {
     size_t array_length = field.getArrayLength();
     JsonStream::JsonTypes field_type = field.getParameter().getType();
-    size_t N = value.size();
-    if ((field_type == JsonStream::ARRAY_TYPE) && (array_length >= N))
+    if (field_type == JsonStream::ARRAY_TYPE)
     {
+      size_t N = value.size();
+      size_t array_length_min = min(array_length,N);
       bool success;
       JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
       switch (array_element_type)
       {
         case JsonStream::LONG_TYPE:
           {
-            for (size_t i=0;i<N;++i)
+            for (size_t i=0;i<array_length_min;++i)
             {
               long v = value[i];
               success = setFieldElementValue(field_name,i,v);
@@ -267,7 +268,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
           }
         case JsonStream::DOUBLE_TYPE:
           {
-            for (size_t i=0;i<N;++i)
+            for (size_t i=0;i<array_length_min;++i)
             {
               double v = value[i];
               success = setFieldElementValue(field_name,i,v);
@@ -280,7 +281,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
           }
         case JsonStream::BOOL_TYPE:
           {
-            for (size_t i=0;i<N;++i)
+            for (size_t i=0;i<array_length_min;++i)
             {
               bool v = value[i];
               success = setFieldElementValue(field_name,i,v);
