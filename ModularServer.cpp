@@ -64,7 +64,7 @@ ArduinoJson::JsonVariant ModularServer::getParameterValue(const ConstantString &
   return server_.getParameterValue(parameter_name);
 }
 
-unsigned int ModularServer::getFieldArrayLength(const ConstantString &field_name)
+size_t ModularServer::getFieldArrayLength(const ConstantString &field_name)
 {
   return server_.getFieldArrayLength(field_name);
 }

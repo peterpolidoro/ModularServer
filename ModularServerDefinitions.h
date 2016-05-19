@@ -60,7 +60,7 @@ bool ModularServer::setFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool ModularServer::setFieldElementValue(const ConstantString &field_name,
-                                         const unsigned int element_index,
+                                         const size_t element_index,
                                          const T &value)
 {
   return server_.setFieldElementValue(field_name,element_index,value);
@@ -83,7 +83,7 @@ bool ModularServer::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool ModularServer::getFieldElementValue(const ConstantString &field_name,
-                                         const unsigned int element_index,
+                                         const size_t element_index,
                                          T &value)
 {
   return server_.getFieldElementValue(field_name,element_index,value);
@@ -106,7 +106,7 @@ bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
 
 template <typename T>
 bool ModularServer::getFieldDefaultElementValue(const ConstantString &field_name,
-                                                const unsigned int element_index,
+                                                const size_t element_index,
                                                 T &value)
 {
   return server_.getFieldDefaultElementValue(field_name,element_index,value);

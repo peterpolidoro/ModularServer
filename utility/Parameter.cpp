@@ -135,8 +135,8 @@ void Parameter::removeRange()
   range_is_set_ = false;
 }
 
-void Parameter::setArrayLengthRange(const unsigned char array_length_min,
-                                    const unsigned char array_length_max)
+void Parameter::setArrayLengthRange(const size_t array_length_min,
+                                    const size_t array_length_max)
 {
   setTypeArray();
   array_length_min_ = array_length_min;
@@ -196,12 +196,12 @@ constants::NumberType Parameter::getMax()
   return max_;
 }
 
-unsigned char Parameter::getArrayLengthMin()
+size_t Parameter::getArrayLengthMin()
 {
   return array_length_min_;
 }
 
-unsigned char Parameter::getArrayLengthMax()
+size_t Parameter::getArrayLengthMax()
 {
   return array_length_max_;
 }

@@ -90,7 +90,7 @@ private:
     return saved_variable_.getDefaultValue(value);
   };
   template<typename T>
-  bool getDefaultElementValue(T &value, const unsigned int element_index);
+  bool getDefaultElementValue(T &value, const size_t element_index);
   template<typename T>
   bool setValue(const T &value);
   template<size_t N>
@@ -139,7 +139,7 @@ private:
     return saved_variable_.setValue(value);
   };
   template<typename T>
-  bool setElementValue(const T &value, const unsigned int element_index);
+  bool setElementValue(const T &value, const size_t element_index);
   template<typename T>
   bool getValue(T &value);
   template<size_t N>
@@ -170,10 +170,10 @@ private:
     return saved_variable_.getValue(value);
   };
   template<typename T>
-  bool getElementValue(T &value, const unsigned int element_index);
+  bool getElementValue(T &value, const size_t element_index);
   void setDefaultValue();
   bool isDefaultValue();
-  unsigned int getArrayLength();
+  size_t getArrayLength();
   Parameter& getParameter();
   friend class Server;
 };

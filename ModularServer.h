@@ -51,7 +51,7 @@ public:
                      const size_t N);
   template <typename T>
   bool setFieldElementValue(const ConstantString &field_name,
-                            const unsigned int element_index,
+                            const size_t element_index,
                             const T &value);
   template <typename T>
   bool getFieldValue(const ConstantString &field_name,
@@ -62,7 +62,7 @@ public:
                      const size_t N);
   template <typename T>
   bool getFieldElementValue(const ConstantString &field_name,
-                            const unsigned int element_index,
+                            const size_t element_index,
                             T &value);
   template <typename T>
   bool getFieldDefaultValue(const ConstantString &field_name,
@@ -73,9 +73,9 @@ public:
                             const size_t N);
   template <typename T>
   bool getFieldDefaultElementValue(const ConstantString &field_name,
-                                   const unsigned int element_index,
+                                   const size_t element_index,
                                    T &value);
-  unsigned int getFieldArrayLength(const ConstantString &field_name);
+  size_t getFieldArrayLength(const ConstantString &field_name);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>

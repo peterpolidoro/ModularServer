@@ -68,7 +68,7 @@ const int internal_error_error_code = -32603;
 const int server_error_error_code = -32000;
 
 // Saved Variables
-const unsigned char eeprom_initialized_default_value = 123;
+const size_t eeprom_initialized_default_value = 123;
 
 // Constant Strings
 CONSTANT_STRING(empty_constant_string,"");

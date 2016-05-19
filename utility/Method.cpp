@@ -79,7 +79,7 @@ void Method::callback()
 int Method::findParameterIndex(const ConstantString &parameter_name)
 {
   int parameter_index = -1;
-  for (unsigned int i=0; i<parameter_ptrs_.size(); ++i)
+  for (size_t i=0; i<parameter_ptrs_.size(); ++i)
   {
     if (parameter_ptrs_[i]->compareName(parameter_name))
     {

@@ -17,7 +17,7 @@ Field::Field()
 template <>
 Field::Field<long>(const ConstantString &name,
                    const long &default_value) :
-  parameter_(name),
+parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeLong();
@@ -26,7 +26,7 @@ Field::Field<long>(const ConstantString &name,
 template <>
 Field::Field<double>(const ConstantString &name,
                      const double &default_value) :
-  parameter_(name),
+parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeDouble();
@@ -35,7 +35,7 @@ Field::Field<double>(const ConstantString &name,
 template <>
 Field::Field<bool>(const ConstantString &name,
                    const bool &default_value) :
-  parameter_(name),
+parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeBool();
@@ -72,25 +72,25 @@ bool Field::getDefaultValue<bool>(bool &value)
 }
 
 template <>
-bool Field::getDefaultElementValue<long>(long &value, const unsigned int element_index)
+bool Field::getDefaultElementValue<long>(long &value, const size_t element_index)
 {
   return saved_variable_.getDefaultElementValue(value,element_index);
 }
 
 template <>
-bool Field::getDefaultElementValue<double>(double &value, const unsigned int element_index)
+bool Field::getDefaultElementValue<double>(double &value, const size_t element_index)
 {
   return saved_variable_.getDefaultElementValue(value,element_index);
 }
 
 template <>
-bool Field::getDefaultElementValue<bool>(bool &value, const unsigned int element_index)
+bool Field::getDefaultElementValue<bool>(bool &value, const size_t element_index)
 {
   return saved_variable_.getDefaultElementValue(value,element_index);
 }
 
 template <>
-bool Field::getDefaultElementValue<char>(char &value, const unsigned int element_index)
+bool Field::getDefaultElementValue<char>(char &value, const size_t element_index)
 {
   return saved_variable_.getDefaultElementValue(value,element_index);
 }
@@ -132,7 +132,7 @@ bool Field::setValue<bool>(const bool &value)
 }
 
 template <>
-bool Field::setElementValue<long>(const long &value, const unsigned int element_index)
+bool Field::setElementValue<long>(const long &value, const size_t element_index)
 {
   if (parameter_.rangeIsSet())
   {
@@ -147,7 +147,7 @@ bool Field::setElementValue<long>(const long &value, const unsigned int element_
 }
 
 template <>
-bool Field::setElementValue<double>(const double &value, const unsigned int element_index)
+bool Field::setElementValue<double>(const double &value, const size_t element_index)
 {
   if (parameter_.rangeIsSet())
   {
@@ -162,13 +162,13 @@ bool Field::setElementValue<double>(const double &value, const unsigned int elem
 }
 
 template <>
-bool Field::setElementValue<bool>(const bool &value, const unsigned int element_index)
+bool Field::setElementValue<bool>(const bool &value, const size_t element_index)
 {
   return saved_variable_.setElementValue(value,element_index);
 }
 
 template <>
-bool Field::setElementValue<char>(const char &value, const unsigned int element_index)
+bool Field::setElementValue<char>(const char &value, const size_t element_index)
 {
   return saved_variable_.setElementValue(value,element_index);
 }
@@ -192,25 +192,25 @@ bool Field::getValue<bool>(bool &value)
 }
 
 template <>
-bool Field::getElementValue<long>(long &value, const unsigned int element_index)
+bool Field::getElementValue<long>(long &value, const size_t element_index)
 {
   return saved_variable_.getElementValue(value,element_index);
 }
 
 template <>
-bool Field::getElementValue<double>(double &value, const unsigned int element_index)
+bool Field::getElementValue<double>(double &value, const size_t element_index)
 {
   return saved_variable_.getElementValue(value,element_index);
 }
 
 template <>
-bool Field::getElementValue<bool>(bool &value, const unsigned int element_index)
+bool Field::getElementValue<bool>(bool &value, const size_t element_index)
 {
   return saved_variable_.getElementValue(value,element_index);
 }
 
 template <>
-bool Field::getElementValue<char>(char &value, const unsigned int element_index)
+bool Field::getElementValue<char>(char &value, const size_t element_index)
 {
   return saved_variable_.getElementValue(value,element_index);
 }
@@ -225,7 +225,7 @@ bool Field::isDefaultValue()
   return saved_variable_.isDefaultValue();
 }
 
-unsigned int Field::getArrayLength()
+size_t Field::getArrayLength()
 {
   return saved_variable_.getArrayLength();
 }

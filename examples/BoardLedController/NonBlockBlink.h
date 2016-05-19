@@ -31,7 +31,7 @@ private:
   int led_pin_;
   int led_state_;
   bool enabled_;
-  unsigned int interval_;
+  size_t interval_;
   int counter_;
   unsigned long current_time_;
   unsigned long previous_time_;

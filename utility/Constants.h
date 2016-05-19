@@ -97,7 +97,7 @@ extern const int internal_error_error_code;
 extern const int server_error_error_code;
 
 // Saved Variables
-extern const unsigned char eeprom_initialized_default_value;
+extern const size_t eeprom_initialized_default_value;
 
 // Constant Strings
 extern ConstantString empty_constant_string;

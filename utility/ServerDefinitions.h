@@ -110,10 +110,10 @@ bool Server::setFieldValue(const ConstantString &field_name,
   if (field_index >= 0)
   {
     bool success;
-    unsigned int array_length = field.getArrayLength();
+    size_t array_length = field.getArrayLength();
     if (array_length >= N)
     {
-      for (unsigned int i=0;i<N;++i)
+      for (size_t i=0;i<N;++i)
       {
         T v = value[i];
         success = setFieldElementValue(field_name,i,v);
@@ -137,7 +137,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool Server::setFieldElementValue(const ConstantString &field_name,
-                                  const unsigned int element_index,
+                                  const size_t element_index,
                                   const T &value)
 {
   int field_index;
@@ -161,8 +161,8 @@ bool Server::setAllFieldElementValues(const ConstantString &field_name,
   if (field_index >= 0)
   {
     bool success;
-    unsigned int array_length = field.getArrayLength();
-    for (unsigned int i=0;i<array_length;++i)
+    size_t array_length = field.getArrayLength();
+    for (size_t i=0;i<array_length;++i)
     {
       success = setFieldElementValue(field_name,i,value);
       if (!success)
@@ -219,11 +219,11 @@ bool Server::getFieldValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    unsigned int array_length = field.getArrayLength();
+    size_t array_length = field.getArrayLength();
     if (array_length <= N)
     {
       bool success;
-      for (unsigned int i=0;i<array_length;++i)
+      for (size_t i=0;i<array_length;++i)
       {
         T v;
         success = getFieldElementValue(field_name,i,v);
@@ -248,7 +248,7 @@ bool Server::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool Server::getFieldElementValue(const ConstantString &field_name,
-                                  const unsigned int element_index,
+                                  const size_t element_index,
                                   T &value)
 {
   int field_index;
@@ -304,11 +304,11 @@ bool Server::getFieldDefaultValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    unsigned int array_length = field.getArrayLength();
+    size_t array_length = field.getArrayLength();
     if (array_length <= N)
     {
       bool success;
-      for (unsigned int i=0;i<array_length;++i)
+      for (size_t i=0;i<array_length;++i)
       {
         T v;
         success = getFieldDefaultElementValue(field_name,i,v);
@@ -333,7 +333,7 @@ bool Server::getFieldDefaultValue(const ConstantString &field_name,
 
 template <typename T>
 bool Server::getFieldDefaultElementValue(const ConstantString &field_name,
-                                         const unsigned int element_index,
+                                         const size_t element_index,
                                          T &value)
 {
   int field_index;
@@ -449,7 +449,7 @@ template <typename T>
 int Server::findMethodIndex(T const&method_name)
 {
   int method_index = -1;
-  for (unsigned int i=0; i<internal_methods_.size(); ++i)
+  for (size_t i=0; i<internal_methods_.size(); ++i)
   {
     if (internal_methods_[i].compareName(method_name))
     {
@@ -457,7 +457,7 @@ int Server::findMethodIndex(T const&method_name)
       return method_index;
     }
   }
-  for (unsigned int i=0; i<external_methods_.size(); ++i)
+  for (size_t i=0; i<external_methods_.size(); ++i)
   {
     if (external_methods_[i].compareName(method_name))
     {
@@ -472,7 +472,7 @@ template <typename T>
 int Server::findParameterIndex(T const&parameter_name)
 {
   int parameter_index = -1;
-  for (unsigned int i=0; i<internal_parameters_.size(); ++i)
+  for (size_t i=0; i<internal_parameters_.size(); ++i)
   {
     if (internal_parameters_[i].compareName(parameter_name))
     {
@@ -480,7 +480,7 @@ int Server::findParameterIndex(T const&parameter_name)
       return parameter_index;
     }
   }
-  for (unsigned int i=0; i<external_parameters_.size(); ++i)
+  for (size_t i=0; i<external_parameters_.size(); ++i)
   {
     if (external_parameters_[i].compareName(parameter_name))
     {
@@ -507,7 +507,7 @@ int Server::findMethodParameterIndex(int method_index, T const&parameter_name)
       int index = method_index - internal_methods_.max_size();
       parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
     }
-    for (unsigned int i=0; i<parameter_ptrs_ptr->size(); ++i)
+    for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
     {
       if ((*parameter_ptrs_ptr)[i]->compareName(parameter_name))
       {
@@ -523,7 +523,7 @@ template <typename T>
 int Server::findFieldIndex(T const&field_name)
 {
   int field_index = -1;
-  for (unsigned int i=0; i<internal_fields_.size(); ++i)
+  for (size_t i=0; i<internal_fields_.size(); ++i)
   {
     if (internal_fields_[i].getParameter().compareName(field_name))
     {
@@ -531,7 +531,7 @@ int Server::findFieldIndex(T const&field_name)
       return field_index;
     }
   }
-  for (unsigned int i=0; i<external_fields_.size(); ++i)
+  for (size_t i=0; i<external_fields_.size(); ++i)
   {
     if (external_fields_[i].getParameter().compareName(field_name))
     {

@@ -120,7 +120,7 @@ void Server::setup()
 void Server::addServerStream(Stream &stream)
 {
   bool stream_found = false;
-  for (unsigned int i=0;i<server_stream_ptrs_.size();++i)
+  for (size_t i=0;i<server_stream_ptrs_.size();++i)
   {
     if (server_stream_ptrs_[i] == &stream)
     {
@@ -243,9 +243,9 @@ bool Server::setFieldValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    unsigned int array_length = field.getArrayLength();
+    size_t array_length = field.getArrayLength();
     JsonStream::JsonTypes field_type = field.getParameter().getType();
-    unsigned int N = value.size();
+    size_t N = value.size();
     if ((field_type == JsonStream::ARRAY_TYPE) && (array_length >= N))
     {
       bool success;
@@ -254,7 +254,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
       {
         case JsonStream::LONG_TYPE:
           {
-            for (unsigned int i=0;i<N;++i)
+            for (size_t i=0;i<N;++i)
             {
               long v = value[i];
               success = setFieldElementValue(field_name,i,v);
@@ -267,7 +267,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
           }
         case JsonStream::DOUBLE_TYPE:
           {
-            for (unsigned int i=0;i<N;++i)
+            for (size_t i=0;i<N;++i)
             {
               double v = value[i];
               success = setFieldElementValue(field_name,i,v);
@@ -280,7 +280,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
           }
         case JsonStream::BOOL_TYPE:
           {
-            for (unsigned int i=0;i<N;++i)
+            for (size_t i=0;i<N;++i)
             {
               bool v = value[i];
               success = setFieldElementValue(field_name,i,v);
@@ -305,7 +305,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
   return true;
 }
 
-unsigned int Server::getFieldArrayLength(const ConstantString &field_name)
+size_t Server::getFieldArrayLength(const ConstantString &field_name)
 {
   int field_index;
   Field& field = findField(field_name,&field_index);
@@ -318,8 +318,8 @@ unsigned int Server::getFieldArrayLength(const ConstantString &field_name)
     }
     else
     {
-      unsigned int max_array_length = field.getArrayLength();
-      unsigned int array_length = 1;
+      size_t max_array_length = field.getArrayLength();
+      size_t array_length = 1;
       char value;
       while (array_length < max_array_length)
       {
@@ -377,11 +377,11 @@ void Server::endResponseArray()
 
 void Server::setFieldsToDefaults()
 {
-  for (unsigned int i=0; i<internal_fields_.size(); ++i)
+  for (size_t i=0; i<internal_fields_.size(); ++i)
   {
     internal_fields_[i].setDefaultValue();
   }
-  for (unsigned int i=0; i<external_fields_.size(); ++i)
+  for (size_t i=0; i<external_fields_.size(); ++i)
   {
     external_fields_[i].setDefaultValue();
   }
@@ -689,7 +689,7 @@ void Server::methodHelp(bool verbose, int method_index)
     int index = method_index - internal_methods_.max_size();
     parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
   }
-  for (unsigned int i=0; i<parameter_ptrs_ptr->size(); ++i)
+  for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
     if (verbose)
     {
@@ -870,8 +870,8 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
         }
         if (parameter.arrayLengthRangeIsSet())
         {
-          uint8_t array_length_min = parameter.getArrayLengthMin();
-          uint8_t array_length_max = parameter.getArrayLengthMax();
+          size_t array_length_min = parameter.getArrayLengthMin();
+          size_t array_length_max = parameter.getArrayLengthMax();
           writeToResponse(constants::array_length_min_constant_string,array_length_min);
           writeToResponse(constants::array_length_max_constant_string,array_length_max);
         }
@@ -1004,9 +1004,9 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
         {
           if (parameter.arrayLengthRangeIsSet())
           {
-            unsigned char array_length = json_array.size();
-            unsigned char array_length_min = parameter.getArrayLengthMin();
-            unsigned char array_length_max = parameter.getArrayLengthMax();
+            size_t array_length = json_array.size();
+            size_t array_length_min = parameter.getArrayLengthMin();
+            size_t array_length_max = parameter.getArrayLengthMax();
             if ((array_length < array_length_min) || (array_length > array_length_max))
             {
               array_length_out_of_range = true;
@@ -1233,7 +1233,7 @@ void Server::help(bool verbose)
     {
       writeKeyToResponse(constants::methods_constant_string);
       beginResponseArray();
-      for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
+      for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
         if (!internal_methods_[method_index].isPrivate())
         {
@@ -1241,7 +1241,7 @@ void Server::help(bool verbose)
           writeToResponse(method_name);
         }
       }
-      for (unsigned int method_index=0; method_index<external_methods_.size(); ++method_index)
+      for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
       {
         const ConstantString& method_name = external_methods_[method_index].getName();
         writeToResponse(method_name);
@@ -1250,12 +1250,12 @@ void Server::help(bool verbose)
 
       writeKeyToResponse(constants::parameters_constant_string);
       beginResponseArray();
-      for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+      for (size_t parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
       {
         const ConstantString& parameter_name = internal_parameters_[parameter_index].getName();
         writeToResponse(parameter_name);
       }
-      for (unsigned int parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
+      for (size_t parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
       {
         const ConstantString& parameter_name = external_parameters_[parameter_index].getName();
         writeToResponse(parameter_name);
@@ -1264,12 +1264,12 @@ void Server::help(bool verbose)
 
       writeKeyToResponse(constants::fields_constant_string);
       beginResponseArray();
-      for (unsigned int field_index=0; field_index<internal_fields_.size(); ++field_index)
+      for (size_t field_index=0; field_index<internal_fields_.size(); ++field_index)
       {
         const ConstantString& field_name = internal_fields_[field_index].getParameter().getName();
         writeToResponse(field_name);
       }
-      for (unsigned int field_index=0; field_index<external_fields_.size(); ++field_index)
+      for (size_t field_index=0; field_index<external_fields_.size(); ++field_index)
       {
         const ConstantString& field_name = external_fields_[field_index].getParameter().getName();
         writeToResponse(field_name);
@@ -1281,14 +1281,14 @@ void Server::help(bool verbose)
     {
       writeKeyToResponse(constants::methods_constant_string);
       beginResponseArray();
-      for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
+      for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
         if (!internal_methods_[method_index].isPrivate())
         {
           methodHelp(false,method_index);
         }
       }
-      for (unsigned int method_index=0; method_index<external_methods_.size(); ++method_index)
+      for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
       {
         int index = method_index + internal_methods_.max_size();
         methodHelp(false,index);
@@ -1297,11 +1297,11 @@ void Server::help(bool verbose)
 
       writeKeyToResponse(constants::parameters_constant_string);
       beginResponseArray();
-      for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+      for (size_t parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
       {
         parameterHelp(internal_parameters_[parameter_index]);
       }
-      for (unsigned int parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
+      for (size_t parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
       {
         parameterHelp(external_parameters_[parameter_index]);
       }
@@ -1309,11 +1309,11 @@ void Server::help(bool verbose)
 
       writeKeyToResponse(constants::fields_constant_string);
       beginResponseArray();
-      for (unsigned int field_index=0; field_index<internal_fields_.size(); ++field_index)
+      for (size_t field_index=0; field_index<internal_fields_.size(); ++field_index)
       {
         fieldHelp(internal_fields_[field_index]);
       }
-      for (unsigned int field_index=0; field_index<external_fields_.size(); ++field_index)
+      for (size_t field_index=0; field_index<external_fields_.size(); ++field_index)
       {
         fieldHelp(external_fields_[field_index]);
       }
@@ -1511,7 +1511,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
     case JsonStream::ARRAY_TYPE:
       {
         const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
-        unsigned int array_length = field.getArrayLength();
+        size_t array_length = field.getArrayLength();
         if (element_index >= (int)array_length)
         {
           writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
@@ -1665,6 +1665,7 @@ void Server::writeFieldErrorToResponse(const ConstantString &error)
   endResponseObject();
 }
 
+// internal methods
 void Server::getDeviceInfoCallback()
 {
   writeResultKeyToResponse();
@@ -1675,7 +1676,7 @@ void Server::getMethodIdsCallback()
 {
   writeResultKeyToResponse();
   beginResponseObject();
-  for (unsigned int method_index=0; method_index<internal_methods_.size(); ++method_index)
+  for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
   {
     if (!internal_methods_[method_index].isPrivate())
     {
@@ -1683,7 +1684,7 @@ void Server::getMethodIdsCallback()
       writeToResponse(method_name,method_index);
     }
   }
-  for (unsigned int method_index=0; method_index<external_methods_.size(); ++method_index)
+  for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
   {
     const ConstantString& method_name = external_methods_[method_index].getName();
     int index = method_index + internal_methods_.max_size();
@@ -1698,11 +1699,11 @@ void Server::getParametersCallback()
   beginResponseObject();
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
-  for (unsigned int parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+  for (size_t parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
   {
     parameterHelp(internal_parameters_[parameter_index]);
   }
-  for (unsigned int parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
+  for (size_t parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
   {
     parameterHelp(external_parameters_[parameter_index]);
   }
@@ -1731,12 +1732,12 @@ void Server::getFieldDefaultValuesCallback()
 {
   writeResultKeyToResponse();
   beginResponseObject();
-  for (unsigned int i=0; i<internal_fields_.size(); ++i)
+  for (size_t i=0; i<internal_fields_.size(); ++i)
   {
     Field& field = internal_fields_[i];
     writeFieldToResponse(field,true,true);
   }
-  for (unsigned int i=0; i<external_fields_.size(); ++i)
+  for (size_t i=0; i<external_fields_.size(); ++i)
   {
     Field& field = external_fields_[i];
     writeFieldToResponse(field,true,true);
@@ -1768,12 +1769,12 @@ void Server::getFieldValuesCallback()
 {
   writeResultKeyToResponse();
   beginResponseObject();
-  for (unsigned int i=0; i<internal_fields_.size(); ++i)
+  for (size_t i=0; i<internal_fields_.size(); ++i)
   {
     Field& field = internal_fields_[i];
     writeFieldToResponse(field,true,false);
   }
-  for (unsigned int i=0; i<external_fields_.size(); ++i)
+  for (size_t i=0; i<external_fields_.size(); ++i)
   {
     Field& field = external_fields_[i];
     writeFieldToResponse(field,true,false);

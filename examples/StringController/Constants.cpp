@@ -10,17 +10,17 @@
 
 namespace constants
 {
-const unsigned int baudrate = 9600;
+const size_t baudrate = 9600;
 
-const unsigned int model_number = 1002;
+const size_t model_number = 1002;
 
 // Use semantic versioning http://semver.org/
-const unsigned char firmware_major = 0;
-const unsigned char firmware_minor = 1;
-const unsigned char firmware_patch = 0;
+const long firmware_major = 0;
+const long firmware_minor = 1;
+const long firmware_patch = 0;
 
 HardwareSerial& serial2 = Serial2;
-const unsigned char serial2_rx_pin = 17;
+const size_t serial2_rx_pin = 17;
 
 CONSTANT_STRING(device_name,"string_controller");
 
@@ -42,8 +42,8 @@ const int count_max = 100;
 CONSTANT_STRING(index_array_parameter_name,"index_array");
 const int index_array_element_min = 0;
 const int index_array_element_max = 10;
-const unsigned char index_array_length_min = 1;
-const unsigned char index_array_length_max = 3;
+const size_t index_array_length_min = 1;
+const size_t index_array_length_max = 3;
 
 CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 

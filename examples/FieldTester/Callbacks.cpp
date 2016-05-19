@@ -53,7 +53,7 @@ void getLongArrayFixedCallback()
 
 void getLongArrayVariableCallback()
 {
-  unsigned int array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
+  size_t array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
   long long_array[array_length];
   modular_server.getFieldValue(constants::long_array_field_name,long_array,array_length);
   modular_server.writeResultToResponse(long_array,array_length);
@@ -72,7 +72,7 @@ void setLongArrayFixedCallback()
 
 void setLongArrayVariableCallback()
 {
-  unsigned int array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
+  size_t array_length = modular_server.getFieldArrayLength(constants::long_array_field_name);
   long long_array[array_length];
   long_array[0] = -1;
   long_array[1] = -2;
@@ -91,7 +91,7 @@ void setLongArrayParameterCallback()
 
 void getCharArrayCallback()
 {
-  unsigned int array_length = modular_server.getFieldArrayLength(constants::char_array_field_name);
+  size_t array_length = modular_server.getFieldArrayLength(constants::char_array_field_name);
   char char_array[array_length];
   modular_server.getFieldValue(constants::char_array_field_name,char_array,array_length);
   modular_server.writeResultToResponse(char_array,array_length);

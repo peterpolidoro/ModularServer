@@ -16,16 +16,16 @@ enum{FIELD_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=5};
 enum{METHOD_COUNT_MAX=8};
 
-extern const unsigned int baudrate;
+extern const size_t baudrate;
 
-extern const unsigned int model_number;
+extern const size_t model_number;
 
-extern const unsigned char firmware_major;
-extern const unsigned char firmware_minor;
-extern const unsigned char firmware_patch;
+extern const long firmware_major;
+extern const long firmware_minor;
+extern const long firmware_patch;
 
 extern HardwareSerial& serial2;
-extern const unsigned char serial2_rx_pin;
+extern const size_t serial2_rx_pin;
 
 extern ConstantString device_name;
 
@@ -48,8 +48,8 @@ extern const int count_max;
 extern ConstantString index_array_parameter_name;
 extern const int index_array_element_min;
 extern const int index_array_element_max;
-extern const unsigned char index_array_length_min;
-extern const unsigned char index_array_length_max;
+extern const size_t index_array_length_min;
+extern const size_t index_array_length_max;
 
 extern ConstantString double_echo_parameter_name;
 

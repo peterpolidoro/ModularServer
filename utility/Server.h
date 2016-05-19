@@ -75,7 +75,7 @@ public:
                      ArduinoJson::JsonArray &value);
   template <typename T>
   bool setFieldElementValue(const ConstantString &field_name,
-                            const unsigned int element_index,
+                            const size_t element_index,
                             const T &value);
   template <typename T>
   bool setAllFieldElementValues(const ConstantString &field_name,
@@ -92,7 +92,7 @@ public:
                      const size_t N);
   template <typename T>
   bool getFieldElementValue(const ConstantString &field_name,
-                            const unsigned int element_index,
+                            const size_t element_index,
                             T &value);
   template <typename T>
   bool getFieldDefaultValue(const ConstantString &field_name,
@@ -106,9 +106,9 @@ public:
                             const size_t N);
   template <typename T>
   bool getFieldDefaultElementValue(const ConstantString &field_name,
-                                   const unsigned int element_index,
+                                   const size_t element_index,
                                    T &value);
-  unsigned int getFieldArrayLength(const ConstantString &field_name);
+  size_t getFieldArrayLength(const ConstantString &field_name);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>
@@ -145,7 +145,7 @@ public:
   void handleRequest();
 private:
   Array<Stream*,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
-  unsigned char server_stream_index_;
+  size_t server_stream_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray *request_json_array_ptr_;
   Array<Field,constants::INTERNAL_FIELD_COUNT_MAX> internal_fields_;
