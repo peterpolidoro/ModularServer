@@ -9,7 +9,6 @@
 
 Controller::Controller()
 {
-  stored_string_ = String("");
 }
 
 void Controller::setup()
@@ -33,6 +32,8 @@ void Controller::setup()
   // Fields
   ModularDevice::Field& starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);
   starting_chars_count_field.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
+
+  ModularDevice::Field& stored_string_field = modular_server_.createField(constants::stored_string_field_name,constants::stored_string_default);
 
   // Parameters
   ModularDevice::Parameter& string_parameter = modular_server_.createParameter(constants::string_parameter_name);
@@ -109,16 +110,6 @@ void Controller::update()
 ModularDevice::ModularServer& Controller::getModularServer()
 {
   return modular_server_;
-}
-
-void Controller::setStoredString(String str)
-{
-  stored_string_ = str;
-}
-
-String Controller::getStoredString()
-{
-  return stored_string_;
 }
 
 Controller controller;

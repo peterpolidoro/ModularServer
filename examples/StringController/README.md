@@ -35,6 +35,7 @@ Example Response:
     "device_info":{
       "name":"string_controller",
       "model_number":1002,
+      "board":"mega",
       "serial_number":0,
       "firmware_version":{
         "major":0,
@@ -44,18 +45,38 @@ Example Response:
     },
     "methods":[
       "getMemoryFree",
-      "resetDefaults",
-      "setSerialNumber",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
       "echo",
       "length",
       "startsWith",
       "repeat",
       "charsAt",
       "startingChars",
-      "setStartingCharsCount",
-      "getStartingCharsCount",
       "setStoredString",
       "getStoredString"
+    ],
+    "parameters":[
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "string",
+      "string2",
+      "count",
+      "index_array",
+      "double_echo"
+    ],
+    "fields":[
+      "serial_number",
+      "starting_chars_count",
+      "stored_string"
     ]
   }
 }
@@ -76,7 +97,7 @@ Example Response:
 ```json
 {
   "id":"getStoredString",
-  "result":""
+  "result":"I am a stored string."
 }
 ```
 
@@ -248,14 +269,14 @@ Example Response:
 Example Method:
 
 ```shell
-setStartingCharsCount 5
+setFieldValue starting_chars_count 5
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setStartingCharsCount",
+  "id":"setFieldValue",
   "result":null
 }
 ```
@@ -284,19 +305,26 @@ from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 device_info = dev.get_device_info()
 dev.convert_to_json(device_info)
-'{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"string_controller","model_number":1002}'
+'{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"model_number":1002,"name":"string_controller","board":"mega"}'
 dev.get_methods()
 ['starts_with',
  'get_memory_free',
  'repeat',
- 'reset_defaults',
  'starting_chars',
- 'set_serial_number',
- 'get_starting_chars_count',
- 'set_starting_chars_count',
+ 'get_field_value',
+ 'get_field_element_value',
+ 'set_stored_string',
+ 'set_field_element_value',
+ 'set_field_to_default',
  'echo',
+ 'set_fields_to_defaults',
  'length',
- 'chars_at']
+ 'get_field_default_values',
+ 'chars_at',
+ 'set_field_value',
+ 'set_all_field_element_values',
+ 'get_field_values',
+ 'get_stored_string']
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
@@ -310,21 +338,21 @@ dev.repeat('count','?')
 {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
 dev.repeat('"I am a string to repeat."',-1)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 1 <= count <= 100, code: -32602
-dev.repeat('"I am a string to repeat."',4)
+dev.repeat('I am a string to repeat.',4)
 ['I am a string to repeat.',
  'I am a string to repeat.',
  'I am a string to repeat.',
  'I am a string to repeat.']
-dev.chars_at('"I am an input string!"',[0,6,8])
+dev.chars_at('I am an input string!',[0,6,8])
 [{'char': 'I', 'index': 0},
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
-dev.get_starting_chars_count('?')
-{'name': 'getStartingCharsCount', 'parameters': [], 'result_type': 'long'}
-dev.set_starting_chars_count(3)
-dev.call_server_method('set_starting_chars_count',7)
-dev.send_json_request('["set_starting_chars_count",5]')
-dev.get_starting_chars_count()
+dev.get_field_value('starting_chars_count')
+2
+dev.set_field_value('starting_chars_count',3)
+dev.call_server_method('set_field_value','starting_chars_count',7)
+dev.send_json_request('["set_field_value","starting_chars_count",5]')
+dev.get_field_value('starting_chars_count')
 5
 dev.starting_chars('Fantastic!')
 'Fanta'
@@ -355,13 +383,19 @@ dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo();
 json = dev.convertToJson(device_info)
 json =
-  {"name":"string_controller","model_number":1002,"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0}}
+  {"name":"string_controller","model_number":1002,"board": "mega","serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0}}
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
 getMemoryFree
-resetDefaults
-setSerialNumber
+getFieldDefaultValues
+setFieldsToDefaults
+getFieldValues
+getFieldValue
+getFieldElementValue
+setFieldValue
+setFieldElementValue
+setAllFieldElementValues
 echo
 length
 startsWith
@@ -397,7 +431,7 @@ chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =
   [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
-dev.getStartingCharsCount()
+dev.getFieldValue('starting_chars_count')
 ans =
      5
 dev.startingChars('Fantastic!')
@@ -409,8 +443,8 @@ result =
 result = dev.sendJsonRequest('["startingChars","Fantastic!"]')
 result =
   Fanta
-dev.close()                      % close serial connection
-delete(dev)                      % deletes the device
+dev.close()
+clear dev
 ```
 
 For more details on the Matlab interface:

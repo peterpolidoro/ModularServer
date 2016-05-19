@@ -88,12 +88,21 @@ void setLongArrayParameterCallback()
   modular_server.writeResultToResponse(success);
 }
 
-void getCharArrayCallback()
+void getStringAllCallback()
 {
-  size_t array_length = modular_server.getFieldArrayLength(constants::char_array_field_name);
-  char char_array[array_length];
-  modular_server.getFieldValue(constants::char_array_field_name,char_array,array_length);
-  modular_server.writeResultToResponse(char_array);
+  size_t array_length = modular_server.getFieldArrayLength(constants::string_field_name);
+  char string[array_length];
+  modular_server.getFieldValue(constants::string_field_name,string,array_length);
+  modular_server.writeResultToResponse(string);
+}
+
+void getStringSomeCallback()
+{
+  long length = modular_server.getParameterValue(constants::length_parameter_name);
+  size_t array_length = length + 1;
+  char string[array_length];
+  modular_server.getFieldValue(constants::string_field_name,string,array_length);
+  modular_server.writeResultToResponse(string);
 }
 
 }

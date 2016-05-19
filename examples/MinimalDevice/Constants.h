@@ -28,6 +28,7 @@ extern const long firmware_patch;
 extern ConstantString device_name;
 
 // Fields
+// Field values must be long, double, bool, long[], double[], bool[], char[]
 
 // Parameters
 

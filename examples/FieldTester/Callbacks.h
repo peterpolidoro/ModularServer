@@ -29,7 +29,9 @@ void setLongArrayVariableCallback();
 
 void setLongArrayParameterCallback();
 
-void getCharArrayCallback();
+void getStringAllCallback();
+
+void getStringSomeCallback();
 
 }
 #endif

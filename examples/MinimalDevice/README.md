@@ -35,6 +35,7 @@ Example Response:
     "device_info":{
       "name":"minimal_device",
       "model_number":1000,
+      "board":"mega",
       "serial_number":0,
       "firmware_version":{
         "major":0,
@@ -44,8 +45,23 @@ Example Response:
     },
     "methods":[
       "getMemoryFree",
-      "resetDefaults",
-      "setSerialNumber"
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues"
+    ],
+    "parameters":[
+      "field_name",
+      "field_value",
+      "field_element_index"
+    ],
+    "fields":[
+      "serial_number"
     ]
   }
 }
@@ -66,7 +82,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":6379
+  "result":5962
 }
 ```
 
@@ -88,6 +104,7 @@ Example Response:
     "device_info":{
       "name":"minimal_device",
       "model_number":1000,
+      "board":"mega",
       "serial_number":0,
       "firmware_version":{
         "major":0,
@@ -102,24 +119,90 @@ Example Response:
         "result_type":"long"
       },
       {
-        "name":"resetDefaults",
+        "name":"getFieldDefaultValues",
         "parameters":[],
         "result_type":null
       },
       {
-        "name":"setSerialNumber",
+        "name":"setFieldsToDefaults",
+        "parameters":[],
+        "result_type":null
+      },
+      {
+        "name":"setFieldToDefault",
         "parameters":[
-          "serial_number"
+          "field_name"
+        ],
+        "result_type":null
+      },
+      {
+        "name":"getFieldValues",
+        "parameters":[],
+        "result_type":"object"
+      },
+      {
+        "name":"getFieldValue",
+        "parameters":[
+          "field_name"
+        ],
+        "result_type":"value"
+      },
+      {
+        "name":"getFieldElementValue",
+        "parameters":[
+          "field_name",
+          "field_element_index"
+        ],
+        "result_type":"value"
+      },
+      {
+        "name":"setFieldValue",
+        "parameters":[
+          "field_name",
+          "field_value"
+        ],
+        "result_type":null
+      },
+      {
+        "name":"setFieldElementValue",
+        "parameters":[
+          "field_name",
+          "field_element_index",
+          "field_value"
+        ],
+        "result_type":null
+      },
+      {
+        "name":"setAllFieldElementValues",
+        "parameters":[
+          "field_name",
+          "field_value"
         ],
         "result_type":null
       }
     ],
     "parameters":[
       {
+        "name":"field_name",
+        "type":"string"
+      },
+      {
+        "name":"field_value",
+        "type":"value"
+      },
+      {
+        "name":"field_element_index",
+        "type":"long"
+      }
+    ],
+    "fields":[
+      {
         "name":"serial_number",
         "type":"long",
         "min":0,
-        "max":65535
+        "max":65535,
+        "value":0,
+        "default_value":0
       }
     ]
   }
@@ -129,14 +212,14 @@ Example Response:
 Example Method with Parameters:
 
 ```shell
-setSerialNumber
+getFieldValue
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setSerialNumber",
+  "id":"getFieldValue",
   "error":{
     "message":"Invalid params",
     "data":"Incorrect number of parameters. 0 given. 1 needed.",
@@ -156,20 +239,20 @@ a question mark.
 Example Method Help:
 
 ```shell
-setSerialNumber ?
+getFieldValue ?
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setSerialNumber",
+  "id":"getFieldValue",
   "result":{
-    "name":"setSerialNumber",
+    "name":"getFieldValue",
     "parameters":[
-      "serial_number"
+      "field_name"
     ],
-    "result_type":null
+    "result_type":"value"
   }
 }
 ```
@@ -179,7 +262,7 @@ Or you can enter a question mark followed by the method.
 Example Method Help:
 
 ```shell
-? setSerialNumber
+? getFieldValue
 ```
 
 Example Response:
@@ -188,11 +271,11 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "name":"setSerialNumber",
+    "name":"getFieldValue",
     "parameters":[
-      "serial_number"
+      "field_name"
     ],
-    "result_type":null
+    "result_type":"value"
   }
 }
 ```
@@ -201,25 +284,23 @@ To get more verbose information about all of the parameters a method
 takes, enter the method followed by two questions marks.
 
 ```shell
-setSerialNumber ??
+getFieldValue ??
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setSerialNumber",
+  "id":"getFieldValue",
   "result":{
-    "name":"setSerialNumber",
+    "name":"getFieldValue",
     "parameters":[
       {
-        "name":"serial_number",
-        "type":"long",
-        "min":0,
-        "max":65535
+        "name":"field_name",
+        "type":"string"
       }
     ],
-    "result_type":null
+    "result_type":"value"
   }
 }
 ```
@@ -227,15 +308,15 @@ Example Response:
 Example Method:
 
 ```shell
-setSerialNumber 32
+getFieldValue serial_number
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setSerialNumber",
-  "result":null
+  "id":"getFieldValue",
+  "result":0
 }
 ```
 
@@ -243,79 +324,62 @@ The serial number setting persists even after the device is powered
 off. The serial number is used to differentiate several identical
 devices connected to a single host machine at one time.
 
-```shell
-?
-```
-
-Example Response:
-
-```json
-{
-  "id":"?",
-  "result":{
-    "device_info":{
-      "name":"minimal_device",
-      "model_number":1000,
-      "serial_number":32,
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      }
-    },
-    "methods":[
-      "getMemoryFree",
-      "resetDefaults",
-      "setSerialNumber"
-    ]
-  }
-}
-```
-
-To reset the serial number to the default value, use the resetDefaults
-method.
-
 Example Method:
 
 ```shell
-resetDefaults
+setFieldValue serial_number 32
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"resetDefaults",
+  "id":"setFieldValue",
   "result":null
 }
 ```
 
 ```shell
-?
+getFieldValue serial_number
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"?",
-  "result":{
-    "device_info":{
-      "name":"minimal_device",
-      "model_number":1000,
-      "serial_number":0,
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      }
-    },
-    "methods":[
-      "getMemoryFree",
-      "resetDefaults",
-      "setSerialNumber"
-    ]
-  }
+  "id":"getFieldValue",
+  "result":32
+}
+```
+
+To reset the serial number to the default value, use the setFieldsToDefaults
+method.
+
+Example Method:
+
+```shell
+setFieldsToDefaults
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldsToDefaults",
+  "result":null
+}
+```
+
+```shell
+getFieldValue serial_number
+```
+
+Example Response:
+
+```json
+{
+  "id":"getFieldValue",
+  "result":0
 }
 ```
 
@@ -327,36 +391,41 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
+{'board': 'mega',
+ 'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'model_number': 1000,
  'name': 'minimal_device',
  'serial_number': 0}
 dev.get_methods()
-['set_serial_number', 'get_memory_free', 'reset_defaults']
+['get_memory_free',
+ 'get_field_value',
+ 'get_field_element_value',
+ 'set_field_element_value',
+ 'set_all_field_element_values',
+ 'set_fields_to_defaults',
+ 'get_field_default_values',
+ 'set_field_value',
+ 'set_field_to_default',
+ 'get_field_values']
 dev.get_memory_free()
-6379
-dev.set_serial_number()
+5962
+dev.get_field_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
-dev.set_serial_number('?')
-{'name': 'setSerialNumber',
- 'parameters': ['serial_number'],
- 'result_type': None}
-dev.set_serial_number('serial_number','?')
-{'max': 65535, 'min': 0, 'name': 'serial_number', 'type': 'long'}
-dev.set_serial_number('??')
-{'name': 'setSerialNumber',
- 'parameters': [{'max': 65535,
-   'min': 0,
-   'name': 'serial_number',
-   'type': 'long'}],
- 'result_type': None}
-dev.set_serial_number(-1)
+dev.get_field_value('?')
+{'name': 'getFieldValue', 'parameters': ['field_name'], 'result_type': 'value'}
+dev.get_field_value('serial_number')
+0
+dev.set_field_value('serial_number',-1)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
-dev.set_serial_number(12)
+dev.set_field_value('serial_number',12)
 result = dev.call_server_method('?')
-dev.convert_to_json(result)
-'{"device_info":{"serial_number":12,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"methods":["getMemoryFree","resetDefaults","setSerialNumber"]}'
-dev.send_json_request('["reset_defaults"]')
+result['device_info']['serial_number']
+12
+dev.convert_to_json(result['device_info']['firmware_version'])
+'{"major":0,"minor":1,"patch":0}'
+dev.send_json_request('["set_fields_to_defaults"]')
+dev.get_field_value('serial_number')
+0
 ```
 
 For more details on the Python interface:
@@ -381,6 +450,7 @@ device_info = dev.getDeviceInfo()
 device_info =
   name: 'minimal_device'
   model_number: 1000
+  board: 'mega'
   serial_number: 0
   firmware_version: [1x1 struct]
 device_info.firmware_version
@@ -392,47 +462,42 @@ dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
 getMemoryFree
-resetDefaults
-setSerialNumber
+getFieldDefaultValues
+setFieldsToDefaults
+getFieldValues
+getFieldValue
+getFieldElementValue
+setFieldValue
+setFieldElementValue
+setAllFieldElementValues
 dev.getMemoryFree()
 ans =
-  6379
-dev.setSerialNumber()
+  5962
+dev.getFieldValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
-method_info = dev.setSerialNumber('?')
+method_info = dev.getFieldValue('?')
 method_info
 ans =
-  name: 'setSerialNumber'
-  parameters: 'serial_number'
-  result_type: []
-method_info = dev.setSerialNumber('??')
-method_info =
-  name: 'setSerialNumber'
-  parameters: {[1x1 struct]}
-  result_type: []
-method_info.parameters{1}
-  name: 'serial_number'
-  type: 'long'
-  min: 0
-  max: 65535
-parameter_info = dev.setSerialNumber('serial_number','?')
-parameter_info =
-  name: 'serial_number'
-  type: 'long'
-  min: 0
-  max: 65535
-dev.setSerialNumber(-1)
+  name: 'getFieldValue'
+  parameters: {'field_name'}
+  result_type: 'value'
+dev.getFieldValue('serial_number')
+ans =
+  0
+dev.setFieldValue('serial_number',-1)
 (from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
-dev.setSerialNumber(13);
+dev.setFieldValue('serial_number',13);
 result = dev.callServerMethod('?');
 result.device_info.serial_number
 ans =
   13
-result = dev.callServerMethod('?')
-json = dev.convertToJson(result)
+json = dev.convertToJson(result.device_info.firmware_version)
 json =
-  '{"device_info":{"serial_number":12,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"minimal_device","model_number":1000},"methods":["getMemoryFree","resetDefaults","setSerialNumber"]}'
-dev.sendJsonRequest('["resetDefaults"]')
+  {"major": 0,"minor": 1,"patch": 0}
+dev.sendJsonRequest('["setFieldsToDefaults"]')
+dev.getFieldValue('serial_number')
+ans =
+  0
 dev.close()
 clear dev
 ```

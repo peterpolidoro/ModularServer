@@ -118,8 +118,18 @@ bool Server::setFieldValue(const ConstantString &field_name,
       success = setFieldElementValue(field_name,i,v);
       if (!success)
       {
+        // terminate string
+        if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+        {
+          setFieldElementValue(field_name,i,'\0');
+        }
         return false;
       }
+    }
+    // terminate string
+    if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+    {
+      setFieldElementValue(field_name,array_length_min-1,'\0');
     }
   }
   else
@@ -161,8 +171,18 @@ bool Server::setAllFieldElementValues(const ConstantString &field_name,
       success = setFieldElementValue(field_name,i,value);
       if (!success)
       {
+        // terminate string
+        if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+        {
+          setFieldElementValue(field_name,i,'\0');
+        }
         return false;
       }
+    }
+    // terminate string
+    if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+    {
+      setFieldElementValue(field_name,array_length-1,'\0');
     }
   }
   else
@@ -222,9 +242,19 @@ bool Server::getFieldValue(const ConstantString &field_name,
       success = getFieldElementValue(field_name,i,v);
       if (!success)
       {
+        // terminate string
+        if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+        {
+          value[i] = '\0';
+        }
         return false;
       }
       value[i] = v;
+    }
+    // terminate string
+    if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+    {
+      value[array_length_min-1] = '\0';
     }
   }
   else

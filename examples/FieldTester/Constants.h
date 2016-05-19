@@ -13,8 +13,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{FIELD_COUNT_MAX=6};
-enum{PARAMETER_COUNT_MAX=1};
-enum{METHOD_COUNT_MAX=8};
+enum{PARAMETER_COUNT_MAX=2};
+enum{METHOD_COUNT_MAX=9};
 
 extern const size_t baudrate;
 
@@ -53,12 +53,16 @@ extern ConstantString bool_array_field_name;
 enum{BOOL_ARRAY_LENGTH=2};
 extern const bool bool_array_default[BOOL_ARRAY_LENGTH];
 
-extern ConstantString char_array_field_name;
-enum{CHAR_ARRAY_LENGTH_MAX=10};
-extern const char char_array_default[CHAR_ARRAY_LENGTH_MAX];
+extern ConstantString string_field_name;
+enum{STRING_LENGTH_MAX=10};
+extern const char string_default[STRING_LENGTH_MAX];
 
 // Parameters
 extern ConstantString long_array_parameter_name;
+
+extern ConstantString length_parameter_name;
+extern const long length_min;
+extern const long length_max;
 
 // Methods
 extern ConstantString get_doubled_method_name;
@@ -68,7 +72,8 @@ extern ConstantString get_long_array_variable_method_name;
 extern ConstantString set_long_array_fixed_method_name;
 extern ConstantString set_long_array_variable_method_name;
 extern ConstantString set_long_array_parameter_method_name;
-extern ConstantString get_char_array_method_name;
+extern ConstantString get_string_all_method_name;
+extern ConstantString get_string_some_method_name;
 
 // Errors
 extern ConstantString index_error;

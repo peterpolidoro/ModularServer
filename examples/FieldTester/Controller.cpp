@@ -42,12 +42,15 @@ void Controller::setup()
 
   ModularDevice::Field& bool_array_field = modular_server_.createField(constants::bool_array_field_name,constants::bool_array_default);
 
-  ModularDevice::Field& char_array_field = modular_server_.createField(constants::char_array_field_name,constants::char_array_default);
+  ModularDevice::Field& string_field = modular_server_.createField(constants::string_field_name,constants::string_default);
 
   // Parameters
   ModularDevice::Parameter& long_array_parameter = modular_server_.createParameter(constants::long_array_parameter_name);
   long_array_parameter.setTypeLong();
   long_array_parameter.setTypeArray();
+
+  ModularDevice::Parameter& length_parameter = modular_server_.createParameter(constants::length_parameter_name);
+  length_parameter.setRange(constants::length_min,constants::length_max);
 
   // Methods
   ModularDevice::Method& get_doubled_method = modular_server_.createMethod(constants::get_doubled_method_name);
@@ -79,9 +82,14 @@ void Controller::setup()
   set_long_array_parameter_method.addParameter(long_array_parameter);
   set_long_array_parameter_method.setReturnTypeBool();
 
-  ModularDevice::Method& get_char_array_method = modular_server_.createMethod(constants::get_char_array_method_name);
-  get_char_array_method.attachCallback(callbacks::getCharArrayCallback);
-  get_char_array_method.setReturnTypeString();
+  ModularDevice::Method& get_string_all_method = modular_server_.createMethod(constants::get_string_all_method_name);
+  get_string_all_method.attachCallback(callbacks::getStringAllCallback);
+  get_string_all_method.setReturnTypeString();
+
+  ModularDevice::Method& get_string_some_method = modular_server_.createMethod(constants::get_string_some_method_name);
+  get_string_some_method.attachCallback(callbacks::getStringSomeCallback);
+  get_string_some_method.addParameter(length_parameter);
+  get_string_some_method.setReturnTypeString();
 
   // Setup Streams
   Serial.begin(constants::baudrate);

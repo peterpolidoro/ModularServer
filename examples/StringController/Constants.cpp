@@ -30,6 +30,9 @@ const long starting_chars_count_min = 1;
 const long starting_chars_count_max = 10;
 const long starting_chars_count_default = 2;
 
+CONSTANT_STRING(stored_string_field_name,"stored_string");
+const char stored_string_default[STORED_STRING_LENGTH_MAX] = "I am a stored string.";
+
 // Parameters
 CONSTANT_STRING(string_parameter_name,"string");
 

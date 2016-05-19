@@ -33,8 +33,9 @@ Example Response:
   "id":"?",
   "result":{
     "device_info":{
-      "name":"string_controller",
-      "model_number":1002,
+      "name":"field_tester",
+      "model_number":1003,
+      "board":"mega",
       "serial_number":0,
       "firmware_version":{
         "major":0,
@@ -44,18 +45,40 @@ Example Response:
     },
     "methods":[
       "getMemoryFree",
-      "resetDefaults",
-      "setSerialNumber",
-      "echo",
-      "length",
-      "startsWith",
-      "repeat",
-      "charsAt",
-      "startingChars",
-      "setStartingCharsCount",
-      "getStartingCharsCount",
-      "setStoredString",
-      "getStoredString"
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "getDoubled",
+      "getBool",
+      "getLongArrayFixed",
+      "getLongArrayVariable",
+      "setLongArrayFixed",
+      "setLongArrayVariable",
+      "setLongArrayParameter",
+      "getStringAll",
+      "getStringSome"
+    ],
+    "parameters":[
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "long_array_parameter",
+      "length_parameter"
+    ],
+    "fields":[
+      "serial_number",
+      "double",
+      "bool",
+      "long_array",
+      "double_array",
+      "bool_array",
+      "string"
     ]
   }
 }
@@ -68,116 +91,34 @@ type it into the input field and press the 'Send' button or press the
 Example Method:
 
 ```shell
-getStoredString
+getFieldValues
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getStoredString",
-  "result":""
-}
-```
-
-Example Method with Parameters:
-
-```shell
-repeat
-```
-
-Example Response:
-
-```json
-{
-  "id":"repeat",
-  "error":{
-    "message":"Invalid params",
-    "data":"Incorrect number of parameters. 0 given. 2 needed.",
-    "code":-32602
-  }
-}
-```
-
-To get more information about a method, enter the method followed by
-a question mark ?
-
-Example Method Help:
-
-```shell
-repeat ?
-```
-
-Example Response:
-
-```json
-{
-  "id":"repeat",
+  "id":"getFieldValues",
   "result":{
-    "name":"repeat",
-    "parameters":[
-      "string",
-      "count"
+    "serial_number":0,
+    "double":3.141590,
+    "bool":false,
+    "long_array":[
+      5,
+      4,
+      3,
+      2
     ],
-    "result_type":"array"
-  }
-}
-```
-
-The repeat method requires 2 parameters.
-
-To get more information about all of the parameters a method takes,
-enter the method followed by two questions marks ??:
-
-Example Parameter Help:
-
-```shell
-repeat ??
-```
-
-Example Response:
-
-```json
-{
-  "id":"repeat",
-  "result":{
-    "name":"repeat",
-    "parameters":[
-      {
-        "name":"string",
-        "type":"string"
-      },
-      {
-        "name":"count",
-        "type":"long",
-        "min":1,
-        "max":100
-      }
+    "double_array":[
+      -1.100000,
+      2.200000,
+      3.300000
     ],
-    "result_type":"array"
-  }
-}
-```
-
-To get more information about just one of the parameters a method takes,
-enter the method followed by the parameter followed by one question mark ?:
-
-Example Parameter Help:
-
-```shell
-repeat count ?
-```
-
-Example Response:
-
-```json
-{
-  "id":"repeat",
-  "result":{
-    "name":"count",
-    "type":"long",
-    "min":1,
-    "max":100
+    "bool_array":[
+      false,
+      true
+    ],
+    "string":"abcdef"
   }
 }
 ```
@@ -185,19 +126,19 @@ Example Response:
 Example Method:
 
 ```shell
-repeat "I am a string to repeat." 4
+getFieldValue long_array
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"repeat",
+  "id":"getFieldValue",
   "result":[
-    "I am a string to repeat.",
-    "I am a string to repeat.",
-    "I am a string to repeat.",
-    "I am a string to repeat."
+    5,
+    4,
+    3,
+    2
   ]
 }
 ```
@@ -205,57 +146,29 @@ Example Response:
 Example Method:
 
 ```shell
-charsAt "I am an input string!" [0,6,8]
+getFieldElementValue double_array 1
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"charsAt",
-  "result":[
-    {
-      "index":0,
-      "char":"I"
-    },
-    {
-      "index":6,
-      "char":"n"
-    },
-    {
-      "index":8,
-      "char":"i"
-    }
-  ]
+  "id":"getFieldElementValue",
+  "result":2.200000
 }
 ```
 
 Example Method:
 
 ```shell
-startingChars "Fantastic!"
+setFieldValue bool_array [false,false]
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"startingChars",
-  "result":"Fa"
-}
-```
-
-Example Method:
-
-```shell
-setStartingCharsCount 5
-```
-
-Example Response:
-
-```json
-{
-  "id":"setStartingCharsCount",
+  "id":"setFieldValue",
   "result":null
 }
 ```
@@ -263,15 +176,95 @@ Example Response:
 Example Method:
 
 ```shell
-startingChars "Fantastic!"
+setFieldValue string asdfghjkl
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"startingChars",
-  "result":"Fanta"
+  "id":"setFieldValue",
+  "result":null
+}
+```
+
+Example Method:
+
+```shell
+getFieldElementValue string 3
+```
+
+Example Response:
+
+```json
+{
+  "id":"getFieldElementValue",
+  "result":"f"
+}
+```
+
+Example Method:
+
+```shell
+setFieldElementValue string 3 X
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldElementValue",
+  "result":null
+}
+```
+
+Example Method:
+
+```shell
+getFieldValues
+```
+
+Example Response:
+
+```json
+{
+  "id":"getFieldValues",
+  "result":{
+    "serial_number":0,
+    "double":3.141590,
+    "bool":false,
+    "long_array":[
+      5,
+      4,
+      3,
+      2
+    ],
+    "double_array":[
+      -1.100000,
+      2.200000,
+      3.300000
+    ],
+    "bool_array":[
+      false,
+      false
+    ],
+    "string":"asdXghjkl"
+  }
+}
+```
+
+Example Method:
+
+```shell
+setFieldsToDefaults
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldsToDefaults",
+  "result":null
 }
 ```
 
@@ -282,56 +275,52 @@ Example Python session:
 ```python
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
-device_info = dev.get_device_info()
-dev.convert_to_json(device_info)
-'{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"name":"string_controller","model_number":1002}'
 dev.get_methods()
-['starts_with',
- 'get_memory_free',
- 'repeat',
- 'reset_defaults',
- 'starting_chars',
- 'set_serial_number',
- 'get_starting_chars_count',
- 'set_starting_chars_count',
- 'echo',
- 'length',
- 'chars_at']
-dev.repeat()
-IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
-dev.repeat('?')
-{'name': 'repeat', 'parameters': ['string', 'count'], 'result_type': 'array'}
-dev.repeat('??')
-{'name': 'repeat',
- 'parameters': [{'name': 'string', 'type': 'string'},
-  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
- 'result_type': 'array'}
-dev.repeat('count','?')
-{'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
-dev.repeat('"I am a string to repeat."',-1)
-IOError: (from server) message: Invalid params, data: Parameter value out of range: 1 <= count <= 100, code: -32602
-dev.repeat('"I am a string to repeat."',4)
-['I am a string to repeat.',
- 'I am a string to repeat.',
- 'I am a string to repeat.',
- 'I am a string to repeat.']
-dev.chars_at('"I am an input string!"',[0,6,8])
-[{'char': 'I', 'index': 0},
- {'char': 'n', 'index': 6},
- {'char': 'i', 'index': 8}]
-dev.get_starting_chars_count('?')
-{'name': 'getStartingCharsCount', 'parameters': [], 'result_type': 'long'}
-dev.set_starting_chars_count(3)
-dev.call_server_method('set_starting_chars_count',7)
-dev.send_json_request('["set_starting_chars_count",5]')
-dev.get_starting_chars_count()
-5
-dev.starting_chars('Fantastic!')
-'Fanta'
-dev.call_server_method('starting_chars','Fantastic!')
-'Fanta'
-dev.send_json_request('["starting_chars","Fantastic!"]')
-'Fanta'
+['get_memory_free',
+ 'get_bool',
+ 'get_field_value',
+ 'get_field_element_value',
+ 'set_field_element_value',
+ 'get_long_array_fixed',
+ 'set_long_array_variable',
+ 'get_doubled',
+ 'set_long_array_fixed',
+ 'set_fields_to_defaults',
+ 'get_field_default_values',
+ 'set_long_array_parameter',
+ 'get_string_all',
+ 'get_long_array_variable',
+ 'set_field_value',
+ 'set_all_field_element_values',
+ 'get_field_values',
+ 'get_string_some',
+ 'set_field_to_default']
+dev.get_field_values()
+{'bool': False,
+ 'bool_array': [False, True],
+ 'double': 3.14159,
+ 'double_array': [-1.1, 2.2, 3.3],
+ 'long_array': [5, 4, 3, 2],
+ 'serial_number': 0,
+ 'string': 'abcdef'}
+dev.get_field_value('long_array')
+[5, 4, 3, 2]
+dev.get_field_element_value('double_array',1)
+2.2
+dev.set_field_value('bool_array',[False,False])
+dev.set_field_value('string','asdfghjkl')
+dev.get_field_element_value('string',3)
+'f'
+dev.set_field_element_value('string',3,'X')
+dev.get_field_values()
+{'bool': False,
+ 'bool_array': [False, False],
+ 'double': 3.14159,
+ 'double_array': [-1.1, 2.2, 3.3],
+ 'long_array': [5, 4, 3, 2],
+ 'serial_number': 0,
+ 'string': 'asdXghjkl'}
+dev.set_fields_to_defaults()
 ```
 
 For more details on the Python interface:
@@ -352,65 +341,60 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
-device_info = dev.getDeviceInfo();
-json = dev.convertToJson(device_info)
-json =
-  {"name":"string_controller","model_number":1002,"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0}}
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
 getMemoryFree
-resetDefaults
-setSerialNumber
-echo
-length
-startsWith
-repeat
-charsAt
-startingChars
-setStartingCharsCount
-getStartingCharsCount
-setStoredString
-getStoredString
-dev.repeat()
-(from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
-dev.repeat('?')
+getFieldDefaultValues
+setFieldsToDefaults
+getFieldValues
+getFieldValue
+getFieldElementValue
+setFieldValue
+setFieldElementValue
+setAllFieldElementValues
+getDoubled
+getBool
+getLongArrayFixed
+getLongArrayVariable
+setLongArrayFixed
+setLongArrayVariable
+setLongArrayParameter
+getStringAll
+getStringSome
+dev.getFieldValues()
 ans =
-  name: 'repeat'
-  parameters: {'string'    'count'}
-  result_type: 'array'
-dev.repeat('count','?')
+  serial_number: 0
+  double: 3.1416
+  bool: 0
+  long_array: [5 4 3 2]
+  double_array: [-1.1000 2.2000 3.3000]
+  bool_array: [0 1]
+  string: 'abcdef'
+dev.getFieldValue('long_array')
 ans =
-  name: 'count'
-  type: 'long'
-  min: 1
-  max: 100
-dev.repeat('I am a string to repeat.',-1)
-device responded with error, Parameter value out of range: 1 <= count <= 100
-dev.repeat('I am a string to repeat.',4)
+  5   4   3   2
+dev.getFieldElementValue('double_array',1)
 ans =
-I am a string to repeat.
-I am a string to repeat.
-I am a string to repeat.
-I am a string to repeat.
-chars_at = dev.charsAt('I am an input string!',[0,6,8]);
-json = dev.convertToJson(chars_at)
-json =
-  [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
-dev.getStartingCharsCount()
+  2.2000
+dev.setFieldValue('bool_array',[false,false]);
+dev.setFieldValue('string','asdfghjkl');
+dev.getFieldElementValue('string',3)
 ans =
-     5
-dev.startingChars('Fantastic!')
+  f
+dev.setFieldElementValue('string',3,'X');
+dev.getFieldValues()
 ans =
-  Fanta
-result = dev.callServerMethod('startingChars','Fantastic!')
-result =
-  Fanta
-result = dev.sendJsonRequest('["startingChars","Fantastic!"]')
-result =
-  Fanta
-dev.close()                      % close serial connection
-delete(dev)                      % deletes the device
+  serial_number: 0
+  double: 3.1416
+  bool: 0
+  long_array: [5 4 3 2]
+  double_array: [-1.1000 2.2000 3.3000]
+  bool_array: [0 0]
+  string: 'asdXghjkl'
+dev.setFieldsToDefaults();
+dev.close()
+clear dev
 ```
 
 For more details on the Matlab interface:

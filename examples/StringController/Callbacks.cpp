@@ -113,11 +113,15 @@ void startingCharsCallback()
 void setStoredStringCallback()
 {
   const char* string = modular_server.getParameterValue(constants::string_parameter_name);
-  controller.setStoredString(String(string));
+  size_t array_length = strlen(string) + 1;
+  modular_server.setFieldValue(constants::stored_string_field_name,string,array_length);
 }
 
 void getStoredStringCallback()
 {
-  modular_server.writeResultToResponse(controller.getStoredString());
+  size_t array_length = modular_server.getFieldArrayLength(constants::stored_string_field_name);
+  char stored_string[array_length];
+  modular_server.getFieldValue(constants::stored_string_field_name,stored_string,array_length);
+  modular_server.writeResultToResponse(stored_string);
 }
 }

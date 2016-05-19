@@ -12,7 +12,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=1};
+enum{FIELD_COUNT_MAX=2};
 enum{PARAMETER_COUNT_MAX=5};
 enum{METHOD_COUNT_MAX=8};
 
@@ -30,11 +30,15 @@ extern const size_t serial2_rx_pin;
 extern ConstantString device_name;
 
 // Fields
-// Field values must be long, bool, long[], or bool[]
+// Field values must be long, double, bool, long[], double[], bool[], char[]
 extern ConstantString starting_chars_count_field_name;
 extern const long starting_chars_count_min;
 extern const long starting_chars_count_max;
 extern const long starting_chars_count_default;
+
+extern ConstantString stored_string_field_name;
+enum{STORED_STRING_LENGTH_MAX=30};
+extern const char stored_string_default[STORED_STRING_LENGTH_MAX];
 
 // Parameters
 extern ConstantString string_parameter_name;

@@ -312,17 +312,17 @@ size_t Server::getFieldArrayLength(const ConstantString &field_name)
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    JsonStream::JsonTypes field_element_type = field.getParameter().getArrayElementType();
-    if (field_element_type != JsonStream::STRING_TYPE)
+    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    if (field_type == JsonStream::ARRAY_TYPE)
     {
       return field.getArrayLength();
     }
-    else
+    else if (field_type == JsonStream::STRING_TYPE)
     {
-      size_t max_array_length = field.getArrayLength();
+      size_t array_length_max = field.getArrayLength();
       size_t array_length = 1;
       char value;
-      while (array_length < max_array_length)
+      while (array_length < array_length_max)
       {
         field.getElementValue(value,array_length-1);
         if (value == 0)
@@ -331,7 +331,7 @@ size_t Server::getFieldArrayLength(const ConstantString &field_name)
         }
         ++array_length;
       }
-      return max_array_length;
+      return array_length_max;
     }
   }
   else
@@ -1509,6 +1509,44 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
         writeToResponse(field_value);
         break;
       }
+    case JsonStream::STRING_TYPE:
+      {
+        size_t array_length = getFieldArrayLength(field_name);
+        if (element_index >= 0)
+        {
+          if (element_index >= ((int)array_length-1))
+          {
+            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+            return;
+          }
+          size_t array_length = 2;
+          char char_array[array_length];
+          char field_element_value;
+          bool success = getFieldElementValue(field_name,element_index,field_element_value);
+          if (success)
+          {
+            char_array[0] = field_element_value;
+            char_array[1] = '\0';
+          }
+          else
+          {
+            char_array[0] = '\0';
+          }
+          writeToResponse(char_array);
+          return;
+        }
+        char char_array[array_length];
+        if (write_default)
+        {
+          getFieldDefaultValue(field_name,char_array,array_length);
+        }
+        else
+        {
+          getFieldValue(field_name,char_array,array_length);
+        }
+        writeToResponse(char_array);
+        break;
+      }
     case JsonStream::ARRAY_TYPE:
       {
         const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
@@ -1856,6 +1894,13 @@ void Server::setFieldValueCallback()
           setFieldValue(field_name_cs,field_value);
           break;
         }
+      case JsonStream::STRING_TYPE:
+        {
+          const char* field_value = getParameterValue(constants::field_value_parameter_name);
+          size_t array_length = strlen(field_value) + 1;
+          setFieldValue(field_name_cs,field_value,array_length);
+          break;
+        }
       case JsonStream::ARRAY_TYPE:
         {
           ArduinoJson::JsonArray &field_value = getParameterValue(constants::field_value_parameter_name);
@@ -1908,8 +1953,31 @@ void Server::setFieldElementValueCallback()
           writeFieldErrorToResponse(constants::field_not_array_type_error_data);
           break;
         }
+      case JsonStream::STRING_TYPE:
+        {
+          size_t array_length = field.getArrayLength();
+          if ((size_t)field_element_index >= (array_length - 1))
+          {
+            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+            return;
+          }
+          const char* field_value = getParameterValue(constants::field_value_parameter_name);
+          size_t string_length = strlen(field_value);
+          if (string_length >= 1)
+          {
+            char v = field_value[0];
+            setFieldElementValue(field_name_cs,field_element_index,v);
+          }
+          break;
+        }
       case JsonStream::ARRAY_TYPE:
         {
+          size_t array_length = field.getArrayLength();
+          if ((size_t)field_element_index >= array_length)
+          {
+            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+            return;
+          }
           JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
           switch (array_element_type)
           {

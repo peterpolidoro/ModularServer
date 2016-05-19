@@ -35,7 +35,8 @@ Example Response:
     "device_info":{
       "name":"board_led_controller",
       "model_number":1001,
-      "serial_number":0,
+      "board":"mega",
+      "serial_number":12,
       "firmware_version":{
         "major":0,
         "minor":1,
@@ -44,12 +45,30 @@ Example Response:
     },
     "methods":[
       "getMemoryFree",
-      "resetDefaults",
-      "setSerialNumber",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
       "setLedOn",
       "setLedOff",
       "getLedPin",
       "blinkLed"
+    ],
+    "parameters":[
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "duration_on",
+      "duration_off",
+      "count"
+    ],
+    "fields":[
+      "serial_number"
     ]
   }
 }
@@ -279,18 +298,26 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
+{'board': 'mega',
+ 'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'model_number': 1001,
  'name': 'board_led_controller',
  'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
- 'reset_defaults',
- 'set_serial_number',
- 'get_led_pin',
+ 'get_field_value',
+ 'get_field_element_value',
  'set_led_on',
+ 'get_led_pin',
+ 'set_field_element_value',
+ 'set_all_field_element_values',
+ 'set_fields_to_defaults',
+ 'get_field_default_values',
  'blink_led',
- 'set_led_off']
+ 'set_led_off',
+ 'set_field_value',
+ 'set_field_to_default',
+ 'get_field_values']
 dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
@@ -357,13 +384,21 @@ device_info = dev.getDeviceInfo()
 device_info =
   name: 'board_led_controller'
   model_number: 1001
+  board: 'mega'
   serial_number: 0
   firmware_number: [1x1 struct]
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
 getMemoryFree
-resetDefaults
+getFieldDefaultValues
+setFieldsToDefaults
+getFieldValues
+getFieldValue
+getFieldElementValue
+setFieldValue
+setFieldElementValue
+setAllFieldElementValues
 setLedOn
 setLedOff
 getLedPin
@@ -399,8 +434,8 @@ led_pin =
   13
 dev.callServerMethod('blinkLed',0.5,0.2,20)
 dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')
-dev.close()                      % close serial connection
-delete(dev)                      % deletes the device
+dev.close()
+clear dev
 ```
 
 For more details on the Matlab interface:

@@ -61,7 +61,6 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeString();
-    parameter_.setArrayLengthRange(1,N);
   }
 
   void setRange(const long min, const long max);
