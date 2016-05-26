@@ -109,6 +109,7 @@ public:
                                    const size_t element_index,
                                    T &value);
   size_t getFieldArrayLength(const ConstantString &field_name);
+  size_t getFieldStringLength(const ConstantString &field_name);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>

@@ -312,12 +312,23 @@ size_t Server::getFieldArrayLength(const ConstantString &field_name)
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
+    return field.getArrayLength();
+  }
+  else
+  {
+    return 0;
+  }
+
+}
+
+size_t Server::getFieldStringLength(const ConstantString &field_name)
+{
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
     JsonStream::JsonTypes field_type = field.getParameter().getType();
-    if (field_type == JsonStream::ARRAY_TYPE)
-    {
-      return field.getArrayLength();
-    }
-    else if (field_type == JsonStream::STRING_TYPE)
+    if (field_type == JsonStream::STRING_TYPE)
     {
       size_t array_length_max = field.getArrayLength();
       size_t array_length = 1;
@@ -327,11 +338,15 @@ size_t Server::getFieldArrayLength(const ConstantString &field_name)
         field.getElementValue(value,array_length-1);
         if (value == 0)
         {
-          return array_length;
+          return array_length - 1;
         }
         ++array_length;
       }
       return array_length_max;
+    }
+    else
+    {
+      return 0;
     }
   }
   else
@@ -2037,6 +2052,17 @@ void Server::setAllFieldElementValuesCallback()
         }
       case JsonStream::BOOL_TYPE:
         {
+          break;
+        }
+      case JsonStream::STRING_TYPE:
+        {
+          const char* field_value = getParameterValue(constants::field_value_parameter_name);
+          size_t string_length = strlen(field_value);
+          if (string_length >= 1)
+          {
+            char v = field_value[0];
+            setAllFieldElementValues(field_name_cs,v);
+          }
           break;
         }
       case JsonStream::ARRAY_TYPE:

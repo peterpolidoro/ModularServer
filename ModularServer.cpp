@@ -69,6 +69,11 @@ size_t ModularServer::getFieldArrayLength(const ConstantString &field_name)
   return server_.getFieldArrayLength(field_name);
 }
 
+size_t ModularServer::getFieldStringLength(const ConstantString &field_name)
+{
+  return server_.getFieldStringLength(field_name);
+}
+
 void ModularServer::writeNullToResponse()
 {
   server_.writeNullToResponse();
