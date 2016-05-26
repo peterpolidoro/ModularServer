@@ -16,8 +16,6 @@
 #include "Controller.h"
 
 
-// See README.md for more information
-
 void setup()
 {
   controller.setup();
