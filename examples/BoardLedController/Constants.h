@@ -17,6 +17,7 @@ enum{PARAMETER_COUNT_MAX=3};
 enum{METHOD_COUNT_MAX=4};
 
 extern const size_t led_pin;
+
 extern const size_t baudrate;
 
 extern const size_t model_number;
@@ -35,14 +36,16 @@ extern ConstantString device_name;
 
 // Parameters
 extern ConstantString duration_on_parameter_name;
-extern ConstantString duration_off_parameter_name;
-extern ConstantString count_parameter_name;
-extern ConstantString seconds_unit;
-
 extern const double duration_min;
 extern const double duration_max;
+
+extern ConstantString duration_off_parameter_name;
+
+extern ConstantString count_parameter_name;
 extern const long count_min;
 extern const long count_max;
+
+extern ConstantString seconds_unit;
 
 // Methods
 extern ConstantString led_on_method_name;

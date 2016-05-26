@@ -11,6 +11,7 @@
 namespace constants
 {
 const size_t led_pin = 13;
+
 const size_t baudrate = 9600;
 
 const size_t model_number = 1001;
@@ -29,14 +30,16 @@ CONSTANT_STRING(device_name,"board_led_controller");
 
 // Parameters
 CONSTANT_STRING(duration_on_parameter_name,"duration_on");
-CONSTANT_STRING(duration_off_parameter_name,"duration_off");
-CONSTANT_STRING(count_parameter_name,"count");
-CONSTANT_STRING(seconds_unit,"seconds");
-
 const double duration_min = 0.1;
 const double duration_max = 2.5;
+
+CONSTANT_STRING(duration_off_parameter_name,"duration_off");
+
+CONSTANT_STRING(count_parameter_name,"count");
 const long count_min = 1;
 const long count_max = 100;
+
+CONSTANT_STRING(seconds_unit,"seconds");
 
 // Methods
 CONSTANT_STRING(led_on_method_name,"setLedOn");
