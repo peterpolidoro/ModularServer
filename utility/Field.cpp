@@ -41,6 +41,11 @@ parameter_(name),
   parameter_.setTypeBool();
 }
 
+void Field::setUnits(const ConstantString &name)
+{
+  parameter_.setUnits(name);
+}
+
 void Field::setRange(const long min, const long max)
 {
   parameter_.setRange(min,max);

@@ -63,6 +63,7 @@ public:
     parameter_.setTypeString();
   }
 
+  void setUnits(const ConstantString &name);
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
 
