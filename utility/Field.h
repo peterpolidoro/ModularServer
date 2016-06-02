@@ -20,6 +20,9 @@
 
 namespace ModularDevice
 {
+typedef void (*SetValueCallback)(void);
+typedef void (*SetElementValueCallback)(const size_t);
+
 class Field
 {
 public:
@@ -66,10 +69,14 @@ public:
   void setUnits(const ConstantString &name);
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
+  void attachSetValueCallback(SetValueCallback callback);
+  void attachSetElementValueCallback(SetElementValueCallback callback);
 
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;
+  SetValueCallback set_value_callback_;
+  SetElementValueCallback set_element_value_callback_;
 
   // Saved Variable Methods
   template<typename T>
@@ -175,6 +182,8 @@ private:
   bool isDefaultValue();
   size_t getArrayLength();
   Parameter& getParameter();
+  void setValueCallback();
+  void setElementValueCallback(const size_t element_index);
   friend class Server;
 };
 }

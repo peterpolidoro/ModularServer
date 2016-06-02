@@ -303,6 +303,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
   {
     return false;
   }
+  field.setValueCallback();
   return true;
 }
 

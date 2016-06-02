@@ -24,7 +24,7 @@ Method::Method(const ConstantString &name)
 void Method::setup(const ConstantString &name)
 {
   setName(name);
-  callback_attached_ = false;
+  callback_ = NULL;
   parameter_count_ = 0;
   return_type_ = JsonStream::NULL_TYPE;
 }
@@ -37,7 +37,6 @@ void Method::setName(const ConstantString &name)
 void Method::attachCallback(Callback callback)
 {
   callback_ = callback;
-  callback_attached_ = true;
 }
 
 void Method::addParameter(Parameter &parameter)
@@ -70,7 +69,7 @@ const ConstantString& Method::getName()
 
 void Method::callback()
 {
-  if (callback_attached_)
+  if (callback_ != NULL)
   {
     (*callback_)();
   }
@@ -140,23 +139,24 @@ InternalMethod::InternalMethod()
 {
   setup(constants::empty_constant_string);
   private_ = false;
+  internal_callback_ = NULL;
 }
 
 InternalMethod::InternalMethod(const ConstantString &name)
 {
   setup(name);
   private_ = false;
+  internal_callback_ = NULL;
 }
 
 void InternalMethod::attachCallback(InternalCallback callback)
 {
   internal_callback_ = callback;
-  callback_attached_ = true;
 }
 
 void InternalMethod::callback(Server *server)
 {
-  if (callback_attached_)
+  if (internal_callback_ != NULL)
   {
     (server->*internal_callback_)();
   }

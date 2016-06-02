@@ -42,7 +42,6 @@ public:
 protected:
   const ConstantString *name_ptr_;
   Callback callback_;
-  bool callback_attached_;
   Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
   int findParameterIndex(const ConstantString &parameter_name);
   int parameter_count_;

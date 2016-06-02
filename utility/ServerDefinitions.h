@@ -76,7 +76,12 @@ bool Server::setFieldValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    return field.setValue(value);
+    bool success = field.setValue(value);
+    if (success)
+    {
+      field.setValueCallback();
+    }
+    return success;
   }
   else
   {
@@ -92,7 +97,12 @@ bool Server::setFieldValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    return field.setValue(value);
+    bool success = field.setValue(value);
+    if (success)
+    {
+      field.setValueCallback();
+    }
+    return success;
   }
   else
   {
@@ -136,6 +146,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
   {
     return false;
   }
+  field.setValueCallback();
   return true;
 }
 
@@ -148,7 +159,12 @@ bool Server::setFieldElementValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    return field.setElementValue(value,element_index);
+    bool success = field.setElementValue(value,element_index);
+    if (success)
+    {
+      field.setElementValueCallback(element_index);
+    }
+    return success;
   }
   else
   {
@@ -189,6 +205,7 @@ bool Server::setAllFieldElementValues(const ConstantString &field_name,
   {
     return false;
   }
+  field.setValueCallback();
   return true;
 }
 

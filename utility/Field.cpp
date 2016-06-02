@@ -21,6 +21,8 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeLong();
+  set_value_callback_ = NULL;
+  set_element_value_callback_ = NULL;
 }
 
 template <>
@@ -30,6 +32,8 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeDouble();
+  set_value_callback_ = NULL;
+  set_element_value_callback_ = NULL;
 }
 
 template <>
@@ -39,6 +43,8 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeBool();
+  set_value_callback_ = NULL;
+  set_element_value_callback_ = NULL;
 }
 
 void Field::setUnits(const ConstantString &name)
@@ -54,6 +60,16 @@ void Field::setRange(const long min, const long max)
 void Field::setRange(const double min, const double max)
 {
   parameter_.setRange(min,max);
+}
+
+void Field::attachSetValueCallback(SetValueCallback callback)
+{
+  set_value_callback_ = callback;
+}
+
+void Field::attachSetElementValueCallback(SetElementValueCallback callback)
+{
+  set_element_value_callback_ = callback;
 }
 
 // Private
@@ -223,6 +239,7 @@ bool Field::getElementValue<char>(char &value, const size_t element_index)
 void Field::setDefaultValue()
 {
   saved_variable_.setDefaultValue();
+  setValueCallback();
 }
 
 bool Field::isDefaultValue()
@@ -239,4 +256,21 @@ Parameter& Field::getParameter()
 {
   return parameter_;
 }
+
+void Field::setValueCallback()
+{
+  if (set_value_callback_ != NULL)
+  {
+    (*set_value_callback_)();
+  }
+}
+
+void Field::setElementValueCallback(const size_t element_index)
+{
+  if (set_element_value_callback_ != NULL)
+  {
+    (*set_element_value_callback_)(element_index);
+  }
+}
+
 }
