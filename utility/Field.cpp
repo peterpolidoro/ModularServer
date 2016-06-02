@@ -12,6 +12,8 @@ namespace ModularDevice
 {
 Field::Field()
 {
+  set_value_callback_ = NULL;
+  set_element_value_callback_ = NULL;
 }
 
 template <>

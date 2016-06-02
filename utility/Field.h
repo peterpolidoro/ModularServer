@@ -38,6 +38,8 @@ public:
   {
     parameter_.setTypeLong();
     parameter_.setArrayLengthRange(1,N);
+    set_value_callback_ = NULL;
+    set_element_value_callback_ = NULL;
   };
   template <size_t N>
   Field(const ConstantString &name,
@@ -47,6 +49,8 @@ public:
   {
     parameter_.setTypeDouble();
     parameter_.setArrayLengthRange(1,N);
+    set_value_callback_ = NULL;
+    set_element_value_callback_ = NULL;
   }
   template <size_t N>
   Field(const ConstantString &name,
@@ -56,6 +60,8 @@ public:
   {
     parameter_.setTypeBool();
     parameter_.setArrayLengthRange(1,N);
+    set_value_callback_ = NULL;
+    set_element_value_callback_ = NULL;
   }
   template <size_t N>
   Field(const ConstantString &name,
@@ -64,6 +70,8 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeString();
+    set_value_callback_ = NULL;
+    set_element_value_callback_ = NULL;
   }
 
   void setUnits(const ConstantString &name);
