@@ -398,7 +398,7 @@ void Server::writeToResponse(T (&value)[N])
 template <typename T>
 void Server::writeToResponse(T *value, size_t N)
 {
-  json_stream_.write(value,N);
+  json_stream_.writeArray(value,N);
 }
 
 template <typename K, typename T>
