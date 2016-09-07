@@ -85,12 +85,12 @@ public:
   void writeToResponse(T (&value)[N]);
   template <typename K, typename T>
   void writeToResponse(K key, T value);
-  template <typename T>
-  void writeToResponse(T *value, size_t N);
   template <typename K, typename T, size_t N>
   void writeToResponse(K key, T (&value)[N]);
+  template <typename T>
+  void writeArrayToResponse(T *value, size_t N);
   template <typename K, typename T>
-  void writeToResponse(K key, T *value, size_t N);
+  void writeArrayToResponse(K key, T *value, size_t N);
   void writeNullToResponse();
   template <typename K>
   void writeNullToResponse(K key);

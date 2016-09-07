@@ -395,12 +395,6 @@ void Server::writeToResponse(T (&value)[N])
   json_stream_.write(value);
 }
 
-template <typename T>
-void Server::writeToResponse(T *value, size_t N)
-{
-  json_stream_.writeArray(value,N);
-}
-
 template <typename K, typename T>
 void Server::writeToResponse(K key, T value)
 {
@@ -413,10 +407,16 @@ void Server::writeToResponse(K key, T (&value)[N])
   json_stream_.write(key,value);
 }
 
-template <typename K, typename T>
-void Server::writeToResponse(K key, T *value, size_t N)
+template <typename T>
+void Server::writeArrayToResponse(T *value, size_t N)
 {
-  json_stream_.write(key,value,N);
+  json_stream_.writeArray(value,N);
+}
+
+template <typename K, typename T>
+void Server::writeArrayToResponse(K key, T *value, size_t N)
+{
+  json_stream_.writeArray(key,value,N);
 }
 
 template <typename K>

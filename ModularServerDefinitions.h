@@ -130,12 +130,6 @@ void ModularServer::writeToResponse(T (&value)[N])
   server_.writeToResponse(value);
 }
 
-template <typename T>
-void ModularServer::writeToResponse(T *value, size_t N)
-{
-  server_.writeToResponse(value);
-}
-
 template <typename K, typename T>
 void ModularServer::writeToResponse(K key, T value)
 {
@@ -148,10 +142,16 @@ void ModularServer::writeToResponse(K key, T (&value)[N])
   server_.writeToResponse(key,value);
 }
 
-template <typename K, typename T>
-void ModularServer::writeToResponse(K key, T *value, size_t N)
+template <typename T>
+void ModularServer::writeArrayToResponse(T *value, size_t N)
 {
-  server_.writeToResponse(key,value,N);
+  server_.writeArrayToResponse(value);
+}
+
+template <typename K, typename T>
+void ModularServer::writeArrayToResponse(K key, T *value, size_t N)
+{
+  server_.writeArrayToResponse(key,value,N);
 }
 
 template <typename K>
