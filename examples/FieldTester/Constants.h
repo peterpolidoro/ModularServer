@@ -12,7 +12,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=6};
+enum{FIELD_COUNT_MAX=8};
 enum{PARAMETER_COUNT_MAX=2};
 enum{METHOD_COUNT_MAX=9};
 
@@ -30,7 +30,7 @@ extern const size_t serial2_rx_pin;
 extern ConstantString device_name;
 
 // Fields
-// Field values must be long, double, bool, long[], double[], bool[], char[]
+// Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString*
 extern ConstantString double_field_name;
 extern const double double_default;
 
@@ -56,6 +56,19 @@ extern const bool bool_array_default[BOOL_ARRAY_LENGTH];
 extern ConstantString string_field_name;
 enum{STRING_LENGTH_MAX=10};
 extern const char string_default[STRING_LENGTH_MAX];
+
+extern ConstantString odd_field_name;
+enum{ODD_MEMBER_COUNT=5};
+extern const long odd_members[ODD_MEMBER_COUNT];
+extern const long &odd_default;
+
+extern ConstantString mode_field_name;
+enum{MODE_MEMBER_COUNT=3};
+extern ConstantString mode_rising;
+extern ConstantString mode_falling;
+extern ConstantString mode_change;
+extern const ConstantString * const mode_ptr_members[MODE_MEMBER_COUNT];
+extern ConstantString * const mode_ptr_default;
 
 // Parameters
 extern ConstantString long_array_parameter_name;

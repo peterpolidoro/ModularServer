@@ -44,6 +44,9 @@ void Controller::setup()
 
   ModularDevice::Field& string_field = modular_server_.createField(constants::string_field_name,constants::string_default);
 
+  ModularDevice::Field& odd_field = modular_server_.createField(constants::odd_field_name,constants::odd_default);
+  odd_field.setMembership(constants::odd_members);
+
   // Parameters
   ModularDevice::Parameter& long_array_parameter = modular_server_.createParameter(constants::long_array_parameter_name);
   long_array_parameter.setTypeLong();

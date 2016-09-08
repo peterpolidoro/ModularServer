@@ -79,7 +79,16 @@ public:
   void setRange(const double min, const double max);
   void attachSetValueCallback(SetValueCallback callback);
   void attachSetElementValueCallback(SetElementValueCallback callback);
-
+  template <size_t N>
+  void setMembership(const long (&members)[N])
+  {
+    parameter_.setMembership(members);
+  };
+  template <size_t N>
+  void setMembership(const ConstantString * const (&members)[N])
+  {
+    parameter_.setMembership(members);
+  };
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;

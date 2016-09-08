@@ -18,6 +18,7 @@ Parameter::Parameter()
   array_element_type_ = JsonStream::LONG_TYPE;
   range_is_set_ = false;
   array_length_range_is_set_ = false;
+  membership_is_set_ = false;
 }
 
 Parameter::Parameter(const ConstantString &name)
@@ -28,6 +29,7 @@ Parameter::Parameter(const ConstantString &name)
   array_element_type_ = JsonStream::LONG_TYPE;
   range_is_set_ = false;
   array_length_range_is_set_ = false;
+  membership_is_set_ = false;
 }
 
 void Parameter::setName(const ConstantString &name)
@@ -209,6 +211,16 @@ size_t Parameter::getArrayLengthMax()
 bool Parameter::arrayLengthRangeIsSet()
 {
   return array_length_range_is_set_;
+}
+
+bool Parameter::membershipIsSet()
+{
+  return membership_is_set_;
+}
+
+Vector<constants::MemberType>& Parameter::getMembers()
+{
+  return members_;
 }
 
 }

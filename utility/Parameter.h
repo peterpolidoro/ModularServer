@@ -14,6 +14,7 @@
 #endif
 #include "ConstantVariable.h"
 #include "JsonStream.h"
+#include "Vector.h"
 #include "Constants.h"
 
 
@@ -47,6 +48,18 @@ public:
   void setArrayLengthRange(const size_t array_length_min,
                            const size_t array_length_max);
   void removeArrayLengthRange();
+  template <size_t N>
+  void setMembership(const long (&members)[N])
+  {
+    members_.setStorage((constants::MemberType[N])members);
+    membership_is_set_ = true;
+  };
+  template <size_t N>
+  void setMembership(const ConstantString * const (&members)[N])
+  {
+    members_.setStorage(members);
+    membership_is_set_ = true;
+  };
 private:
   const ConstantString *name_ptr_;
   const ConstantString *units_ptr_;
@@ -58,6 +71,8 @@ private:
   size_t array_length_min_;
   size_t array_length_max_;
   bool array_length_range_is_set_;
+  Vector<constants::MemberType> members_;
+  bool membership_is_set_;
   bool compareName(const char *name_to_compare);
   bool compareName(const ConstantString &name_to_compare);
   const ConstantString& getName();
@@ -70,6 +85,8 @@ private:
   size_t getArrayLengthMin();
   size_t getArrayLengthMax();
   bool arrayLengthRangeIsSet();
+  bool membershipIsSet();
+  Vector<constants::MemberType>& getMembers();
   friend class Field;
   friend class Method;
   friend class Server;

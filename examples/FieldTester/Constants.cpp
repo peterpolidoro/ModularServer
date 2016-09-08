@@ -47,6 +47,22 @@ const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
 CONSTANT_STRING(string_field_name,"string");
 const char string_default[STRING_LENGTH_MAX] = "abcdef";
 
+CONSTANT_STRING(odd_field_name,"odd");
+const long odd_members[ODD_MEMBER_COUNT] = {1,3,5,7,9};
+const long &odd_default = odd_members[2];
+
+CONSTANT_STRING(mode_field_name,"mode");
+CONSTANT_STRING(mode_rising,"RISING");
+CONSTANT_STRING(mode_falling,"FALLING");
+CONSTANT_STRING(mode_change,"CHANGE");
+const ConstantString * const mode_ptr_members[MODE_MEMBER_COUNT] =
+  {
+    &mode_rising,
+    &mode_falling,
+    &mode_change,
+  };
+ConstantString * const mode_ptr_default = &mode_rising;
+
 // Parameters
 CONSTANT_STRING(long_array_parameter_name,"long_array_parameter");
 

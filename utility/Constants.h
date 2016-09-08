@@ -39,6 +39,12 @@ union NumberType
   double d;
 };
 
+union MemberType
+{
+  long l;
+  ConstantString *sp;
+};
+
 // Fields
 extern ConstantString serial_number_field_name;
 

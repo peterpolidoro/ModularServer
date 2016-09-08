@@ -49,6 +49,17 @@ parameter_(name),
   set_element_value_callback_ = NULL;
 }
 
+template <>
+Field::Field<ConstantString * const>(const ConstantString &name,
+                                     const ConstantString * const &default_value) :
+parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeString();
+  set_value_callback_ = NULL;
+  set_element_value_callback_ = NULL;
+}
+
 void Field::setUnits(const ConstantString &name)
 {
   parameter_.setUnits(name);
