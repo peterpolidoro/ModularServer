@@ -1587,7 +1587,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                 {
                   getFieldValue(field_name,field_value,array_length);
                 }
-                writeToResponse(field_value,array_length);
+                writeArrayToResponse(field_value,array_length);
               }
               else
               {
@@ -1617,7 +1617,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                 {
                   getFieldValue(field_name,field_value,array_length);
                 }
-                writeToResponse(field_value,array_length);
+                writeArrayToResponse(field_value,array_length);
               }
               else
               {
@@ -1647,7 +1647,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
                 {
                   getFieldValue(field_name,field_value,array_length);
                 }
-                writeToResponse(field_value,array_length);
+                writeArrayToResponse(field_value,array_length);
               }
               else
               {

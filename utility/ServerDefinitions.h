@@ -470,7 +470,7 @@ void Server::writeResultToResponse(T *value, size_t N)
   if (!result_key_in_response_ && !error_)
   {
     result_key_in_response_ = true;
-    json_stream_.write(constants::result_constant_string,value,N);
+    json_stream_.writeArray(constants::result_constant_string,value,N);
   }
 }
 
