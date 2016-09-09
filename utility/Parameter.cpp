@@ -18,7 +18,7 @@ Parameter::Parameter()
   array_element_type_ = JsonStream::LONG_TYPE;
   range_is_set_ = false;
   array_length_range_is_set_ = false;
-  membership_is_set_ = false;
+  subset_is_set_ = false;
 }
 
 Parameter::Parameter(const ConstantString &name)
@@ -29,7 +29,7 @@ Parameter::Parameter(const ConstantString &name)
   array_element_type_ = JsonStream::LONG_TYPE;
   range_is_set_ = false;
   array_length_range_is_set_ = false;
-  membership_is_set_ = false;
+  subset_is_set_ = false;
 }
 
 void Parameter::setName(const ConstantString &name)
@@ -151,6 +151,11 @@ void Parameter::removeArrayLengthRange()
   array_length_range_is_set_ = false;
 }
 
+void Parameter::removeSubset()
+{
+  subset_is_set_ = false;
+}
+
 bool Parameter::compareName(const char *name_to_compare)
 {
   char name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
@@ -213,14 +218,14 @@ bool Parameter::arrayLengthRangeIsSet()
   return array_length_range_is_set_;
 }
 
-bool Parameter::membershipIsSet()
+bool Parameter::subsetIsSet()
 {
-  return membership_is_set_;
+  return subset_is_set_;
 }
 
-Vector<constants::MemberType>& Parameter::getMembers()
+Vector<const constants::SubsetMemberType>& Parameter::getSubset()
 {
-  return members_;
+  return subset_;
 }
 
 }

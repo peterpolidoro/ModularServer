@@ -73,22 +73,18 @@ public:
     set_value_callback_ = NULL;
     set_element_value_callback_ = NULL;
   }
-
+  Field(const ConstantString &name,
+        const ConstantString * const default_value);
   void setUnits(const ConstantString &name);
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
+  template <size_t N>
+  void setSubset(const constants::SubsetMemberType (&subset)[N])
+  {
+    parameter_.setSubset(subset);
+  }
   void attachSetValueCallback(SetValueCallback callback);
   void attachSetElementValueCallback(SetElementValueCallback callback);
-  template <size_t N>
-  void setMembership(const long (&members)[N])
-  {
-    parameter_.setMembership(members);
-  };
-  template <size_t N>
-  void setMembership(const ConstantString * const (&members)[N])
-  {
-    parameter_.setMembership(members);
-  };
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;

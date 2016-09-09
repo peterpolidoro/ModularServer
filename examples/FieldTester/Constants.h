@@ -8,6 +8,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include "ConstantVariable.h"
+#include "ModularServer.h"
 
 namespace constants
 {
@@ -58,17 +59,17 @@ enum{STRING_LENGTH_MAX=10};
 extern const char string_default[STRING_LENGTH_MAX];
 
 extern ConstantString odd_field_name;
-enum{ODD_MEMBER_COUNT=5};
-extern const long odd_members[ODD_MEMBER_COUNT];
+enum{ODD_SUBSET_LENGTH=5};
+extern const ModularDevice::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
 extern const long &odd_default;
 
 extern ConstantString mode_field_name;
-enum{MODE_MEMBER_COUNT=3};
+enum{MODE_SUBSET_LENGTH=3};
 extern ConstantString mode_rising;
 extern ConstantString mode_falling;
 extern ConstantString mode_change;
-extern const ConstantString * const mode_ptr_members[MODE_MEMBER_COUNT];
-extern ConstantString * const mode_ptr_default;
+extern const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
+extern const ConstantString * const mode_ptr_default;
 
 // Parameters
 extern ConstantString long_array_parameter_name;

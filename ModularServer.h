@@ -13,6 +13,7 @@
 namespace ModularDevice
 {
 class Method;
+using SubsetMemberType = constants::SubsetMemberType;
 
 class ModularServer
 {

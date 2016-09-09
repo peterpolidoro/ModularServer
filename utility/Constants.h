@@ -39,10 +39,10 @@ union NumberType
   double d;
 };
 
-union MemberType
+union SubsetMemberType
 {
-  long l;
-  ConstantString *sp;
+  const long l;
+  ConstantString * const cs_ptr;
 };
 
 // Fields

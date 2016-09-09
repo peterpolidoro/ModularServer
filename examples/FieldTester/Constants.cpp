@@ -48,20 +48,20 @@ CONSTANT_STRING(string_field_name,"string");
 const char string_default[STRING_LENGTH_MAX] = "abcdef";
 
 CONSTANT_STRING(odd_field_name,"odd");
-const long odd_members[ODD_MEMBER_COUNT] = {1,3,5,7,9};
-const long &odd_default = odd_members[2];
+const ModularDevice::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH] = {1,3,5,7,9};
+const long &odd_default = odd_subset[2].l;
 
 CONSTANT_STRING(mode_field_name,"mode");
 CONSTANT_STRING(mode_rising,"RISING");
 CONSTANT_STRING(mode_falling,"FALLING");
 CONSTANT_STRING(mode_change,"CHANGE");
-const ConstantString * const mode_ptr_members[MODE_MEMBER_COUNT] =
+const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   {
     &mode_rising,
     &mode_falling,
     &mode_change,
   };
-ConstantString * const mode_ptr_default = &mode_rising;
+const ConstantString * const mode_ptr_default = &mode_rising;
 
 // Parameters
 CONSTANT_STRING(long_array_parameter_name,"long_array_parameter");
