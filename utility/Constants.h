@@ -94,6 +94,7 @@ extern ConstantString invalid_json_array_error_data;
 extern ConstantString parameter_error_error_data;
 extern ConstantString array_parameter_error_error_data;
 extern ConstantString array_parameter_length_error_error_data;
+extern ConstantString value_not_in_subset_error_data;
 
 extern const int parse_error_code;
 extern const int invalid_request_error_code;

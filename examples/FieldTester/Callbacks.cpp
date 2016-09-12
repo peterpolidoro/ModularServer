@@ -105,4 +105,21 @@ void getStringSomeCallback()
   modular_server.writeResultToResponse(string);
 }
 
+void getCountCallback()
+{
+  long count = modular_server.getParameterValue(constants::count_parameter_name);
+  switch (count)
+  {
+    case 10:
+      modular_server.writeResultToResponse("ten");
+      break;
+    case 20:
+      modular_server.writeResultToResponse("twenty");
+      break;
+    case 30:
+      modular_server.writeResultToResponse("thirty");
+      break;
+  }
+}
+
 }

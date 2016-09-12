@@ -58,6 +58,10 @@ void Controller::setup()
   ModularDevice::Parameter& length_parameter = modular_server_.createParameter(constants::length_parameter_name);
   length_parameter.setRange(constants::length_min,constants::length_max);
 
+  ModularDevice::Parameter& count_parameter = modular_server_.createParameter(constants::count_parameter_name);
+  count_parameter.setTypeLong();
+  count_parameter.setSubset(constants::count_subset);
+
   // Methods
   ModularDevice::Method& get_doubled_method = modular_server_.createMethod(constants::get_doubled_method_name);
   get_doubled_method.attachCallback(callbacks::getDoubledCallback);
@@ -96,6 +100,11 @@ void Controller::setup()
   get_string_some_method.attachCallback(callbacks::getStringSomeCallback);
   get_string_some_method.addParameter(length_parameter);
   get_string_some_method.setReturnTypeString();
+
+  ModularDevice::Method& get_count_method = modular_server_.createMethod(constants::get_count_method_name);
+  get_count_method.attachCallback(callbacks::getCountCallback);
+  get_count_method.addParameter(count_parameter);
+  get_count_method.setReturnTypeString();
 
   // Setup Streams
   Serial.begin(constants::baudrate);

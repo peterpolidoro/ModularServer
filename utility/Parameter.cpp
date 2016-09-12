@@ -193,6 +193,36 @@ bool Parameter::rangeIsSet()
   return range_is_set_;
 }
 
+bool Parameter::valueNotInRange(const double value)
+{
+  bool not_in_range = false;
+  if (rangeIsSet())
+  {
+    double min = getMin().d;
+    double max = getMax().d;
+    if ((value < min) || (value > max))
+    {
+      not_in_range = true;
+    }
+  }
+  return not_in_range;
+}
+
+bool Parameter::valueNotInRange(const float value)
+{
+  bool not_in_range = false;
+  if (rangeIsSet())
+  {
+    double min = getMin().d;
+    double max = getMax().d;
+    if (((double)value < min) || ((double)value > max))
+    {
+      not_in_range = true;
+    }
+  }
+  return not_in_range;
+}
+
 constants::NumberType Parameter::getMin()
 {
   return min_;
@@ -216,6 +246,21 @@ size_t Parameter::getArrayLengthMax()
 bool Parameter::arrayLengthRangeIsSet()
 {
   return array_length_range_is_set_;
+}
+
+bool Parameter::arrayLengthNotInRange(const size_t array_length)
+{
+  bool not_in_range = false;
+  if (arrayLengthRangeIsSet())
+  {
+    size_t array_length_min = getArrayLengthMin();
+    size_t array_length_max = getArrayLengthMax();
+    if ((array_length < array_length_min) || (array_length > array_length_max))
+    {
+      not_in_range = true;
+    }
+  }
+  return not_in_range;
 }
 
 bool Parameter::subsetIsSet()

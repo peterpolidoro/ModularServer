@@ -33,5 +33,7 @@ void getStringAllCallback();
 
 void getStringSomeCallback();
 
+void getCountCallback();
+
 }
 #endif

@@ -201,7 +201,8 @@ private:
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceInfoToResponse();
-  void writeParameterOutOfRangeErrorToResponse(Parameter &parameter, char min_str[], char max_str[]);
+  void writeParameterNotInSubsetErrorToResponse(Parameter &parameter, Vector<const constants::SubsetMemberType> &subset);
+  void writeParameterNotInRangeErrorToResponse(Parameter &parameter, char min_str[], char max_str[]);
   void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false, int element_index=-1);
   void writeFieldErrorToResponse(const ConstantString &error);
 

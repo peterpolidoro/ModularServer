@@ -70,6 +70,21 @@ CONSTANT_STRING(length_parameter_name,"length_parameter");
 const long length_min = 0;
 const long length_max = 20;
 
+CONSTANT_STRING(count_parameter_name,"count");
+const ModularDevice::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH] = {10,20,30};
+
+// CONSTANT_STRING(mode_parameter_name,"mode");
+// CONSTANT_STRING(mode_rising,"RISING");
+// CONSTANT_STRING(mode_falling,"FALLING");
+// CONSTANT_STRING(mode_change,"CHANGE");
+// const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
+//   {
+//     &mode_rising,
+//     &mode_falling,
+//     &mode_change,
+//   };
+// const ConstantString * const mode_ptr_default = &mode_rising;
+
 // Methods
 CONSTANT_STRING(get_doubled_method_name,"getDoubled");
 CONSTANT_STRING(get_bool_method_name,"getBool");
@@ -80,6 +95,7 @@ CONSTANT_STRING(set_long_array_variable_method_name,"setLongArrayVariable");
 CONSTANT_STRING(set_long_array_parameter_method_name,"setLongArrayParameter");
 CONSTANT_STRING(get_string_all_method_name,"getStringAll");
 CONSTANT_STRING(get_string_some_method_name,"getStringSome");
+CONSTANT_STRING(get_count_method_name,"getCount");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");
