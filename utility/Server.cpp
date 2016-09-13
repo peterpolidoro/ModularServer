@@ -794,6 +794,13 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
     case JsonStream::LONG_TYPE:
       {
         writeToResponse(constants::type_constant_string,JsonStream::LONG_TYPE);
+        if (parameter.subsetIsSet())
+        {
+          char subset_str[constants::STRING_LENGTH_SUBSET];
+          subset_str[0] = 0;
+          subsetToString(subset_str,parameter.getSubset(),constants::STRING_LENGTH_SUBSET);
+          writeToResponse(constants::subset_constant_string,subset_str);
+        }
         if (parameter.rangeIsSet())
         {
           long min = parameter.getMin().l;
@@ -841,6 +848,13 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
           case JsonStream::LONG_TYPE:
             {
               writeToResponse(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
+              if (parameter.subsetIsSet())
+              {
+                char subset_str[constants::STRING_LENGTH_SUBSET];
+                subset_str[0] = 0;
+                subsetToString(subset_str,parameter.getSubset(),constants::STRING_LENGTH_SUBSET);
+                writeToResponse(constants::array_element_subset_constant_string,subset_str);
+              }
               if (parameter.rangeIsSet())
               {
                 long min = parameter.getMin().l;
@@ -952,9 +966,9 @@ bool Server::checkParameters()
 
 bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json_value)
 {
-  bool not_in_subset = false;
-  bool not_in_range = false;
-  bool array_length_not_in_range = false;
+  bool in_subset = true;
+  bool in_range = true;
+  bool array_length_in_range = true;
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
@@ -967,14 +981,14 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     case JsonStream::LONG_TYPE:
       {
         long value = (long)json_value;
-        if (parameter.valueNotInSubset(value))
+        if (!parameter.valueInSubset(value))
         {
-          not_in_subset = true;
+          in_subset = false;
           break;
         }
-        if (parameter.valueNotInRange(value))
+        if (!parameter.valueInRange(value))
         {
-          not_in_range = true;
+          in_range = false;
           long min = parameter.getMin().l;
           long max = parameter.getMax().l;
           dtostrf(min,0,0,min_str);
@@ -985,9 +999,9 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     case JsonStream::DOUBLE_TYPE:
       {
         double value = (double)json_value;
-        if (parameter.valueNotInRange(value))
+        if (!parameter.valueInRange(value))
         {
-          not_in_range = true;
+          in_range = false;
           double min = parameter.getMin().d;
           double max = parameter.getMax().d;
           dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
@@ -1020,9 +1034,9 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
         else
         {
           size_t array_length = json_array.size();
-          if (parameter.arrayLengthNotInRange(array_length))
+          if (!parameter.arrayLengthInRange(array_length))
           {
-            array_length_not_in_range = true;
+            array_length_in_range = false;
             size_t array_length_min = parameter.getArrayLengthMin();
             size_t array_length_max = parameter.getArrayLengthMax();
             dtostrf(array_length_min,0,0,min_str);
@@ -1043,16 +1057,16 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
         break;
       }
   }
-  if (not_in_subset)
+  if (!in_subset)
   {
     Vector<const constants::SubsetMemberType> &subset = parameter.getSubset();
     writeParameterNotInSubsetErrorToResponse(parameter,subset);
   }
-  else if (not_in_range)
+  else if (!in_range)
   {
     writeParameterNotInRangeErrorToResponse(parameter,min_str,max_str);
   }
-  else if (array_length_not_in_range)
+  else if (!array_length_in_range)
   {
     error_ = true;
     writeKeyToResponse(constants::error_constant_string);
@@ -1061,6 +1075,9 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = 0;
     constants::array_parameter_length_error_error_data.copy(error_str);
+    char value_not_in_range_str[constants::value_not_in_range_error_data.length() + 1];
+    constants::value_not_in_range_error_data.copy(value_not_in_range_str);
+    strcat(error_str,value_not_in_range_str);
     strcat(error_str,min_str);
     char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
     constants::less_than_equal_constant_string.copy(less_than_equal_str);
@@ -1119,13 +1136,14 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
     endResponseObject();
   }
-  bool parameter_ok = (!not_in_subset) && (!not_in_range) && (!array_length_not_in_range) && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
+  bool parameter_ok = in_subset && in_range && array_length_in_range && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
   return parameter_ok;
 }
 
 bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonVariant &json_value)
 {
-  bool not_in_range = false;
+  bool in_subset = true;
+  bool in_range = true;
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
   min_str[0] = 0;
   char max_str[JsonStream::STRING_LENGTH_DOUBLE];
@@ -1153,9 +1171,14 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
           case JsonStream::LONG_TYPE:
             {
               long value = (long)json_value;
-              if (parameter.valueNotInRange(value))
+              if (!parameter.valueInSubset(value))
               {
-                not_in_range = true;
+                in_subset = false;
+                break;
+              }
+              if (!parameter.valueInRange(value))
+              {
+                in_range = false;
                 long min = parameter.getMin().l;
                 long max = parameter.getMax().l;
                 dtostrf(min,0,0,min_str);
@@ -1166,9 +1189,9 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
           case JsonStream::DOUBLE_TYPE:
             {
               double value = (double)json_value;
-              if (parameter.valueNotInRange(value))
+              if (!parameter.valueInRange(value))
               {
-                not_in_range = true;
+                in_range = false;
                 double min = parameter.getMin().d;
                 double max = parameter.getMax().d;
                 dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
@@ -1190,11 +1213,16 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
       }
       break;
   }
-  if (not_in_range)
+  if (!in_subset)
+  {
+    Vector<const constants::SubsetMemberType> &subset = parameter.getSubset();
+    writeParameterNotInSubsetErrorToResponse(parameter,subset);
+  }
+  else if (!in_range)
   {
     writeParameterNotInRangeErrorToResponse(parameter,min_str,max_str);
   }
-  bool parameter_ok = !not_in_range;
+  bool parameter_ok = in_subset && in_range;
   return parameter_ok;
 }
 
@@ -1684,23 +1712,8 @@ void Server::writeParameterNotInSubsetErrorToResponse(Parameter &parameter, Vect
   char value_not_in_subset_str[constants::value_not_in_subset_error_data.length() + 1];
   constants::value_not_in_subset_error_data.copy(value_not_in_subset_str);
   strcat(error_str,value_not_in_subset_str);
-  // strcat(error_str,min_str);
-  // char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
-  // constants::less_than_equal_constant_string.copy(less_than_equal_str);
-  // strcat(error_str,less_than_equal_str);
-  // char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-  // parameter_name[0] = 0;
-  // const ConstantString& name = parameter.getName();
-  // name.copy(parameter_name);
-  // strcat(error_str,parameter_name);
-  // if (type == JsonStream::ARRAY_TYPE)
-  // {
-  //   char element_str[constants::element_constant_string.length()+1];
-  //   constants::element_constant_string.copy(element_str);
-  //   strcat(error_str,element_str);
-  // }
-  // strcat(error_str,less_than_equal_str);
-  // strcat(error_str,max_str);
+  size_t length_left = constants::STRING_LENGTH_ERROR - strlen(error_str) - 1;
+  subsetToString(error_str,subset,length_left);
   writeToResponse(constants::data_constant_string,error_str);
   writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
   endResponseObject();
@@ -1723,6 +1736,9 @@ void Server::writeParameterNotInRangeErrorToResponse(Parameter &parameter, char 
   {
     constants::array_parameter_error_error_data.copy(error_str);
   }
+  char value_not_in_range_str[constants::value_not_in_range_error_data.length() + 1];
+  constants::value_not_in_range_error_data.copy(value_not_in_range_str);
+  strcat(error_str,value_not_in_range_str);
   strcat(error_str,min_str);
   char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
   constants::less_than_equal_constant_string.copy(less_than_equal_str);
@@ -1754,6 +1770,55 @@ void Server::writeFieldErrorToResponse(const ConstantString &error)
   writeToResponse(constants::data_constant_string,error);
   writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
   endResponseObject();
+}
+
+void Server::subsetToString(char * destination, Vector<const constants::SubsetMemberType> &subset, const size_t num)
+{
+  size_t length_left = num;
+  size_t length = constants::array_open_constant_string.length();
+  if (length_left < length)
+  {
+    return;
+  }
+  char array_open_str[length + 1];
+  constants::array_open_constant_string.copy(array_open_str);
+  strcat(destination,array_open_str);
+  length_left -= length;
+
+  char value_str[constants::STRING_LENGTH_SUBSET_ELEMENT];
+  for (size_t i=0; i<subset.size(); ++i)
+  {
+    if (i != 0)
+    {
+      length = constants::array_separator_constant_string.length();
+      if (length_left < length)
+      {
+        return;
+      }
+      char array_separator_str[length + 1];
+      constants::array_separator_constant_string.copy(array_separator_str);
+      strcat(destination,array_separator_str);
+      length_left -= length;
+    }
+    value_str[0] = 0;
+    ltoa(subset[i].l,value_str,10);
+    length = strlen(value_str);
+    if (length_left < length)
+    {
+      return;
+    }
+    strcat(destination,value_str);
+    length_left -= length;
+  }
+
+  length = constants::array_close_constant_string.length();
+  if (length_left < length)
+  {
+    return;
+  }
+  char array_close_str[length + 1];
+  constants::array_close_constant_string.copy(array_close_str);
+  strcat(destination,array_close_str);
 }
 
 // internal methods

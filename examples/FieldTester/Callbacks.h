@@ -35,5 +35,7 @@ void getStringSomeCallback();
 
 void getCountCallback();
 
+void getCountArrayCallback();
+
 }
 #endif

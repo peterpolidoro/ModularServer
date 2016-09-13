@@ -56,10 +56,11 @@ CONSTANT_STRING(field_element_index_out_of_bounds_error_data,"field_element_inde
 CONSTANT_STRING(incorrect_parameter_number_error_data,"Incorrect number of parameters. ")
 CONSTANT_STRING(invalid_json_object_error_data," is not a valid JSON object.")
 CONSTANT_STRING(invalid_json_array_error_data," is not a valid JSON array.")
-CONSTANT_STRING(parameter_error_error_data,"Parameter value not valid: ");
-CONSTANT_STRING(array_parameter_error_error_data,"Array parameter element value not valid: ");
-CONSTANT_STRING(array_parameter_length_error_error_data,"Array parameter length not valid: ");
-CONSTANT_STRING(value_not_in_subset_error_data,"Value not in subset.");
+CONSTANT_STRING(parameter_error_error_data,"Parameter value not valid. ");
+CONSTANT_STRING(array_parameter_error_error_data,"Array parameter element value not valid. ");
+CONSTANT_STRING(array_parameter_length_error_error_data,"Array parameter length not valid. ");
+CONSTANT_STRING(value_not_in_subset_error_data,"Value not in subset: ");
+CONSTANT_STRING(value_not_in_range_error_data,"Value not in range: ");
 
 const int parse_error_code = -32700;
 const int invalid_request_error_code = -32600;
@@ -109,6 +110,11 @@ CONSTANT_STRING(needed_constant_string," needed.");
 CONSTANT_STRING(less_than_equal_constant_string," <= ");
 CONSTANT_STRING(element_constant_string," element");
 CONSTANT_STRING(array_length_constant_string," array length");
+CONSTANT_STRING(array_open_constant_string,"[");
+CONSTANT_STRING(array_close_constant_string,"]");
+CONSTANT_STRING(array_separator_constant_string,",");
+CONSTANT_STRING(subset_constant_string,"subset");
+CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(board_constant_string,"board");
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)

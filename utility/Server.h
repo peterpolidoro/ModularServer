@@ -205,6 +205,7 @@ private:
   void writeParameterNotInRangeErrorToResponse(Parameter &parameter, char min_str[], char max_str[]);
   void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false, int element_index=-1);
   void writeFieldErrorToResponse(const ConstantString &error);
+  void subsetToString(char * destination, Vector<const constants::SubsetMemberType> &subset, const size_t num);
 
   // internal methods
   void getDeviceInfoCallback();

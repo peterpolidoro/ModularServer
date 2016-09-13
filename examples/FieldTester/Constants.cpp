@@ -71,7 +71,13 @@ const long length_min = 0;
 const long length_max = 20;
 
 CONSTANT_STRING(count_parameter_name,"count");
-const ModularDevice::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH] = {10,20,30};
+const ModularDevice::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH] = {10,20,30,40,50,60,70};
+
+CONSTANT_STRING(count_array_parameter_name,"count_array");
+const size_t count_array_element_min = 30;
+const size_t count_array_element_max = 60;
+const size_t count_array_length_min = 1;
+const size_t count_array_length_max = 3;
 
 // CONSTANT_STRING(mode_parameter_name,"mode");
 // CONSTANT_STRING(mode_rising,"RISING");
@@ -96,6 +102,7 @@ CONSTANT_STRING(set_long_array_parameter_method_name,"setLongArrayParameter");
 CONSTANT_STRING(get_string_all_method_name,"getStringAll");
 CONSTANT_STRING(get_string_some_method_name,"getStringSome");
 CONSTANT_STRING(get_count_method_name,"getCount");
+CONSTANT_STRING(get_count_array_method_name,"getCountArray");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

@@ -119,7 +119,28 @@ void getCountCallback()
     case 30:
       modular_server.writeResultToResponse("thirty");
       break;
+    case 40:
+      modular_server.writeResultToResponse("forty");
+      break;
+    case 50:
+      modular_server.writeResultToResponse("fifty");
+      break;
+    case 60:
+      modular_server.writeResultToResponse("sixty");
+      break;
+    case 70:
+      modular_server.writeResultToResponse("seventy");
+      break;
+    default:
+      modular_server.writeResultToResponse("???");
+      break;
   }
+}
+
+void getCountArrayCallback()
+{
+  ArduinoJson::JsonArray& count_array = modular_server.getParameterValue(constants::count_array_parameter_name);
+  modular_server.writeResultToResponse(&count_array);
 }
 
 }

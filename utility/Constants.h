@@ -30,6 +30,8 @@ enum{STRING_LENGTH_PARAMETER_NAME=24};
 enum{STRING_LENGTH_PARAMETER_UNITS=8};
 enum{STRING_LENGTH_PARAMETER_COUNT=2};
 enum{STRING_LENGTH_METHOD_NAME=32};
+enum{STRING_LENGTH_SUBSET=257};
+enum{STRING_LENGTH_SUBSET_ELEMENT=12};
 
 enum {JSON_TOKEN_MAX=32};
 
@@ -95,6 +97,7 @@ extern ConstantString parameter_error_error_data;
 extern ConstantString array_parameter_error_error_data;
 extern ConstantString array_parameter_length_error_error_data;
 extern ConstantString value_not_in_subset_error_data;
+extern ConstantString value_not_in_range_error_data;
 
 extern const int parse_error_code;
 extern const int invalid_request_error_code;
@@ -144,6 +147,11 @@ extern ConstantString needed_constant_string;
 extern ConstantString less_than_equal_constant_string;
 extern ConstantString element_constant_string;
 extern ConstantString array_length_constant_string;
+extern ConstantString array_open_constant_string;
+extern ConstantString array_close_constant_string;
+extern ConstantString array_separator_constant_string;
+extern ConstantString subset_constant_string;
+extern ConstantString array_element_subset_constant_string;
 extern ConstantString board_constant_string;
 extern ConstantString board_type_constant_string;
 }
