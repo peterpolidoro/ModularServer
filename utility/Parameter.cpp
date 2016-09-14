@@ -337,6 +337,36 @@ bool Parameter::valueInSubset(const long value)
   return in_subset;
 }
 
+bool Parameter::valueInSubset(const char *value)
+{
+  bool in_subset = true;
+  if (subsetIsSet())
+  {
+    in_subset = false;
+    JsonStream::JsonTypes type = getType();
+    switch (type)
+    {
+      case JsonStream::STRING_TYPE:
+      {
+        for(size_t i=0; i<subset_.size(); ++i)
+        {
+          if (value == *subset_[i].cs_ptr)
+          {
+            in_subset = true;
+            break;
+          }
+        }
+        break;
+      }
+      default:
+      {
+        break;
+      }
+    }
+  }
+  return in_subset;
+}
+
 Vector<const constants::SubsetMemberType>& Parameter::getSubset()
 {
   return subset_;

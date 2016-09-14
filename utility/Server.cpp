@@ -1036,7 +1036,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     }
     case JsonStream::STRING_TYPE:
     {
-      long value = (long)json_value;
+      const char* value = (const char*)json_value;
       if (!parameter.valueInSubset(value))
       {
         in_subset = false;

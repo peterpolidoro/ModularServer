@@ -120,6 +120,7 @@ private:
   bool arrayLengthInRange(const size_t array_length);
   bool subsetIsSet();
   bool valueInSubset(const long value);
+  bool valueInSubset(const char *value);
   Vector<const constants::SubsetMemberType>& getSubset();
   friend class Field;
   friend class Method;
