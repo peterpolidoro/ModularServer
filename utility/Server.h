@@ -116,6 +116,7 @@ public:
   void writeToResponse(T value);
   template <typename T, size_t N>
   void writeToResponse(T (&value)[N]);
+  void writeToResponse(Vector<const constants::SubsetMemberType>& value, JsonStream::JsonTypes type);
   template <typename K, typename T>
   void writeToResponse(K key, T value);
   template <typename K, typename T, size_t N>

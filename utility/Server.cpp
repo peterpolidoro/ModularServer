@@ -362,6 +362,21 @@ void Server::writeNullToResponse()
   json_stream_.writeNull();
 }
 
+void Server::writeToResponse(Vector<const constants::SubsetMemberType> &value, JsonStream::JsonTypes type)
+{
+  switch (type)
+  {
+    case JsonStream::LONG_TYPE:
+      Array<long,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
+      for (size_t i=0; i<value.size(); ++i)
+      {
+        subset_elements_array.push_back(value[i].l);
+      }
+      json_stream_.write(subset_elements_array);
+      break;
+  }
+}
+
 void Server::writeResultKeyToResponse()
 {
   // Prevent multiple results in one response
@@ -796,10 +811,8 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
         writeToResponse(constants::type_constant_string,JsonStream::LONG_TYPE);
         if (parameter.subsetIsSet())
         {
-          char subset_str[constants::STRING_LENGTH_SUBSET];
-          subset_str[0] = 0;
-          subsetToString(subset_str,parameter.getSubset(),constants::STRING_LENGTH_SUBSET);
-          writeToResponse(constants::subset_constant_string,subset_str);
+          writeKeyToResponse(constants::subset_constant_string);
+          writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
         }
         if (parameter.rangeIsSet())
         {
@@ -850,10 +863,8 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
               writeToResponse(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
               if (parameter.subsetIsSet())
               {
-                char subset_str[constants::STRING_LENGTH_SUBSET];
-                subset_str[0] = 0;
-                subsetToString(subset_str,parameter.getSubset(),constants::STRING_LENGTH_SUBSET);
-                writeToResponse(constants::array_element_subset_constant_string,subset_str);
+                writeKeyToResponse(constants::array_element_subset_constant_string);
+                writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
               }
               if (parameter.rangeIsSet())
               {
