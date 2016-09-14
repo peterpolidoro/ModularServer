@@ -37,5 +37,7 @@ void getCountCallback();
 
 void getCountArrayCallback();
 
+void getDirectionCallback();
+
 }
 #endif

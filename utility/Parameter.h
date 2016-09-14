@@ -81,11 +81,31 @@ private:
     bool in_range = true;
     if (rangeIsSet())
     {
-      long min = getMin().l;
-      long max = getMax().l;
-      if (((long)value < min) || ((long)value > max))
+      long min;
+      long max;
+      JsonStream::JsonTypes type = getType();
+      switch (type)
       {
-        in_range = false;
+        case JsonStream::LONG_TYPE:
+        {
+          min = getMin().l;
+          max = getMax().l;
+          if (((long)value < min) || ((long)value > max))
+          {
+            in_range = false;
+          }
+          break;
+        }
+        case JsonStream::DOUBLE_TYPE:
+        {
+          in_range = valueInRange((double)value);
+          break;
+        }
+        default:
+        {
+          in_range = false;
+          break;
+        }
       }
     }
     return in_range;
@@ -99,25 +119,7 @@ private:
   bool arrayLengthRangeIsSet();
   bool arrayLengthInRange(const size_t array_length);
   bool subsetIsSet();
-  template <typename T>
-  bool valueInSubset(const T value)
-  {
-    bool in_subset = true;
-    if (subsetIsSet())
-    {
-      in_subset = false;
-      long value_long = (long)value;
-      for(size_t i=0; i<subset_.size(); ++i)
-      {
-        if (value_long == subset_[i].l)
-        {
-          in_subset = true;
-          break;
-        }
-      }
-    }
-    return in_subset;
-  }
+  bool valueInSubset(const long value);
   Vector<const constants::SubsetMemberType>& getSubset();
   friend class Field;
   friend class Method;

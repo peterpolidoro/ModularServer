@@ -79,17 +79,18 @@ const size_t count_array_element_max = 60;
 const size_t count_array_length_min = 1;
 const size_t count_array_length_max = 3;
 
-// CONSTANT_STRING(mode_parameter_name,"mode");
-// CONSTANT_STRING(mode_rising,"RISING");
-// CONSTANT_STRING(mode_falling,"FALLING");
-// CONSTANT_STRING(mode_change,"CHANGE");
-// const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
-//   {
-//     &mode_rising,
-//     &mode_falling,
-//     &mode_change,
-//   };
-// const ConstantString * const mode_ptr_default = &mode_rising;
+CONSTANT_STRING(direction_parameter_name,"direction");
+CONSTANT_STRING(direction_up,"UP");
+CONSTANT_STRING(direction_down,"DOWN");
+CONSTANT_STRING(direction_left,"LEFT");
+CONSTANT_STRING(direction_right,"RIGHT");
+const ModularDevice::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH] =
+  {
+    &direction_up,
+    &direction_down,
+    &direction_left,
+    &direction_right,
+  };
 
 // Methods
 CONSTANT_STRING(get_doubled_method_name,"getDoubled");
@@ -103,6 +104,7 @@ CONSTANT_STRING(get_string_all_method_name,"getStringAll");
 CONSTANT_STRING(get_string_some_method_name,"getStringSome");
 CONSTANT_STRING(get_count_method_name,"getCount");
 CONSTANT_STRING(get_count_array_method_name,"getCountArray");
+CONSTANT_STRING(get_direction_method_name,"getDirection");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

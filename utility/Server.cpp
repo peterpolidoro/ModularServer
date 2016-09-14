@@ -254,44 +254,44 @@ bool Server::setFieldValue(const ConstantString &field_name,
       switch (array_element_type)
       {
         case JsonStream::LONG_TYPE:
+        {
+          for (size_t i=0;i<array_length_min;++i)
           {
-            for (size_t i=0;i<array_length_min;++i)
+            long v = value[i];
+            success = setFieldElementValue(field_name,i,v);
+            if (!success)
             {
-              long v = value[i];
-              success = setFieldElementValue(field_name,i,v);
-              if (!success)
-              {
-                return false;
-              }
+              return false;
             }
-            break;
           }
+          break;
+        }
         case JsonStream::DOUBLE_TYPE:
+        {
+          for (size_t i=0;i<array_length_min;++i)
           {
-            for (size_t i=0;i<array_length_min;++i)
+            double v = value[i];
+            success = setFieldElementValue(field_name,i,v);
+            if (!success)
             {
-              double v = value[i];
-              success = setFieldElementValue(field_name,i,v);
-              if (!success)
-              {
-                return false;
-              }
+              return false;
             }
-            break;
           }
+          break;
+        }
         case JsonStream::BOOL_TYPE:
+        {
+          for (size_t i=0;i<array_length_min;++i)
           {
-            for (size_t i=0;i<array_length_min;++i)
+            bool v = value[i];
+            success = setFieldElementValue(field_name,i,v);
+            if (!success)
             {
-              bool v = value[i];
-              success = setFieldElementValue(field_name,i,v);
-              if (!success)
-              {
-                return false;
-              }
+              return false;
             }
-            break;
           }
+          break;
+        }
       }
     }
     else
@@ -367,6 +367,7 @@ void Server::writeToResponse(Vector<const constants::SubsetMemberType> &value, J
   switch (type)
   {
     case JsonStream::LONG_TYPE:
+    {
       Array<long,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
       for (size_t i=0; i<value.size(); ++i)
       {
@@ -374,6 +375,7 @@ void Server::writeToResponse(Vector<const constants::SubsetMemberType> &value, J
       }
       json_stream_.write(subset_elements_array);
       break;
+    }
   }
 }
 
@@ -807,123 +809,127 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
   switch (type)
   {
     case JsonStream::LONG_TYPE:
+    {
+      writeToResponse(constants::type_constant_string,JsonStream::LONG_TYPE);
+      if (parameter.subsetIsSet())
       {
-        writeToResponse(constants::type_constant_string,JsonStream::LONG_TYPE);
-        if (parameter.subsetIsSet())
-        {
-          writeKeyToResponse(constants::subset_constant_string);
-          writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
-        }
-        if (parameter.rangeIsSet())
-        {
-          long min = parameter.getMin().l;
-          long max = parameter.getMax().l;
-          writeToResponse(constants::min_constant_string,min);
-          writeToResponse(constants::max_constant_string,max);
-        }
-        break;
+        writeKeyToResponse(constants::subset_constant_string);
+        writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
       }
-    case JsonStream::DOUBLE_TYPE:
+      if (parameter.rangeIsSet())
       {
-        writeToResponse(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
-        if (parameter.rangeIsSet())
-        {
-          double min = parameter.getMin().d;
-          double max = parameter.getMax().d;
-          writeToResponse(constants::min_constant_string,min);
-          writeToResponse(constants::max_constant_string,max);
-        }
-        break;
+        long min = parameter.getMin().l;
+        long max = parameter.getMax().l;
+        writeToResponse(constants::min_constant_string,min);
+        writeToResponse(constants::max_constant_string,max);
       }
-    case JsonStream::BOOL_TYPE:
-      {
-        writeToResponse(constants::type_constant_string,JsonStream::BOOL_TYPE);
-        break;
-      }
-    case JsonStream::NULL_TYPE:
       break;
+    }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      writeToResponse(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
+      if (parameter.rangeIsSet())
+      {
+        double min = parameter.getMin().d;
+        double max = parameter.getMax().d;
+        writeToResponse(constants::min_constant_string,min);
+        writeToResponse(constants::max_constant_string,max);
+      }
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      writeToResponse(constants::type_constant_string,JsonStream::BOOL_TYPE);
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      break;
+    }
     case JsonStream::STRING_TYPE:
-      {
-        writeToResponse(constants::type_constant_string,JsonStream::STRING_TYPE);
-        break;
-      }
+    {
+      writeToResponse(constants::type_constant_string,JsonStream::STRING_TYPE);
+      break;
+    }
     case JsonStream::OBJECT_TYPE:
-      {
-        writeToResponse(constants::type_constant_string,JsonStream::OBJECT_TYPE);
-        break;
-      }
+    {
+      writeToResponse(constants::type_constant_string,JsonStream::OBJECT_TYPE);
+      break;
+    }
     case JsonStream::ARRAY_TYPE:
+    {
+      writeToResponse(constants::type_constant_string,JsonStream::ARRAY_TYPE);
+      JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+      switch (array_element_type)
       {
-        writeToResponse(constants::type_constant_string,JsonStream::ARRAY_TYPE);
-        JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
-        switch (array_element_type)
+        case JsonStream::LONG_TYPE:
         {
-          case JsonStream::LONG_TYPE:
-            {
-              writeToResponse(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
-              if (parameter.subsetIsSet())
-              {
-                writeKeyToResponse(constants::array_element_subset_constant_string);
-                writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
-              }
-              if (parameter.rangeIsSet())
-              {
-                long min = parameter.getMin().l;
-                long max = parameter.getMax().l;
-                writeToResponse(constants::array_element_min_constant_string,min);
-                writeToResponse(constants::array_element_max_constant_string,max);
-              }
-              break;
-            }
-          case JsonStream::DOUBLE_TYPE:
-            {
-              writeToResponse(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
-              if (parameter.rangeIsSet())
-              {
-                double min = parameter.getMin().d;
-                double max = parameter.getMax().d;
-                writeToResponse(constants::array_element_min_constant_string,min);
-                writeToResponse(constants::array_element_max_constant_string,max);
-              }
-              break;
-            }
-          case JsonStream::BOOL_TYPE:
-            {
-              writeToResponse(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
-              break;
-            }
-          case JsonStream::NULL_TYPE:
-            break;
-          case JsonStream::STRING_TYPE:
-            {
-              writeToResponse(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
-              break;
-            }
-          case JsonStream::OBJECT_TYPE:
-            {
-              writeToResponse(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
-              break;
-            }
-          case JsonStream::ARRAY_TYPE:
-            {
-              writeToResponse(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
-              break;
-            }
+          writeToResponse(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
+          if (parameter.subsetIsSet())
+          {
+            writeKeyToResponse(constants::array_element_subset_constant_string);
+            writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
+          }
+          if (parameter.rangeIsSet())
+          {
+            long min = parameter.getMin().l;
+            long max = parameter.getMax().l;
+            writeToResponse(constants::array_element_min_constant_string,min);
+            writeToResponse(constants::array_element_max_constant_string,max);
+          }
+          break;
         }
-        if (parameter.arrayLengthRangeIsSet())
+        case JsonStream::DOUBLE_TYPE:
         {
-          size_t array_length_min = parameter.getArrayLengthMin();
-          size_t array_length_max = parameter.getArrayLengthMax();
-          writeToResponse(constants::array_length_min_constant_string,array_length_min);
-          writeToResponse(constants::array_length_max_constant_string,array_length_max);
+          writeToResponse(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
+          if (parameter.rangeIsSet())
+          {
+            double min = parameter.getMin().d;
+            double max = parameter.getMax().d;
+            writeToResponse(constants::array_element_min_constant_string,min);
+            writeToResponse(constants::array_element_max_constant_string,max);
+          }
+          break;
         }
-        break;
+        case JsonStream::BOOL_TYPE:
+        {
+          writeToResponse(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
+          break;
+        }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          writeToResponse(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          writeToResponse(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          writeToResponse(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
+          break;
+        }
       }
+      if (parameter.arrayLengthRangeIsSet())
+      {
+        size_t array_length_min = parameter.getArrayLengthMin();
+        size_t array_length_max = parameter.getArrayLengthMax();
+        writeToResponse(constants::array_length_min_constant_string,array_length_min);
+        writeToResponse(constants::array_length_max_constant_string,array_length_max);
+      }
+      break;
+    }
     case JsonStream::VALUE_TYPE:
-      {
-        writeToResponse(constants::type_constant_string,JsonStream::VALUE_TYPE);
-        break;
-      }
+    {
+      writeToResponse(constants::type_constant_string,JsonStream::VALUE_TYPE);
+      break;
+    }
   }
   if (end_object)
   {
@@ -990,83 +996,95 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
   switch (type)
   {
     case JsonStream::LONG_TYPE:
+    {
+      long value = (long)json_value;
+      if (!parameter.valueInSubset(value))
       {
-        long value = (long)json_value;
-        if (!parameter.valueInSubset(value))
+        in_subset = false;
+        break;
+      }
+      if (!parameter.valueInRange(value))
+      {
+        in_range = false;
+        long min = parameter.getMin().l;
+        long max = parameter.getMax().l;
+        dtostrf(min,0,0,min_str);
+        dtostrf(max,0,0,max_str);
+      }
+      break;
+    }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      double value = (double)json_value;
+      if (!parameter.valueInRange(value))
+      {
+        in_range = false;
+        double min = parameter.getMin().d;
+        double max = parameter.getMax().d;
+        dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
+        dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
+      }
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::STRING_TYPE:
+    {
+      long value = (long)json_value;
+      if (!parameter.valueInSubset(value))
+      {
+        in_subset = false;
+        break;
+      }
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
+      ArduinoJson::JsonObject& json_object = json_value;
+      if (!json_object.success())
+      {
+        object_parse_unsuccessful = true;
+      }
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      ArduinoJson::JsonArray& json_array = json_value;
+      if (!json_array.success())
+      {
+        array_parse_unsuccessful = true;
+      }
+      else
+      {
+        size_t array_length = json_array.size();
+        if (!parameter.arrayLengthInRange(array_length))
         {
-          in_subset = false;
+          array_length_in_range = false;
+          size_t array_length_min = parameter.getArrayLengthMin();
+          size_t array_length_max = parameter.getArrayLengthMax();
+          dtostrf(array_length_min,0,0,min_str);
+          dtostrf(array_length_max,0,0,max_str);
           break;
         }
-        if (!parameter.valueInRange(value))
+        for (ArduinoJson::JsonArray::iterator it=json_array.begin();
+             it!=json_array.end();
+             ++it)
         {
-          in_range = false;
-          long min = parameter.getMin().l;
-          long max = parameter.getMax().l;
-          dtostrf(min,0,0,min_str);
-          dtostrf(max,0,0,max_str);
-        }
-        break;
-      }
-    case JsonStream::DOUBLE_TYPE:
-      {
-        double value = (double)json_value;
-        if (!parameter.valueInRange(value))
-        {
-          in_range = false;
-          double min = parameter.getMin().d;
-          double max = parameter.getMax().d;
-          dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
-          dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
-        }
-        break;
-      }
-    case JsonStream::BOOL_TYPE:
-      break;
-    case JsonStream::NULL_TYPE:
-      break;
-    case JsonStream::STRING_TYPE:
-      break;
-    case JsonStream::OBJECT_TYPE:
-      {
-        ArduinoJson::JsonObject& json_object = json_value;
-        if (!json_object.success())
-        {
-          object_parse_unsuccessful = true;
-        }
-        break;
-      }
-    case JsonStream::ARRAY_TYPE:
-      {
-        ArduinoJson::JsonArray& json_array = json_value;
-        if (!json_array.success())
-        {
-          array_parse_unsuccessful = true;
-        }
-        else
-        {
-          size_t array_length = json_array.size();
-          if (!parameter.arrayLengthInRange(array_length))
+          bool parameter_ok = checkArrayParameterElement(parameter,*it);
+          if (!parameter_ok)
           {
-            array_length_in_range = false;
-            size_t array_length_min = parameter.getArrayLengthMin();
-            size_t array_length_max = parameter.getArrayLengthMax();
-            dtostrf(array_length_min,0,0,min_str);
-            dtostrf(array_length_max,0,0,max_str);
             break;
           }
-          for (ArduinoJson::JsonArray::iterator it=json_array.begin();
-               it!=json_array.end();
-               ++it)
-          {
-            bool parameter_ok = checkArrayParameterElement(parameter,*it);
-            if (!parameter_ok)
-            {
-              break;
-            }
-          }
         }
-        break;
       }
+      break;
+    }
   }
   if (!in_subset)
   {
@@ -1163,66 +1181,88 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
   switch (type)
   {
     case JsonStream::LONG_TYPE:
+    {
       break;
+    }
     case JsonStream::DOUBLE_TYPE:
+    {
       break;
+    }
     case JsonStream::BOOL_TYPE:
+    {
       break;
+    }
     case JsonStream::NULL_TYPE:
+    {
       break;
+    }
     case JsonStream::STRING_TYPE:
+    {
       break;
+    }
     case JsonStream::OBJECT_TYPE:
+    {
       break;
+    }
     case JsonStream::ARRAY_TYPE:
+    {
+      JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+      switch (array_element_type)
       {
-        JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
-        switch (array_element_type)
+        case JsonStream::LONG_TYPE:
         {
-          case JsonStream::LONG_TYPE:
-            {
-              long value = (long)json_value;
-              if (!parameter.valueInSubset(value))
-              {
-                in_subset = false;
-                break;
-              }
-              if (!parameter.valueInRange(value))
-              {
-                in_range = false;
-                long min = parameter.getMin().l;
-                long max = parameter.getMax().l;
-                dtostrf(min,0,0,min_str);
-                dtostrf(max,0,0,max_str);
-              }
-              break;
-            }
-          case JsonStream::DOUBLE_TYPE:
-            {
-              double value = (double)json_value;
-              if (!parameter.valueInRange(value))
-              {
-                in_range = false;
-                double min = parameter.getMin().d;
-                double max = parameter.getMax().d;
-                dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
-                dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
-              }
-              break;
-            }
-          case JsonStream::BOOL_TYPE:
+          long value = (long)json_value;
+          if (!parameter.valueInSubset(value))
+          {
+            in_subset = false;
             break;
-          case JsonStream::NULL_TYPE:
-            break;
-          case JsonStream::STRING_TYPE:
-            break;
-          case JsonStream::OBJECT_TYPE:
-            break;
-          case JsonStream::ARRAY_TYPE:
-            break;
+          }
+          if (!parameter.valueInRange(value))
+          {
+            in_range = false;
+            long min = parameter.getMin().l;
+            long max = parameter.getMax().l;
+            dtostrf(min,0,0,min_str);
+            dtostrf(max,0,0,max_str);
+          }
+          break;
+        }
+        case JsonStream::DOUBLE_TYPE:
+        {
+          double value = (double)json_value;
+          if (!parameter.valueInRange(value))
+          {
+            in_range = false;
+            double min = parameter.getMin().d;
+            double max = parameter.getMax().d;
+            dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
+            dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
+          }
+          break;
+        }
+        case JsonStream::BOOL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          break;
         }
       }
-      break;
+    }
+    break;
   }
   if (!in_subset)
   {
@@ -1502,204 +1542,204 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
   switch (field_type)
   {
     case JsonStream::LONG_TYPE:
+    {
+      if (element_index >= 0)
       {
-        if (element_index >= 0)
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          return;
-        }
-        long field_value;
-        if (write_default)
-        {
-          getFieldDefaultValue(field_name,field_value);
-        }
-        else
-        {
-          getFieldValue(field_name,field_value);
-        }
-        writeToResponse(field_value);
-        break;
+        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        return;
       }
+      long field_value;
+      if (write_default)
+      {
+        getFieldDefaultValue(field_name,field_value);
+      }
+      else
+      {
+        getFieldValue(field_name,field_value);
+      }
+      writeToResponse(field_value);
+      break;
+    }
     case JsonStream::DOUBLE_TYPE:
+    {
+      if (element_index >= 0)
       {
-        if (element_index >= 0)
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          return;
-        }
-        double field_value;
-        if (write_default)
-        {
-          getFieldDefaultValue(field_name,field_value);
-        }
-        else
-        {
-          getFieldValue(field_name,field_value);
-        }
-        writeToResponse(field_value);
-        break;
+        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        return;
       }
+      double field_value;
+      if (write_default)
+      {
+        getFieldDefaultValue(field_name,field_value);
+      }
+      else
+      {
+        getFieldValue(field_name,field_value);
+      }
+      writeToResponse(field_value);
+      break;
+    }
     case JsonStream::BOOL_TYPE:
+    {
+      if (element_index >= 0)
       {
-        if (element_index >= 0)
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          return;
-        }
-        bool field_value;
-        if (write_default)
-        {
-          getFieldDefaultValue(field_name,field_value);
-        }
-        else
-        {
-          getFieldValue(field_name,field_value);
-        }
-        writeToResponse(field_value);
-        break;
+        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        return;
       }
+      bool field_value;
+      if (write_default)
+      {
+        getFieldDefaultValue(field_name,field_value);
+      }
+      else
+      {
+        getFieldValue(field_name,field_value);
+      }
+      writeToResponse(field_value);
+      break;
+    }
     case JsonStream::STRING_TYPE:
+    {
+      size_t array_length = getFieldArrayLength(field_name);
+      if (element_index >= 0)
       {
-        size_t array_length = getFieldArrayLength(field_name);
-        if (element_index >= 0)
-        {
-          if (element_index >= ((int)array_length-1))
-          {
-            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
-            return;
-          }
-          size_t array_length = 2;
-          char char_array[array_length];
-          char field_element_value;
-          bool success = getFieldElementValue(field_name,element_index,field_element_value);
-          if (success)
-          {
-            char_array[0] = field_element_value;
-            char_array[1] = '\0';
-          }
-          else
-          {
-            char_array[0] = '\0';
-          }
-          writeToResponse(char_array);
-          return;
-        }
-        char char_array[array_length];
-        if (write_default)
-        {
-          getFieldDefaultValue(field_name,char_array,array_length);
-        }
-        else
-        {
-          getFieldValue(field_name,char_array,array_length);
-        }
-        writeToResponse(char_array);
-        break;
-      }
-    case JsonStream::ARRAY_TYPE:
-      {
-        const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
-        size_t array_length = field.getArrayLength();
-        if (element_index >= (int)array_length)
+        if (element_index >= ((int)array_length-1))
         {
           writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
           return;
         }
-        switch (array_element_type)
+        size_t array_length = 2;
+        char char_array[array_length];
+        char field_element_value;
+        bool success = getFieldElementValue(field_name,element_index,field_element_value);
+        if (success)
         {
-          case JsonStream::LONG_TYPE:
-            {
-              if (element_index < 0)
-              {
-                long field_value[array_length];
-                if (write_default)
-                {
-                  getFieldDefaultValue(field_name,field_value,array_length);
-                }
-                else
-                {
-                  getFieldValue(field_name,field_value,array_length);
-                }
-                writeArrayToResponse(field_value,array_length);
-              }
-              else
-              {
-                long field_value;
-                if (write_default)
-                {
-                  getFieldDefaultElementValue(field_name,element_index,field_value);
-                }
-                else
-                {
-                  getFieldElementValue(field_name,element_index,field_value);
-                }
-                writeToResponse(field_value);
-              }
-              break;
-            }
-          case JsonStream::DOUBLE_TYPE:
-            {
-              if (element_index < 0)
-              {
-                double field_value[array_length];
-                if (write_default)
-                {
-                  getFieldDefaultValue(field_name,field_value,array_length);
-                }
-                else
-                {
-                  getFieldValue(field_name,field_value,array_length);
-                }
-                writeArrayToResponse(field_value,array_length);
-              }
-              else
-              {
-                double field_value;
-                if (write_default)
-                {
-                  getFieldDefaultElementValue(field_name,element_index,field_value);
-                }
-                else
-                {
-                  getFieldElementValue(field_name,element_index,field_value);
-                }
-                writeToResponse(field_value);
-              }
-              break;
-            }
-          case JsonStream::BOOL_TYPE:
-            {
-              if (element_index < 0)
-              {
-                bool field_value[array_length];
-                if (write_default)
-                {
-                  getFieldDefaultValue(field_name,field_value,array_length);
-                }
-                else
-                {
-                  getFieldValue(field_name,field_value,array_length);
-                }
-                writeArrayToResponse(field_value,array_length);
-              }
-              else
-              {
-                bool field_value;
-                if (write_default)
-                {
-                  getFieldDefaultElementValue(field_name,element_index,field_value);
-                }
-                else
-                {
-                  getFieldElementValue(field_name,element_index,field_value);
-                }
-                writeToResponse(field_value);
-              }
-              break;
-            }
+          char_array[0] = field_element_value;
+          char_array[1] = '\0';
         }
-        break;
+        else
+        {
+          char_array[0] = '\0';
+        }
+        writeToResponse(char_array);
+        return;
       }
+      char char_array[array_length];
+      if (write_default)
+      {
+        getFieldDefaultValue(field_name,char_array,array_length);
+      }
+      else
+      {
+        getFieldValue(field_name,char_array,array_length);
+      }
+      writeToResponse(char_array);
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+      size_t array_length = field.getArrayLength();
+      if (element_index >= (int)array_length)
+      {
+        writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+        return;
+      }
+      switch (array_element_type)
+      {
+        case JsonStream::LONG_TYPE:
+        {
+          if (element_index < 0)
+          {
+            long field_value[array_length];
+            if (write_default)
+            {
+              getFieldDefaultValue(field_name,field_value,array_length);
+            }
+            else
+            {
+              getFieldValue(field_name,field_value,array_length);
+            }
+            writeArrayToResponse(field_value,array_length);
+          }
+          else
+          {
+            long field_value;
+            if (write_default)
+            {
+              getFieldDefaultElementValue(field_name,element_index,field_value);
+            }
+            else
+            {
+              getFieldElementValue(field_name,element_index,field_value);
+            }
+            writeToResponse(field_value);
+          }
+          break;
+        }
+        case JsonStream::DOUBLE_TYPE:
+        {
+          if (element_index < 0)
+          {
+            double field_value[array_length];
+            if (write_default)
+            {
+              getFieldDefaultValue(field_name,field_value,array_length);
+            }
+            else
+            {
+              getFieldValue(field_name,field_value,array_length);
+            }
+            writeArrayToResponse(field_value,array_length);
+          }
+          else
+          {
+            double field_value;
+            if (write_default)
+            {
+              getFieldDefaultElementValue(field_name,element_index,field_value);
+            }
+            else
+            {
+              getFieldElementValue(field_name,element_index,field_value);
+            }
+            writeToResponse(field_value);
+          }
+          break;
+        }
+        case JsonStream::BOOL_TYPE:
+        {
+          if (element_index < 0)
+          {
+            bool field_value[array_length];
+            if (write_default)
+            {
+              getFieldDefaultValue(field_name,field_value,array_length);
+            }
+            else
+            {
+              getFieldValue(field_name,field_value,array_length);
+            }
+            writeArrayToResponse(field_value,array_length);
+          }
+          else
+          {
+            bool field_value;
+            if (write_default)
+            {
+              getFieldDefaultElementValue(field_name,element_index,field_value);
+            }
+            else
+            {
+              getFieldElementValue(field_name,element_index,field_value);
+            }
+            writeToResponse(field_value);
+          }
+          break;
+        }
+      }
+      break;
+    }
   }
 }
 
@@ -2005,36 +2045,36 @@ void Server::setFieldValueCallback()
     switch (field_type)
     {
       case JsonStream::LONG_TYPE:
-        {
-          long field_value = getParameterValue(constants::field_value_parameter_name);
-          setFieldValue(field_name_cs,field_value);
-          break;
-        }
+      {
+        long field_value = getParameterValue(constants::field_value_parameter_name);
+        setFieldValue(field_name_cs,field_value);
+        break;
+      }
       case JsonStream::DOUBLE_TYPE:
-        {
-          double field_value = getParameterValue(constants::field_value_parameter_name);
-          setFieldValue(field_name_cs,field_value);
-          break;
-        }
+      {
+        double field_value = getParameterValue(constants::field_value_parameter_name);
+        setFieldValue(field_name_cs,field_value);
+        break;
+      }
       case JsonStream::BOOL_TYPE:
-        {
-          bool field_value = getParameterValue(constants::field_value_parameter_name);
-          setFieldValue(field_name_cs,field_value);
-          break;
-        }
+      {
+        bool field_value = getParameterValue(constants::field_value_parameter_name);
+        setFieldValue(field_name_cs,field_value);
+        break;
+      }
       case JsonStream::STRING_TYPE:
-        {
-          const char* field_value = getParameterValue(constants::field_value_parameter_name);
-          size_t array_length = strlen(field_value) + 1;
-          setFieldValue(field_name_cs,field_value,array_length);
-          break;
-        }
+      {
+        const char* field_value = getParameterValue(constants::field_value_parameter_name);
+        size_t array_length = strlen(field_value) + 1;
+        setFieldValue(field_name_cs,field_value,array_length);
+        break;
+      }
       case JsonStream::ARRAY_TYPE:
-        {
-          ArduinoJson::JsonArray &field_value = getParameterValue(constants::field_value_parameter_name);
-          setFieldValue(field_name_cs,field_value);
-          break;
-        }
+      {
+        ArduinoJson::JsonArray &field_value = getParameterValue(constants::field_value_parameter_name);
+        setFieldValue(field_name_cs,field_value);
+        break;
+      }
     }
   }
   else
@@ -2067,69 +2107,69 @@ void Server::setFieldElementValueCallback()
     switch (field_type)
     {
       case JsonStream::LONG_TYPE:
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          break;
-        }
+      {
+        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        break;
+      }
       case JsonStream::DOUBLE_TYPE:
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          break;
-        }
+      {
+        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        break;
+      }
       case JsonStream::BOOL_TYPE:
-        {
-          writeFieldErrorToResponse(constants::field_not_array_type_error_data);
-          break;
-        }
+      {
+        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        break;
+      }
       case JsonStream::STRING_TYPE:
+      {
+        size_t array_length = field.getArrayLength();
+        if ((size_t)field_element_index >= (array_length - 1))
         {
-          size_t array_length = field.getArrayLength();
-          if ((size_t)field_element_index >= (array_length - 1))
-          {
-            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
-            return;
-          }
-          const char* field_value = getParameterValue(constants::field_value_parameter_name);
-          size_t string_length = strlen(field_value);
-          if (string_length >= 1)
-          {
-            char v = field_value[0];
-            setFieldElementValue(field_name_cs,field_element_index,v);
-          }
-          break;
+          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+          return;
         }
+        const char* field_value = getParameterValue(constants::field_value_parameter_name);
+        size_t string_length = strlen(field_value);
+        if (string_length >= 1)
+        {
+          char v = field_value[0];
+          setFieldElementValue(field_name_cs,field_element_index,v);
+        }
+        break;
+      }
       case JsonStream::ARRAY_TYPE:
+      {
+        size_t array_length = field.getArrayLength();
+        if ((size_t)field_element_index >= array_length)
         {
-          size_t array_length = field.getArrayLength();
-          if ((size_t)field_element_index >= array_length)
-          {
-            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
-            return;
-          }
-          JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
-          switch (array_element_type)
-          {
-            case JsonStream::LONG_TYPE:
-              {
-                long field_value = getParameterValue(constants::field_value_parameter_name);
-                setFieldElementValue(field_name_cs,field_element_index,field_value);
-                break;
-              }
-            case JsonStream::DOUBLE_TYPE:
-              {
-                double field_value = getParameterValue(constants::field_value_parameter_name);
-                setFieldElementValue(field_name_cs,field_element_index,field_value);
-                break;
-              }
-            case JsonStream::BOOL_TYPE:
-              {
-                bool field_value = getParameterValue(constants::field_value_parameter_name);
-                setFieldElementValue(field_name_cs,field_element_index,field_value);
-                break;
-              }
-          }
-          break;
+          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+          return;
         }
+        JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+        switch (array_element_type)
+        {
+          case JsonStream::LONG_TYPE:
+          {
+            long field_value = getParameterValue(constants::field_value_parameter_name);
+            setFieldElementValue(field_name_cs,field_element_index,field_value);
+            break;
+          }
+          case JsonStream::DOUBLE_TYPE:
+          {
+            double field_value = getParameterValue(constants::field_value_parameter_name);
+            setFieldElementValue(field_name_cs,field_element_index,field_value);
+            break;
+          }
+          case JsonStream::BOOL_TYPE:
+          {
+            bool field_value = getParameterValue(constants::field_value_parameter_name);
+            setFieldElementValue(field_name_cs,field_element_index,field_value);
+            break;
+          }
+        }
+        break;
+      }
     }
   }
   else
@@ -2156,54 +2196,54 @@ void Server::setAllFieldElementValuesCallback()
     switch (field_type)
     {
       case JsonStream::LONG_TYPE:
-        {
-          break;
-        }
+      {
+        break;
+      }
       case JsonStream::DOUBLE_TYPE:
-        {
-          break;
-        }
+      {
+        break;
+      }
       case JsonStream::BOOL_TYPE:
-        {
-          break;
-        }
+      {
+        break;
+      }
       case JsonStream::STRING_TYPE:
+      {
+        const char* field_value = getParameterValue(constants::field_value_parameter_name);
+        size_t string_length = strlen(field_value);
+        if (string_length >= 1)
         {
-          const char* field_value = getParameterValue(constants::field_value_parameter_name);
-          size_t string_length = strlen(field_value);
-          if (string_length >= 1)
-          {
-            char v = field_value[0];
-            setAllFieldElementValues(field_name_cs,v);
-          }
-          break;
+          char v = field_value[0];
+          setAllFieldElementValues(field_name_cs,v);
         }
+        break;
+      }
       case JsonStream::ARRAY_TYPE:
+      {
+        JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+        switch (array_element_type)
         {
-          JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
-          switch (array_element_type)
+          case JsonStream::LONG_TYPE:
           {
-            case JsonStream::LONG_TYPE:
-              {
-                long field_value = getParameterValue(constants::field_value_parameter_name);
-                setAllFieldElementValues(field_name_cs,field_value);
-                break;
-              }
-            case JsonStream::DOUBLE_TYPE:
-              {
-                double field_value = getParameterValue(constants::field_value_parameter_name);
-                setAllFieldElementValues(field_name_cs,field_value);
-                break;
-              }
-            case JsonStream::BOOL_TYPE:
-              {
-                bool field_value = getParameterValue(constants::field_value_parameter_name);
-                setAllFieldElementValues(field_name_cs,field_value);
-                break;
-              }
+            long field_value = getParameterValue(constants::field_value_parameter_name);
+            setAllFieldElementValues(field_name_cs,field_value);
+            break;
           }
-          break;
+          case JsonStream::DOUBLE_TYPE:
+          {
+            double field_value = getParameterValue(constants::field_value_parameter_name);
+            setAllFieldElementValues(field_name_cs,field_value);
+            break;
+          }
+          case JsonStream::BOOL_TYPE:
+          {
+            bool field_value = getParameterValue(constants::field_value_parameter_name);
+            setAllFieldElementValues(field_name_cs,field_value);
+            break;
+          }
         }
+        break;
+      }
     }
   }
   else

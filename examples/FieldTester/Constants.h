@@ -14,8 +14,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{FIELD_COUNT_MAX=8};
-enum{PARAMETER_COUNT_MAX=4};
-enum{METHOD_COUNT_MAX=11};
+enum{PARAMETER_COUNT_MAX=6};
+enum{METHOD_COUNT_MAX=13};
 
 extern const size_t baudrate;
 
@@ -88,13 +88,13 @@ extern const size_t count_array_element_max;
 extern const size_t count_array_length_min;
 extern const size_t count_array_length_max;
 
-// extern ConstantString mode_parameter_name;
-// enum{MODE_SUBSET_LENGTH=3};
-// extern ConstantString mode_rising;
-// extern ConstantString mode_falling;
-// extern ConstantString mode_change;
-// extern const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
-// extern const ConstantString * const mode_ptr_default;
+extern ConstantString direction_parameter_name;
+enum{DIRECTION_SUBSET_LENGTH=4};
+extern ConstantString direction_up;
+extern ConstantString direction_down;
+extern ConstantString direction_left;
+extern ConstantString direction_right;
+extern const ModularDevice::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH];
 
 // Methods
 extern ConstantString get_doubled_method_name;
@@ -108,6 +108,7 @@ extern ConstantString get_string_all_method_name;
 extern ConstantString get_string_some_method_name;
 extern ConstantString get_count_method_name;
 extern ConstantString get_count_array_method_name;
+extern ConstantString get_direction_method_name;
 
 // Errors
 extern ConstantString index_error;

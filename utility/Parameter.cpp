@@ -198,11 +198,31 @@ bool Parameter::valueInRange(const double value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    double min = getMin().d;
-    double max = getMax().d;
-    if ((value < min) || (value > max))
+    double min;
+    double max;
+    JsonStream::JsonTypes type = getType();
+    switch (type)
     {
-      in_range = false;
+      case JsonStream::DOUBLE_TYPE:
+      {
+        min = getMin().d;
+        max = getMax().d;
+        if ((value < min) || (value > max))
+        {
+          in_range = false;
+        }
+        break;
+      }
+      case JsonStream::LONG_TYPE:
+      {
+        in_range = valueInRange((long)value);
+        break;
+      }
+      default:
+      {
+        in_range = false;
+        break;
+      }
     }
   }
   return in_range;
@@ -213,11 +233,30 @@ bool Parameter::valueInRange(const float value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    double min = getMin().d;
-    double max = getMax().d;
-    if (((double)value < min) || ((double)value > max))
+    JsonStream::JsonTypes type = getType();
+    double min;
+    double max;
+    switch (type)
     {
-      in_range = false;
+      case JsonStream::DOUBLE_TYPE:
+      {
+        min = getMin().d;
+        max = getMax().d;
+        if (((double)value < min) || ((double)value > max))
+        {
+          in_range = false;
+        }
+        break;
+      }
+      case JsonStream::LONG_TYPE:
+      {
+        in_range = valueInRange((long)value);
+        break;
+      }
+      default:
+      {
+        in_range = false;
+      }
     }
   }
   return in_range;
@@ -266,6 +305,36 @@ bool Parameter::arrayLengthInRange(const size_t array_length)
 bool Parameter::subsetIsSet()
 {
   return subset_is_set_;
+}
+
+bool Parameter::valueInSubset(const long value)
+{
+  bool in_subset = true;
+  if (subsetIsSet())
+  {
+    in_subset = false;
+    JsonStream::JsonTypes type = getType();
+    switch (type)
+    {
+      case JsonStream::LONG_TYPE:
+      {
+        for(size_t i=0; i<subset_.size(); ++i)
+        {
+          if (value == subset_[i].l)
+          {
+            in_subset = true;
+            break;
+          }
+        }
+        break;
+      }
+      default:
+      {
+        break;
+      }
+    }
+  }
+  return in_subset;
 }
 
 Vector<const constants::SubsetMemberType>& Parameter::getSubset()

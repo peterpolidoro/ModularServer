@@ -143,4 +143,10 @@ void getCountArrayCallback()
   modular_server.writeResultToResponse(&count_array);
 }
 
+void getDirectionCallback()
+{
+  const char* direction = modular_server.getParameterValue(constants::direction_parameter_name);
+  modular_server.writeResultToResponse(direction);
+}
+
 }
