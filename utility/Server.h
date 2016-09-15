@@ -32,6 +32,8 @@
 #include "Method.h"
 #include "Constants.h"
 
+#include "Streaming.h"
+
 
 namespace ModularDevice
 {
@@ -83,6 +85,8 @@ public:
   template <typename T>
   bool getFieldValue(const ConstantString &field_name,
                      T &value);
+  bool getFieldValue(const ConstantString &field_name,
+                     const ConstantString *value);
   template <typename T, size_t N>
   bool getFieldValue(const ConstantString &field_name,
                      T (&value)[N]);

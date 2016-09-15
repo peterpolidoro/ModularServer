@@ -57,9 +57,9 @@ CONSTANT_STRING(mode_falling,"FALLING");
 CONSTANT_STRING(mode_change,"CHANGE");
 const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   {
-    &mode_rising,
-    &mode_falling,
-    &mode_change,
+    {.cs_ptr=&mode_rising},
+    {.cs_ptr=&mode_falling},
+    {.cs_ptr=&mode_change},
   };
 const ConstantString * const mode_ptr_default = &mode_rising;
 
@@ -86,10 +86,10 @@ CONSTANT_STRING(direction_left,"LEFT");
 CONSTANT_STRING(direction_right,"RIGHT");
 const ModularDevice::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH] =
   {
-    &direction_up,
-    &direction_down,
-    &direction_left,
-    &direction_right,
+    {.cs_ptr=&direction_up},
+    {.cs_ptr=&direction_down},
+    {.cs_ptr=&direction_left},
+    {.cs_ptr=&direction_right},
   };
 
 CONSTANT_STRING(direction_array_parameter_name,"direction_array");

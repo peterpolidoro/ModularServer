@@ -244,13 +244,13 @@ bool Server::setFieldValue(const ConstantString &field_name,
   if (field_index >= 0)
   {
     size_t array_length = field.getArrayLength();
-    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    JsonStream::JsonTypes field_type = field.getType();
     if (field_type == JsonStream::ARRAY_TYPE)
     {
       size_t N = value.size();
       size_t array_length_min = min(array_length,N);
       bool success;
-      JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+      JsonStream::JsonTypes array_element_type = field.getArrayElementType();
       switch (array_element_type)
       {
         case JsonStream::LONG_TYPE:
@@ -292,6 +292,26 @@ bool Server::setFieldValue(const ConstantString &field_name,
           }
           break;
         }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::VALUE_TYPE:
+        {
+          break;
+        }
       }
     }
     else
@@ -305,6 +325,22 @@ bool Server::setFieldValue(const ConstantString &field_name,
   }
   field.setValueCallback();
   return true;
+}
+
+bool Server::getFieldValue(const ConstantString &field_name,
+                           const ConstantString *value)
+{
+  Serial << "const ConstantString *value";
+  int field_index;
+  Field& field = findField(field_name,&field_index);
+  if (field_index >= 0)
+  {
+    return field.getValue(value);
+  }
+  else
+  {
+    return false;
+  }
 }
 
 size_t Server::getFieldArrayLength(const ConstantString &field_name)
@@ -328,7 +364,7 @@ size_t Server::getFieldStringLength(const ConstantString &field_name)
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    JsonStream::JsonTypes field_type = field.getType();
     if (field_type == JsonStream::STRING_TYPE)
     {
       size_t array_length_max = field.getArrayLength();
@@ -376,6 +412,18 @@ void Server::writeToResponse(Vector<const constants::SubsetMemberType> &value, J
       json_stream_.write(subset_elements_array);
       break;
     }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      break;
+    }
     case JsonStream::STRING_TYPE:
     {
       Array<ConstantString *,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
@@ -384,6 +432,18 @@ void Server::writeToResponse(Vector<const constants::SubsetMemberType> &value, J
         subset_elements_array.push_back(value[i].cs_ptr);
       }
       json_stream_.write(subset_elements_array);
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      break;
+    }
+    case JsonStream::VALUE_TYPE:
+    {
       break;
     }
   }
@@ -935,6 +995,10 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
           writeToResponse(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
           break;
         }
+        case JsonStream::VALUE_TYPE:
+        {
+          break;
+        }
       }
       if (parameter.arrayLengthRangeIsSet())
       {
@@ -1102,6 +1166,10 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
           }
         }
       }
+      break;
+    }
+    case JsonStream::VALUE_TYPE:
+    {
       break;
     }
   }
@@ -1284,9 +1352,17 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
         {
           break;
         }
+        case JsonStream::VALUE_TYPE:
+        {
+          break;
+        }
       }
+      break;
     }
-    break;
+    case JsonStream::VALUE_TYPE:
+    {
+      break;
+    }
   }
   if (!in_subset)
   {
@@ -1380,12 +1456,12 @@ void Server::help(bool verbose)
       beginResponseArray();
       for (size_t field_index=0; field_index<internal_fields_.size(); ++field_index)
       {
-        const ConstantString& field_name = internal_fields_[field_index].getParameter().getName();
+        const ConstantString& field_name = internal_fields_[field_index].getName();
         writeToResponse(field_name);
       }
       for (size_t field_index=0; field_index<external_fields_.size(); ++field_index)
       {
-        const ConstantString& field_name = external_fields_[field_index].getParameter().getName();
+        const ConstantString& field_name = external_fields_[field_index].getName();
         writeToResponse(field_name);
       }
       endResponseArray();
@@ -1557,12 +1633,12 @@ void Server::writeDeviceInfoToResponse()
 
 void Server::writeFieldToResponse(Field &field, bool write_key, bool write_default, int element_index)
 {
-  const ConstantString& field_name = field.getParameter().getName();
+  const ConstantString& field_name = field.getName();
   if (write_key)
   {
     writeKeyToResponse(field_name);
   }
-  JsonStream::JsonTypes field_type = field.getParameter().getType();
+  JsonStream::JsonTypes field_type = field.getType();
   switch (field_type)
   {
     case JsonStream::LONG_TYPE:
@@ -1624,45 +1700,61 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
     }
     case JsonStream::STRING_TYPE:
     {
-      size_t array_length = getFieldArrayLength(field_name);
-      if (element_index >= 0)
+      if (field.isStringSavedAsCharArray())
       {
-        if (element_index >= ((int)array_length-1))
+        size_t array_length = getFieldArrayLength(field_name);
+        if (element_index >= 0)
         {
-          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+          if (element_index >= ((int)array_length-1))
+          {
+            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+            return;
+          }
+          size_t array_length = 2;
+          char char_array[array_length];
+          char field_element_value;
+          bool success = getFieldElementValue(field_name,element_index,field_element_value);
+          if (success)
+          {
+            char_array[0] = field_element_value;
+            char_array[1] = '\0';
+          }
+          else
+          {
+            char_array[0] = '\0';
+          }
+          writeToResponse(char_array);
           return;
         }
-        size_t array_length = 2;
         char char_array[array_length];
-        char field_element_value;
-        bool success = getFieldElementValue(field_name,element_index,field_element_value);
-        if (success)
+        if (write_default)
         {
-          char_array[0] = field_element_value;
-          char_array[1] = '\0';
+          getFieldDefaultValue(field_name,char_array,array_length);
         }
         else
         {
-          char_array[0] = '\0';
+          getFieldValue(field_name,char_array,array_length);
         }
         writeToResponse(char_array);
-        return;
-      }
-      char char_array[array_length];
-      if (write_default)
-      {
-        getFieldDefaultValue(field_name,char_array,array_length);
       }
       else
       {
-        getFieldValue(field_name,char_array,array_length);
+        const ConstantString *cs_ptr;
+        if (write_default)
+        {
+          getFieldDefaultValue(field_name,cs_ptr);
+        }
+        else
+        {
+          getFieldValue(field_name,cs_ptr);
+        }
+        writeToResponse(*cs_ptr);
       }
-      writeToResponse(char_array);
       break;
     }
     case JsonStream::ARRAY_TYPE:
     {
-      const JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+      const JsonStream::JsonTypes array_element_type = field.getArrayElementType();
       size_t array_length = field.getArrayLength();
       if (element_index >= (int)array_length)
       {
@@ -1761,7 +1853,31 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
           }
           break;
         }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::VALUE_TYPE:
+        {
+          break;
+        }
       }
+      break;
+    }
+    case JsonStream::VALUE_TYPE:
+    {
       break;
     }
   }
@@ -1884,6 +2000,18 @@ void Server::subsetToString(char * destination, Vector<const constants::SubsetMe
         ltoa(subset[i].l,value_str,10);
         break;
       }
+      case JsonStream::DOUBLE_TYPE:
+      {
+        break;
+      }
+      case JsonStream::BOOL_TYPE:
+      {
+        break;
+      }
+      case JsonStream::NULL_TYPE:
+      {
+        break;
+      }
       case JsonStream::STRING_TYPE:
       {
         char quote_str[constants::quote_constant_string.length() + 1];
@@ -1893,6 +2021,18 @@ void Server::subsetToString(char * destination, Vector<const constants::SubsetMe
         subset[i].cs_ptr->copy(cs_str);
         strncat(value_str,cs_str,constants::STRING_LENGTH_SUBSET_ELEMENT - 2);
         strcat(value_str,quote_str);
+        break;
+      }
+      case JsonStream::OBJECT_TYPE:
+      {
+        break;
+      }
+      case JsonStream::ARRAY_TYPE:
+      {
+        break;
+      }
+      case JsonStream::VALUE_TYPE:
+      {
         break;
       }
     }
@@ -2075,7 +2215,7 @@ void Server::setFieldValueCallback()
   const char* field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
   Field& field = findField(field_name,&field_index);
-  const ConstantString& field_name_cs = field.getParameter().getName();
+  const ConstantString& field_name_cs = field.getName();
   if (field_index >= 0)
   {
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
@@ -2084,7 +2224,7 @@ void Server::setFieldValueCallback()
     {
       return;
     }
-    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    JsonStream::JsonTypes field_type = field.getType();
     switch (field_type)
     {
       case JsonStream::LONG_TYPE:
@@ -2105,6 +2245,10 @@ void Server::setFieldValueCallback()
         setFieldValue(field_name_cs,field_value);
         break;
       }
+      case JsonStream::NULL_TYPE:
+      {
+        break;
+      }
       case JsonStream::STRING_TYPE:
       {
         const char* field_value = getParameterValue(constants::field_value_parameter_name);
@@ -2112,10 +2256,18 @@ void Server::setFieldValueCallback()
         setFieldValue(field_name_cs,field_value,array_length);
         break;
       }
+      case JsonStream::OBJECT_TYPE:
+      {
+        break;
+      }
       case JsonStream::ARRAY_TYPE:
       {
         ArduinoJson::JsonArray &field_value = getParameterValue(constants::field_value_parameter_name);
         setFieldValue(field_name_cs,field_value);
+        break;
+      }
+      case JsonStream::VALUE_TYPE:
+      {
         break;
       }
     }
@@ -2137,7 +2289,7 @@ void Server::setFieldElementValueCallback()
   }
   int field_index;
   Field& field = findField(field_name,&field_index);
-  const ConstantString& field_name_cs = field.getParameter().getName();
+  const ConstantString& field_name_cs = field.getName();
   if (field_index >= 0)
   {
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
@@ -2146,7 +2298,7 @@ void Server::setFieldElementValueCallback()
     {
       return;
     }
-    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    JsonStream::JsonTypes field_type = field.getType();
     switch (field_type)
     {
       case JsonStream::LONG_TYPE:
@@ -2162,6 +2314,10 @@ void Server::setFieldElementValueCallback()
       case JsonStream::BOOL_TYPE:
       {
         writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        break;
+      }
+      case JsonStream::NULL_TYPE:
+      {
         break;
       }
       case JsonStream::STRING_TYPE:
@@ -2181,6 +2337,10 @@ void Server::setFieldElementValueCallback()
         }
         break;
       }
+      case JsonStream::OBJECT_TYPE:
+      {
+        break;
+      }
       case JsonStream::ARRAY_TYPE:
       {
         size_t array_length = field.getArrayLength();
@@ -2189,7 +2349,7 @@ void Server::setFieldElementValueCallback()
           writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
           return;
         }
-        JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+        JsonStream::JsonTypes array_element_type = field.getArrayElementType();
         switch (array_element_type)
         {
           case JsonStream::LONG_TYPE:
@@ -2210,7 +2370,31 @@ void Server::setFieldElementValueCallback()
             setFieldElementValue(field_name_cs,field_element_index,field_value);
             break;
           }
+          case JsonStream::NULL_TYPE:
+          {
+            break;
+          }
+          case JsonStream::STRING_TYPE:
+          {
+            break;
+          }
+          case JsonStream::OBJECT_TYPE:
+          {
+            break;
+          }
+          case JsonStream::ARRAY_TYPE:
+          {
+            break;
+          }
+          case JsonStream::VALUE_TYPE:
+          {
+            break;
+          }
         }
+        break;
+      }
+      case JsonStream::VALUE_TYPE:
+      {
         break;
       }
     }
@@ -2227,7 +2411,7 @@ void Server::setAllFieldElementValuesCallback()
   int field_index;
   Field& field = findField(field_name,&field_index);
   ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-  const ConstantString& field_name_cs = field.getParameter().getName();
+  const ConstantString& field_name_cs = field.getName();
   if (field_index >= 0)
   {
     bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
@@ -2235,7 +2419,7 @@ void Server::setAllFieldElementValuesCallback()
     {
       return;
     }
-    JsonStream::JsonTypes field_type = field.getParameter().getType();
+    JsonStream::JsonTypes field_type = field.getType();
     switch (field_type)
     {
       case JsonStream::LONG_TYPE:
@@ -2250,6 +2434,10 @@ void Server::setAllFieldElementValuesCallback()
       {
         break;
       }
+      case JsonStream::NULL_TYPE:
+      {
+        break;
+      }
       case JsonStream::STRING_TYPE:
       {
         const char* field_value = getParameterValue(constants::field_value_parameter_name);
@@ -2261,9 +2449,13 @@ void Server::setAllFieldElementValuesCallback()
         }
         break;
       }
+      case JsonStream::OBJECT_TYPE:
+      {
+        break;
+      }
       case JsonStream::ARRAY_TYPE:
       {
-        JsonStream::JsonTypes array_element_type = field.getParameter().getArrayElementType();
+        JsonStream::JsonTypes array_element_type = field.getArrayElementType();
         switch (array_element_type)
         {
           case JsonStream::LONG_TYPE:
@@ -2284,7 +2476,31 @@ void Server::setAllFieldElementValuesCallback()
             setAllFieldElementValues(field_name_cs,field_value);
             break;
           }
+          case JsonStream::NULL_TYPE:
+          {
+            break;
+          }
+          case JsonStream::STRING_TYPE:
+          {
+            break;
+          }
+          case JsonStream::OBJECT_TYPE:
+          {
+            break;
+          }
+          case JsonStream::ARRAY_TYPE:
+          {
+            break;
+          }
+          case JsonStream::VALUE_TYPE:
+          {
+            break;
+          }
         }
+        break;
+      }
+      case JsonStream::VALUE_TYPE:
+      {
         break;
       }
     }

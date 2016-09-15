@@ -17,6 +17,8 @@
 #include "Parameter.h"
 #include "Constants.h"
 
+#include "Streaming.h"
+
 
 namespace ModularDevice
 {
@@ -70,6 +72,7 @@ public:
     saved_variable_(default_value,N)
   {
     parameter_.setTypeString();
+    string_saved_as_char_array_ = true;
     set_value_callback_ = NULL;
     set_element_value_callback_ = NULL;
   }
@@ -90,33 +93,56 @@ private:
   SavedVariable saved_variable_;
   SetValueCallback set_value_callback_;
   SetElementValueCallback set_element_value_callback_;
+  bool string_saved_as_char_array_;
 
   // Saved Variable Methods
   template<typename T>
   bool getDefaultValue(T &value);
+  bool getDefaultValue(const ConstantString *value);
   template<size_t N>
   bool getDefaultValue(long (&value)[N])
   {
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::LONG_TYPE) ||
+        (getArrayLength() != N))
+    {
+      return false;
+    }
     return saved_variable_.getDefaultValue(value);
   };
   template<size_t N>
   bool getDefaultValue(double (&value)[N])
   {
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
+        (getArrayLength() != N))
+    {
+      return false;
+    }
     return saved_variable_.getDefaultValue(value);
   };
   template<size_t N>
   bool getDefaultValue(bool (&value)[N])
   {
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::BOOL_TYPE) ||
+        (getArrayLength() != N))
+    {
+      return false;
+    }
     return saved_variable_.getDefaultValue(value);
   };
   template<typename T>
   bool getDefaultElementValue(T &value, const size_t element_index);
   template<typename T>
   bool setValue(const T &value);
+  bool setValue(const ConstantString * const value);
   template<size_t N>
   bool setValue(const long (&value)[N])
   {
-    if (getArrayLength() != N)
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::LONG_TYPE) ||
+        (getArrayLength() != N))
     {
       return false;
     }
@@ -134,7 +160,9 @@ private:
   template<size_t N>
   bool setValue(const double (&value)[N])
   {
-    if (getArrayLength() != N)
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
+        (getArrayLength() != N))
     {
       return false;
     }
@@ -152,7 +180,9 @@ private:
   template<size_t N>
   bool setValue(const bool (&value)[N])
   {
-    if (getArrayLength() != N)
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::BOOL_TYPE) ||
+        (getArrayLength() != N))
     {
       return false;
     }
@@ -162,10 +192,13 @@ private:
   bool setElementValue(const T &value, const size_t element_index);
   template<typename T>
   bool getValue(T &value);
+  bool getValue(const ConstantString *value);
   template<size_t N>
   bool getValue(long (&value)[N])
   {
-    if (getArrayLength() != N)
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::LONG_TYPE) ||
+        (getArrayLength() != N))
     {
       return false;
     }
@@ -174,7 +207,9 @@ private:
   template<size_t N>
   bool getValue(double (&value)[N])
   {
-    if (getArrayLength() != N)
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
+        (getArrayLength() != N))
     {
       return false;
     }
@@ -183,7 +218,9 @@ private:
   template<size_t N>
   bool getValue(bool (&value)[N])
   {
-    if (getArrayLength() != N)
+    if ((getType() != JsonStream::ARRAY_TYPE) ||
+        (getArrayElementType() != JsonStream::BOOL_TYPE) ||
+        (getArrayLength() != N))
     {
       return false;
     }
@@ -195,6 +232,10 @@ private:
   bool isDefaultValue();
   size_t getArrayLength();
   Parameter& getParameter();
+  const ConstantString& getName();
+  JsonStream::JsonTypes getType();
+  JsonStream::JsonTypes getArrayElementType();
+  bool isStringSavedAsCharArray();
   void setValueCallback();
   void setElementValueCallback(const size_t element_index);
   friend class Server;

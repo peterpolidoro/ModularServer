@@ -119,6 +119,12 @@ bool Server::setFieldValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
+    JsonStream::JsonTypes type = field.getType();
+    if ((type == JsonStream::STRING_TYPE) &&
+        !field.isStringSavedAsCharArray())
+    {
+      return false;
+    }
     bool success;
     size_t array_length = field.getArrayLength();
     size_t array_length_min = min(array_length,N);
@@ -129,7 +135,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
       if (!success)
       {
         // terminate string
-        if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+        if (type == JsonStream::STRING_TYPE)
         {
           setFieldElementValue(field_name,i,'\0');
         }
@@ -137,7 +143,8 @@ bool Server::setFieldValue(const ConstantString &field_name,
       }
     }
     // terminate string
-    if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+    if ((type == JsonStream::STRING_TYPE) &&
+        (array_length_min >= 1))
     {
       setFieldElementValue(field_name,array_length_min-1,'\0');
     }
@@ -180,6 +187,12 @@ bool Server::setAllFieldElementValues(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
+    JsonStream::JsonTypes type = field.getType();
+    if ((type == JsonStream::STRING_TYPE) &&
+        !field.isStringSavedAsCharArray())
+    {
+      return false;
+    }
     bool success;
     size_t array_length = field.getArrayLength();
     for (size_t i=0;i<array_length;++i)
@@ -188,7 +201,7 @@ bool Server::setAllFieldElementValues(const ConstantString &field_name,
       if (!success)
       {
         // terminate string
-        if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+        if (type == JsonStream::STRING_TYPE)
         {
           setFieldElementValue(field_name,i,'\0');
         }
@@ -196,7 +209,8 @@ bool Server::setAllFieldElementValues(const ConstantString &field_name,
       }
     }
     // terminate string
-    if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+    if ((type == JsonStream::STRING_TYPE) &&
+        (array_length >= 1))
     {
       setFieldElementValue(field_name,array_length-1,'\0');
     }
@@ -250,6 +264,12 @@ bool Server::getFieldValue(const ConstantString &field_name,
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
+    JsonStream::JsonTypes type = field.getType();
+    if ((type == JsonStream::STRING_TYPE) &&
+        !field.isStringSavedAsCharArray())
+    {
+      return false;
+    }
     size_t array_length = field.getArrayLength();
     size_t array_length_min = min(array_length,N);
     bool success;
@@ -260,7 +280,7 @@ bool Server::getFieldValue(const ConstantString &field_name,
       if (!success)
       {
         // terminate string
-        if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+        if (type == JsonStream::STRING_TYPE)
         {
           value[i] = '\0';
         }
@@ -269,7 +289,8 @@ bool Server::getFieldValue(const ConstantString &field_name,
       value[i] = v;
     }
     // terminate string
-    if (field.getParameter().getType() == JsonStream::STRING_TYPE)
+    if ((type == JsonStream::STRING_TYPE) &&
+        (array_length_min >= 1))
     {
       value[array_length_min-1] = '\0';
     }
