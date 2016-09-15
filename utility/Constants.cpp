@@ -113,6 +113,7 @@ CONSTANT_STRING(array_length_constant_string," array length");
 CONSTANT_STRING(array_open_constant_string,"[");
 CONSTANT_STRING(array_close_constant_string,"]");
 CONSTANT_STRING(array_separator_constant_string,",");
+CONSTANT_STRING(quote_constant_string,"\"");
 CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(board_constant_string,"board");

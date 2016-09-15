@@ -63,6 +63,7 @@ void Controller::setup()
   count_parameter.setSubset(constants::count_subset);
 
   ModularDevice::Parameter& count_array_parameter = modular_server_.createParameter(constants::count_array_parameter_name);
+  count_array_parameter.setTypeLong();
   count_array_parameter.setRange(constants::count_array_element_min,constants::count_array_element_max);
   count_array_parameter.setArrayLengthRange(constants::count_array_length_min,constants::count_array_length_max);
   count_array_parameter.setSubset(constants::count_subset);
@@ -70,6 +71,11 @@ void Controller::setup()
   ModularDevice::Parameter& direction_parameter = modular_server_.createParameter(constants::direction_parameter_name);
   direction_parameter.setTypeString();
   direction_parameter.setSubset(constants::direction_ptr_subset);
+
+  ModularDevice::Parameter& direction_array_parameter = modular_server_.createParameter(constants::direction_array_parameter_name);
+  direction_array_parameter.setTypeString();
+  direction_array_parameter.setArrayLengthRange(constants::direction_array_length_min,constants::direction_array_length_max);
+  direction_array_parameter.setSubset(constants::direction_ptr_subset);
 
   // Methods
   ModularDevice::Method& get_doubled_method = modular_server_.createMethod(constants::get_doubled_method_name);
@@ -124,6 +130,11 @@ void Controller::setup()
   get_direction_method.attachCallback(callbacks::getDirectionCallback);
   get_direction_method.addParameter(direction_parameter);
   get_direction_method.setReturnTypeString();
+
+  ModularDevice::Method& get_direction_array_method = modular_server_.createMethod(constants::get_direction_array_method_name);
+  get_direction_array_method.attachCallback(callbacks::getDirectionArrayCallback);
+  get_direction_array_method.addParameter(direction_array_parameter);
+  get_direction_array_method.setReturnTypeArray();
 
   // Setup Streams
   Serial.begin(constants::baudrate);

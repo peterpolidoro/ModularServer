@@ -255,7 +255,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
       {
         case JsonStream::LONG_TYPE:
         {
-          for (size_t i=0;i<array_length_min;++i)
+          for (size_t i=0; i<array_length_min; ++i)
           {
             long v = value[i];
             success = setFieldElementValue(field_name,i,v);
@@ -268,7 +268,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
         }
         case JsonStream::DOUBLE_TYPE:
         {
-          for (size_t i=0;i<array_length_min;++i)
+          for (size_t i=0; i<array_length_min; ++i)
           {
             double v = value[i];
             success = setFieldElementValue(field_name,i,v);
@@ -372,6 +372,16 @@ void Server::writeToResponse(Vector<const constants::SubsetMemberType> &value, J
       for (size_t i=0; i<value.size(); ++i)
       {
         subset_elements_array.push_back(value[i].l);
+      }
+      json_stream_.write(subset_elements_array);
+      break;
+    }
+    case JsonStream::STRING_TYPE:
+    {
+      Array<ConstantString *,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
+      for (size_t i=0; i<value.size(); ++i)
+      {
+        subset_elements_array.push_back(value[i].cs_ptr);
       }
       json_stream_.write(subset_elements_array);
       break;
@@ -568,7 +578,7 @@ void Server::processRequestArray()
         char incorrect_parameter_number[constants::incorrect_parameter_number_error_data.length()+1];
         constants::incorrect_parameter_number_error_data.copy(incorrect_parameter_number);
         char error_str[constants::STRING_LENGTH_ERROR];
-        error_str[0] = 0;
+        error_str[0] = '\0';
         strcat(error_str,incorrect_parameter_number);
         char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
         dtostrf(parameter_count,0,0,parameter_count_str);
@@ -603,7 +613,7 @@ void Server::processRequestArray()
       char incorrect_parameter_number[constants::incorrect_parameter_number_error_data.length()+1];
       constants::incorrect_parameter_number_error_data.copy(incorrect_parameter_number);
       char error_str[constants::STRING_LENGTH_ERROR];
-      error_str[0] = 0;
+      error_str[0] = '\0';
       strcat(error_str,incorrect_parameter_number);
       char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
       dtostrf(parameter_count,0,0,parameter_count_str);
@@ -797,7 +807,7 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
   writeToResponse(constants::name_constant_string,parameter_name);
 
   char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS];
-  parameter_units[0] = 0;
+  parameter_units[0] = '\0';
   const ConstantString& units = parameter.getUnits();
   units.copy(parameter_units);
   char empty_str[] = {0};
@@ -849,6 +859,11 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
     case JsonStream::STRING_TYPE:
     {
       writeToResponse(constants::type_constant_string,JsonStream::STRING_TYPE);
+      if (parameter.subsetIsSet())
+      {
+        writeKeyToResponse(constants::subset_constant_string);
+        writeToResponse(parameter.getSubset(),JsonStream::STRING_TYPE);
+      }
       break;
     }
     case JsonStream::OBJECT_TYPE:
@@ -903,6 +918,11 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
         case JsonStream::STRING_TYPE:
         {
           writeToResponse(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
+          if (parameter.subsetIsSet())
+          {
+            writeKeyToResponse(constants::array_element_subset_constant_string);
+            writeToResponse(parameter.getSubset(),JsonStream::STRING_TYPE);
+          }
           break;
         }
         case JsonStream::OBJECT_TYPE:
@@ -989,9 +1009,9 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
-  min_str[0] = 0;
+  min_str[0] = '\0';
   char max_str[JsonStream::STRING_LENGTH_DOUBLE];
-  max_str[0] = 0;
+  max_str[0] = '\0';
   JsonStream::JsonTypes type = parameter.getType();
   switch (type)
   {
@@ -1040,7 +1060,6 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
       if (!parameter.valueInSubset(value))
       {
         in_subset = false;
-        break;
       }
       break;
     }
@@ -1102,7 +1121,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = 0;
+    error_str[0] = '\0';
     constants::array_parameter_length_error_error_data.copy(error_str);
     char value_not_in_range_str[constants::value_not_in_range_error_data.length() + 1];
     constants::value_not_in_range_error_data.copy(value_not_in_range_str);
@@ -1112,7 +1131,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     constants::less_than_equal_constant_string.copy(less_than_equal_str);
     strcat(error_str,less_than_equal_str);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-    parameter_name[0] = 0;
+    parameter_name[0] = '\0';
     const ConstantString& name = parameter.getName();
     name.copy(parameter_name);
     strcat(error_str,parameter_name);
@@ -1132,11 +1151,11 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-    parameter_name[0] = 0;
+    parameter_name[0] = '\0';
     const ConstantString& name = parameter.getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = 0;
+    error_str[0] = '\0';
     strcat(error_str,parameter_name);
     char invalid_json_object[constants::invalid_json_object_error_data.length()+1];
     constants::invalid_json_object_error_data.copy(invalid_json_object);
@@ -1152,11 +1171,11 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-    parameter_name[0] = 0;
+    parameter_name[0] = '\0';
     const ConstantString& name = parameter.getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = 0;
+    error_str[0] = '\0';
     strcat(error_str,parameter_name);
     char invalid_json_array[constants::invalid_json_array_error_data.length()+1];
     constants::invalid_json_array_error_data.copy(invalid_json_array);
@@ -1174,9 +1193,9 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
   bool in_subset = true;
   bool in_range = true;
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
-  min_str[0] = 0;
+  min_str[0] = '\0';
   char max_str[JsonStream::STRING_LENGTH_DOUBLE];
-  max_str[0] = 0;
+  max_str[0] = '\0';
   JsonStream::JsonTypes type = parameter.getType();
   switch (type)
   {
@@ -1250,6 +1269,11 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
         }
         case JsonStream::STRING_TYPE:
         {
+          const char* value = (const char*)json_value;
+          if (!parameter.valueInSubset(value))
+          {
+            in_subset = false;
+          }
           break;
         }
         case JsonStream::OBJECT_TYPE:
@@ -1750,7 +1774,7 @@ void Server::writeParameterNotInSubsetErrorToResponse(Parameter &parameter, Vect
   beginResponseObject();
   writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
   char error_str[constants::STRING_LENGTH_ERROR];
-  error_str[0] = 0;
+  error_str[0] = '\0';
   JsonStream::JsonTypes type = parameter.getType();
   if (type != JsonStream::ARRAY_TYPE)
   {
@@ -1759,12 +1783,13 @@ void Server::writeParameterNotInSubsetErrorToResponse(Parameter &parameter, Vect
   else
   {
     constants::array_parameter_error_error_data.copy(error_str);
+    type = parameter.getArrayElementType();
   }
   char value_not_in_subset_str[constants::value_not_in_subset_error_data.length() + 1];
   constants::value_not_in_subset_error_data.copy(value_not_in_subset_str);
   strcat(error_str,value_not_in_subset_str);
   size_t length_left = constants::STRING_LENGTH_ERROR - strlen(error_str) - 1;
-  subsetToString(error_str,subset,length_left);
+  subsetToString(error_str,subset,type,length_left);
   writeToResponse(constants::data_constant_string,error_str);
   writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
   endResponseObject();
@@ -1777,7 +1802,7 @@ void Server::writeParameterNotInRangeErrorToResponse(Parameter &parameter, char 
   beginResponseObject();
   writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
   char error_str[constants::STRING_LENGTH_ERROR];
-  error_str[0] = 0;
+  error_str[0] = '\0';
   JsonStream::JsonTypes type = parameter.getType();
   if (type != JsonStream::ARRAY_TYPE)
   {
@@ -1795,7 +1820,7 @@ void Server::writeParameterNotInRangeErrorToResponse(Parameter &parameter, char 
   constants::less_than_equal_constant_string.copy(less_than_equal_str);
   strcat(error_str,less_than_equal_str);
   char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-  parameter_name[0] = 0;
+  parameter_name[0] = '\0';
   const ConstantString& name = parameter.getName();
   name.copy(parameter_name);
   strcat(error_str,parameter_name);
@@ -1823,7 +1848,7 @@ void Server::writeFieldErrorToResponse(const ConstantString &error)
   endResponseObject();
 }
 
-void Server::subsetToString(char * destination, Vector<const constants::SubsetMemberType> &subset, const size_t num)
+void Server::subsetToString(char * destination, Vector<const constants::SubsetMemberType> &subset, const JsonStream::JsonTypes type, const size_t num)
 {
   size_t length_left = num;
   size_t length = constants::array_open_constant_string.length();
@@ -1851,8 +1876,26 @@ void Server::subsetToString(char * destination, Vector<const constants::SubsetMe
       strcat(destination,array_separator_str);
       length_left -= length;
     }
-    value_str[0] = 0;
-    ltoa(subset[i].l,value_str,10);
+    value_str[0] = '\0';
+    switch (type)
+    {
+      case JsonStream::LONG_TYPE:
+      {
+        ltoa(subset[i].l,value_str,10);
+        break;
+      }
+      case JsonStream::STRING_TYPE:
+      {
+        char quote_str[constants::quote_constant_string.length() + 1];
+        constants::quote_constant_string.copy(quote_str);
+        strcat(value_str,quote_str);
+        char cs_str[subset[i].cs_ptr->length() + 1];
+        subset[i].cs_ptr->copy(cs_str);
+        strncat(value_str,cs_str,constants::STRING_LENGTH_SUBSET_ELEMENT - 2);
+        strcat(value_str,quote_str);
+        break;
+      }
+    }
     length = strlen(value_str);
     if (length_left < length)
     {

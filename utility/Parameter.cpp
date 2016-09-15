@@ -198,31 +198,11 @@ bool Parameter::valueInRange(const double value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    double min;
-    double max;
-    JsonStream::JsonTypes type = getType();
-    switch (type)
+    double min = getMin().d;
+    double max = getMax().d;
+    if ((value < min) || (value > max))
     {
-      case JsonStream::DOUBLE_TYPE:
-      {
-        min = getMin().d;
-        max = getMax().d;
-        if ((value < min) || (value > max))
-        {
-          in_range = false;
-        }
-        break;
-      }
-      case JsonStream::LONG_TYPE:
-      {
-        in_range = valueInRange((long)value);
-        break;
-      }
-      default:
-      {
-        in_range = false;
-        break;
-      }
+      in_range = false;
     }
   }
   return in_range;
@@ -233,30 +213,11 @@ bool Parameter::valueInRange(const float value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    JsonStream::JsonTypes type = getType();
-    double min;
-    double max;
-    switch (type)
+    double min = getMin().d;
+    double max = getMax().d;
+    if (((double)value < min) || ((double)value > max))
     {
-      case JsonStream::DOUBLE_TYPE:
-      {
-        min = getMin().d;
-        max = getMax().d;
-        if (((double)value < min) || ((double)value > max))
-        {
-          in_range = false;
-        }
-        break;
-      }
-      case JsonStream::LONG_TYPE:
-      {
-        in_range = valueInRange((long)value);
-        break;
-      }
-      default:
-      {
-        in_range = false;
-      }
+      in_range = false;
     }
   }
   return in_range;
@@ -313,23 +274,11 @@ bool Parameter::valueInSubset(const long value)
   if (subsetIsSet())
   {
     in_subset = false;
-    JsonStream::JsonTypes type = getType();
-    switch (type)
+    for(size_t i=0; i<subset_.size(); ++i)
     {
-      case JsonStream::LONG_TYPE:
+      if (value == subset_[i].l)
       {
-        for(size_t i=0; i<subset_.size(); ++i)
-        {
-          if (value == subset_[i].l)
-          {
-            in_subset = true;
-            break;
-          }
-        }
-        break;
-      }
-      default:
-      {
+        in_subset = true;
         break;
       }
     }
@@ -343,23 +292,11 @@ bool Parameter::valueInSubset(const char *value)
   if (subsetIsSet())
   {
     in_subset = false;
-    JsonStream::JsonTypes type = getType();
-    switch (type)
+    for(size_t i=0; i<subset_.size(); ++i)
     {
-      case JsonStream::STRING_TYPE:
+      if (value == *subset_[i].cs_ptr)
       {
-        for(size_t i=0; i<subset_.size(); ++i)
-        {
-          if (value == *subset_[i].cs_ptr)
-          {
-            in_subset = true;
-            break;
-          }
-        }
-        break;
-      }
-      default:
-      {
+        in_subset = true;
         break;
       }
     }

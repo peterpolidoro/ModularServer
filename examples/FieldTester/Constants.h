@@ -96,6 +96,10 @@ extern ConstantString direction_left;
 extern ConstantString direction_right;
 extern const ModularDevice::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH];
 
+extern ConstantString direction_array_parameter_name;
+extern const size_t direction_array_length_min;
+extern const size_t direction_array_length_max;
+
 // Methods
 extern ConstantString get_doubled_method_name;
 extern ConstantString get_bool_method_name;
@@ -109,6 +113,7 @@ extern ConstantString get_string_some_method_name;
 extern ConstantString get_count_method_name;
 extern ConstantString get_count_array_method_name;
 extern ConstantString get_direction_method_name;
+extern ConstantString get_direction_array_method_name;
 
 // Errors
 extern ConstantString index_error;

@@ -149,4 +149,10 @@ void getDirectionCallback()
   modular_server.writeResultToResponse(direction);
 }
 
+void getDirectionArrayCallback()
+{
+  ArduinoJson::JsonArray& direction_array = modular_server.getParameterValue(constants::direction_array_parameter_name);
+  modular_server.writeResultToResponse(&direction_array);
+}
+
 }

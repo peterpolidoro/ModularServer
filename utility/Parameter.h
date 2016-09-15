@@ -81,31 +81,11 @@ private:
     bool in_range = true;
     if (rangeIsSet())
     {
-      long min;
-      long max;
-      JsonStream::JsonTypes type = getType();
-      switch (type)
+      long min = getMin().l;
+      long max = getMax().l;
+      if (((long)value < min) || ((long)value > max))
       {
-        case JsonStream::LONG_TYPE:
-        {
-          min = getMin().l;
-          max = getMax().l;
-          if (((long)value < min) || ((long)value > max))
-          {
-            in_range = false;
-          }
-          break;
-        }
-        case JsonStream::DOUBLE_TYPE:
-        {
-          in_range = valueInRange((double)value);
-          break;
-        }
-        default:
-        {
-          in_range = false;
-          break;
-        }
+        in_range = false;
       }
     }
     return in_range;
