@@ -268,20 +268,47 @@ bool Parameter::subsetIsSet()
   return subset_is_set_;
 }
 
+int Parameter::findSubsetValueIndex(const long value)
+{
+  int value_index = -1;
+  if (subsetIsSet())
+  {
+    for(size_t i=0; i<subset_.size(); ++i)
+    {
+      if (value == subset_[i].l)
+      {
+        value_index = i;
+        break;
+      }
+    }
+  }
+  return value_index;
+}
+
+int Parameter::findSubsetValueIndex(const char * value)
+{
+  int value_index = -1;
+  if (subsetIsSet())
+  {
+    for(size_t i=0; i<subset_.size(); ++i)
+    {
+      if (value == *subset_[i].cs_ptr)
+      {
+        value_index = i;
+        break;
+      }
+    }
+  }
+  return value_index;
+}
+
 bool Parameter::valueInSubset(const long value)
 {
   bool in_subset = true;
   if (subsetIsSet())
   {
-    in_subset = false;
-    for(size_t i=0; i<subset_.size(); ++i)
-    {
-      if (value == subset_[i].l)
-      {
-        in_subset = true;
-        break;
-      }
-    }
+    int subset_value_index = findSubsetValueIndex(value);
+    in_subset = ((subset_value_index >= 0) ? true : false);
   }
   return in_subset;
 }
@@ -291,15 +318,8 @@ bool Parameter::valueInSubset(const char * value)
   bool in_subset = true;
   if (subsetIsSet())
   {
-    in_subset = false;
-    for(size_t i=0; i<subset_.size(); ++i)
-    {
-      if (value == *subset_[i].cs_ptr)
-      {
-        in_subset = true;
-        break;
-      }
-    }
+    int subset_value_index = findSubsetValueIndex(value);
+    in_subset = ((subset_value_index >= 0) ? true : false);
   }
   return in_subset;
 }

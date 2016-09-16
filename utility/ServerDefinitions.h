@@ -123,7 +123,18 @@ bool Server::setFieldValue(const ConstantString & field_name,
     if ((type == JsonStream::STRING_TYPE) &&
         !field.isStringSavedAsCharArray())
     {
-      return false;
+      int subset_value_index = field.findSubsetValueIndex(value);
+      if (subset_value_index >= 0)
+      {
+        Vector<const constants::SubsetMemberType> & subset = field.getSubset();
+        const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
+        setFieldValue(field_name,subset_value);
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
     bool success;
     size_t array_length = field.getArrayLength();

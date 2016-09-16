@@ -99,6 +99,8 @@ private:
   bool arrayLengthRangeIsSet();
   bool arrayLengthInRange(const size_t array_length);
   bool subsetIsSet();
+  int findSubsetValueIndex(const long value);
+  int findSubsetValueIndex(const char * value);
   bool valueInSubset(const long value);
   bool valueInSubset(const char * value);
   Vector<const constants::SubsetMemberType> & getSubset();

@@ -422,6 +422,11 @@ bool Field::isStringSavedAsCharArray()
   return string_saved_as_char_array_;
 }
 
+Vector<const constants::SubsetMemberType> & Field::getSubset()
+{
+  return parameter_.getSubset();
+}
+
 void Field::setValueCallback()
 {
   if (set_value_callback_ != NULL)

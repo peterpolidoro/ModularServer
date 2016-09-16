@@ -14,6 +14,7 @@
 #endif
 #include "SavedVariable.h"
 #include "JsonStream.h"
+#include "Vector.h"
 #include "Parameter.h"
 #include "Constants.h"
 
@@ -229,6 +230,12 @@ private:
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool isStringSavedAsCharArray();
+  template<typename T>
+  int findSubsetValueIndex(T value)
+  {
+    return parameter_.findSubsetValueIndex(value);
+  }
+  Vector<const constants::SubsetMemberType> & getSubset();
   void setValueCallback();
   void setElementValueCallback(const size_t element_index);
   friend class Server;

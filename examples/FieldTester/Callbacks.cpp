@@ -157,9 +157,9 @@ void getDirectionArrayCallback()
 
 void checkModeCallback()
 {
-  // long cast_ptr = (long)constants::mode_ptr_subset[0].cs_ptr;
-  long cast_ptr = (long)constants::mode_ptr_default;
-  modular_server.writeResultToResponse(cast_ptr);
+  const ConstantString * mode_ptr;
+  modular_server.getFieldValue(constants::mode_field_name,mode_ptr);
+  modular_server.writeResultToResponse(*mode_ptr);
 }
 
 }
