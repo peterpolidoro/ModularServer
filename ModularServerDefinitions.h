@@ -52,7 +52,7 @@ bool ModularServer::setFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool ModularServer::setFieldValue(const ConstantString &field_name,
-                                  const T *value,
+                                  const T * value,
                                   const size_t N)
 {
   return server_.setFieldValue(field_name,value,N);
@@ -75,7 +75,7 @@ bool ModularServer::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool ModularServer::getFieldValue(const ConstantString &field_name,
-                                  T *value,
+                                  T * value,
                                   const size_t N)
 {
   return server_.getFieldValue(field_name,value,N);
@@ -98,7 +98,7 @@ bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
 
 template <typename T>
 bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
-                                         T *value,
+                                         T * value,
                                          const size_t N)
 {
   return server_.getFieldDefaultValue(field_name,value,N);
@@ -143,13 +143,13 @@ void ModularServer::writeToResponse(K key, T (&value)[N])
 }
 
 template <typename T>
-void ModularServer::writeArrayToResponse(T *value, size_t N)
+void ModularServer::writeArrayToResponse(T * value, size_t N)
 {
   server_.writeArrayToResponse(value);
 }
 
 template <typename K, typename T>
-void ModularServer::writeArrayToResponse(K key, T *value, size_t N)
+void ModularServer::writeArrayToResponse(K key, T * value, size_t N)
 {
   server_.writeArrayToResponse(key,value,N);
 }
@@ -179,7 +179,7 @@ void ModularServer::writeResultToResponse(T (&value)[N])
 }
 
 template <typename T>
-void ModularServer::writeResultToResponse(T *value, size_t N)
+void ModularServer::writeResultToResponse(T * value, size_t N)
 {
   server_.writeResultToResponse(value,N);
 }

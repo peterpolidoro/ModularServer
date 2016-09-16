@@ -40,14 +40,14 @@ public:
   void setReturnTypeValue();
   JsonStream::JsonTypes getReturnType();
 protected:
-  const ConstantString *name_ptr_;
+  const ConstantString * name_ptr_;
   Callback callback_;
-  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
+  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
   int findParameterIndex(const ConstantString &parameter_name);
   int parameter_count_;
   JsonStream::JsonTypes return_type_;
   void setup(const ConstantString &name);
-  bool compareName(const char *name_to_compare);
+  bool compareName(const char * name_to_compare);
   bool compareName(const ConstantString &name_to_compare);
   const ConstantString& getName();
   void callback();
@@ -60,7 +60,7 @@ public:
   InternalMethod();
   InternalMethod(const ConstantString &name);
   void attachCallback(InternalCallback callback);
-  void callback(Server *server);
+  void callback(Server * server);
   void setPrivacy(bool is_private);
   bool isPrivate();
 private:

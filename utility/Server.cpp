@@ -328,7 +328,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
 }
 
 // bool Server::getFieldValue(const ConstantString &field_name,
-//                            const ConstantString *value)
+//                            const ConstantString * value)
 // {
 //   Serial << "const ConstantString *value";
 //   int field_index;
@@ -581,7 +581,7 @@ void Server::handleRequest()
 
 void Server::processRequestArray()
 {
-  const char* method_string = (*request_json_array_ptr_)[0];
+  const char * method_string = (*request_json_array_ptr_)[0];
   request_method_index_ = processMethodString(method_string);
   if (request_method_index_ >= 0)
   {
@@ -610,7 +610,7 @@ void Server::processRequestArray()
               (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
-      Parameter* parameter_ptr;
+      Parameter * parameter_ptr;
       if (request_method_index_ < (int)internal_methods_.max_size())
       {
         parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
@@ -701,7 +701,7 @@ void Server::processRequestArray()
   }
 }
 
-int Server::processMethodString(const char *method_string)
+int Server::processMethodString(const char * method_string)
 {
   int method_index = -1;
   int method_id = atoi(method_string);
@@ -783,7 +783,7 @@ void Server::methodHelp(bool verbose, int method_index)
 
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
-  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
+  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
   if (method_index < (int)internal_methods_.max_size())
   {
     parameter_ptrs_ptr = &internal_methods_[method_index].parameter_ptrs_;
@@ -818,7 +818,7 @@ void Server::methodHelp(bool verbose, int method_index)
   endResponseObject();
 }
 
-int Server::processParameterString(const char *parameter_string)
+int Server::processParameterString(const char * parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = atoi(parameter_string);
@@ -836,7 +836,7 @@ int Server::processParameterString(const char *parameter_string)
   {
     parameter_index = findMethodParameterIndex(request_method_index_,parameter_string);
   }
-  Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
+  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
   if  (request_method_index_ < (int)internal_methods_.max_size())
   {
     parameter_ptrs_ptr = &internal_methods_[request_method_index_].parameter_ptrs_;
@@ -1041,7 +1041,7 @@ bool Server::checkParameters()
     // do not check method
     if (it!=request_json_array_ptr_->begin())
     {
-      Parameter* parameter_ptr = NULL;
+      Parameter * parameter_ptr = NULL;
       if  (request_method_index_ < (int)internal_methods_.max_size())
       {
         parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
@@ -1120,7 +1120,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     }
     case JsonStream::STRING_TYPE:
     {
-      const char* value = (const char*)json_value;
+      const char * value = (const char *)json_value;
       if (!parameter.valueInSubset(value))
       {
         in_subset = false;
@@ -1337,7 +1337,7 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
         }
         case JsonStream::STRING_TYPE:
         {
-          const char* value = (const char*)json_value;
+          const char * value = (const char *)json_value;
           if (!parameter.valueInSubset(value))
           {
             in_subset = false;
@@ -1519,7 +1519,7 @@ void Server::help(bool verbose)
   // ?? field
   else if (parameter_count == 1)
   {
-    const char* param_string = (*request_json_array_ptr_)[1];
+    const char * param_string = (*request_json_array_ptr_)[1];
     int method_index = findMethodIndex(param_string);
     if (method_index >= 0)
     {
@@ -1537,7 +1537,7 @@ void Server::help(bool verbose)
         // ?? parameter
         param_error = false;
         writeResultKeyToResponse();
-        Parameter* parameter_ptr = NULL;
+        Parameter * parameter_ptr = NULL;
         if (parameter_index < (int)internal_parameters_.max_size())
         {
           parameter_ptr = &internal_parameters_[parameter_index];
@@ -1558,7 +1558,7 @@ void Server::help(bool verbose)
           // ?? field
           param_error = false;
           writeResultKeyToResponse();
-          Field* field_ptr = NULL;
+          Field * field_ptr = NULL;
           if (field_index < (int)internal_fields_.max_size())
           {
             field_ptr = &internal_fields_[field_index];
@@ -1577,7 +1577,7 @@ void Server::help(bool verbose)
   // ?? method parameter
   else if (parameter_count == 2)
   {
-    const char* method_string = (*request_json_array_ptr_)[1];
+    const char * method_string = (*request_json_array_ptr_)[1];
     int method_index = findMethodIndex(method_string);
     if (method_index >= 0)
     {
@@ -1585,7 +1585,7 @@ void Server::help(bool verbose)
       if (parameter_index >= 0)
       {
         param_error = false;
-        Parameter* parameter_ptr = NULL;
+        Parameter * parameter_ptr = NULL;
         if (method_index < (int)internal_methods_.max_size())
         {
           parameter_ptr = internal_methods_[method_index].parameter_ptrs_[parameter_index];
@@ -1739,7 +1739,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
       }
       else
       {
-        const ConstantString *cs_ptr;
+        const ConstantString * cs_ptr;
         if (write_default)
         {
           getFieldDefaultValue(field_name,cs_ptr);
@@ -2142,7 +2142,7 @@ void Server::setFieldsToDefaultsCallback()
 
 void Server::setFieldToDefaultCallback()
 {
-  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
@@ -2175,7 +2175,7 @@ void Server::getFieldValuesCallback()
 void Server::getFieldValueCallback()
 {
   writeResultKeyToResponse();
-  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
   Field& field = findField(field_name,&field_index);
   if (field_index >= 0)
@@ -2191,7 +2191,7 @@ void Server::getFieldValueCallback()
 void Server::getFieldElementValueCallback()
 {
   writeResultKeyToResponse();
-  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  const char * field_name = getParameterValue(constants::field_name_parameter_name);
   long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
   if (field_element_index < 0)
   {
@@ -2212,7 +2212,7 @@ void Server::getFieldElementValueCallback()
 
 void Server::setFieldValueCallback()
 {
-  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
   Field& field = findField(field_name,&field_index);
   const ConstantString& field_name_cs = field.getName();
@@ -2251,7 +2251,7 @@ void Server::setFieldValueCallback()
       }
       case JsonStream::STRING_TYPE:
       {
-        const char* field_value = getParameterValue(constants::field_value_parameter_name);
+        const char * field_value = getParameterValue(constants::field_value_parameter_name);
         size_t array_length = strlen(field_value) + 1;
         setFieldValue(field_name_cs,field_value,array_length);
         break;
@@ -2280,7 +2280,7 @@ void Server::setFieldValueCallback()
 
 void Server::setFieldElementValueCallback()
 {
-  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  const char * field_name = getParameterValue(constants::field_name_parameter_name);
   long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
   if (field_element_index < 0)
   {
@@ -2328,7 +2328,7 @@ void Server::setFieldElementValueCallback()
           writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
           return;
         }
-        const char* field_value = getParameterValue(constants::field_value_parameter_name);
+        const char * field_value = getParameterValue(constants::field_value_parameter_name);
         size_t string_length = strlen(field_value);
         if (string_length >= 1)
         {
@@ -2407,7 +2407,7 @@ void Server::setFieldElementValueCallback()
 
 void Server::setAllFieldElementValuesCallback()
 {
-  const char* field_name = getParameterValue(constants::field_name_parameter_name);
+  const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
   Field& field = findField(field_name,&field_index);
   ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
@@ -2440,7 +2440,7 @@ void Server::setAllFieldElementValuesCallback()
       }
       case JsonStream::STRING_TYPE:
       {
-        const char* field_value = getParameterValue(constants::field_value_parameter_name);
+        const char * field_value = getParameterValue(constants::field_value_parameter_name);
         size_t string_length = strlen(field_value);
         if (string_length >= 1)
         {

@@ -56,8 +56,8 @@ public:
   }
   void removeSubset();
 private:
-  const ConstantString *name_ptr_;
-  const ConstantString *units_ptr_;
+  const ConstantString * name_ptr_;
+  const ConstantString * units_ptr_;
   JsonStream::JsonTypes type_;
   JsonStream::JsonTypes array_element_type_;
   constants::NumberType min_;
@@ -68,7 +68,7 @@ private:
   bool array_length_range_is_set_;
   Vector<const constants::SubsetMemberType> subset_;
   bool subset_is_set_;
-  bool compareName(const char *name_to_compare);
+  bool compareName(const char * name_to_compare);
   bool compareName(const ConstantString &name_to_compare);
   const ConstantString& getName();
   const ConstantString& getUnits();
@@ -100,7 +100,7 @@ private:
   bool arrayLengthInRange(const size_t array_length);
   bool subsetIsSet();
   bool valueInSubset(const long value);
-  bool valueInSubset(const char *value);
+  bool valueInSubset(const char * value);
   Vector<const constants::SubsetMemberType>& getSubset();
   friend class Field;
   friend class Method;

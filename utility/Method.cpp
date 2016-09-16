@@ -50,7 +50,7 @@ void Method::addParameter(Parameter &parameter)
   }
 }
 
-bool Method::compareName(const char *name_to_compare)
+bool Method::compareName(const char * name_to_compare)
 {
   char name[constants::STRING_LENGTH_METHOD_NAME] = {0};
   name_ptr_->copy(name);
@@ -154,7 +154,7 @@ void InternalMethod::attachCallback(InternalCallback callback)
   internal_callback_ = callback;
 }
 
-void InternalMethod::callback(Server *server)
+void InternalMethod::callback(Server * server)
 {
   if (internal_callback_ != NULL)
   {

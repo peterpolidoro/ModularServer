@@ -112,7 +112,7 @@ bool Server::setFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool Server::setFieldValue(const ConstantString &field_name,
-                           const T *value,
+                           const T * value,
                            const size_t N)
 {
   int field_index;
@@ -257,7 +257,7 @@ bool Server::getFieldValue(const ConstantString &field_name,
 
 template <typename T>
 bool Server::getFieldValue(const ConstantString &field_name,
-                           T *value,
+                           T * value,
                            const size_t N)
 {
   int field_index;
@@ -353,7 +353,7 @@ bool Server::getFieldDefaultValue(const ConstantString &field_name,
 
 template <typename T>
 bool Server::getFieldDefaultValue(const ConstantString &field_name,
-                                  T *value,
+                                  T * value,
                                   const size_t N)
 {
   int field_index;
@@ -429,13 +429,13 @@ void Server::writeToResponse(K key, T (&value)[N])
 }
 
 template <typename T>
-void Server::writeArrayToResponse(T *value, size_t N)
+void Server::writeArrayToResponse(T * value, size_t N)
 {
   json_stream_.writeArray(value,N);
 }
 
 template <typename K, typename T>
-void Server::writeArrayToResponse(K key, T *value, size_t N)
+void Server::writeArrayToResponse(K key, T * value, size_t N)
 {
   json_stream_.writeArray(key,value,N);
 }
@@ -485,7 +485,7 @@ void Server::writeResultToResponse(T (&value)[N])
 }
 
 template <typename T>
-void Server::writeResultToResponse(T *value, size_t N)
+void Server::writeResultToResponse(T * value, size_t N)
 {
   // Prevent multiple results in one response
   if (!result_key_in_response_ && !error_)
@@ -547,7 +547,7 @@ int Server::findMethodParameterIndex(int method_index, T const&parameter_name)
   int parameter_index = -1;
   if (method_index >= 0)
   {
-    Array<Parameter*,constants::METHOD_PARAMETER_COUNT_MAX>* parameter_ptrs_ptr = NULL;
+    Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
     if (method_index < internal_methods_.max_size())
     {
       parameter_ptrs_ptr = &internal_methods_[method_index].parameter_ptrs_;
@@ -593,7 +593,7 @@ int Server::findFieldIndex(T const&field_name)
 }
 
 template <typename T>
-Field& Server::findField(T const&field_name, int *field_index_ptr)
+Field& Server::findField(T const&field_name, int * field_index_ptr)
 {
   int field_index = findFieldIndex(field_name);
   *field_index_ptr = field_index;

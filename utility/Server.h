@@ -69,7 +69,7 @@ public:
                      const T (&value)[N]);
   template <typename T>
   bool setFieldValue(const ConstantString &field_name,
-                     const T *value,
+                     const T * value,
                      const size_t N);
   bool setFieldValue(const ConstantString &field_name,
                      ArduinoJson::JsonArray &value);
@@ -88,7 +88,7 @@ public:
                      T (&value)[N]);
   template <typename T>
   bool getFieldValue(const ConstantString &field_name,
-                     T *value,
+                     T * value,
                      const size_t N);
   template <typename T>
   bool getFieldElementValue(const ConstantString &field_name,
@@ -102,7 +102,7 @@ public:
                             T (&value)[N]);
   template <typename T>
   bool getFieldDefaultValue(const ConstantString &field_name,
-                            T *value,
+                            T * value,
                             const size_t N);
   template <typename T>
   bool getFieldDefaultElementValue(const ConstantString &field_name,
@@ -122,9 +122,9 @@ public:
   template <typename K, typename T, size_t N>
   void writeToResponse(K key, T (&value)[N]);
   template <typename T>
-  void writeArrayToResponse(T *value, size_t N);
+  void writeArrayToResponse(T * value, size_t N);
   template <typename K, typename T>
-  void writeArrayToResponse(K key, T *value, size_t N);
+  void writeArrayToResponse(K key, T * value, size_t N);
   void writeNullToResponse();
   template <typename K>
   void writeNullToResponse(K key);
@@ -136,7 +136,7 @@ public:
   template <typename T, size_t N>
   void writeResultToResponse(T (&value)[N]);
   template <typename T>
-  void writeResultToResponse(T *value, size_t N);
+  void writeResultToResponse(T * value, size_t N);
   void beginResponseObject();
   void endResponseObject();
   void beginResponseArray();
@@ -146,17 +146,17 @@ public:
   void stopServer();
   void handleRequest();
 private:
-  Array<Stream*,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
+  Array<Stream *,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
   size_t server_stream_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
-  ArduinoJson::JsonArray *request_json_array_ptr_;
+  ArduinoJson::JsonArray  * request_json_array_ptr_;
   Array<Field,constants::INTERNAL_FIELD_COUNT_MAX> internal_fields_;
   Array<Parameter,constants::INTERNAL_PARAMETER_COUNT_MAX> internal_parameters_;
   Array<InternalMethod,constants::INTERNAL_METHOD_COUNT_MAX> internal_methods_;
   Vector<Field> external_fields_;
   Vector<Parameter> external_parameters_;
   Vector<Method> external_methods_;
-  const ConstantString *name_ptr_;
+  const ConstantString * name_ptr_;
   long model_number_;
   long firmware_major_;
   long firmware_minor_;
@@ -177,13 +177,13 @@ private:
   Field& createInternalField(const ConstantString &field_name,
                              const T &default_value);
   void processRequestArray();
-  int processMethodString(const char *method_string);
+  int processMethodString(const char * method_string);
   template <typename T>
   int findMethodIndex(T const&method_name);
   int countJsonArrayElements(ArduinoJson::JsonArray &json_array);
   void executeMethod();
   void methodHelp(bool verbose, int method_index);
-  int processParameterString(const char *parameter_string);
+  int processParameterString(const char * parameter_string);
   template <typename T>
   int findParameterIndex(T const&parameter_name);
   template <typename T>
@@ -196,7 +196,7 @@ private:
   template <typename T>
   int findFieldIndex(T const&field_name);
   template <typename T>
-  Field& findField(T const&field_name, int *field_index_ptr);
+  Field& findField(T const&field_name, int * field_index_ptr);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();

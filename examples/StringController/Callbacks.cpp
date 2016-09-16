@@ -13,7 +13,7 @@ namespace callbacks
 // Callbacks must be non-blocking (avoid 'delay')
 //
 // modular_server.getParameterValue must be cast to either:
-// const char*
+// const char *
 // long
 // double
 // bool
@@ -31,7 +31,7 @@ ModularDevice::ModularServer& modular_server = controller.getModularServer();
 
 void echoCallback()
 {
-  const char* string = modular_server.getParameterValue(constants::string_parameter_name);
+  const char * string = modular_server.getParameterValue(constants::string_parameter_name);
   bool double_echo = modular_server.getParameterValue(constants::double_echo_parameter_name);
   if (!double_echo)
   {
@@ -46,20 +46,20 @@ void echoCallback()
 
 void lengthCallback()
 {
-  const char* string = modular_server.getParameterValue(constants::string_parameter_name);
+  const char * string = modular_server.getParameterValue(constants::string_parameter_name);
   modular_server.writeResultToResponse(strlen(string));
 }
 
 void startsWithCallback()
 {
-  const char* string = modular_server.getParameterValue(constants::string_parameter_name);
-  const char* string2 = modular_server.getParameterValue(constants::string2_parameter_name);
+  const char * string = modular_server.getParameterValue(constants::string_parameter_name);
+  const char * string2 = modular_server.getParameterValue(constants::string2_parameter_name);
   modular_server.writeResultToResponse((bool)String(string).startsWith(string2));
 }
 
 void repeatCallback()
 {
-  const char* string = modular_server.getParameterValue(constants::string_parameter_name);
+  const char * string = modular_server.getParameterValue(constants::string_parameter_name);
   long count = modular_server.getParameterValue(constants::count_parameter_name);
   modular_server.writeResultKeyToResponse();
   modular_server.beginResponseArray();
@@ -72,7 +72,7 @@ void repeatCallback()
 
 void charsAtCallback()
 {
-  const char* string = modular_server.getParameterValue(constants::string_parameter_name);
+  const char * string = modular_server.getParameterValue(constants::string_parameter_name);
   ArduinoJson::JsonArray& index_array = modular_server.getParameterValue(constants::index_array_parameter_name);
   for (ArduinoJson::JsonArray::iterator it=index_array.begin();
        it != index_array.end();
@@ -103,7 +103,7 @@ void charsAtCallback()
 
 void startingCharsCallback()
 {
-  const char* string = modular_server.getParameterValue(constants::string_parameter_name);
+  const char * string = modular_server.getParameterValue(constants::string_parameter_name);
   // modular_server.getFieldValue type must match the field default type
   long starting_chars_count;
   modular_server.getFieldValue(constants::starting_chars_count_field_name,starting_chars_count);
@@ -112,7 +112,7 @@ void startingCharsCallback()
 
 void setStoredStringCallback()
 {
-  const char* string = modular_server.getParameterValue(constants::string_parameter_name);
+  const char * string = modular_server.getParameterValue(constants::string_parameter_name);
   size_t array_length = strlen(string) + 1;
   modular_server.setFieldValue(constants::stored_string_field_name,string,array_length);
 }

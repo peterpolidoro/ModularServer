@@ -48,7 +48,7 @@ public:
                      ArduinoJson::JsonArray &value);
   template <typename T>
   bool setFieldValue(const ConstantString &field_name,
-                     const T *value,
+                     const T * value,
                      const size_t N);
   template <typename T>
   bool setFieldElementValue(const ConstantString &field_name,
@@ -59,7 +59,7 @@ public:
                      T &value);
   template <typename T>
   bool getFieldValue(const ConstantString &field_name,
-                     T *value,
+                     T * value,
                      const size_t N);
   template <typename T>
   bool getFieldElementValue(const ConstantString &field_name,
@@ -70,7 +70,7 @@ public:
                             T &value);
   template <typename T>
   bool getFieldDefaultValue(const ConstantString &field_name,
-                            T *value,
+                            T * value,
                             const size_t N);
   template <typename T>
   bool getFieldDefaultElementValue(const ConstantString &field_name,
@@ -89,9 +89,9 @@ public:
   template <typename K, typename T, size_t N>
   void writeToResponse(K key, T (&value)[N]);
   template <typename T>
-  void writeArrayToResponse(T *value, size_t N);
+  void writeArrayToResponse(T * value, size_t N);
   template <typename K, typename T>
-  void writeArrayToResponse(K key, T *value, size_t N);
+  void writeArrayToResponse(K key, T * value, size_t N);
   void writeNullToResponse();
   template <typename K>
   void writeNullToResponse(K key);
@@ -103,7 +103,7 @@ public:
   template <typename T, size_t N>
   void writeResultToResponse(T (&value)[N]);
   template <typename T>
-  void writeResultToResponse(T *value, size_t N);
+  void writeResultToResponse(T * value, size_t N);
   void beginResponseObject();
   void endResponseObject();
   void beginResponseArray();

@@ -13,7 +13,7 @@ namespace callbacks
 // Callbacks must be non-blocking (avoid 'delay')
 //
 // modular_server.getParameterValue must be cast to either:
-// const char*
+// const char *
 // long
 // double
 // bool
@@ -145,7 +145,7 @@ void getCountArrayCallback()
 
 void getDirectionCallback()
 {
-  const char* direction = modular_server.getParameterValue(constants::direction_parameter_name);
+  const char * direction = modular_server.getParameterValue(constants::direction_parameter_name);
   modular_server.writeResultToResponse(direction);
 }
 

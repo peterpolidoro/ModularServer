@@ -13,7 +13,7 @@ namespace callbacks
 // Callbacks must be non-blocking (avoid 'delay')
 //
 // modular_server.getParameterValue must be cast to either:
-// const char*
+// const char *
 // long
 // double
 // bool

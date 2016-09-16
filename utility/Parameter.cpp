@@ -156,7 +156,7 @@ void Parameter::removeSubset()
   subset_is_set_ = false;
 }
 
-bool Parameter::compareName(const char *name_to_compare)
+bool Parameter::compareName(const char * name_to_compare)
 {
   char name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
   name_ptr_->copy(name);
@@ -286,7 +286,7 @@ bool Parameter::valueInSubset(const long value)
   return in_subset;
 }
 
-bool Parameter::valueInSubset(const char *value)
+bool Parameter::valueInSubset(const char * value)
 {
   bool in_subset = true;
   if (subsetIsSet())
