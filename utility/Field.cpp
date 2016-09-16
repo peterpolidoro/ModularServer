@@ -49,8 +49,9 @@ parameter_(name),
   set_element_value_callback_ = NULL;
 }
 
+template <>
 Field::Field(const ConstantString &name,
-             const ConstantString * const default_value) :
+             const ConstantString * const &default_value) :
   parameter_(name),
   saved_variable_(default_value)
 {
@@ -117,7 +118,8 @@ bool Field::getDefaultValue<bool>(bool &value)
   return saved_variable_.getDefaultValue(value);
 }
 
-bool Field::getDefaultValue(const ConstantString *value)
+template <>
+bool Field::getDefaultValue<const ConstantString *>(const ConstantString * &value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       isStringSavedAsCharArray())
@@ -220,7 +222,8 @@ bool Field::setValue<bool>(const bool &value)
   return saved_variable_.setValue(value);
 }
 
-bool Field::setValue(const ConstantString * const value)
+template <>
+bool Field::setValue<const ConstantString * const>(const ConstantString * const &value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       isStringSavedAsCharArray())
@@ -322,7 +325,8 @@ bool Field::getValue<bool>(bool &value)
   return saved_variable_.getValue(value);
 }
 
-bool Field::getValue(const ConstantString *value)
+template <>
+bool Field::getValue<const ConstantString *>(const ConstantString * &value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       isStringSavedAsCharArray())
@@ -330,7 +334,6 @@ bool Field::getValue(const ConstantString *value)
     value = NULL;
     return false;
   }
-  Serial << "getting value!";
   return saved_variable_.getValue(value);
 }
 

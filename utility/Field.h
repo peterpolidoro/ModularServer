@@ -17,8 +17,6 @@
 #include "Parameter.h"
 #include "Constants.h"
 
-#include "Streaming.h"
-
 
 namespace ModularDevice
 {
@@ -76,8 +74,6 @@ public:
     set_value_callback_ = NULL;
     set_element_value_callback_ = NULL;
   }
-  Field(const ConstantString &name,
-        const ConstantString * const default_value);
   void setUnits(const ConstantString &name);
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
@@ -98,7 +94,6 @@ private:
   // Saved Variable Methods
   template<typename T>
   bool getDefaultValue(T &value);
-  bool getDefaultValue(const ConstantString *value);
   template<size_t N>
   bool getDefaultValue(long (&value)[N])
   {
@@ -136,7 +131,6 @@ private:
   bool getDefaultElementValue(T &value, const size_t element_index);
   template<typename T>
   bool setValue(const T &value);
-  bool setValue(const ConstantString * const value);
   template<size_t N>
   bool setValue(const long (&value)[N])
   {
@@ -192,7 +186,6 @@ private:
   bool setElementValue(const T &value, const size_t element_index);
   template<typename T>
   bool getValue(T &value);
-  bool getValue(const ConstantString *value);
   template<size_t N>
   bool getValue(long (&value)[N])
   {

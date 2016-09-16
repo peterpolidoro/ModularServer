@@ -327,21 +327,21 @@ bool Server::setFieldValue(const ConstantString &field_name,
   return true;
 }
 
-bool Server::getFieldValue(const ConstantString &field_name,
-                           const ConstantString *value)
-{
-  Serial << "const ConstantString *value";
-  int field_index;
-  Field& field = findField(field_name,&field_index);
-  if (field_index >= 0)
-  {
-    return field.getValue(value);
-  }
-  else
-  {
-    return false;
-  }
-}
+// bool Server::getFieldValue(const ConstantString &field_name,
+//                            const ConstantString *value)
+// {
+//   Serial << "const ConstantString *value";
+//   int field_index;
+//   Field& field = findField(field_name,&field_index);
+//   if (field_index >= 0)
+//   {
+//     return field.getValue(value);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
 size_t Server::getFieldArrayLength(const ConstantString &field_name)
 {
