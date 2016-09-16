@@ -18,7 +18,7 @@ public:
   Controller();
   void setup();
   void update();
-  ModularDevice::ModularServer& getModularServer();
+  ModularDevice::ModularServer & getModularServer();
 
 private:
   ModularDevice::ModularServer modular_server_;

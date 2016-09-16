@@ -17,8 +17,8 @@ namespace callbacks
 // long
 // double
 // bool
-// ArduinoJson::JsonArray&
-// ArduinoJson::JsonObject&
+// ArduinoJson::JsonArray &
+// ArduinoJson::JsonObject &
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
@@ -27,7 +27,7 @@ namespace callbacks
 // modular_server.getFieldElementValue type must match the field array element default type
 // modular_server.setFieldElementValue type must match the field array element default type
 
-ModularDevice::ModularServer& modular_server = controller.getModularServer();
+ModularDevice::ModularServer & modular_server = controller.getModularServer();
 
 void getDoubledCallback()
 {
@@ -83,7 +83,7 @@ void setLongArrayVariableCallback()
 
 void setLongArrayParameterCallback()
 {
-  ArduinoJson::JsonArray& long_array = modular_server.getParameterValue(constants::long_array_parameter_name);
+  ArduinoJson::JsonArray & long_array = modular_server.getParameterValue(constants::long_array_parameter_name);
   bool success = modular_server.setFieldValue(constants::long_array_field_name,long_array);
   modular_server.writeResultToResponse(success);
 }
@@ -139,7 +139,7 @@ void getCountCallback()
 
 void getCountArrayCallback()
 {
-  ArduinoJson::JsonArray& count_array = modular_server.getParameterValue(constants::count_array_parameter_name);
+  ArduinoJson::JsonArray & count_array = modular_server.getParameterValue(constants::count_array_parameter_name);
   modular_server.writeResultToResponse(&count_array);
 }
 
@@ -151,7 +151,7 @@ void getDirectionCallback()
 
 void getDirectionArrayCallback()
 {
-  ArduinoJson::JsonArray& direction_array = modular_server.getParameterValue(constants::direction_array_parameter_name);
+  ArduinoJson::JsonArray & direction_array = modular_server.getParameterValue(constants::direction_array_parameter_name);
   modular_server.writeResultToResponse(&direction_array);
 }
 

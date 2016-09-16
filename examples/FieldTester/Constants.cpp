@@ -19,7 +19,7 @@ const long firmware_major = 0;
 const long firmware_minor = 1;
 const long firmware_patch = 0;
 
-HardwareSerial& serial2 = Serial2;
+HardwareSerial & serial2 = Serial2;
 const size_t serial2_rx_pin = 17;
 
 CONSTANT_STRING(device_name,"field_tester");
@@ -56,7 +56,7 @@ const ModularDevice::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH] =
     {.l=7},
     {.l=9},
   };
-const long &odd_default = odd_subset[2].l;
+const long & odd_default = odd_subset[2].l;
 
 CONSTANT_STRING(mode_field_name,"mode");
 CONSTANT_STRING(mode_rising,"RISING");

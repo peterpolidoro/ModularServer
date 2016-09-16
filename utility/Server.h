@@ -39,84 +39,84 @@ class Server
 {
 public:
   Server();
-  Server(Stream &stream);
-  void addServerStream(Stream &stream);
-  void setName(const ConstantString &name);
+  Server(Stream & stream);
+  void addServerStream(Stream & stream);
+  void setName(const ConstantString & name);
   void setModelNumber(const long model_number);
   void setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch);
   template <size_t MAX_SIZE>
   void setMethodStorage(Method (&methods)[MAX_SIZE]);
-  Method& createMethod(const ConstantString &method_name);
-  Method& copyMethod(Method method,const ConstantString &method_name);
+  Method & createMethod(const ConstantString & method_name);
+  Method & copyMethod(Method method,const ConstantString & method_name);
   template <size_t MAX_SIZE>
   void setParameterStorage(Parameter (&parameters)[MAX_SIZE]);
-  Parameter& createParameter(const ConstantString &parameter_name);
-  Parameter& copyParameter(Parameter parameter,const ConstantString &parameter_name);
-  ArduinoJson::JsonVariant getParameterValue(const ConstantString &parameter_name);
+  Parameter & createParameter(const ConstantString & parameter_name);
+  Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
+  ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   template <size_t MAX_SIZE>
   void setFieldStorage(Field (&fields)[MAX_SIZE]);
   template <typename T>
-  Field& createField(const ConstantString &field_name,
-                     const T &default_value);
+  Field & createField(const ConstantString & field_name,
+                     const T & default_value);
   template <typename T, size_t N>
-  Field& createField(const ConstantString &field_name,
+  Field & createField(const ConstantString & field_name,
                      const T (&default_value)[N]);
   template <typename T>
-  bool setFieldValue(const ConstantString &field_name,
-                     const T &value);
+  bool setFieldValue(const ConstantString & field_name,
+                     const T & value);
   template <typename T, size_t N>
-  bool setFieldValue(const ConstantString &field_name,
+  bool setFieldValue(const ConstantString & field_name,
                      const T (&value)[N]);
   template <typename T>
-  bool setFieldValue(const ConstantString &field_name,
+  bool setFieldValue(const ConstantString & field_name,
                      const T * value,
                      const size_t N);
-  bool setFieldValue(const ConstantString &field_name,
-                     ArduinoJson::JsonArray &value);
+  bool setFieldValue(const ConstantString & field_name,
+                     ArduinoJson::JsonArray & value);
   template <typename T>
-  bool setFieldElementValue(const ConstantString &field_name,
+  bool setFieldElementValue(const ConstantString & field_name,
                             const size_t element_index,
-                            const T &value);
+                            const T & value);
   template <typename T>
-  bool setAllFieldElementValues(const ConstantString &field_name,
-                                const T &value);
+  bool setAllFieldElementValues(const ConstantString & field_name,
+                                const T & value);
   template <typename T>
-  bool getFieldValue(const ConstantString &field_name,
-                     T &value);
+  bool getFieldValue(const ConstantString & field_name,
+                     T & value);
   template <typename T, size_t N>
-  bool getFieldValue(const ConstantString &field_name,
+  bool getFieldValue(const ConstantString & field_name,
                      T (&value)[N]);
   template <typename T>
-  bool getFieldValue(const ConstantString &field_name,
+  bool getFieldValue(const ConstantString & field_name,
                      T * value,
                      const size_t N);
   template <typename T>
-  bool getFieldElementValue(const ConstantString &field_name,
+  bool getFieldElementValue(const ConstantString & field_name,
                             const size_t element_index,
-                            T &value);
+                            T & value);
   template <typename T>
-  bool getFieldDefaultValue(const ConstantString &field_name,
-                            T &value);
+  bool getFieldDefaultValue(const ConstantString & field_name,
+                            T & value);
   template <typename T, size_t N>
-  bool getFieldDefaultValue(const ConstantString &field_name,
+  bool getFieldDefaultValue(const ConstantString & field_name,
                             T (&value)[N]);
   template <typename T>
-  bool getFieldDefaultValue(const ConstantString &field_name,
+  bool getFieldDefaultValue(const ConstantString & field_name,
                             T * value,
                             const size_t N);
   template <typename T>
-  bool getFieldDefaultElementValue(const ConstantString &field_name,
+  bool getFieldDefaultElementValue(const ConstantString & field_name,
                                    const size_t element_index,
-                                   T &value);
-  size_t getFieldArrayLength(const ConstantString &field_name);
-  size_t getFieldStringLength(const ConstantString &field_name);
+                                   T & value);
+  size_t getFieldArrayLength(const ConstantString & field_name);
+  size_t getFieldStringLength(const ConstantString & field_name);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>
   void writeToResponse(T value);
   template <typename T, size_t N>
   void writeToResponse(T (&value)[N]);
-  void writeToResponse(Vector<const constants::SubsetMemberType>& value, JsonStream::JsonTypes type);
+  void writeToResponse(Vector<const constants::SubsetMemberType> & value, JsonStream::JsonTypes type);
   template <typename K, typename T>
   void writeToResponse(K key, T value);
   template <typename K, typename T, size_t N>
@@ -171,42 +171,42 @@ private:
   bool server_running_;
 
   void setup();
-  InternalMethod& createInternalMethod(const ConstantString &method_name, bool is_private=false);
-  Parameter& createInternalParameter(const ConstantString &parameter_name);
+  InternalMethod & createInternalMethod(const ConstantString & method_name, bool is_private=false);
+  Parameter & createInternalParameter(const ConstantString & parameter_name);
   template <typename T>
-  Field& createInternalField(const ConstantString &field_name,
-                             const T &default_value);
+  Field & createInternalField(const ConstantString & field_name,
+                             const T & default_value);
   void processRequestArray();
   int processMethodString(const char * method_string);
   template <typename T>
-  int findMethodIndex(T const&method_name);
-  int countJsonArrayElements(ArduinoJson::JsonArray &json_array);
+  int findMethodIndex(T const & method_name);
+  int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
   void executeMethod();
   void methodHelp(bool verbose, int method_index);
   int processParameterString(const char * parameter_string);
   template <typename T>
-  int findParameterIndex(T const&parameter_name);
+  int findParameterIndex(T const & parameter_name);
   template <typename T>
-  int findMethodParameterIndex(int method_index, T const&parameter_name);
-  void parameterHelp(Parameter &parameter, bool end_object=true);
-  void fieldHelp(Field &field);
+  int findMethodParameterIndex(int method_index, T const & parameter_name);
+  void parameterHelp(Parameter & parameter, bool end_object=true);
+  void fieldHelp(Field & field);
   bool checkParameters();
-  bool checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json_value);
-  bool checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonVariant &json_value);
+  bool checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
+  bool checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   template <typename T>
-  int findFieldIndex(T const&field_name);
+  int findFieldIndex(T const & field_name);
   template <typename T>
-  Field& findField(T const&field_name, int * field_index_ptr);
+  Field & findField(T const & field_name, int * field_index_ptr);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceInfoToResponse();
-  void writeParameterNotInSubsetErrorToResponse(Parameter &parameter, Vector<const constants::SubsetMemberType> &subset);
-  void writeParameterNotInRangeErrorToResponse(Parameter &parameter, char min_str[], char max_str[]);
-  void writeFieldToResponse(Field &field, bool write_key=false, bool write_default=false, int element_index=-1);
-  void writeFieldErrorToResponse(const ConstantString &error);
-  void subsetToString(char * destination, Vector<const constants::SubsetMemberType> &subset, const JsonStream::JsonTypes type, const size_t num);
+  void writeParameterNotInSubsetErrorToResponse(Parameter & parameter, Vector<const constants::SubsetMemberType> & subset);
+  void writeParameterNotInRangeErrorToResponse(Parameter & parameter, char min_str[], char max_str[]);
+  void writeFieldToResponse(Field & field, bool write_key=false, bool write_default=false, int element_index=-1);
+  void writeFieldErrorToResponse(const ConstantString & error);
+  void subsetToString(char * destination, Vector<const constants::SubsetMemberType> & subset, const JsonStream::JsonTypes type, const size_t num);
 
   // internal methods
   void getDeviceInfoCallback();

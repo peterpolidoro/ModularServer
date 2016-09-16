@@ -17,8 +17,8 @@ Field::Field()
 }
 
 template <>
-Field::Field<long>(const ConstantString &name,
-                   const long &default_value) :
+Field::Field<long>(const ConstantString & name,
+                   const long & default_value) :
 parameter_(name),
   saved_variable_(default_value)
 {
@@ -28,8 +28,8 @@ parameter_(name),
 }
 
 template <>
-Field::Field<double>(const ConstantString &name,
-                     const double &default_value) :
+Field::Field<double>(const ConstantString & name,
+                     const double & default_value) :
 parameter_(name),
   saved_variable_(default_value)
 {
@@ -39,8 +39,8 @@ parameter_(name),
 }
 
 template <>
-Field::Field<bool>(const ConstantString &name,
-                   const bool &default_value) :
+Field::Field<bool>(const ConstantString & name,
+                   const bool & default_value) :
 parameter_(name),
   saved_variable_(default_value)
 {
@@ -50,8 +50,8 @@ parameter_(name),
 }
 
 template <>
-Field::Field(const ConstantString &name,
-             const ConstantString * const &default_value) :
+Field::Field(const ConstantString & name,
+             const ConstantString * const & default_value) :
   parameter_(name),
   saved_variable_(default_value)
 {
@@ -61,7 +61,7 @@ Field::Field(const ConstantString &name,
   set_element_value_callback_ = NULL;
 }
 
-void Field::setUnits(const ConstantString &name)
+void Field::setUnits(const ConstantString & name)
 {
   parameter_.setUnits(name);
 }
@@ -89,7 +89,7 @@ void Field::attachSetElementValueCallback(SetElementValueCallback callback)
 // Private
 // Saved Variable Methods
 template <>
-bool Field::getDefaultValue<long>(long &value)
+bool Field::getDefaultValue<long>(long & value)
 {
   if (getType() != JsonStream::LONG_TYPE)
   {
@@ -99,7 +99,7 @@ bool Field::getDefaultValue<long>(long &value)
 }
 
 template <>
-bool Field::getDefaultValue<double>(double &value)
+bool Field::getDefaultValue<double>(double & value)
 {
   if (getType() != JsonStream::DOUBLE_TYPE)
   {
@@ -109,7 +109,7 @@ bool Field::getDefaultValue<double>(double &value)
 }
 
 template <>
-bool Field::getDefaultValue<bool>(bool &value)
+bool Field::getDefaultValue<bool>(bool & value)
 {
   if (getType() != JsonStream::BOOL_TYPE)
   {
@@ -119,7 +119,7 @@ bool Field::getDefaultValue<bool>(bool &value)
 }
 
 template <>
-bool Field::getDefaultValue<const ConstantString *>(const ConstantString * &value)
+bool Field::getDefaultValue<const ConstantString *>(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       isStringSavedAsCharArray())
@@ -131,7 +131,7 @@ bool Field::getDefaultValue<const ConstantString *>(const ConstantString * &valu
 }
 
 template <>
-bool Field::getDefaultElementValue<long>(long &value, const size_t element_index)
+bool Field::getDefaultElementValue<long>(long & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE))
@@ -142,7 +142,7 @@ bool Field::getDefaultElementValue<long>(long &value, const size_t element_index
 }
 
 template <>
-bool Field::getDefaultElementValue<double>(double &value, const size_t element_index)
+bool Field::getDefaultElementValue<double>(double & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE))
@@ -153,7 +153,7 @@ bool Field::getDefaultElementValue<double>(double &value, const size_t element_i
 }
 
 template <>
-bool Field::getDefaultElementValue<bool>(bool &value, const size_t element_index)
+bool Field::getDefaultElementValue<bool>(bool & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE))
@@ -164,7 +164,7 @@ bool Field::getDefaultElementValue<bool>(bool &value, const size_t element_index
 }
 
 template <>
-bool Field::getDefaultElementValue<char>(char &value, const size_t element_index)
+bool Field::getDefaultElementValue<char>(char & value, const size_t element_index)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       (!isStringSavedAsCharArray()))
@@ -175,7 +175,7 @@ bool Field::getDefaultElementValue<char>(char &value, const size_t element_index
 }
 
 template <>
-bool Field::setValue<long>(const long &value)
+bool Field::setValue<long>(const long & value)
 {
   if (getType() != JsonStream::LONG_TYPE)
   {
@@ -194,7 +194,7 @@ bool Field::setValue<long>(const long &value)
 }
 
 template <>
-bool Field::setValue<double>(const double &value)
+bool Field::setValue<double>(const double & value)
 {
   if (getType() != JsonStream::DOUBLE_TYPE)
   {
@@ -213,7 +213,7 @@ bool Field::setValue<double>(const double &value)
 }
 
 template <>
-bool Field::setValue<bool>(const bool &value)
+bool Field::setValue<bool>(const bool & value)
 {
   if (getType() != JsonStream::BOOL_TYPE)
   {
@@ -223,7 +223,7 @@ bool Field::setValue<bool>(const bool &value)
 }
 
 template <>
-bool Field::setValue<const ConstantString * const>(const ConstantString * const &value)
+bool Field::setValue<const ConstantString * const>(const ConstantString * const & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       isStringSavedAsCharArray())
@@ -234,7 +234,7 @@ bool Field::setValue<const ConstantString * const>(const ConstantString * const 
 }
 
 template <>
-bool Field::setElementValue<long>(const long &value, const size_t element_index)
+bool Field::setElementValue<long>(const long & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE))
@@ -254,7 +254,7 @@ bool Field::setElementValue<long>(const long &value, const size_t element_index)
 }
 
 template <>
-bool Field::setElementValue<double>(const double &value, const size_t element_index)
+bool Field::setElementValue<double>(const double & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE))
@@ -274,7 +274,7 @@ bool Field::setElementValue<double>(const double &value, const size_t element_in
 }
 
 template <>
-bool Field::setElementValue<bool>(const bool &value, const size_t element_index)
+bool Field::setElementValue<bool>(const bool & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE))
@@ -285,7 +285,7 @@ bool Field::setElementValue<bool>(const bool &value, const size_t element_index)
 }
 
 template <>
-bool Field::setElementValue<char>(const char &value, const size_t element_index)
+bool Field::setElementValue<char>(const char & value, const size_t element_index)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       (!isStringSavedAsCharArray()))
@@ -296,7 +296,7 @@ bool Field::setElementValue<char>(const char &value, const size_t element_index)
 }
 
 template <>
-bool Field::getValue<long>(long &value)
+bool Field::getValue<long>(long & value)
 {
   if (getType() != JsonStream::LONG_TYPE)
   {
@@ -306,7 +306,7 @@ bool Field::getValue<long>(long &value)
 }
 
 template <>
-bool Field::getValue<double>(double &value)
+bool Field::getValue<double>(double & value)
 {
   if (getType() != JsonStream::DOUBLE_TYPE)
   {
@@ -316,7 +316,7 @@ bool Field::getValue<double>(double &value)
 }
 
 template <>
-bool Field::getValue<bool>(bool &value)
+bool Field::getValue<bool>(bool & value)
 {
   if (getType() != JsonStream::BOOL_TYPE)
   {
@@ -326,7 +326,7 @@ bool Field::getValue<bool>(bool &value)
 }
 
 template <>
-bool Field::getValue<const ConstantString *>(const ConstantString * &value)
+bool Field::getValue<const ConstantString *>(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       isStringSavedAsCharArray())
@@ -338,7 +338,7 @@ bool Field::getValue<const ConstantString *>(const ConstantString * &value)
 }
 
 template <>
-bool Field::getElementValue<long>(long &value, const size_t element_index)
+bool Field::getElementValue<long>(long & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE))
@@ -349,7 +349,7 @@ bool Field::getElementValue<long>(long &value, const size_t element_index)
 }
 
 template <>
-bool Field::getElementValue<double>(double &value, const size_t element_index)
+bool Field::getElementValue<double>(double & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE))
@@ -360,7 +360,7 @@ bool Field::getElementValue<double>(double &value, const size_t element_index)
 }
 
 template <>
-bool Field::getElementValue<bool>(bool &value, const size_t element_index)
+bool Field::getElementValue<bool>(bool & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE))
@@ -371,7 +371,7 @@ bool Field::getElementValue<bool>(bool &value, const size_t element_index)
 }
 
 template <>
-bool Field::getElementValue<char>(char &value, const size_t element_index)
+bool Field::getElementValue<char>(char & value, const size_t element_index)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       (!isStringSavedAsCharArray()))
@@ -397,12 +397,12 @@ size_t Field::getArrayLength()
   return saved_variable_.getArrayLength();
 }
 
-Parameter& Field::getParameter()
+Parameter & Field::getParameter()
 {
   return parameter_;
 }
 
-const ConstantString& Field::getName()
+const ConstantString & Field::getName()
 {
   return parameter_.getName();
 }

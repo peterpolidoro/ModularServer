@@ -21,7 +21,7 @@ Parameter::Parameter()
   subset_is_set_ = false;
 }
 
-Parameter::Parameter(const ConstantString &name)
+Parameter::Parameter(const ConstantString & name)
 {
   setName(name);
   setUnits(constants::empty_constant_string);
@@ -32,12 +32,12 @@ Parameter::Parameter(const ConstantString &name)
   subset_is_set_ = false;
 }
 
-void Parameter::setName(const ConstantString &name)
+void Parameter::setName(const ConstantString & name)
 {
   name_ptr_ = &name;
 }
 
-void Parameter::setUnits(const ConstantString &units)
+void Parameter::setUnits(const ConstantString & units)
 {
   units_ptr_ = &units;
 }
@@ -163,17 +163,17 @@ bool Parameter::compareName(const char * name_to_compare)
   return String(name).equalsIgnoreCase(name_to_compare);
 }
 
-bool Parameter::compareName(const ConstantString &name_to_compare)
+bool Parameter::compareName(const ConstantString & name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
 }
 
-const ConstantString& Parameter::getName()
+const ConstantString & Parameter::getName()
 {
   return *name_ptr_;
 }
 
-const ConstantString& Parameter::getUnits()
+const ConstantString & Parameter::getUnits()
 {
   return *units_ptr_;
 }
@@ -304,7 +304,7 @@ bool Parameter::valueInSubset(const char * value)
   return in_subset;
 }
 
-Vector<const constants::SubsetMemberType>& Parameter::getSubset()
+Vector<const constants::SubsetMemberType> & Parameter::getSubset()
 {
   return subset_;
 }

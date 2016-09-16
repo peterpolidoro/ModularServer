@@ -19,7 +19,7 @@ const long firmware_major = 0;
 const long firmware_minor = 1;
 const long firmware_patch = 0;
 
-HardwareSerial& serial2 = Serial2;
+HardwareSerial & serial2 = Serial2;
 const size_t serial2_rx_pin = 17;
 
 CONSTANT_STRING(device_name,"string_controller");

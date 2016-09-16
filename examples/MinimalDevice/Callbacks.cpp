@@ -17,8 +17,8 @@ namespace callbacks
 // long
 // double
 // bool
-// ArduinoJson::JsonArray&
-// ArduinoJson::JsonObject&
+// ArduinoJson::JsonArray &
+// ArduinoJson::JsonObject &
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
@@ -27,6 +27,6 @@ namespace callbacks
 // modular_server.getFieldElementValue type must match the field array element default type
 // modular_server.setFieldElementValue type must match the field array element default type
 
-ModularDevice::ModularServer& modular_server = controller.getModularServer();
+ModularDevice::ModularServer & modular_server = controller.getModularServer();
 
 }

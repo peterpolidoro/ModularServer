@@ -30,28 +30,28 @@ void ModularServer::setFieldStorage(Field (&fields)[MAX_SIZE])
 }
 
 template <typename T>
-Field& ModularServer::createField(const ConstantString &field_name,
-                                  const T &default_value)
+Field & ModularServer::createField(const ConstantString & field_name,
+                                  const T & default_value)
 {
   return server_.createField(field_name,default_value);
 }
 
 template <typename T, size_t N>
-Field& ModularServer::createField(const ConstantString &field_name,
+Field & ModularServer::createField(const ConstantString & field_name,
                                   const T (&default_value)[N])
 {
   return server_.createField(field_name,default_value);
 }
 
 template <typename T>
-bool ModularServer::setFieldValue(const ConstantString &field_name,
-                                  const T &value)
+bool ModularServer::setFieldValue(const ConstantString & field_name,
+                                  const T & value)
 {
   return server_.setFieldValue(field_name,value);
 }
 
 template <typename T>
-bool ModularServer::setFieldValue(const ConstantString &field_name,
+bool ModularServer::setFieldValue(const ConstantString & field_name,
                                   const T * value,
                                   const size_t N)
 {
@@ -59,22 +59,22 @@ bool ModularServer::setFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool ModularServer::setFieldElementValue(const ConstantString &field_name,
+bool ModularServer::setFieldElementValue(const ConstantString & field_name,
                                          const size_t element_index,
-                                         const T &value)
+                                         const T & value)
 {
   return server_.setFieldElementValue(field_name,element_index,value);
 }
 
 template <typename T>
-bool ModularServer::getFieldValue(const ConstantString &field_name,
-                                  T &value)
+bool ModularServer::getFieldValue(const ConstantString & field_name,
+                                  T & value)
 {
   return server_.getFieldValue(field_name,value);
 }
 
 template <typename T>
-bool ModularServer::getFieldValue(const ConstantString &field_name,
+bool ModularServer::getFieldValue(const ConstantString & field_name,
                                   T * value,
                                   const size_t N)
 {
@@ -82,22 +82,22 @@ bool ModularServer::getFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool ModularServer::getFieldElementValue(const ConstantString &field_name,
+bool ModularServer::getFieldElementValue(const ConstantString & field_name,
                                          const size_t element_index,
-                                         T &value)
+                                         T & value)
 {
   return server_.getFieldElementValue(field_name,element_index,value);
 }
 
 template <typename T>
-bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
-                                         T &value)
+bool ModularServer::getFieldDefaultValue(const ConstantString & field_name,
+                                         T & value)
 {
   return server_.getFieldDefaultValue(field_name,value);
 }
 
 template <typename T>
-bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
+bool ModularServer::getFieldDefaultValue(const ConstantString & field_name,
                                          T * value,
                                          const size_t N)
 {
@@ -105,9 +105,9 @@ bool ModularServer::getFieldDefaultValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool ModularServer::getFieldDefaultElementValue(const ConstantString &field_name,
+bool ModularServer::getFieldDefaultElementValue(const ConstantString & field_name,
                                                 const size_t element_index,
-                                                T &value)
+                                                T & value)
 {
   return server_.getFieldDefaultElementValue(field_name,element_index,value);
 }

@@ -19,65 +19,65 @@ class ModularServer
 {
 public:
   ModularServer();
-  ModularServer(Stream &stream);
-  void addServerStream(Stream &stream);
-  void setName(const ConstantString &device_name);
+  ModularServer(Stream & stream);
+  void addServerStream(Stream & stream);
+  void setName(const ConstantString & device_name);
   void setModelNumber(const long model_number);
   void setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch);
   template <size_t MAX_SIZE>
   void setMethodStorage(Method (&methods)[MAX_SIZE]);
-  Method& createMethod(const ConstantString &method_name);
-  Method& copyMethod(Method &method,const ConstantString &method_name);
+  Method & createMethod(const ConstantString & method_name);
+  Method & copyMethod(Method & method,const ConstantString & method_name);
   template <size_t MAX_SIZE>
   void setParameterStorage(Parameter (&parameters)[MAX_SIZE]);
-  Parameter& createParameter(const ConstantString &parameter_name);
-  Parameter& copyParameter(Parameter &parameter,const ConstantString &parameter_name);
-  ArduinoJson::JsonVariant getParameterValue(const ConstantString &parameter_name);
+  Parameter & createParameter(const ConstantString & parameter_name);
+  Parameter & copyParameter(Parameter & parameter,const ConstantString & parameter_name);
+  ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   template <size_t MAX_SIZE>
   void setFieldStorage(Field (&fields)[MAX_SIZE]);
   template <typename T>
-  Field& createField(const ConstantString &field_name,
-                     const T &default_value);
+  Field & createField(const ConstantString & field_name,
+                     const T & default_value);
   template <typename T, size_t N>
-  Field& createField(const ConstantString &field_name,
+  Field & createField(const ConstantString & field_name,
                      const T (&default_value)[N]);
   template <typename T>
-  bool setFieldValue(const ConstantString &field_name,
-                     const T &value);
-  bool setFieldValue(const ConstantString &field_name,
-                     ArduinoJson::JsonArray &value);
+  bool setFieldValue(const ConstantString & field_name,
+                     const T & value);
+  bool setFieldValue(const ConstantString & field_name,
+                     ArduinoJson::JsonArray & value);
   template <typename T>
-  bool setFieldValue(const ConstantString &field_name,
+  bool setFieldValue(const ConstantString & field_name,
                      const T * value,
                      const size_t N);
   template <typename T>
-  bool setFieldElementValue(const ConstantString &field_name,
+  bool setFieldElementValue(const ConstantString & field_name,
                             const size_t element_index,
-                            const T &value);
+                            const T & value);
   template <typename T>
-  bool getFieldValue(const ConstantString &field_name,
-                     T &value);
+  bool getFieldValue(const ConstantString & field_name,
+                     T & value);
   template <typename T>
-  bool getFieldValue(const ConstantString &field_name,
+  bool getFieldValue(const ConstantString & field_name,
                      T * value,
                      const size_t N);
   template <typename T>
-  bool getFieldElementValue(const ConstantString &field_name,
+  bool getFieldElementValue(const ConstantString & field_name,
                             const size_t element_index,
-                            T &value);
+                            T & value);
   template <typename T>
-  bool getFieldDefaultValue(const ConstantString &field_name,
-                            T &value);
+  bool getFieldDefaultValue(const ConstantString & field_name,
+                            T & value);
   template <typename T>
-  bool getFieldDefaultValue(const ConstantString &field_name,
+  bool getFieldDefaultValue(const ConstantString & field_name,
                             T * value,
                             const size_t N);
   template <typename T>
-  bool getFieldDefaultElementValue(const ConstantString &field_name,
+  bool getFieldDefaultElementValue(const ConstantString & field_name,
                                    const size_t element_index,
-                                   T &value);
-  size_t getFieldArrayLength(const ConstantString &field_name);
-  size_t getFieldStringLength(const ConstantString &field_name);
+                                   T & value);
+  size_t getFieldArrayLength(const ConstantString & field_name);
+  size_t getFieldStringLength(const ConstantString & field_name);
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>

@@ -46,7 +46,7 @@ void Controller::update()
   modular_server_.handleServerRequests();
 }
 
-ModularDevice::ModularServer& Controller::getModularServer()
+ModularDevice::ModularServer & Controller::getModularServer()
 {
   return modular_server_;
 }

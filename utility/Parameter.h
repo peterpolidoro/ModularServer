@@ -24,9 +24,9 @@ class Parameter
 {
 public:
   Parameter();
-  Parameter(const ConstantString &name);
-  void setName(const ConstantString &name);
-  void setUnits(const ConstantString &name);
+  Parameter(const ConstantString & name);
+  void setName(const ConstantString & name);
+  void setUnits(const ConstantString & name);
   void setTypeLong();
   void setTypeDouble();
   void setTypeBool();
@@ -69,9 +69,9 @@ private:
   Vector<const constants::SubsetMemberType> subset_;
   bool subset_is_set_;
   bool compareName(const char * name_to_compare);
-  bool compareName(const ConstantString &name_to_compare);
-  const ConstantString& getName();
-  const ConstantString& getUnits();
+  bool compareName(const ConstantString & name_to_compare);
+  const ConstantString & getName();
+  const ConstantString & getUnits();
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool rangeIsSet();
@@ -101,7 +101,7 @@ private:
   bool subsetIsSet();
   bool valueInSubset(const long value);
   bool valueInSubset(const char * value);
-  Vector<const constants::SubsetMemberType>& getSubset();
+  Vector<const constants::SubsetMemberType> & getSubset();
   friend class Field;
   friend class Method;
   friend class Server;

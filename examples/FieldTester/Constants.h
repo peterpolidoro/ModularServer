@@ -25,7 +25,7 @@ extern const long firmware_major;
 extern const long firmware_minor;
 extern const long firmware_patch;
 
-extern HardwareSerial& serial2;
+extern HardwareSerial & serial2;
 extern const size_t serial2_rx_pin;
 
 extern ConstantString device_name;
@@ -61,7 +61,7 @@ extern const char string_default[STRING_LENGTH_MAX];
 extern ConstantString odd_field_name;
 enum{ODD_SUBSET_LENGTH=5};
 extern const ModularDevice::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
-extern const long &odd_default;
+extern const long & odd_default;
 
 extern ConstantString mode_field_name;
 enum{MODE_SUBSET_LENGTH=3};

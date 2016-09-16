@@ -30,8 +30,8 @@ void Server::setMethodStorage(Method (&methods)[MAX_SIZE])
 }
 
 template <typename T>
-Field& Server::createInternalField(const ConstantString &field_name,
-                                   const T &default_value)
+Field & Server::createInternalField(const ConstantString & field_name,
+                                   const T & default_value)
 {
   int field_index = findFieldIndex(field_name);
   if (field_index < 0)
@@ -43,8 +43,8 @@ Field& Server::createInternalField(const ConstantString &field_name,
 }
 
 template <typename T>
-Field& Server::createField(const ConstantString &field_name,
-                           const T &default_value)
+Field & Server::createField(const ConstantString & field_name,
+                           const T & default_value)
 {
   int field_index = findFieldIndex(field_name);
   if (field_index < 0)
@@ -56,7 +56,7 @@ Field& Server::createField(const ConstantString &field_name,
 }
 
 template <typename T, size_t N>
-Field& Server::createField(const ConstantString &field_name,
+Field & Server::createField(const ConstantString & field_name,
                            const T (&default_value)[N])
 {
   int field_index = findFieldIndex(field_name);
@@ -69,11 +69,11 @@ Field& Server::createField(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::setFieldValue(const ConstantString &field_name,
-                           const T &value)
+bool Server::setFieldValue(const ConstantString & field_name,
+                           const T & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     bool success = field.setValue(value);
@@ -90,11 +90,11 @@ bool Server::setFieldValue(const ConstantString &field_name,
 }
 
 template <typename T, size_t N>
-bool Server::setFieldValue(const ConstantString &field_name,
+bool Server::setFieldValue(const ConstantString & field_name,
                            const T (&value)[N])
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     bool success = field.setValue(value);
@@ -111,12 +111,12 @@ bool Server::setFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::setFieldValue(const ConstantString &field_name,
+bool Server::setFieldValue(const ConstantString & field_name,
                            const T * value,
                            const size_t N)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     JsonStream::JsonTypes type = field.getType();
@@ -158,12 +158,12 @@ bool Server::setFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::setFieldElementValue(const ConstantString &field_name,
+bool Server::setFieldElementValue(const ConstantString & field_name,
                                   const size_t element_index,
-                                  const T &value)
+                                  const T & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     bool success = field.setElementValue(value,element_index);
@@ -180,11 +180,11 @@ bool Server::setFieldElementValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::setAllFieldElementValues(const ConstantString &field_name,
-                                      const T &value)
+bool Server::setAllFieldElementValues(const ConstantString & field_name,
+                                      const T & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     JsonStream::JsonTypes type = field.getType();
@@ -224,11 +224,11 @@ bool Server::setAllFieldElementValues(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::getFieldValue(const ConstantString &field_name,
-                           T &value)
+bool Server::getFieldValue(const ConstantString & field_name,
+                           T & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     return field.getValue(value);
@@ -240,11 +240,11 @@ bool Server::getFieldValue(const ConstantString &field_name,
 }
 
 template <typename T, size_t N>
-bool Server::getFieldValue(const ConstantString &field_name,
+bool Server::getFieldValue(const ConstantString & field_name,
                            T (&value)[N])
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     return field.getValue(value);
@@ -256,12 +256,12 @@ bool Server::getFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::getFieldValue(const ConstantString &field_name,
+bool Server::getFieldValue(const ConstantString & field_name,
                            T * value,
                            const size_t N)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     JsonStream::JsonTypes type = field.getType();
@@ -303,12 +303,12 @@ bool Server::getFieldValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::getFieldElementValue(const ConstantString &field_name,
+bool Server::getFieldElementValue(const ConstantString & field_name,
                                   const size_t element_index,
-                                  T &value)
+                                  T & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     return field.getElementValue(value,element_index);
@@ -320,11 +320,11 @@ bool Server::getFieldElementValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::getFieldDefaultValue(const ConstantString &field_name,
-                                  T &value)
+bool Server::getFieldDefaultValue(const ConstantString & field_name,
+                                  T & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     return field.getDefaultValue(value);
@@ -336,11 +336,11 @@ bool Server::getFieldDefaultValue(const ConstantString &field_name,
 }
 
 template <typename T, size_t N>
-bool Server::getFieldDefaultValue(const ConstantString &field_name,
+bool Server::getFieldDefaultValue(const ConstantString & field_name,
                                   T (&value)[N])
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     return field.getDefaultValue(value);
@@ -352,12 +352,12 @@ bool Server::getFieldDefaultValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::getFieldDefaultValue(const ConstantString &field_name,
+bool Server::getFieldDefaultValue(const ConstantString & field_name,
                                   T * value,
                                   const size_t N)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     size_t array_length = field.getArrayLength();
@@ -382,12 +382,12 @@ bool Server::getFieldDefaultValue(const ConstantString &field_name,
 }
 
 template <typename T>
-bool Server::getFieldDefaultElementValue(const ConstantString &field_name,
+bool Server::getFieldDefaultElementValue(const ConstantString & field_name,
                                          const size_t element_index,
-                                         T &value)
+                                         T & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     return field.getDefaultElementValue(value,element_index);
@@ -496,7 +496,7 @@ void Server::writeResultToResponse(T * value, size_t N)
 }
 
 template <typename T>
-int Server::findMethodIndex(T const&method_name)
+int Server::findMethodIndex(T const & method_name)
 {
   int method_index = -1;
   for (size_t i=0; i<internal_methods_.size(); ++i)
@@ -519,7 +519,7 @@ int Server::findMethodIndex(T const&method_name)
 }
 
 template <typename T>
-int Server::findParameterIndex(T const&parameter_name)
+int Server::findParameterIndex(T const & parameter_name)
 {
   int parameter_index = -1;
   for (size_t i=0; i<internal_parameters_.size(); ++i)
@@ -542,7 +542,7 @@ int Server::findParameterIndex(T const&parameter_name)
 }
 
 template <typename T>
-int Server::findMethodParameterIndex(int method_index, T const&parameter_name)
+int Server::findMethodParameterIndex(int method_index, T const & parameter_name)
 {
   int parameter_index = -1;
   if (method_index >= 0)
@@ -570,7 +570,7 @@ int Server::findMethodParameterIndex(int method_index, T const&parameter_name)
 }
 
 template <typename T>
-int Server::findFieldIndex(T const&field_name)
+int Server::findFieldIndex(T const & field_name)
 {
   int field_index = -1;
   for (size_t i=0; i<internal_fields_.size(); ++i)
@@ -593,7 +593,7 @@ int Server::findFieldIndex(T const&field_name)
 }
 
 template <typename T>
-Field& Server::findField(T const&field_name, int * field_index_ptr)
+Field & Server::findField(T const & field_name, int * field_index_ptr)
 {
   int field_index = findFieldIndex(field_name);
   *field_index_ptr = field_index;

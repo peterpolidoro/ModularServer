@@ -26,10 +26,10 @@ class Method
 {
 public:
   Method();
-  Method(const ConstantString &name);
-  void setName(const ConstantString &name);
+  Method(const ConstantString & name);
+  void setName(const ConstantString & name);
   void attachCallback(Callback callback);
-  void addParameter(Parameter &parameter);
+  void addParameter(Parameter & parameter);
   void setReturnTypeLong();
   void setReturnTypeDouble();
   void setReturnTypeBool();
@@ -43,13 +43,13 @@ protected:
   const ConstantString * name_ptr_;
   Callback callback_;
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
-  int findParameterIndex(const ConstantString &parameter_name);
+  int findParameterIndex(const ConstantString & parameter_name);
   int parameter_count_;
   JsonStream::JsonTypes return_type_;
-  void setup(const ConstantString &name);
+  void setup(const ConstantString & name);
   bool compareName(const char * name_to_compare);
-  bool compareName(const ConstantString &name_to_compare);
-  const ConstantString& getName();
+  bool compareName(const ConstantString & name_to_compare);
+  const ConstantString &  getName();
   void callback();
   friend class Server;
 };
@@ -58,7 +58,7 @@ class InternalMethod : public Method
 {
 public:
   InternalMethod();
-  InternalMethod(const ConstantString &name);
+  InternalMethod(const ConstantString & name);
   void attachCallback(InternalCallback callback);
   void callback(Server * server);
   void setPrivacy(bool is_private);

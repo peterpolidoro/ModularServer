@@ -26,7 +26,7 @@ extern const long firmware_major;
 extern const long firmware_minor;
 extern const long firmware_patch;
 
-extern HardwareSerial& serial2;
+extern HardwareSerial & serial2;
 extern const size_t serial2_rx_pin;
 
 extern ConstantString device_name;

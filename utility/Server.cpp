@@ -16,7 +16,7 @@ Server::Server() :
   setup();
 }
 
-Server::Server(Stream &stream)
+Server::Server(Stream & stream)
 {
   addServerStream(stream);
   setup();
@@ -38,78 +38,78 @@ void Server::setup()
   eeprom_initialized_ = false;
 
   // Fields
-  Field& serial_number_field = createInternalField(constants::serial_number_field_name,constants::serial_number_default);
+  Field & serial_number_field = createInternalField(constants::serial_number_field_name,constants::serial_number_default);
   serial_number_field.setRange(constants::serial_number_min,constants::serial_number_max);
 
   // Parameters
-  Parameter& field_name_parameter = createInternalParameter(constants::field_name_parameter_name);
+  Parameter & field_name_parameter = createInternalParameter(constants::field_name_parameter_name);
   field_name_parameter.setTypeString();
 
-  Parameter& field_value_parameter = createInternalParameter(constants::field_value_parameter_name);
+  Parameter & field_value_parameter = createInternalParameter(constants::field_value_parameter_name);
   field_value_parameter.setTypeValue();
 
-  Parameter& field_element_index_parameter = createInternalParameter(constants::field_element_index_parameter_name);
+  Parameter & field_element_index_parameter = createInternalParameter(constants::field_element_index_parameter_name);
   field_element_index_parameter.setTypeLong();
 
   // Methods
-  InternalMethod& get_device_info_method = createInternalMethod(constants::get_device_info_method_name,true);
+  InternalMethod & get_device_info_method = createInternalMethod(constants::get_device_info_method_name,true);
   get_device_info_method.attachCallback(&Server::getDeviceInfoCallback);
 
-  InternalMethod& get_method_ids_method = createInternalMethod(constants::get_method_ids_method_name,true);
+  InternalMethod & get_method_ids_method = createInternalMethod(constants::get_method_ids_method_name,true);
   get_method_ids_method.attachCallback(&Server::getMethodIdsCallback);
 
-  InternalMethod& get_parameters_method = createInternalMethod(constants::get_parameters_method_name,true);
+  InternalMethod & get_parameters_method = createInternalMethod(constants::get_parameters_method_name,true);
   get_parameters_method.attachCallback(&Server::getParametersCallback);
 
-  InternalMethod& help_method = createInternalMethod(constants::help_method_name,true);
+  InternalMethod & help_method = createInternalMethod(constants::help_method_name,true);
   help_method.attachCallback(&Server::helpCallback);
 
-  InternalMethod& verbose_help_method = createInternalMethod(constants::verbose_help_method_name,true);
+  InternalMethod & verbose_help_method = createInternalMethod(constants::verbose_help_method_name,true);
   verbose_help_method.attachCallback(&Server::verboseHelpCallback);
 
 #ifdef __AVR__
-  InternalMethod& get_memory_free_method = createInternalMethod(constants::get_memory_free_method_name);
+  InternalMethod & get_memory_free_method = createInternalMethod(constants::get_memory_free_method_name);
   get_memory_free_method.attachCallback(&Server::getMemoryFreeCallback);
   get_memory_free_method.setReturnTypeLong();
 #endif
 
-  InternalMethod& get_field_default_values_method = createInternalMethod(constants::get_field_default_values_method_name);
+  InternalMethod & get_field_default_values_method = createInternalMethod(constants::get_field_default_values_method_name);
   get_field_default_values_method.attachCallback(&Server::getFieldDefaultValuesCallback);
 
-  InternalMethod& set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
+  InternalMethod & set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
   set_fields_to_defaults_method.attachCallback(&Server::setFieldsToDefaultsCallback);
 
-  InternalMethod& set_field_to_default_method = createInternalMethod(constants::set_field_to_default_method_name);
+  InternalMethod & set_field_to_default_method = createInternalMethod(constants::set_field_to_default_method_name);
   set_field_to_default_method.attachCallback(&Server::setFieldToDefaultCallback);
   set_field_to_default_method.addParameter(field_name_parameter);
 
-  InternalMethod& get_field_values_method = createInternalMethod(constants::get_field_values_method_name);
+  InternalMethod & get_field_values_method = createInternalMethod(constants::get_field_values_method_name);
   get_field_values_method.attachCallback(&Server::getFieldValuesCallback);
   get_field_values_method.setReturnTypeObject();
 
-  InternalMethod& get_field_value_method = createInternalMethod(constants::get_field_value_method_name);
+  InternalMethod & get_field_value_method = createInternalMethod(constants::get_field_value_method_name);
   get_field_value_method.attachCallback(&Server::getFieldValueCallback);
   get_field_value_method.addParameter(field_name_parameter);
   get_field_value_method.setReturnTypeValue();
 
-  InternalMethod& get_field_element_value_method = createInternalMethod(constants::get_field_element_value_method_name);
+  InternalMethod & get_field_element_value_method = createInternalMethod(constants::get_field_element_value_method_name);
   get_field_element_value_method.attachCallback(&Server::getFieldElementValueCallback);
   get_field_element_value_method.addParameter(field_name_parameter);
   get_field_element_value_method.addParameter(field_element_index_parameter);
   get_field_element_value_method.setReturnTypeValue();
 
-  InternalMethod& set_field_value_method = createInternalMethod(constants::set_field_value_method_name);
+  InternalMethod & set_field_value_method = createInternalMethod(constants::set_field_value_method_name);
   set_field_value_method.attachCallback(&Server::setFieldValueCallback);
   set_field_value_method.addParameter(field_name_parameter);
   set_field_value_method.addParameter(field_value_parameter);
 
-  InternalMethod& set_field_element_value_method = createInternalMethod(constants::set_field_element_value_method_name);
+  InternalMethod & set_field_element_value_method = createInternalMethod(constants::set_field_element_value_method_name);
   set_field_element_value_method.attachCallback(&Server::setFieldElementValueCallback);
   set_field_element_value_method.addParameter(field_name_parameter);
   set_field_element_value_method.addParameter(field_element_index_parameter);
   set_field_element_value_method.addParameter(field_value_parameter);
 
-  InternalMethod& set_all_field_element_values_method = createInternalMethod(constants::set_all_field_element_values_method_name);
+  InternalMethod & set_all_field_element_values_method = createInternalMethod(constants::set_all_field_element_values_method_name);
   set_all_field_element_values_method.attachCallback(&Server::setAllFieldElementValuesCallback);
   set_all_field_element_values_method.addParameter(field_name_parameter);
   set_all_field_element_values_method.addParameter(field_value_parameter);
@@ -117,7 +117,7 @@ void Server::setup()
   server_running_ = false;
 }
 
-void Server::addServerStream(Stream &stream)
+void Server::addServerStream(Stream & stream)
 {
   bool stream_found = false;
   for (size_t i=0;i<server_stream_ptrs_.size();++i)
@@ -134,7 +134,7 @@ void Server::addServerStream(Stream &stream)
   json_stream_.setStream(stream);
 }
 
-void Server::setName(const ConstantString &name)
+void Server::setName(const ConstantString & name)
 {
   name_ptr_ = &name;
 }
@@ -151,7 +151,7 @@ void Server::setFirmwareVersion(const long firmware_major,const long firmware_mi
   firmware_patch_ = firmware_patch;
 }
 
-InternalMethod& Server::createInternalMethod(const ConstantString &method_name, bool is_private)
+InternalMethod & Server::createInternalMethod(const ConstantString & method_name, bool is_private)
 {
   int method_index = findMethodIndex(method_name);
   if ((method_index < 0) || (method_index >= (int)internal_methods_.max_size()))
@@ -168,7 +168,7 @@ InternalMethod& Server::createInternalMethod(const ConstantString &method_name, 
   }
 }
 
-Method& Server::createMethod(const ConstantString &method_name)
+Method & Server::createMethod(const ConstantString & method_name)
 {
   int method_index = findMethodIndex(method_name);
   if ((method_index < 0) || (method_index < (int)internal_methods_.max_size()))
@@ -184,14 +184,14 @@ Method& Server::createMethod(const ConstantString &method_name)
   }
 }
 
-Method& Server::copyMethod(Method method,const ConstantString &method_name)
+Method & Server::copyMethod(Method method,const ConstantString & method_name)
 {
   external_methods_.push_back(method);
   external_methods_.back().setName(method_name);
   return external_methods_.back();
 }
 
-Parameter& Server::createInternalParameter(const ConstantString &parameter_name)
+Parameter & Server::createInternalParameter(const ConstantString & parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
   if ((parameter_index < 0) || (parameter_index >= (int)internal_parameters_.max_size()))
@@ -206,7 +206,7 @@ Parameter& Server::createInternalParameter(const ConstantString &parameter_name)
   }
 }
 
-Parameter& Server::createParameter(const ConstantString &parameter_name)
+Parameter & Server::createParameter(const ConstantString & parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
   if ((parameter_index < 0) || (parameter_index < (int)internal_parameters_.max_size()))
@@ -222,25 +222,25 @@ Parameter& Server::createParameter(const ConstantString &parameter_name)
   }
 }
 
-Parameter& Server::copyParameter(Parameter parameter,const ConstantString &parameter_name)
+Parameter & Server::copyParameter(Parameter parameter,const ConstantString & parameter_name)
 {
   external_parameters_.push_back(parameter);
   external_parameters_.back().setName(parameter_name);
   return external_parameters_.back();
 }
 
-ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString &parameter_name)
+ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
 {
   int parameter_index = findMethodParameterIndex(request_method_index_,parameter_name);
   // index 0 is the method, index 1 is the first parameter
   return (*request_json_array_ptr_)[parameter_index+1];
 }
 
-bool Server::setFieldValue(const ConstantString &field_name,
-                           ArduinoJson::JsonArray &value)
+bool Server::setFieldValue(const ConstantString & field_name,
+                           ArduinoJson::JsonArray & value)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     size_t array_length = field.getArrayLength();
@@ -327,26 +327,10 @@ bool Server::setFieldValue(const ConstantString &field_name,
   return true;
 }
 
-// bool Server::getFieldValue(const ConstantString &field_name,
-//                            const ConstantString * value)
-// {
-//   Serial << "const ConstantString *value";
-//   int field_index;
-//   Field& field = findField(field_name,&field_index);
-//   if (field_index >= 0)
-//   {
-//     return field.getValue(value);
-//   }
-//   else
-//   {
-//     return false;
-//   }
-// }
-
-size_t Server::getFieldArrayLength(const ConstantString &field_name)
+size_t Server::getFieldArrayLength(const ConstantString & field_name)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     return field.getArrayLength();
@@ -358,10 +342,10 @@ size_t Server::getFieldArrayLength(const ConstantString &field_name)
 
 }
 
-size_t Server::getFieldStringLength(const ConstantString &field_name)
+size_t Server::getFieldStringLength(const ConstantString & field_name)
 {
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     JsonStream::JsonTypes field_type = field.getType();
@@ -398,7 +382,7 @@ void Server::writeNullToResponse()
   json_stream_.writeNull();
 }
 
-void Server::writeToResponse(Vector<const constants::SubsetMemberType> &value, JsonStream::JsonTypes type)
+void Server::writeToResponse(Vector<const constants::SubsetMemberType> & value, JsonStream::JsonTypes type)
 {
   switch (type)
   {
@@ -737,7 +721,7 @@ int Server::processMethodString(const char * method_string)
   return method_index;
 }
 
-int Server::countJsonArrayElements(ArduinoJson::JsonArray &json_array)
+int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
 {
   int elements_count = 0;
   for (ArduinoJson::JsonArray::iterator it=json_array.begin();
@@ -771,13 +755,13 @@ void Server::methodHelp(bool verbose, int method_index)
   beginResponseObject();
   if (method_index < (int)internal_methods_.max_size())
   {
-    const ConstantString& method_name = internal_methods_[method_index].getName();
+    const ConstantString & method_name = internal_methods_[method_index].getName();
     writeToResponse(constants::name_constant_string,method_name);
   }
   else
   {
     int index = method_index - internal_methods_.max_size();
-    const ConstantString& method_name = external_methods_[index].getName();
+    const ConstantString & method_name = external_methods_[index].getName();
     writeToResponse(constants::name_constant_string,method_name);
   }
 
@@ -801,7 +785,7 @@ void Server::methodHelp(bool verbose, int method_index)
     }
     else
     {
-      const ConstantString& parameter_name = (*parameter_ptrs_ptr)[i]->getName();
+      const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
       writeToResponse(parameter_name);
     }
   }
@@ -860,15 +844,15 @@ int Server::processParameterString(const char * parameter_string)
   return parameter_index;
 }
 
-void Server::parameterHelp(Parameter &parameter, bool end_object)
+void Server::parameterHelp(Parameter & parameter, bool end_object)
 {
   beginResponseObject();
-  const ConstantString& parameter_name = parameter.getName();
+  const ConstantString & parameter_name = parameter.getName();
   writeToResponse(constants::name_constant_string,parameter_name);
 
   char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS];
   parameter_units[0] = '\0';
-  const ConstantString& units = parameter.getUnits();
+  const ConstantString & units = parameter.getUnits();
   units.copy(parameter_units);
   char empty_str[] = {0};
   if (strcmp(parameter_units,empty_str) != 0)
@@ -1021,7 +1005,7 @@ void Server::parameterHelp(Parameter &parameter, bool end_object)
   }
 }
 
-void Server::fieldHelp(Field &field)
+void Server::fieldHelp(Field & field)
 {
   parameterHelp(field.getParameter(),false);
   writeKeyToResponse(constants::value_constant_string);
@@ -1065,7 +1049,7 @@ bool Server::checkParameters()
   return true;
 }
 
-bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json_value)
+bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value)
 {
   bool in_subset = true;
   bool in_range = true;
@@ -1129,7 +1113,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     }
     case JsonStream::OBJECT_TYPE:
     {
-      ArduinoJson::JsonObject& json_object = json_value;
+      ArduinoJson::JsonObject & json_object = json_value;
       if (!json_object.success())
       {
         object_parse_unsuccessful = true;
@@ -1138,7 +1122,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     }
     case JsonStream::ARRAY_TYPE:
     {
-      ArduinoJson::JsonArray& json_array = json_value;
+      ArduinoJson::JsonArray & json_array = json_value;
       if (!json_array.success())
       {
         array_parse_unsuccessful = true;
@@ -1175,7 +1159,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
   }
   if (!in_subset)
   {
-    Vector<const constants::SubsetMemberType> &subset = parameter.getSubset();
+    Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
     writeParameterNotInSubsetErrorToResponse(parameter,subset);
   }
   else if (!in_range)
@@ -1200,7 +1184,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     strcat(error_str,less_than_equal_str);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = '\0';
-    const ConstantString& name = parameter.getName();
+    const ConstantString & name = parameter.getName();
     name.copy(parameter_name);
     strcat(error_str,parameter_name);
     char array_length_str[constants::array_length_constant_string.length()+1];
@@ -1220,7 +1204,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = '\0';
-    const ConstantString& name = parameter.getName();
+    const ConstantString & name = parameter.getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = '\0';
@@ -1240,7 +1224,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
     char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
     parameter_name[0] = '\0';
-    const ConstantString& name = parameter.getName();
+    const ConstantString & name = parameter.getName();
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = '\0';
@@ -1256,7 +1240,7 @@ bool Server::checkParameter(Parameter &parameter, ArduinoJson::JsonVariant &json
   return parameter_ok;
 }
 
-bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonVariant &json_value)
+bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value)
 {
   bool in_subset = true;
   bool in_range = true;
@@ -1366,7 +1350,7 @@ bool Server::checkArrayParameterElement(Parameter &parameter, ArduinoJson::JsonV
   }
   if (!in_subset)
   {
-    Vector<const constants::SubsetMemberType> &subset = parameter.getSubset();
+    Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
     writeParameterNotInSubsetErrorToResponse(parameter,subset);
   }
   else if (!in_range)
@@ -1427,13 +1411,13 @@ void Server::help(bool verbose)
       {
         if (!internal_methods_[method_index].isPrivate())
         {
-          const ConstantString& method_name = internal_methods_[method_index].getName();
+          const ConstantString & method_name = internal_methods_[method_index].getName();
           writeToResponse(method_name);
         }
       }
       for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
       {
-        const ConstantString& method_name = external_methods_[method_index].getName();
+        const ConstantString & method_name = external_methods_[method_index].getName();
         writeToResponse(method_name);
       }
       endResponseArray();
@@ -1442,12 +1426,12 @@ void Server::help(bool verbose)
       beginResponseArray();
       for (size_t parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
       {
-        const ConstantString& parameter_name = internal_parameters_[parameter_index].getName();
+        const ConstantString & parameter_name = internal_parameters_[parameter_index].getName();
         writeToResponse(parameter_name);
       }
       for (size_t parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
       {
-        const ConstantString& parameter_name = external_parameters_[parameter_index].getName();
+        const ConstantString & parameter_name = external_parameters_[parameter_index].getName();
         writeToResponse(parameter_name);
       }
       endResponseArray();
@@ -1456,12 +1440,12 @@ void Server::help(bool verbose)
       beginResponseArray();
       for (size_t field_index=0; field_index<internal_fields_.size(); ++field_index)
       {
-        const ConstantString& field_name = internal_fields_[field_index].getName();
+        const ConstantString & field_name = internal_fields_[field_index].getName();
         writeToResponse(field_name);
       }
       for (size_t field_index=0; field_index<external_fields_.size(); ++field_index)
       {
-        const ConstantString& field_name = external_fields_[field_index].getName();
+        const ConstantString & field_name = external_fields_[field_index].getName();
         writeToResponse(field_name);
       }
       endResponseArray();
@@ -1631,9 +1615,9 @@ void Server::writeDeviceInfoToResponse()
   endResponseObject();
 }
 
-void Server::writeFieldToResponse(Field &field, bool write_key, bool write_default, int element_index)
+void Server::writeFieldToResponse(Field & field, bool write_key, bool write_default, int element_index)
 {
-  const ConstantString& field_name = field.getName();
+  const ConstantString & field_name = field.getName();
   if (write_key)
   {
     writeKeyToResponse(field_name);
@@ -1883,7 +1867,7 @@ void Server::writeFieldToResponse(Field &field, bool write_key, bool write_defau
   }
 }
 
-void Server::writeParameterNotInSubsetErrorToResponse(Parameter &parameter, Vector<const constants::SubsetMemberType> &subset)
+void Server::writeParameterNotInSubsetErrorToResponse(Parameter & parameter, Vector<const constants::SubsetMemberType> & subset)
 {
   error_ = true;
   writeKeyToResponse(constants::error_constant_string);
@@ -1911,7 +1895,7 @@ void Server::writeParameterNotInSubsetErrorToResponse(Parameter &parameter, Vect
   endResponseObject();
 }
 
-void Server::writeParameterNotInRangeErrorToResponse(Parameter &parameter, char min_str[], char max_str[])
+void Server::writeParameterNotInRangeErrorToResponse(Parameter & parameter, char min_str[], char max_str[])
 {
   error_ = true;
   writeKeyToResponse(constants::error_constant_string);
@@ -1937,7 +1921,7 @@ void Server::writeParameterNotInRangeErrorToResponse(Parameter &parameter, char 
   strcat(error_str,less_than_equal_str);
   char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
   parameter_name[0] = '\0';
-  const ConstantString& name = parameter.getName();
+  const ConstantString & name = parameter.getName();
   name.copy(parameter_name);
   strcat(error_str,parameter_name);
   if (type == JsonStream::ARRAY_TYPE)
@@ -1953,7 +1937,7 @@ void Server::writeParameterNotInRangeErrorToResponse(Parameter &parameter, char 
   endResponseObject();
 }
 
-void Server::writeFieldErrorToResponse(const ConstantString &error)
+void Server::writeFieldErrorToResponse(const ConstantString & error)
 {
   error_ = true;
   writeKeyToResponse(constants::error_constant_string);
@@ -1964,7 +1948,7 @@ void Server::writeFieldErrorToResponse(const ConstantString &error)
   endResponseObject();
 }
 
-void Server::subsetToString(char * destination, Vector<const constants::SubsetMemberType> &subset, const JsonStream::JsonTypes type, const size_t num)
+void Server::subsetToString(char * destination, Vector<const constants::SubsetMemberType> & subset, const JsonStream::JsonTypes type, const size_t num)
 {
   size_t length_left = num;
   size_t length = constants::array_open_constant_string.length();
@@ -2070,13 +2054,13 @@ void Server::getMethodIdsCallback()
   {
     if (!internal_methods_[method_index].isPrivate())
     {
-      const ConstantString& method_name = internal_methods_[method_index].getName();
+      const ConstantString & method_name = internal_methods_[method_index].getName();
       writeToResponse(method_name,method_index);
     }
   }
   for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
   {
-    const ConstantString& method_name = external_methods_[method_index].getName();
+    const ConstantString & method_name = external_methods_[method_index].getName();
     int index = method_index + internal_methods_.max_size();
     writeToResponse(method_name,index);
   }
@@ -2124,12 +2108,12 @@ void Server::getFieldDefaultValuesCallback()
   beginResponseObject();
   for (size_t i=0; i<internal_fields_.size(); ++i)
   {
-    Field& field = internal_fields_[i];
+    Field & field = internal_fields_[i];
     writeFieldToResponse(field,true,true);
   }
   for (size_t i=0; i<external_fields_.size(); ++i)
   {
-    Field& field = external_fields_[i];
+    Field & field = external_fields_[i];
     writeFieldToResponse(field,true,true);
   }
   endResponseObject();
@@ -2144,7 +2128,7 @@ void Server::setFieldToDefaultCallback()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     field.setDefaultValue();
@@ -2161,12 +2145,12 @@ void Server::getFieldValuesCallback()
   beginResponseObject();
   for (size_t i=0; i<internal_fields_.size(); ++i)
   {
-    Field& field = internal_fields_[i];
+    Field & field = internal_fields_[i];
     writeFieldToResponse(field,true,false);
   }
   for (size_t i=0; i<external_fields_.size(); ++i)
   {
-    Field& field = external_fields_[i];
+    Field & field = external_fields_[i];
     writeFieldToResponse(field,true,false);
   }
   endResponseObject();
@@ -2177,7 +2161,7 @@ void Server::getFieldValueCallback()
   writeResultKeyToResponse();
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     writeFieldToResponse(field,false,false);
@@ -2199,7 +2183,7 @@ void Server::getFieldElementValueCallback()
     return;
   }
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
     writeFieldToResponse(field,false,false,field_element_index);
@@ -2214,8 +2198,8 @@ void Server::setFieldValueCallback()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
-  Field& field = findField(field_name,&field_index);
-  const ConstantString& field_name_cs = field.getName();
+  Field & field = findField(field_name,&field_index);
+  const ConstantString & field_name_cs = field.getName();
   if (field_index >= 0)
   {
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
@@ -2262,7 +2246,7 @@ void Server::setFieldValueCallback()
       }
       case JsonStream::ARRAY_TYPE:
       {
-        ArduinoJson::JsonArray &field_value = getParameterValue(constants::field_value_parameter_name);
+        ArduinoJson::JsonArray & field_value = getParameterValue(constants::field_value_parameter_name);
         setFieldValue(field_name_cs,field_value);
         break;
       }
@@ -2288,8 +2272,8 @@ void Server::setFieldElementValueCallback()
     return;
   }
   int field_index;
-  Field& field = findField(field_name,&field_index);
-  const ConstantString& field_name_cs = field.getName();
+  Field & field = findField(field_name,&field_index);
+  const ConstantString & field_name_cs = field.getName();
   if (field_index >= 0)
   {
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
@@ -2409,9 +2393,9 @@ void Server::setAllFieldElementValuesCallback()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index;
-  Field& field = findField(field_name,&field_index);
+  Field & field = findField(field_name,&field_index);
   ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-  const ConstantString& field_name_cs = field.getName();
+  const ConstantString & field_name_cs = field.getName();
   if (field_index >= 0)
   {
     bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);

@@ -28,10 +28,10 @@ class Field
 public:
   Field();
   template <typename T>
-  Field(const ConstantString &name,
-        const T &default_value);
+  Field(const ConstantString & name,
+        const T & default_value);
   template <size_t N>
-  Field(const ConstantString &name,
+  Field(const ConstantString & name,
         const long (&default_value)[N]):
     parameter_(name),
     saved_variable_(default_value,N)
@@ -42,7 +42,7 @@ public:
     set_element_value_callback_ = NULL;
   };
   template <size_t N>
-  Field(const ConstantString &name,
+  Field(const ConstantString & name,
         const double (&default_value)[N]) :
     parameter_(name),
     saved_variable_(default_value,N)
@@ -53,7 +53,7 @@ public:
     set_element_value_callback_ = NULL;
   }
   template <size_t N>
-  Field(const ConstantString &name,
+  Field(const ConstantString & name,
         const bool (&default_value)[N]) :
     parameter_(name),
     saved_variable_(default_value,N)
@@ -64,7 +64,7 @@ public:
     set_element_value_callback_ = NULL;
   }
   template <size_t N>
-  Field(const ConstantString &name,
+  Field(const ConstantString & name,
         const char (&default_value)[N]) :
     parameter_(name),
     saved_variable_(default_value,N)
@@ -74,7 +74,7 @@ public:
     set_value_callback_ = NULL;
     set_element_value_callback_ = NULL;
   }
-  void setUnits(const ConstantString &name);
+  void setUnits(const ConstantString & name);
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
   template <size_t N>
@@ -93,7 +93,7 @@ private:
 
   // Saved Variable Methods
   template<typename T>
-  bool getDefaultValue(T &value);
+  bool getDefaultValue(T & value);
   template<size_t N>
   bool getDefaultValue(long (&value)[N])
   {
@@ -128,9 +128,9 @@ private:
     return saved_variable_.getDefaultValue(value);
   };
   template<typename T>
-  bool getDefaultElementValue(T &value, const size_t element_index);
+  bool getDefaultElementValue(T & value, const size_t element_index);
   template<typename T>
-  bool setValue(const T &value);
+  bool setValue(const T & value);
   template<size_t N>
   bool setValue(const long (&value)[N])
   {
@@ -183,9 +183,9 @@ private:
     return saved_variable_.setValue(value);
   };
   template<typename T>
-  bool setElementValue(const T &value, const size_t element_index);
+  bool setElementValue(const T & value, const size_t element_index);
   template<typename T>
-  bool getValue(T &value);
+  bool getValue(T & value);
   template<size_t N>
   bool getValue(long (&value)[N])
   {
@@ -220,12 +220,12 @@ private:
     return saved_variable_.getValue(value);
   };
   template<typename T>
-  bool getElementValue(T &value, const size_t element_index);
+  bool getElementValue(T & value, const size_t element_index);
   void setDefaultValue();
   bool isDefaultValue();
   size_t getArrayLength();
-  Parameter& getParameter();
-  const ConstantString& getName();
+  Parameter & getParameter();
+  const ConstantString & getName();
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool isStringSavedAsCharArray();
