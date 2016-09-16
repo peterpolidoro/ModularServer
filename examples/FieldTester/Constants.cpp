@@ -48,7 +48,14 @@ CONSTANT_STRING(string_field_name,"string");
 const char string_default[STRING_LENGTH_MAX] = "abcdef";
 
 CONSTANT_STRING(odd_field_name,"odd");
-const ModularDevice::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH] = {1,3,5,7,9};
+const ModularDevice::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH] =
+  {
+    {.l=1},
+    {.l=3},
+    {.l=5},
+    {.l=7},
+    {.l=9},
+  };
 const long &odd_default = odd_subset[2].l;
 
 CONSTANT_STRING(mode_field_name,"mode");
@@ -71,7 +78,16 @@ const long length_min = 0;
 const long length_max = 20;
 
 CONSTANT_STRING(count_parameter_name,"count");
-const ModularDevice::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH] = {10,20,30,40,50,60,70};
+const ModularDevice::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH] =
+  {
+    {.l=10},
+    {.l=20},
+    {.l=30},
+    {.l=40},
+    {.l=50},
+    {.l=60},
+    {.l=70},
+  };
 
 CONSTANT_STRING(count_array_parameter_name,"count_array");
 const size_t count_array_element_min = 30;
@@ -110,6 +126,7 @@ CONSTANT_STRING(get_count_method_name,"getCount");
 CONSTANT_STRING(get_count_array_method_name,"getCountArray");
 CONSTANT_STRING(get_direction_method_name,"getDirection");
 CONSTANT_STRING(get_direction_array_method_name,"getDirectionArray");
+CONSTANT_STRING(check_mode_method_name,"checkMode");
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

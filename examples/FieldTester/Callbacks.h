@@ -41,5 +41,7 @@ void getDirectionCallback();
 
 void getDirectionArrayCallback();
 
+void checkModeCallback();
+
 }
 #endif

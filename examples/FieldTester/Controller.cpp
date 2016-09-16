@@ -136,6 +136,10 @@ void Controller::setup()
   get_direction_array_method.addParameter(direction_array_parameter);
   get_direction_array_method.setReturnTypeArray();
 
+  ModularDevice::Method& check_mode_method = modular_server_.createMethod(constants::check_mode_method_name);
+  check_mode_method.attachCallback(callbacks::checkModeCallback);
+  check_mode_method.setReturnTypeString();
+
   // Setup Streams
   Serial.begin(constants::baudrate);
   constants::serial2.begin(constants::baudrate);

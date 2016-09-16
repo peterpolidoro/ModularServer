@@ -155,4 +155,11 @@ void getDirectionArrayCallback()
   modular_server.writeResultToResponse(&direction_array);
 }
 
+void checkModeCallback()
+{
+  // long cast_ptr = (long)constants::mode_ptr_subset[0].cs_ptr;
+  long cast_ptr = (long)constants::mode_ptr_default;
+  modular_server.writeResultToResponse(cast_ptr);
+}
+
 }

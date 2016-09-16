@@ -15,7 +15,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{FIELD_COUNT_MAX=8};
 enum{PARAMETER_COUNT_MAX=6};
-enum{METHOD_COUNT_MAX=13};
+enum{METHOD_COUNT_MAX=14};
 
 extern const size_t baudrate;
 
@@ -114,6 +114,7 @@ extern ConstantString get_count_method_name;
 extern ConstantString get_count_array_method_name;
 extern ConstantString get_direction_method_name;
 extern ConstantString get_direction_array_method_name;
+extern ConstantString check_mode_method_name;
 
 // Errors
 extern ConstantString index_error;
