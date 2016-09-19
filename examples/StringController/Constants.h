@@ -30,7 +30,7 @@ extern const size_t serial2_rx_pin;
 extern ConstantString device_name;
 
 // Fields
-// Field values must be long, double, bool, long[], double[], bool[], char[]
+// Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
 extern ConstantString starting_chars_count_field_name;
 extern const long starting_chars_count_min;
 extern const long starting_chars_count_max;

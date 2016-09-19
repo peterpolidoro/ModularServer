@@ -234,6 +234,17 @@ bool Field::setValue<const ConstantString *>(const ConstantString * const & valu
 }
 
 template <>
+bool Field::setValue<ConstantString *>(ConstantString * const & value)
+{
+  if ((getType() != JsonStream::STRING_TYPE) ||
+      isStringSavedAsCharArray())
+  {
+    return false;
+  }
+  return saved_variable_.setValue(value);
+}
+
+template <>
 bool Field::setElementValue<long>(const long & value, const size_t element_index)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||

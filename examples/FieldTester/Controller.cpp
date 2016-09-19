@@ -140,6 +140,10 @@ void Controller::setup()
   check_mode_method.attachCallback(callbacks::checkModeCallback);
   check_mode_method.setReturnTypeString();
 
+  ModularDevice::Method & increment_mode_method = modular_server_.createMethod(constants::increment_mode_method_name);
+  increment_mode_method.attachCallback(callbacks::incrementModeCallback);
+  increment_mode_method.setReturnTypeString();
+
   // Setup Streams
   Serial.begin(constants::baudrate);
   constants::serial2.begin(constants::baudrate);

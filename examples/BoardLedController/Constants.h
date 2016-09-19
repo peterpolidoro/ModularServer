@@ -32,7 +32,7 @@ extern const size_t serial2_rx_pin;
 extern ConstantString device_name;
 
 // Fields
-// Field values must be long, double, bool, long[], double[], bool[], char[]
+// Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
 
 // Parameters
 extern ConstantString duration_on_parameter_name;

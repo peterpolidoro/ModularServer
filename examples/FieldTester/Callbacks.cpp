@@ -193,4 +193,29 @@ void checkModeCallback()
   }
 }
 
+void incrementModeCallback()
+{
+  const ConstantString * mode_ptr;
+  modular_server.getFieldValue(constants::mode_field_name,mode_ptr);
+  if (mode_ptr == &constants::mode_rising)
+  {
+    modular_server.setFieldValue(constants::mode_field_name,&constants::mode_falling);
+    modular_server.writeResultToResponse("Mode was set to rising, now set to falling!");
+  }
+  else if (mode_ptr == &constants::mode_falling)
+  {
+    modular_server.setFieldValue(constants::mode_field_name,&constants::mode_change);
+    modular_server.writeResultToResponse("Mode was set to falling, now set to change!");
+  }
+  else if (mode_ptr == &constants::mode_change)
+  {
+    modular_server.setFieldValue(constants::mode_field_name,&constants::mode_rising);
+    modular_server.writeResultToResponse("Mode was set to change, now set to rising!");
+  }
+  else
+  {
+    modular_server.writeResultToResponse("???");
+  }
+}
+
 }
