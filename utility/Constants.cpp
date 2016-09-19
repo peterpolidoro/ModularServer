@@ -79,6 +79,9 @@ CONSTANT_STRING(error_constant_string,"error");
 CONSTANT_STRING(message_constant_string,"message");
 CONSTANT_STRING(data_constant_string,"data");
 CONSTANT_STRING(code_constant_string,"code");
+CONSTANT_STRING(device_name_constant_string,"device_name");
+CONSTANT_STRING(firmware_name_constant_string,"firmware_name");
+CONSTANT_STRING(hardware_name_constant_string,"hardware_name");
 CONSTANT_STRING(name_constant_string,"name");
 CONSTANT_STRING(type_constant_string,"type");
 CONSTANT_STRING(units_constant_string,"units");
@@ -116,14 +119,14 @@ CONSTANT_STRING(array_separator_constant_string,",");
 CONSTANT_STRING(quote_constant_string,"\"");
 CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
-CONSTANT_STRING(board_constant_string,"board");
+CONSTANT_STRING(processor_constant_string,"processor");
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-CONSTANT_STRING(board_type_constant_string,"mega");
+CONSTANT_STRING(processor_type_constant_string,"mega");
 #elif defined(__MK20DX128__) || defined(__MK20DX256__)
-CONSTANT_STRING(board_type_constant_string,"teensy");
+CONSTANT_STRING(processor_type_constant_string,"teensy");
 #else
-CONSTANT_STRING(board_type_constant_string,"");
+CONSTANT_STRING(processor_type_constant_string,"");
 #endif
 }
 }

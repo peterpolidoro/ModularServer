@@ -24,11 +24,13 @@ Server::Server(Stream & stream)
 
 void Server::setup()
 {
-  setName(constants::empty_constant_string);
-  model_number_ = 0;
+  setDeviceName(constants::empty_constant_string);
+  setFirmwareName(constants::empty_constant_string);
   firmware_major_ = 0;
   firmware_minor_ = 0;
   firmware_patch_ = 0;
+  setHardwareName(constants::empty_constant_string);
+  model_number_ = 0;
   request_method_index_ = -1;
   parameter_count_ = 0;
   error_ = false;
@@ -134,14 +136,14 @@ void Server::addServerStream(Stream & stream)
   json_stream_.setStream(stream);
 }
 
-void Server::setName(const ConstantString & name)
+void Server::setDeviceName(const ConstantString & device_name)
 {
-  name_ptr_ = &name;
+  device_name_ptr_ = &device_name;
 }
 
-void Server::setModelNumber(const long model_number)
+void Server::setFirmwareName(const ConstantString & firmware_name)
 {
-  model_number_ = model_number;
+  firmware_name_ptr_ = &firmware_name;
 }
 
 void Server::setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch)
@@ -149,6 +151,16 @@ void Server::setFirmwareVersion(const long firmware_major,const long firmware_mi
   firmware_major_ = firmware_major;
   firmware_minor_ = firmware_minor;
   firmware_patch_ = firmware_patch;
+}
+
+void Server::setHardwareName(const ConstantString & hardware_name)
+{
+  hardware_name_ptr_ = &hardware_name;
+}
+
+void Server::setModelNumber(const long model_number)
+{
+  model_number_ = model_number;
 }
 
 InternalMethod & Server::createInternalMethod(const ConstantString & method_name, bool is_private)
@@ -1602,16 +1614,18 @@ void Server::help(bool verbose)
 void Server::writeDeviceInfoToResponse()
 {
   beginResponseObject();
-  writeToResponse(constants::name_constant_string,name_ptr_);
-  writeToResponse(constants::model_number_constant_string,model_number_);
-  writeToResponse(constants::board_constant_string,constants::board_type_constant_string);
-  writeToResponse(constants::serial_number_field_name,getSerialNumber());
+  writeToResponse(constants::device_name_constant_string,device_name_ptr_);
+  writeToResponse(constants::firmware_name_constant_string,firmware_name_ptr_);
   writeKeyToResponse(constants::firmware_version_constant_string);
   beginResponseObject();
   writeToResponse(constants::major_constant_string,firmware_major_);
   writeToResponse(constants::minor_constant_string,firmware_minor_);
   writeToResponse(constants::patch_constant_string,firmware_patch_);
   endResponseObject();
+  writeToResponse(constants::hardware_name_constant_string,hardware_name_ptr_);
+  writeToResponse(constants::model_number_constant_string,model_number_);
+  writeToResponse(constants::processor_constant_string,constants::processor_type_constant_string);
+  writeToResponse(constants::serial_number_field_name,getSerialNumber());
   endResponseObject();
 }
 

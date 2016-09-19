@@ -24,19 +24,29 @@ void ModularServer::addServerStream(Stream & stream)
   server_.addServerStream(stream);
 }
 
-void ModularServer::setName(const ConstantString & device_name)
+void ModularServer::setDeviceName(const ConstantString & device_name)
 {
-  server_.setName(device_name);
+  server_.setDeviceName(device_name);
 }
 
-void ModularServer::setModelNumber(const long model_number)
+void ModularServer::setFirmwareName(const ConstantString & firmware_name)
 {
-  server_.setModelNumber(model_number);
+  server_.setFirmwareName(firmware_name);
 }
 
 void ModularServer::setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch)
 {
   server_.setFirmwareVersion(firmware_major,firmware_minor,firmware_patch);
+}
+
+void ModularServer::setHardwareName(const ConstantString & hardware_name)
+{
+  server_.setHardwareName(hardware_name);
+}
+
+void ModularServer::setModelNumber(const long model_number)
+{
+  server_.setModelNumber(model_number);
 }
 
 Method & ModularServer::createMethod(const ConstantString & method_name)

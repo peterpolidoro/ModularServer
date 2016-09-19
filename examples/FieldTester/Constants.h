@@ -17,18 +17,16 @@ enum{FIELD_COUNT_MAX=8};
 enum{PARAMETER_COUNT_MAX=6};
 enum{METHOD_COUNT_MAX=15};
 
-extern const size_t baudrate;
-
-extern const size_t model_number;
-
+extern ConstantString device_name;
+extern ConstantString firmware_name;
 extern const long firmware_major;
 extern const long firmware_minor;
 extern const long firmware_patch;
 
-extern HardwareSerial & serial2;
-extern const size_t serial2_rx_pin;
+extern const size_t baudrate;
 
-extern ConstantString device_name;
+extern const size_t model_number;
+extern ConstantString hardware_name;
 
 // Fields
 // Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *

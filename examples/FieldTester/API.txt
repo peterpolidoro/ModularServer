@@ -2,15 +2,17 @@
   "id":"??",
   "result":{
     "device_info":{
-      "name":"field_tester",
-      "model_number":1003,
-      "board":"mega",
-      "serial_number":0,
+      "device_name":"modular_server",
+      "firmware_name":"field_tester",
       "firmware_version":{
         "major":0,
         "minor":1,
         "patch":0
-      }
+      },
+      "hardware_name":"",
+      "model_number":0,
+      "processor":"mega",
+      "serial_number":0
     },
     "methods":[
       {

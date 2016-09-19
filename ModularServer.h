@@ -21,9 +21,11 @@ public:
   ModularServer();
   ModularServer(Stream & stream);
   void addServerStream(Stream & stream);
-  void setName(const ConstantString & device_name);
-  void setModelNumber(const long model_number);
+  void setDeviceName(const ConstantString & device_name);
+  void setFirmwareName(const ConstantString & firmware_name);
   void setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch);
+  void setHardwareName(const ConstantString & hardware_name);
+  void setModelNumber(const long model_number);
   template <size_t MAX_SIZE>
   void setMethodStorage(Method (&methods)[MAX_SIZE]);
   Method & createMethod(const ConstantString & method_name);

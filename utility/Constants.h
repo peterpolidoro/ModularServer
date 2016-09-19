@@ -117,6 +117,9 @@ extern ConstantString error_constant_string;
 extern ConstantString message_constant_string;
 extern ConstantString data_constant_string;
 extern ConstantString code_constant_string;
+extern ConstantString device_name_constant_string;
+extern ConstantString firmware_name_constant_string;
+extern ConstantString hardware_name_constant_string;
 extern ConstantString name_constant_string;
 extern ConstantString type_constant_string;
 extern ConstantString units_constant_string;
@@ -154,8 +157,8 @@ extern ConstantString array_separator_constant_string;
 extern ConstantString quote_constant_string;
 extern ConstantString subset_constant_string;
 extern ConstantString array_element_subset_constant_string;
-extern ConstantString board_constant_string;
-extern ConstantString board_type_constant_string;
+extern ConstantString processor_constant_string;
+extern ConstantString processor_type_constant_string;
 }
 }
 #endif

@@ -10,21 +10,36 @@
 
 namespace constants
 {
-const size_t led_pin = 13;
-
-const size_t baudrate = 9600;
-
-const size_t model_number = 1001;
-
+CONSTANT_STRING(device_name,"modular_server");
+CONSTANT_STRING(firmware_name,"board_led_controller");
 // Use semantic versioning http://semver.org/
 const long firmware_major = 0;
 const long firmware_minor = 1;
 const long firmware_patch = 0;
 
+const size_t baudrate = 9600;
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+
+const size_t model_number = 0;
+CONSTANT_STRING(hardware_name,"");
+
+#elif defined(__MK20DX128__) || defined(__MK20DX256__)
+
+const size_t model_number = 0;
+CONSTANT_STRING(hardware_name,"");
+
+#else
+
+const size_t model_number = 0;
+CONSTANT_STRING(hardware_name,"");
+
+#endif
+
+const size_t led_pin = 13;
+
 HardwareSerial & serial2 = Serial2;
 const size_t serial2_rx_pin = 17;
-
-CONSTANT_STRING(device_name,"board_led_controller");
 
 // Fields
 

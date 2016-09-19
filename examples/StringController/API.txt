@@ -2,15 +2,17 @@
   "id":"??",
   "result":{
     "device_info":{
-      "name":"string_controller",
-      "model_number":1002,
-      "board":"mega",
-      "serial_number":0,
+      "device_name":"modular_server",
+      "firmware_name":"string_controller",
       "firmware_version":{
         "major":0,
         "minor":1,
         "patch":0
-      }
+      },
+      "hardware_name":"",
+      "model_number":0,
+      "processor":"mega",
+      "serial_number":0
     },
     "methods":[
       {
