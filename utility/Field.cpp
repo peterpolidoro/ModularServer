@@ -50,8 +50,8 @@ parameter_(name),
 }
 
 template <>
-Field::Field(const ConstantString & name,
-             const ConstantString * const & default_value) :
+Field::Field<const ConstantString *>(const ConstantString & name,
+                                     const ConstantString * const & default_value) :
   parameter_(name),
   saved_variable_(default_value)
 {
@@ -223,7 +223,7 @@ bool Field::setValue<bool>(const bool & value)
 }
 
 template <>
-bool Field::setValue<const ConstantString * const>(const ConstantString * const & value)
+bool Field::setValue<const ConstantString *>(const ConstantString * const & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       isStringSavedAsCharArray())

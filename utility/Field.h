@@ -93,9 +93,9 @@ private:
   bool string_saved_as_char_array_;
 
   // Saved Variable Methods
-  template<typename T>
+  template <typename T>
   bool getDefaultValue(T & value);
-  template<size_t N>
+  template <size_t N>
   bool getDefaultValue(long (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -106,7 +106,7 @@ private:
     }
     return saved_variable_.getDefaultValue(value);
   };
-  template<size_t N>
+  template <size_t N>
   bool getDefaultValue(double (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -117,7 +117,7 @@ private:
     }
     return saved_variable_.getDefaultValue(value);
   };
-  template<size_t N>
+  template <size_t N>
   bool getDefaultValue(bool (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -128,11 +128,11 @@ private:
     }
     return saved_variable_.getDefaultValue(value);
   };
-  template<typename T>
+  template <typename T>
   bool getDefaultElementValue(T & value, const size_t element_index);
-  template<typename T>
+  template <typename T>
   bool setValue(const T & value);
-  template<size_t N>
+  template <size_t N>
   bool setValue(const long (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -152,7 +152,7 @@ private:
     }
     return true;
   };
-  template<size_t N>
+  template <size_t N>
   bool setValue(const double (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -172,7 +172,7 @@ private:
     }
     return true;
   };
-  template<size_t N>
+  template <size_t N>
   bool setValue(const bool (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -183,11 +183,11 @@ private:
     }
     return saved_variable_.setValue(value);
   };
-  template<typename T>
+  template <typename T>
   bool setElementValue(const T & value, const size_t element_index);
-  template<typename T>
+  template <typename T>
   bool getValue(T & value);
-  template<size_t N>
+  template <size_t N>
   bool getValue(long (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -198,7 +198,7 @@ private:
     }
     return saved_variable_.getValue(value);
   };
-  template<size_t N>
+  template <size_t N>
   bool getValue(double (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -209,7 +209,7 @@ private:
     }
     return saved_variable_.getValue(value);
   };
-  template<size_t N>
+  template <size_t N>
   bool getValue(bool (&value)[N])
   {
     if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -220,7 +220,7 @@ private:
     }
     return saved_variable_.getValue(value);
   };
-  template<typename T>
+  template <typename T>
   bool getElementValue(T & value, const size_t element_index);
   void setDefaultValue();
   bool isDefaultValue();
@@ -230,10 +230,10 @@ private:
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool isStringSavedAsCharArray();
-  template<typename T>
+  template <typename T>
   int findSubsetValueIndex(T value)
   {
-    return parameter_.findSubsetValueIndex(value);
+    parameter_.findSubsetValueIndex(value);
   }
   Vector<const constants::SubsetMemberType> & getSubset();
   void setValueCallback();

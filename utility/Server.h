@@ -64,6 +64,8 @@ public:
   template <typename T>
   bool setFieldValue(const ConstantString & field_name,
                      const T & value);
+  bool setFieldValue(const ConstantString & field_name,
+                     ArduinoJson::JsonArray & value);
   template <typename T, size_t N>
   bool setFieldValue(const ConstantString & field_name,
                      const T (&value)[N]);
@@ -71,8 +73,6 @@ public:
   bool setFieldValue(const ConstantString & field_name,
                      const T * value,
                      const size_t N);
-  bool setFieldValue(const ConstantString & field_name,
-                     ArduinoJson::JsonArray & value);
   template <typename T>
   bool setFieldElementValue(const ConstantString & field_name,
                             const size_t element_index,

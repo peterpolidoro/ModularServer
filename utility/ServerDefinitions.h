@@ -123,7 +123,7 @@ bool Server::setFieldValue(const ConstantString & field_name,
     if ((type == JsonStream::STRING_TYPE) &&
         !field.isStringSavedAsCharArray())
     {
-      int subset_value_index = field.findSubsetValueIndex(value);
+      int subset_value_index = field.findSubsetValueIndex((const char *)value);
       if (subset_value_index >= 0)
       {
         Vector<const constants::SubsetMemberType> & subset = field.getSubset();

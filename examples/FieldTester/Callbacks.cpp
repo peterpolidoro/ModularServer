@@ -111,29 +111,45 @@ void getCountCallback()
   switch (count)
   {
     case 10:
+    {
       modular_server.writeResultToResponse("ten");
       break;
+    }
     case 20:
+    {
       modular_server.writeResultToResponse("twenty");
       break;
+    }
     case 30:
+    {
       modular_server.writeResultToResponse("thirty");
       break;
+    }
     case 40:
+    {
       modular_server.writeResultToResponse("forty");
       break;
+    }
     case 50:
+    {
       modular_server.writeResultToResponse("fifty");
       break;
+    }
     case 60:
+    {
       modular_server.writeResultToResponse("sixty");
       break;
+    }
     case 70:
+    {
       modular_server.writeResultToResponse("seventy");
       break;
+    }
     default:
+    {
       modular_server.writeResultToResponse("???");
       break;
+    }
   }
 }
 
@@ -159,7 +175,22 @@ void checkModeCallback()
 {
   const ConstantString * mode_ptr;
   modular_server.getFieldValue(constants::mode_field_name,mode_ptr);
-  modular_server.writeResultToResponse(*mode_ptr);
+  if (mode_ptr == &constants::mode_rising)
+  {
+    modular_server.writeResultToResponse("Mode set to rising!");
+  }
+  else if (mode_ptr == &constants::mode_falling)
+  {
+    modular_server.writeResultToResponse("Mode set to falling!");
+  }
+  else if (mode_ptr == &constants::mode_change)
+  {
+    modular_server.writeResultToResponse("Mode set to change!");
+  }
+  else
+  {
+    modular_server.writeResultToResponse("???");
+  }
 }
 
 }
