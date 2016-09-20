@@ -45,5 +45,13 @@ void checkModeCallback();
 
 void incrementModeCallback();
 
+void preSetFieldValueCallback();
+
+void postSetFieldValueCallback();
+
+void preSetFieldElementValueCallback(const size_t element_index);
+
+void postSetFieldElementValueCallback(const size_t element_index);
+
 }
 #endif

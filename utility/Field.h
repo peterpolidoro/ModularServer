@@ -39,8 +39,7 @@ public:
   {
     parameter_.setTypeLong();
     parameter_.setArrayLengthRange(1,N);
-    set_value_callback_ = NULL;
-    set_element_value_callback_ = NULL;
+    setCallbacksToNull();
   };
   template <size_t N>
   Field(const ConstantString & name,
@@ -50,8 +49,7 @@ public:
   {
     parameter_.setTypeDouble();
     parameter_.setArrayLengthRange(1,N);
-    set_value_callback_ = NULL;
-    set_element_value_callback_ = NULL;
+    setCallbacksToNull();
   }
   template <size_t N>
   Field(const ConstantString & name,
@@ -61,8 +59,7 @@ public:
   {
     parameter_.setTypeBool();
     parameter_.setArrayLengthRange(1,N);
-    set_value_callback_ = NULL;
-    set_element_value_callback_ = NULL;
+    setCallbacksToNull();
   }
   template <size_t N>
   Field(const ConstantString & name,
@@ -72,8 +69,7 @@ public:
   {
     parameter_.setTypeString();
     string_saved_as_char_array_ = true;
-    set_value_callback_ = NULL;
-    set_element_value_callback_ = NULL;
+    setCallbacksToNull();
   }
   void setUnits(const ConstantString & name);
   void setRange(const long min, const long max);
@@ -83,13 +79,17 @@ public:
   {
     parameter_.setSubset(subset);
   }
-  void attachSetValueCallback(SetValueCallback callback);
-  void attachSetElementValueCallback(SetElementValueCallback callback);
+  void attachPreSetValueCallback(SetValueCallback callback);
+  void attachPreSetElementValueCallback(SetElementValueCallback callback);
+  void attachPostSetValueCallback(SetValueCallback callback);
+  void attachPostSetElementValueCallback(SetElementValueCallback callback);
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;
-  SetValueCallback set_value_callback_;
-  SetElementValueCallback set_element_value_callback_;
+  SetValueCallback pre_set_value_callback_;
+  SetElementValueCallback pre_set_element_value_callback_;
+  SetValueCallback post_set_value_callback_;
+  SetElementValueCallback post_set_element_value_callback_;
   bool string_saved_as_char_array_;
 
   // Saved Variable Methods
@@ -135,53 +135,65 @@ private:
   template <size_t N>
   bool setValue(const long (&value)[N])
   {
-    if ((getType() != JsonStream::ARRAY_TYPE) ||
-        (getArrayElementType() != JsonStream::LONG_TYPE) ||
-        (getArrayLength() != N))
+    bool success = false;
+    preSetValueCallback();
+    if ((getType() == JsonStream::ARRAY_TYPE) &&
+        (getArrayElementType() == JsonStream::LONG_TYPE) &&
+        (getArrayLength() == N))
     {
-      return false;
-    }
-    bool success;
-    for (size_t i=0;i<N;++i)
-    {
-      success = setElementValue(value[i],i);
-      if (!success)
+      for (size_t i=0;i<N;++i)
       {
-        return false;
+        success = setElementValue(value[i],i);
+        if (!success)
+        {
+          break;
+        }
       }
     }
-    return true;
+    postSetValueCallback();
+    return success;
   };
   template <size_t N>
   bool setValue(const double (&value)[N])
   {
-    if ((getType() != JsonStream::ARRAY_TYPE) ||
-        (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
-        (getArrayLength() != N))
+    bool success = false;
+    preSetValueCallback();
+    if ((getType() == JsonStream::ARRAY_TYPE) &&
+        (getArrayElementType() == JsonStream::DOUBLE_TYPE) &&
+        (getArrayLength() &= N))
     {
-      return false;
-    }
-    bool success;
-    for (size_t i=0;i<N;++i)
-    {
-      success = setElementValue(value[i],i);
-      if (!success)
+      for (size_t i=0;i<N;++i)
       {
-        return false;
+        success = setElementValue(value[i],i);
+        if (!success)
+        {
+          break;
+        }
       }
     }
-    return true;
+    postSetValueCallback();
+    return success;
   };
   template <size_t N>
   bool setValue(const bool (&value)[N])
   {
-    if ((getType() != JsonStream::ARRAY_TYPE) ||
-        (getArrayElementType() != JsonStream::BOOL_TYPE) ||
-        (getArrayLength() != N))
+    bool success = false;
+    preSetValueCallback();
+    if ((getType() == JsonStream::ARRAY_TYPE) &&
+        (getArrayElementType() == JsonStream::BOOL_TYPE) &&
+        (getArrayLength() == N))
     {
-      return false;
+      for (size_t i=0;i<N;++i)
+      {
+        success = setElementValue(value[i],i);
+        if (!success)
+        {
+          break;
+        }
+      }
     }
-    return saved_variable_.setValue(value);
+    postSetValueCallback();
+    return success;
   };
   template <typename T>
   bool setElementValue(const T & value, const size_t element_index);
@@ -236,8 +248,11 @@ private:
     parameter_.findSubsetValueIndex(value);
   }
   Vector<const constants::SubsetMemberType> & getSubset();
-  void setValueCallback();
-  void setElementValueCallback(const size_t element_index);
+  void setCallbacksToNull();
+  void preSetValueCallback();
+  void preSetElementValueCallback(const size_t element_index);
+  void postSetValueCallback();
+  void postSetElementValueCallback(const size_t element_index);
   friend class Server;
 };
 }

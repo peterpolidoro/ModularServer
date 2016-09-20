@@ -35,6 +35,8 @@ void Controller::setup()
   ModularDevice::Field & double_field = modular_server_.createField(constants::double_field_name,constants::double_default);
 
   ModularDevice::Field & bool_field = modular_server_.createField(constants::bool_field_name,constants::bool_default);
+  bool_field.attachPreSetValueCallback(callbacks::preSetFieldValueCallback);
+  bool_field.attachPostSetValueCallback(callbacks::postSetFieldValueCallback);
 
   ModularDevice::Field & long_array_field = modular_server_.createField(constants::long_array_field_name,constants::long_array_default);
   long_array_field.setRange(constants::long_array_element_min,constants::long_array_element_max);
@@ -43,8 +45,16 @@ void Controller::setup()
   double_array_field.setRange(constants::double_array_element_min,constants::double_array_element_max);
 
   ModularDevice::Field & bool_array_field = modular_server_.createField(constants::bool_array_field_name,constants::bool_array_default);
+  bool_array_field.attachPreSetValueCallback(callbacks::preSetFieldValueCallback);
+  bool_array_field.attachPostSetValueCallback(callbacks::postSetFieldValueCallback);
+  bool_array_field.attachPreSetElementValueCallback(callbacks::preSetFieldElementValueCallback);
+  bool_array_field.attachPostSetElementValueCallback(callbacks::postSetFieldElementValueCallback);
 
   ModularDevice::Field & string_field = modular_server_.createField(constants::string_field_name,constants::string_default);
+  string_field.attachPreSetValueCallback(callbacks::preSetFieldValueCallback);
+  string_field.attachPostSetValueCallback(callbacks::postSetFieldValueCallback);
+  string_field.attachPreSetElementValueCallback(callbacks::preSetFieldElementValueCallback);
+  string_field.attachPostSetElementValueCallback(callbacks::postSetFieldElementValueCallback);
 
   ModularDevice::Field & odd_field = modular_server_.createField(constants::odd_field_name,constants::odd_default);
   odd_field.setSubset(constants::odd_subset);

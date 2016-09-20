@@ -218,4 +218,24 @@ void incrementModeCallback()
   }
 }
 
+void preSetFieldValueCallback()
+{
+  Serial << " setting field value! ";
+}
+
+void postSetFieldValueCallback()
+{
+  Serial << " set field value! ";
+}
+
+void preSetFieldElementValueCallback(const size_t element_index)
+{
+  Serial << " setting field element value at index " << element_index << "! ";
+}
+
+void postSetFieldElementValueCallback(const size_t element_index)
+{
+  Serial << " set field element value at index " << element_index << "! ";
+}
+
 }

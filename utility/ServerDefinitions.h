@@ -72,42 +72,28 @@ template <typename T>
 bool Server::setFieldValue(const ConstantString & field_name,
                            const T & value)
 {
+  bool success = false;
   int field_index;
   Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    bool success = field.setValue(value);
-    if (success)
-    {
-      field.setValueCallback();
-    }
-    return success;
+    success = field.setValue(value);
   }
-  else
-  {
-    return false;
-  }
+  return success;
 }
 
 template <typename T, size_t N>
 bool Server::setFieldValue(const ConstantString & field_name,
                            const T (&value)[N])
 {
+  bool success = false;
   int field_index;
   Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    bool success = field.setValue(value);
-    if (success)
-    {
-      field.setValueCallback();
-    }
-    return success;
+    success = field.setValue(value);
   }
-  else
-  {
-    return false;
-  }
+  return success;
 }
 
 template <typename T>
@@ -115,6 +101,7 @@ bool Server::setFieldValue(const ConstantString & field_name,
                            const T * value,
                            const size_t N)
 {
+  bool success = false;
   int field_index;
   Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
@@ -128,44 +115,34 @@ bool Server::setFieldValue(const ConstantString & field_name,
       {
         Vector<const constants::SubsetMemberType> & subset = field.getSubset();
         const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
-        setFieldValue(field_name,subset_value);
-        return true;
+        success = setFieldValue(field_name,subset_value);
       }
-      else
-      {
-        return false;
-      }
+      return success;
     }
-    bool success;
     size_t array_length = field.getArrayLength();
     size_t array_length_min = min(array_length,N);
+    field.preSetValueCallback();
     for (size_t i=0;i<array_length_min;++i)
     {
       T v = value[i];
       success = setFieldElementValue(field_name,i,v);
-      if (!success)
+      if (!success && (type == JsonStream::STRING_TYPE))
       {
         // terminate string
-        if (type == JsonStream::STRING_TYPE)
-        {
-          setFieldElementValue(field_name,i,'\0');
-        }
-        return false;
+        setFieldElementValue(field_name,i,'\0');
+        break;
       }
     }
-    // terminate string
-    if ((type == JsonStream::STRING_TYPE) &&
+    if (success &&
+        (type == JsonStream::STRING_TYPE) &&
         (array_length_min >= 1))
     {
+      // terminate string just in case
       setFieldElementValue(field_name,array_length_min-1,'\0');
     }
+    field.postSetValueCallback();
   }
-  else
-  {
-    return false;
-  }
-  field.setValueCallback();
-  return true;
+  return success;
 }
 
 template <typename T>
@@ -173,27 +150,21 @@ bool Server::setFieldElementValue(const ConstantString & field_name,
                                   const size_t element_index,
                                   const T & value)
 {
+  bool success = false;
   int field_index;
   Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
   {
-    bool success = field.setElementValue(value,element_index);
-    if (success)
-    {
-      field.setElementValueCallback(element_index);
-    }
-    return success;
+    success = field.setElementValue(value,element_index);
   }
-  else
-  {
-    return false;
-  }
+  return success;
 }
 
 template <typename T>
 bool Server::setAllFieldElementValues(const ConstantString & field_name,
                                       const T & value)
 {
+  bool success = false;
   int field_index;
   Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
@@ -202,36 +173,30 @@ bool Server::setAllFieldElementValues(const ConstantString & field_name,
     if ((type == JsonStream::STRING_TYPE) &&
         !field.isStringSavedAsCharArray())
     {
-      return false;
+      return success;
     }
-    bool success;
     size_t array_length = field.getArrayLength();
+    field.preSetValueCallback();
     for (size_t i=0;i<array_length;++i)
     {
       success = setFieldElementValue(field_name,i,value);
-      if (!success)
+      if (!success && (type == JsonStream::STRING_TYPE))
       {
         // terminate string
-        if (type == JsonStream::STRING_TYPE)
-        {
-          setFieldElementValue(field_name,i,'\0');
-        }
-        return false;
+        setFieldElementValue(field_name,i,'\0');
+        break;
       }
     }
-    // terminate string
-    if ((type == JsonStream::STRING_TYPE) &&
+    if (success &&
+        (type == JsonStream::STRING_TYPE) &&
         (array_length >= 1))
     {
+      // terminate string just in case
       setFieldElementValue(field_name,array_length-1,'\0');
     }
+    field.postSetValueCallback();
   }
-  else
-  {
-    return false;
-  }
-  field.setValueCallback();
-  return true;
+  return success;
 }
 
 template <typename T>

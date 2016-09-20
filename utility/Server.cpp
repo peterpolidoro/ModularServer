@@ -258,6 +258,7 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
 bool Server::setFieldValue(const ConstantString & field_name,
                            ArduinoJson::JsonArray & value)
 {
+  bool success = false;
   int field_index;
   Field & field = findField(field_name,&field_index);
   if (field_index >= 0)
@@ -268,8 +269,8 @@ bool Server::setFieldValue(const ConstantString & field_name,
     {
       size_t N = value.size();
       size_t array_length_min = min(array_length,N);
-      bool success;
       JsonStream::JsonTypes array_element_type = field.getArrayElementType();
+      field.preSetValueCallback();
       switch (array_element_type)
       {
         case JsonStream::LONG_TYPE:
@@ -280,7 +281,7 @@ bool Server::setFieldValue(const ConstantString & field_name,
             success = setFieldElementValue(field_name,i,v);
             if (!success)
             {
-              return false;
+              break;
             }
           }
           break;
@@ -293,7 +294,7 @@ bool Server::setFieldValue(const ConstantString & field_name,
             success = setFieldElementValue(field_name,i,v);
             if (!success)
             {
-              return false;
+              break;
             }
           }
           break;
@@ -306,7 +307,7 @@ bool Server::setFieldValue(const ConstantString & field_name,
             success = setFieldElementValue(field_name,i,v);
             if (!success)
             {
-              return false;
+              break;
             }
           }
           break;
@@ -332,18 +333,10 @@ bool Server::setFieldValue(const ConstantString & field_name,
           break;
         }
       }
-    }
-    else
-    {
-      return false;
+      field.postSetValueCallback();
     }
   }
-  else
-  {
-    return false;
-  }
-  field.setValueCallback();
-  return true;
+  return success;
 }
 
 size_t Server::getFieldArrayLength(const ConstantString & field_name)

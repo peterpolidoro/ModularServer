@@ -12,8 +12,7 @@ namespace ModularDevice
 {
 Field::Field()
 {
-  set_value_callback_ = NULL;
-  set_element_value_callback_ = NULL;
+  setCallbacksToNull();
 }
 
 template <>
@@ -23,8 +22,7 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeLong();
-  set_value_callback_ = NULL;
-  set_element_value_callback_ = NULL;
+  setCallbacksToNull();
 }
 
 template <>
@@ -34,8 +32,7 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeDouble();
-  set_value_callback_ = NULL;
-  set_element_value_callback_ = NULL;
+  setCallbacksToNull();
 }
 
 template <>
@@ -45,8 +42,7 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeBool();
-  set_value_callback_ = NULL;
-  set_element_value_callback_ = NULL;
+  setCallbacksToNull();
 }
 
 template <>
@@ -57,8 +53,7 @@ Field::Field<const ConstantString *>(const ConstantString & name,
 {
   parameter_.setTypeString();
   string_saved_as_char_array_ = false;
-  set_value_callback_ = NULL;
-  set_element_value_callback_ = NULL;
+  setCallbacksToNull();
 }
 
 void Field::setUnits(const ConstantString & name)
@@ -76,14 +71,24 @@ void Field::setRange(const double min, const double max)
   parameter_.setRange(min,max);
 }
 
-void Field::attachSetValueCallback(SetValueCallback callback)
+void Field::attachPreSetValueCallback(SetValueCallback callback)
 {
-  set_value_callback_ = callback;
+  pre_set_value_callback_ = callback;
 }
 
-void Field::attachSetElementValueCallback(SetElementValueCallback callback)
+void Field::attachPreSetElementValueCallback(SetElementValueCallback callback)
 {
-  set_element_value_callback_ = callback;
+  pre_set_element_value_callback_ = callback;
+}
+
+void Field::attachPostSetValueCallback(SetValueCallback callback)
+{
+  post_set_value_callback_ = callback;
+}
+
+void Field::attachPostSetElementValueCallback(SetElementValueCallback callback)
+{
+  post_set_element_value_callback_ = callback;
 }
 
 // Private
@@ -177,133 +182,172 @@ bool Field::getDefaultElementValue<char>(char & value, const size_t element_inde
 template <>
 bool Field::setValue<long>(const long & value)
 {
-  if (getType() != JsonStream::LONG_TYPE)
+  bool success = false;
+  preSetValueCallback();
+  if (getType() == JsonStream::LONG_TYPE)
   {
-    return false;
-  }
-  if (parameter_.rangeIsSet())
-  {
-    long min = parameter_.getMin().l;
-    long max = parameter_.getMax().l;
-    if ((value < min) || (value > max))
+    if (parameter_.rangeIsSet())
     {
-      return false;
+      long min = parameter_.getMin().l;
+      long max = parameter_.getMax().l;
+      if ((value >= min) && (value <= max))
+      {
+        success = saved_variable_.setValue(value);
+      }
+    }
+    else
+    {
+      success = saved_variable_.setValue(value);
     }
   }
-  return saved_variable_.setValue(value);
+  postSetValueCallback();
+  return success;
 }
 
 template <>
 bool Field::setValue<double>(const double & value)
 {
-  if (getType() != JsonStream::DOUBLE_TYPE)
+  bool success = false;
+  preSetValueCallback();
+  if (getType() == JsonStream::DOUBLE_TYPE)
   {
-    return false;
-  }
-  if (parameter_.rangeIsSet())
-  {
-    double min = parameter_.getMin().d;
-    double max = parameter_.getMax().d;
-    if ((value < min) || (value > max))
+    if (parameter_.rangeIsSet())
     {
-      return false;
+      double min = parameter_.getMin().d;
+      double max = parameter_.getMax().d;
+      if ((value >= min) && (value <= max))
+      {
+        success = saved_variable_.setValue(value);
+      }
+    }
+    else
+    {
+      success = saved_variable_.setValue(value);
     }
   }
-  return saved_variable_.setValue(value);
+  postSetValueCallback();
+  return success;
 }
 
 template <>
 bool Field::setValue<bool>(const bool & value)
 {
-  if (getType() != JsonStream::BOOL_TYPE)
+  bool success = false;
+  preSetValueCallback();
+  if (getType() == JsonStream::BOOL_TYPE)
   {
-    return false;
+    success = saved_variable_.setValue(value);
   }
-  return saved_variable_.setValue(value);
+  postSetValueCallback();
+  return success;
 }
 
 template <>
 bool Field::setValue<const ConstantString *>(const ConstantString * const & value)
 {
-  if ((getType() != JsonStream::STRING_TYPE) ||
-      isStringSavedAsCharArray())
+  bool success = false;
+  preSetValueCallback();
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      !isStringSavedAsCharArray())
   {
-    return false;
+    success = saved_variable_.setValue(value);
   }
-  return saved_variable_.setValue(value);
+  postSetValueCallback();
+  return success;
 }
 
 template <>
 bool Field::setValue<ConstantString *>(ConstantString * const & value)
 {
-  if ((getType() != JsonStream::STRING_TYPE) ||
-      isStringSavedAsCharArray())
+  bool success = false;
+  preSetValueCallback();
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      !isStringSavedAsCharArray())
   {
-    return false;
+    success = saved_variable_.setValue(value);
   }
-  return saved_variable_.setValue(value);
+  postSetValueCallback();
+  return success;
 }
 
 template <>
 bool Field::setElementValue<long>(const long & value, const size_t element_index)
 {
-  if ((getType() != JsonStream::ARRAY_TYPE) ||
-      (getArrayElementType() != JsonStream::LONG_TYPE))
+  bool success = false;
+  preSetElementValueCallback(element_index);
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::LONG_TYPE))
   {
-    return false;
-  }
-  if (parameter_.rangeIsSet())
-  {
-    long min = parameter_.getMin().l;
-    long max = parameter_.getMax().l;
-    if ((value < min) || (value > max))
+    if (parameter_.rangeIsSet())
     {
-      return false;
+      long min = parameter_.getMin().l;
+      long max = parameter_.getMax().l;
+      if ((value >= min) && (value <= max))
+      {
+        success = saved_variable_.setElementValue(value,element_index);
+      }
+    }
+    else
+    {
+      success = saved_variable_.setElementValue(value,element_index);
     }
   }
-  return saved_variable_.setElementValue(value,element_index);
+  postSetElementValueCallback(element_index);
+  return success;
 }
 
 template <>
 bool Field::setElementValue<double>(const double & value, const size_t element_index)
 {
-  if ((getType() != JsonStream::ARRAY_TYPE) ||
-      (getArrayElementType() != JsonStream::DOUBLE_TYPE))
+  bool success = false;
+  preSetElementValueCallback(element_index);
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::DOUBLE_TYPE))
   {
-    return false;
-  }
-  if (parameter_.rangeIsSet())
-  {
-    double min = parameter_.getMin().d;
-    double max = parameter_.getMax().d;
-    if ((value < min) || (value > max))
+    if (parameter_.rangeIsSet())
     {
-      return false;
+      double min = parameter_.getMin().d;
+      double max = parameter_.getMax().d;
+      if ((value >= min) && (value <= max))
+      {
+        success = saved_variable_.setElementValue(value,element_index);
+      }
+    }
+    else
+    {
+      success = saved_variable_.setElementValue(value,element_index);
     }
   }
-  return saved_variable_.setElementValue(value,element_index);
+  postSetElementValueCallback(element_index);
+  return success;
 }
 
 template <>
 bool Field::setElementValue<bool>(const bool & value, const size_t element_index)
 {
-  if ((getType() != JsonStream::ARRAY_TYPE) ||
-      (getArrayElementType() != JsonStream::BOOL_TYPE))
+  bool success = false;
+  preSetElementValueCallback(element_index);
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::BOOL_TYPE))
   {
-    return false;
+    success = saved_variable_.setElementValue(value,element_index);
   }
-  return saved_variable_.setElementValue(value,element_index);
+  postSetElementValueCallback(element_index);
+  return success;
 }
 
 template <>
 bool Field::setElementValue<char>(const char & value, const size_t element_index)
 {
-  if ((getType() != JsonStream::STRING_TYPE) ||
-      (!isStringSavedAsCharArray()))
+  bool success = false;
+  preSetElementValueCallback(element_index);
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      (isStringSavedAsCharArray()))
   {
-    return false;
+    success = saved_variable_.setElementValue(value,element_index);
   }
-  return saved_variable_.setElementValue(value,element_index);
+  postSetElementValueCallback(element_index);
+  return success;
 }
 
 template <>
@@ -394,8 +438,9 @@ bool Field::getElementValue<char>(char & value, const size_t element_index)
 
 void Field::setDefaultValue()
 {
+  preSetValueCallback();
   saved_variable_.setDefaultValue();
-  setValueCallback();
+  postSetValueCallback();
 }
 
 bool Field::isDefaultValue()
@@ -438,19 +483,43 @@ Vector<const constants::SubsetMemberType> & Field::getSubset()
   return parameter_.getSubset();
 }
 
-void Field::setValueCallback()
+void Field::setCallbacksToNull()
 {
-  if (set_value_callback_ != NULL)
+  pre_set_value_callback_ = NULL;
+  pre_set_element_value_callback_ = NULL;
+  post_set_value_callback_ = NULL;
+  post_set_element_value_callback_ = NULL;
+}
+
+void Field::preSetValueCallback()
+{
+  if (pre_set_value_callback_ != NULL)
   {
-    (*set_value_callback_)();
+    (*pre_set_value_callback_)();
   }
 }
 
-void Field::setElementValueCallback(const size_t element_index)
+void Field::preSetElementValueCallback(const size_t element_index)
 {
-  if (set_element_value_callback_ != NULL)
+  if (pre_set_element_value_callback_ != NULL)
   {
-    (*set_element_value_callback_)(element_index);
+    (*pre_set_element_value_callback_)(element_index);
+  }
+}
+
+void Field::postSetValueCallback()
+{
+  if (post_set_value_callback_ != NULL)
+  {
+    (*post_set_value_callback_)();
+  }
+}
+
+void Field::postSetElementValueCallback(const size_t element_index)
+{
+  if (post_set_element_value_callback_ != NULL)
+  {
+    (*post_set_element_value_callback_)(element_index);
   }
 }
 
