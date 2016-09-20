@@ -34,7 +34,7 @@ void ModularServer::setFirmwareName(const ConstantString & firmware_name)
   server_.setFirmwareName(firmware_name);
 }
 
-void ModularServer::setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch)
+void ModularServer::setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch)
 {
   server_.setFirmwareVersion(firmware_major,firmware_minor,firmware_patch);
 }
@@ -44,9 +44,9 @@ void ModularServer::setHardwareName(const ConstantString & hardware_name)
   server_.setHardwareName(hardware_name);
 }
 
-void ModularServer::setHardwareVersion(const long hardware_major,const long hardware_minor,const long hardware_patch)
+void ModularServer::setHardwareVersion(const long hardware_major, const long hardware_minor)
 {
-  server_.setHardwareVersion(hardware_major,hardware_minor,hardware_patch);
+  server_.setHardwareVersion(hardware_major,hardware_minor);
 }
 
 void ModularServer::setModelNumber(const long model_number)

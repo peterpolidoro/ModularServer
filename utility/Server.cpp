@@ -151,7 +151,7 @@ void Server::setFirmwareName(const ConstantString & firmware_name)
   firmware_name_ptr_ = &firmware_name;
 }
 
-void Server::setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch)
+void Server::setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch)
 {
   firmware_major_ = firmware_major;
   firmware_minor_ = firmware_minor;
@@ -163,11 +163,10 @@ void Server::setHardwareName(const ConstantString & hardware_name)
   hardware_name_ptr_ = &hardware_name;
 }
 
-void Server::setHardwareVersion(const long hardware_major,const long hardware_minor,const long hardware_patch)
+void Server::setHardwareVersion(const long hardware_major, const long hardware_minor)
 {
   hardware_major_ = hardware_major;
   hardware_minor_ = hardware_minor;
-  hardware_patch_ = hardware_patch;
 }
 
 InternalMethod & Server::createInternalMethod(const ConstantString & method_name, bool is_private)
@@ -1629,7 +1628,6 @@ void Server::writeDeviceInfoToResponse()
   beginResponseObject();
   writeToResponse(constants::major_constant_string,hardware_major_);
   writeToResponse(constants::minor_constant_string,hardware_minor_);
-  writeToResponse(constants::patch_constant_string,hardware_patch_);
   endResponseObject();
   writeToResponse(constants::processor_constant_string,constants::processor_name_constant_string);
   endResponseObject();

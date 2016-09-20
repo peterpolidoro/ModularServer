@@ -24,9 +24,9 @@ public:
   void setDeviceName(const ConstantString & device_name);
   void setModelNumber(const long model_number);
   void setFirmwareName(const ConstantString & firmware_name);
-  void setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch);
+  void setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch);
   void setHardwareName(const ConstantString & hardware_name);
-  void setHardwareVersion(const long hardware_major,const long hardware_minor,const long hardware_patch);
+  void setHardwareVersion(const long hardware_major, const long hardware_minor);
   template <size_t MAX_SIZE>
   void setMethodStorage(Method (&methods)[MAX_SIZE]);
   Method & createMethod(const ConstantString & method_name);

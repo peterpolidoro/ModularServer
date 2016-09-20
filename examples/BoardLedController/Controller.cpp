@@ -24,7 +24,7 @@ void Controller::setup()
   modular_server_.setFirmwareName(constants::firmware_name);
   modular_server_.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
   modular_server_.setHardwareName(constants::hardware_name);
-  modular_server_.setHardwareVersion(constants::hardware_major,constants::hardware_minor,constants::hardware_patch);
+  modular_server_.setHardwareVersion(constants::hardware_major,constants::hardware_minor);
 
   // Add Server Streams
   modular_server_.addServerStream(Serial);

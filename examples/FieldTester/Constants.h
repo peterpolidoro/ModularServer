@@ -29,7 +29,6 @@ extern const size_t model_number;
 extern ConstantString hardware_name;
 extern const long hardware_major;
 extern const long hardware_minor;
-extern const long hardware_patch;
 
 // Fields
 // Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
