@@ -29,59 +29,6 @@ press the 'Enter' key.
 Example Response:
 
 ```json
-{
-  "id":"?",
-  "result":{
-    "device_info":{
-      "name":"field_tester",
-      "model_number":1003,
-      "board":"mega",
-      "serial_number":0,
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      }
-    },
-    "methods":[
-      "getMemoryFree",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
-      "getDoubled",
-      "getBool",
-      "getLongArrayFixed",
-      "getLongArrayVariable",
-      "setLongArrayFixed",
-      "setLongArrayVariable",
-      "setLongArrayParameter",
-      "getStringAll",
-      "getStringSome"
-    ],
-    "parameters":[
-      "field_name",
-      "field_value",
-      "field_element_index",
-      "long_array_parameter",
-      "length_parameter"
-    ],
-    "fields":[
-      "serial_number",
-      "double",
-      "bool",
-      "long_array",
-      "double_array",
-      "bool_array",
-      "string"
-    ]
-  }
-}
 ```
 
 "methods" is an array of user methods. To execute a method, simply

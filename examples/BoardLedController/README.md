@@ -29,6 +29,55 @@ press the 'Enter' key.
 Example Response:
 
 ```json
+{
+  "id":"?",
+  "result":{
+    "device_info":{
+      "device_name":"modular_server",
+      "model_number":0,
+      "serial_number":0,
+      "firmware_name":"board_led_controller",
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      },
+      "hardware_name":"mega",
+      "hardware_version":{
+        "major":0,
+        "minor":0
+      },
+      "processor":"ATmega2560"
+    },
+    "methods":[
+      "getMemoryFree",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "setLedOn",
+      "setLedOff",
+      "getLedPin",
+      "blinkLed"
+    ],
+    "parameters":[
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "duration_on",
+      "duration_off",
+      "count"
+    ],
+    "fields":[
+      "serial_number"
+    ]
+  }
+}
 ```
 
 "methods" is an array of user methods. To execute a method, simply
@@ -255,10 +304,13 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'board': 'mega',
+{'device_name': 'modular_server',
+ 'firmware_name': 'board_led_controller',
  'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
- 'model_number': 1001,
- 'name': 'board_led_controller',
+ 'hardware_name': 'mega',
+ 'hardware_version': {'major': 0, 'minor': 0},
+ 'model_number': 0,
+ 'processor': 'ATmega2560',
  'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
