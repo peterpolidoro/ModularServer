@@ -1382,7 +1382,7 @@ long Server::getSerialNumber()
 
 void Server::initializeEeprom()
 {
-  if (!eeprom_initialized_sv_.isDefaultValue())
+  if (!eeprom_initialized_sv_.valueIsDefault())
   {
     eeprom_initialized_sv_.setDefaultValue();
     setFieldsToDefaults();
@@ -1704,7 +1704,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
     }
     case JsonStream::STRING_TYPE:
     {
-      if (field.isStringSavedAsCharArray())
+      if (field.stringIsSavedAsCharArray())
       {
         size_t array_length = getFieldArrayLength(field_name);
         if (element_index >= 0)

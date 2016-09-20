@@ -235,13 +235,13 @@ private:
   template <typename T>
   bool getElementValue(T & value, const size_t element_index);
   void setDefaultValue();
-  bool isDefaultValue();
+  bool valueIsDefault();
   size_t getArrayLength();
   Parameter & getParameter();
   const ConstantString & getName();
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
-  bool isStringSavedAsCharArray();
+  bool stringIsSavedAsCharArray();
   template <typename T>
   int findSubsetValueIndex(T value)
   {

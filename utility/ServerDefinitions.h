@@ -108,7 +108,7 @@ bool Server::setFieldValue(const ConstantString & field_name,
   {
     JsonStream::JsonTypes type = field.getType();
     if ((type == JsonStream::STRING_TYPE) &&
-        !field.isStringSavedAsCharArray())
+        !field.stringIsSavedAsCharArray())
     {
       int subset_value_index = field.findSubsetValueIndex((const char *)value);
       if (subset_value_index >= 0)
@@ -171,7 +171,7 @@ bool Server::setAllFieldElementValues(const ConstantString & field_name,
   {
     JsonStream::JsonTypes type = field.getType();
     if ((type == JsonStream::STRING_TYPE) &&
-        !field.isStringSavedAsCharArray())
+        !field.stringIsSavedAsCharArray())
     {
       return success;
     }
@@ -242,7 +242,7 @@ bool Server::getFieldValue(const ConstantString & field_name,
   {
     JsonStream::JsonTypes type = field.getType();
     if ((type == JsonStream::STRING_TYPE) &&
-        !field.isStringSavedAsCharArray())
+        !field.stringIsSavedAsCharArray())
     {
       return false;
     }

@@ -127,7 +127,7 @@ template <>
 bool Field::getDefaultValue<const ConstantString *>(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
-      isStringSavedAsCharArray())
+      stringIsSavedAsCharArray())
   {
     value = NULL;
     return false;
@@ -172,7 +172,7 @@ template <>
 bool Field::getDefaultElementValue<char>(char & value, const size_t element_index)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
-      (!isStringSavedAsCharArray()))
+      (!stringIsSavedAsCharArray()))
   {
     return false;
   }
@@ -248,7 +248,7 @@ bool Field::setValue<const ConstantString *>(const ConstantString * const & valu
   bool success = false;
   preSetValueCallback();
   if ((getType() == JsonStream::STRING_TYPE) &&
-      !isStringSavedAsCharArray())
+      !stringIsSavedAsCharArray())
   {
     success = saved_variable_.setValue(value);
   }
@@ -262,7 +262,7 @@ bool Field::setValue<ConstantString *>(ConstantString * const & value)
   bool success = false;
   preSetValueCallback();
   if ((getType() == JsonStream::STRING_TYPE) &&
-      !isStringSavedAsCharArray())
+      !stringIsSavedAsCharArray())
   {
     success = saved_variable_.setValue(value);
   }
@@ -342,7 +342,7 @@ bool Field::setElementValue<char>(const char & value, const size_t element_index
   bool success = false;
   preSetElementValueCallback(element_index);
   if ((getType() == JsonStream::STRING_TYPE) &&
-      (isStringSavedAsCharArray()))
+      (stringIsSavedAsCharArray()))
   {
     success = saved_variable_.setElementValue(value,element_index);
   }
@@ -384,7 +384,7 @@ template <>
 bool Field::getValue<const ConstantString *>(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
-      isStringSavedAsCharArray())
+      stringIsSavedAsCharArray())
   {
     value = NULL;
     return false;
@@ -429,7 +429,7 @@ template <>
 bool Field::getElementValue<char>(char & value, const size_t element_index)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
-      (!isStringSavedAsCharArray()))
+      (!stringIsSavedAsCharArray()))
   {
     return false;
   }
@@ -443,9 +443,9 @@ void Field::setDefaultValue()
   postSetValueCallback();
 }
 
-bool Field::isDefaultValue()
+bool Field::valueIsDefault()
 {
-  return saved_variable_.isDefaultValue();
+  return saved_variable_.valueIsDefault();
 }
 
 size_t Field::getArrayLength()
@@ -473,7 +473,7 @@ JsonStream::JsonTypes Field::getArrayElementType()
   return parameter_.getArrayElementType();
 }
 
-bool Field::isStringSavedAsCharArray()
+bool Field::stringIsSavedAsCharArray()
 {
   return string_saved_as_char_array_;
 }
