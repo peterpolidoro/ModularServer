@@ -22,17 +22,26 @@ const size_t baudrate = 9600;
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 const size_t model_number = 0;
-CONSTANT_STRING(hardware_name,"");
+CONSTANT_STRING(hardware_name,"mega");
+const long hardware_major = 0;
+const long hardware_minor = 0;
+const long hardware_patch = 0;
 
 #elif defined(__MK20DX128__) || defined(__MK20DX256__)
 
 const size_t model_number = 0;
-CONSTANT_STRING(hardware_name,"");
+CONSTANT_STRING(hardware_name,"teensy");
+const long hardware_major = 0;
+const long hardware_minor = 0;
+const long hardware_patch = 0;
 
 #else
 
 const size_t model_number = 0;
 CONSTANT_STRING(hardware_name,"");
+const long hardware_major = 0;
+const long hardware_minor = 0;
+const long hardware_patch = 0;
 
 #endif
 

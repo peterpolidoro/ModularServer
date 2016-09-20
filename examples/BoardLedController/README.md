@@ -29,49 +29,6 @@ press the 'Enter' key.
 Example Response:
 
 ```json
-{
-  "id":"?",
-  "result":{
-    "device_info":{
-      "name":"board_led_controller",
-      "model_number":1001,
-      "board":"mega",
-      "serial_number":12,
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      }
-    },
-    "methods":[
-      "getMemoryFree",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
-      "setLedOn",
-      "setLedOff",
-      "getLedPin",
-      "blinkLed"
-    ],
-    "parameters":[
-      "field_name",
-      "field_value",
-      "field_element_index",
-      "duration_on",
-      "duration_off",
-      "count"
-    ],
-    "fields":[
-      "serial_number"
-    ]
-  }
-}
 ```
 
 "methods" is an array of user methods. To execute a method, simply

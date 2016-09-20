@@ -42,10 +42,11 @@ public:
   Server(Stream & stream);
   void addServerStream(Stream & stream);
   void setDeviceName(const ConstantString & device_name);
+  void setModelNumber(const long model_number);
   void setFirmwareName(const ConstantString & firmware_name);
   void setFirmwareVersion(const long firmware_major,const long firmware_minor,const long firmware_patch);
   void setHardwareName(const ConstantString & hardware_name);
-  void setModelNumber(const long model_number);
+  void setHardwareVersion(const long hardware_major,const long hardware_minor,const long hardware_patch);
   template <size_t MAX_SIZE>
   void setMethodStorage(Method (&methods)[MAX_SIZE]);
   Method & createMethod(const ConstantString & method_name);
@@ -159,12 +160,15 @@ private:
   Vector<Parameter> external_parameters_;
   Vector<Method> external_methods_;
   const ConstantString * device_name_ptr_;
+  long model_number_;
   const ConstantString * firmware_name_ptr_;
   long firmware_major_;
   long firmware_minor_;
   long firmware_patch_;
   const ConstantString * hardware_name_ptr_;
-  long model_number_;
+  long hardware_major_;
+  long hardware_minor_;
+  long hardware_patch_;
   int request_method_index_;
   int parameter_count_;
   JsonStream json_stream_;

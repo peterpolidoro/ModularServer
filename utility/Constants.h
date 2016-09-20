@@ -137,6 +137,7 @@ extern ConstantString array_length_min_constant_string;
 extern ConstantString array_length_max_constant_string;
 extern ConstantString model_number_constant_string;
 extern ConstantString firmware_version_constant_string;
+extern ConstantString hardware_version_constant_string;
 extern ConstantString major_constant_string;
 extern ConstantString minor_constant_string;
 extern ConstantString patch_constant_string;
@@ -158,7 +159,7 @@ extern ConstantString quote_constant_string;
 extern ConstantString subset_constant_string;
 extern ConstantString array_element_subset_constant_string;
 extern ConstantString processor_constant_string;
-extern ConstantString processor_type_constant_string;
+extern ConstantString processor_name_constant_string;
 }
 }
 #endif

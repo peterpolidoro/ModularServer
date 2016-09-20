@@ -99,6 +99,7 @@ CONSTANT_STRING(array_length_min_constant_string,"array_length_min");
 CONSTANT_STRING(array_length_max_constant_string,"array_length_max");
 CONSTANT_STRING(model_number_constant_string,"model_number");
 CONSTANT_STRING(firmware_version_constant_string,"firmware_version");
+CONSTANT_STRING(hardware_version_constant_string,"hardware_version");
 CONSTANT_STRING(major_constant_string,"major");
 CONSTANT_STRING(minor_constant_string,"minor");
 CONSTANT_STRING(patch_constant_string,"patch");
@@ -121,12 +122,16 @@ CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(processor_constant_string,"processor");
 
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-CONSTANT_STRING(processor_type_constant_string,"mega");
-#elif defined(__MK20DX128__) || defined(__MK20DX256__)
-CONSTANT_STRING(processor_type_constant_string,"teensy");
+#if defined(__AVR_ATmega1280__)
+CONSTANT_STRING(processor_name_constant_string,"ATmega1280");
+#elif defined(__AVR_ATmega2560__)
+CONSTANT_STRING(processor_name_constant_string,"ATmega2560");
+#elif defined(__MK20DX128__)
+CONSTANT_STRING(processor_name_constant_string,"MK20DX128");
+#elif defined(__MK20DX256__)
+CONSTANT_STRING(processor_name_constant_string,"MK20DX256");
 #else
-CONSTANT_STRING(processor_type_constant_string,"");
+CONSTANT_STRING(processor_name_constant_string,"");
 #endif
 }
 }

@@ -141,6 +141,11 @@ void Server::setDeviceName(const ConstantString & device_name)
   device_name_ptr_ = &device_name;
 }
 
+void Server::setModelNumber(const long model_number)
+{
+  model_number_ = model_number;
+}
+
 void Server::setFirmwareName(const ConstantString & firmware_name)
 {
   firmware_name_ptr_ = &firmware_name;
@@ -158,9 +163,11 @@ void Server::setHardwareName(const ConstantString & hardware_name)
   hardware_name_ptr_ = &hardware_name;
 }
 
-void Server::setModelNumber(const long model_number)
+void Server::setHardwareVersion(const long hardware_major,const long hardware_minor,const long hardware_patch)
 {
-  model_number_ = model_number;
+  hardware_major_ = hardware_major;
+  hardware_minor_ = hardware_minor;
+  hardware_patch_ = hardware_patch;
 }
 
 InternalMethod & Server::createInternalMethod(const ConstantString & method_name, bool is_private)
@@ -1615,6 +1622,8 @@ void Server::writeDeviceInfoToResponse()
 {
   beginResponseObject();
   writeToResponse(constants::device_name_constant_string,device_name_ptr_);
+  writeToResponse(constants::model_number_constant_string,model_number_);
+  writeToResponse(constants::serial_number_field_name,getSerialNumber());
   writeToResponse(constants::firmware_name_constant_string,firmware_name_ptr_);
   writeKeyToResponse(constants::firmware_version_constant_string);
   beginResponseObject();
@@ -1623,9 +1632,13 @@ void Server::writeDeviceInfoToResponse()
   writeToResponse(constants::patch_constant_string,firmware_patch_);
   endResponseObject();
   writeToResponse(constants::hardware_name_constant_string,hardware_name_ptr_);
-  writeToResponse(constants::model_number_constant_string,model_number_);
-  writeToResponse(constants::processor_constant_string,constants::processor_type_constant_string);
-  writeToResponse(constants::serial_number_field_name,getSerialNumber());
+  writeKeyToResponse(constants::hardware_version_constant_string);
+  beginResponseObject();
+  writeToResponse(constants::major_constant_string,hardware_major_);
+  writeToResponse(constants::minor_constant_string,hardware_minor_);
+  writeToResponse(constants::patch_constant_string,hardware_patch_);
+  endResponseObject();
+  writeToResponse(constants::processor_constant_string,constants::processor_name_constant_string);
   endResponseObject();
 }
 

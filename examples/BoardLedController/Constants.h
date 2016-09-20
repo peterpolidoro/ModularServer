@@ -26,6 +26,9 @@ extern const size_t baudrate;
 
 extern const size_t model_number;
 extern ConstantString hardware_name;
+extern const long hardware_major;
+extern const long hardware_minor;
+extern const long hardware_patch;
 
 extern const size_t led_pin;
 

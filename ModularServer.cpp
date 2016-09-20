@@ -44,6 +44,11 @@ void ModularServer::setHardwareName(const ConstantString & hardware_name)
   server_.setHardwareName(hardware_name);
 }
 
+void ModularServer::setHardwareVersion(const long hardware_major,const long hardware_minor,const long hardware_patch)
+{
+  server_.setHardwareVersion(hardware_major,hardware_minor,hardware_patch);
+}
+
 void ModularServer::setModelNumber(const long model_number)
 {
   server_.setModelNumber(model_number);
