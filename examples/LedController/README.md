@@ -1,4 +1,4 @@
-#BoardLedController
+#LedController
 
 Authors:
 
@@ -36,7 +36,7 @@ Example Response:
       "device_name":"modular_server",
       "model_number":0,
       "serial_number":0,
-      "firmware_name":"board_led_controller",
+      "firmware_name":"led_controller",
       "firmware_version":{
         "major":0,
         "minor":1,
@@ -305,7 +305,7 @@ from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
 {'device_name': 'modular_server',
- 'firmware_name': 'board_led_controller',
+ 'firmware_name': 'led_controller',
  'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'hardware_name': 'mega',
  'hardware_version': {'major': 0, 'minor': 0},
@@ -391,11 +391,14 @@ dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
 device_info =
-  name: 'board_led_controller'
-  model_number: 1001
-  board: 'mega'
+  device_name: 'modular_server'
+  model_number: 0
   serial_number: 0
-  firmware_number: [1x1 struct]
+  firmware_name: 'led_controller'
+  firmware_version: [1x1 struct]
+  hardware_name: 'mega'
+  hardware_version: [1x1 struct]
+  processor: 'ATmega2560'
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------

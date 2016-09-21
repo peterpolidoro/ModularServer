@@ -241,11 +241,6 @@ bool Server::getFieldValue(const ConstantString & field_name,
   if (field_index >= 0)
   {
     JsonStream::JsonTypes type = field.getType();
-    if ((type == JsonStream::STRING_TYPE) &&
-        !field.stringIsSavedAsCharArray())
-    {
-      return false;
-    }
     size_t array_length = field.getArrayLength();
     size_t array_length_min = min(array_length,N);
     bool success;

@@ -171,10 +171,26 @@ bool Field::getDefaultElementValue<bool>(bool & value, const size_t element_inde
 template <>
 bool Field::getDefaultElementValue<char>(char & value, const size_t element_index)
 {
-  if ((getType() != JsonStream::STRING_TYPE) ||
-      (!stringIsSavedAsCharArray()))
+  if (getType() != JsonStream::STRING_TYPE)
   {
     return false;
+  }
+  if (!stringIsSavedAsCharArray())
+  {
+    const ConstantString * cs_ptr;
+    getDefaultValue(cs_ptr);
+    size_t str_len = cs_ptr->length();
+    if (element_index <= str_len)
+    {
+      char str[str_len+1];
+      cs_ptr->copy(str);
+      value = str[element_index];
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
   return saved_variable_.getDefaultElementValue(value,element_index);
 }
@@ -428,10 +444,26 @@ bool Field::getElementValue<bool>(bool & value, const size_t element_index)
 template <>
 bool Field::getElementValue<char>(char & value, const size_t element_index)
 {
-  if ((getType() != JsonStream::STRING_TYPE) ||
-      (!stringIsSavedAsCharArray()))
+  if (getType() != JsonStream::STRING_TYPE)
   {
     return false;
+  }
+  if (!stringIsSavedAsCharArray())
+  {
+    const ConstantString * cs_ptr;
+    getValue(cs_ptr);
+    size_t str_len = cs_ptr->length();
+    if (element_index <= str_len)
+    {
+      char str[str_len+1];
+      cs_ptr->copy(str);
+      value = str[element_index];
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
   return saved_variable_.getElementValue(value,element_index);
 }
@@ -450,6 +482,13 @@ bool Field::valueIsDefault()
 
 size_t Field::getArrayLength()
 {
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      (!stringIsSavedAsCharArray()))
+  {
+    const ConstantString * cs_ptr;
+    getValue(cs_ptr);
+    return cs_ptr->length() + 1;
+  }
   return saved_variable_.getArrayLength();
 }
 
@@ -476,6 +515,16 @@ JsonStream::JsonTypes Field::getArrayElementType()
 bool Field::stringIsSavedAsCharArray()
 {
   return string_saved_as_char_array_;
+}
+
+int Field::findSubsetValueIndex(const long value)
+{
+  return parameter_.findSubsetValueIndex(value);
+}
+
+int Field::findSubsetValueIndex(const char * value)
+{
+  return parameter_.findSubsetValueIndex(value);
 }
 
 Vector<const constants::SubsetMemberType> & Field::getSubset()

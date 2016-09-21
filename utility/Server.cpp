@@ -1702,56 +1702,40 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
     }
     case JsonStream::STRING_TYPE:
     {
-      if (field.stringIsSavedAsCharArray())
+      size_t array_length = getFieldArrayLength(field_name);
+      if (element_index >= 0)
       {
-        size_t array_length = getFieldArrayLength(field_name);
-        if (element_index >= 0)
+        if (element_index >= ((int)array_length-1))
         {
-          if (element_index >= ((int)array_length-1))
-          {
-            writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
-            return;
-          }
-          size_t array_length = 2;
-          char char_array[array_length];
-          char field_element_value;
-          bool success = getFieldElementValue(field_name,element_index,field_element_value);
-          if (success)
-          {
-            char_array[0] = field_element_value;
-            char_array[1] = '\0';
-          }
-          else
-          {
-            char_array[0] = '\0';
-          }
-          writeToResponse(char_array);
+          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
           return;
         }
+        size_t array_length = 2;
         char char_array[array_length];
-        if (write_default)
+        char field_element_value;
+        bool success = getFieldElementValue(field_name,element_index,field_element_value);
+        if (success)
         {
-          getFieldDefaultValue(field_name,char_array,array_length);
+          char_array[0] = field_element_value;
+          char_array[1] = '\0';
         }
         else
         {
-          getFieldValue(field_name,char_array,array_length);
+          char_array[0] = '\0';
         }
         writeToResponse(char_array);
+        return;
+      }
+      char char_array[array_length];
+      if (write_default)
+      {
+        getFieldDefaultValue(field_name,char_array,array_length);
       }
       else
       {
-        const ConstantString * cs_ptr;
-        if (write_default)
-        {
-          getFieldDefaultValue(field_name,cs_ptr);
-        }
-        else
-        {
-          getFieldValue(field_name,cs_ptr);
-        }
-        writeToResponse(*cs_ptr);
+        getFieldValue(field_name,char_array,array_length);
       }
+      writeToResponse(char_array);
       break;
     }
     case JsonStream::ARRAY_TYPE:
@@ -2324,6 +2308,11 @@ void Server::setFieldElementValueCallback()
       }
       case JsonStream::STRING_TYPE:
       {
+        if (!field.stringIsSavedAsCharArray())
+        {
+          writeFieldErrorToResponse(constants::cannot_set_element_in_string_field_with_subset_error_data);
+          break;
+        }
         size_t array_length = field.getArrayLength();
         if ((size_t)field_element_index >= (array_length - 1))
         {
@@ -2442,6 +2431,11 @@ void Server::setAllFieldElementValuesCallback()
       }
       case JsonStream::STRING_TYPE:
       {
+        if (!field.stringIsSavedAsCharArray())
+        {
+          writeFieldErrorToResponse(constants::cannot_set_element_in_string_field_with_subset_error_data);
+          break;
+        }
         const char * field_value = getParameterValue(constants::field_value_parameter_name);
         size_t string_length = strlen(field_value);
         if (string_length >= 1)

@@ -29,6 +29,77 @@ press the 'Enter' key.
 Example Response:
 
 ```json
+{
+  "id":"?",
+  "result":{
+    "device_info":{
+      "device_name":"modular_server",
+      "model_number":0,
+      "serial_number":0,
+      "firmware_name":"field_tester",
+      "firmware_version":{
+        "major":0,
+        "minor":1,
+        "patch":0
+      },
+      "hardware_name":"mega",
+      "hardware_version":{
+        "major":0,
+        "minor":0
+      },
+      "processor":"ATmega2560"
+    },
+    "methods":[
+      "getMemoryFree",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "getDoubled",
+      "getBool",
+      "getLongArrayFixed",
+      "getLongArrayVariable",
+      "setLongArrayFixed",
+      "setLongArrayVariable",
+      "setLongArrayParameter",
+      "getStringAll",
+      "getStringSome",
+      "getCount",
+      "getCountArray",
+      "getDirection",
+      "getDirectionArray",
+      "checkMode",
+      "incrementMode"
+    ],
+    "parameters":[
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "long_array_parameter",
+      "length_parameter",
+      "count",
+      "count_array",
+      "direction",
+      "direction_array"
+    ],
+    "fields":[
+      "serial_number",
+      "double",
+      "bool",
+      "long_array",
+      "double_array",
+      "bool_array",
+      "string",
+      "odd",
+      "mode"
+    ]
+  }
+}
 ```
 
 "methods" is an array of user methods. To execute a method, simply
@@ -65,7 +136,9 @@ Example Response:
       false,
       true
     ],
-    "string":"abcdef"
+    "string":"abcdef",
+    "odd":5,
+    "mode":"RISING"
   }
 }
 ```
@@ -168,6 +241,74 @@ Example Response:
 Example Method:
 
 ```shell
+setFieldValue odd 2
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldValue",
+  "error":{
+    "message":"Invalid params",
+    "data":"Parameter value not valid. Value not in subset: [1,3,5,7,9]",
+    "code":-32602
+  }
+}
+```
+
+Example Method:
+
+```shell
+setFieldValue odd 7
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldValue",
+  "result":null
+}
+```
+
+Example Method:
+
+```shell
+setFieldValue mode test
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldValue",
+  "error":{
+    "message":"Invalid params",
+    "data":"Parameter value not valid. Value not in subset: ["RISING","FALLING","CHANGE"]",
+    "code":-32602
+  }
+}
+```
+
+Example Method:
+
+```shell
+setFieldValue mode CHANGE
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldValue",
+  "result":null
+}
+```
+
+Example Method:
+
+```shell
 getFieldValues
 ```
 
@@ -195,7 +336,9 @@ Example Response:
       false,
       false
     ],
-    "string":"asdXghjkl"
+    "string":"asdXghjkl",
+    "odd":7,
+    "mode":"CHANGE"
   }
 }
 ```

@@ -62,6 +62,9 @@ void Controller::setup()
   ModularDevice::Field & mode_field = modular_server_.createField(constants::mode_field_name,constants::mode_ptr_default);
   mode_field.setSubset(constants::mode_ptr_subset);
 
+  ModularDevice::Field & odd_array_field = modular_server_.createField(constants::odd_array_field_name,constants::odd_array_default);
+  odd_array_field.setSubset(constants::odd_subset);
+
   // Parameters
   ModularDevice::Parameter & long_array_parameter = modular_server_.createParameter(constants::long_array_parameter_name);
   long_array_parameter.setTypeLong();

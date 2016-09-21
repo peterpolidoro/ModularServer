@@ -91,6 +91,7 @@ extern ConstantString parameter_not_found_error_data;
 extern ConstantString field_not_found_error_data;
 extern ConstantString field_not_array_type_error_data;
 extern ConstantString field_element_index_out_of_bounds_error_data;
+extern ConstantString cannot_set_element_in_string_field_with_subset_error_data;
 extern ConstantString incorrect_parameter_number_error_data;
 extern ConstantString invalid_json_object_error_data;
 extern ConstantString invalid_json_array_error_data;

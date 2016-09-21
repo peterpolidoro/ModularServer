@@ -242,11 +242,8 @@ private:
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool stringIsSavedAsCharArray();
-  template <typename T>
-  int findSubsetValueIndex(T value)
-  {
-    parameter_.findSubsetValueIndex(value);
-  }
+  int findSubsetValueIndex(const long value);
+  int findSubsetValueIndex(const char * value);
   Vector<const constants::SubsetMemberType> & getSubset();
   void setCallbacksToNull();
   void preSetValueCallback();

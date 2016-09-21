@@ -53,6 +53,7 @@ CONSTANT_STRING(parameter_not_found_error_data,"Parameter not found");
 CONSTANT_STRING(field_not_found_error_data,"Field not found");
 CONSTANT_STRING(field_not_array_type_error_data,"Field not array type");
 CONSTANT_STRING(field_element_index_out_of_bounds_error_data,"field_element_index out of bounds");
+CONSTANT_STRING(cannot_set_element_in_string_field_with_subset_error_data,"Cannot set element in string field with subset.");
 CONSTANT_STRING(incorrect_parameter_number_error_data,"Incorrect number of parameters. ")
 CONSTANT_STRING(invalid_json_object_error_data," is not a valid JSON object.")
 CONSTANT_STRING(invalid_json_array_error_data," is not a valid JSON array.")

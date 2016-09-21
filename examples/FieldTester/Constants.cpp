@@ -88,6 +88,13 @@ const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   };
 const ConstantString * const mode_ptr_default = &mode_rising;
 
+CONSTANT_STRING(odd_array_field_name,"odd_array");
+const long odd_array_default[ODD_ARRAY_LENGTH] =
+  {
+    odd_subset[0].l,
+    odd_subset[2].l,
+  };
+
 // Parameters
 CONSTANT_STRING(long_array_parameter_name,"long_array_parameter");
 

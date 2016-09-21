@@ -13,7 +13,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=8};
+enum{FIELD_COUNT_MAX=9};
 enum{PARAMETER_COUNT_MAX=6};
 enum{METHOD_COUNT_MAX=15};
 
@@ -70,6 +70,10 @@ extern ConstantString mode_falling;
 extern ConstantString mode_change;
 extern const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 extern const ConstantString * const mode_ptr_default;
+
+extern ConstantString odd_array_field_name;
+enum{ODD_ARRAY_LENGTH=2};
+extern const long odd_array_default[ODD_ARRAY_LENGTH];
 
 // Parameters
 extern ConstantString long_array_parameter_name;

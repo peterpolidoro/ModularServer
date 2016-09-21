@@ -220,22 +220,38 @@ void incrementModeCallback()
 
 void preSetFieldValueCallback()
 {
-  Serial << " setting field value! ";
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldValueCallback
+
+  // Serial << " setting field value! ";
 }
 
 void postSetFieldValueCallback()
 {
-  Serial << " set field value! ";
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldValueCallback
+
+  // Serial << " set field value! ";
 }
 
 void preSetFieldElementValueCallback(const size_t element_index)
 {
-  Serial << " setting field element value at index " << element_index << "! ";
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldElementValueCallback
+
+  // Serial << " setting field element value at index " << element_index << "! ";
 }
 
 void postSetFieldElementValueCallback(const size_t element_index)
 {
-  Serial << " set field element value at index " << element_index << "! ";
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldElementValueCallback
+
+  // Serial << " set field element value at index " << element_index << "! ";
 }
 
 }
