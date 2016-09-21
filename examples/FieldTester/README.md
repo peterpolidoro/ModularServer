@@ -96,7 +96,8 @@ Example Response:
       "bool_array",
       "string",
       "odd",
-      "mode"
+      "mode",
+      "odd_array"
     ]
   }
 }
@@ -138,7 +139,11 @@ Example Response:
     ],
     "string":"abcdef",
     "odd":5,
-    "mode":"RISING"
+    "mode":"RISING",
+    "odd_array":[
+      1,
+      5
+    ]
   }
 }
 ```
@@ -285,7 +290,7 @@ Example Response:
   "id":"setFieldValue",
   "error":{
     "message":"Invalid params",
-    "data":"Parameter value not valid. Value not in subset: ["RISING","FALLING","CHANGE"]",
+    "data":"Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE]",
     "code":-32602
   }
 }
@@ -302,6 +307,59 @@ Example Response:
 ```json
 {
   "id":"setFieldValue",
+  "result":null
+}
+```
+
+Example Method:
+
+```shell
+setFieldElementValue mode 3 t
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldElementValue",
+  "error":{
+    "message":"Invalid params",
+    "data":"Cannot set element in string field with subset.",
+    "code":-32602
+  }
+}
+```
+
+Example Method:
+
+```shell
+setAllFieldElementValues odd_array 2
+```
+
+Example Response:
+
+```json
+{
+  "id":"setAllFieldElementValues",
+  "error":{
+    "message":"Invalid params",
+    "data":"Array parameter element value not valid. Value not in subset: [1,3,5,7,9]",
+    "code":-32602
+  }
+}
+```
+
+Example Method:
+
+```shell
+setAllFieldElementValues odd_array 9
+```
+
+Example Response:
+
+```json
+{
+  "id":"setAllFieldElementValues",
   "result":null
 }
 ```
@@ -338,7 +396,11 @@ Example Response:
     ],
     "string":"asdXghjkl",
     "odd":7,
-    "mode":"CHANGE"
+    "mode":"CHANGE",
+    "odd_array":[
+      9,
+      9
+    ]
   }
 }
 ```
@@ -365,32 +427,50 @@ Example Python session:
 ```python
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
+dev.get_device_info()
+{'device_name': 'modular_server',
+ 'firmware_name': 'field_tester',
+ 'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
+ 'hardware_name': 'mega',
+ 'hardware_version': {'major': 0, 'minor': 0},
+ 'model_number': 0,
+ 'processor': 'ATmega2560',
+ 'serial_number': 0}
 dev.get_methods()
-['get_memory_free',
- 'get_bool',
- 'get_field_value',
- 'get_field_element_value',
- 'set_field_element_value',
+['get_count_array',
  'get_long_array_fixed',
- 'set_long_array_variable',
- 'get_doubled',
- 'set_long_array_fixed',
- 'set_fields_to_defaults',
+ 'set_all_field_element_values',
+ 'get_direction',
  'get_field_default_values',
+ 'get_count',
+ 'set_field_value',
+ 'get_string_some',
+ 'get_memory_free',
+ 'set_field_element_value',
+ 'set_long_array_variable',
+ 'set_fields_to_defaults',
+ 'increment_mode',
+ 'get_direction_array',
+ 'set_long_array_fixed',
  'set_long_array_parameter',
  'get_string_all',
  'get_long_array_variable',
- 'set_field_value',
- 'set_all_field_element_values',
- 'get_field_values',
- 'get_string_some',
- 'set_field_to_default']
+ 'check_mode',
+ 'get_field_value',
+ 'get_field_element_value',
+ 'get_doubled',
+ 'get_bool',
+ 'set_field_to_default',
+ 'get_field_values']
 dev.get_field_values()
 {'bool': False,
  'bool_array': [False, True],
  'double': 3.14159,
  'double_array': [-1.1, 2.2, 3.3],
  'long_array': [5, 4, 3, 2],
+ 'mode': 'RISING',
+ 'odd': 5,
+ 'odd_array': [1, 5],
  'serial_number': 0,
  'string': 'abcdef'}
 dev.get_field_value('long_array')
@@ -402,12 +482,26 @@ dev.set_field_value('string','asdfghjkl')
 dev.get_field_element_value('string',3)
 'f'
 dev.set_field_element_value('string',3,'X')
+dev.set_field_value('odd',2)
+IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in subset: [1,3,5,7,9], code: -32602
+dev.set_field_value('odd',7)
+dev.set_field_value('mode','test')
+IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE], code: -32602
+dev.set_field_value('mode','CHANGE')
+dev.set_field_element_value('mode',3,'t')
+IOError: (from server) message: Invalid params, data: Cannot set element in string field with subset., code: -32602
+dev.set_all_field_element_values('odd_array',2)
+IOError: (from server) message: Invalid params, data: Array parameter element value not valid. Value not in subset: [1,3,5,7,9], code: -32602
+dev.set_all_field_element_values('odd_array',9)
 dev.get_field_values()
 {'bool': False,
  'bool_array': [False, False],
  'double': 3.14159,
  'double_array': [-1.1, 2.2, 3.3],
  'long_array': [5, 4, 3, 2],
+ 'mode': 'CHANGE',
+ 'odd': 7,
+ 'odd_array': [9, 9],
  'serial_number': 0,
  'string': 'asdXghjkl'}
 dev.set_fields_to_defaults()
@@ -431,6 +525,16 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
+device_info = dev.getDeviceInfo()
+device_info =
+  device_name: 'modular_server'
+  model_number: 0
+  serial_number: 0
+  firmware_name: 'field_tester'
+  firmware_version: [1x1 struct]
+  hardware_name: 'mega'
+  hardware_version: [1x1 struct]
+  processor: 'ATmega2560'
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
@@ -452,6 +556,12 @@ setLongArrayVariable
 setLongArrayParameter
 getStringAll
 getStringSome
+getCount
+getCountArray
+getDirection
+getDirectionArray
+checkMode
+incrementMode
 dev.getFieldValues()
 ans =
   serial_number: 0
@@ -461,13 +571,16 @@ ans =
   double_array: [-1.1000 2.2000 3.3000]
   bool_array: [0 1]
   string: 'abcdef'
+  odd: 5
+  mode: 'RISING'
+  odd_array: [1 5]
 dev.getFieldValue('long_array')
 ans =
   5   4   3   2
 dev.getFieldElementValue('double_array',1)
 ans =
   2.2000
-dev.setFieldValue('bool_array',[false,false]);
+dev.setFieldValue('bool_array',[0,0]);
 dev.setFieldValue('string','asdfghjkl');
 dev.getFieldElementValue('string',3)
 ans =
@@ -482,6 +595,9 @@ ans =
   double_array: [-1.1000 2.2000 3.3000]
   bool_array: [0 0]
   string: 'asdXghjkl'
+  odd: 5
+  mode: 'RISING'
+  odd_array: [1 5]
 dev.setFieldsToDefaults();
 dev.close()
 clear dev

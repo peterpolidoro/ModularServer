@@ -156,7 +156,6 @@ extern ConstantString array_length_constant_string;
 extern ConstantString array_open_constant_string;
 extern ConstantString array_close_constant_string;
 extern ConstantString array_separator_constant_string;
-extern ConstantString quote_constant_string;
 extern ConstantString subset_constant_string;
 extern ConstantString array_element_subset_constant_string;
 extern ConstantString processor_constant_string;

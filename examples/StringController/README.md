@@ -33,15 +33,21 @@ Example Response:
   "id":"?",
   "result":{
     "device_info":{
-      "name":"string_controller",
-      "model_number":1002,
-      "board":"mega",
+      "device_name":"modular_server",
+      "model_number":0,
       "serial_number":0,
+      "firmware_name":"string_controller",
       "firmware_version":{
         "major":0,
         "minor":1,
         "patch":0
-      }
+      },
+      "hardware_name":"mega",
+      "hardware_version":{
+        "major":0,
+        "minor":0
+      },
+      "processor":"ATmega2560"
     },
     "methods":[
       "getMemoryFree",
@@ -304,8 +310,14 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 device_info = dev.get_device_info()
-dev.convert_to_json(device_info)
-'{"serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0},"model_number":1002,"name":"string_controller","board":"mega"}'
+{'device_name': 'modular_server',
+ 'firmware_name': 'string_controller',
+ 'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
+ 'hardware_name': 'mega',
+ 'hardware_version': {'major': 0, 'minor': 0},
+ 'model_number': 0,
+ 'processor': 'ATmega2560',
+ 'serial_number': 0}
 dev.get_methods()
 ['starts_with',
  'get_memory_free',
@@ -381,9 +393,15 @@ serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo();
-json = dev.convertToJson(device_info)
-json =
-  {"name":"string_controller","model_number":1002,"board": "mega","serial_number":0,"firmware_version":{"major":0,"minor":1,"patch":0}}
+device_info =
+  device_name: 'modular_server'
+  model_number: 0
+  serial_number: 0
+  firmware_name: 'string_controller'
+  firmware_version: [1x1 struct]
+  hardware_name: 'mega'
+  hardware_version: [1x1 struct]
+  processor: 'ATmega2560'
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------

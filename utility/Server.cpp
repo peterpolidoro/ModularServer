@@ -2000,13 +2000,9 @@ void Server::subsetToString(char * destination, Vector<const constants::SubsetMe
       }
       case JsonStream::STRING_TYPE:
       {
-        char quote_str[constants::quote_constant_string.length() + 1];
-        constants::quote_constant_string.copy(quote_str);
-        strcat(value_str,quote_str);
         char cs_str[subset[i].cs_ptr->length() + 1];
         subset[i].cs_ptr->copy(cs_str);
         strncat(value_str,cs_str,constants::STRING_LENGTH_SUBSET_ELEMENT - 2);
-        strcat(value_str,quote_str);
         break;
       }
       case JsonStream::OBJECT_TYPE:
