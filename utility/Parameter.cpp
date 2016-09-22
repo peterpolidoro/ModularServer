@@ -158,7 +158,8 @@ void Parameter::removeSubset()
 
 bool Parameter::compareName(const char * name_to_compare)
 {
-  char name[constants::STRING_LENGTH_PARAMETER_NAME] = {0};
+  char name[name_ptr_->length()+1] = {0};
+  name[0] = '\0';
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
 }

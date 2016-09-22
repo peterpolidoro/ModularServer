@@ -1193,9 +1193,9 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
     char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
     constants::less_than_equal_constant_string.copy(less_than_equal_str);
     strcat(error_str,less_than_equal_str);
-    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-    parameter_name[0] = '\0';
     const ConstantString & name = parameter.getName();
+    char parameter_name[name.length()+1];
+    parameter_name[0] = '\0';
     name.copy(parameter_name);
     strcat(error_str,parameter_name);
     char array_length_str[constants::array_length_constant_string.length()+1];
@@ -1213,9 +1213,9 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
     writeKeyToResponse(constants::error_constant_string);
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-    parameter_name[0] = '\0';
     const ConstantString & name = parameter.getName();
+    char parameter_name[name.length()+1];
+    parameter_name[0] = '\0';
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = '\0';
@@ -1233,9 +1233,9 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
     writeKeyToResponse(constants::error_constant_string);
     beginResponseObject();
     writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-    parameter_name[0] = '\0';
     const ConstantString & name = parameter.getName();
+    char parameter_name[name.length()+1];
+    parameter_name[0] = '\0';
     name.copy(parameter_name);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = '\0';
@@ -1921,9 +1921,9 @@ void Server::writeParameterNotInRangeErrorToResponse(Parameter & parameter, char
   char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
   constants::less_than_equal_constant_string.copy(less_than_equal_str);
   strcat(error_str,less_than_equal_str);
-  char parameter_name[constants::STRING_LENGTH_PARAMETER_NAME];
-  parameter_name[0] = '\0';
   const ConstantString & name = parameter.getName();
+  char parameter_name[name.length()+1];
+  parameter_name[0] = '\0';
   name.copy(parameter_name);
   strcat(error_str,parameter_name);
   if (type == JsonStream::ARRAY_TYPE)
