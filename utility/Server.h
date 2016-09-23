@@ -7,16 +7,7 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_DEVICE_SERVER_H_
 #define _MODULAR_DEVICE_SERVER_H_
-#ifdef ARDUINO
-#if ARDUINO >= 100
-#include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
-#else
-#include <cstddef>
-#include <cstring>
-#endif
+#include "Arduino.h"
 #include "Streaming.h"
 #include "ArduinoJson.h"
 #include "JsonSanitizer.h"
@@ -26,6 +17,7 @@
 #include "ConstantVariable.h"
 #include "SavedVariable.h"
 #include "JsonStream.h"
+#include "Functor.h"
 
 #include "Field.h"
 #include "Parameter.h"

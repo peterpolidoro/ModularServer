@@ -11,6 +11,8 @@
 #include "Array.h"
 #include "ConstantVariable.h"
 #include "JsonStream.h"
+#include "Functor.h"
+
 #include "Parameter.h"
 #include "Constants.h"
 
@@ -19,16 +21,13 @@ namespace ModularDevice
 {
 class Server;
 
-typedef void (*Callback)(void);
-typedef void (Server::*InternalCallback)(void);
-
 class Method
 {
 public:
   Method();
   Method(const ConstantString & name);
   void setName(const ConstantString & name);
-  void attachCallback(Callback callback);
+  void attachCallback(const Functor0 & callback);
   void addParameter(Parameter & parameter);
   void setReturnTypeLong();
   void setReturnTypeDouble();
@@ -41,7 +40,7 @@ public:
   JsonStream::JsonTypes getReturnType();
 protected:
   const ConstantString * name_ptr_;
-  Callback callback_;
+  Functor0 callback_;
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
   int findParameterIndex(const ConstantString & parameter_name);
   int parameter_count_;
@@ -52,20 +51,6 @@ protected:
   const ConstantString &  getName();
   void callback();
   friend class Server;
-};
-
-class InternalMethod : public Method
-{
-public:
-  InternalMethod();
-  InternalMethod(const ConstantString & name);
-  void attachCallback(InternalCallback callback);
-  void callback(Server * server);
-  void setPrivacy(bool is_private);
-  bool isPrivate();
-private:
-  InternalCallback internal_callback_;
-  bool private_;
 };
 }
 #endif

@@ -34,7 +34,7 @@ void Method::setName(const ConstantString & name)
   name_ptr_ = &name;
 }
 
-void Method::attachCallback(Callback callback)
+void Method::attachCallback(const Functor0 & callback)
 {
   callback_ = callback;
 }
@@ -133,43 +133,5 @@ void Method::setReturnTypeValue()
 JsonStream::JsonTypes Method::getReturnType()
 {
   return return_type_;
-}
-
-// InternalMethod
-InternalMethod::InternalMethod()
-{
-  setup(constants::empty_constant_string);
-  private_ = false;
-  internal_callback_ = NULL;
-}
-
-InternalMethod::InternalMethod(const ConstantString & name)
-{
-  setup(name);
-  private_ = false;
-  internal_callback_ = NULL;
-}
-
-void InternalMethod::attachCallback(InternalCallback callback)
-{
-  internal_callback_ = callback;
-}
-
-void InternalMethod::callback(Server * server)
-{
-  if (internal_callback_ != NULL)
-  {
-    (server->*internal_callback_)();
-  }
-}
-
-void InternalMethod::setPrivacy(bool is_private)
-{
-  private_ = is_private;
-}
-
-bool InternalMethod::isPrivate()
-{
-  return private_;
 }
 }
