@@ -88,7 +88,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5898
+  "result":5901
 }
 ```
 
@@ -417,7 +417,7 @@ dev.get_methods()
  'set_field_to_default',
  'get_field_values']
 dev.get_memory_free()
-5898
+5901
 dev.get_field_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_field_value('?')
@@ -484,7 +484,7 @@ setFieldElementValue
 setAllFieldElementValues
 dev.getMemoryFree()
 ans =
-  5898
+  5901
 dev.getFieldValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.getFieldValue('?')

@@ -52,7 +52,8 @@ void Method::addParameter(Parameter & parameter)
 
 bool Method::compareName(const char * name_to_compare)
 {
-  char name[constants::STRING_LENGTH_METHOD_NAME] = {0};
+  char name[name_ptr_->length()+1];
+  name[0] = '\0';
   name_ptr_->copy(name);
   return String(name).equalsIgnoreCase(name_to_compare);
 }

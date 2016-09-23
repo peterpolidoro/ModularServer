@@ -861,9 +861,9 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
   const ConstantString & parameter_name = parameter.getName();
   writeToResponse(constants::name_constant_string,parameter_name);
 
-  char parameter_units[constants::STRING_LENGTH_PARAMETER_UNITS];
-  parameter_units[0] = '\0';
   const ConstantString & units = parameter.getUnits();
+  char parameter_units[units.length()+1];
+  parameter_units[0] = '\0';
   units.copy(parameter_units);
   char empty_str[] = {0};
   if (strcmp(parameter_units,empty_str) != 0)
