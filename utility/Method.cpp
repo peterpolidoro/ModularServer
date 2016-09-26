@@ -24,8 +24,6 @@ Method::Method(const ConstantString & name)
 void Method::setup(const ConstantString & name)
 {
   setName(name);
-  callback_ = NULL;
-  parameter_count_ = 0;
   return_type_ = JsonStream::NULL_TYPE;
 }
 
@@ -46,7 +44,6 @@ void Method::addParameter(Parameter & parameter)
   if (parameter_index < 0)
   {
     parameter_ptrs_.push_back(&parameter);
-    parameter_count_++;
   }
 }
 
@@ -68,11 +65,16 @@ const ConstantString & Method::getName()
   return *name_ptr_;
 }
 
+size_t Method::getParameterCount()
+{
+  return parameter_ptrs_.size();
+}
+
 void Method::callback()
 {
-  if (callback_ != NULL)
+  if (callback_)
   {
-    (*callback_)();
+    callback_();
   }
 }
 

@@ -12,7 +12,6 @@ namespace ModularDevice
 {
 Field::Field()
 {
-  setCallbacksToNull();
 }
 
 template <>
@@ -22,7 +21,6 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeLong();
-  setCallbacksToNull();
 }
 
 template <>
@@ -32,7 +30,6 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeDouble();
-  setCallbacksToNull();
 }
 
 template <>
@@ -42,7 +39,6 @@ parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeBool();
-  setCallbacksToNull();
 }
 
 template <>
@@ -53,7 +49,6 @@ Field::Field<const ConstantString *>(const ConstantString & name,
 {
   parameter_.setTypeString();
   string_saved_as_char_array_ = false;
-  setCallbacksToNull();
 }
 
 void Field::setUnits(const ConstantString & name)
@@ -71,22 +66,22 @@ void Field::setRange(const double min, const double max)
   parameter_.setRange(min,max);
 }
 
-void Field::attachPreSetValueCallback(SetValueCallback callback)
+void Field::attachPreSetValueCallback(const Functor0 & callback)
 {
   pre_set_value_callback_ = callback;
 }
 
-void Field::attachPreSetElementValueCallback(SetElementValueCallback callback)
+void Field::attachPreSetElementValueCallback(const Functor1<const size_t> & callback)
 {
   pre_set_element_value_callback_ = callback;
 }
 
-void Field::attachPostSetValueCallback(SetValueCallback callback)
+void Field::attachPostSetValueCallback(const Functor0 & callback)
 {
   post_set_value_callback_ = callback;
 }
 
-void Field::attachPostSetElementValueCallback(SetElementValueCallback callback)
+void Field::attachPostSetElementValueCallback(const Functor1<const size_t> & callback)
 {
   post_set_element_value_callback_ = callback;
 }
@@ -532,43 +527,35 @@ Vector<const constants::SubsetMemberType> & Field::getSubset()
   return parameter_.getSubset();
 }
 
-void Field::setCallbacksToNull()
-{
-  pre_set_value_callback_ = NULL;
-  pre_set_element_value_callback_ = NULL;
-  post_set_value_callback_ = NULL;
-  post_set_element_value_callback_ = NULL;
-}
-
 void Field::preSetValueCallback()
 {
-  if (pre_set_value_callback_ != NULL)
+  if (pre_set_value_callback_)
   {
-    (*pre_set_value_callback_)();
+    pre_set_value_callback_();
   }
 }
 
 void Field::preSetElementValueCallback(const size_t element_index)
 {
-  if (pre_set_element_value_callback_ != NULL)
+  if (pre_set_element_value_callback_)
   {
-    (*pre_set_element_value_callback_)(element_index);
+    pre_set_element_value_callback_(element_index);
   }
 }
 
 void Field::postSetValueCallback()
 {
-  if (post_set_value_callback_ != NULL)
+  if (post_set_value_callback_)
   {
-    (*post_set_value_callback_)();
+    post_set_value_callback_();
   }
 }
 
 void Field::postSetElementValueCallback(const size_t element_index)
 {
-  if (post_set_element_value_callback_ != NULL)
+  if (post_set_element_value_callback_)
   {
-    (*post_set_element_value_callback_)(element_index);
+    post_set_element_value_callback_(element_index);
   }
 }
 

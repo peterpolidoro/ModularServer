@@ -35,8 +35,8 @@ void Controller::setup()
   ModularDevice::Field & double_field = modular_server_.createField(constants::double_field_name,constants::double_default);
 
   ModularDevice::Field & bool_field = modular_server_.createField(constants::bool_field_name,constants::bool_default);
-  bool_field.attachPreSetValueCallback(callbacks::preSetFieldValueCallback);
-  bool_field.attachPostSetValueCallback(callbacks::postSetFieldValueCallback);
+  bool_field.attachPreSetValueCallback(makeFunctor((Functor0 *)0,*this,&Controller::preSetFieldValueCallback));
+  bool_field.attachPostSetValueCallback(makeFunctor((Functor0 *)0,*this,&Controller::postSetFieldValueCallback));
 
   ModularDevice::Field & long_array_field = modular_server_.createField(constants::long_array_field_name,constants::long_array_default);
   long_array_field.setRange(constants::long_array_element_min,constants::long_array_element_max);
@@ -45,16 +45,16 @@ void Controller::setup()
   double_array_field.setRange(constants::double_array_element_min,constants::double_array_element_max);
 
   ModularDevice::Field & bool_array_field = modular_server_.createField(constants::bool_array_field_name,constants::bool_array_default);
-  bool_array_field.attachPreSetValueCallback(callbacks::preSetFieldValueCallback);
-  bool_array_field.attachPostSetValueCallback(callbacks::postSetFieldValueCallback);
-  bool_array_field.attachPreSetElementValueCallback(callbacks::preSetFieldElementValueCallback);
-  bool_array_field.attachPostSetElementValueCallback(callbacks::postSetFieldElementValueCallback);
+  bool_array_field.attachPreSetValueCallback(makeFunctor((Functor0 *)0,*this,&Controller::preSetFieldValueCallback));
+  bool_array_field.attachPostSetValueCallback(makeFunctor((Functor0 *)0,*this,&Controller::postSetFieldValueCallback));
+  bool_array_field.attachPreSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&Controller::preSetFieldElementValueCallback));
+  bool_array_field.attachPostSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&Controller::postSetFieldElementValueCallback));
 
   ModularDevice::Field & string_field = modular_server_.createField(constants::string_field_name,constants::string_default);
-  string_field.attachPreSetValueCallback(callbacks::preSetFieldValueCallback);
-  string_field.attachPostSetValueCallback(callbacks::postSetFieldValueCallback);
-  string_field.attachPreSetElementValueCallback(callbacks::preSetFieldElementValueCallback);
-  string_field.attachPostSetElementValueCallback(callbacks::postSetFieldElementValueCallback);
+  string_field.attachPreSetValueCallback(makeFunctor((Functor0 *)0,*this,&Controller::preSetFieldValueCallback));
+  string_field.attachPostSetValueCallback(makeFunctor((Functor0 *)0,*this,&Controller::postSetFieldValueCallback));
+  string_field.attachPreSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&Controller::preSetFieldElementValueCallback));
+  string_field.attachPostSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&Controller::postSetFieldElementValueCallback));
 
   ModularDevice::Field & odd_field = modular_server_.createField(constants::odd_field_name,constants::odd_default);
   odd_field.setSubset(constants::odd_subset);
@@ -94,69 +94,69 @@ void Controller::setup()
 
   // Methods
   ModularDevice::Method & get_doubled_method = modular_server_.createMethod(constants::get_doubled_method_name);
-  get_doubled_method.attachCallback(callbacks::getDoubledCallback);
+  get_doubled_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getDoubledCallback));
   get_doubled_method.setReturnTypeDouble();
 
   ModularDevice::Method & get_bool_method = modular_server_.createMethod(constants::get_bool_method_name);
-  get_bool_method.attachCallback(callbacks::getBoolCallback);
+  get_bool_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getBoolCallback));
   get_bool_method.setReturnTypeBool();
 
   ModularDevice::Method & get_long_array_fixed_method = modular_server_.createMethod(constants::get_long_array_fixed_method_name);
-  get_long_array_fixed_method.attachCallback(callbacks::getLongArrayFixedCallback);
+  get_long_array_fixed_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getLongArrayFixedCallback));
   get_long_array_fixed_method.setReturnTypeArray();
 
   ModularDevice::Method & get_long_array_variable_method = modular_server_.createMethod(constants::get_long_array_variable_method_name);
-  get_long_array_variable_method.attachCallback(callbacks::getLongArrayVariableCallback);
+  get_long_array_variable_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getLongArrayVariableCallback));
   get_long_array_variable_method.setReturnTypeArray();
 
   ModularDevice::Method & set_long_array_fixed_method = modular_server_.createMethod(constants::set_long_array_fixed_method_name);
-  set_long_array_fixed_method.attachCallback(callbacks::setLongArrayFixedCallback);
+  set_long_array_fixed_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setLongArrayFixedCallback));
   set_long_array_fixed_method.setReturnTypeBool();
 
   ModularDevice::Method & set_long_array_variable_method = modular_server_.createMethod(constants::set_long_array_variable_method_name);
-  set_long_array_variable_method.attachCallback(callbacks::setLongArrayVariableCallback);
+  set_long_array_variable_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setLongArrayVariableCallback));
   set_long_array_variable_method.setReturnTypeBool();
 
   ModularDevice::Method & set_long_array_parameter_method = modular_server_.createMethod(constants::set_long_array_parameter_method_name);
-  set_long_array_parameter_method.attachCallback(callbacks::setLongArrayParameterCallback);
+  set_long_array_parameter_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setLongArrayParameterCallback));
   set_long_array_parameter_method.addParameter(long_array_parameter);
   set_long_array_parameter_method.setReturnTypeBool();
 
   ModularDevice::Method & get_string_all_method = modular_server_.createMethod(constants::get_string_all_method_name);
-  get_string_all_method.attachCallback(callbacks::getStringAllCallback);
+  get_string_all_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getStringAllCallback));
   get_string_all_method.setReturnTypeString();
 
   ModularDevice::Method & get_string_some_method = modular_server_.createMethod(constants::get_string_some_method_name);
-  get_string_some_method.attachCallback(callbacks::getStringSomeCallback);
+  get_string_some_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getStringSomeCallback));
   get_string_some_method.addParameter(length_parameter);
   get_string_some_method.setReturnTypeString();
 
   ModularDevice::Method & get_count_method = modular_server_.createMethod(constants::get_count_method_name);
-  get_count_method.attachCallback(callbacks::getCountCallback);
+  get_count_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getCountCallback));
   get_count_method.addParameter(count_parameter);
   get_count_method.setReturnTypeString();
 
   ModularDevice::Method & get_count_array_method = modular_server_.createMethod(constants::get_count_array_method_name);
-  get_count_array_method.attachCallback(callbacks::getCountArrayCallback);
+  get_count_array_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getCountArrayCallback));
   get_count_array_method.addParameter(count_array_parameter);
   get_count_array_method.setReturnTypeArray();
 
   ModularDevice::Method & get_direction_method = modular_server_.createMethod(constants::get_direction_method_name);
-  get_direction_method.attachCallback(callbacks::getDirectionCallback);
+  get_direction_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getDirectionCallback));
   get_direction_method.addParameter(direction_parameter);
   get_direction_method.setReturnTypeString();
 
   ModularDevice::Method & get_direction_array_method = modular_server_.createMethod(constants::get_direction_array_method_name);
-  get_direction_array_method.attachCallback(callbacks::getDirectionArrayCallback);
+  get_direction_array_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getDirectionArrayCallback));
   get_direction_array_method.addParameter(direction_array_parameter);
   get_direction_array_method.setReturnTypeArray();
 
   ModularDevice::Method & check_mode_method = modular_server_.createMethod(constants::check_mode_method_name);
-  check_mode_method.attachCallback(callbacks::checkModeCallback);
+  check_mode_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::checkModeCallback));
   check_mode_method.setReturnTypeString();
 
   ModularDevice::Method & increment_mode_method = modular_server_.createMethod(constants::increment_mode_method_name);
-  increment_mode_method.attachCallback(callbacks::incrementModeCallback);
+  increment_mode_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::incrementModeCallback));
   increment_mode_method.setReturnTypeString();
 
   // Setup Streams
@@ -171,9 +171,244 @@ void Controller::update()
   modular_server_.handleServerRequests();
 }
 
-ModularDevice::ModularServer & Controller::getModularServer()
+// Callbacks must be non-blocking (avoid 'delay')
+//
+// modular_server_.getParameterValue must be cast to either:
+// const char *
+// long
+// double
+// bool
+// ArduinoJson::JsonArray &
+// ArduinoJson::JsonObject &
+//
+// For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
+//
+// modular_server_.getFieldValue type must match the field default type
+// modular_server_.setFieldValue type must match the field default type
+// modular_server_.getFieldElementValue type must match the field array element default type
+// modular_server_.setFieldElementValue type must match the field array element default type
+
+void Controller::getDoubledCallback()
 {
-  return modular_server_;
+  double value;
+  modular_server_.getFieldValue(constants::double_field_name,value);
+  value *= 2;
+  modular_server_.writeResultToResponse(value);
 }
 
-Controller controller;
+void Controller::getBoolCallback()
+{
+  bool value;
+  modular_server_.getFieldValue(constants::bool_field_name,value);
+  modular_server_.writeResultToResponse(value);
+}
+
+void Controller::getLongArrayFixedCallback()
+{
+  long long_array[constants::LONG_ARRAY_LENGTH];
+  modular_server_.getFieldValue(constants::long_array_field_name,long_array);
+  modular_server_.writeResultToResponse(long_array);
+}
+
+void Controller::getLongArrayVariableCallback()
+{
+  size_t array_length = modular_server_.getFieldArrayLength(constants::long_array_field_name);
+  long long_array[array_length];
+  modular_server_.getFieldValue(constants::long_array_field_name,long_array,array_length);
+  modular_server_.writeResultToResponse(long_array,array_length);
+}
+
+void Controller::setLongArrayFixedCallback()
+{
+  long long_array[constants::LONG_ARRAY_LENGTH];
+  long_array[0] = 1;
+  long_array[1] = 2;
+  long_array[2] = 102;
+  long_array[3] = 103;
+  bool success = modular_server_.setFieldValue(constants::long_array_field_name,long_array);
+  modular_server_.writeResultToResponse(success);
+}
+
+void Controller::setLongArrayVariableCallback()
+{
+  size_t array_length = modular_server_.getFieldArrayLength(constants::long_array_field_name);
+  long long_array[array_length-1];
+  long_array[0] = -1;
+  long_array[1] = -2;
+  long_array[2] = 9;
+  bool success = modular_server_.setFieldValue(constants::long_array_field_name,long_array,array_length-1);
+  modular_server_.writeResultToResponse(success);
+}
+
+void Controller::setLongArrayParameterCallback()
+{
+  ArduinoJson::JsonArray & long_array = modular_server_.getParameterValue(constants::long_array_parameter_name);
+  bool success = modular_server_.setFieldValue(constants::long_array_field_name,long_array);
+  modular_server_.writeResultToResponse(success);
+}
+
+void Controller::getStringAllCallback()
+{
+  size_t array_length = modular_server_.getFieldArrayLength(constants::string_field_name);
+  char string[array_length];
+  modular_server_.getFieldValue(constants::string_field_name,string,array_length);
+  modular_server_.writeResultToResponse(string);
+}
+
+void Controller::getStringSomeCallback()
+{
+  long length = modular_server_.getParameterValue(constants::length_parameter_name);
+  size_t array_length = length + 1;
+  char string[array_length];
+  modular_server_.getFieldValue(constants::string_field_name,string,array_length);
+  modular_server_.writeResultToResponse(string);
+}
+
+void Controller::getCountCallback()
+{
+  long count = modular_server_.getParameterValue(constants::count_parameter_name);
+  switch (count)
+  {
+    case 10:
+    {
+      modular_server_.writeResultToResponse("ten");
+      break;
+    }
+    case 20:
+    {
+      modular_server_.writeResultToResponse("twenty");
+      break;
+    }
+    case 30:
+    {
+      modular_server_.writeResultToResponse("thirty");
+      break;
+    }
+    case 40:
+    {
+      modular_server_.writeResultToResponse("forty");
+      break;
+    }
+    case 50:
+    {
+      modular_server_.writeResultToResponse("fifty");
+      break;
+    }
+    case 60:
+    {
+      modular_server_.writeResultToResponse("sixty");
+      break;
+    }
+    case 70:
+    {
+      modular_server_.writeResultToResponse("seventy");
+      break;
+    }
+    default:
+    {
+      modular_server_.writeResultToResponse("???");
+      break;
+    }
+  }
+}
+
+void Controller::getCountArrayCallback()
+{
+  ArduinoJson::JsonArray & count_array = modular_server_.getParameterValue(constants::count_array_parameter_name);
+  modular_server_.writeResultToResponse(&count_array);
+}
+
+void Controller::getDirectionCallback()
+{
+  const char * direction = modular_server_.getParameterValue(constants::direction_parameter_name);
+  modular_server_.writeResultToResponse(direction);
+}
+
+void Controller::getDirectionArrayCallback()
+{
+  ArduinoJson::JsonArray & direction_array = modular_server_.getParameterValue(constants::direction_array_parameter_name);
+  modular_server_.writeResultToResponse(&direction_array);
+}
+
+void Controller::checkModeCallback()
+{
+  const ConstantString * mode_ptr;
+  modular_server_.getFieldValue(constants::mode_field_name,mode_ptr);
+  if (mode_ptr == &constants::mode_rising)
+  {
+    modular_server_.writeResultToResponse("Mode set to rising!");
+  }
+  else if (mode_ptr == &constants::mode_falling)
+  {
+    modular_server_.writeResultToResponse("Mode set to falling!");
+  }
+  else if (mode_ptr == &constants::mode_change)
+  {
+    modular_server_.writeResultToResponse("Mode set to change!");
+  }
+  else
+  {
+    modular_server_.writeResultToResponse("???");
+  }
+}
+
+void Controller::incrementModeCallback()
+{
+  const ConstantString * mode_ptr;
+  modular_server_.getFieldValue(constants::mode_field_name,mode_ptr);
+  if (mode_ptr == &constants::mode_rising)
+  {
+    modular_server_.setFieldValue(constants::mode_field_name,&constants::mode_falling);
+    modular_server_.writeResultToResponse("Mode was set to rising, now set to falling!");
+  }
+  else if (mode_ptr == &constants::mode_falling)
+  {
+    modular_server_.setFieldValue(constants::mode_field_name,&constants::mode_change);
+    modular_server_.writeResultToResponse("Mode was set to falling, now set to change!");
+  }
+  else if (mode_ptr == &constants::mode_change)
+  {
+    modular_server_.setFieldValue(constants::mode_field_name,&constants::mode_rising);
+    modular_server_.writeResultToResponse("Mode was set to change, now set to rising!");
+  }
+  else
+  {
+    modular_server_.writeResultToResponse("???");
+  }
+}
+
+void Controller::preSetFieldValueCallback()
+{
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldValueCallback
+
+  // Serial << " setting field value! ";
+}
+
+void Controller::postSetFieldValueCallback()
+{
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldValueCallback
+
+  // Serial << " set field value! ";
+}
+
+void Controller::preSetFieldElementValueCallback(const size_t element_index)
+{
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldElementValueCallback
+
+  // Serial << " setting field element value at index " << element_index << "! ";
+}
+
+void Controller::postSetFieldElementValueCallback(const size_t element_index)
+{
+  // Writing to Serial like this makes response invalid!
+  // Do not do this in a real device!
+  // Uncomment next line just to demonstrate setFieldElementValueCallback
+
+  // Serial << " set field element value at index " << element_index << "! ";
+}

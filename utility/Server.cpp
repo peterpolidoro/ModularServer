@@ -54,65 +54,70 @@ void Server::setup()
   field_element_index_parameter.setTypeLong();
 
   // Methods
-  InternalMethod & get_device_info_method = createInternalMethod(constants::get_device_info_method_name,true);
-  get_device_info_method.attachCallback(&Server::getDeviceInfoCallback);
+  Method & get_device_info_method = createInternalMethod(constants::get_device_info_method_name);
+  get_device_info_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoCallback));
+  private_method_index_ = 0;
 
-  InternalMethod & get_method_ids_method = createInternalMethod(constants::get_method_ids_method_name,true);
-  get_method_ids_method.attachCallback(&Server::getMethodIdsCallback);
+  Method & get_method_ids_method = createInternalMethod(constants::get_method_ids_method_name);
+  get_method_ids_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsCallback));
+  private_method_index_++;
 
-  InternalMethod & get_parameters_method = createInternalMethod(constants::get_parameters_method_name,true);
-  get_parameters_method.attachCallback(&Server::getParametersCallback);
+  Method & get_parameters_method = createInternalMethod(constants::get_parameters_method_name);
+  get_parameters_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getParametersCallback));
+  private_method_index_++;
 
-  InternalMethod & help_method = createInternalMethod(constants::help_method_name,true);
-  help_method.attachCallback(&Server::helpCallback);
+  Method & help_method = createInternalMethod(constants::help_method_name);
+  help_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::helpCallback));
+  private_method_index_++;
 
-  InternalMethod & verbose_help_method = createInternalMethod(constants::verbose_help_method_name,true);
-  verbose_help_method.attachCallback(&Server::verboseHelpCallback);
+  Method & verbose_help_method = createInternalMethod(constants::verbose_help_method_name);
+  verbose_help_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpCallback));
+  private_method_index_++;
 
 #ifdef __AVR__
-  InternalMethod & get_memory_free_method = createInternalMethod(constants::get_memory_free_method_name);
-  get_memory_free_method.attachCallback(&Server::getMemoryFreeCallback);
+  Method & get_memory_free_method = createInternalMethod(constants::get_memory_free_method_name);
+  get_memory_free_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeCallback));
   get_memory_free_method.setReturnTypeLong();
 #endif
 
-  InternalMethod & get_field_default_values_method = createInternalMethod(constants::get_field_default_values_method_name);
-  get_field_default_values_method.attachCallback(&Server::getFieldDefaultValuesCallback);
+  Method & get_field_default_values_method = createInternalMethod(constants::get_field_default_values_method_name);
+  get_field_default_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesCallback));
 
-  InternalMethod & set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
-  set_fields_to_defaults_method.attachCallback(&Server::setFieldsToDefaultsCallback);
+  Method & set_fields_to_defaults_method = createInternalMethod(constants::set_fields_to_defaults_method_name);
+  set_fields_to_defaults_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldsToDefaultsCallback));
 
-  InternalMethod & set_field_to_default_method = createInternalMethod(constants::set_field_to_default_method_name);
-  set_field_to_default_method.attachCallback(&Server::setFieldToDefaultCallback);
+  Method & set_field_to_default_method = createInternalMethod(constants::set_field_to_default_method_name);
+  set_field_to_default_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldToDefaultCallback));
   set_field_to_default_method.addParameter(field_name_parameter);
 
-  InternalMethod & get_field_values_method = createInternalMethod(constants::get_field_values_method_name);
-  get_field_values_method.attachCallback(&Server::getFieldValuesCallback);
+  Method & get_field_values_method = createInternalMethod(constants::get_field_values_method_name);
+  get_field_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldValuesCallback));
   get_field_values_method.setReturnTypeObject();
 
-  InternalMethod & get_field_value_method = createInternalMethod(constants::get_field_value_method_name);
-  get_field_value_method.attachCallback(&Server::getFieldValueCallback);
+  Method & get_field_value_method = createInternalMethod(constants::get_field_value_method_name);
+  get_field_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldValueCallback));
   get_field_value_method.addParameter(field_name_parameter);
   get_field_value_method.setReturnTypeValue();
 
-  InternalMethod & get_field_element_value_method = createInternalMethod(constants::get_field_element_value_method_name);
-  get_field_element_value_method.attachCallback(&Server::getFieldElementValueCallback);
+  Method & get_field_element_value_method = createInternalMethod(constants::get_field_element_value_method_name);
+  get_field_element_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldElementValueCallback));
   get_field_element_value_method.addParameter(field_name_parameter);
   get_field_element_value_method.addParameter(field_element_index_parameter);
   get_field_element_value_method.setReturnTypeValue();
 
-  InternalMethod & set_field_value_method = createInternalMethod(constants::set_field_value_method_name);
-  set_field_value_method.attachCallback(&Server::setFieldValueCallback);
+  Method & set_field_value_method = createInternalMethod(constants::set_field_value_method_name);
+  set_field_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldValueCallback));
   set_field_value_method.addParameter(field_name_parameter);
   set_field_value_method.addParameter(field_value_parameter);
 
-  InternalMethod & set_field_element_value_method = createInternalMethod(constants::set_field_element_value_method_name);
-  set_field_element_value_method.attachCallback(&Server::setFieldElementValueCallback);
+  Method & set_field_element_value_method = createInternalMethod(constants::set_field_element_value_method_name);
+  set_field_element_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldElementValueCallback));
   set_field_element_value_method.addParameter(field_name_parameter);
   set_field_element_value_method.addParameter(field_element_index_parameter);
   set_field_element_value_method.addParameter(field_value_parameter);
 
-  InternalMethod & set_all_field_element_values_method = createInternalMethod(constants::set_all_field_element_values_method_name);
-  set_all_field_element_values_method.attachCallback(&Server::setAllFieldElementValuesCallback);
+  Method & set_all_field_element_values_method = createInternalMethod(constants::set_all_field_element_values_method_name);
+  set_all_field_element_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setAllFieldElementValuesCallback));
   set_all_field_element_values_method.addParameter(field_name_parameter);
   set_all_field_element_values_method.addParameter(field_value_parameter);
 
@@ -169,19 +174,17 @@ void Server::setHardwareVersion(const long hardware_major, const long hardware_m
   hardware_minor_ = hardware_minor;
 }
 
-InternalMethod & Server::createInternalMethod(const ConstantString & method_name, bool is_private)
+Method & Server::createInternalMethod(const ConstantString & method_name)
 {
   int method_index = findMethodIndex(method_name);
   if ((method_index < 0) || (method_index >= (int)internal_methods_.max_size()))
   {
-    internal_methods_.push_back(InternalMethod(method_name));
-    internal_methods_.back().setPrivacy(is_private);
+    internal_methods_.push_back(Method(method_name));
     return internal_methods_.back();
   }
   else
   {
-    internal_methods_[method_index] = InternalMethod(method_name);
-    internal_methods_[method_index].setPrivacy(is_private);
+    internal_methods_[method_index] = Method(method_name);
     return internal_methods_[method_index];
   }
 }
@@ -620,11 +623,11 @@ void Server::processRequestArray()
     }
     else if (request_method_index_ < (int)internal_methods_.max_size())
     {
-      if (internal_methods_[request_method_index_].isPrivate())
+      if (request_method_index_ <= private_method_index_)
       {
         executeMethod();
       }
-      else if (parameter_count != internal_methods_[request_method_index_].parameter_count_)
+      else if (parameter_count != internal_methods_[request_method_index_].getParameterCount())
       {
         error_ = true;
         writeKeyToResponse(constants::error_constant_string);
@@ -641,7 +644,7 @@ void Server::processRequestArray()
         char given_str[constants::given_constant_string.length()+1];
         constants::given_constant_string.copy(given_str);
         strcat(error_str,given_str);
-        dtostrf(internal_methods_[request_method_index_].parameter_count_,0,0,parameter_count_str);
+        dtostrf(internal_methods_[request_method_index_].getParameterCount(),0,0,parameter_count_str);
         strcat(error_str,parameter_count_str);
         char needed_str[constants::needed_constant_string.length()+1];
         constants::needed_constant_string.copy(needed_str);
@@ -659,7 +662,7 @@ void Server::processRequestArray()
         }
       }
     }
-    else if (parameter_count != external_methods_[request_method_index_-internal_methods_.max_size()].parameter_count_)
+    else if (parameter_count != external_methods_[request_method_index_-internal_methods_.max_size()].getParameterCount())
     {
       error_ = true;
       writeKeyToResponse(constants::error_constant_string);
@@ -676,7 +679,7 @@ void Server::processRequestArray()
       char given_str[constants::given_constant_string.length()+1];
       constants::given_constant_string.copy(given_str);
       strcat(error_str,given_str);
-      dtostrf(external_methods_[request_method_index_-internal_methods_.max_size()].parameter_count_,0,0,parameter_count_str);
+      dtostrf(external_methods_[request_method_index_-internal_methods_.max_size()].getParameterCount(),0,0,parameter_count_str);
       strcat(error_str,parameter_count_str);
       char needed_str[constants::needed_constant_string.length()+1];
       constants::needed_constant_string.copy(needed_str);
@@ -750,7 +753,7 @@ void Server::executeMethod()
   {
     if (request_method_index_ < (int)internal_methods_.size())
     {
-      internal_methods_[request_method_index_].callback(this);
+      internal_methods_[request_method_index_].callback();
     }
     else if ((request_method_index_ >= (int)internal_methods_.max_size()) &&
              (request_method_index_ < (int)(internal_methods_.max_size() + external_methods_.size())))
@@ -1420,7 +1423,7 @@ void Server::help(bool verbose)
       beginResponseArray();
       for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
-        if (!internal_methods_[method_index].isPrivate())
+        if (method_index > private_method_index_)
         {
           const ConstantString & method_name = internal_methods_[method_index].getName();
           writeToResponse(method_name);
@@ -1468,7 +1471,7 @@ void Server::help(bool verbose)
       beginResponseArray();
       for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
       {
-        if (!internal_methods_[method_index].isPrivate())
+        if (method_index > private_method_index_)
         {
           methodHelp(false,method_index);
         }
@@ -2050,7 +2053,7 @@ void Server::getMethodIdsCallback()
   beginResponseObject();
   for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
   {
-    if (!internal_methods_[method_index].isPrivate())
+    if (method_index > private_method_index_)
     {
       const ConstantString & method_name = internal_methods_[method_index].getName();
       writeToResponse(method_name,method_index);

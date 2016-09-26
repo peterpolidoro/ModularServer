@@ -147,7 +147,8 @@ private:
   ArduinoJson::JsonArray  * request_json_array_ptr_;
   Array<Field,constants::INTERNAL_FIELD_COUNT_MAX> internal_fields_;
   Array<Parameter,constants::INTERNAL_PARAMETER_COUNT_MAX> internal_parameters_;
-  Array<InternalMethod,constants::INTERNAL_METHOD_COUNT_MAX> internal_methods_;
+  Array<Method,constants::INTERNAL_METHOD_COUNT_MAX> internal_methods_;
+  int private_method_index_;
   Vector<Field> external_fields_;
   Vector<Parameter> external_parameters_;
   Vector<Method> external_methods_;
@@ -170,7 +171,7 @@ private:
   bool server_running_;
 
   void setup();
-  InternalMethod & createInternalMethod(const ConstantString & method_name, bool is_private=false);
+  Method & createInternalMethod(const ConstantString & method_name);
   Parameter & createInternalParameter(const ConstantString & parameter_name);
   template <typename T>
   Field & createInternalField(const ConstantString & field_name,

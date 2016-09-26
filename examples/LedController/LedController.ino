@@ -9,12 +9,15 @@
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
 #include "SavedVariable.h"
+#include "Functor.h"
 #include "ModularServer.h"
-#include "NonBlockBlink.h"
-#include "Constants.h"
-#include "Callbacks.h"
-#include "Controller.h"
 
+#include "Constants.h"
+#include "Controller.h"
+#include "NonBlockBlink.h"
+
+
+Controller controller;
 
 void setup()
 {

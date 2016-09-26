@@ -15,16 +15,16 @@
 #include "SavedVariable.h"
 #include "JsonStream.h"
 #include "Vector.h"
+#include "Functor.h"
 
 #include "Parameter.h"
 #include "Constants.h"
 
+#include "Streaming.h"
+
 
 namespace ModularDevice
 {
-typedef void (*SetValueCallback)(void);
-typedef void (*SetElementValueCallback)(const size_t);
-
 class Field
 {
 public:
@@ -40,7 +40,6 @@ public:
   {
     parameter_.setTypeLong();
     parameter_.setArrayLengthRange(1,N);
-    setCallbacksToNull();
   };
   template <size_t N>
   Field(const ConstantString & name,
@@ -50,7 +49,6 @@ public:
   {
     parameter_.setTypeDouble();
     parameter_.setArrayLengthRange(1,N);
-    setCallbacksToNull();
   }
   template <size_t N>
   Field(const ConstantString & name,
@@ -60,7 +58,6 @@ public:
   {
     parameter_.setTypeBool();
     parameter_.setArrayLengthRange(1,N);
-    setCallbacksToNull();
   }
   template <size_t N>
   Field(const ConstantString & name,
@@ -70,7 +67,6 @@ public:
   {
     parameter_.setTypeString();
     string_saved_as_char_array_ = true;
-    setCallbacksToNull();
   }
   void setUnits(const ConstantString & name);
   void setRange(const long min, const long max);
@@ -80,17 +76,17 @@ public:
   {
     parameter_.setSubset(subset);
   }
-  void attachPreSetValueCallback(SetValueCallback callback);
-  void attachPreSetElementValueCallback(SetElementValueCallback callback);
-  void attachPostSetValueCallback(SetValueCallback callback);
-  void attachPostSetElementValueCallback(SetElementValueCallback callback);
+  void attachPreSetValueCallback(const Functor0 & callback);
+  void attachPreSetElementValueCallback(const Functor1<const size_t> & callback);
+  void attachPostSetValueCallback(const Functor0 & callback);
+  void attachPostSetElementValueCallback(const Functor1<const size_t> & callback);
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;
-  SetValueCallback pre_set_value_callback_;
-  SetElementValueCallback pre_set_element_value_callback_;
-  SetValueCallback post_set_value_callback_;
-  SetElementValueCallback post_set_element_value_callback_;
+  Functor0 pre_set_value_callback_;
+  Functor1<const size_t> pre_set_element_value_callback_;
+  Functor0 post_set_value_callback_;
+  Functor1<const size_t> post_set_element_value_callback_;
   bool string_saved_as_char_array_;
 
   // Saved Variable Methods
@@ -246,7 +242,6 @@ private:
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
   Vector<const constants::SubsetMemberType> & getSubset();
-  void setCallbacksToNull();
   void preSetValueCallback();
   void preSetElementValueCallback(const size_t element_index);
   void postSetValueCallback();

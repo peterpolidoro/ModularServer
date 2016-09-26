@@ -6,9 +6,10 @@
 // ----------------------------------------------------------------------------
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
+#include "Functor.h"
 #include "ModularServer.h"
+
 #include "Constants.h"
-#include "Callbacks.h"
 
 
 class Controller
@@ -17,7 +18,6 @@ public:
   Controller();
   void setup();
   void update();
-  ModularDevice::ModularServer & getModularServer();
 
 private:
   ModularDevice::ModularServer modular_server_;
@@ -25,8 +25,17 @@ private:
   ModularDevice::Field fields_[constants::FIELD_COUNT_MAX];
   ModularDevice::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
   ModularDevice::Method methods_[constants::METHOD_COUNT_MAX];
-};
 
-extern Controller controller;
+  // Callbacks
+  void echoCallback();
+  void lengthCallback();
+  void startsWithCallback();
+  void repeatCallback();
+  void charsAtCallback();
+  void startingCharsCallback();
+  void setStoredStringCallback();
+  void getStoredStringCallback();
+
+};
 
 #endif
