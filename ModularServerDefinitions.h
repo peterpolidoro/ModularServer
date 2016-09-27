@@ -11,22 +11,11 @@
 
 namespace ModularDevice
 {
+// Field
 template <size_t MAX_SIZE>
-void ModularServer::setMethodStorage(Method (&methods)[MAX_SIZE])
+void ModularServer::addFieldStorage(Field (&fields)[MAX_SIZE])
 {
-  server_.setMethodStorage(methods);
-}
-
-template <size_t MAX_SIZE>
-void ModularServer::setParameterStorage(Parameter (&parameters)[MAX_SIZE])
-{
-  server_.setParameterStorage(parameters);
-}
-
-template <size_t MAX_SIZE>
-void ModularServer::setFieldStorage(Field (&fields)[MAX_SIZE])
-{
-  server_.setFieldStorage(fields);
+  server_.addFieldStorage(fields);
 }
 
 template <typename T>
@@ -112,6 +101,21 @@ bool ModularServer::getFieldDefaultElementValue(const ConstantString & field_nam
   return server_.getFieldDefaultElementValue(field_name,element_index,value);
 }
 
+// Parameter
+template <size_t MAX_SIZE>
+void ModularServer::addParameterStorage(Parameter (&parameters)[MAX_SIZE])
+{
+  server_.addParameterStorage(parameters);
+}
+
+// Method
+template <size_t MAX_SIZE>
+void ModularServer::addMethodStorage(Method (&methods)[MAX_SIZE])
+{
+  server_.addMethodStorage(methods);
+}
+
+// Response
 template <typename K>
 void ModularServer::writeKeyToResponse(K key)
 {

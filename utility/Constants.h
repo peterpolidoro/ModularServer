@@ -14,10 +14,12 @@ namespace ModularDevice
 {
 namespace constants
 {
+enum {STORAGE_ARRAY_COUNT_MAX=6};
+
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{INTERNAL_FIELD_COUNT_MAX=1};
-enum{INTERNAL_PARAMETER_COUNT_MAX=3};
-enum{INTERNAL_METHOD_COUNT_MAX=15};
+enum{SERVER_FIELD_COUNT_MAX=1};
+enum{SERVER_PARAMETER_COUNT_MAX=3};
+enum{SERVER_METHOD_COUNT_MAX=15};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 

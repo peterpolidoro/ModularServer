@@ -13,6 +13,7 @@
 #include "JsonSanitizer.h"
 #include "Array.h"
 #include "Vector.h"
+#include "ConcatenatedArray.h"
 #include "MemoryFree.h"
 #include "ConstantVariable.h"
 #include "SavedVariable.h"
@@ -31,25 +32,21 @@ class Server
 {
 public:
   Server();
-  Server(Stream & stream);
+
+  // Stream
   void addServerStream(Stream & stream);
+
+  // Device Info
   void setDeviceName(const ConstantString & device_name);
   void setModelNumber(const long model_number);
   void setFirmwareName(const ConstantString & firmware_name);
   void setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch);
   void setHardwareName(const ConstantString & hardware_name);
   void setHardwareVersion(const long hardware_major, const long hardware_minor);
+
+  // Field
   template <size_t MAX_SIZE>
-  void setMethodStorage(Method (&methods)[MAX_SIZE]);
-  Method & createMethod(const ConstantString & method_name);
-  Method & copyMethod(Method method,const ConstantString & method_name);
-  template <size_t MAX_SIZE>
-  void setParameterStorage(Parameter (&parameters)[MAX_SIZE]);
-  Parameter & createParameter(const ConstantString & parameter_name);
-  Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
-  ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
-  template <size_t MAX_SIZE>
-  void setFieldStorage(Field (&fields)[MAX_SIZE]);
+  void addFieldStorage(Field (&fields)[MAX_SIZE]);
   template <typename T>
   Field & createField(const ConstantString & field_name,
                      const T & default_value);
@@ -105,6 +102,22 @@ public:
                                    T & value);
   size_t getFieldArrayLength(const ConstantString & field_name);
   size_t getFieldStringLength(const ConstantString & field_name);
+  void setFieldsToDefaults();
+
+  // Parameter
+  template <size_t MAX_SIZE>
+  void addParameterStorage(Parameter (&parameters)[MAX_SIZE]);
+  Parameter & createParameter(const ConstantString & parameter_name);
+  Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
+  ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
+
+  // Method
+  template <size_t MAX_SIZE>
+  void addMethodStorage(Method (&methods)[MAX_SIZE]);
+  Method & createMethod(const ConstantString & method_name);
+  Method & copyMethod(Method method,const ConstantString & method_name);
+
+  // Response
   template <typename K>
   void writeKeyToResponse(K key);
   template <typename T>
@@ -136,22 +149,24 @@ public:
   void endResponseObject();
   void beginResponseArray();
   void endResponseArray();
-  void setFieldsToDefaults();
+
+  // Server
   void startServer();
   void stopServer();
   void handleRequest();
+
 private:
   Array<Stream *,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
   size_t server_stream_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray  * request_json_array_ptr_;
-  Array<Field,constants::INTERNAL_FIELD_COUNT_MAX> internal_fields_;
-  Array<Parameter,constants::INTERNAL_PARAMETER_COUNT_MAX> internal_parameters_;
-  Array<Method,constants::INTERNAL_METHOD_COUNT_MAX> internal_methods_;
+  Field server_fields_[constants::SERVER_FIELD_COUNT_MAX];
+  Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
+  Method server_methods_[constants::SERVER_METHOD_COUNT_MAX];
+  ConcatenatedArray<Field,constants::STORAGE_ARRAY_COUNT_MAX> fields_;
+  ConcatenatedArray<Parameter,constants::STORAGE_ARRAY_COUNT_MAX> parameters_;
+  ConcatenatedArray<Method,constants::STORAGE_ARRAY_COUNT_MAX> methods_;
   int private_method_index_;
-  Vector<Field> external_fields_;
-  Vector<Parameter> external_parameters_;
-  Vector<Method> external_methods_;
   const ConstantString * device_name_ptr_;
   long model_number_;
   const ConstantString * firmware_name_ptr_;
@@ -171,11 +186,6 @@ private:
   bool server_running_;
 
   void setup();
-  Method & createInternalMethod(const ConstantString & method_name);
-  Parameter & createInternalParameter(const ConstantString & parameter_name);
-  template <typename T>
-  Field & createInternalField(const ConstantString & field_name,
-                             const T & default_value);
   void processRequestArray();
   int processMethodString(const char * method_string);
   template <typename T>
@@ -208,7 +218,7 @@ private:
   void writeFieldErrorToResponse(const ConstantString & error);
   void subsetToString(char * destination, Vector<const constants::SubsetMemberType> & subset, const JsonStream::JsonTypes type, const size_t num);
 
-  // internal methods
+  // Callbacks
   void getDeviceInfoCallback();
   void getMethodIdsCallback();
   void getResponseCodesCallback();
@@ -225,6 +235,7 @@ private:
   void setFieldValueCallback();
   void setFieldElementValueCallback();
   void setAllFieldElementValuesCallback();
+
 };
 }
 #include "ServerDefinitions.h"

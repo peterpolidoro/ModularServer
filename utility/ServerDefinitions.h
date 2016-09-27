@@ -11,35 +11,11 @@
 
 namespace ModularDevice
 {
+// Field
 template <size_t MAX_SIZE>
-void Server::setFieldStorage(Field (&fields)[MAX_SIZE])
+void Server::addFieldStorage(Field (&fields)[MAX_SIZE])
 {
-  external_fields_.setStorage(fields);
-}
-
-template <size_t MAX_SIZE>
-void Server::setParameterStorage(Parameter (&parameters)[MAX_SIZE])
-{
-  external_parameters_.setStorage(parameters);
-}
-
-template <size_t MAX_SIZE>
-void Server::setMethodStorage(Method (&methods)[MAX_SIZE])
-{
-  external_methods_.setStorage(methods);
-}
-
-template <typename T>
-Field & Server::createInternalField(const ConstantString & field_name,
-                                   const T & default_value)
-{
-  int field_index = findFieldIndex(field_name);
-  if (field_index < 0)
-  {
-    internal_fields_.push_back(Field(field_name,
-                                     default_value));
-  }
-  return internal_fields_.back();
+  fields_.addArray(fields);
 }
 
 template <typename T>
@@ -369,6 +345,21 @@ bool Server::getFieldDefaultElementValue(const ConstantString & field_name,
   }
 }
 
+// Parameter
+template <size_t MAX_SIZE>
+void Server::addParameterStorage(Parameter (&parameters)[MAX_SIZE])
+{
+  parameters_.addArray(parameters);
+}
+
+// Method
+template <size_t MAX_SIZE>
+void Server::addMethodStorage(Method (&methods)[MAX_SIZE])
+{
+  methods_.addArray(methods);
+}
+
+// Response
 template <typename K>
 void Server::writeKeyToResponse(K key)
 {
@@ -467,6 +458,49 @@ void Server::writeResultToResponse(T * value, size_t N)
 }
 
 template <typename T>
+int Server::findFieldIndex(T const & field_name)
+{
+  int field_index = -1;
+  for (size_t i=0; i<internal_fields_.size(); ++i)
+  {
+    if (internal_fields_[i].getParameter().compareName(field_name))
+    {
+      field_index = i;
+      return field_index;
+    }
+  }
+  for (size_t i=0; i<external_fields_.size(); ++i)
+  {
+    if (external_fields_[i].getParameter().compareName(field_name))
+    {
+      field_index = i + internal_fields_.max_size();
+      return field_index;
+    }
+  }
+  return field_index;
+}
+
+template <typename T>
+Field & Server::findField(T const & field_name, int * field_index_ptr)
+{
+  int field_index = findFieldIndex(field_name);
+  *field_index_ptr = field_index;
+  if ((field_index >= 0) && (field_index < (int)internal_fields_.max_size()))
+  {
+    return internal_fields_[field_index];
+  }
+  else if (field_index >= (int)internal_fields_.max_size())
+  {
+    field_index -=  internal_fields_.max_size();
+    return external_fields_[field_index];
+  }
+  else
+  {
+    return internal_fields_[0];
+  }
+}
+
+template <typename T>
 int Server::findMethodIndex(T const & method_name)
 {
   int method_index = -1;
@@ -538,49 +572,6 @@ int Server::findMethodParameterIndex(int method_index, T const & parameter_name)
     }
   }
   return parameter_index;
-}
-
-template <typename T>
-int Server::findFieldIndex(T const & field_name)
-{
-  int field_index = -1;
-  for (size_t i=0; i<internal_fields_.size(); ++i)
-  {
-    if (internal_fields_[i].getParameter().compareName(field_name))
-    {
-      field_index = i;
-      return field_index;
-    }
-  }
-  for (size_t i=0; i<external_fields_.size(); ++i)
-  {
-    if (external_fields_[i].getParameter().compareName(field_name))
-    {
-      field_index = i + internal_fields_.max_size();
-      return field_index;
-    }
-  }
-  return field_index;
-}
-
-template <typename T>
-Field & Server::findField(T const & field_name, int * field_index_ptr)
-{
-  int field_index = findFieldIndex(field_name);
-  *field_index_ptr = field_index;
-  if ((field_index >= 0) && (field_index < (int)internal_fields_.max_size()))
-  {
-    return internal_fields_[field_index];
-  }
-  else if (field_index >= (int)internal_fields_.max_size())
-  {
-    field_index -=  internal_fields_.max_size();
-    return external_fields_[field_index];
-  }
-  else
-  {
-    return internal_fields_[0];
-  }
 }
 
 }

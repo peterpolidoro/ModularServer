@@ -14,16 +14,13 @@ ModularServer::ModularServer()
 {
 }
 
-ModularServer::ModularServer(Stream & stream) :
-  server_(stream)
-{
-}
-
+// Stream
 void ModularServer::addServerStream(Stream & stream)
 {
   server_.addServerStream(stream);
 }
 
+// Device Info
 void ModularServer::setDeviceName(const ConstantString & device_name)
 {
   server_.setDeviceName(device_name);
@@ -54,16 +51,29 @@ void ModularServer::setModelNumber(const long model_number)
   server_.setModelNumber(model_number);
 }
 
-Method & ModularServer::createMethod(const ConstantString & method_name)
+// Field
+bool ModularServer::setFieldValue(const ConstantString & field_name,
+                                  ArduinoJson::JsonArray & value)
 {
-  return server_.createMethod(method_name);
+  return server_.setFieldValue(field_name,value);
 }
 
-Method & ModularServer::copyMethod(Method & method,const ConstantString & method_name)
+size_t ModularServer::getFieldArrayLength(const ConstantString & field_name)
 {
-  return server_.copyMethod(method,method_name);
+  return server_.getFieldArrayLength(field_name);
 }
 
+size_t ModularServer::getFieldStringLength(const ConstantString & field_name)
+{
+  return server_.getFieldStringLength(field_name);
+}
+
+void ModularServer::setFieldsToDefaults()
+{
+  server_.setFieldsToDefaults();
+}
+
+// Parameter
 Parameter & ModularServer::createParameter(const ConstantString & parameter_name)
 {
   return server_.createParameter(parameter_name);
@@ -79,16 +89,18 @@ ArduinoJson::JsonVariant ModularServer::getParameterValue(const ConstantString &
   return server_.getParameterValue(parameter_name);
 }
 
-size_t ModularServer::getFieldArrayLength(const ConstantString & field_name)
+// Method
+Method & ModularServer::createMethod(const ConstantString & method_name)
 {
-  return server_.getFieldArrayLength(field_name);
+  return server_.createMethod(method_name);
 }
 
-size_t ModularServer::getFieldStringLength(const ConstantString & field_name)
+Method & ModularServer::copyMethod(Method & method,const ConstantString & method_name)
 {
-  return server_.getFieldStringLength(field_name);
+  return server_.copyMethod(method,method_name);
 }
 
+// Response
 void ModularServer::writeNullToResponse()
 {
   server_.writeNullToResponse();
@@ -119,6 +131,7 @@ void ModularServer::endResponseArray()
   server_.endResponseArray();
 }
 
+// Server
 void ModularServer::startServer()
 {
   server_.startServer();
@@ -132,16 +145,5 @@ void ModularServer::stopServer()
 void ModularServer::handleServerRequests()
 {
   server_.handleRequest();
-}
-
-bool ModularServer::setFieldValue(const ConstantString & field_name,
-                                  ArduinoJson::JsonArray & value)
-{
-  return server_.setFieldValue(field_name,value);
-}
-
-void ModularServer::setFieldsToDefaults()
-{
-  server_.setFieldsToDefaults();
 }
 }
