@@ -738,13 +738,9 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
   writeToResponse(constants::name_constant_string,parameter_name);
 
   const ConstantString & units = parameter.getUnits();
-  char parameter_units[units.length()+1];
-  parameter_units[0] = '\0';
-  units.copy(parameter_units);
-  char empty_str[] = {0};
-  if (strcmp(parameter_units,empty_str) != 0)
+  if (units.length() != 0)
   {
-    writeToResponse(constants::units_constant_string,parameter_units);
+    writeToResponse(constants::units_constant_string,units);
   }
   JsonStream::JsonTypes type = parameter.getType();
   switch (type)
