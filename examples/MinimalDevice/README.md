@@ -33,10 +33,10 @@ Example Response:
   "id":"?",
   "result":{
     "device_info":{
-      "device_name":"modular_server",
+      "device_name":"",
       "model_number":0,
       "serial_number":0,
-      "firmware_name":"minimal_device",
+      "firmware_name":"MinimalDevice",
       "firmware_version":{
         "major":0,
         "minor":1,
@@ -88,7 +88,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5864
+  "result":5762
 }
 ```
 
@@ -108,7 +108,7 @@ Example Response:
   "id":"??",
   "result":{
     "device_info":{
-      "name":"minimal_device",
+      "name":"MinimalDevice",
       "model_number":1000,
       "board":"mega",
       "serial_number":0,
@@ -397,8 +397,8 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'device_name': 'modular_server',
- 'firmware_name': 'minimal_device',
+{'device_name': '',
+ 'firmware_name': 'MinimalDevice',
  'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'hardware_name': 'mega',
  'hardware_version': {'major': 0, 'minor': 0},
@@ -417,7 +417,7 @@ dev.get_methods()
  'set_field_to_default',
  'get_field_values']
 dev.get_memory_free()
-5864
+5762
 dev.get_field_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_field_value('?')
@@ -457,10 +457,10 @@ dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
 device_info =
-  device_name: 'modular_server'
+  device_name: ''
   model_number: 0
   serial_number: 0
-  firmware_name: 'minimal_device'
+  firmware_name: 'MinimalDevice'
   firmware_version: [1x1 struct]
   hardware_name: 'mega'
   hardware_version: [1x1 struct]
@@ -484,7 +484,7 @@ setFieldElementValue
 setAllFieldElementValues
 dev.getMemoryFree()
 ans =
-  5864
+  5762
 dev.getFieldValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.getFieldValue('?')

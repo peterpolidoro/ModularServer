@@ -33,10 +33,10 @@ Example Response:
   "id":"?",
   "result":{
     "device_info":{
-      "device_name":"modular_server",
+      "device_name":"",
       "model_number":0,
       "serial_number":0,
-      "firmware_name":"field_tester",
+      "firmware_name":"FieldTester",
       "firmware_version":{
         "major":0,
         "minor":1,
@@ -428,8 +428,8 @@ Example Python session:
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
 dev.get_device_info()
-{'device_name': 'modular_server',
- 'firmware_name': 'field_tester',
+{'device_name': '',
+ 'firmware_name': 'FieldTester',
  'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
  'hardware_name': 'mega',
  'hardware_version': {'major': 0, 'minor': 0},
@@ -527,10 +527,10 @@ dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 device_info = dev.getDeviceInfo()
 device_info =
-  device_name: 'modular_server'
+  device_name: ''
   model_number: 0
   serial_number: 0
-  firmware_name: 'field_tester'
+  firmware_name: 'FieldTester'
   firmware_version: [1x1 struct]
   hardware_name: 'mega'
   hardware_version: [1x1 struct]

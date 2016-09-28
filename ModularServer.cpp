@@ -51,6 +51,8 @@ void ModularServer::setModelNumber(const long model_number)
   server_.setModelNumber(model_number);
 }
 
+// Storage
+
 // Field
 bool ModularServer::setFieldValue(const ConstantString & field_name,
                                   ArduinoJson::JsonArray & value)

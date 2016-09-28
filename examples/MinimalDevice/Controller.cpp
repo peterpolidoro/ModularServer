@@ -27,9 +27,6 @@ void Controller::setup()
   modular_server_.addServerStream(Serial);
 
   // Set Storage
-  modular_server_.setFieldStorage(fields_);
-  modular_server_.setParameterStorage(parameters_);
-  modular_server_.setMethodStorage(methods_);
 
   // Fields
 

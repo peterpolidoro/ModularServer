@@ -27,9 +27,9 @@ void Controller::setup()
   modular_server_.addServerStream(Serial);
 
   // Set Storage
-  modular_server_.setFieldStorage(fields_);
-  modular_server_.setParameterStorage(parameters_);
-  modular_server_.setMethodStorage(methods_);
+  modular_server_.addFieldStorage(fields_);
+  modular_server_.addParameterStorage(parameters_);
+  modular_server_.addMethodStorage(methods_);
 
   // Fields
   ModularDevice::Field & starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);

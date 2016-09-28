@@ -175,15 +175,17 @@ void Server::setHardwareVersion(const long hardware_major, const long hardware_m
   hardware_minor_ = hardware_minor;
 }
 
+// Storage
+
 // Field
 bool Server::setFieldValue(const ConstantString & field_name,
                            ArduinoJson::JsonArray & value)
 {
   bool success = false;
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
     size_t array_length = field.getArrayLength();
     JsonStream::JsonTypes field_type = field.getType();
     if (field_type == JsonStream::ARRAY_TYPE)
@@ -262,10 +264,10 @@ bool Server::setFieldValue(const ConstantString & field_name,
 
 size_t Server::getFieldArrayLength(const ConstantString & field_name)
 {
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
     return field.getArrayLength();
   }
   else
@@ -277,10 +279,10 @@ size_t Server::getFieldArrayLength(const ConstantString & field_name)
 
 size_t Server::getFieldStringLength(const ConstantString & field_name)
 {
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
     JsonStream::JsonTypes field_type = field.getType();
     if (field_type == JsonStream::STRING_TYPE)
     {
@@ -312,13 +314,9 @@ size_t Server::getFieldStringLength(const ConstantString & field_name)
 
 void Server::setFieldsToDefaults()
 {
-  for (size_t i=0; i<internal_fields_.size(); ++i)
+  for (size_t i=0; i<fields_.size(); ++i)
   {
-    internal_fields_[i].setDefaultValue();
-  }
-  for (size_t i=0; i<external_fields_.size(); ++i)
-  {
-    external_fields_[i].setDefaultValue();
+    fields_[i].setDefaultValue();
   }
 }
 
@@ -326,24 +324,18 @@ void Server::setFieldsToDefaults()
 Parameter & Server::createParameter(const ConstantString & parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
-  if ((parameter_index < 0) || (parameter_index < (int)internal_parameters_.max_size()))
+  if (parameter_index < 0)
   {
-    external_parameters_.push_back(Parameter(parameter_name));
-    return external_parameters_.back();
-  }
-  else
-  {
-    parameter_index -= internal_parameters_.max_size();
-    external_parameters_[parameter_index] = Parameter(parameter_name);
-    return external_parameters_[parameter_index];
+    parameters_.push_back(Parameter(parameter_name));
+    return parameters_.back();
   }
 }
 
 Parameter & Server::copyParameter(Parameter parameter,const ConstantString & parameter_name)
 {
-  external_parameters_.push_back(parameter);
-  external_parameters_.back().setName(parameter_name);
-  return external_parameters_.back();
+  parameters_.push_back(parameter);
+  parameters_.back().setName(parameter_name);
+  return parameters_.back();
 }
 
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
@@ -357,24 +349,18 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
 Method & Server::createMethod(const ConstantString & method_name)
 {
   int method_index = findMethodIndex(method_name);
-  if ((method_index < 0) || (method_index < (int)internal_methods_.max_size()))
+  if (method_index < 0)
   {
-    external_methods_.push_back(Method(method_name));
-    return external_methods_.back();
-  }
-  else
-  {
-    method_index -= internal_methods_.max_size();
-    external_methods_[method_index] = Method(method_name);
-    return external_methods_[method_index];
+    methods_.push_back(Method(method_name));
+    return methods_.back();
   }
 }
 
 Method & Server::copyMethod(Method method,const ConstantString & method_name)
 {
-  external_methods_.push_back(method);
-  external_methods_.back().setName(method_name);
-  return external_methods_.back();
+  methods_.push_back(method);
+  methods_.back().setName(method_name);
+  return methods_.back();
 }
 
 // Response
@@ -556,8 +542,8 @@ void Server::handleRequest()
 void Server::processRequestArray()
 {
   const char * method_string = (*request_json_array_ptr_)[0];
-  request_method_index_ = processMethodString(method_string);
-  if (request_method_index_ >= 0)
+  request_method_index_ = findRequestMethodIndex(method_string);
+  if ((request_method_index_ >= 0) && (request_method_index_ < methods_.size()))
   {
     int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
     int parameter_count = array_elements_count - 1;
@@ -585,60 +571,16 @@ void Server::processRequestArray()
     {
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter * parameter_ptr;
-      if (request_method_index_ < (int)internal_methods_.max_size())
-      {
-        parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
-      }
-      else
-      {
-        int index = request_method_index_ - internal_methods_.max_size();
-        parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
-      }
+      parameter_ptr = methods_[request_method_index_].parameter_ptrs_[parameter_index];
       writeResultKeyToResponse();
       parameterHelp(*parameter_ptr);
     }
-    else if (request_method_index_ < (int)internal_methods_.max_size())
-    {
-      if (request_method_index_ <= private_method_index_)
-      {
-        executeMethod();
-      }
-      else if (parameter_count != internal_methods_[request_method_index_].getParameterCount())
-      {
-        error_ = true;
-        writeKeyToResponse(constants::error_constant_string);
-        beginResponseObject();
-        writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-        char incorrect_parameter_number[constants::incorrect_parameter_number_error_data.length()+1];
-        constants::incorrect_parameter_number_error_data.copy(incorrect_parameter_number);
-        char error_str[constants::STRING_LENGTH_ERROR];
-        error_str[0] = '\0';
-        strcat(error_str,incorrect_parameter_number);
-        char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
-        dtostrf(parameter_count,0,0,parameter_count_str);
-        strcat(error_str,parameter_count_str);
-        char given_str[constants::given_constant_string.length()+1];
-        constants::given_constant_string.copy(given_str);
-        strcat(error_str,given_str);
-        dtostrf(internal_methods_[request_method_index_].getParameterCount(),0,0,parameter_count_str);
-        strcat(error_str,parameter_count_str);
-        char needed_str[constants::needed_constant_string.length()+1];
-        constants::needed_constant_string.copy(needed_str);
-        strcat(error_str,needed_str);
-        writeToResponse(constants::data_constant_string,error_str);
-        writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-        endResponseObject();
-      }
-      else
-      {
-        bool parameters_ok = checkParameters();
-        if (parameters_ok)
-        {
-          executeMethod();
-        }
-      }
-    }
-    else if (parameter_count != external_methods_[request_method_index_-internal_methods_.max_size()].getParameterCount())
+    // execute private method without checking parameters
+    // else if (request_method_index_ <= private_method_index_)
+    // {
+    //   methods_[request_method_index_].callback();
+    // }
+    else if (parameter_count != methods_[request_method_index_].getParameterCount())
     {
       error_ = true;
       writeKeyToResponse(constants::error_constant_string);
@@ -655,7 +597,7 @@ void Server::processRequestArray()
       char given_str[constants::given_constant_string.length()+1];
       constants::given_constant_string.copy(given_str);
       strcat(error_str,given_str);
-      dtostrf(external_methods_[request_method_index_-internal_methods_.max_size()].getParameterCount(),0,0,parameter_count_str);
+      dtostrf(methods_[request_method_index_].getParameterCount(),0,0,parameter_count_str);
       strcat(error_str,parameter_count_str);
       char needed_str[constants::needed_constant_string.length()+1];
       constants::needed_constant_string.copy(needed_str);
@@ -669,13 +611,22 @@ void Server::processRequestArray()
       bool parameters_ok = checkParameters();
       if (parameters_ok)
       {
-        executeMethod();
+        methods_[request_method_index_].callback();
       }
     }
   }
+  else
+  {
+    error_ = true;
+    writeKeyToResponse(constants::error_constant_string);
+    beginResponseObject();
+    writeToResponse(constants::message_constant_string,constants::method_not_found_error_message);
+    writeToResponse(constants::code_constant_string,constants::method_not_found_error_code);
+    endResponseObject();
+  }
 }
 
-int Server::processMethodString(const char * method_string)
+int Server::findRequestMethodIndex(const char * method_string)
 {
   int method_index = -1;
   int method_id = atoi(method_string);
@@ -696,18 +647,6 @@ int Server::processMethodString(const char * method_string)
     method_index = findMethodIndex(method_string);
     writeToResponse(constants::id_constant_string,method_string);
   }
-  if ((method_index < 0) ||
-      ((method_index >= (int)internal_methods_.size()) && (method_index < (int)internal_methods_.max_size())) ||
-      (method_index >= ((int)internal_methods_.max_size() + (int)external_methods_.size())))
-  {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::method_not_found_error_message);
-    writeToResponse(constants::code_constant_string,constants::method_not_found_error_code);
-    endResponseObject();
-    method_index = -1;
-  }
   return method_index;
 }
 
@@ -723,50 +662,22 @@ int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
   return elements_count;
 }
 
-void Server::executeMethod()
-{
-  if (request_method_index_ >= 0)
-  {
-    if (request_method_index_ < (int)internal_methods_.size())
-    {
-      internal_methods_[request_method_index_].callback();
-    }
-    else if ((request_method_index_ >= (int)internal_methods_.max_size()) &&
-             (request_method_index_ < (int)(internal_methods_.max_size() + external_methods_.size())))
-    {
-      int index = request_method_index_ - internal_methods_.max_size();
-      external_methods_[index].callback();
-    }
-  }
-}
-
 void Server::methodHelp(bool verbose, int method_index)
 {
+  if ((method_index < 0) || (method_index >= (int)methods_.max_size()))
+  {
+    return;
+  }
+
   beginResponseObject();
-  if (method_index < (int)internal_methods_.max_size())
-  {
-    const ConstantString & method_name = internal_methods_[method_index].getName();
-    writeToResponse(constants::name_constant_string,method_name);
-  }
-  else
-  {
-    int index = method_index - internal_methods_.max_size();
-    const ConstantString & method_name = external_methods_[index].getName();
-    writeToResponse(constants::name_constant_string,method_name);
-  }
+
+  const ConstantString & method_name = methods_[method_index].getName();
+  writeToResponse(constants::name_constant_string,method_name);
 
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  if (method_index < (int)internal_methods_.max_size())
-  {
-    parameter_ptrs_ptr = &internal_methods_[method_index].parameter_ptrs_;
-  }
-  else
-  {
-    int index = method_index - internal_methods_.max_size();
-    parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
-  }
+  parameter_ptrs_ptr = &methods_[method_index].parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
     if (verbose)
@@ -780,15 +691,9 @@ void Server::methodHelp(bool verbose, int method_index)
     }
   }
   json_stream_.endArray();
-  if (method_index < (int)internal_methods_.max_size())
-  {
-    writeToResponse(constants::result_type_constant_string,internal_methods_[method_index].getReturnType());
-  }
-  else
-  {
-    int index = method_index - internal_methods_.max_size();
-    writeToResponse(constants::result_type_constant_string,external_methods_[index].getReturnType());
-  }
+
+  writeToResponse(constants::result_type_constant_string,methods_[method_index].getReturnType());
+
   endResponseObject();
 }
 
@@ -811,15 +716,7 @@ int Server::processParameterString(const char * parameter_string)
     parameter_index = findMethodParameterIndex(request_method_index_,parameter_string);
   }
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  if  (request_method_index_ < (int)internal_methods_.max_size())
-  {
-    parameter_ptrs_ptr = &internal_methods_[request_method_index_].parameter_ptrs_;
-  }
-  else
-  {
-    int index = request_method_index_ - internal_methods_.max_size();
-    parameter_ptrs_ptr = &external_methods_[index].parameter_ptrs_;
-  }
+  parameter_ptrs_ptr = &methods_[request_method_index_].parameter_ptrs_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs_ptr->size()))
   {
     error_ = true;
@@ -1016,15 +913,7 @@ bool Server::checkParameters()
     if (it!=request_json_array_ptr_->begin())
     {
       Parameter * parameter_ptr = NULL;
-      if  (request_method_index_ < (int)internal_methods_.max_size())
-      {
-        parameter_ptr = internal_methods_[request_method_index_].parameter_ptrs_[parameter_index];
-      }
-      else
-      {
-        int index = request_method_index_ - internal_methods_.max_size();
-        parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
-      }
+      parameter_ptr = methods_[request_method_index_].parameter_ptrs_[parameter_index];
       if (checkParameter(*parameter_ptr,*it))
       {
         parameter_index++;
@@ -1397,45 +1286,30 @@ void Server::help(bool verbose)
     {
       writeKeyToResponse(constants::methods_constant_string);
       beginResponseArray();
-      for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
+      for (size_t method_index=0; method_index<methods_.size(); ++method_index)
       {
         if (method_index > private_method_index_)
         {
-          const ConstantString & method_name = internal_methods_[method_index].getName();
+          const ConstantString & method_name = methods_[method_index].getName();
           writeToResponse(method_name);
         }
-      }
-      for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
-      {
-        const ConstantString & method_name = external_methods_[method_index].getName();
-        writeToResponse(method_name);
       }
       endResponseArray();
 
       writeKeyToResponse(constants::parameters_constant_string);
       beginResponseArray();
-      for (size_t parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+      for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
       {
-        const ConstantString & parameter_name = internal_parameters_[parameter_index].getName();
-        writeToResponse(parameter_name);
-      }
-      for (size_t parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
-      {
-        const ConstantString & parameter_name = external_parameters_[parameter_index].getName();
+        const ConstantString & parameter_name = parameters_[parameter_index].getName();
         writeToResponse(parameter_name);
       }
       endResponseArray();
 
       writeKeyToResponse(constants::fields_constant_string);
       beginResponseArray();
-      for (size_t field_index=0; field_index<internal_fields_.size(); ++field_index)
+      for (size_t field_index=0; field_index<fields_.size(); ++field_index)
       {
-        const ConstantString & field_name = internal_fields_[field_index].getName();
-        writeToResponse(field_name);
-      }
-      for (size_t field_index=0; field_index<external_fields_.size(); ++field_index)
-      {
-        const ConstantString & field_name = external_fields_[field_index].getName();
+        const ConstantString & field_name = fields_[field_index].getName();
         writeToResponse(field_name);
       }
       endResponseArray();
@@ -1445,41 +1319,28 @@ void Server::help(bool verbose)
     {
       writeKeyToResponse(constants::methods_constant_string);
       beginResponseArray();
-      for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
+      for (size_t method_index=0; method_index<methods_.size(); ++method_index)
       {
         if (method_index > private_method_index_)
         {
           methodHelp(false,method_index);
         }
       }
-      for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
-      {
-        int index = method_index + internal_methods_.max_size();
-        methodHelp(false,index);
-      }
       endResponseArray();
 
       writeKeyToResponse(constants::parameters_constant_string);
       beginResponseArray();
-      for (size_t parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+      for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
       {
-        parameterHelp(internal_parameters_[parameter_index]);
-      }
-      for (size_t parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
-      {
-        parameterHelp(external_parameters_[parameter_index]);
+        parameterHelp(parameters_[parameter_index]);
       }
       endResponseArray();
 
       writeKeyToResponse(constants::fields_constant_string);
       beginResponseArray();
-      for (size_t field_index=0; field_index<internal_fields_.size(); ++field_index)
+      for (size_t field_index=0; field_index<fields_.size(); ++field_index)
       {
-        fieldHelp(internal_fields_[field_index]);
-      }
-      for (size_t field_index=0; field_index<external_fields_.size(); ++field_index)
-      {
-        fieldHelp(external_fields_[field_index]);
+        fieldHelp(fields_[field_index]);
       }
       endResponseArray();
     }
@@ -1495,7 +1356,7 @@ void Server::help(bool verbose)
   {
     const char * param_string = (*request_json_array_ptr_)[1];
     int method_index = findMethodIndex(param_string);
-    if (method_index >= 0)
+    if ((method_index >= 0) && (method_index < (int)methods_.size()))
     {
       // ? method
       param_error = false;
@@ -1505,44 +1366,24 @@ void Server::help(bool verbose)
     else
     {
       int parameter_index = findParameterIndex(param_string);
-      if (parameter_index >= 0)
+      if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
       {
         // ? parameter
         // ?? parameter
         param_error = false;
         writeResultKeyToResponse();
-        Parameter * parameter_ptr = NULL;
-        if (parameter_index < (int)internal_parameters_.max_size())
-        {
-          parameter_ptr = &internal_parameters_[parameter_index];
-        }
-        else
-        {
-          int index = parameter_index - internal_parameters_.max_size();
-          parameter_ptr = &external_parameters_[index];
-        }
-        parameterHelp(*parameter_ptr);
+        parameterHelp(parameters_[parameter_index]);
       }
       else
       {
         int field_index = findFieldIndex(param_string);
-        if (field_index >= 0)
+        if ((field_index >= 0) && (field_index < (int)fields_.max_size()))
         {
           // ? field
           // ?? field
           param_error = false;
           writeResultKeyToResponse();
-          Field * field_ptr = NULL;
-          if (field_index < (int)internal_fields_.max_size())
-          {
-            field_ptr = &internal_fields_[field_index];
-          }
-          else
-          {
-            int index = field_index - internal_fields_.max_size();
-            field_ptr = &external_fields_[index];
-          }
-          fieldHelp(*field_ptr);
+          fieldHelp(fields_[field_index]);
         }
       }
     }
@@ -1553,24 +1394,14 @@ void Server::help(bool verbose)
   {
     const char * method_string = (*request_json_array_ptr_)[1];
     int method_index = findMethodIndex(method_string);
-    if (method_index >= 0)
+    if ((method_index >= 0) && (method_index < (int)methods_.size()))
     {
       int parameter_index = findMethodParameterIndex(method_index,(const char *)(*request_json_array_ptr_)[2]);
-      if (parameter_index >= 0)
+      if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
       {
         param_error = false;
-        Parameter * parameter_ptr = NULL;
-        if (method_index < (int)internal_methods_.max_size())
-        {
-          parameter_ptr = internal_methods_[method_index].parameter_ptrs_[parameter_index];
-        }
-        else
-        {
-          int index = method_index - internal_methods_.max_size();
-          parameter_ptr = external_methods_[index].parameter_ptrs_[parameter_index];
-        }
         writeResultKeyToResponse();
-        parameterHelp(*parameter_ptr);
+        parameterHelp(*methods_[method_index].parameter_ptrs_[parameter_index]);
       }
     }
   }
@@ -2016,7 +1847,7 @@ void Server::subsetToString(char * destination, Vector<const constants::SubsetMe
   strcat(destination,array_close_str);
 }
 
-// internal methods
+// Callbacks
 void Server::getDeviceInfoCallback()
 {
   writeResultKeyToResponse();
@@ -2027,19 +1858,13 @@ void Server::getMethodIdsCallback()
 {
   writeResultKeyToResponse();
   beginResponseObject();
-  for (size_t method_index=0; method_index<internal_methods_.size(); ++method_index)
+  for (size_t method_index=0; method_index<methods_.size(); ++method_index)
   {
     if (method_index > private_method_index_)
     {
-      const ConstantString & method_name = internal_methods_[method_index].getName();
+      const ConstantString & method_name = methods_[method_index].getName();
       writeToResponse(method_name,method_index);
     }
-  }
-  for (size_t method_index=0; method_index<external_methods_.size(); ++method_index)
-  {
-    const ConstantString & method_name = external_methods_[method_index].getName();
-    int index = method_index + internal_methods_.max_size();
-    writeToResponse(method_name,index);
   }
   endResponseObject();
 }
@@ -2050,13 +1875,9 @@ void Server::getParametersCallback()
   beginResponseObject();
   writeKeyToResponse(constants::parameters_constant_string);
   json_stream_.beginArray();
-  for (size_t parameter_index=0; parameter_index<internal_parameters_.size(); ++parameter_index)
+  for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
   {
-    parameterHelp(internal_parameters_[parameter_index]);
-  }
-  for (size_t parameter_index=0; parameter_index<external_parameters_.size(); ++parameter_index)
-  {
-    parameterHelp(external_parameters_[parameter_index]);
+    parameterHelp(parameters_[parameter_index]);
   }
   json_stream_.endArray();
   endResponseObject();
@@ -2083,14 +1904,9 @@ void Server::getFieldDefaultValuesCallback()
 {
   writeResultKeyToResponse();
   beginResponseObject();
-  for (size_t i=0; i<internal_fields_.size(); ++i)
+  for (size_t i=0; i<fields_.size(); ++i)
   {
-    Field & field = internal_fields_[i];
-    writeFieldToResponse(field,true,true);
-  }
-  for (size_t i=0; i<external_fields_.size(); ++i)
-  {
-    Field & field = external_fields_[i];
+    Field & field = fields_[i];
     writeFieldToResponse(field,true,true);
   }
   endResponseObject();
@@ -2104,10 +1920,10 @@ void Server::setFieldsToDefaultsCallback()
 void Server::setFieldToDefaultCallback()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
     field.setDefaultValue();
   }
   else
@@ -2120,14 +1936,9 @@ void Server::getFieldValuesCallback()
 {
   writeResultKeyToResponse();
   beginResponseObject();
-  for (size_t i=0; i<internal_fields_.size(); ++i)
+  for (size_t i=0; i<fields_.size(); ++i)
   {
-    Field & field = internal_fields_[i];
-    writeFieldToResponse(field,true,false);
-  }
-  for (size_t i=0; i<external_fields_.size(); ++i)
-  {
-    Field & field = external_fields_[i];
+    Field & field = fields_[i];
     writeFieldToResponse(field,true,false);
   }
   endResponseObject();
@@ -2137,10 +1948,10 @@ void Server::getFieldValueCallback()
 {
   writeResultKeyToResponse();
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
     writeFieldToResponse(field,false,false);
   }
   else
@@ -2159,10 +1970,10 @@ void Server::getFieldElementValueCallback()
     writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
     return;
   }
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
     writeFieldToResponse(field,false,false,field_element_index);
   }
   else
@@ -2174,11 +1985,11 @@ void Server::getFieldElementValueCallback()
 void Server::setFieldValueCallback()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  const ConstantString & field_name_cs = field.getName();
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
+    const ConstantString & field_name_cs = field.getName();
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
     bool parameter_ok = checkParameter(field.getParameter(),json_value);
     if (!parameter_ok)
@@ -2248,11 +2059,11 @@ void Server::setFieldElementValueCallback()
     writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
     return;
   }
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  const ConstantString & field_name_cs = field.getName();
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
+    const ConstantString & field_name_cs = field.getName();
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
     bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
     if (!parameter_ok)
@@ -2374,12 +2185,12 @@ void Server::setFieldElementValueCallback()
 void Server::setAllFieldElementValuesCallback()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index;
-  Field & field = findField(field_name,&field_index);
-  ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-  const ConstantString & field_name_cs = field.getName();
-  if (field_index >= 0)
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
+    Field & field = fields_[field_index];
+    const ConstantString & field_name_cs = field.getName();
+    ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
     bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
     if (!parameter_ok)
     {

@@ -31,9 +31,15 @@ public:
   void setHardwareName(const ConstantString & hardware_name);
   void setHardwareVersion(const long hardware_major, const long hardware_minor);
 
-  // Field
+  // Storage
   template <size_t MAX_SIZE>
   void addFieldStorage(Field (&fields)[MAX_SIZE]);
+  template <size_t MAX_SIZE>
+  void addParameterStorage(Parameter (&parameters)[MAX_SIZE]);
+  template <size_t MAX_SIZE>
+  void addMethodStorage(Method (&methods)[MAX_SIZE]);
+
+  // Field
   template <typename T>
   Field & createField(const ConstantString & field_name,
                      const T & default_value);
@@ -80,15 +86,11 @@ public:
   void setFieldsToDefaults();
 
   // Parameter
-  template <size_t MAX_SIZE>
-  void addParameterStorage(Parameter (&parameters)[MAX_SIZE]);
   Parameter & createParameter(const ConstantString & parameter_name);
   Parameter & copyParameter(Parameter & parameter,const ConstantString & parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
 
   // Method
-  template <size_t MAX_SIZE>
-  void addMethodStorage(Method (&methods)[MAX_SIZE]);
   Method & createMethod(const ConstantString & method_name);
   Method & copyMethod(Method & method,const ConstantString & method_name);
 

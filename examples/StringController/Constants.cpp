@@ -10,8 +10,8 @@
 
 namespace constants
 {
-CONSTANT_STRING(device_name,"modular_server");
-CONSTANT_STRING(firmware_name,"string_controller");
+CONSTANT_STRING(device_name,"");
+CONSTANT_STRING(firmware_name,"StringController");
 // Use semantic versioning http://semver.org/
 const long firmware_major = 0;
 const long firmware_minor = 1;
