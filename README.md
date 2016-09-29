@@ -16,5 +16,8 @@ work with the Arduino Mega 2560, Teensy 3.2, and chipKIT Max32.
 
 ##More Detailed Modular Device Information
 
-<https://github.com/janelia-modular-devices/modular-devices>
+[modular-devices](https://github.com/janelia-modular-devices/modular-devices)
 
+##Install Library Dependencies
+
+[arduino-libraries](https://github.com/janelia-arduino/arduino-libraries)
