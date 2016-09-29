@@ -32,58 +32,51 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "device_info":{
-      "device_name":"",
-      "model_number":0,
-      "serial_number":0,
-      "firmware_name":"StringController",
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      },
-      "hardware_name":"mega",
-      "hardware_version":{
-        "major":0,
-        "minor":0
-      },
-      "processor":"ATmega2560"
+    "device_id":{
+      "name":"string_controller",
+      "form_factor":"mega",
+      "serial_number":0
     },
-    "methods":[
-      "getMemoryFree",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
-      "echo",
-      "length",
-      "startsWith",
-      "repeat",
-      "charsAt",
-      "startingChars",
-      "setStoredString",
-      "getStoredString"
-    ],
-    "parameters":[
-      "field_name",
-      "field_value",
-      "field_element_index",
-      "string",
-      "string2",
-      "count",
-      "index_array",
-      "double_echo"
-    ],
-    "fields":[
-      "serial_number",
-      "starting_chars_count",
-      "stored_string"
-    ]
+    "API":{
+      "methods":[
+        "getDeviceId",
+        "getDeviceInfo",
+        "getApi",
+        "getFieldDefaultValues",
+        "setFieldsToDefaults",
+        "setFieldToDefault",
+        "getFieldValues",
+        "getFieldValue",
+        "getFieldElementValue",
+        "setFieldValue",
+        "setFieldElementValue",
+        "setAllFieldElementValues",
+        "getMemoryFree",
+        "echo",
+        "length",
+        "startsWith",
+        "repeat",
+        "charsAt",
+        "startingChars",
+        "setStoredString",
+        "getStoredString"
+      ],
+      "parameters":[
+        "field_name",
+        "field_value",
+        "field_element_index",
+        "string",
+        "string2",
+        "count",
+        "index_array",
+        "double_echo"
+      ],
+      "fields":[
+        "serial_number",
+        "starting_chars_count",
+        "stored_string"
+      ]
+    }
   }
 }
 ```
@@ -309,34 +302,30 @@ Example Python session:
 ```python
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
-device_info = dev.get_device_info()
-{'device_name': '',
- 'firmware_name': 'StringController',
- 'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
- 'hardware_name': 'mega',
- 'hardware_version': {'major': 0, 'minor': 0},
- 'model_number': 0,
- 'processor': 'ATmega2560',
- 'serial_number': 0}
+dev.get_device_id()
+{'form_factor': 'mega', 'name': 'string_controller', 'serial_number': 0}
 dev.get_methods()
 ['starts_with',
  'get_memory_free',
  'repeat',
+ 'set_all_field_element_values',
  'starting_chars',
  'get_field_value',
  'get_field_element_value',
- 'set_stored_string',
+ 'get_api',
  'set_field_element_value',
- 'set_field_to_default',
+ 'length',
  'echo',
  'set_fields_to_defaults',
- 'length',
+ 'get_device_id',
  'get_field_default_values',
+ 'get_stored_string',
  'chars_at',
+ 'set_stored_string',
  'set_field_value',
- 'set_all_field_element_values',
+ 'set_field_to_default',
  'get_field_values',
- 'get_stored_string']
+ 'get_device_info']
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
@@ -376,7 +365,7 @@ dev.send_json_request('["starting_chars","Fantastic!"]')
 
 For more details on the Python interface:
 
-<https://github.com/janelia-modular-devices/modular_device_python>
+<https://github.com/janelia-pypi/modular_client_python>
 
 ###Matlab
 
@@ -392,20 +381,17 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
-device_info = dev.getDeviceInfo();
-device_info =
-  device_name: ''
-  model_number: 0
+dev.getDeviceId()
+ans =
+  name: 'string_controller'
+  form_factor: 'mega'
   serial_number: 0
-  firmware_name: 'StringController'
-  firmware_version: [1x1 struct]
-  hardware_name: 'mega'
-  hardware_version: [1x1 struct]
-  processor: 'ATmega2560'
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
-getMemoryFree
+getDeviceId
+getDeviceInfo
+getApi
 getFieldDefaultValues
 setFieldsToDefaults
 getFieldValues
@@ -414,6 +400,7 @@ getFieldElementValue
 setFieldValue
 setFieldElementValue
 setAllFieldElementValues
+getMemoryFree
 echo
 length
 startsWith
@@ -467,7 +454,7 @@ clear dev
 
 For more details on the Matlab interface:
 
-<https://github.com/janelia-modular-devices/modular_device_matlab>
+<https://github.com/janelia-matlab/modular_client_matlab>
 
 ##Installation
 

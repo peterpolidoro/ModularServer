@@ -15,20 +15,15 @@ void Controller::setup()
 {
   // Pin Setup
   pinMode(constants::led_pin, OUTPUT);
-  pinMode(constants::serial2_rx_pin,INPUT);
-  digitalWrite(constants::serial2_rx_pin,HIGH);
 
   // Device Info
   modular_server_.setDeviceName(constants::device_name);
-  modular_server_.setModelNumber(constants::model_number);
-  modular_server_.setFirmwareName(constants::firmware_name);
-  modular_server_.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
-  modular_server_.setHardwareName(constants::hardware_name);
-  modular_server_.setHardwareVersion(constants::hardware_major,constants::hardware_minor);
+  modular_server_.setFormFactor(constants::form_factor);
+  modular_server_.addFirmwareInfo(constants::firmware_info);
+  modular_server_.addHardwareInfo(constants::hardware_info);
 
   // Add Server Streams
   modular_server_.addServerStream(Serial);
-  modular_server_.addServerStream(constants::serial2);
 
   // Set Storage
   modular_server_.addFieldStorage(fields_);
@@ -66,7 +61,6 @@ void Controller::setup()
 
   // Setup Streams
   Serial.begin(constants::baudrate);
-  constants::serial2.begin(constants::baudrate);
 
   // Start Modular Device Server
   modular_server_.startServer();

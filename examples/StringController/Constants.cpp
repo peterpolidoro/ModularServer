@@ -10,35 +10,55 @@
 
 namespace constants
 {
-CONSTANT_STRING(device_name,"");
+CONSTANT_STRING(device_name,"string_controller");
+
 CONSTANT_STRING(firmware_name,"StringController");
 // Use semantic versioning http://semver.org/
-const long firmware_major = 0;
-const long firmware_minor = 1;
-const long firmware_patch = 0;
+const ModularDevice::FirmwareInfo firmware_info =
+  {
+    .name_ptr=&firmware_name,
+    .version_major=1,
+    .version_minor=0,
+    .version_patch=0,
+  };
 
 const size_t baudrate = 9600;
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
-const size_t model_number = 0;
+CONSTANT_STRING(form_factor,"mega");
 CONSTANT_STRING(hardware_name,"mega");
-const long hardware_major = 0;
-const long hardware_minor = 0;
+const ModularDevice::HardwareInfo hardware_info =
+  {
+    .name_ptr=&hardware_name,
+    .model_number=0,
+    .version_major=0,
+    .version_minor=0,
+  };
 
 #elif defined(__MK20DX128__) || defined(__MK20DX256__)
 
-const size_t model_number = 0;
+CONSTANT_STRING(form_factor,"teensy");
 CONSTANT_STRING(hardware_name,"teensy");
-const long hardware_major = 0;
-const long hardware_minor = 0;
+const ModularDevice::HardwareInfo hardware_info =
+  {
+    .name_ptr=&hardware_name,
+    .model_number=0,
+    .version_major=0,
+    .version_minor=0,
+  };
 
 #else
 
-const size_t model_number = 0;
+CONSTANT_STRING(form_factor,"");
 CONSTANT_STRING(hardware_name,"");
-const long hardware_major = 0;
-const long hardware_minor = 0;
+const ModularDevice::HardwareInfo hardware_info =
+  {
+    .name_ptr=&hardware_name,
+    .model_number=0,
+    .version_major=0,
+    .version_minor=0,
+  };
 
 #endif
 

@@ -26,29 +26,19 @@ void ModularServer::setDeviceName(const ConstantString & device_name)
   server_.setDeviceName(device_name);
 }
 
-void ModularServer::setFirmwareName(const ConstantString & firmware_name)
+void ModularServer::setFormFactor(const ConstantString & form_factor)
 {
-  server_.setFirmwareName(firmware_name);
+  server_.setFormFactor(form_factor);
 }
 
-void ModularServer::setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch)
+void ModularServer::addFirmwareInfo(const FirmwareInfo & firmware_info)
 {
-  server_.setFirmwareVersion(firmware_major,firmware_minor,firmware_patch);
+  server_.addFirmwareInfo(firmware_info);
 }
 
-void ModularServer::setHardwareName(const ConstantString & hardware_name)
+void ModularServer::addHardwareInfo(const HardwareInfo & hardware_info)
 {
-  server_.setHardwareName(hardware_name);
-}
-
-void ModularServer::setHardwareVersion(const long hardware_major, const long hardware_minor)
-{
-  server_.setHardwareVersion(hardware_major,hardware_minor);
-}
-
-void ModularServer::setModelNumber(const long model_number)
-{
-  server_.setModelNumber(model_number);
+  server_.addHardwareInfo(hardware_info);
 }
 
 // Storage

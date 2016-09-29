@@ -19,12 +19,6 @@ Server::Server() :
 void Server::setup()
 {
   setDeviceName(constants::empty_constant_string);
-  setFirmwareName(constants::empty_constant_string);
-  firmware_major_ = 0;
-  firmware_minor_ = 0;
-  firmware_patch_ = 0;
-  setHardwareName(constants::empty_constant_string);
-  model_number_ = 0;
   request_method_index_ = -1;
   parameter_count_ = 0;
   error_ = false;
@@ -32,6 +26,9 @@ void Server::setup()
   server_stream_index_ = 0;
 
   eeprom_initialized_ = false;
+
+  // Device Info
+  addFirmwareInfo(constants::firmware_info);
 
   // Add Storage
   addFieldStorage(server_fields_);
@@ -53,34 +50,36 @@ void Server::setup()
   field_element_index_parameter.setTypeLong();
 
   // Methods
-  Method & get_device_info_method = createMethod(constants::get_device_info_method_name);
-  get_device_info_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoCallback));
-  private_method_index_ = 0;
-
   Method & get_method_ids_method = createMethod(constants::get_method_ids_method_name);
   get_method_ids_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsCallback));
-  private_method_index_++;
-
-  Method & get_parameters_method = createMethod(constants::get_parameters_method_name);
-  get_parameters_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getParametersCallback));
-  private_method_index_++;
+  get_method_ids_method.setReturnTypeObject();
+  private_method_index_ = 0;
 
   Method & help_method = createMethod(constants::help_method_name);
   help_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::helpCallback));
+  help_method.setReturnTypeObject();
   private_method_index_++;
 
   Method & verbose_help_method = createMethod(constants::verbose_help_method_name);
   verbose_help_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpCallback));
+  verbose_help_method.setReturnTypeObject();
   private_method_index_++;
 
-#ifdef __AVR__
-  Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
-  get_memory_free_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeCallback));
-  get_memory_free_method.setReturnTypeLong();
-#endif
+  Method & get_device_id_method = createMethod(constants::get_device_id_method_name);
+  get_device_id_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdCallback));
+  get_device_id_method.setReturnTypeObject();
+
+  Method & get_device_info_method = createMethod(constants::get_device_info_method_name);
+  get_device_info_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoCallback));
+  get_device_info_method.setReturnTypeObject();
+
+  Method & get_api_method = createMethod(constants::get_api_method_name);
+  get_api_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getApiCallback));
+  get_api_method.setReturnTypeObject();
 
   Method & get_field_default_values_method = createMethod(constants::get_field_default_values_method_name);
   get_field_default_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesCallback));
+  get_field_default_values_method.setReturnTypeObject();
 
   Method & set_fields_to_defaults_method = createMethod(constants::set_fields_to_defaults_method_name);
   set_fields_to_defaults_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldsToDefaultsCallback));
@@ -120,6 +119,12 @@ void Server::setup()
   set_all_field_element_values_method.addParameter(field_name_parameter);
   set_all_field_element_values_method.addParameter(field_value_parameter);
 
+#ifdef __AVR__
+  Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
+  get_memory_free_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeCallback));
+  get_memory_free_method.setReturnTypeLong();
+#endif
+
   server_running_ = false;
 }
 
@@ -147,32 +152,19 @@ void Server::setDeviceName(const ConstantString & device_name)
   device_name_ptr_ = &device_name;
 }
 
-void Server::setModelNumber(const long model_number)
+void Server::setFormFactor(const ConstantString & form_factor)
 {
-  model_number_ = model_number;
+  form_factor_ptr_ = &form_factor;
 }
 
-void Server::setFirmwareName(const ConstantString & firmware_name)
+void Server::addFirmwareInfo(const constants::FirmwareInfo & firmware_info)
 {
-  firmware_name_ptr_ = &firmware_name;
+  firmware_info_array_.push_back(&firmware_info);
 }
 
-void Server::setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch)
+void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
 {
-  firmware_major_ = firmware_major;
-  firmware_minor_ = firmware_minor;
-  firmware_patch_ = firmware_patch;
-}
-
-void Server::setHardwareName(const ConstantString & hardware_name)
-{
-  hardware_name_ptr_ = &hardware_name;
-}
-
-void Server::setHardwareVersion(const long hardware_major, const long hardware_minor)
-{
-  hardware_major_ = hardware_major;
-  hardware_minor_ = hardware_minor;
+  hardware_info_array_.push_back(&hardware_info);
 }
 
 // Storage
@@ -1274,72 +1266,19 @@ void Server::help(bool verbose)
     param_error = false;
     writeResultKeyToResponse();
     beginResponseObject();
-    writeKeyToResponse(constants::device_info_constant_string);
-    writeDeviceInfoToResponse();
 
-    // ?
-    if (!verbose)
+    writeKeyToResponse(constants::device_id_constant_string);
+    writeDeviceIdToResponse();
+
+    if (verbose)
     {
-      writeKeyToResponse(constants::methods_constant_string);
-      beginResponseArray();
-      for (size_t method_index=0; method_index<methods_.size(); ++method_index)
-      {
-        if (method_index > private_method_index_)
-        {
-          const ConstantString & method_name = methods_[method_index].getName();
-          writeToResponse(method_name);
-        }
-      }
-      endResponseArray();
-
-      writeKeyToResponse(constants::parameters_constant_string);
-      beginResponseArray();
-      for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
-      {
-        const ConstantString & parameter_name = parameters_[parameter_index].getName();
-        writeToResponse(parameter_name);
-      }
-      endResponseArray();
-
-      writeKeyToResponse(constants::fields_constant_string);
-      beginResponseArray();
-      for (size_t field_index=0; field_index<fields_.size(); ++field_index)
-      {
-        const ConstantString & field_name = fields_[field_index].getName();
-        writeToResponse(field_name);
-      }
-      endResponseArray();
+      writeKeyToResponse(constants::device_info_constant_string);
+      writeDeviceInfoToResponse();
     }
-    // ??
-    else
-    {
-      writeKeyToResponse(constants::methods_constant_string);
-      beginResponseArray();
-      for (size_t method_index=0; method_index<methods_.size(); ++method_index)
-      {
-        if (method_index > private_method_index_)
-        {
-          methodHelp(false,method_index);
-        }
-      }
-      endResponseArray();
 
-      writeKeyToResponse(constants::parameters_constant_string);
-      beginResponseArray();
-      for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
-      {
-        parameterHelp(parameters_[parameter_index]);
-      }
-      endResponseArray();
+    writeKeyToResponse(constants::api_constant_string);
+    writeApiToResponse(verbose);
 
-      writeKeyToResponse(constants::fields_constant_string);
-      beginResponseArray();
-      for (size_t field_index=0; field_index<fields_.size(); ++field_index)
-      {
-        fieldHelp(fields_[field_index]);
-      }
-      endResponseArray();
-    }
     endResponseObject();
   }
   // ? method
@@ -1416,26 +1355,125 @@ void Server::help(bool verbose)
   }
 }
 
+void Server::writeDeviceIdToResponse()
+{
+  beginResponseObject();
+
+  writeToResponse(constants::name_constant_string,device_name_ptr_);
+  writeToResponse(constants::form_factor_constant_string,form_factor_ptr_);
+  writeToResponse(constants::serial_number_field_name,getSerialNumber());
+
+  endResponseObject();
+}
+
 void Server::writeDeviceInfoToResponse()
 {
   beginResponseObject();
-  writeToResponse(constants::device_name_constant_string,device_name_ptr_);
-  writeToResponse(constants::model_number_constant_string,model_number_);
-  writeToResponse(constants::serial_number_field_name,getSerialNumber());
-  writeToResponse(constants::firmware_name_constant_string,firmware_name_ptr_);
-  writeKeyToResponse(constants::firmware_version_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::major_constant_string,firmware_major_);
-  writeToResponse(constants::minor_constant_string,firmware_minor_);
-  writeToResponse(constants::patch_constant_string,firmware_patch_);
-  endResponseObject();
-  writeToResponse(constants::hardware_name_constant_string,hardware_name_ptr_);
-  writeKeyToResponse(constants::hardware_version_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::major_constant_string,hardware_major_);
-  writeToResponse(constants::minor_constant_string,hardware_minor_);
-  endResponseObject();
+
+  char version_str[constants::STRING_LENGTH_VERSION];
+
+  writeKeyToResponse(constants::firmware_constant_string);
+  beginResponseArray();
+  for (size_t i=0; i<firmware_info_array_.size(); ++i)
+  {
+    const constants::FirmwareInfo * firmware_info_ptr = firmware_info_array_[i];
+    beginResponseObject();
+    writeToResponse(constants::name_constant_string,firmware_info_ptr->name_ptr);
+    versionToString(version_str,
+                    firmware_info_ptr->version_major,
+                    firmware_info_ptr->version_minor,
+                    firmware_info_ptr->version_patch);
+    writeToResponse(constants::version_constant_string,version_str);
+    endResponseObject();
+  }
+  endResponseArray();
+
+  writeKeyToResponse(constants::hardware_constant_string);
+  beginResponseArray();
+  for (size_t i=0; i<hardware_info_array_.size(); ++i)
+  {
+    const constants::HardwareInfo * hardware_info_ptr = hardware_info_array_[i];
+    beginResponseObject();
+    writeToResponse(constants::name_constant_string,hardware_info_ptr->name_ptr);
+    writeToResponse(constants::model_number_constant_string,hardware_info_ptr->model_number);
+    versionToString(version_str,
+                    hardware_info_ptr->version_major,
+                    hardware_info_ptr->version_minor);
+    writeToResponse(constants::version_constant_string,version_str);
+    endResponseObject();
+  }
+  endResponseArray();
+
   writeToResponse(constants::processor_constant_string,constants::processor_name_constant_string);
+
+  endResponseObject();
+}
+
+void Server::writeApiToResponse(bool verbose)
+{
+  beginResponseObject();
+
+  if (!verbose)
+  {
+    writeKeyToResponse(constants::methods_constant_string);
+    beginResponseArray();
+    for (size_t method_index=0; method_index<methods_.size(); ++method_index)
+    {
+      if (method_index > private_method_index_)
+      {
+        const ConstantString & method_name = methods_[method_index].getName();
+        writeToResponse(method_name);
+      }
+    }
+    endResponseArray();
+
+    writeKeyToResponse(constants::parameters_constant_string);
+    beginResponseArray();
+    for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
+    {
+      const ConstantString & parameter_name = parameters_[parameter_index].getName();
+      writeToResponse(parameter_name);
+    }
+    endResponseArray();
+
+    writeKeyToResponse(constants::fields_constant_string);
+    beginResponseArray();
+    for (size_t field_index=0; field_index<fields_.size(); ++field_index)
+    {
+      const ConstantString & field_name = fields_[field_index].getName();
+      writeToResponse(field_name);
+    }
+    endResponseArray();
+  }
+  else
+  {
+    writeKeyToResponse(constants::methods_constant_string);
+    beginResponseArray();
+    for (size_t method_index=0; method_index<methods_.size(); ++method_index)
+    {
+      if (method_index > private_method_index_)
+      {
+        methodHelp(false,method_index);
+      }
+    }
+    endResponseArray();
+
+    writeKeyToResponse(constants::parameters_constant_string);
+    beginResponseArray();
+    for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
+    {
+      parameterHelp(parameters_[parameter_index]);
+    }
+    endResponseArray();
+
+    writeKeyToResponse(constants::fields_constant_string);
+    beginResponseArray();
+    for (size_t field_index=0; field_index<fields_.size(); ++field_index)
+    {
+      fieldHelp(fields_[field_index]);
+    }
+    endResponseArray();
+  }
   endResponseObject();
 }
 
@@ -1756,6 +1794,27 @@ void Server::writeFieldErrorToResponse(const ConstantString & error)
   endResponseObject();
 }
 
+void Server::versionToString(char* destination, const long major, const long minor, const long patch)
+{
+  destination[0] = '\0';
+  char version_field_str[constants::STRING_LENGTH_VERSION_FIELD];
+  char version_field_sep_str[constants::version_field_separator_constant_string.length()+1];
+  constants::version_field_separator_constant_string.copy(version_field_sep_str);
+
+  ltoa(major,destination,10);
+  strcat(destination,version_field_sep_str);
+  version_field_str[0] = '\0';
+  ltoa(minor,version_field_str,10);
+  strcat(destination,version_field_str);
+  if (patch >= 0)
+  {
+    strcat(destination,version_field_sep_str);
+    version_field_str[0] = '\0';
+    ltoa(patch,version_field_str,10);
+    strcat(destination,version_field_str);
+  }
+}
+
 void Server::subsetToString(char * destination, Vector<const constants::SubsetMemberType> & subset, const JsonStream::JsonTypes type, const size_t num)
 {
   size_t length_left = num;
@@ -1844,12 +1903,6 @@ void Server::subsetToString(char * destination, Vector<const constants::SubsetMe
 }
 
 // Callbacks
-void Server::getDeviceInfoCallback()
-{
-  writeResultKeyToResponse();
-  writeDeviceInfoToResponse();
-}
-
 void Server::getMethodIdsCallback()
 {
   writeResultKeyToResponse();
@@ -1865,20 +1918,6 @@ void Server::getMethodIdsCallback()
   endResponseObject();
 }
 
-void Server::getParametersCallback()
-{
-  writeResultKeyToResponse();
-  beginResponseObject();
-  writeKeyToResponse(constants::parameters_constant_string);
-  json_stream_.beginArray();
-  for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
-  {
-    parameterHelp(parameters_[parameter_index]);
-  }
-  json_stream_.endArray();
-  endResponseObject();
-}
-
 void Server::helpCallback()
 {
   help(false);
@@ -1887,6 +1926,24 @@ void Server::helpCallback()
 void Server::verboseHelpCallback()
 {
   help(true);
+}
+
+void Server::getDeviceIdCallback()
+{
+  writeResultKeyToResponse();
+  writeDeviceIdToResponse();
+}
+
+void Server::getDeviceInfoCallback()
+{
+  writeResultKeyToResponse();
+  writeDeviceInfoToResponse();
+}
+
+void Server::getApiCallback()
+{
+  writeResultKeyToResponse();
+  writeApiToResponse(true);
 }
 
 #ifdef __AVR__

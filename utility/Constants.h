@@ -14,12 +14,13 @@ namespace ModularDevice
 {
 namespace constants
 {
-enum {STORAGE_ARRAY_COUNT_MAX=6};
+enum {STORAGE_ARRAY_COUNT_MAX=7};
+enum {HARDWARE_INFO_ARRAY_COUNT_MAX=3};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_FIELD_COUNT_MAX=1};
 enum{SERVER_PARAMETER_COUNT_MAX=3};
-enum{SERVER_METHOD_COUNT_MAX=15};
+enum{SERVER_METHOD_COUNT_MAX=16};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
@@ -30,9 +31,27 @@ enum{STRING_LENGTH_ERROR=257};
 enum{STRING_LENGTH_PARAMETER_COUNT=3};
 enum{STRING_LENGTH_SUBSET=257};
 enum{STRING_LENGTH_SUBSET_ELEMENT=12};
+enum{STRING_LENGTH_VERSION=18};
+enum{STRING_LENGTH_VERSION_FIELD=6};
 enum{SUBSET_ELEMENT_COUNT_MAX=20};
 
 enum {JSON_TOKEN_MAX=32};
+
+struct FirmwareInfo
+{
+  const ConstantString * const name_ptr;
+  const size_t version_major;
+  const size_t version_minor;
+  const size_t version_patch;
+};
+
+struct HardwareInfo
+{
+  const ConstantString * const name_ptr;
+  const size_t model_number;
+  const size_t version_major;
+  const size_t version_minor;
+};
 
 union NumberType
 {
@@ -45,6 +64,9 @@ union SubsetMemberType
   const long l;
   ConstantString * const cs_ptr;
 };
+
+extern ConstantString firmware_name;
+extern const FirmwareInfo firmware_info;
 
 // Fields
 extern ConstantString serial_number_field_name;
@@ -59,11 +81,12 @@ extern ConstantString field_value_parameter_name;
 extern ConstantString field_element_index_parameter_name;
 
 // Methods
-extern ConstantString get_device_info_method_name;
 extern ConstantString get_method_ids_method_name;
-extern ConstantString get_parameters_method_name;
 extern ConstantString help_method_name;
 extern ConstantString verbose_help_method_name;
+extern ConstantString get_device_id_method_name;
+extern ConstantString get_device_info_method_name;
+extern ConstantString get_api_method_name;
 extern ConstantString get_memory_free_method_name;
 extern ConstantString get_field_default_values_method_name;
 extern ConstantString set_fields_to_defaults_method_name;
@@ -116,9 +139,9 @@ extern ConstantString error_constant_string;
 extern ConstantString message_constant_string;
 extern ConstantString data_constant_string;
 extern ConstantString code_constant_string;
-extern ConstantString device_name_constant_string;
-extern ConstantString firmware_name_constant_string;
-extern ConstantString hardware_name_constant_string;
+extern ConstantString form_factor_constant_string;
+extern ConstantString firmware_constant_string;
+extern ConstantString hardware_constant_string;
 extern ConstantString name_constant_string;
 extern ConstantString type_constant_string;
 extern ConstantString units_constant_string;
@@ -134,13 +157,11 @@ extern ConstantString array_element_min_constant_string;
 extern ConstantString array_element_max_constant_string;
 extern ConstantString array_length_min_constant_string;
 extern ConstantString array_length_max_constant_string;
+extern ConstantString version_constant_string;
 extern ConstantString model_number_constant_string;
-extern ConstantString firmware_version_constant_string;
-extern ConstantString hardware_version_constant_string;
-extern ConstantString major_constant_string;
-extern ConstantString minor_constant_string;
-extern ConstantString patch_constant_string;
+extern ConstantString device_id_constant_string;
 extern ConstantString device_info_constant_string;
+extern ConstantString api_constant_string;
 extern ConstantString value_constant_string;
 extern ConstantString default_value_constant_string;
 extern ConstantString question_constant_string;
@@ -154,6 +175,7 @@ extern ConstantString array_length_constant_string;
 extern ConstantString array_open_constant_string;
 extern ConstantString array_close_constant_string;
 extern ConstantString array_separator_constant_string;
+extern ConstantString version_field_separator_constant_string;
 extern ConstantString subset_constant_string;
 extern ConstantString array_element_subset_constant_string;
 extern ConstantString processor_constant_string;

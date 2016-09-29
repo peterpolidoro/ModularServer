@@ -32,43 +32,36 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "device_info":{
-      "device_name":"",
-      "model_number":0,
-      "serial_number":0,
-      "firmware_name":"MinimalDevice",
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      },
-      "hardware_name":"mega",
-      "hardware_version":{
-        "major":0,
-        "minor":0
-      },
-      "processor":"ATmega2560"
+    "device_id":{
+      "name":"minimal_device",
+      "form_factor":"mega",
+      "serial_number":0
     },
-    "methods":[
-      "getMemoryFree",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues"
-    ],
-    "parameters":[
-      "field_name",
-      "field_value",
-      "field_element_index"
-    ],
-    "fields":[
-      "serial_number"
-    ]
+    "API":{
+      "methods":[
+        "getDeviceId",
+        "getDeviceInfo",
+        "getApi",
+        "getFieldDefaultValues",
+        "setFieldsToDefaults",
+        "setFieldToDefault",
+        "getFieldValues",
+        "getFieldValue",
+        "getFieldElementValue",
+        "setFieldValue",
+        "setFieldElementValue",
+        "setAllFieldElementValues",
+        "getMemoryFree"
+      ],
+      "parameters":[
+        "field_name",
+        "field_value",
+        "field_element_index"
+      ],
+      "fields":[
+        "serial_number"
+      ]
+    }
   }
 }
 ```
@@ -88,7 +81,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5762
+  "result":5688
 }
 ```
 
@@ -107,110 +100,141 @@ Example Response:
 {
   "id":"??",
   "result":{
-    "device_info":{
-      "name":"MinimalDevice",
-      "model_number":1000,
-      "board":"mega",
-      "serial_number":0,
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      }
+    "device_id":{
+      "name":"minimal_device",
+      "form_factor":"mega",
+      "serial_number":0
     },
-    "methods":[
-      {
-        "name":"getMemoryFree",
-        "parameters":[],
-        "result_type":"long"
-      },
-      {
-        "name":"getFieldDefaultValues",
-        "parameters":[],
-        "result_type":null
-      },
-      {
-        "name":"setFieldsToDefaults",
-        "parameters":[],
-        "result_type":null
-      },
-      {
-        "name":"setFieldToDefault",
-        "parameters":[
-          "field_name"
-        ],
-        "result_type":null
-      },
-      {
-        "name":"getFieldValues",
-        "parameters":[],
-        "result_type":"object"
-      },
-      {
-        "name":"getFieldValue",
-        "parameters":[
-          "field_name"
-        ],
-        "result_type":"value"
-      },
-      {
-        "name":"getFieldElementValue",
-        "parameters":[
-          "field_name",
-          "field_element_index"
-        ],
-        "result_type":"value"
-      },
-      {
-        "name":"setFieldValue",
-        "parameters":[
-          "field_name",
-          "field_value"
-        ],
-        "result_type":null
-      },
-      {
-        "name":"setFieldElementValue",
-        "parameters":[
-          "field_name",
-          "field_element_index",
-          "field_value"
-        ],
-        "result_type":null
-      },
-      {
-        "name":"setAllFieldElementValues",
-        "parameters":[
-          "field_name",
-          "field_value"
-        ],
-        "result_type":null
-      }
-    ],
-    "parameters":[
-      {
-        "name":"field_name",
-        "type":"string"
-      },
-      {
-        "name":"field_value",
-        "type":"value"
-      },
-      {
-        "name":"field_element_index",
-        "type":"long"
-      }
-    ],
-    "fields":[
-      {
-        "name":"serial_number",
-        "type":"long",
-        "min":0,
-        "max":65535,
-        "value":0,
-        "default_value":0
-      }
-    ]
+    "device_info":{
+      "firmware":[
+        {
+          "name":"ModularServer",
+          "version":"1.0.0"
+        },
+        {
+          "name":"MinimalDevice",
+          "version":"1.0.0"
+        }
+      ],
+      "hardware":[
+        {
+          "name":"mega",
+          "model_number":0,
+          "version":"0.0"
+        }
+      ],
+      "processor":"ATmega2560"
+    },
+    "API":{
+      "methods":[
+        {
+          "name":"getDeviceId",
+          "parameters":[],
+          "result_type":"object"
+        },
+        {
+          "name":"getDeviceInfo",
+          "parameters":[],
+          "result_type":"object"
+        },
+        {
+          "name":"getApi",
+          "parameters":[],
+          "result_type":"object"
+        },
+        {
+          "name":"getFieldDefaultValues",
+          "parameters":[],
+          "result_type":"object"
+        },
+        {
+          "name":"setFieldsToDefaults",
+          "parameters":[],
+          "result_type":null
+        },
+        {
+          "name":"setFieldToDefault",
+          "parameters":[
+            "field_name"
+          ],
+          "result_type":null
+        },
+        {
+          "name":"getFieldValues",
+          "parameters":[],
+          "result_type":"object"
+        },
+        {
+          "name":"getFieldValue",
+          "parameters":[
+            "field_name"
+          ],
+          "result_type":"value"
+        },
+        {
+          "name":"getFieldElementValue",
+          "parameters":[
+            "field_name",
+            "field_element_index"
+          ],
+          "result_type":"value"
+        },
+        {
+          "name":"setFieldValue",
+          "parameters":[
+            "field_name",
+            "field_value"
+          ],
+          "result_type":null
+        },
+        {
+          "name":"setFieldElementValue",
+          "parameters":[
+            "field_name",
+            "field_element_index",
+            "field_value"
+          ],
+          "result_type":null
+        },
+        {
+          "name":"setAllFieldElementValues",
+          "parameters":[
+            "field_name",
+            "field_value"
+          ],
+          "result_type":null
+        },
+        {
+          "name":"getMemoryFree",
+          "parameters":[],
+          "result_type":"long"
+        }
+      ],
+      "parameters":[
+        {
+          "name":"field_name",
+          "type":"string"
+        },
+        {
+          "name":"field_value",
+          "type":"value"
+        },
+        {
+          "name":"field_element_index",
+          "type":"long"
+        }
+      ],
+      "fields":[
+        {
+          "name":"serial_number",
+          "type":"long",
+          "min":0,
+          "max":65535,
+          "value":0,
+          "default_value":0
+        }
+      ]
+    }
   }
 }
 ```
@@ -396,28 +420,24 @@ Example Python session:
 ```python
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
-dev.get_device_info()
-{'device_name': '',
- 'firmware_name': 'MinimalDevice',
- 'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
- 'hardware_name': 'mega',
- 'hardware_version': {'major': 0, 'minor': 0},
- 'model_number': 0,
- 'processor': 'ATmega2560',
- 'serial_number': 0}
+dev.get_device_id()
+{'form_factor': '', 'name': 'minimal_device', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
  'get_field_value',
  'get_field_element_value',
+ 'get_api',
  'set_field_element_value',
  'set_all_field_element_values',
  'set_fields_to_defaults',
+ 'get_device_id',
  'get_field_default_values',
  'set_field_value',
  'set_field_to_default',
- 'get_field_values']
+ 'get_field_values',
+ 'get_device_info']
 dev.get_memory_free()
-5762
+5688
 dev.get_field_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_field_value('?')
@@ -439,7 +459,7 @@ dev.get_field_value('serial_number')
 
 For more details on the Python interface:
 
-<https://github.com/janelia-modular-devices/modular_device_python>
+<https://github.com/janelia-pypi/modular_client_python>
 
 ###Matlab
 
@@ -455,25 +475,17 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
-device_info = dev.getDeviceInfo()
-device_info =
-  device_name: ''
-  model_number: 0
-  serial_number: 0
-  firmware_name: 'MinimalDevice'
-  firmware_version: [1x1 struct]
-  hardware_name: 'mega'
-  hardware_version: [1x1 struct]
-  processor: 'ATmega2560'
-device_info.firmware_version
+dev.getDeviceId()
 ans =
-  major: 0
-  minor: 1
-  patch: 0
+  name: 'minimal_device'
+  form_factor: 'mega'
+  serial_number: 0
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
-getMemoryFree
+getDeviceId
+getDeviceInfo
+getApi
 getFieldDefaultValues
 setFieldsToDefaults
 getFieldValues
@@ -482,9 +494,10 @@ getFieldElementValue
 setFieldValue
 setFieldElementValue
 setAllFieldElementValues
+getMemoryFree
 dev.getMemoryFree()
 ans =
-  5762
+  5688
 dev.getFieldValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.getFieldValue('?')
@@ -516,7 +529,7 @@ clear dev
 
 For more details on the Matlab interface:
 
-<https://github.com/janelia-modular-devices/modular_device_matlab>
+<https://github.com/janelia-matlab/modular_client_matlab>
 
 ##Installation
 

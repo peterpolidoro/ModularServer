@@ -8,7 +8,7 @@ License:
 
     BSD
 
-This firmware requires at least 2.1KB of SRAM and 48KB of flash
+This firmware requires at least 2.5KB of SRAM and 50KB of flash
 memory, so it needs at least Arduino Mega level resources. Known to
 work with the Arduino Mega 2560, Teensy 3.2, and chipKIT Max32.
 

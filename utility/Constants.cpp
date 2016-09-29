@@ -11,6 +11,16 @@ namespace ModularDevice
 {
 namespace constants
 {
+CONSTANT_STRING(firmware_name,"ModularServer");
+// Use semantic versioning http://semver.org/
+const FirmwareInfo firmware_info =
+  {
+    .name_ptr=&firmware_name,
+    .version_major=1,
+    .version_minor=0,
+    .version_patch=0,
+  };
+
 // Fields
 CONSTANT_STRING(serial_number_field_name,"serial_number");
 
@@ -24,11 +34,12 @@ CONSTANT_STRING(field_value_parameter_name,"field_value");
 CONSTANT_STRING(field_element_index_parameter_name,"field_element_index");
 
 // Methods
-CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
 CONSTANT_STRING(get_method_ids_method_name,"getMethodIds");
-CONSTANT_STRING(get_parameters_method_name,"getParameters");
 CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
+CONSTANT_STRING(get_device_id_method_name,"getDeviceId");
+CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
+CONSTANT_STRING(get_api_method_name,"getApi");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
 CONSTANT_STRING(get_field_default_values_method_name,"getFieldDefaultValues");
 CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");
@@ -80,9 +91,9 @@ CONSTANT_STRING(error_constant_string,"error");
 CONSTANT_STRING(message_constant_string,"message");
 CONSTANT_STRING(data_constant_string,"data");
 CONSTANT_STRING(code_constant_string,"code");
-CONSTANT_STRING(device_name_constant_string,"device_name");
-CONSTANT_STRING(firmware_name_constant_string,"firmware_name");
-CONSTANT_STRING(hardware_name_constant_string,"hardware_name");
+CONSTANT_STRING(form_factor_constant_string,"form_factor");
+CONSTANT_STRING(firmware_constant_string,"firmware");
+CONSTANT_STRING(hardware_constant_string,"hardware");
 CONSTANT_STRING(name_constant_string,"name");
 CONSTANT_STRING(type_constant_string,"type");
 CONSTANT_STRING(units_constant_string,"units");
@@ -98,13 +109,11 @@ CONSTANT_STRING(array_element_min_constant_string,"array_element_min");
 CONSTANT_STRING(array_element_max_constant_string,"array_element_max");
 CONSTANT_STRING(array_length_min_constant_string,"array_length_min");
 CONSTANT_STRING(array_length_max_constant_string,"array_length_max");
+CONSTANT_STRING(version_constant_string,"version");
 CONSTANT_STRING(model_number_constant_string,"model_number");
-CONSTANT_STRING(firmware_version_constant_string,"firmware_version");
-CONSTANT_STRING(hardware_version_constant_string,"hardware_version");
-CONSTANT_STRING(major_constant_string,"major");
-CONSTANT_STRING(minor_constant_string,"minor");
-CONSTANT_STRING(patch_constant_string,"patch");
+CONSTANT_STRING(device_id_constant_string,"device_id");
 CONSTANT_STRING(device_info_constant_string,"device_info");
+CONSTANT_STRING(api_constant_string,"API");
 CONSTANT_STRING(value_constant_string,"value");
 CONSTANT_STRING(default_value_constant_string,"default_value");
 CONSTANT_STRING(question_constant_string,"?");
@@ -118,6 +127,7 @@ CONSTANT_STRING(array_length_constant_string," array length");
 CONSTANT_STRING(array_open_constant_string,"[");
 CONSTANT_STRING(array_close_constant_string,"]");
 CONSTANT_STRING(array_separator_constant_string,",");
+CONSTANT_STRING(version_field_separator_constant_string,".");
 CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(processor_constant_string,"processor");

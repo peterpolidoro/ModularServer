@@ -38,11 +38,9 @@ public:
 
   // Device Info
   void setDeviceName(const ConstantString & device_name);
-  void setModelNumber(const long model_number);
-  void setFirmwareName(const ConstantString & firmware_name);
-  void setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch);
-  void setHardwareName(const ConstantString & hardware_name);
-  void setHardwareVersion(const long hardware_major, const long hardware_minor);
+  void setFormFactor(const ConstantString & form_factor);
+  void addFirmwareInfo(const constants::FirmwareInfo & firmware_info);
+  void addHardwareInfo(const constants::HardwareInfo & hardware_info);
 
   // Storage
   template <size_t MAX_SIZE>
@@ -162,6 +160,7 @@ private:
   size_t server_stream_index_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray  * request_json_array_ptr_;
+
   Field server_fields_[constants::SERVER_FIELD_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
   Method server_methods_[constants::SERVER_METHOD_COUNT_MAX];
@@ -170,14 +169,10 @@ private:
   ConcatenatedArray<Method,constants::STORAGE_ARRAY_COUNT_MAX> methods_;
   int private_method_index_;
   const ConstantString * device_name_ptr_;
-  long model_number_;
-  const ConstantString * firmware_name_ptr_;
-  long firmware_major_;
-  long firmware_minor_;
-  long firmware_patch_;
-  const ConstantString * hardware_name_ptr_;
-  long hardware_major_;
-  long hardware_minor_;
+  const ConstantString * form_factor_ptr_;
+  Array<const constants::FirmwareInfo *,constants::STORAGE_ARRAY_COUNT_MAX> firmware_info_array_;
+  Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
+
   int request_method_index_;
   int parameter_count_;
   JsonStream json_stream_;
@@ -210,20 +205,23 @@ private:
   void initializeEeprom();
   void incrementServerStream();
   void help(bool verbose);
+  void writeDeviceIdToResponse();
   void writeDeviceInfoToResponse();
+  void writeApiToResponse(bool verbose);
   void writeParameterNotInSubsetErrorToResponse(Parameter & parameter, Vector<const constants::SubsetMemberType> & subset);
   void writeParameterNotInRangeErrorToResponse(Parameter & parameter, char min_str[], char max_str[]);
   void writeFieldToResponse(Field & field, bool write_key=false, bool write_default=false, int element_index=-1);
   void writeFieldErrorToResponse(const ConstantString & error);
+  void versionToString(char* destination, const long major, const long minor, const long patch=-1);
   void subsetToString(char * destination, Vector<const constants::SubsetMemberType> & subset, const JsonStream::JsonTypes type, const size_t num);
 
   // Callbacks
-  void getDeviceInfoCallback();
   void getMethodIdsCallback();
-  void getResponseCodesCallback();
-  void getParametersCallback();
   void helpCallback();
   void verboseHelpCallback();
+  void getDeviceIdCallback();
+  void getDeviceInfoCallback();
+  void getApiCallback();
   void getMemoryFreeCallback();
   void getFieldDefaultValuesCallback();
   void setFieldsToDefaultsCallback();

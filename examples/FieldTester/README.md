@@ -32,73 +32,66 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "device_info":{
-      "device_name":"",
-      "model_number":0,
-      "serial_number":0,
-      "firmware_name":"FieldTester",
-      "firmware_version":{
-        "major":0,
-        "minor":1,
-        "patch":0
-      },
-      "hardware_name":"mega",
-      "hardware_version":{
-        "major":0,
-        "minor":0
-      },
-      "processor":"ATmega2560"
+    "device_id":{
+      "name":"field_tester",
+      "form_factor":"mega",
+      "serial_number":0
     },
-    "methods":[
-      "getMemoryFree",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
-      "getDoubled",
-      "getBool",
-      "getLongArrayFixed",
-      "getLongArrayVariable",
-      "setLongArrayFixed",
-      "setLongArrayVariable",
-      "setLongArrayParameter",
-      "getStringAll",
-      "getStringSome",
-      "getCount",
-      "getCountArray",
-      "getDirection",
-      "getDirectionArray",
-      "checkMode",
-      "incrementMode"
-    ],
-    "parameters":[
-      "field_name",
-      "field_value",
-      "field_element_index",
-      "long_array_parameter",
-      "length_parameter",
-      "count",
-      "count_array",
-      "direction",
-      "direction_array"
-    ],
-    "fields":[
-      "serial_number",
-      "double",
-      "bool",
-      "long_array",
-      "double_array",
-      "bool_array",
-      "string",
-      "odd",
-      "mode",
-      "odd_array"
-    ]
+    "API":{
+      "methods":[
+        "getDeviceId",
+        "getDeviceInfo",
+        "getApi",
+        "getFieldDefaultValues",
+        "setFieldsToDefaults",
+        "setFieldToDefault",
+        "getFieldValues",
+        "getFieldValue",
+        "getFieldElementValue",
+        "setFieldValue",
+        "setFieldElementValue",
+        "setAllFieldElementValues",
+        "getMemoryFree",
+        "getDoubled",
+        "getBool",
+        "getLongArrayFixed",
+        "getLongArrayVariable",
+        "setLongArrayFixed",
+        "setLongArrayVariable",
+        "setLongArrayParameter",
+        "getStringAll",
+        "getStringSome",
+        "getCount",
+        "getCountArray",
+        "getDirection",
+        "getDirectionArray",
+        "checkMode",
+        "incrementMode"
+      ],
+      "parameters":[
+        "field_name",
+        "field_value",
+        "field_element_index",
+        "long_array_parameter",
+        "length_parameter",
+        "count",
+        "count_array",
+        "direction",
+        "direction_array"
+      ],
+      "fields":[
+        "serial_number",
+        "double",
+        "bool",
+        "long_array",
+        "double_array",
+        "bool_array",
+        "string",
+        "odd",
+        "mode",
+        "odd_array"
+      ]
+    }
   }
 }
 ```
@@ -427,15 +420,8 @@ Example Python session:
 ```python
 from modular_device import ModularDevice
 dev = ModularDevice() # Automatically finds device if one available
-dev.get_device_info()
-{'device_name': '',
- 'firmware_name': 'FieldTester',
- 'firmware_version': {'major': 0, 'minor': 1, 'patch': 0},
- 'hardware_name': 'mega',
- 'hardware_version': {'major': 0, 'minor': 0},
- 'model_number': 0,
- 'processor': 'ATmega2560',
- 'serial_number': 0}
+dev.get_device_id()
+{'form_factor': 'mega', 'name': 'field_tester', 'serial_number': 0}
 dev.get_methods()
 ['get_count_array',
  'get_long_array_fixed',
@@ -445,10 +431,12 @@ dev.get_methods()
  'get_count',
  'set_field_value',
  'get_string_some',
+ 'get_device_info',
  'get_memory_free',
  'set_field_element_value',
  'set_long_array_variable',
  'set_fields_to_defaults',
+ 'get_device_id',
  'increment_mode',
  'get_direction_array',
  'set_long_array_fixed',
@@ -458,6 +446,7 @@ dev.get_methods()
  'check_mode',
  'get_field_value',
  'get_field_element_value',
+ 'get_api',
  'get_doubled',
  'get_bool',
  'set_field_to_default',
@@ -509,7 +498,7 @@ dev.set_fields_to_defaults()
 
 For more details on the Python interface:
 
-<https://github.com/janelia-modular-devices/modular_device_python>
+<https://github.com/janelia-pypi/modular_client_python>
 
 ###Matlab
 
@@ -525,20 +514,17 @@ getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularDevice(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
-device_info = dev.getDeviceInfo()
-device_info =
-  device_name: ''
-  model_number: 0
+dev.getDeviceId()
+ans =
+  name: 'field_tester'
+  form_factor: 'mega'
   serial_number: 0
-  firmware_name: 'FieldTester'
-  firmware_version: [1x1 struct]
-  hardware_name: 'mega'
-  hardware_version: [1x1 struct]
-  processor: 'ATmega2560'
 dev.getMethods()                 % get device methods
 Modular Device Methods
 ---------------------
-getMemoryFree
+getDeviceId
+getDeviceInfo
+getApi
 getFieldDefaultValues
 setFieldsToDefaults
 getFieldValues
@@ -547,6 +533,7 @@ getFieldElementValue
 setFieldValue
 setFieldElementValue
 setAllFieldElementValues
+getMemoryFree
 getDoubled
 getBool
 getLongArrayFixed
@@ -605,7 +592,7 @@ clear dev
 
 For more details on the Matlab interface:
 
-<https://github.com/janelia-modular-devices/modular_device_matlab>
+<https://github.com/janelia-matlab/modular_client_matlab>
 
 ##Installation
 

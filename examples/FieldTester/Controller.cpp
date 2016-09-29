@@ -17,11 +17,9 @@ void Controller::setup()
 
   // Device Info
   modular_server_.setDeviceName(constants::device_name);
-  modular_server_.setModelNumber(constants::model_number);
-  modular_server_.setFirmwareName(constants::firmware_name);
-  modular_server_.setFirmwareVersion(constants::firmware_major,constants::firmware_minor,constants::firmware_patch);
-  modular_server_.setHardwareName(constants::hardware_name);
-  modular_server_.setHardwareVersion(constants::hardware_major,constants::hardware_minor);
+  modular_server_.setFormFactor(constants::form_factor);
+  modular_server_.addFirmwareInfo(constants::firmware_info);
+  modular_server_.addHardwareInfo(constants::hardware_info);
 
   // Add Server Streams
   modular_server_.addServerStream(Serial);

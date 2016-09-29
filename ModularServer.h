@@ -13,6 +13,8 @@
 namespace ModularDevice
 {
 class Method;
+using FirmwareInfo = constants::FirmwareInfo;
+using HardwareInfo = constants::HardwareInfo;
 using SubsetMemberType = constants::SubsetMemberType;
 
 class ModularServer
@@ -25,11 +27,9 @@ public:
 
   // Device Info
   void setDeviceName(const ConstantString & device_name);
-  void setModelNumber(const long model_number);
-  void setFirmwareName(const ConstantString & firmware_name);
-  void setFirmwareVersion(const long firmware_major, const long firmware_minor, const long firmware_patch);
-  void setHardwareName(const ConstantString & hardware_name);
-  void setHardwareVersion(const long hardware_major, const long hardware_minor);
+  void setFormFactor(const ConstantString & form_factor);
+  void addFirmwareInfo(const FirmwareInfo & firmware_info);
+  void addHardwareInfo(const HardwareInfo & hardware_info);
 
   // Storage
   template <size_t MAX_SIZE>
