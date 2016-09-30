@@ -206,6 +206,8 @@ private:
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceIdToResponse();
+  void writeFirmwareInfoToResponse();
+  void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
   void writeApiToResponse(bool verbose);
   void writeParameterNotInSubsetErrorToResponse(Parameter & parameter, Vector<const constants::SubsetMemberType> & subset);

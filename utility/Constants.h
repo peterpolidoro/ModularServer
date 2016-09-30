@@ -14,8 +14,8 @@ namespace ModularDevice
 {
 namespace constants
 {
-enum {STORAGE_ARRAY_COUNT_MAX=7};
-enum {HARDWARE_INFO_ARRAY_COUNT_MAX=3};
+enum {STORAGE_ARRAY_COUNT_MAX=8};
+enum {HARDWARE_INFO_ARRAY_COUNT_MAX=4};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_FIELD_COUNT_MAX=1};

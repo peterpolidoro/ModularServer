@@ -464,7 +464,7 @@ void Server::handleRequest()
     int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
     if (bytes_read > 0)
     {
-      JsonSanitizer sanitizer(constants::JSON_TOKEN_MAX);
+      JsonSanitizer<constants::JSON_TOKEN_MAX> sanitizer;
       if (sanitizer.firstCharIsValidJson(request_))
       {
         json_stream_.setCompactPrint();
@@ -476,7 +476,7 @@ void Server::handleRequest()
       json_stream_.beginObject();
       error_ = false;
       result_key_in_response_ = false;
-      sanitizer.sanitize(request_,constants::STRING_LENGTH_REQUEST);
+      sanitizer.sanitizeBuffer(request_);
       StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
       if (sanitizer.firstCharIsValidJsonObject(request_))
       {
@@ -1366,13 +1366,10 @@ void Server::writeDeviceIdToResponse()
   endResponseObject();
 }
 
-void Server::writeDeviceInfoToResponse()
+void Server::writeFirmwareInfoToResponse()
 {
-  beginResponseObject();
-
   char version_str[constants::STRING_LENGTH_VERSION];
 
-  writeKeyToResponse(constants::firmware_constant_string);
   beginResponseArray();
   for (size_t i=0; i<firmware_info_array_.size(); ++i)
   {
@@ -1383,28 +1380,52 @@ void Server::writeDeviceInfoToResponse()
                     firmware_info_ptr->version_major,
                     firmware_info_ptr->version_minor,
                     firmware_info_ptr->version_patch);
-    writeToResponse(constants::version_constant_string,version_str);
+    if (strlen(version_str) > 0)
+    {
+      writeToResponse(constants::version_constant_string,version_str);
+    }
     endResponseObject();
   }
   endResponseArray();
+}
 
-  writeKeyToResponse(constants::hardware_constant_string);
+void Server::writeHardwareInfoToResponse()
+{
+  char version_str[constants::STRING_LENGTH_VERSION];
+
   beginResponseArray();
   for (size_t i=0; i<hardware_info_array_.size(); ++i)
   {
     const constants::HardwareInfo * hardware_info_ptr = hardware_info_array_[i];
     beginResponseObject();
     writeToResponse(constants::name_constant_string,hardware_info_ptr->name_ptr);
-    writeToResponse(constants::model_number_constant_string,hardware_info_ptr->model_number);
+    if (hardware_info_ptr->model_number > 0)
+    {
+      writeToResponse(constants::model_number_constant_string,hardware_info_ptr->model_number);
+    }
     versionToString(version_str,
                     hardware_info_ptr->version_major,
                     hardware_info_ptr->version_minor);
-    writeToResponse(constants::version_constant_string,version_str);
+    if (strlen(version_str) > 0)
+    {
+      writeToResponse(constants::version_constant_string,version_str);
+    }
     endResponseObject();
   }
   endResponseArray();
+}
+
+void Server::writeDeviceInfoToResponse()
+{
+  beginResponseObject();
 
   writeToResponse(constants::processor_constant_string,constants::processor_name_constant_string);
+
+  writeKeyToResponse(constants::firmware_constant_string);
+  writeFirmwareInfoToResponse();
+
+  writeKeyToResponse(constants::hardware_constant_string);
+  writeHardwareInfoToResponse();
 
   endResponseObject();
 }
@@ -1797,6 +1818,10 @@ void Server::writeFieldErrorToResponse(const ConstantString & error)
 void Server::versionToString(char* destination, const long major, const long minor, const long patch)
 {
   destination[0] = '\0';
+  if ((major == 0) && (minor == 0) && (patch <= 0))
+  {
+    return;
+  }
   char version_field_str[constants::STRING_LENGTH_VERSION_FIELD];
   char version_field_sep_str[constants::version_field_separator_constant_string.length()+1];
   constants::version_field_separator_constant_string.copy(version_field_sep_str);

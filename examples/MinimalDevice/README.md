@@ -81,7 +81,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5688
+  "result":5398
 }
 ```
 
@@ -106,6 +106,7 @@ Example Response:
       "serial_number":0
     },
     "device_info":{
+      "processor":"ATmega2560",
       "firmware":[
         {
           "name":"ModularServer",
@@ -118,12 +119,9 @@ Example Response:
       ],
       "hardware":[
         {
-          "name":"mega",
-          "model_number":0,
-          "version":"0.0"
+          "name":"mega"
         }
-      ],
-      "processor":"ATmega2560"
+      ]
     },
     "API":{
       "methods":[
@@ -437,7 +435,7 @@ dev.get_methods()
  'get_field_values',
  'get_device_info']
 dev.get_memory_free()
-5688
+5398
 dev.get_field_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_field_value('?')
@@ -497,7 +495,7 @@ setAllFieldElementValues
 getMemoryFree
 dev.getMemoryFree()
 ans =
-  5688
+  5398
 dev.getFieldValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.getFieldValue('?')
