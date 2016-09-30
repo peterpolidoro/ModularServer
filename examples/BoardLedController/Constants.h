@@ -18,12 +18,12 @@ enum{FIELD_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=3};
 enum{METHOD_COUNT_MAX=4};
 
+extern const size_t baudrate;
+
 extern ConstantString device_name;
 
 extern ConstantString firmware_name;
 extern const ModularDevice::FirmwareInfo firmware_info;
-
-extern const size_t baudrate;
 
 extern ConstantString form_factor;
 extern ConstantString hardware_name;

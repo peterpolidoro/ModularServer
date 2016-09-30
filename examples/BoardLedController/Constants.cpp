@@ -10,6 +10,8 @@
 
 namespace constants
 {
+const size_t baudrate = 9600;
+
 CONSTANT_STRING(device_name,"board_led_controller");
 
 CONSTANT_STRING(firmware_name,"BoardLedController");
@@ -21,8 +23,6 @@ const ModularDevice::FirmwareInfo firmware_info =
     .version_minor=0,
     .version_patch=0,
   };
-
-const size_t baudrate = 9600;
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
