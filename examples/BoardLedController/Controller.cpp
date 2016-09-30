@@ -33,27 +33,27 @@ void Controller::setup()
   // Fields
 
   // Parameters
-  ModularDevice::Parameter & duration_on_parameter = modular_server_.createParameter(constants::duration_on_parameter_name);
+  Modular::Parameter & duration_on_parameter = modular_server_.createParameter(constants::duration_on_parameter_name);
   duration_on_parameter.setUnits(constants::seconds_unit);
   duration_on_parameter.setRange(constants::duration_min,constants::duration_max);
 
-  ModularDevice::Parameter & duration_off_parameter = modular_server_.copyParameter(duration_on_parameter,constants::duration_off_parameter_name);
+  Modular::Parameter & duration_off_parameter = modular_server_.copyParameter(duration_on_parameter,constants::duration_off_parameter_name);
 
-  ModularDevice::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
+  Modular::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
   count_parameter.setRange(constants::count_min,constants::count_max);
 
   // Methods
-  ModularDevice::Method & led_on_method = modular_server_.createMethod(constants::led_on_method_name);
+  Modular::Method & led_on_method = modular_server_.createMethod(constants::led_on_method_name);
   led_on_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setLedOnCallback));
 
-  ModularDevice::Method & led_off_method = modular_server_.createMethod(constants::led_off_method_name);
+  Modular::Method & led_off_method = modular_server_.createMethod(constants::led_off_method_name);
   led_off_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setLedOffCallback));
 
-  ModularDevice::Method & get_led_pin_method = modular_server_.createMethod(constants::get_led_pin_method_name);
+  Modular::Method & get_led_pin_method = modular_server_.createMethod(constants::get_led_pin_method_name);
   get_led_pin_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getLedPinCallback));
   get_led_pin_method.setReturnTypeLong();
 
-  ModularDevice::Method & blink_led_method = modular_server_.createMethod(constants::blink_led_method_name);
+  Modular::Method & blink_led_method = modular_server_.createMethod(constants::blink_led_method_name);
   blink_led_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::blinkLedCallback));
   blink_led_method.addParameter(duration_on_parameter);
   blink_led_method.addParameter(duration_off_parameter);

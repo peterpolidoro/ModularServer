@@ -8,7 +8,7 @@
 #include "Parameter.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 Parameter::Parameter()
 {

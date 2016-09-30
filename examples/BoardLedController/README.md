@@ -294,8 +294,8 @@ Example Response:
 Example Python session:
 
 ```python
-from modular_device import ModularDevice
-dev = ModularDevice() # Automatically finds device if one available
+from modular_device import ModularClient
+dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '', 'name': 'board_led_controller', 'serial_number': 0}
 dev.get_methods()
@@ -376,7 +376,7 @@ serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
 % Windows
 getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
-dev = ModularDevice(serial_port) % creates a device object
+dev = ModularClient(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
@@ -405,7 +405,7 @@ blinkLed
 dev.setLedOn();
 dev.setLedOff();
 dev.blinkLed();
-Error using ModularDevice/sendRequest (line 301)
+Error using ModularClient/sendRequest (line 301)
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
 method_info = dev.blinkLed('?')
 method_info =

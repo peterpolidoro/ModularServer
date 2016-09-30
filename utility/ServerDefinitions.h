@@ -5,11 +5,11 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_DEVICE_SERVER_DEFINITIONS_H_
-#define _MODULAR_DEVICE_SERVER_DEFINITIONS_H_
+#ifndef _MODULAR_SERVER_SERVER_DEFINITIONS_H_
+#define _MODULAR_SERVER_SERVER_DEFINITIONS_H_
 
 
-namespace ModularDevice
+namespace Modular
 {
 // Storage
 template <size_t MAX_SIZE>

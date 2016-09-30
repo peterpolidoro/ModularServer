@@ -418,8 +418,8 @@ Example Response:
 Example Python session:
 
 ```python
-from modular_device import ModularDevice
-dev = ModularDevice() # Automatically finds device if one available
+from modular_device import ModularClient
+dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': 'mega', 'name': 'field_tester', 'serial_number': 0}
 dev.get_methods()
@@ -512,7 +512,7 @@ serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
 % Windows
 getAvailableComPorts()
 serial_port = 'COM4'             % example Windows serial port
-dev = ModularDevice(serial_port) % creates a device object
+dev = ModularClient(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =

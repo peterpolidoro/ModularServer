@@ -8,7 +8,7 @@
 #include "ModularServer.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 ModularServer::ModularServer()
 {

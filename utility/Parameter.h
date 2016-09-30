@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_DEVICE_PARAMETER_H_
-#define _MODULAR_DEVICE_PARAMETER_H_
+#ifndef _MODULAR_SERVER_PARAMETER_H_
+#define _MODULAR_SERVER_PARAMETER_H_
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -19,7 +19,7 @@
 #include "Constants.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 class Parameter
 {

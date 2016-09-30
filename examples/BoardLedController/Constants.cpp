@@ -16,7 +16,7 @@ CONSTANT_STRING(device_name,"board_led_controller");
 
 CONSTANT_STRING(firmware_name,"BoardLedController");
 // Use semantic versioning http://semver.org/
-const ModularDevice::FirmwareInfo firmware_info =
+const Modular::FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=1,
@@ -28,7 +28,7 @@ const ModularDevice::FirmwareInfo firmware_info =
 
 CONSTANT_STRING(form_factor,"mega");
 CONSTANT_STRING(hardware_name,"mega");
-const ModularDevice::HardwareInfo hardware_info =
+const Modular::HardwareInfo hardware_info =
   {
     .name_ptr=&hardware_name,
     .model_number=0,
@@ -40,7 +40,7 @@ const ModularDevice::HardwareInfo hardware_info =
 
 CONSTANT_STRING(form_factor,"teensy");
 CONSTANT_STRING(hardware_name,"teensy");
-const ModularDevice::HardwareInfo hardware_info =
+const Modular::HardwareInfo hardware_info =
   {
     .name_ptr=&hardware_name,
     .model_number=0,
@@ -52,7 +52,7 @@ const ModularDevice::HardwareInfo hardware_info =
 
 CONSTANT_STRING(form_factor,"");
 CONSTANT_STRING(hardware_name,"");
-const ModularDevice::HardwareInfo hardware_info =
+const Modular::HardwareInfo hardware_info =
   {
     .name_ptr=&hardware_name,
     .model_number=0,

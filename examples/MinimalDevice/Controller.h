@@ -20,11 +20,11 @@ public:
   void update();
 
 private:
-  ModularDevice::ModularServer modular_server_;
+  Modular::ModularServer modular_server_;
 
-  ModularDevice::Field fields_[constants::FIELD_COUNT_MAX];
-  ModularDevice::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
-  ModularDevice::Method methods_[constants::METHOD_COUNT_MAX];
+  Modular::Field fields_[constants::FIELD_COUNT_MAX];
+  Modular::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
+  Modular::Method methods_[constants::METHOD_COUNT_MAX];
 
   // Callbacks
 };

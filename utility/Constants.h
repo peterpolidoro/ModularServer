@@ -5,12 +5,12 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_DEVICE_CONSTANTS_H_
-#define _MODULAR_DEVICE_CONSTANTS_H_
+#ifndef _MODULAR_SERVER_CONSTANTS_H_
+#define _MODULAR_SERVER_CONSTANTS_H_
 #include "ConstantVariable.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 namespace constants
 {

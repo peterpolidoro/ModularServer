@@ -8,7 +8,7 @@
 #include "Field.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 Field::Field()
 {

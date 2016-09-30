@@ -23,11 +23,11 @@ extern const size_t baudrate;
 extern ConstantString device_name;
 
 extern ConstantString firmware_name;
-extern const ModularDevice::FirmwareInfo firmware_info;
+extern const Modular::FirmwareInfo firmware_info;
 
 extern ConstantString form_factor;
 extern ConstantString hardware_name;
-extern const ModularDevice::HardwareInfo hardware_info;
+extern const Modular::HardwareInfo hardware_info;
 
 // Fields
 // Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *

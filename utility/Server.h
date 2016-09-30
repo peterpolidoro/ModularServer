@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_DEVICE_SERVER_H_
-#define _MODULAR_DEVICE_SERVER_H_
+#ifndef _MODULAR_SERVER_SERVER_H_
+#define _MODULAR_SERVER_SERVER_H_
 #include "Arduino.h"
 #include "Streaming.h"
 #include "ArduinoJson.h"
@@ -26,7 +26,7 @@
 #include "Constants.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 class Server
 {

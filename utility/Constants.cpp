@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 #include "Constants.h"
 
-namespace ModularDevice
+namespace Modular
 {
 namespace constants
 {

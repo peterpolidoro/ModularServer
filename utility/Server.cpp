@@ -8,7 +8,7 @@
 #include "Server.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 Server::Server() :
   eeprom_initialized_sv_(constants::eeprom_initialized_default_value)

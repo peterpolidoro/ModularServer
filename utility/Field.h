@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_DEVICE_FIELD_H_
-#define _MODULAR_DEVICE_FIELD_H_
+#ifndef _MODULAR_SERVER_FIELD_H_
+#define _MODULAR_SERVER_FIELD_H_
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -23,7 +23,7 @@
 #include "Streaming.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 class Field
 {

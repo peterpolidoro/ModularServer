@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_DEVICE_METHOD_H_
-#define _MODULAR_DEVICE_METHOD_H_
+#ifndef _MODULAR_SERVER_METHOD_H_
+#define _MODULAR_SERVER_METHOD_H_
 #include "Streaming.h"
 #include "Array.h"
 #include "ConstantVariable.h"
@@ -17,7 +17,7 @@
 #include "Constants.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 class Server;
 

@@ -23,11 +23,11 @@ extern const size_t baudrate;
 extern ConstantString device_name;
 
 extern ConstantString firmware_name;
-extern const ModularDevice::FirmwareInfo firmware_info;
+extern const Modular::FirmwareInfo firmware_info;
 
 extern ConstantString form_factor;
 extern ConstantString hardware_name;
-extern const ModularDevice::HardwareInfo hardware_info;
+extern const Modular::HardwareInfo hardware_info;
 
 // Fields
 // Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
@@ -59,7 +59,7 @@ extern const char string_default[STRING_LENGTH_MAX];
 
 extern ConstantString odd_field_name;
 enum{ODD_SUBSET_LENGTH=5};
-extern const ModularDevice::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
+extern const Modular::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
 extern const long & odd_default;
 
 extern ConstantString mode_field_name;
@@ -67,7 +67,7 @@ enum{MODE_SUBSET_LENGTH=3};
 extern ConstantString mode_rising;
 extern ConstantString mode_falling;
 extern ConstantString mode_change;
-extern const ModularDevice::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
+extern const Modular::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 extern const ConstantString * const mode_ptr_default;
 
 extern ConstantString odd_array_field_name;
@@ -83,7 +83,7 @@ extern const long length_max;
 
 extern ConstantString count_parameter_name;
 enum{COUNT_SUBSET_LENGTH=7};
-extern const ModularDevice::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH];
+extern const Modular::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH];
 
 extern ConstantString count_array_parameter_name;
 extern const size_t count_array_element_min;
@@ -97,7 +97,7 @@ extern ConstantString direction_up;
 extern ConstantString direction_down;
 extern ConstantString direction_left;
 extern ConstantString direction_right;
-extern const ModularDevice::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH];
+extern const Modular::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH];
 
 extern ConstantString direction_array_parameter_name;
 extern const size_t direction_array_length_min;

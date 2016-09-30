@@ -8,7 +8,7 @@
 #include "Method.h"
 
 
-namespace ModularDevice
+namespace Modular
 {
 // Method
 Method::Method()
