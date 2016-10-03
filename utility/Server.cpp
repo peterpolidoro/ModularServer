@@ -568,10 +568,10 @@ void Server::processRequestArray()
       parameterHelp(*parameter_ptr);
     }
     // execute private method without checking parameters
-    // else if (request_method_index_ <= private_method_index_)
-    // {
-    //   methods_[request_method_index_].callback();
-    // }
+    else if (request_method_index_ <= private_method_index_)
+    {
+      methods_[request_method_index_].callback();
+    }
     else if (parameter_count != methods_[request_method_index_].getParameterCount())
     {
       error_ = true;
