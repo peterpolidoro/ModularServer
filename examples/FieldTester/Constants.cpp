@@ -62,6 +62,8 @@ const modular_server::HardwareInfo hardware_info =
 
 #endif
 
+// Units
+
 // Fields
 CONSTANT_STRING(double_field_name,"double");
 const double double_default = 3.14159;

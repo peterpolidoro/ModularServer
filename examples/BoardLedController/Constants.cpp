@@ -64,6 +64,9 @@ const modular_server::HardwareInfo hardware_info =
 
 const size_t led_pin = 13;
 
+// Units
+CONSTANT_STRING(seconds_unit,"seconds");
+
 // Fields
 
 // Parameters
@@ -76,8 +79,6 @@ CONSTANT_STRING(duration_off_parameter_name,"duration_off");
 CONSTANT_STRING(count_parameter_name,"count");
 const long count_min = 1;
 const long count_max = 100;
-
-CONSTANT_STRING(seconds_unit,"seconds");
 
 // Methods
 CONSTANT_STRING(led_on_method_name,"setLedOn");

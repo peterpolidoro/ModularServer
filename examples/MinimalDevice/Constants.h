@@ -29,6 +29,8 @@ extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
+// Units
+
 // Fields
 // Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
 

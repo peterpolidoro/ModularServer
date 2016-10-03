@@ -31,6 +31,9 @@ extern const modular_server::HardwareInfo hardware_info;
 
 extern const size_t led_pin;
 
+// Units
+extern ConstantString seconds_unit;
+
 // Fields
 // Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
 
@@ -44,8 +47,6 @@ extern ConstantString duration_off_parameter_name;
 extern ConstantString count_parameter_name;
 extern const long count_min;
 extern const long count_max;
-
-extern ConstantString seconds_unit;
 
 // Methods
 extern ConstantString led_on_method_name;

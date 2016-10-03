@@ -62,6 +62,8 @@ const modular_server::HardwareInfo hardware_info =
 
 #endif
 
+// Units
+
 // Fields
 CONSTANT_STRING(starting_chars_count_field_name,"starting_chars_count");
 const long starting_chars_count_min = 1;
