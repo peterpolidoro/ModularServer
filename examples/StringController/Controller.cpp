@@ -30,67 +30,67 @@ void Controller::setup()
   modular_server_.addMethodStorage(methods_);
 
   // Fields
-  Modular::Field & starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);
+  modular_server::Field & starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);
   starting_chars_count_field.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
 
-  Modular::Field & stored_string_field = modular_server_.createField(constants::stored_string_field_name,constants::stored_string_default);
+  modular_server::Field & stored_string_field = modular_server_.createField(constants::stored_string_field_name,constants::stored_string_default);
 
   // Parameters
-  Modular::Parameter & string_parameter = modular_server_.createParameter(constants::string_parameter_name);
+  modular_server::Parameter & string_parameter = modular_server_.createParameter(constants::string_parameter_name);
   string_parameter.setTypeString();
 
-  Modular::Parameter & string2_parameter = modular_server_.copyParameter(string_parameter,constants::string2_parameter_name);
+  modular_server::Parameter & string2_parameter = modular_server_.copyParameter(string_parameter,constants::string2_parameter_name);
 
-  Modular::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
+  modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
   count_parameter.setRange(constants::count_min,constants::count_max);
 
-  Modular::Parameter & index_array_parameter = modular_server_.createParameter(constants::index_array_parameter_name);
+  modular_server::Parameter & index_array_parameter = modular_server_.createParameter(constants::index_array_parameter_name);
   index_array_parameter.setRange(constants::index_array_element_min,constants::index_array_element_max);
   index_array_parameter.setArrayLengthRange(constants::index_array_length_min,constants::index_array_length_max);
 
-  Modular::Parameter & double_echo_parameter = modular_server_.createParameter(constants::double_echo_parameter_name);
+  modular_server::Parameter & double_echo_parameter = modular_server_.createParameter(constants::double_echo_parameter_name);
   double_echo_parameter.setTypeBool();
 
   // Methods
-  Modular::Method & echo_method = modular_server_.createMethod(constants::echo_method_name);
+  modular_server::Method & echo_method = modular_server_.createMethod(constants::echo_method_name);
   echo_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::echoCallback));
   echo_method.addParameter(string_parameter);
   echo_method.addParameter(double_echo_parameter);
   echo_method.setReturnTypeString();
 
-  Modular::Method & length_method = modular_server_.createMethod(constants::length_method_name);
+  modular_server::Method & length_method = modular_server_.createMethod(constants::length_method_name);
   length_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::lengthCallback));
   length_method.addParameter(string_parameter);
   length_method.setReturnTypeLong();
 
-  Modular::Method & starts_with_method = modular_server_.createMethod(constants::starts_with_method_name);
+  modular_server::Method & starts_with_method = modular_server_.createMethod(constants::starts_with_method_name);
   starts_with_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::startsWithCallback));
   starts_with_method.addParameter(string_parameter);
   starts_with_method.addParameter(string2_parameter);
   starts_with_method.setReturnTypeBool();
 
-  Modular::Method & repeat_method = modular_server_.createMethod(constants::repeat_method_name);
+  modular_server::Method & repeat_method = modular_server_.createMethod(constants::repeat_method_name);
   repeat_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::repeatCallback));
   repeat_method.addParameter(string_parameter);
   repeat_method.addParameter(count_parameter);
   repeat_method.setReturnTypeArray();
 
-  Modular::Method & chars_at_method = modular_server_.createMethod(constants::chars_at_method_name);
+  modular_server::Method & chars_at_method = modular_server_.createMethod(constants::chars_at_method_name);
   chars_at_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::charsAtCallback));
   chars_at_method.addParameter(string_parameter);
   chars_at_method.addParameter(index_array_parameter);
   chars_at_method.setReturnTypeArray();
 
-  Modular::Method & starting_chars_method = modular_server_.createMethod(constants::starting_chars_method_name);
+  modular_server::Method & starting_chars_method = modular_server_.createMethod(constants::starting_chars_method_name);
   starting_chars_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::startingCharsCallback));
   starting_chars_method.addParameter(string_parameter);
   starting_chars_method.setReturnTypeString();
 
-  Modular::Method & set_stored_string_method = modular_server_.createMethod(constants::set_stored_string_method_name);
+  modular_server::Method & set_stored_string_method = modular_server_.createMethod(constants::set_stored_string_method_name);
   set_stored_string_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setStoredStringCallback));
   set_stored_string_method.addParameter(string_parameter);
 
-  Modular::Method & get_stored_string_method = modular_server_.createMethod(constants::get_stored_string_method_name);
+  modular_server::Method & get_stored_string_method = modular_server_.createMethod(constants::get_stored_string_method_name);
   get_stored_string_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getStoredStringCallback));
   get_stored_string_method.setReturnTypeString();
 

@@ -8,7 +8,7 @@
 #include "Method.h"
 
 
-namespace Modular
+namespace modular_server
 {
 // Method
 Method::Method()

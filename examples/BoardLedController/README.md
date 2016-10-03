@@ -34,7 +34,7 @@ Example Response:
   "result":{
     "device_id":{
       "name":"board_led_controller",
-      "form_factor":"mega",
+      "form_factor":"5x3",
       "serial_number":0
     },
     "API":{
@@ -381,7 +381,7 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'board_led_controller'
-  form_factor: 'mega'
+  form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
 Modular Device Methods

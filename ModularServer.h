@@ -10,7 +10,7 @@
 #include "utility/Server.h"
 
 
-namespace Modular
+namespace modular_server
 {
 class Method;
 using FirmwareInfo = constants::FirmwareInfo;

@@ -8,7 +8,7 @@
 #include "Field.h"
 
 
-namespace Modular
+namespace modular_server
 {
 Field::Field()
 {

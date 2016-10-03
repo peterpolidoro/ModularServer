@@ -9,7 +9,7 @@
 #define _MODULAR_SERVER_SERVER_DEFINITIONS_H_
 
 
-namespace Modular
+namespace modular_server
 {
 // Storage
 template <size_t MAX_SIZE>

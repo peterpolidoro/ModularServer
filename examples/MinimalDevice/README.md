@@ -34,7 +34,7 @@ Example Response:
   "result":{
     "device_id":{
       "name":"minimal_device",
-      "form_factor":"mega",
+      "form_factor":"5x3",
       "serial_number":0
     },
     "API":{
@@ -102,7 +102,7 @@ Example Response:
   "result":{
     "device_id":{
       "name":"minimal_device",
-      "form_factor":"mega",
+      "form_factor":"5x3",
       "serial_number":0
     },
     "device_info":{
@@ -119,7 +119,7 @@ Example Response:
       ],
       "hardware":[
         {
-          "name":"mega"
+          "name":"Mega2560"
         }
       ]
     },
@@ -476,7 +476,7 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'minimal_device'
-  form_factor: 'mega'
+  form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
 Modular Device Methods

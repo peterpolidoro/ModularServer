@@ -34,7 +34,7 @@ Example Response:
   "result":{
     "device_id":{
       "name":"field_tester",
-      "form_factor":"mega",
+      "form_factor":"5x3",
       "serial_number":0
     },
     "API":{
@@ -421,7 +421,7 @@ Example Python session:
 from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': 'mega', 'name': 'field_tester', 'serial_number': 0}
+{'form_factor': '5x3', 'name': 'field_tester', 'serial_number': 0}
 dev.get_methods()
 ['get_count_array',
  'get_long_array_fixed',
@@ -517,7 +517,7 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'field_tester'
-  form_factor: 'mega'
+  form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
 Modular Device Methods

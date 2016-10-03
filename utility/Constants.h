@@ -10,7 +10,7 @@
 #include "ConstantVariable.h"
 
 
-namespace Modular
+namespace modular_server
 {
 namespace constants
 {
@@ -48,7 +48,7 @@ struct FirmwareInfo
 struct HardwareInfo
 {
   const ConstantString * const name_ptr;
-  const size_t model_number;
+  const size_t part_number;
   const size_t version_major;
   const size_t version_minor;
 };
@@ -158,7 +158,7 @@ extern ConstantString array_element_max_constant_string;
 extern ConstantString array_length_min_constant_string;
 extern ConstantString array_length_max_constant_string;
 extern ConstantString version_constant_string;
-extern ConstantString model_number_constant_string;
+extern ConstantString part_number_constant_string;
 extern ConstantString device_id_constant_string;
 extern ConstantString device_info_constant_string;
 extern ConstantString api_constant_string;

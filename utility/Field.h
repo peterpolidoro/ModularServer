@@ -23,7 +23,7 @@
 #include "Streaming.h"
 
 
-namespace Modular
+namespace modular_server
 {
 class Field
 {

@@ -20,11 +20,11 @@ public:
   void update();
 
 private:
-  Modular::ModularServer modular_server_;
+  modular_server::ModularServer modular_server_;
 
-  Modular::Field fields_[constants::FIELD_COUNT_MAX];
-  Modular::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
-  Modular::Method methods_[constants::METHOD_COUNT_MAX];
+  modular_server::Field fields_[constants::FIELD_COUNT_MAX];
+  modular_server::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
+  modular_server::Method methods_[constants::METHOD_COUNT_MAX];
 
   // Callbacks
   void getDoubledCallback();

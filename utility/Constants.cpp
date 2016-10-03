@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 #include "Constants.h"
 
-namespace Modular
+namespace modular_server
 {
 namespace constants
 {
@@ -110,7 +110,7 @@ CONSTANT_STRING(array_element_max_constant_string,"array_element_max");
 CONSTANT_STRING(array_length_min_constant_string,"array_length_min");
 CONSTANT_STRING(array_length_max_constant_string,"array_length_max");
 CONSTANT_STRING(version_constant_string,"version");
-CONSTANT_STRING(model_number_constant_string,"model_number");
+CONSTANT_STRING(part_number_constant_string,"part_number");
 CONSTANT_STRING(device_id_constant_string,"device_id");
 CONSTANT_STRING(device_info_constant_string,"device_info");
 CONSTANT_STRING(api_constant_string,"API");

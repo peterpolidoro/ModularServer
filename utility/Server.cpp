@@ -8,7 +8,7 @@
 #include "Server.h"
 
 
-namespace Modular
+namespace modular_server
 {
 Server::Server() :
   eeprom_initialized_sv_(constants::eeprom_initialized_default_value)
@@ -1399,9 +1399,9 @@ void Server::writeHardwareInfoToResponse()
     const constants::HardwareInfo * hardware_info_ptr = hardware_info_array_[i];
     beginResponseObject();
     writeToResponse(constants::name_constant_string,hardware_info_ptr->name_ptr);
-    if (hardware_info_ptr->model_number > 0)
+    if (hardware_info_ptr->part_number > 0)
     {
-      writeToResponse(constants::model_number_constant_string,hardware_info_ptr->model_number);
+      writeToResponse(constants::part_number_constant_string,hardware_info_ptr->part_number);
     }
     versionToString(version_str,
                     hardware_info_ptr->version_major,

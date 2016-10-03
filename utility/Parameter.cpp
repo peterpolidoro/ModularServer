@@ -8,7 +8,7 @@
 #include "Parameter.h"
 
 
-namespace Modular
+namespace modular_server
 {
 Parameter::Parameter()
 {

@@ -19,7 +19,7 @@
 #include "Constants.h"
 
 
-namespace Modular
+namespace modular_server
 {
 class Parameter
 {
