@@ -15,16 +15,18 @@ void Controller::setup()
 {
   // Pin Setup
 
-  // Device Info
+  // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
   modular_server_.setFormFactor(constants::form_factor);
+
+  // Add Device Info
   modular_server_.addFirmwareInfo(constants::firmware_info);
   modular_server_.addHardwareInfo(constants::hardware_info);
 
   // Add Server Streams
   modular_server_.addServerStream(Serial);
 
-  // Set Storage
+  // Add Storage
   modular_server_.addFieldStorage(fields_);
   modular_server_.addParameterStorage(parameters_);
   modular_server_.addMethodStorage(methods_);
