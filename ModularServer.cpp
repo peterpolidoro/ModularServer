@@ -14,13 +14,13 @@ ModularServer::ModularServer()
 {
 }
 
-// Stream
+// Streams
 void ModularServer::addServerStream(Stream & stream)
 {
   server_.addServerStream(stream);
 }
 
-// Device Info
+// Device ID
 void ModularServer::setDeviceName(const ConstantString & device_name)
 {
   server_.setDeviceName(device_name);
@@ -31,19 +31,15 @@ void ModularServer::setFormFactor(const ConstantString & form_factor)
   server_.setFormFactor(form_factor);
 }
 
-void ModularServer::addFirmwareInfo(const FirmwareInfo & firmware_info)
-{
-  server_.addFirmwareInfo(firmware_info);
-}
-
+// Hardware Info
 void ModularServer::addHardwareInfo(const HardwareInfo & hardware_info)
 {
   server_.addHardwareInfo(hardware_info);
 }
 
-// Storage
+// Firmware
 
-// Field
+// Fields
 bool ModularServer::setFieldValue(const ConstantString & field_name,
                                   ArduinoJson::JsonArray & value)
 {
@@ -65,7 +61,7 @@ void ModularServer::setFieldsToDefaults()
   server_.setFieldsToDefaults();
 }
 
-// Parameter
+// Parameters
 Parameter & ModularServer::createParameter(const ConstantString & parameter_name)
 {
   return server_.createParameter(parameter_name);
@@ -81,7 +77,7 @@ ArduinoJson::JsonVariant ModularServer::getParameterValue(const ConstantString &
   return server_.getParameterValue(parameter_name);
 }
 
-// Method
+// Methods
 Method & ModularServer::createMethod(const ConstantString & method_name)
 {
   return server_.createMethod(method_name);

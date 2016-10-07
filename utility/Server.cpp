@@ -27,13 +27,17 @@ void Server::setup()
 
   eeprom_initialized_ = false;
 
-  // Device Info
-  addFirmwareInfo(constants::firmware_info);
+  // Streams
 
-  // Add Storage
-  addFieldStorage(server_fields_);
-  addParameterStorage(server_parameters_);
-  addMethodStorage(server_methods_);
+  // Device ID
+
+  // Hardware Info
+
+  // Firmware
+  addFirmware(constants::firmware_info,
+              server_fields_,
+              server_parameters_,
+              server_methods_);
 
   // Fields
   Field & serial_number_field = createField(constants::serial_number_field_name,constants::serial_number_default);
@@ -128,7 +132,7 @@ void Server::setup()
   server_running_ = false;
 }
 
-// Stream
+// Streams
 void Server::addServerStream(Stream & stream)
 {
   bool stream_found = false;
@@ -146,7 +150,7 @@ void Server::addServerStream(Stream & stream)
   json_stream_.setStream(stream);
 }
 
-// Device Info
+// Device ID
 void Server::setDeviceName(const ConstantString & device_name)
 {
   device_name_ptr_ = &device_name;
@@ -157,19 +161,15 @@ void Server::setFormFactor(const ConstantString & form_factor)
   form_factor_ptr_ = &form_factor;
 }
 
-void Server::addFirmwareInfo(const constants::FirmwareInfo & firmware_info)
-{
-  firmware_info_array_.push_back(&firmware_info);
-}
-
+// Hardware Info
 void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
 {
   hardware_info_array_.push_back(&hardware_info);
 }
 
-// Storage
+// Firmware
 
-// Field
+// Fields
 bool Server::setFieldValue(const ConstantString & field_name,
                            ArduinoJson::JsonArray & value)
 {
@@ -312,7 +312,7 @@ void Server::setFieldsToDefaults()
   }
 }
 
-// Parameter
+// Parameters
 Parameter & Server::createParameter(const ConstantString & parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
@@ -337,7 +337,7 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
   return (*request_json_array_ptr_)[parameter_index+1];
 }
 
-// Method
+// Methods
 Method & Server::createMethod(const ConstantString & method_name)
 {
   int method_index = findMethodIndex(method_name);
@@ -1421,11 +1421,11 @@ void Server::writeDeviceInfoToResponse()
 
   writeToResponse(constants::processor_constant_string,constants::processor_name_constant_string);
 
-  writeKeyToResponse(constants::firmware_constant_string);
-  writeFirmwareInfoToResponse();
-
   writeKeyToResponse(constants::hardware_constant_string);
   writeHardwareInfoToResponse();
+
+  writeKeyToResponse(constants::firmware_constant_string);
+  writeFirmwareInfoToResponse();
 
   endResponseObject();
 }

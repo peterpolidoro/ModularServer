@@ -1,22 +1,20 @@
 // ----------------------------------------------------------------------------
-// Controller.h
+// StringController.h
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef STRING_CONTROLLER_H
+#define STRING_CONTROLLER_H
 #include "Functor.h"
 #include "ModularServer.h"
 
 #include "Constants.h"
-#include "NonBlockBlink.h"
 
 
-class Controller
+class StringController
 {
 public:
-  Controller();
   void setup();
   void update();
 
@@ -28,10 +26,14 @@ private:
   modular_server::Method methods_[constants::METHOD_COUNT_MAX];
 
   // Callbacks
-  void setLedOnCallback();
-  void setLedOffCallback();
-  void getLedPinCallback();
-  void blinkLedCallback();
+  void echoCallback();
+  void lengthCallback();
+  void startsWithCallback();
+  void repeatCallback();
+  void charsAtCallback();
+  void startingCharsCallback();
+  void setStoredStringCallback();
+  void getStoredStringCallback();
 
 };
 

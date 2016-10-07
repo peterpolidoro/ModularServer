@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef FIELD_TESTER_CONSTANTS_H
+#define FIELD_TESTER_CONSTANTS_H
 #include "ConstantVariable.h"
 #include "ModularServer.h"
 

@@ -11,26 +11,28 @@
 
 namespace modular_server
 {
-// Storage
-template <size_t MAX_SIZE>
-void Server::addFieldStorage(Field (&fields)[MAX_SIZE])
+// Streams
+
+// Device ID
+
+// Hardware Info
+
+// Firmware
+template <size_t FIELDS_MAX_SIZE,
+          size_t PARAMETERS_MAX_SIZE,
+          size_t METHODS_MAX_SIZE>
+void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
+                         Field (&fields)[FIELDS_MAX_SIZE],
+                         Parameter (&parameters)[PARAMETERS_MAX_SIZE],
+                         Method (&methods)[METHODS_MAX_SIZE])
 {
+  firmware_info_array_.push_back(&firmware_info);
   fields_.addArray(fields);
-}
-
-template <size_t MAX_SIZE>
-void Server::addParameterStorage(Parameter (&parameters)[MAX_SIZE])
-{
   parameters_.addArray(parameters);
-}
-
-template <size_t MAX_SIZE>
-void Server::addMethodStorage(Method (&methods)[MAX_SIZE])
-{
   methods_.addArray(methods);
 }
 
-// Field
+// Fields
 template <typename T>
 Field & Server::createField(const ConstantString & field_name,
                            const T & default_value)
@@ -358,9 +360,9 @@ bool Server::getFieldDefaultElementValue(const ConstantString & field_name,
   }
 }
 
-// Parameter
+// Parameters
 
-// Method
+// Methods
 
 // Response
 template <typename K>

@@ -1,32 +1,31 @@
 // ----------------------------------------------------------------------------
-// Controller.cpp
+// MinimalDevice.cpp
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "Controller.h"
+#include "MinimalDevice.h"
 
 
-Controller::Controller()
-{
-}
-
-void Controller::setup()
+void MinimalDevice::setup()
 {
   // Pin Setup
+
+  // Add Server Streams
+  modular_server_.addServerStream(Serial);
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
   modular_server_.setFormFactor(constants::form_factor);
 
-  // Add Device Info
-  modular_server_.addFirmwareInfo(constants::firmware_info);
+  // Add Hardware Info
   modular_server_.addHardwareInfo(constants::hardware_info);
 
-  // Add Server Streams
-  modular_server_.addServerStream(Serial);
-
-  // Add Storage
+  // Add Firmware
+  modular_server_.addFirmware(constants::firmware_info,
+                              fields_,
+                              parameters_,
+                              methods_);
 
   // Fields
 
@@ -34,14 +33,14 @@ void Controller::setup()
 
   // Methods
 
-  // Setup Streams
+  // Begin Streams
   Serial.begin(constants::baudrate);
 
   // Start Modular Device Server
   modular_server_.startServer();
 }
 
-void Controller::update()
+void MinimalDevice::update()
 {
   modular_server_.handleServerRequests();
 }

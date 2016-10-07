@@ -10,20 +10,21 @@
 #include "ConstantVariable.h"
 #include "SavedVariable.h"
 #include "Functor.h"
-#include "ModularServer.h"
 
 #include "Constants.h"
-#include "Controller.h"
+
+#include "ModularServer.h"
+#include "FieldTester.h"
 
 
-Controller controller;
+FieldTester dev;
 
 void setup()
 {
-  controller.setup();
+  dev.setup();
 }
 
 void loop()
 {
-  controller.update();
+  dev.update();
 }

@@ -1,36 +1,32 @@
 // ----------------------------------------------------------------------------
-// Controller.cpp
+// BoardLedController.cpp
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "Controller.h"
+#include "BoardLedController.h"
 
 
-Controller::Controller()
-{
-}
-
-void Controller::setup()
+void BoardLedController::setup()
 {
   // Pin Setup
   pinMode(constants::led_pin, OUTPUT);
+
+  // Add Server Streams
+  modular_server_.addServerStream(Serial);
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
   modular_server_.setFormFactor(constants::form_factor);
 
-  // Add Device Info
-  modular_server_.addFirmwareInfo(constants::firmware_info);
+  // Add Hardware Info
   modular_server_.addHardwareInfo(constants::hardware_info);
 
-  // Add Server Streams
-  modular_server_.addServerStream(Serial);
-
-  // Add Storage
-  modular_server_.addFieldStorage(fields_);
-  modular_server_.addParameterStorage(parameters_);
-  modular_server_.addMethodStorage(methods_);
+  // Add Firmware
+  modular_server_.addFirmware(constants::firmware_info,
+                              fields_,
+                              parameters_,
+                              methods_);
 
   // Fields
 
@@ -46,29 +42,29 @@ void Controller::setup()
 
   // Methods
   modular_server::Method & led_on_method = modular_server_.createMethod(constants::led_on_method_name);
-  led_on_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setLedOnCallback));
+  led_on_method.attachCallback(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOnCallback));
 
   modular_server::Method & led_off_method = modular_server_.createMethod(constants::led_off_method_name);
-  led_off_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::setLedOffCallback));
+  led_off_method.attachCallback(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOffCallback));
 
   modular_server::Method & get_led_pin_method = modular_server_.createMethod(constants::get_led_pin_method_name);
-  get_led_pin_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::getLedPinCallback));
+  get_led_pin_method.attachCallback(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinCallback));
   get_led_pin_method.setReturnTypeLong();
 
   modular_server::Method & blink_led_method = modular_server_.createMethod(constants::blink_led_method_name);
-  blink_led_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Controller::blinkLedCallback));
+  blink_led_method.attachCallback(makeFunctor((Functor0 *)0,*this,&BoardLedController::blinkLedCallback));
   blink_led_method.addParameter(duration_on_parameter);
   blink_led_method.addParameter(duration_off_parameter);
   blink_led_method.addParameter(count_parameter);
 
-  // Setup Streams
+  // Begin Streams
   Serial.begin(constants::baudrate);
 
   // Start Modular Device Server
   modular_server_.startServer();
 }
 
-void Controller::update()
+void BoardLedController::update()
 {
   modular_server_.handleServerRequests();
   non_block_blink.update();
@@ -91,24 +87,24 @@ void Controller::update()
 // modular_server_.getFieldElementValue type must match the field array element default type
 // modular_server_.setFieldElementValue type must match the field array element default type
 
-void Controller::setLedOnCallback()
+void BoardLedController::setLedOnCallback()
 {
   non_block_blink.stop();
   digitalWrite(constants::led_pin, HIGH);
 }
 
-void Controller::setLedOffCallback()
+void BoardLedController::setLedOffCallback()
 {
   non_block_blink.stop();
   digitalWrite(constants::led_pin, LOW);
 }
 
-void Controller::getLedPinCallback()
+void BoardLedController::getLedPinCallback()
 {
   modular_server_.writeResultToResponse(constants::led_pin);
 }
 
-void Controller::blinkLedCallback()
+void BoardLedController::blinkLedCallback()
 {
   double duration_on = modular_server_.getParameterValue(constants::duration_on_parameter_name);
   double duration_off = modular_server_.getParameterValue(constants::duration_off_parameter_name);

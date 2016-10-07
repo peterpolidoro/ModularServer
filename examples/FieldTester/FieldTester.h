@@ -1,21 +1,20 @@
 // ----------------------------------------------------------------------------
-// Controller.h
+// FieldTester.h
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef FIELD_TESTER_H
+#define FIELD_TESTER_H
 #include "Functor.h"
 #include "ModularServer.h"
 
 #include "Constants.h"
 
 
-class Controller
+class FieldTester
 {
 public:
-  Controller();
   void setup();
   void update();
 

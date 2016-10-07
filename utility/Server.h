@@ -33,24 +33,26 @@ class Server
 public:
   Server();
 
-  // Stream
+  // Streams
   void addServerStream(Stream & stream);
 
-  // Device Info
+  // Device ID
   void setDeviceName(const ConstantString & device_name);
   void setFormFactor(const ConstantString & form_factor);
-  void addFirmwareInfo(const constants::FirmwareInfo & firmware_info);
+
+  // Hardware Info
   void addHardwareInfo(const constants::HardwareInfo & hardware_info);
 
-  // Storage
-  template <size_t MAX_SIZE>
-  void addFieldStorage(Field (&fields)[MAX_SIZE]);
-  template <size_t MAX_SIZE>
-  void addParameterStorage(Parameter (&parameters)[MAX_SIZE]);
-  template <size_t MAX_SIZE>
-  void addMethodStorage(Method (&methods)[MAX_SIZE]);
+  // Firmware
+  template <size_t FIELDS_MAX_SIZE,
+            size_t PARAMETERS_MAX_SIZE,
+            size_t METHODS_MAX_SIZE>
+  void addFirmware(const constants::FirmwareInfo & firmware_info,
+                   Field (&fields)[FIELDS_MAX_SIZE],
+                   Parameter (&parameters)[PARAMETERS_MAX_SIZE],
+                   Method (&methods)[METHODS_MAX_SIZE]);
 
-  // Field
+  // Fields
   template <typename T>
   Field & createField(const ConstantString & field_name,
                      const T & default_value);
@@ -108,12 +110,12 @@ public:
   size_t getFieldStringLength(const ConstantString & field_name);
   void setFieldsToDefaults();
 
-  // Parameter
+  // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);
   Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
 
-  // Method
+  // Methods
   Method & createMethod(const ConstantString & method_name);
   Method & copyMethod(Method method,const ConstantString & method_name);
 

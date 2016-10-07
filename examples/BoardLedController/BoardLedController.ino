@@ -10,21 +10,22 @@
 #include "ConstantVariable.h"
 #include "SavedVariable.h"
 #include "Functor.h"
-#include "ModularServer.h"
 
 #include "Constants.h"
-#include "Controller.h"
 #include "NonBlockBlink.h"
 
+#include "ModularServer.h"
+#include "BoardLedController.h"
 
-Controller controller;
+
+BoardLedController dev;
 
 void setup()
 {
-  controller.setup();
+  dev.setup();
 }
 
 void loop()
 {
-  controller.update();
+  dev.update();
 }
