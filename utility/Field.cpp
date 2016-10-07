@@ -86,8 +86,6 @@ void Field::attachPostSetElementValueCallback(const Functor1<const size_t> & cal
   post_set_element_value_callback_ = callback;
 }
 
-// Private
-// Saved Variable Methods
 template <>
 bool Field::getDefaultValue<long>(long & value)
 {

@@ -40,26 +40,26 @@ void ModularServer::addHardwareInfo(const HardwareInfo & hardware_info)
 // Firmware
 
 // Fields
-Field & ModularServer::getField(const ConstantString & field_name)
-{
-  return server_.getField(field_name);
-}
+// Field & ModularServer::getField(const ConstantString & field_name)
+// {
+//   return server_.getField(field_name);
+// }
 
-bool ModularServer::setFieldValue(const ConstantString & field_name,
-                                  ArduinoJson::JsonArray & value)
-{
-  return server_.setFieldValue(field_name,value);
-}
+// bool ModularServer::setFieldValue(const ConstantString & field_name,
+//                                   ArduinoJson::JsonArray & value)
+// {
+//   return server_.setFieldValue(field_name,value);
+// }
 
-size_t ModularServer::getFieldArrayLength(const ConstantString & field_name)
-{
-  return server_.getFieldArrayLength(field_name);
-}
+// size_t ModularServer::getFieldArrayLength(const ConstantString & field_name)
+// {
+//   return server_.getFieldArrayLength(field_name);
+// }
 
-size_t ModularServer::getFieldStringLength(const ConstantString & field_name)
-{
-  return server_.getFieldStringLength(field_name);
-}
+// size_t ModularServer::getFieldStringLength(const ConstantString & field_name)
+// {
+//   return server_.getFieldStringLength(field_name);
+// }
 
 void ModularServer::setFieldsToDefaults()
 {

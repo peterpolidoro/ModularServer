@@ -59,33 +59,33 @@ Field & Server::createField(const ConstantString & field_name,
   }
 }
 
-template <typename T>
-bool Server::setFieldValue(const ConstantString & field_name,
-                           const T & value)
-{
-  bool success = false;
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    success = field.setValue(value);
-  }
-  return success;
-}
+// template <typename T>
+// bool Server::setFieldValue(const ConstantString & field_name,
+//                            const T & value)
+// {
+//   bool success = false;
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     success = field.setValue(value);
+//   }
+//   return success;
+// }
 
-template <typename T, size_t N>
-bool Server::setFieldValue(const ConstantString & field_name,
-                           const T (&value)[N])
-{
-  bool success = false;
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    success = field.setValue(value);
-  }
-  return success;
-}
+// template <typename T, size_t N>
+// bool Server::setFieldValue(const ConstantString & field_name,
+//                            const T (&value)[N])
+// {
+//   bool success = false;
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     success = field.setValue(value);
+//   }
+//   return success;
+// }
 
 template <typename T>
 bool Server::setFieldValue(const ConstantString & field_name,
@@ -136,20 +136,20 @@ bool Server::setFieldValue(const ConstantString & field_name,
   return success;
 }
 
-template <typename T>
-bool Server::setFieldElementValue(const ConstantString & field_name,
-                                  const size_t element_index,
-                                  const T & value)
-{
-  bool success = false;
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    success = field.setElementValue(value,element_index);
-  }
-  return success;
-}
+// template <typename T>
+// bool Server::setFieldElementValue(const ConstantString & field_name,
+//                                   const size_t element_index,
+//                                   const T & value)
+// {
+//   bool success = false;
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     success = field.setElementValue(value,element_index);
+//   }
+//   return success;
+// }
 
 template <typename T>
 bool Server::setAllFieldElementValues(const ConstantString & field_name,
@@ -190,37 +190,37 @@ bool Server::setAllFieldElementValues(const ConstantString & field_name,
   return success;
 }
 
-template <typename T>
-bool Server::getFieldValue(const ConstantString & field_name,
-                           T & value)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.getValue(value);
-  }
-  else
-  {
-    return false;
-  }
-}
+// template <typename T>
+// bool Server::getFieldValue(const ConstantString & field_name,
+//                            T & value)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.getValue(value);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
-template <typename T, size_t N>
-bool Server::getFieldValue(const ConstantString & field_name,
-                           T (&value)[N])
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.getValue(value);
-  }
-  else
-  {
-    return false;
-  }
-}
+// template <typename T, size_t N>
+// bool Server::getFieldValue(const ConstantString & field_name,
+//                            T (&value)[N])
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.getValue(value);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
 template <typename T>
 bool Server::getFieldValue(const ConstantString & field_name,
@@ -264,54 +264,54 @@ bool Server::getFieldValue(const ConstantString & field_name,
   return true;
 }
 
-template <typename T>
-bool Server::getFieldElementValue(const ConstantString & field_name,
-                                  const size_t element_index,
-                                  T & value)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.getElementValue(value,element_index);
-  }
-  else
-  {
-    return false;
-  }
-}
+// template <typename T>
+// bool Server::getFieldElementValue(const ConstantString & field_name,
+//                                   const size_t element_index,
+//                                   T & value)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.getElementValue(value,element_index);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
-template <typename T>
-bool Server::getFieldDefaultValue(const ConstantString & field_name,
-                                  T & value)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.getDefaultValue(value);
-  }
-  else
-  {
-    return false;
-  }
-}
+// template <typename T>
+// bool Server::getFieldDefaultValue(const ConstantString & field_name,
+//                                   T & value)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.getDefaultValue(value);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
-template <typename T, size_t N>
-bool Server::getFieldDefaultValue(const ConstantString & field_name,
-                                  T (&value)[N])
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.getDefaultValue(value);
-  }
-  else
-  {
-    return false;
-  }
-}
+// template <typename T, size_t N>
+// bool Server::getFieldDefaultValue(const ConstantString & field_name,
+//                                   T (&value)[N])
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.getDefaultValue(value);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
 template <typename T>
 bool Server::getFieldDefaultValue(const ConstantString & field_name,
@@ -343,38 +343,38 @@ bool Server::getFieldDefaultValue(const ConstantString & field_name,
   return true;
 }
 
-template <typename T>
-bool Server::getFieldDefaultElementValue(const ConstantString & field_name,
-                                         const size_t element_index,
-                                         T & value)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.getDefaultElementValue(value,element_index);
-  }
-  else
-  {
-    return false;
-  }
-}
+// template <typename T>
+// bool Server::getFieldDefaultElementValue(const ConstantString & field_name,
+//                                          const size_t element_index,
+//                                          T & value)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.getDefaultElementValue(value,element_index);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
-template <typename T>
-Field & Server::setFieldDefaultValue(const ConstantString & field_name,
-                                     const T & default_value)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.setDefaultValue(default_value);
-  }
-  else
-  {
-    return false;
-  }
-}
+// template <typename T>
+// Field & Server::setFieldDefaultValue(const ConstantString & field_name,
+//                                      const T & default_value)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.setDefaultValue(default_value);
+//   }
+//   else
+//   {
+//     return false;
+//   }
+// }
 
 // Parameters
 
