@@ -16,11 +16,10 @@
 #include "JsonStream.h"
 #include "Vector.h"
 #include "Functor.h"
+#include "ArduinoJson.h"
 
 #include "Parameter.h"
 #include "Constants.h"
-
-#include "Streaming.h"
 
 
 namespace modular_server
@@ -66,7 +65,7 @@ public:
   template <typename T>
   bool getDefaultValue(T * value, const size_t N);
   template <typename T>
-  bool getDefaultElementValue(T & value, const size_t element_index);
+  bool getDefaultElementValue(const size_t element_index, T & value);
   template <typename T>
   bool setValue(const T & value);
   template <size_t N>
@@ -77,8 +76,9 @@ public:
   bool setValue(const bool (&value)[N]);
   template <typename T>
   bool setValue(T * value, const size_t N);
+  bool setValue(ArduinoJson::JsonArray & value);
   template <typename T>
-  bool setElementValue(const T & value, const size_t element_index);
+  bool setElementValue(const size_t element_index, const T & value);
   template <typename T>
   bool setAllElementValues(const T & value);
   template <typename T>
@@ -92,10 +92,11 @@ public:
   template <typename T>
   bool getValue(T * value, const size_t N);
   template <typename T>
-  bool getElementValue(T & value, const size_t element_index);
+  bool getElementValue(const size_t element_index, T & value);
   void setValueToDefault();
   bool valueIsDefault();
   size_t getArrayLength();
+  size_t getStringLength();
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;

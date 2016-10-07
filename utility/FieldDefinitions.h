@@ -108,7 +108,7 @@ bool Field::getDefaultValue(T * value, const size_t N)
   for (size_t i=0; i<array_length_min; ++i)
   {
     T v;
-    success = getDefaultElementValue(v,i);
+    success = getDefaultElementValue(i,v);
     if (!success)
     {
       return false;
@@ -129,7 +129,7 @@ bool Field::setValue(const long (&value)[N])
   {
     for (size_t i=0;i<N;++i)
     {
-      success = setElementValue(value[i],i);
+      success = setElementValue(i,value[i]);
       if (!success)
       {
         break;
@@ -151,7 +151,7 @@ bool Field::setValue(const double (&value)[N])
   {
     for (size_t i=0;i<N;++i)
     {
-      success = setElementValue(value[i],i);
+      success = setElementValue(i,value[i]);
       if (!success)
       {
         break;
@@ -173,7 +173,7 @@ bool Field::setValue(const bool (&value)[N])
   {
     for (size_t i=0;i<N;++i)
     {
-      success = setElementValue(value[i],i);
+      success = setElementValue(i,value[i]);
       if (!success)
       {
         break;
@@ -207,11 +207,11 @@ bool Field::setValue(T * value, const size_t N)
   for (size_t i=0; i<array_length_min; ++i)
   {
     T v = value[i];
-    success = setElementValue(v,i);
+    success = setElementValue(i,v);
     if (!success && (type == JsonStream::STRING_TYPE))
     {
       // terminate string
-      setElementValue('\0',i);
+      setElementValue(i,'\0');
       break;
     }
   }
@@ -220,7 +220,7 @@ bool Field::setValue(T * value, const size_t N)
       (array_length_min >= 1))
   {
     // terminate string just in case
-    setElementValue('\0',array_length_min-1);
+    setElementValue(array_length_min-1,'\0');
   }
   postSetValueCallback();
   return success;
@@ -240,11 +240,11 @@ bool Field::setAllElementValues(const T & value)
   preSetValueCallback();
   for (size_t i=0; i<array_length; ++i)
   {
-    success = setElementValue(value,i);
+    success = setElementValue(i,value);
     if (!success && (type == JsonStream::STRING_TYPE))
     {
       // terminate string
-      setElementValue('\0',i);
+      setElementValue(i,'\0');
       break;
     }
   }
@@ -253,7 +253,7 @@ bool Field::setAllElementValues(const T & value)
       (array_length >= 1))
   {
     // terminate string just in case
-    setElementValue('\0',array_length-1);
+    setElementValue(array_length-1,'\0');
   }
   postSetValueCallback();
   return success;
@@ -305,7 +305,7 @@ bool Field::getValue(T * value, const size_t N)
   for (size_t i=0; i<array_length_min; ++i)
   {
     T v;
-    success = getElementValue(v,i);
+    success = getElementValue(i,v);
     if (!success)
     {
       // terminate string
@@ -326,4 +326,5 @@ bool Field::getValue(T * value, const size_t N)
   return true;
 }
 
+}
 #endif
