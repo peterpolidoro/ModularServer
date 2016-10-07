@@ -92,6 +92,11 @@ private:
   // Saved Variable Methods
   template <typename T>
   bool getDefaultValue(T & value);
+  template <typename T>
+  bool setDefaultValue(T & default_value)
+  {
+    return saved_variable_.setDefaultValue(default_value);
+  };
   template <size_t N>
   bool getDefaultValue(long (&value)[N])
   {

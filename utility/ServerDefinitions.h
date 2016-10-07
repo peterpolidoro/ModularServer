@@ -57,7 +57,6 @@ Field & Server::createField(const ConstantString & field_name,
                             default_value));
     return fields_.back();
   }
-  return Field();
 }
 
 template <typename T>
@@ -354,6 +353,22 @@ bool Server::getFieldDefaultElementValue(const ConstantString & field_name,
   {
     Field & field = fields_[field_index];
     return field.getDefaultElementValue(value,element_index);
+  }
+  else
+  {
+    return false;
+  }
+}
+
+template <typename T>
+Field & Server::setFieldDefaultValue(const ConstantString & field_name,
+                                     const T & default_value)
+{
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  {
+    Field & field = fields_[field_index];
+    return field.setDefaultValue(default_value);
   }
   else
   {

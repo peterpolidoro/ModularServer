@@ -116,6 +116,13 @@ bool ModularServer::getFieldDefaultElementValue(const ConstantString & field_nam
   return server_.getFieldDefaultElementValue(field_name,element_index,value);
 }
 
+template <typename T>
+Field & ModularServer::setFieldDefaultValue(const ConstantString & field_name,
+                                            const T & default_value)
+{
+  return server_.setFieldDefaultValue(field_name,default_value);
+}
+
 // Parameters
 
 // Methods

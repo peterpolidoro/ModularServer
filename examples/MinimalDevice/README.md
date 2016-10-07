@@ -107,6 +107,11 @@ Example Response:
     },
     "device_info":{
       "processor":"ATmega2560",
+      "hardware":[
+        {
+          "name":"Mega2560"
+        }
+      ],
       "firmware":[
         {
           "name":"ModularServer",
@@ -115,11 +120,6 @@ Example Response:
         {
           "name":"MinimalDevice",
           "version":"1.0.0"
-        }
-      ],
-      "hardware":[
-        {
-          "name":"Mega2560"
         }
       ]
     },

@@ -107,6 +107,9 @@ public:
   bool getFieldDefaultElementValue(const ConstantString & field_name,
                                    const size_t element_index,
                                    T & value);
+  template <typename T>
+  Field & setFieldDefaultValue(const ConstantString & field_name,
+                               const T & default_value);
   size_t getFieldArrayLength(const ConstantString & field_name);
   size_t getFieldStringLength(const ConstantString & field_name);
   void setFieldsToDefaults();
