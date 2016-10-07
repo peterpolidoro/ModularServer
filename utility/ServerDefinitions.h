@@ -57,6 +57,7 @@ Field & Server::createField(const ConstantString & field_name,
                             default_value));
     return fields_.back();
   }
+  return Field();
 }
 
 template <typename T>

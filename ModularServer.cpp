@@ -40,6 +40,11 @@ void ModularServer::addHardwareInfo(const HardwareInfo & hardware_info)
 // Firmware
 
 // Fields
+Field & ModularServer::getField(const ConstantString & field_name)
+{
+  return server_.getField(field_name);
+}
+
 bool ModularServer::setFieldValue(const ConstantString & field_name,
                                   ArduinoJson::JsonArray & value)
 {
@@ -67,6 +72,11 @@ Parameter & ModularServer::createParameter(const ConstantString & parameter_name
   return server_.createParameter(parameter_name);
 }
 
+Parameter & ModularServer::getParameter(const ConstantString & parameter_name)
+{
+  return server_.getParameter(parameter_name);
+}
+
 Parameter & ModularServer::copyParameter(Parameter & parameter,const ConstantString & parameter_name)
 {
   return server_.copyParameter(parameter,parameter_name);
@@ -81,6 +91,11 @@ ArduinoJson::JsonVariant ModularServer::getParameterValue(const ConstantString &
 Method & ModularServer::createMethod(const ConstantString & method_name)
 {
   return server_.createMethod(method_name);
+}
+
+Method & ModularServer::getMethod(const ConstantString & method_name)
+{
+  return server_.getMethod(method_name);
 }
 
 Method & ModularServer::copyMethod(Method & method,const ConstantString & method_name)

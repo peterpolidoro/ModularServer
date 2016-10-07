@@ -170,6 +170,15 @@ void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
 // Firmware
 
 // Fields
+Field & Server::getField(const ConstantString & field_name)
+{
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  {
+    return fields_[field_index];
+  }
+}
+
 bool Server::setFieldValue(const ConstantString & field_name,
                            ArduinoJson::JsonArray & value)
 {
@@ -323,6 +332,15 @@ Parameter & Server::createParameter(const ConstantString & parameter_name)
   }
 }
 
+Parameter & Server::getParameter(const ConstantString & parameter_name)
+{
+  int parameter_index = findParameterIndex(parameter_name);
+  if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
+  {
+    return parameters_[parameter_index];
+  }
+}
+
 Parameter & Server::copyParameter(Parameter parameter,const ConstantString & parameter_name)
 {
   parameters_.push_back(parameter);
@@ -345,6 +363,15 @@ Method & Server::createMethod(const ConstantString & method_name)
   {
     methods_.push_back(Method(method_name));
     return methods_.back();
+  }
+}
+
+Method & Server::getMethod(const ConstantString & method_name)
+{
+  int method_index = findMethodIndex(method_name);
+  if ((method_index >= 0) && (method_index < (int)methods_.size()))
+  {
+    return methods_[method_index];
   }
 }
 

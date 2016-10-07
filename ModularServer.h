@@ -48,6 +48,7 @@ public:
   template <typename T, size_t N>
   Field & createField(const ConstantString & field_name,
                      const T (&default_value)[N]);
+  Field & getField(const ConstantString & field_name);
   template <typename T>
   bool setFieldValue(const ConstantString & field_name,
                      const T & value);
@@ -89,11 +90,13 @@ public:
 
   // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);
+  Parameter & getParameter(const ConstantString & parameter_name);
   Parameter & copyParameter(Parameter & parameter,const ConstantString & parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
 
   // Methods
   Method & createMethod(const ConstantString & method_name);
+  Method & getMethod(const ConstantString & method_name);
   Method & copyMethod(Method & method,const ConstantString & method_name);
 
   // Response
