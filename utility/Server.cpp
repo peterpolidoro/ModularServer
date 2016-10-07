@@ -308,7 +308,7 @@ void Server::setFieldsToDefaults()
 {
   for (size_t i=0; i<fields_.size(); ++i)
   {
-    fields_[i].setDefaultValue();
+    fields_[i].setValueToDefault();
   }
 }
 
@@ -1239,7 +1239,7 @@ void Server::initializeEeprom()
 {
   if (!eeprom_initialized_sv_.valueIsDefault())
   {
-    eeprom_initialized_sv_.setDefaultValue();
+    eeprom_initialized_sv_.setValueToDefault();
     setFieldsToDefaults();
   }
   eeprom_initialized_ = true;
@@ -2002,7 +2002,7 @@ void Server::setFieldToDefaultCallback()
   if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
     Field & field = fields_[field_index];
-    field.setDefaultValue();
+    field.setValueToDefault();
   }
   else
   {

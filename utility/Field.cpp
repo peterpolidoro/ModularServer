@@ -463,10 +463,10 @@ bool Field::getElementValue<char>(char & value, const size_t element_index)
   return saved_variable_.getElementValue(value,element_index);
 }
 
-void Field::setDefaultValue()
+void Field::setValueToDefault()
 {
   preSetValueCallback();
-  saved_variable_.setDefaultValue();
+  saved_variable_.setValueToDefault();
   postSetValueCallback();
 }
 

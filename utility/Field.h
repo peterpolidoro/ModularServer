@@ -231,7 +231,7 @@ private:
   };
   template <typename T>
   bool getElementValue(T & value, const size_t element_index);
-  void setDefaultValue();
+  void setValueToDefault();
   bool valueIsDefault();
   size_t getArrayLength();
   Parameter & getParameter();
