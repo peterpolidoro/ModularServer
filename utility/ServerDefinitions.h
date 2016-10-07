@@ -87,54 +87,54 @@ Field & Server::createField(const ConstantString & field_name,
 //   return success;
 // }
 
-template <typename T>
-bool Server::setFieldValue(const ConstantString & field_name,
-                           const T * value,
-                           const size_t N)
-{
-  bool success = false;
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    JsonStream::JsonTypes type = field.getType();
-    if ((type == JsonStream::STRING_TYPE) &&
-        !field.stringIsSavedAsCharArray())
-    {
-      int subset_value_index = field.findSubsetValueIndex((const char *)value);
-      if (subset_value_index >= 0)
-      {
-        Vector<const constants::SubsetMemberType> & subset = field.getSubset();
-        const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
-        success = setFieldValue(field_name,subset_value);
-      }
-      return success;
-    }
-    size_t array_length = field.getArrayLength();
-    size_t array_length_min = min(array_length,N);
-    field.preSetValueCallback();
-    for (size_t i=0;i<array_length_min;++i)
-    {
-      T v = value[i];
-      success = setFieldElementValue(field_name,i,v);
-      if (!success && (type == JsonStream::STRING_TYPE))
-      {
-        // terminate string
-        setFieldElementValue(field_name,i,'\0');
-        break;
-      }
-    }
-    if (success &&
-        (type == JsonStream::STRING_TYPE) &&
-        (array_length_min >= 1))
-    {
-      // terminate string just in case
-      setFieldElementValue(field_name,array_length_min-1,'\0');
-    }
-    field.postSetValueCallback();
-  }
-  return success;
-}
+// template <typename T>
+// bool Server::setFieldValue(const ConstantString & field_name,
+//                            const T * value,
+//                            const size_t N)
+// {
+//   bool success = false;
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     JsonStream::JsonTypes type = field.getType();
+//     if ((type == JsonStream::STRING_TYPE) &&
+//         !field.stringIsSavedAsCharArray())
+//     {
+//       int subset_value_index = field.findSubsetValueIndex((const char *)value);
+//       if (subset_value_index >= 0)
+//       {
+//         Vector<const constants::SubsetMemberType> & subset = field.getSubset();
+//         const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
+//         success = setFieldValue(field_name,subset_value);
+//       }
+//       return success;
+//     }
+//     size_t array_length = field.getArrayLength();
+//     size_t array_length_min = min(array_length,N);
+//     field.preSetValueCallback();
+//     for (size_t i=0;i<array_length_min;++i)
+//     {
+//       T v = value[i];
+//       success = setFieldElementValue(field_name,i,v);
+//       if (!success && (type == JsonStream::STRING_TYPE))
+//       {
+//         // terminate string
+//         setFieldElementValue(field_name,i,'\0');
+//         break;
+//       }
+//     }
+//     if (success &&
+//         (type == JsonStream::STRING_TYPE) &&
+//         (array_length_min >= 1))
+//     {
+//       // terminate string just in case
+//       setFieldElementValue(field_name,array_length_min-1,'\0');
+//     }
+//     field.postSetValueCallback();
+//   }
+//   return success;
+// }
 
 // template <typename T>
 // bool Server::setFieldElementValue(const ConstantString & field_name,
@@ -151,44 +151,44 @@ bool Server::setFieldValue(const ConstantString & field_name,
 //   return success;
 // }
 
-template <typename T>
-bool Server::setAllFieldElementValues(const ConstantString & field_name,
-                                      const T & value)
-{
-  bool success = false;
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    JsonStream::JsonTypes type = field.getType();
-    if ((type == JsonStream::STRING_TYPE) &&
-        !field.stringIsSavedAsCharArray())
-    {
-      return success;
-    }
-    size_t array_length = field.getArrayLength();
-    field.preSetValueCallback();
-    for (size_t i=0;i<array_length;++i)
-    {
-      success = setFieldElementValue(field_name,i,value);
-      if (!success && (type == JsonStream::STRING_TYPE))
-      {
-        // terminate string
-        setFieldElementValue(field_name,i,'\0');
-        break;
-      }
-    }
-    if (success &&
-        (type == JsonStream::STRING_TYPE) &&
-        (array_length >= 1))
-    {
-      // terminate string just in case
-      setFieldElementValue(field_name,array_length-1,'\0');
-    }
-    field.postSetValueCallback();
-  }
-  return success;
-}
+// template <typename T>
+// bool Server::setAllFieldElementValues(const ConstantString & field_name,
+//                                       const T & value)
+// {
+//   bool success = false;
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     JsonStream::JsonTypes type = field.getType();
+//     if ((type == JsonStream::STRING_TYPE) &&
+//         !field.stringIsSavedAsCharArray())
+//     {
+//       return success;
+//     }
+//     size_t array_length = field.getArrayLength();
+//     field.preSetValueCallback();
+//     for (size_t i=0;i<array_length;++i)
+//     {
+//       success = setFieldElementValue(field_name,i,value);
+//       if (!success && (type == JsonStream::STRING_TYPE))
+//       {
+//         // terminate string
+//         setFieldElementValue(field_name,i,'\0');
+//         break;
+//       }
+//     }
+//     if (success &&
+//         (type == JsonStream::STRING_TYPE) &&
+//         (array_length >= 1))
+//     {
+//       // terminate string just in case
+//       setFieldElementValue(field_name,array_length-1,'\0');
+//     }
+//     field.postSetValueCallback();
+//   }
+//   return success;
+// }
 
 // template <typename T>
 // bool Server::getFieldValue(const ConstantString & field_name,
@@ -222,47 +222,47 @@ bool Server::setAllFieldElementValues(const ConstantString & field_name,
 //   }
 // }
 
-template <typename T>
-bool Server::getFieldValue(const ConstantString & field_name,
-                           T * value,
-                           const size_t N)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    JsonStream::JsonTypes type = field.getType();
-    size_t array_length = field.getArrayLength();
-    size_t array_length_min = min(array_length,N);
-    bool success;
-    for (size_t i=0;i<array_length_min;++i)
-    {
-      T v;
-      success = getFieldElementValue(field_name,i,v);
-      if (!success)
-      {
-        // terminate string
-        if (type == JsonStream::STRING_TYPE)
-        {
-          value[i] = '\0';
-        }
-        return false;
-      }
-      value[i] = v;
-    }
-    // terminate string
-    if ((type == JsonStream::STRING_TYPE) &&
-        (array_length_min >= 1))
-    {
-      value[array_length_min-1] = '\0';
-    }
-  }
-  else
-  {
-    return false;
-  }
-  return true;
-}
+// template <typename T>
+// bool Server::getFieldValue(const ConstantString & field_name,
+//                            T * value,
+//                            const size_t N)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     JsonStream::JsonTypes type = field.getType();
+//     size_t array_length = field.getArrayLength();
+//     size_t array_length_min = min(array_length,N);
+//     bool success;
+//     for (size_t i=0;i<array_length_min;++i)
+//     {
+//       T v;
+//       success = getFieldElementValue(field_name,i,v);
+//       if (!success)
+//       {
+//         // terminate string
+//         if (type == JsonStream::STRING_TYPE)
+//         {
+//           value[i] = '\0';
+//         }
+//         return false;
+//       }
+//       value[i] = v;
+//     }
+//     // terminate string
+//     if ((type == JsonStream::STRING_TYPE) &&
+//         (array_length_min >= 1))
+//     {
+//       value[array_length_min-1] = '\0';
+//     }
+//   }
+//   else
+//   {
+//     return false;
+//   }
+//   return true;
+// }
 
 // template <typename T>
 // bool Server::getFieldElementValue(const ConstantString & field_name,
@@ -313,35 +313,35 @@ bool Server::getFieldValue(const ConstantString & field_name,
 //   }
 // }
 
-template <typename T>
-bool Server::getFieldDefaultValue(const ConstantString & field_name,
-                                  T * value,
-                                  const size_t N)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    size_t array_length = field.getArrayLength();
-    size_t array_length_min = min(array_length,N);
-    bool success;
-    for (size_t i=0;i<array_length_min;++i)
-    {
-      T v;
-      success = getFieldDefaultElementValue(field_name,i,v);
-      if (!success)
-      {
-        return false;
-      }
-      value[i] = v;
-    }
-  }
-  else
-  {
-    return false;
-  }
-  return true;
-}
+// template <typename T>
+// bool Server::getFieldDefaultValue(const ConstantString & field_name,
+//                                   T * value,
+//                                   const size_t N)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     size_t array_length = field.getArrayLength();
+//     size_t array_length_min = min(array_length,N);
+//     bool success;
+//     for (size_t i=0;i<array_length_min;++i)
+//     {
+//       T v;
+//       success = getFieldDefaultElementValue(field_name,i,v);
+//       if (!success)
+//       {
+//         return false;
+//       }
+//       value[i] = v;
+//     }
+//   }
+//   else
+//   {
+//     return false;
+//   }
+//   return true;
+// }
 
 // template <typename T>
 // bool Server::getFieldDefaultElementValue(const ConstantString & field_name,

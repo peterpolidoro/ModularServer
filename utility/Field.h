@@ -76,7 +76,11 @@ public:
   template <size_t N>
   bool setValue(const bool (&value)[N]);
   template <typename T>
+  bool setValue(T * value, const size_t N);
+  template <typename T>
   bool setElementValue(const T & value, const size_t element_index);
+  template <typename T>
+  bool setAllElementValues(const T & value);
   template <typename T>
   bool getValue(T & value);
   template <size_t N>
@@ -85,6 +89,12 @@ public:
   bool getValue(double (&value)[N]);
   template <size_t N>
   bool getValue(bool (&value)[N]);
+  template <typename T>
+  bool getValue(T * value, const size_t N);
+  template <typename T>
+  bool getElementValue(T & value, const size_t element_index);
+  void setValueToDefault();
+  bool valueIsDefault();
   size_t getArrayLength();
 private:
   Parameter parameter_;
@@ -94,11 +104,6 @@ private:
   Functor0 post_set_value_callback_;
   Functor1<const size_t> post_set_element_value_callback_;
   bool string_saved_as_char_array_;
-
-  template <typename T>
-  bool getElementValue(T & value, const size_t element_index);
-  void setValueToDefault();
-  bool valueIsDefault();
   Parameter & getParameter();
   const ConstantString & getName();
   JsonStream::JsonTypes getType();

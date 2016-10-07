@@ -263,20 +263,20 @@ bool Server::setFieldValue(const ConstantString & field_name,
   return success;
 }
 
-size_t Server::getFieldArrayLength(const ConstantString & field_name)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    Field & field = fields_[field_index];
-    return field.getArrayLength();
-  }
-  else
-  {
-    return 0;
-  }
+// size_t Server::getFieldArrayLength(const ConstantString & field_name)
+// {
+//   int field_index = findFieldIndex(field_name);
+//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
+//   {
+//     Field & field = fields_[field_index];
+//     return field.getArrayLength();
+//   }
+//   else
+//   {
+//     return 0;
+//   }
 
-}
+// }
 
 size_t Server::getFieldStringLength(const ConstantString & field_name)
 {
