@@ -83,34 +83,9 @@ Method & ModularServer::copyMethod(Method & method,const ConstantString & method
 }
 
 // Response
-void ModularServer::writeNullToResponse()
+Response & ModularServer::response()
 {
-  server_.writeNullToResponse();
-}
-
-void ModularServer::writeResultKeyToResponse()
-{
-  server_.writeResultKeyToResponse();
-}
-
-void ModularServer::beginResponseObject()
-{
-  server_.beginResponseObject();
-}
-
-void ModularServer::endResponseObject()
-{
-  server_.endResponseObject();
-}
-
-void ModularServer::beginResponseArray()
-{
-  server_.beginResponseArray();
-}
-
-void ModularServer::endResponseArray()
-{
-  server_.endResponseArray();
+  return server_.response();
 }
 
 // Server

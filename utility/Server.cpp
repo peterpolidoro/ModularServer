@@ -251,90 +251,9 @@ Method & Server::copyMethod(Method method,const ConstantString & method_name)
 }
 
 // Response
-void Server::writeNullToResponse()
+Response & Server::response()
 {
-  json_stream_.writeNull();
-}
-
-void Server::writeToResponse(Vector<const constants::SubsetMemberType> & value, JsonStream::JsonTypes type)
-{
-  switch (type)
-  {
-    case JsonStream::LONG_TYPE:
-    {
-      Array<long,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
-      for (size_t i=0; i<value.size(); ++i)
-      {
-        subset_elements_array.push_back(value[i].l);
-      }
-      json_stream_.write(subset_elements_array);
-      break;
-    }
-    case JsonStream::DOUBLE_TYPE:
-    {
-      break;
-    }
-    case JsonStream::BOOL_TYPE:
-    {
-      break;
-    }
-    case JsonStream::NULL_TYPE:
-    {
-      break;
-    }
-    case JsonStream::STRING_TYPE:
-    {
-      Array<ConstantString *,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
-      for (size_t i=0; i<value.size(); ++i)
-      {
-        subset_elements_array.push_back(value[i].cs_ptr);
-      }
-      json_stream_.write(subset_elements_array);
-      break;
-    }
-    case JsonStream::OBJECT_TYPE:
-    {
-      break;
-    }
-    case JsonStream::ARRAY_TYPE:
-    {
-      break;
-    }
-    case JsonStream::VALUE_TYPE:
-    {
-      break;
-    }
-  }
-}
-
-void Server::writeResultKeyToResponse()
-{
-  // Prevent multiple results in one response
-  if (!result_key_in_response_ && !error_)
-  {
-    result_key_in_response_ = true;
-    json_stream_.writeKey(constants::result_constant_string);
-  }
-}
-
-void Server::beginResponseObject()
-{
-  json_stream_.beginObject();
-}
-
-void Server::endResponseObject()
-{
-  json_stream_.endObject();
-}
-
-void Server::beginResponseArray()
-{
-  json_stream_.beginArray();
-}
-
-void Server::endResponseArray()
-{
-  json_stream_.endArray();
+  return response_;
 }
 
 // Server

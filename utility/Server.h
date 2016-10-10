@@ -23,6 +23,7 @@
 #include "Field.h"
 #include "Parameter.h"
 #include "Method.h"
+#include "Response.h"
 #include "Constants.h"
 
 
@@ -73,37 +74,7 @@ public:
   Method & copyMethod(Method method,const ConstantString & method_name);
 
   // Response
-  template <typename K>
-  void writeKeyToResponse(K key);
-  template <typename T>
-  void writeToResponse(T value);
-  template <typename T, size_t N>
-  void writeToResponse(T (&value)[N]);
-  void writeToResponse(Vector<const constants::SubsetMemberType> & value, JsonStream::JsonTypes type);
-  template <typename K, typename T>
-  void writeToResponse(K key, T value);
-  template <typename K, typename T, size_t N>
-  void writeToResponse(K key, T (&value)[N]);
-  template <typename T>
-  void writeArrayToResponse(T * value, size_t N);
-  template <typename K, typename T>
-  void writeArrayToResponse(K key, T * value, size_t N);
-  void writeNullToResponse();
-  template <typename K>
-  void writeNullToResponse(K key);
-  template <typename T>
-  void sendErrorResponse(T error);
-  void writeResultKeyToResponse();
-  template <typename T>
-  void writeResultToResponse(T value);
-  template <typename T, size_t N>
-  void writeResultToResponse(T (&value)[N]);
-  template <typename T>
-  void writeResultToResponse(T * value, size_t N);
-  void beginResponseObject();
-  void endResponseObject();
-  void beginResponseArray();
-  void endResponseArray();
+  Response & response();
 
   // Server
   void startServer();
@@ -130,7 +101,6 @@ private:
 
   int request_method_index_;
   int parameter_count_;
-  JsonStream json_stream_;
   bool error_;
   bool result_key_in_response_;
   bool eeprom_initialized_;
