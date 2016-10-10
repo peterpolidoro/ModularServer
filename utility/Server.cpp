@@ -2094,7 +2094,6 @@ void Server::setFieldValueCallback()
   if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
     Field & field = fields_[field_index];
-    const ConstantString & field_name_cs = field.getName();
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
     bool parameter_ok = checkParameter(field.getParameter(),json_value);
     if (!parameter_ok)
@@ -2107,19 +2106,19 @@ void Server::setFieldValueCallback()
       case JsonStream::LONG_TYPE:
       {
         long field_value = getParameterValue(constants::field_value_parameter_name);
-        getField(field_name_cs).setValue(field_value);
+        field.setValue(field_value);
         break;
       }
       case JsonStream::DOUBLE_TYPE:
       {
         double field_value = getParameterValue(constants::field_value_parameter_name);
-        getField(field_name_cs).setValue(field_value);
+        field.setValue(field_value);
         break;
       }
       case JsonStream::BOOL_TYPE:
       {
         bool field_value = getParameterValue(constants::field_value_parameter_name);
-        getField(field_name_cs).setValue(field_value);
+        field.setValue(field_value);
         break;
       }
       case JsonStream::NULL_TYPE:
@@ -2130,7 +2129,7 @@ void Server::setFieldValueCallback()
       {
         const char * field_value = getParameterValue(constants::field_value_parameter_name);
         size_t array_length = strlen(field_value) + 1;
-        getField(field_name_cs).setValue(field_value,array_length);
+        field.setValue(field_value,array_length);
         break;
       }
       case JsonStream::OBJECT_TYPE:
@@ -2140,7 +2139,7 @@ void Server::setFieldValueCallback()
       case JsonStream::ARRAY_TYPE:
       {
         ArduinoJson::JsonArray & field_value = getParameterValue(constants::field_value_parameter_name);
-        getField(field_name_cs).setValue(field_value);
+        field.setValue(field_value);
         break;
       }
       case JsonStream::VALUE_TYPE:
@@ -2168,7 +2167,6 @@ void Server::setFieldElementValueCallback()
   if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
     Field & field = fields_[field_index];
-    const ConstantString & field_name_cs = field.getName();
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
     bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
     if (!parameter_ok)
@@ -2215,7 +2213,7 @@ void Server::setFieldElementValueCallback()
         if (string_length >= 1)
         {
           char v = field_value[0];
-          getField(field_name_cs).setElementValue(field_element_index,v);
+          field.setElementValue(field_element_index,v);
         }
         break;
       }
@@ -2237,19 +2235,19 @@ void Server::setFieldElementValueCallback()
           case JsonStream::LONG_TYPE:
           {
             long field_value = getParameterValue(constants::field_value_parameter_name);
-            getField(field_name_cs).setElementValue(field_element_index,field_value);
+            field.setElementValue(field_element_index,field_value);
             break;
           }
           case JsonStream::DOUBLE_TYPE:
           {
             double field_value = getParameterValue(constants::field_value_parameter_name);
-            getField(field_name_cs).setElementValue(field_element_index,field_value);
+            field.setElementValue(field_element_index,field_value);
             break;
           }
           case JsonStream::BOOL_TYPE:
           {
             bool field_value = getParameterValue(constants::field_value_parameter_name);
-            getField(field_name_cs).setElementValue(field_element_index,field_value);
+            field.setElementValue(field_element_index,field_value);
             break;
           }
           case JsonStream::NULL_TYPE:
@@ -2294,7 +2292,6 @@ void Server::setAllFieldElementValuesCallback()
   if ((field_index >= 0) && (field_index < (int)fields_.size()))
   {
     Field & field = fields_[field_index];
-    const ConstantString & field_name_cs = field.getName();
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
     bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
     if (!parameter_ok)
@@ -2332,7 +2329,7 @@ void Server::setAllFieldElementValuesCallback()
         if (string_length >= 1)
         {
           char v = field_value[0];
-          setAllFieldElementValues(field_name_cs,v);
+          field.setAllElementValues(v);
         }
         break;
       }
@@ -2348,19 +2345,19 @@ void Server::setAllFieldElementValuesCallback()
           case JsonStream::LONG_TYPE:
           {
             long field_value = getParameterValue(constants::field_value_parameter_name);
-            setAllFieldElementValues(field_name_cs,field_value);
+            field.setAllElementValues(field_value);
             break;
           }
           case JsonStream::DOUBLE_TYPE:
           {
             double field_value = getParameterValue(constants::field_value_parameter_name);
-            setAllFieldElementValues(field_name_cs,field_value);
+            field.setAllElementValues(field_value);
             break;
           }
           case JsonStream::BOOL_TYPE:
           {
             bool field_value = getParameterValue(constants::field_value_parameter_name);
-            setAllFieldElementValues(field_name_cs,field_value);
+            field.setAllElementValues(field_value);
             break;
           }
           case JsonStream::NULL_TYPE:

@@ -43,44 +43,18 @@ public:
   template <size_t N>
   Field(const ConstantString & name,
         const char (&default_value)[N]);
+
   void setUnits(const ConstantString & name);
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
   template <size_t N>
   void setSubset(const constants::SubsetMemberType (&subset)[N]);
+
   void attachPreSetValueCallback(const Functor0 & callback);
   void attachPreSetElementValueCallback(const Functor1<const size_t> & callback);
   void attachPostSetValueCallback(const Functor0 & callback);
   void attachPostSetElementValueCallback(const Functor1<const size_t> & callback);
-  template <typename T>
-  bool getDefaultValue(T & value);
-  // template <typename T>
-  // bool setDefaultValue(T & default_value);
-  template <size_t N>
-  bool getDefaultValue(long (&value)[N]);
-  template <size_t N>
-  bool getDefaultValue(double (&value)[N]);
-  template <size_t N>
-  bool getDefaultValue(bool (&value)[N]);
-  template <typename T>
-  bool getDefaultValue(T * value, const size_t N);
-  template <typename T>
-  bool getDefaultElementValue(const size_t element_index, T & value);
-  template <typename T>
-  bool setValue(const T & value);
-  template <size_t N>
-  bool setValue(const long (&value)[N]);
-  template <size_t N>
-  bool setValue(const double (&value)[N]);
-  template <size_t N>
-  bool setValue(const bool (&value)[N]);
-  template <typename T>
-  bool setValue(T * value, const size_t N);
-  bool setValue(ArduinoJson::JsonArray & value);
-  template <typename T>
-  bool setElementValue(const size_t element_index, const T & value);
-  template <typename T>
-  bool setAllElementValues(const T & value);
+
   template <typename T>
   bool getValue(T & value);
   template <size_t N>
@@ -93,7 +67,38 @@ public:
   bool getValue(T * value, const size_t N);
   template <typename T>
   bool getElementValue(const size_t element_index, T & value);
+  template <typename T>
+  bool getDefaultValue(T & value);
+  template <size_t N>
+  bool getDefaultValue(long (&value)[N]);
+  template <size_t N>
+  bool getDefaultValue(double (&value)[N]);
+  template <size_t N>
+  bool getDefaultValue(bool (&value)[N]);
+  template <typename T>
+  bool getDefaultValue(T * value, const size_t N);
+  template <typename T>
+  bool getDefaultElementValue(const size_t element_index, T & value);
+
+  template <typename T>
+  bool setElementValue(const size_t element_index, const T & value);
+  template <typename T>
+  bool setValue(const T & value);
+  template <size_t N>
+  bool setValue(const long (&value)[N]);
+  template <size_t N>
+  bool setValue(const double (&value)[N]);
+  template <size_t N>
+  bool setValue(const bool (&value)[N]);
+  bool setValue(ArduinoJson::JsonArray & value);
+  template <typename T>
+  bool setValue(T * value, const size_t N);
+  template <typename T>
+  bool setAllElementValues(const T & value);
+  // template <typename T>
+  // bool setDefaultValue(T & default_value);
   void setValueToDefault();
+
   bool valueIsDefault();
   size_t getArrayLength();
   size_t getStringLength();

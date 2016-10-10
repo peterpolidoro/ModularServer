@@ -57,11 +57,72 @@ void Field::setSubset(const constants::SubsetMemberType (&subset)[N])
   parameter_.setSubset(subset);
 }
 
-// template <typename T>
-// bool Field::setDefaultValue(T & default_value)
-// {
-//   return saved_variable_.setDefaultValue(default_value);
-// };
+template <size_t N>
+bool Field::getValue(long (&value)[N])
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::LONG_TYPE) ||
+      (getArrayLength() != N))
+  {
+    return false;
+  }
+  return saved_variable_.getValue(value);
+}
+
+template <size_t N>
+bool Field::getValue(double (&value)[N])
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
+      (getArrayLength() != N))
+  {
+    return false;
+  }
+  return saved_variable_.getValue(value);
+}
+
+template <size_t N>
+bool Field::getValue(bool (&value)[N])
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::BOOL_TYPE) ||
+      (getArrayLength() != N))
+  {
+    return false;
+  }
+  return saved_variable_.getValue(value);
+}
+
+template <typename T>
+bool Field::getValue(T * value, const size_t N)
+{
+  JsonStream::JsonTypes type = getType();
+  size_t array_length = getArrayLength();
+  size_t array_length_min = min(array_length,N);
+  bool success;
+  for (size_t i=0; i<array_length_min; ++i)
+  {
+    T v;
+    success = getElementValue(i,v);
+    if (!success)
+    {
+      // terminate string
+      if (type == JsonStream::STRING_TYPE)
+      {
+        value[i] = '\0';
+      }
+      return false;
+    }
+    value[i] = v;
+  }
+  // terminate string
+  if ((type == JsonStream::STRING_TYPE) &&
+      (array_length_min >= 1))
+  {
+    value[array_length_min-1] = '\0';
+  }
+  return true;
+}
 
 template <size_t N>
 bool Field::getDefaultValue(long (&value)[N])
@@ -129,7 +190,7 @@ bool Field::setValue(const long (&value)[N])
   {
     for (size_t i=0;i<N;++i)
     {
-      success = setElementValue(i,value[i]);
+      success = setElementValue<long>(i,value[i]);
       if (!success)
       {
         break;
@@ -151,7 +212,7 @@ bool Field::setValue(const double (&value)[N])
   {
     for (size_t i=0;i<N;++i)
     {
-      success = setElementValue(i,value[i]);
+      success = setElementValue<double>(i,value[i]);
       if (!success)
       {
         break;
@@ -173,7 +234,7 @@ bool Field::setValue(const bool (&value)[N])
   {
     for (size_t i=0;i<N;++i)
     {
-      success = setElementValue(i,value[i]);
+      success = setElementValue<bool>(i,value[i]);
       if (!success)
       {
         break;
@@ -211,7 +272,7 @@ bool Field::setValue(T * value, const size_t N)
     if (!success && (type == JsonStream::STRING_TYPE))
     {
       // terminate string
-      setElementValue(i,'\0');
+      setElementValue<char>(i,'\0');
       break;
     }
   }
@@ -220,7 +281,7 @@ bool Field::setValue(T * value, const size_t N)
       (array_length_min >= 1))
   {
     // terminate string just in case
-    setElementValue(array_length_min-1,'\0');
+    setElementValue<char>(array_length_min-1,'\0');
   }
   postSetValueCallback();
   return success;
@@ -244,7 +305,7 @@ bool Field::setAllElementValues(const T & value)
     if (!success && (type == JsonStream::STRING_TYPE))
     {
       // terminate string
-      setElementValue(i,'\0');
+      setElementValue<char>(i,'\0');
       break;
     }
   }
@@ -253,78 +314,17 @@ bool Field::setAllElementValues(const T & value)
       (array_length >= 1))
   {
     // terminate string just in case
-    setElementValue(array_length-1,'\0');
+    setElementValue<char>(array_length-1,'\0');
   }
   postSetValueCallback();
   return success;
 }
 
-template <size_t N>
-bool Field::getValue(long (&value)[N])
-{
-  if ((getType() != JsonStream::ARRAY_TYPE) ||
-      (getArrayElementType() != JsonStream::LONG_TYPE) ||
-      (getArrayLength() != N))
-  {
-    return false;
-  }
-  return saved_variable_.getValue(value);
-}
-
-template <size_t N>
-bool Field::getValue(double (&value)[N])
-{
-  if ((getType() != JsonStream::ARRAY_TYPE) ||
-      (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
-      (getArrayLength() != N))
-  {
-    return false;
-  }
-  return saved_variable_.getValue(value);
-}
-
-template <size_t N>
-bool Field::getValue(bool (&value)[N])
-{
-  if ((getType() != JsonStream::ARRAY_TYPE) ||
-      (getArrayElementType() != JsonStream::BOOL_TYPE) ||
-      (getArrayLength() != N))
-  {
-    return false;
-  }
-  return saved_variable_.getValue(value);
-}
-
-template <typename T>
-bool Field::getValue(T * value, const size_t N)
-{
-  JsonStream::JsonTypes type = getType();
-  size_t array_length = getArrayLength();
-  size_t array_length_min = min(array_length,N);
-  bool success;
-  for (size_t i=0; i<array_length_min; ++i)
-  {
-    T v;
-    success = getElementValue(i,v);
-    if (!success)
-    {
-      // terminate string
-      if (type == JsonStream::STRING_TYPE)
-      {
-        value[i] = '\0';
-      }
-      return false;
-    }
-    value[i] = v;
-  }
-  // terminate string
-  if ((type == JsonStream::STRING_TYPE) &&
-      (array_length_min >= 1))
-  {
-    value[array_length_min-1] = '\0';
-  }
-  return true;
-}
+// template <typename T>
+// bool Field::setDefaultValue(T & default_value)
+// {
+//   return saved_variable_.setDefaultValue(default_value);
+// };
 
 }
 #endif
