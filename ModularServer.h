@@ -53,13 +53,13 @@ public:
 
   // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);
-  Parameter & getParameter(const ConstantString & parameter_name);
+  Parameter & parameter(const ConstantString & parameter_name);
   Parameter & copyParameter(Parameter & parameter,const ConstantString & parameter_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
 
   // Methods
   Method & createMethod(const ConstantString & method_name);
-  Method & getMethod(const ConstantString & method_name);
+  Method & method(const ConstantString & method_name);
   Method & copyMethod(Method & method,const ConstantString & method_name);
 
   // Response

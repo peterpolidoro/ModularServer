@@ -56,9 +56,9 @@ Parameter & ModularServer::createParameter(const ConstantString & parameter_name
   return server_.createParameter(parameter_name);
 }
 
-Parameter & ModularServer::getParameter(const ConstantString & parameter_name)
+Parameter & ModularServer::parameter(const ConstantString & parameter_name)
 {
-  return server_.getParameter(parameter_name);
+  return server_.parameter(parameter_name);
 }
 
 Parameter & ModularServer::copyParameter(Parameter & parameter,const ConstantString & parameter_name)
@@ -77,9 +77,9 @@ Method & ModularServer::createMethod(const ConstantString & method_name)
   return server_.createMethod(method_name);
 }
 
-Method & ModularServer::getMethod(const ConstantString & method_name)
+Method & ModularServer::method(const ConstantString & method_name)
 {
-  return server_.getMethod(method_name);
+  return server_.method(method_name);
 }
 
 Method & ModularServer::copyMethod(Method & method,const ConstantString & method_name)

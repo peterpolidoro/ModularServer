@@ -110,7 +110,7 @@ private:
   Functor0 post_set_value_callback_;
   Functor1<const size_t> post_set_element_value_callback_;
   bool string_saved_as_char_array_;
-  Parameter & getParameter();
+  Parameter & parameter();
   const ConstantString & getName();
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();

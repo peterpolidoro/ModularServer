@@ -167,7 +167,7 @@ int Server::findFieldIndex(T const & field_name)
   int field_index = -1;
   for (size_t i=0; i<fields_.size(); ++i)
   {
-    if (fields_[i].getParameter().compareName(field_name))
+    if (fields_[i].parameter().compareName(field_name))
     {
       field_index = i;
       break;

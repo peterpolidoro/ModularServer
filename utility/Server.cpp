@@ -198,7 +198,7 @@ Parameter & Server::createParameter(const ConstantString & parameter_name)
   }
 }
 
-Parameter & Server::getParameter(const ConstantString & parameter_name)
+Parameter & Server::parameter(const ConstantString & parameter_name)
 {
   int parameter_index = findParameterIndex(parameter_name);
   if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
@@ -232,7 +232,7 @@ Method & Server::createMethod(const ConstantString & method_name)
   }
 }
 
-Method & Server::getMethod(const ConstantString & method_name)
+Method & Server::method(const ConstantString & method_name)
 {
   int method_index = findMethodIndex(method_name);
   if ((method_index >= 0) && (method_index < (int)methods_.size()))
@@ -775,7 +775,7 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
 
 void Server::fieldHelp(Field & field)
 {
-  parameterHelp(field.getParameter(),false);
+  parameterHelp(field.parameter(),false);
   writeKeyToResponse(constants::value_constant_string);
   writeFieldToResponse(field,false,false);
   writeKeyToResponse(constants::default_value_constant_string);
@@ -1961,7 +1961,7 @@ void Server::setFieldValueCallback()
   {
     Field & field = fields_[field_index];
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-    bool parameter_ok = checkParameter(field.getParameter(),json_value);
+    bool parameter_ok = checkParameter(field.parameter(),json_value);
     if (!parameter_ok)
     {
       return;
@@ -2034,7 +2034,7 @@ void Server::setFieldElementValueCallback()
   {
     Field & field = fields_[field_index];
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-    bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
+    bool parameter_ok = checkArrayParameterElement(field.parameter(),json_value);
     if (!parameter_ok)
     {
       return;
@@ -2159,7 +2159,7 @@ void Server::setAllFieldElementValuesCallback()
   {
     Field & field = fields_[field_index];
     ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-    bool parameter_ok = checkArrayParameterElement(field.getParameter(),json_value);
+    bool parameter_ok = checkArrayParameterElement(field.parameter(),json_value);
     if (!parameter_ok)
     {
       return;

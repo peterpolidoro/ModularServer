@@ -586,7 +586,7 @@ size_t Field::getStringLength()
   return length;
 }
 
-Parameter & Field::getParameter()
+Parameter & Field::parameter()
 {
   return parameter_;
 }
