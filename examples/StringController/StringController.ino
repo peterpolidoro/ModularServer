@@ -14,10 +14,10 @@
 #include "ModularServer.h"
 
 #include "Constants.h"
-#include "Controller.h"
+#include "StringController.h"
 
 
-Controller dev;
+StringController dev;
 
 void setup()
 {

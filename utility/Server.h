@@ -59,59 +59,7 @@ public:
   template <typename T, size_t N>
   Field & createField(const ConstantString & field_name,
                      const T (&default_value)[N]);
-  Field & getField(const ConstantString & field_name);
-  // template <typename T>
-  // bool setFieldValue(const ConstantString & field_name,
-  //                    const T & value);
-  // bool setFieldValue(const ConstantString & field_name,
-  //                    ArduinoJson::JsonArray & value);
-  // template <typename T, size_t N>
-  // bool setFieldValue(const ConstantString & field_name,
-  //                    const T (&value)[N]);
-  // template <typename T>
-  // bool setFieldValue(const ConstantString & field_name,
-  //                    const T * value,
-  //                    const size_t N);
-  // template <typename T>
-  // bool setFieldElementValue(const ConstantString & field_name,
-  //                           const size_t element_index,
-  //                           const T & value);
-  // template <typename T>
-  // bool setAllFieldElementValues(const ConstantString & field_name,
-  //                               const T & value);
-  // template <typename T>
-  // bool getFieldValue(const ConstantString & field_name,
-  //                    T & value);
-  // template <typename T, size_t N>
-  // bool getFieldValue(const ConstantString & field_name,
-  //                    T (&value)[N]);
-  // template <typename T>
-  // bool getFieldValue(const ConstantString & field_name,
-  //                    T * value,
-  //                    const size_t N);
-  // template <typename T>
-  // bool getFieldElementValue(const ConstantString & field_name,
-  //                           const size_t element_index,
-  //                           T & value);
-  // template <typename T>
-  // bool getFieldDefaultValue(const ConstantString & field_name,
-  //                           T & value);
-  // template <typename T, size_t N>
-  // bool getFieldDefaultValue(const ConstantString & field_name,
-  //                           T (&value)[N]);
-  // template <typename T>
-  // bool getFieldDefaultValue(const ConstantString & field_name,
-  //                           T * value,
-  //                           const size_t N);
-  // template <typename T>
-  // bool getFieldDefaultElementValue(const ConstantString & field_name,
-  //                                  const size_t element_index,
-  //                                  T & value);
-  // template <typename T>
-  // Field & setFieldDefaultValue(const ConstantString & field_name,
-  //                              const T & default_value);
-  // size_t getFieldArrayLength(const ConstantString & field_name);
-  // size_t getFieldStringLength(const ConstantString & field_name);
+  Field & field(const ConstantString & field_name);
   void setFieldsToDefaults();
 
   // Parameters

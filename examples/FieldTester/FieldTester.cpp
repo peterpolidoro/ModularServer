@@ -179,15 +179,15 @@ void FieldTester::update()
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// modular_server_.getFieldValue type must match the field default type
-// modular_server_.setFieldValue type must match the field default type
-// modular_server_.getFieldElementValue type must match the field array element default type
-// modular_server_.setFieldElementValue type must match the field array element default type
+// field.getValue type must match the field default type
+// field.setValue type must match the field default type
+// field.getElementValue type must match the field array element default type
+// field.setElementValue type must match the field array element default type
 
 void FieldTester::getDoubledCallback()
 {
   double value;
-  modular_server_.getFieldValue(constants::double_field_name,value);
+  modular_server_.field(constants::double_field_name).getValue(value);
   value *= 2;
   modular_server_.writeResultToResponse(value);
 }
@@ -195,22 +195,23 @@ void FieldTester::getDoubledCallback()
 void FieldTester::getBoolCallback()
 {
   bool value;
-  modular_server_.getFieldValue(constants::bool_field_name,value);
+  modular_server_.field(constants::bool_field_name).getValue(value);
   modular_server_.writeResultToResponse(value);
 }
 
 void FieldTester::getLongArrayFixedCallback()
 {
   long long_array[constants::LONG_ARRAY_LENGTH];
-  modular_server_.getFieldValue(constants::long_array_field_name,long_array);
+  modular_server_.field(constants::long_array_field_name).getValue(long_array);
   modular_server_.writeResultToResponse(long_array);
 }
 
 void FieldTester::getLongArrayVariableCallback()
 {
-  size_t array_length = modular_server_.getFieldArrayLength(constants::long_array_field_name);
+  modular_server::Field & field = modular_server_.field(constants::long_array_field_name);
+  size_t array_length = field.getArrayLength();
   long long_array[array_length];
-  modular_server_.getFieldValue(constants::long_array_field_name,long_array,array_length);
+  field.getValue(long_array,array_length);
   modular_server_.writeResultToResponse(long_array,array_length);
 }
 
@@ -219,35 +220,37 @@ void FieldTester::setLongArrayFixedCallback()
   long long_array[constants::LONG_ARRAY_LENGTH];
   long_array[0] = 1;
   long_array[1] = 2;
-  long_array[2] = 102;
-  long_array[3] = 103;
-  bool success = modular_server_.setFieldValue(constants::long_array_field_name,long_array);
+  long_array[2] = 9;
+  long_array[3] = 10;
+  bool success = modular_server_.field(constants::long_array_field_name).setValue(long_array);
   modular_server_.writeResultToResponse(success);
 }
 
 void FieldTester::setLongArrayVariableCallback()
 {
-  size_t array_length = modular_server_.getFieldArrayLength(constants::long_array_field_name);
+  modular_server::Field & field = modular_server_.field(constants::long_array_field_name);
+  size_t array_length = field.getArrayLength();
   long long_array[array_length-1];
   long_array[0] = -1;
   long_array[1] = -2;
-  long_array[2] = 9;
-  bool success = modular_server_.setFieldValue(constants::long_array_field_name,long_array,array_length-1);
+  long_array[2] = 7;
+  bool success = field.setValue(long_array,array_length-1);
   modular_server_.writeResultToResponse(success);
 }
 
 void FieldTester::setLongArrayParameterCallback()
 {
   ArduinoJson::JsonArray & long_array = modular_server_.getParameterValue(constants::long_array_parameter_name);
-  bool success = modular_server_.setFieldValue(constants::long_array_field_name,long_array);
+  bool success = modular_server_.field(constants::long_array_field_name).setValue(long_array);
   modular_server_.writeResultToResponse(success);
 }
 
 void FieldTester::getStringAllCallback()
 {
-  size_t array_length = modular_server_.getFieldArrayLength(constants::string_field_name);
+  modular_server::Field & field = modular_server_.field(constants::string_field_name);
+  size_t array_length = field.getArrayLength();
   char string[array_length];
-  modular_server_.getFieldValue(constants::string_field_name,string,array_length);
+  field.getValue(string,array_length);
   modular_server_.writeResultToResponse(string);
 }
 
@@ -256,7 +259,7 @@ void FieldTester::getStringSomeCallback()
   long length = modular_server_.getParameterValue(constants::length_parameter_name);
   size_t array_length = length + 1;
   char string[array_length];
-  modular_server_.getFieldValue(constants::string_field_name,string,array_length);
+  modular_server_.field(constants::string_field_name).getValue(string,array_length);
   modular_server_.writeResultToResponse(string);
 }
 
@@ -329,7 +332,7 @@ void FieldTester::getDirectionArrayCallback()
 void FieldTester::checkModeCallback()
 {
   const ConstantString * mode_ptr;
-  modular_server_.getFieldValue(constants::mode_field_name,mode_ptr);
+  modular_server_.field(constants::mode_field_name).getValue(mode_ptr);
   if (mode_ptr == &constants::mode_rising)
   {
     modular_server_.writeResultToResponse("Mode set to rising!");
@@ -350,21 +353,22 @@ void FieldTester::checkModeCallback()
 
 void FieldTester::incrementModeCallback()
 {
+  modular_server::Field & field = modular_server_.field(constants::mode_field_name);
   const ConstantString * mode_ptr;
-  modular_server_.getFieldValue(constants::mode_field_name,mode_ptr);
+  field.getValue(mode_ptr);
   if (mode_ptr == &constants::mode_rising)
   {
-    modular_server_.setFieldValue(constants::mode_field_name,&constants::mode_falling);
+    field.setValue(&constants::mode_falling);
     modular_server_.writeResultToResponse("Mode was set to rising, now set to falling!");
   }
   else if (mode_ptr == &constants::mode_falling)
   {
-    modular_server_.setFieldValue(constants::mode_field_name,&constants::mode_change);
+    field.setValue(&constants::mode_change);
     modular_server_.writeResultToResponse("Mode was set to falling, now set to change!");
   }
   else if (mode_ptr == &constants::mode_change)
   {
-    modular_server_.setFieldValue(constants::mode_field_name,&constants::mode_rising);
+    field.setValue(&constants::mode_rising);
     modular_server_.writeResultToResponse("Mode was set to change, now set to rising!");
   }
   else

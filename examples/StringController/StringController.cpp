@@ -116,10 +116,10 @@ void StringController::update()
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// modular_server_.getFieldValue type must match the field default type
-// modular_server_.setFieldValue type must match the field default type
-// modular_server_.getFieldElementValue type must match the field array element default type
-// modular_server_.setFieldElementValue type must match the field array element default type
+// field.getValue type must match the field default type
+// field.setValue type must match the field default type
+// field.getElementValue type must match the field array element default type
+// field.setElementValue type must match the field array element default type
 
 void StringController::echoCallback()
 {
@@ -196,9 +196,8 @@ void StringController::charsAtCallback()
 void StringController::startingCharsCallback()
 {
   const char * string = modular_server_.getParameterValue(constants::string_parameter_name);
-  // modular_server_.getFieldValue type must match the field default type
   long starting_chars_count;
-  modular_server_.getFieldValue(constants::starting_chars_count_field_name,starting_chars_count);
+  modular_server_.field(constants::starting_chars_count_field_name).getValue(starting_chars_count);
   modular_server_.writeResultToResponse(String(string).substring(0,starting_chars_count));
 }
 
@@ -206,13 +205,14 @@ void StringController::setStoredStringCallback()
 {
   const char * string = modular_server_.getParameterValue(constants::string_parameter_name);
   size_t array_length = strlen(string) + 1;
-  modular_server_.setFieldValue(constants::stored_string_field_name,string,array_length);
+  modular_server_.field(constants::stored_string_field_name).setValue(string,array_length);
 }
 
 void StringController::getStoredStringCallback()
 {
-  size_t array_length = modular_server_.getFieldArrayLength(constants::stored_string_field_name);
+  modular_server::Field & field = modular_server_.field(constants::stored_string_field_name);
+  size_t array_length = field.getArrayLength();
   char stored_string[array_length];
-  modular_server_.getFieldValue(constants::stored_string_field_name,stored_string,array_length);
+  field.getValue(stored_string,array_length);
   modular_server_.writeResultToResponse(stored_string);
 }

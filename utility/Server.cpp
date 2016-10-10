@@ -170,7 +170,7 @@ void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
 // Firmware
 
 // Fields
-Field & Server::getField(const ConstantString & field_name)
+Field & Server::field(const ConstantString & field_name)
 {
   int field_index = findFieldIndex(field_name);
   if ((field_index >= 0) && (field_index < (int)fields_.size()))
@@ -178,140 +178,6 @@ Field & Server::getField(const ConstantString & field_name)
     return fields_[field_index];
   }
 }
-
-// bool Server::setFieldValue(const ConstantString & field_name,
-//                            ArduinoJson::JsonArray & value)
-// {
-//   bool success = false;
-//   int field_index = findFieldIndex(field_name);
-//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
-//   {
-//     Field & field = fields_[field_index];
-//     size_t array_length = field.getArrayLength();
-//     JsonStream::JsonTypes field_type = field.getType();
-//     if (field_type == JsonStream::ARRAY_TYPE)
-//     {
-//       size_t N = value.size();
-//       size_t array_length_min = min(array_length,N);
-//       JsonStream::JsonTypes array_element_type = field.getArrayElementType();
-//       field.preSetValueCallback();
-//       switch (array_element_type)
-//       {
-//         case JsonStream::LONG_TYPE:
-//         {
-//           for (size_t i=0; i<array_length_min; ++i)
-//           {
-//             long v = value[i];
-//             success = setFieldElementValue(field_name,i,v);
-//             if (!success)
-//             {
-//               break;
-//             }
-//           }
-//           break;
-//         }
-//         case JsonStream::DOUBLE_TYPE:
-//         {
-//           for (size_t i=0; i<array_length_min; ++i)
-//           {
-//             double v = value[i];
-//             success = setFieldElementValue(field_name,i,v);
-//             if (!success)
-//             {
-//               break;
-//             }
-//           }
-//           break;
-//         }
-//         case JsonStream::BOOL_TYPE:
-//         {
-//           for (size_t i=0;i<array_length_min;++i)
-//           {
-//             bool v = value[i];
-//             success = setFieldElementValue(field_name,i,v);
-//             if (!success)
-//             {
-//               break;
-//             }
-//           }
-//           break;
-//         }
-//         case JsonStream::NULL_TYPE:
-//         {
-//           break;
-//         }
-//         case JsonStream::STRING_TYPE:
-//         {
-//           break;
-//         }
-//         case JsonStream::OBJECT_TYPE:
-//         {
-//           break;
-//         }
-//         case JsonStream::ARRAY_TYPE:
-//         {
-//           break;
-//         }
-//         case JsonStream::VALUE_TYPE:
-//         {
-//           break;
-//         }
-//       }
-//       field.postSetValueCallback();
-//     }
-//   }
-//   return success;
-// }
-
-// size_t Server::getFieldArrayLength(const ConstantString & field_name)
-// {
-//   int field_index = findFieldIndex(field_name);
-//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
-//   {
-//     Field & field = fields_[field_index];
-//     return field.getArrayLength();
-//   }
-//   else
-//   {
-//     return 0;
-//   }
-
-// }
-
-// size_t Server::getFieldStringLength(const ConstantString & field_name)
-// {
-//   int field_index = findFieldIndex(field_name);
-//   if ((field_index >= 0) && (field_index < (int)fields_.size()))
-//   {
-//     Field & field = fields_[field_index];
-//     JsonStream::JsonTypes field_type = field.getType();
-//     if (field_type == JsonStream::STRING_TYPE)
-//     {
-//       size_t array_length_max = field.getArrayLength();
-//       size_t array_length = 1;
-//       char value;
-//       while (array_length < array_length_max)
-//       {
-//         field.getElementValue(value,array_length-1);
-//         if (value == 0)
-//         {
-//           return array_length - 1;
-//         }
-//         ++array_length;
-//       }
-//       return array_length_max;
-//     }
-//     else
-//     {
-//       return 0;
-//     }
-//   }
-//   else
-//   {
-//     return 0;
-//   }
-
-// }
 
 void Server::setFieldsToDefaults()
 {
@@ -1258,7 +1124,7 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
 long Server::getSerialNumber()
 {
   long serial_number;
-  getField(constants::serial_number_field_name).getValue(serial_number);
+  field(constants::serial_number_field_name).getValue(serial_number);
   return serial_number;
 }
 
@@ -1545,11 +1411,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       long field_value;
       if (write_default)
       {
-        getField(field_name).getDefaultValue(field_value);
+        field.getDefaultValue(field_value);
       }
       else
       {
-        getField(field_name).getValue(field_value);
+        field.getValue(field_value);
       }
       writeToResponse(field_value);
       break;
@@ -1564,11 +1430,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       double field_value;
       if (write_default)
       {
-        getField(field_name).getDefaultValue(field_value);
+        field.getDefaultValue(field_value);
       }
       else
       {
-        getField(field_name).getValue(field_value);
+        field.getValue(field_value);
       }
       writeToResponse(field_value);
       break;
@@ -1583,18 +1449,18 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       bool field_value;
       if (write_default)
       {
-        getField(field_name).getDefaultValue(field_value);
+        field.getDefaultValue(field_value);
       }
       else
       {
-        getField(field_name).getValue(field_value);
+        field.getValue(field_value);
       }
       writeToResponse(field_value);
       break;
     }
     case JsonStream::STRING_TYPE:
     {
-      size_t array_length = getField(field_name).getArrayLength();
+      size_t array_length = field.getArrayLength();
       if (element_index >= 0)
       {
         if (element_index >= ((int)array_length-1))
@@ -1605,7 +1471,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
         size_t array_length = 2;
         char char_array[array_length];
         char field_element_value;
-        bool success = getField(field_name).getElementValue(element_index,field_element_value);
+        bool success = field.getElementValue(element_index,field_element_value);
         if (success)
         {
           char_array[0] = field_element_value;
@@ -1621,11 +1487,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       char char_array[array_length];
       if (write_default)
       {
-        getField(field_name).getDefaultValue(char_array,array_length);
+        field.getDefaultValue(char_array,array_length);
       }
       else
       {
-        getField(field_name).getValue(char_array,array_length);
+        field.getValue(char_array,array_length);
       }
       writeToResponse(char_array);
       break;
@@ -1648,11 +1514,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             long field_value[array_length];
             if (write_default)
             {
-              getField(field_name).getDefaultValue(field_value,array_length);
+              field.getDefaultValue(field_value,array_length);
             }
             else
             {
-              getField(field_name).getValue(field_value,array_length);
+              field.getValue(field_value,array_length);
             }
             writeArrayToResponse(field_value,array_length);
           }
@@ -1661,11 +1527,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             long field_value;
             if (write_default)
             {
-              getField(field_name).getDefaultElementValue(element_index,field_value);
+              field.getDefaultElementValue(element_index,field_value);
             }
             else
             {
-              getField(field_name).getElementValue(element_index,field_value);
+              field.getElementValue(element_index,field_value);
             }
             writeToResponse(field_value);
           }
@@ -1678,11 +1544,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             double field_value[array_length];
             if (write_default)
             {
-              getField(field_name).getDefaultValue(field_value,array_length);
+              field.getDefaultValue(field_value,array_length);
             }
             else
             {
-              getField(field_name).getValue(field_value,array_length);
+              field.getValue(field_value,array_length);
             }
             writeArrayToResponse(field_value,array_length);
           }
@@ -1691,11 +1557,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             double field_value;
             if (write_default)
             {
-              getField(field_name).getDefaultElementValue(element_index,field_value);
+              field.getDefaultElementValue(element_index,field_value);
             }
             else
             {
-              getField(field_name).getElementValue(element_index,field_value);
+              field.getElementValue(element_index,field_value);
             }
             writeToResponse(field_value);
           }
@@ -1708,11 +1574,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             bool field_value[array_length];
             if (write_default)
             {
-              getField(field_name).getDefaultValue(field_value,array_length);
+              field.getDefaultValue(field_value,array_length);
             }
             else
             {
-              getField(field_name).getValue(field_value,array_length);
+              field.getValue(field_value,array_length);
             }
             writeArrayToResponse(field_value,array_length);
           }
@@ -1721,11 +1587,11 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             bool field_value;
             if (write_default)
             {
-              getField(field_name).getDefaultElementValue(element_index,field_value);
+              field.getDefaultElementValue(element_index,field_value);
             }
             else
             {
-              getField(field_name).getElementValue(element_index,field_value);
+              field.getElementValue(element_index,field_value);
             }
             writeToResponse(field_value);
           }

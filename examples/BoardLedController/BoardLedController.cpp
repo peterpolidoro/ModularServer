@@ -82,10 +82,10 @@ void BoardLedController::update()
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// modular_server_.getFieldValue type must match the field default type
-// modular_server_.setFieldValue type must match the field default type
-// modular_server_.getFieldElementValue type must match the field array element default type
-// modular_server_.setFieldElementValue type must match the field array element default type
+// field.getValue type must match the field default type
+// field.setValue type must match the field default type
+// field.getElementValue type must match the field array element default type
+// field.setElementValue type must match the field array element default type
 
 void BoardLedController::setLedOnCallback()
 {
