@@ -10,6 +10,8 @@
 
 namespace modular_server
 {
+Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Parameter::get_value_callback_;
+
 Parameter::Parameter()
 {
   setName(constants::empty_constant_string);
@@ -154,6 +156,101 @@ void Parameter::removeArrayLengthRange()
 void Parameter::removeSubset()
 {
   subset_is_set_ = false;
+}
+
+template <>
+bool Parameter::getValue<long>(long & value)
+{
+  if ((getType() == JsonStream::LONG_TYPE) ||
+      (getType() == JsonStream::DOUBLE_TYPE) ||
+      (getType() == JsonStream::BOOL_TYPE) ||
+      (getType() == JsonStream::VALUE_TYPE))
+  {
+    long v = get_value_callback_(getName());
+    value = v;
+    return true;
+  }
+  return false;
+}
+
+template <>
+bool Parameter::getValue<double>(double & value)
+{
+  if ((getType() == JsonStream::LONG_TYPE) ||
+      (getType() == JsonStream::DOUBLE_TYPE) ||
+      (getType() == JsonStream::BOOL_TYPE) ||
+      (getType() == JsonStream::VALUE_TYPE))
+  {
+    double v = get_value_callback_(getName());
+    value = v;
+    return true;
+  }
+  return false;
+}
+
+template <>
+bool Parameter::getValue<float>(float & value)
+{
+  if ((getType() == JsonStream::LONG_TYPE) ||
+      (getType() == JsonStream::DOUBLE_TYPE) ||
+      (getType() == JsonStream::BOOL_TYPE) ||
+      (getType() == JsonStream::VALUE_TYPE))
+  {
+    double v = get_value_callback_(getName());
+    value = v;
+    return true;
+  }
+  return false;
+}
+
+template <>
+bool Parameter::getValue<bool>(bool & value)
+{
+  if ((getType() == JsonStream::LONG_TYPE) ||
+      (getType() == JsonStream::DOUBLE_TYPE) ||
+      (getType() == JsonStream::BOOL_TYPE) ||
+      (getType() == JsonStream::VALUE_TYPE))
+  {
+    bool v = get_value_callback_(getName());
+    value = v;
+    return true;
+  }
+  return false;
+}
+
+template <>
+bool Parameter::getValue<const char *>(const char * & value)
+{
+  if ((getType() != JsonStream::STRING_TYPE) && (getType() != JsonStream::VALUE_TYPE))
+  {
+    return false;
+  }
+  value = get_value_callback_(getName());
+  return true;
+}
+
+template <>
+bool Parameter::getValue<ArduinoJson::JsonArray *>(ArduinoJson::JsonArray * & value)
+{
+  if (getType() != JsonStream::ARRAY_TYPE)
+  {
+    return false;
+  }
+  ArduinoJson::JsonArray & array = get_value_callback_(getName());
+  value = &array;
+  return true;
+}
+
+template <>
+bool Parameter::getValue<ArduinoJson::JsonObject *>(ArduinoJson::JsonObject * & value)
+{
+  if (getType() != JsonStream::OBJECT_TYPE)
+  {
+    return false;
+  }
+  ArduinoJson::JsonObject & object = get_value_callback_(getName());
+  value = &object;
+  return true;
 }
 
 bool Parameter::compareName(const char * name_to_compare)

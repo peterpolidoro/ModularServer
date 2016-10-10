@@ -66,11 +66,6 @@ Parameter & ModularServer::copyParameter(Parameter & parameter,const ConstantStr
   return server_.copyParameter(parameter,parameter_name);
 }
 
-ArduinoJson::JsonVariant ModularServer::getParameterValue(const ConstantString & parameter_name)
-{
-  return server_.getParameterValue(parameter_name);
-}
-
 // Methods
 Method & ModularServer::createMethod(const ConstantString & method_name)
 {

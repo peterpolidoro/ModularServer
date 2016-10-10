@@ -44,6 +44,8 @@ void Server::setup()
   serial_number_field.setRange(constants::serial_number_min,constants::serial_number_max);
 
   // Parameters
+  Parameter::get_value_callback_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+
   Parameter & field_name_parameter = createParameter(constants::field_name_parameter_name);
   field_name_parameter.setTypeString();
 

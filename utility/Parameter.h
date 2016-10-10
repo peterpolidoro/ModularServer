@@ -15,6 +15,8 @@
 #include "ConstantVariable.h"
 #include "JsonStream.h"
 #include "Vector.h"
+#include "Functor.h"
+#include "ArduinoJson.h"
 
 #include "Constants.h"
 
@@ -36,13 +38,7 @@ public:
   void setTypeArray();
   void setTypeValue();
   template <typename T>
-  void setRange(const T min, const T max)
-  {
-    min_.l = (long)min;
-    max_.l = (long)max;
-    setTypeLong();
-    range_is_set_ = true;
-  }
+  void setRange(const T min, const T max);
   void setRange(const double min, const double max);
   void setRange(const float min, const float max);
   void removeRange();
@@ -50,12 +46,10 @@ public:
                            const size_t array_length_max);
   void removeArrayLengthRange();
   template <size_t N>
-  void setSubset(const constants::SubsetMemberType (&subset)[N])
-  {
-    subset_.setStorage(subset,N);
-    subset_is_set_ = true;
-  }
+  void setSubset(const constants::SubsetMemberType (&subset)[N]);
   void removeSubset();
+  template <typename T>
+  bool getValue(T & value);
 private:
   const ConstantString * name_ptr_;
   const ConstantString * units_ptr_;
@@ -77,20 +71,7 @@ private:
   JsonStream::JsonTypes getArrayElementType();
   bool rangeIsSet();
   template <typename T>
-  bool valueInRange(const T value)
-  {
-    bool in_range = true;
-    if (rangeIsSet())
-    {
-      long min = getMin().l;
-      long max = getMax().l;
-      if (((long)value < min) || ((long)value > max))
-      {
-        in_range = false;
-      }
-    }
-    return in_range;
-  }
+  bool valueInRange(const T value);
   bool valueInRange(const double value);
   bool valueInRange(const float value);
   constants::NumberType getMin();
@@ -105,9 +86,12 @@ private:
   bool valueInSubset(const long value);
   bool valueInSubset(const char * value);
   Vector<const constants::SubsetMemberType> & getSubset();
+  static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_callback_;
   friend class Field;
   friend class Method;
   friend class Server;
 };
 }
+#include "ParameterDefinitions.h"
+
 #endif
