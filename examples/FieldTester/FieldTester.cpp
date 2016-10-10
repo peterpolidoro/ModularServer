@@ -169,20 +169,20 @@ void FieldTester::update()
 
 // Callbacks must be non-blocking (avoid 'delay')
 //
-// modular_server_.getParameterValue must be cast to either:
-// const char *
-// long
-// double
+// modular_server_.parameter(parameter_name).getValue(value) value type must be either:
+// fixed-point number (int, long, etc.)
+// floating-point number (float, double)
 // bool
-// ArduinoJson::JsonArray &
-// ArduinoJson::JsonObject &
+// const char *
+// ArduinoJson::JsonArray *
+// ArduinoJson::JsonObject *
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// field.getValue type must match the field default type
-// field.setValue type must match the field default type
-// field.getElementValue type must match the field array element default type
-// field.setElementValue type must match the field array element default type
+// modular_server_.field(field_name).getValue(value) value type must match the field default type
+// modular_server_.field(field_name).setValue(value) value type must match the field default type
+// modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
+// modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type
 
 void FieldTester::getDoubledCallback()
 {
@@ -240,8 +240,9 @@ void FieldTester::setLongArrayVariableCallback()
 
 void FieldTester::setLongArrayParameterCallback()
 {
-  ArduinoJson::JsonArray & long_array = modular_server_.getParameterValue(constants::long_array_parameter_name);
-  bool success = modular_server_.field(constants::long_array_field_name).setValue(long_array);
+  ArduinoJson::JsonArray * long_array_ptr;
+  modular_server_.parameter(constants::long_array_parameter_name).getValue(long_array_ptr);
+  bool success = modular_server_.field(constants::long_array_field_name).setValue(*long_array_ptr);
   modular_server_.writeResultToResponse(success);
 }
 
@@ -256,7 +257,8 @@ void FieldTester::getStringAllCallback()
 
 void FieldTester::getStringSomeCallback()
 {
-  long length = modular_server_.getParameterValue(constants::length_parameter_name);
+  long length;
+  modular_server_.parameter(constants::length_parameter_name).getValue(length);
   size_t array_length = length + 1;
   char string[array_length];
   modular_server_.field(constants::string_field_name).getValue(string,array_length);
@@ -265,7 +267,8 @@ void FieldTester::getStringSomeCallback()
 
 void FieldTester::getCountCallback()
 {
-  long count = modular_server_.getParameterValue(constants::count_parameter_name);
+  long count;
+  modular_server_.parameter(constants::count_parameter_name).getValue(count);
   switch (count)
   {
     case 10:
@@ -313,20 +316,23 @@ void FieldTester::getCountCallback()
 
 void FieldTester::getCountArrayCallback()
 {
-  ArduinoJson::JsonArray & count_array = modular_server_.getParameterValue(constants::count_array_parameter_name);
-  modular_server_.writeResultToResponse(&count_array);
+  ArduinoJson::JsonArray * count_array_ptr;
+  bool success = modular_server_.parameter(constants::count_array_parameter_name).getValue(count_array_ptr);
+  modular_server_.writeResultToResponse(count_array_ptr);
 }
 
 void FieldTester::getDirectionCallback()
 {
-  const char * direction = modular_server_.getParameterValue(constants::direction_parameter_name);
+  const char * direction;
+  modular_server_.parameter(constants::direction_parameter_name).getValue(direction);
   modular_server_.writeResultToResponse(direction);
 }
 
 void FieldTester::getDirectionArrayCallback()
 {
-  ArduinoJson::JsonArray & direction_array = modular_server_.getParameterValue(constants::direction_array_parameter_name);
-  modular_server_.writeResultToResponse(&direction_array);
+  ArduinoJson::JsonArray * direction_array_ptr;
+  modular_server_.parameter(constants::direction_array_parameter_name).getValue(direction_array_ptr);
+  modular_server_.writeResultToResponse(direction_array_ptr);
 }
 
 void FieldTester::checkModeCallback()

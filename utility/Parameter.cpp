@@ -218,8 +218,7 @@ bool Parameter::getValue<bool>(bool & value)
   return false;
 }
 
-template <>
-bool Parameter::getValue<const char *>(const char * & value)
+bool Parameter::getValue(const char * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) && (getType() != JsonStream::VALUE_TYPE))
   {
@@ -229,8 +228,7 @@ bool Parameter::getValue<const char *>(const char * & value)
   return true;
 }
 
-template <>
-bool Parameter::getValue<ArduinoJson::JsonArray *>(ArduinoJson::JsonArray * & value)
+bool Parameter::getValue(ArduinoJson::JsonArray * & value)
 {
   if (getType() != JsonStream::ARRAY_TYPE)
   {
@@ -241,8 +239,7 @@ bool Parameter::getValue<ArduinoJson::JsonArray *>(ArduinoJson::JsonArray * & va
   return true;
 }
 
-template <>
-bool Parameter::getValue<ArduinoJson::JsonObject *>(ArduinoJson::JsonObject * & value)
+bool Parameter::getValue(ArduinoJson::JsonObject * & value)
 {
   if (getType() != JsonStream::OBJECT_TYPE)
   {

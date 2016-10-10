@@ -50,6 +50,9 @@ public:
   void removeSubset();
   template <typename T>
   bool getValue(T & value);
+  bool getValue(const char * & value);
+  bool getValue(ArduinoJson::JsonArray * & value);
+  bool getValue(ArduinoJson::JsonObject * & value);
 private:
   const ConstantString * name_ptr_;
   const ConstantString * units_ptr_;

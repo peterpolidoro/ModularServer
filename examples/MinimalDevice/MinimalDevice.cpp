@@ -47,17 +47,17 @@ void MinimalDevice::update()
 
 // Callbacks must be non-blocking (avoid 'delay')
 //
-// modular_server_.getParameterValue must be cast to either:
-// const char *
-// long
-// double
+// modular_server_.parameter(parameter_name).getValue(value) value type must be either:
+// fixed-point number (int, long, etc.)
+// floating-point number (float, double)
 // bool
-// ArduinoJson::JsonArray &
-// ArduinoJson::JsonObject &
+// const char *
+// ArduinoJson::JsonArray *
+// ArduinoJson::JsonObject *
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// field.getValue type must match the field default type
-// field.setValue type must match the field default type
-// field.getElementValue type must match the field array element default type
-// field.setElementValue type must match the field array element default type
+// modular_server_.field(field_name).getValue(value) value type must match the field default type
+// modular_server_.field(field_name).setValue(value) value type must match the field default type
+// modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
+// modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type

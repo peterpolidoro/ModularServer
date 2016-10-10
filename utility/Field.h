@@ -57,6 +57,7 @@ public:
 
   template <typename T>
   bool getValue(T & value);
+  bool getValue(const ConstantString * & value);
   template <size_t N>
   bool getValue(long (&value)[N]);
   template <size_t N>
@@ -69,6 +70,7 @@ public:
   bool getElementValue(const size_t element_index, T & value);
   template <typename T>
   bool getDefaultValue(T & value);
+  bool getDefaultValue(const ConstantString * & value);
   template <size_t N>
   bool getDefaultValue(long (&value)[N]);
   template <size_t N>

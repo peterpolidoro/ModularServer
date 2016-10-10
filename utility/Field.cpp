@@ -116,8 +116,7 @@ bool Field::getValue<bool>(bool & value)
   return saved_variable_.getValue(value);
 }
 
-template <>
-bool Field::getValue<const ConstantString *>(const ConstantString * & value)
+bool Field::getValue(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       stringIsSavedAsCharArray())
@@ -218,8 +217,7 @@ bool Field::getDefaultValue<bool>(bool & value)
   return saved_variable_.getDefaultValue(value);
 }
 
-template <>
-bool Field::getDefaultValue<const ConstantString *>(const ConstantString * & value)
+bool Field::getDefaultValue(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       stringIsSavedAsCharArray())
