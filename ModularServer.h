@@ -12,7 +12,6 @@
 
 namespace modular_server
 {
-class Method;
 using FirmwareInfo = constants::FirmwareInfo;
 using HardwareInfo = constants::HardwareInfo;
 using SubsetMemberType = constants::SubsetMemberType;
