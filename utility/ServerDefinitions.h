@@ -29,6 +29,9 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
                          Method (&methods)[METHODS_MAX_SIZE])
 {
   firmware_info_array_.push_back(&firmware_info);
+  constants::SubsetMemberType firmware_name_ptr;
+  firmware_name_ptr.cs_ptr = firmware_info.name_ptr;
+  firmware_name_subset_.push_back(firmware_name_ptr);
   fields_.addArray(fields);
   parameters_.addArray(parameters);
   methods_.addArray(methods);
@@ -44,6 +47,8 @@ Field & Server::createField(const ConstantString & field_name,
   {
     fields_.push_back(Field(field_name,
                             default_value));
+    const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
+    fields_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return fields_.back();
   }
 }
@@ -57,6 +62,8 @@ Field & Server::createField(const ConstantString & field_name,
   {
     fields_.push_back(Field(field_name,
                             default_value));
+    const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
+    fields_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return fields_.back();
   }
 }

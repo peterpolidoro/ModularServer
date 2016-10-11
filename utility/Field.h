@@ -117,6 +117,7 @@ private:
 
   Parameter & parameter();
   const ConstantString & getName();
+  const ConstantString &  getFirmwareName();
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool stringIsSavedAsCharArray();

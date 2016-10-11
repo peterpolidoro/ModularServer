@@ -99,6 +99,7 @@ private:
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
   Array<const constants::FirmwareInfo *,constants::STORAGE_ARRAY_COUNT_MAX> firmware_info_array_;
+  Array<const constants::SubsetMemberType,constants::STORAGE_ARRAY_COUNT_MAX> firmware_name_subset_;
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
   int request_method_index_;
@@ -158,6 +159,7 @@ private:
   void getDeviceIdCallback();
   void getDeviceInfoCallback();
   void getApiCallback();
+  void getApiVerboseCallback();
   void getMemoryFreeCallback();
   void getFieldDefaultValuesCallback();
   void setFieldsToDefaultsCallback();

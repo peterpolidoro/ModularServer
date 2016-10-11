@@ -24,7 +24,6 @@ class Method
 public:
   Method();
 
-  void setName(const ConstantString & name);
   void attachCallback(const Functor0 & callback);
   void addParameter(Parameter & parameter);
   void setReturnTypeLong();
@@ -39,14 +38,20 @@ public:
 
 private:
   const ConstantString * name_ptr_;
+  const ConstantString * firmware_name_ptr_;
   Functor0 callback_;
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
   JsonStream::JsonTypes return_type_;
   Method(const ConstantString & name);
   void setup(const ConstantString & name);
+  void setName(const ConstantString & name);
   bool compareName(const char * name_to_compare);
   bool compareName(const ConstantString & name_to_compare);
   const ConstantString &  getName();
+  void setFirmwareName(const ConstantString & firmware_name);
+  bool compareFirmwareName(const char * firmware_name_to_compare);
+  bool compareFirmwareName(const ConstantString & firmware_name_to_compare);
+  const ConstantString &  getFirmwareName();
   int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();
   void callback();

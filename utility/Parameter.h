@@ -28,7 +28,6 @@ class Parameter
 public:
   Parameter();
 
-  void setName(const ConstantString & name);
   void setUnits(const ConstantString & name);
   void setTypeLong();
   void setTypeDouble();
@@ -57,6 +56,7 @@ public:
 
 private:
   const ConstantString * name_ptr_;
+  const ConstantString * firmware_name_ptr_;
   const ConstantString * units_ptr_;
   JsonStream::JsonTypes type_;
   JsonStream::JsonTypes array_element_type_;
@@ -69,9 +69,14 @@ private:
   Vector<const constants::SubsetMemberType> subset_;
   bool subset_is_set_;
   Parameter(const ConstantString & name);
+  void setName(const ConstantString & name);
   bool compareName(const char * name_to_compare);
   bool compareName(const ConstantString & name_to_compare);
   const ConstantString & getName();
+  void setFirmwareName(const ConstantString & firmware_name);
+  bool compareFirmwareName(const char * firmware_name_to_compare);
+  bool compareFirmwareName(const ConstantString & firmware_name_to_compare);
+  const ConstantString &  getFirmwareName();
   const ConstantString & getUnits();
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();

@@ -596,6 +596,11 @@ const ConstantString & Field::getName()
   return parameter_.getName();
 }
 
+const ConstantString & Field::getFirmwareName()
+{
+  return parameter_.getFirmwareName();
+}
+
 JsonStream::JsonTypes Field::getType()
 {
   return parameter_.getType();

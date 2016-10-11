@@ -40,6 +40,7 @@ CONSTANT_STRING(verbose_help_method_name,"??");
 CONSTANT_STRING(get_device_id_method_name,"getDeviceId");
 CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
 CONSTANT_STRING(get_api_method_name,"getApi");
+CONSTANT_STRING(get_api_verbose_method_name,"getApiVerbose");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
 CONSTANT_STRING(get_field_default_values_method_name,"getFieldDefaultValues");
 CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");

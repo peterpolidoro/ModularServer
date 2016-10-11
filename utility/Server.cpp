@@ -79,6 +79,8 @@ Parameter & Server::createParameter(const ConstantString & parameter_name)
   if (parameter_index < 0)
   {
     parameters_.push_back(Parameter(parameter_name));
+    const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
+    parameters_.back().setFirmwareName(*firmware_name_ptr);
     return parameters_.back();
   }
 }
@@ -106,6 +108,8 @@ Method & Server::createMethod(const ConstantString & method_name)
   if (method_index < 0)
   {
     methods_.push_back(Method(method_name));
+    const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
+    methods_.back().setFirmwareName(*firmware_name_ptr);
     return methods_.back();
   }
 }
@@ -262,6 +266,10 @@ void Server::setup()
   Method & get_api_method = createMethod(constants::get_api_method_name);
   get_api_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getApiCallback));
   get_api_method.setReturnTypeObject();
+
+  Method & get_api_verbose_method = createMethod(constants::get_api_verbose_method_name);
+  get_api_verbose_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseCallback));
+  get_api_verbose_method.setReturnTypeObject();
 
   Method & get_field_default_values_method = createMethod(constants::get_field_default_values_method_name);
   get_field_default_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesCallback));
@@ -786,6 +794,8 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
   response_.beginObject();
   const ConstantString & parameter_name = parameter.getName();
   response_.write(constants::name_constant_string,parameter_name);
+  const ConstantString & firmware_name = parameter.getFirmwareName();
+  response_.write(constants::firmware_constant_string,firmware_name);
 
   const ConstantString & units = parameter.getUnits();
   if (units.length() != 0)
@@ -949,6 +959,8 @@ void Server::methodHelp(bool verbose, int method_index)
 
   const ConstantString & method_name = methods_[method_index].getName();
   response_.write(constants::name_constant_string,method_name);
+  const ConstantString & firmware_name = methods_[method_index].getFirmwareName();
+  response_.write(constants::firmware_constant_string,firmware_name);
 
   response_.writeKey(constants::parameters_constant_string);
   json_stream_.beginArray();
@@ -1634,6 +1646,12 @@ void Server::getDeviceInfoCallback()
 }
 
 void Server::getApiCallback()
+{
+  response_.writeResultKey();
+  writeApiToResponse(false);
+}
+
+void Server::getApiVerboseCallback()
 {
   response_.writeResultKey();
   writeApiToResponse(true);

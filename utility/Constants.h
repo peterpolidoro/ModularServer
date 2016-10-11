@@ -19,8 +19,8 @@ enum {HARDWARE_INFO_ARRAY_COUNT_MAX=4};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_FIELD_COUNT_MAX=1};
-enum{SERVER_PARAMETER_COUNT_MAX=3};
-enum{SERVER_METHOD_COUNT_MAX=16};
+enum{SERVER_PARAMETER_COUNT_MAX=4};
+enum{SERVER_METHOD_COUNT_MAX=17};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 
@@ -61,8 +61,8 @@ union NumberType
 
 union SubsetMemberType
 {
-  const long l;
-  ConstantString * const cs_ptr;
+  long l;
+  ConstantString * cs_ptr;
 };
 
 extern ConstantString firmware_name;
@@ -87,6 +87,7 @@ extern ConstantString verbose_help_method_name;
 extern ConstantString get_device_id_method_name;
 extern ConstantString get_device_info_method_name;
 extern ConstantString get_api_method_name;
+extern ConstantString get_api_verbose_method_name;
 extern ConstantString get_memory_free_method_name;
 extern ConstantString get_field_default_values_method_name;
 extern ConstantString set_fields_to_defaults_method_name;

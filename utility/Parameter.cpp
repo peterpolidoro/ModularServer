@@ -24,11 +24,6 @@ Parameter::Parameter()
   subset_is_set_ = false;
 }
 
-void Parameter::setName(const ConstantString & name)
-{
-  name_ptr_ = &name;
-}
-
 void Parameter::setUnits(const ConstantString & units)
 {
   units_ptr_ = &units;
@@ -252,17 +247,45 @@ Parameter::Parameter(const ConstantString & name)
   subset_is_set_ = false;
 }
 
+void Parameter::setName(const ConstantString & name)
+{
+  name_ptr_ = &name;
+}
+
 bool Parameter::compareName(const char * name_to_compare)
 {
-  char name[name_ptr_->length()+1];
-  name[0] = '\0';
-  name_ptr_->copy(name);
-  return String(name).equalsIgnoreCase(name_to_compare);
+  char name_str[name_ptr_->length()+1];
+  name_str[0] = '\0';
+  name_ptr_->copy(name_str);
+  return String(name_str).equalsIgnoreCase(name_to_compare);
 }
 
 bool Parameter::compareName(const ConstantString & name_to_compare)
 {
   return (&name_to_compare == name_ptr_);
+}
+
+void Parameter::setFirmwareName(const ConstantString & firmware_name)
+{
+  firmware_name_ptr_ = &firmware_name;
+}
+
+bool Parameter::compareFirmwareName(const char * firmware_name_to_compare)
+{
+  char firmware_name_str[firmware_name_ptr_->length()+1];
+  firmware_name_str[0] = '\0';
+  firmware_name_ptr_->copy(firmware_name_str);
+  return String(firmware_name_str).equalsIgnoreCase(firmware_name_to_compare);
+}
+
+bool Parameter::compareFirmwareName(const ConstantString & firmware_name_to_compare)
+{
+  return (&firmware_name_to_compare == firmware_name_ptr_);
+}
+
+const ConstantString & Parameter::getFirmwareName()
+{
+  return *firmware_name_ptr_;
 }
 
 const ConstantString & Parameter::getName()
