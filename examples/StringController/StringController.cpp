@@ -127,14 +127,15 @@ void StringController::echoCallback()
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   bool double_echo;
   modular_server_.parameter(constants::double_echo_parameter_name).getValue(double_echo);
+  modular_server::Response & response = modular_server_.response();
   if (!double_echo)
   {
-    modular_server_.writeResultToResponse(string);
+    response.returnResult(string);
   }
   else
   {
     String echo = String(string) + String(string);
-    modular_server_.writeResultToResponse(echo);
+    response.returnResult(echo);
   }
 }
 
@@ -142,7 +143,7 @@ void StringController::lengthCallback()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
-  modular_server_.writeResultToResponse(strlen(string));
+  modular_server_.response().returnResult(strlen(string));
 }
 
 void StringController::startsWithCallback()
@@ -151,7 +152,7 @@ void StringController::startsWithCallback()
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   const char * string2;
   modular_server_.parameter(constants::string2_parameter_name).getValue(string2);
-  modular_server_.writeResultToResponse((bool)String(string).startsWith(string2));
+  modular_server_.response().returnResult((bool)String(string).startsWith(string2));
 }
 
 void StringController::repeatCallback()
@@ -160,13 +161,14 @@ void StringController::repeatCallback()
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   long count;
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
-  modular_server_.writeResultKeyToResponse();
-  modular_server_.beginResponseArray();
+  modular_server::Response & response = modular_server_.response();
+  response.writeResultKey();
+  response.beginArray();
   for (int i=0; i < count; i++)
   {
-    modular_server_.writeToResponse(string);
+    response.write(string);
   }
-  modular_server_.endResponseArray();
+  response.endArray();
 }
 
 void StringController::charsAtCallback()
@@ -175,6 +177,7 @@ void StringController::charsAtCallback()
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   ArduinoJson::JsonArray * index_array_ptr;
   modular_server_.parameter(constants::index_array_parameter_name).getValue(index_array_ptr);
+  modular_server::Response & response = modular_server_.response();
   for (ArduinoJson::JsonArray::iterator it=index_array_ptr->begin();
        it != index_array_ptr->end();
        ++it)
@@ -182,24 +185,24 @@ void StringController::charsAtCallback()
     long index = *it;
     if (index >= String(string).length())
     {
-      modular_server_.sendErrorResponse(constants::index_error);
+      response.returnError(constants::index_error);
       return;
     }
   }
-  modular_server_.writeResultKeyToResponse();
-  modular_server_.beginResponseArray();
+  response.writeResultKey();
+  response.beginArray();
   for (ArduinoJson::JsonArray::iterator it=index_array_ptr->begin();
        it != index_array_ptr->end();
        ++it)
   {
-    modular_server_.beginResponseObject();
+    response.beginObject();
     long index = *it;
-    modular_server_.writeToResponse("index",index);
+    response.write("index",index);
     char c = string[index];
-    modular_server_.writeToResponse("char",c);
-    modular_server_.endResponseObject();
+    response.write("char",c);
+    response.endObject();
   }
-  modular_server_.endResponseArray();
+  response.endArray();
 }
 
 void StringController::startingCharsCallback()
@@ -208,7 +211,7 @@ void StringController::startingCharsCallback()
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   long starting_chars_count;
   modular_server_.field(constants::starting_chars_count_field_name).getValue(starting_chars_count);
-  modular_server_.writeResultToResponse(String(string).substring(0,starting_chars_count));
+  modular_server_.response().returnResult(String(string).substring(0,starting_chars_count));
 }
 
 void StringController::setStoredStringCallback()
@@ -225,5 +228,5 @@ void StringController::getStoredStringCallback()
   size_t array_length = field.getArrayLength();
   char stored_string[array_length];
   field.getValue(stored_string,array_length);
-  modular_server_.writeResultToResponse(stored_string);
+  modular_server_.response().returnResult(stored_string);
 }

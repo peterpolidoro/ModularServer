@@ -101,7 +101,7 @@ void BoardLedController::setLedOffCallback()
 
 void BoardLedController::getLedPinCallback()
 {
-  modular_server_.writeResultToResponse(constants::led_pin);
+  modular_server_.response().returnResult(constants::led_pin);
 }
 
 void BoardLedController::blinkLedCallback()

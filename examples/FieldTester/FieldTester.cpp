@@ -189,21 +189,21 @@ void FieldTester::getDoubledCallback()
   double value;
   modular_server_.field(constants::double_field_name).getValue(value);
   value *= 2;
-  modular_server_.writeResultToResponse(value);
+  modular_server_.response().returnResult(value);
 }
 
 void FieldTester::getBoolCallback()
 {
   bool value;
   modular_server_.field(constants::bool_field_name).getValue(value);
-  modular_server_.writeResultToResponse(value);
+  modular_server_.response().returnResult(value);
 }
 
 void FieldTester::getLongArrayFixedCallback()
 {
   long long_array[constants::LONG_ARRAY_LENGTH];
   modular_server_.field(constants::long_array_field_name).getValue(long_array);
-  modular_server_.writeResultToResponse(long_array);
+  modular_server_.response().returnResult(long_array);
 }
 
 void FieldTester::getLongArrayVariableCallback()
@@ -212,7 +212,7 @@ void FieldTester::getLongArrayVariableCallback()
   size_t array_length = field.getArrayLength();
   long long_array[array_length];
   field.getValue(long_array,array_length);
-  modular_server_.writeResultToResponse(long_array,array_length);
+  modular_server_.response().returnResult(long_array,array_length);
 }
 
 void FieldTester::setLongArrayFixedCallback()
@@ -223,7 +223,7 @@ void FieldTester::setLongArrayFixedCallback()
   long_array[2] = 9;
   long_array[3] = 10;
   bool success = modular_server_.field(constants::long_array_field_name).setValue(long_array);
-  modular_server_.writeResultToResponse(success);
+  modular_server_.response().returnResult(success);
 }
 
 void FieldTester::setLongArrayVariableCallback()
@@ -235,7 +235,7 @@ void FieldTester::setLongArrayVariableCallback()
   long_array[1] = -2;
   long_array[2] = 7;
   bool success = field.setValue(long_array,array_length-1);
-  modular_server_.writeResultToResponse(success);
+  modular_server_.response().returnResult(success);
 }
 
 void FieldTester::setLongArrayParameterCallback()
@@ -243,7 +243,7 @@ void FieldTester::setLongArrayParameterCallback()
   ArduinoJson::JsonArray * long_array_ptr;
   modular_server_.parameter(constants::long_array_parameter_name).getValue(long_array_ptr);
   bool success = modular_server_.field(constants::long_array_field_name).setValue(*long_array_ptr);
-  modular_server_.writeResultToResponse(success);
+  modular_server_.response().returnResult(success);
 }
 
 void FieldTester::getStringAllCallback()
@@ -252,7 +252,7 @@ void FieldTester::getStringAllCallback()
   size_t array_length = field.getArrayLength();
   char string[array_length];
   field.getValue(string,array_length);
-  modular_server_.writeResultToResponse(string);
+  modular_server_.response().returnResult(string);
 }
 
 void FieldTester::getStringSomeCallback()
@@ -262,7 +262,7 @@ void FieldTester::getStringSomeCallback()
   size_t array_length = length + 1;
   char string[array_length];
   modular_server_.field(constants::string_field_name).getValue(string,array_length);
-  modular_server_.writeResultToResponse(string);
+  modular_server_.response().returnResult(string);
 }
 
 void FieldTester::getCountCallback()
@@ -273,42 +273,42 @@ void FieldTester::getCountCallback()
   {
     case 10:
     {
-      modular_server_.writeResultToResponse("ten");
+      modular_server_.response().returnResult("ten");
       break;
     }
     case 20:
     {
-      modular_server_.writeResultToResponse("twenty");
+      modular_server_.response().returnResult("twenty");
       break;
     }
     case 30:
     {
-      modular_server_.writeResultToResponse("thirty");
+      modular_server_.response().returnResult("thirty");
       break;
     }
     case 40:
     {
-      modular_server_.writeResultToResponse("forty");
+      modular_server_.response().returnResult("forty");
       break;
     }
     case 50:
     {
-      modular_server_.writeResultToResponse("fifty");
+      modular_server_.response().returnResult("fifty");
       break;
     }
     case 60:
     {
-      modular_server_.writeResultToResponse("sixty");
+      modular_server_.response().returnResult("sixty");
       break;
     }
     case 70:
     {
-      modular_server_.writeResultToResponse("seventy");
+      modular_server_.response().returnResult("seventy");
       break;
     }
     default:
     {
-      modular_server_.writeResultToResponse("???");
+      modular_server_.response().returnResult("???");
       break;
     }
   }
@@ -318,21 +318,21 @@ void FieldTester::getCountArrayCallback()
 {
   ArduinoJson::JsonArray * count_array_ptr;
   bool success = modular_server_.parameter(constants::count_array_parameter_name).getValue(count_array_ptr);
-  modular_server_.writeResultToResponse(count_array_ptr);
+  modular_server_.response().returnResult(count_array_ptr);
 }
 
 void FieldTester::getDirectionCallback()
 {
   const char * direction;
   modular_server_.parameter(constants::direction_parameter_name).getValue(direction);
-  modular_server_.writeResultToResponse(direction);
+  modular_server_.response().returnResult(direction);
 }
 
 void FieldTester::getDirectionArrayCallback()
 {
   ArduinoJson::JsonArray * direction_array_ptr;
   modular_server_.parameter(constants::direction_array_parameter_name).getValue(direction_array_ptr);
-  modular_server_.writeResultToResponse(direction_array_ptr);
+  modular_server_.response().returnResult(direction_array_ptr);
 }
 
 void FieldTester::checkModeCallback()
@@ -341,19 +341,19 @@ void FieldTester::checkModeCallback()
   modular_server_.field(constants::mode_field_name).getValue(mode_ptr);
   if (mode_ptr == &constants::mode_rising)
   {
-    modular_server_.writeResultToResponse("Mode set to rising!");
+    modular_server_.response().returnResult("Mode set to rising!");
   }
   else if (mode_ptr == &constants::mode_falling)
   {
-    modular_server_.writeResultToResponse("Mode set to falling!");
+    modular_server_.response().returnResult("Mode set to falling!");
   }
   else if (mode_ptr == &constants::mode_change)
   {
-    modular_server_.writeResultToResponse("Mode set to change!");
+    modular_server_.response().returnResult("Mode set to change!");
   }
   else
   {
-    modular_server_.writeResultToResponse("???");
+    modular_server_.response().returnResult("???");
   }
 }
 
@@ -365,21 +365,21 @@ void FieldTester::incrementModeCallback()
   if (mode_ptr == &constants::mode_rising)
   {
     field.setValue(&constants::mode_falling);
-    modular_server_.writeResultToResponse("Mode was set to rising, now set to falling!");
+    modular_server_.response().returnResult("Mode was set to rising, now set to falling!");
   }
   else if (mode_ptr == &constants::mode_falling)
   {
     field.setValue(&constants::mode_change);
-    modular_server_.writeResultToResponse("Mode was set to falling, now set to change!");
+    modular_server_.response().returnResult("Mode was set to falling, now set to change!");
   }
   else if (mode_ptr == &constants::mode_change)
   {
     field.setValue(&constants::mode_rising);
-    modular_server_.writeResultToResponse("Mode was set to change, now set to rising!");
+    modular_server_.response().returnResult("Mode was set to change, now set to rising!");
   }
   else
   {
-    modular_server_.writeResultToResponse("???");
+    modular_server_.response().returnResult("???");
   }
 }
 
