@@ -11,102 +11,105 @@
 
 namespace modular_server
 {
-template <typename K>
-void Response::writeKeyToResponse(K key)
-{
-  json_stream_.writeKey(key);
-}
-
+// public
 template <typename T>
-void Response::writeToResponse(T value)
+void Response::returnResult(T value)
 {
-  json_stream_.write(value);
+  // Prevent multiple results in one response
+  if (!result_key_in_response_ && !error_)
+  {
+    result_key_in_response_ = true;
+    json_stream_ptr_->write(constants::result_constant_string,value);
+  }
 }
 
 template <typename T, size_t N>
-void Response::writeToResponse(T (&value)[N])
+void Response::returnResult(T (&value)[N])
 {
-  json_stream_.write(value);
-}
-
-template <typename K, typename T>
-void Response::writeToResponse(K key, T value)
-{
-  json_stream_.write(key,value);
-}
-
-template <typename K, typename T, size_t N>
-void Response::writeToResponse(K key, T (&value)[N])
-{
-  json_stream_.write(key,value);
+  // Prevent multiple results in one response
+  if (!result_key_in_response_ && !error_)
+  {
+    result_key_in_response_ = true;
+    json_stream_ptr_->write(constants::result_constant_string,value);
+  }
 }
 
 template <typename T>
-void Response::writeArrayToResponse(T * value, size_t N)
+void Response::returnResult(T * value, size_t N)
 {
-  json_stream_.writeArray(value,N);
-}
-
-template <typename K, typename T>
-void Response::writeArrayToResponse(K key, T * value, size_t N)
-{
-  json_stream_.writeArray(key,value,N);
-}
-
-template <typename K>
-void Response::writeNullToResponse(K key)
-{
-  json_stream_.writeNull(key);
+  // Prevent multiple results in one response
+  if (!result_key_in_response_ && !error_)
+  {
+    result_key_in_response_ = true;
+    json_stream_ptr_->writeArray(constants::result_constant_string,value,N);
+  }
 }
 
 template <typename T>
-void Response::sendErrorResponse(T error)
+void Response::returnError(T error)
 {
   // Prevent multiple errors in one response
   if (!error_)
   {
     error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::server_error_error_message);
-    writeToResponse(constants::data_constant_string,error);
-    writeToResponse(constants::code_constant_string,constants::server_error_error_code);
-    endResponseObject();
+    writeKey(constants::error_constant_string);
+    beginObject();
+    write(constants::message_constant_string,constants::server_error_error_message);
+    write(constants::data_constant_string,error);
+    write(constants::code_constant_string,constants::server_error_error_code);
+    endObject();
   }
 }
 
-template <typename T>
-void Response::writeResultToResponse(T value)
+template <typename K>
+void Response::writeKey(K key)
 {
-  // Prevent multiple results in one response
-  if (!result_key_in_response_ && !error_)
-  {
-    result_key_in_response_ = true;
-    json_stream_.write(constants::result_constant_string,value);
-  }
+  json_stream_ptr_->writeKey(key);
+}
+
+template <typename T>
+void Response::write(T value)
+{
+  json_stream_ptr_->write(value);
 }
 
 template <typename T, size_t N>
-void Response::writeResultToResponse(T (&value)[N])
+void Response::write(T (&value)[N])
 {
-  // Prevent multiple results in one response
-  if (!result_key_in_response_ && !error_)
-  {
-    result_key_in_response_ = true;
-    json_stream_.write(constants::result_constant_string,value);
-  }
+  json_stream_ptr_->write(value);
+}
+
+template <typename K, typename T>
+void Response::write(K key, T value)
+{
+  json_stream_ptr_->write(key,value);
+}
+
+template <typename K, typename T, size_t N>
+void Response::write(K key, T (&value)[N])
+{
+  json_stream_ptr_->write(key,value);
 }
 
 template <typename T>
-void Response::writeResultToResponse(T * value, size_t N)
+void Response::writeArray(T * value, size_t N)
 {
-  // Prevent multiple results in one response
-  if (!result_key_in_response_ && !error_)
-  {
-    result_key_in_response_ = true;
-    json_stream_.writeArray(constants::result_constant_string,value,N);
-  }
+  json_stream_ptr_->writeArray(value,N);
 }
+
+template <typename K, typename T>
+void Response::writeArray(K key, T * value, size_t N)
+{
+  json_stream_ptr_->writeArray(key,value,N);
+}
+
+template <typename K>
+void Response::writeNull(K key)
+{
+  json_stream_ptr_->writeNull(key);
+}
+
+// protected
 
 }
 #endif

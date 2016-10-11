@@ -84,8 +84,10 @@ public:
 private:
   Array<Stream *,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
   size_t server_stream_index_;
+  JsonStream json_stream_;
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray  * request_json_array_ptr_;
+  Response response_;
 
   Field server_fields_[constants::SERVER_FIELD_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
@@ -101,8 +103,6 @@ private:
 
   int request_method_index_;
   int parameter_count_;
-  bool error_;
-  bool result_key_in_response_;
   bool eeprom_initialized_;
   SavedVariable eeprom_initialized_sv_;
   bool server_running_;
@@ -136,12 +136,20 @@ private:
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
   void writeApiToResponse(bool verbose);
-  void writeParameterNotInSubsetErrorToResponse(Parameter & parameter, Vector<const constants::SubsetMemberType> & subset);
-  void writeParameterNotInRangeErrorToResponse(Parameter & parameter, char min_str[], char max_str[]);
-  void writeFieldToResponse(Field & field, bool write_key=false, bool write_default=false, int element_index=-1);
-  void writeFieldErrorToResponse(const ConstantString & error);
-  void versionToString(char* destination, const long major, const long minor, const long patch=-1);
-  void subsetToString(char * destination, Vector<const constants::SubsetMemberType> & subset, const JsonStream::JsonTypes type, const size_t num);
+  void writeFieldToResponse(Field & field,
+                            bool write_key=false,
+                            bool write_default=false,
+                            int element_index=-1);
+  void versionToString(char * destination,
+                       const size_t major,
+                       const size_t minor,
+                       const size_t patch,
+                       const size_t num);
+  void subsetToString(char * destination,
+                      Vector<const constants::SubsetMemberType> & subset,
+                      const JsonStream::JsonTypes & parameter_type,
+                      const JsonStream::JsonTypes & parameter_array_element_type,
+                      const size_t num);
 
   // Callbacks
   void getMethodIdsCallback();

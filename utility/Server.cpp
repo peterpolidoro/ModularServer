@@ -18,18 +18,18 @@ Server::Server() :
 
 void Server::setup()
 {
-  setDeviceName(constants::empty_constant_string);
   request_method_index_ = -1;
   parameter_count_ = 0;
-  error_ = false;
-  result_key_in_response_ = false;
   server_stream_index_ = 0;
 
   eeprom_initialized_ = false;
 
   // Streams
+  response_.setJsonStream(json_stream_);
 
   // Device ID
+  setDeviceName(constants::empty_constant_string);
+  setFormFactor(constants::empty_constant_string);
 
   // Hardware Info
 
@@ -281,26 +281,18 @@ void Server::handleRequest()
       JsonSanitizer<constants::JSON_TOKEN_MAX> sanitizer;
       if (sanitizer.firstCharIsValidJson(request_))
       {
-        json_stream_.setCompactPrint();
+        response_.setCompactPrint();
       }
       else
       {
-        json_stream_.setPrettyPrint();
+        response_.setPrettyPrint();
       }
-      json_stream_.beginObject();
-      error_ = false;
-      result_key_in_response_ = false;
+      response_.begin();
       sanitizer.sanitizeBuffer(request_);
       StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
       if (sanitizer.firstCharIsValidJsonObject(request_))
       {
-        error_ = true;
-        writeKeyToResponse(constants::error_constant_string);
-        beginResponseObject();
-        writeToResponse(constants::message_constant_string,constants::server_error_error_message);
-        writeToResponse(constants::data_constant_string,constants::object_request_error_data);
-        writeToResponse(constants::code_constant_string,constants::server_error_error_code);
-        endResponseObject();
+        response_.returnError(constants::object_request_error_data);
       }
       else
       {
@@ -311,35 +303,17 @@ void Server::handleRequest()
         }
         else
         {
-          error_ = true;
-          writeKeyToResponse(constants::error_constant_string);
-          beginResponseObject();
-          writeToResponse(constants::message_constant_string,constants::parse_error_message);
-          writeToResponse(constants::data_constant_string,request_);
-          writeToResponse(constants::code_constant_string,constants::parse_error_code);
-          endResponseObject();
-        }
-        if (!error_ && !result_key_in_response_)
-        {
-          writeNullToResponse(constants::result_constant_string);
+          response_.returnRequestParseError(request_);
         }
       }
-      endResponseObject();
-      json_stream_.writeNewline();
+      response_.end();
     }
     else if (bytes_read < 0)
     {
-      json_stream_.setCompactPrint();
-      json_stream_.beginObject();
-      error_ = true;
-      writeKeyToResponse(constants::error_constant_string);
-      beginResponseObject();
-      writeToResponse(constants::message_constant_string,constants::server_error_error_message);
-      writeToResponse(constants::data_constant_string,constants::request_length_error_data);
-      writeToResponse(constants::code_constant_string,constants::server_error_error_code);
-      endResponseObject();
-      endResponseObject();
-      json_stream_.writeNewline();
+      response_.setCompactPrint();
+      response_.begin();
+      response_.returnError(constants::request_length_error_data);
+      response_.end();
     }
   }
   incrementServerStream();
@@ -360,13 +334,13 @@ void Server::processRequestArray()
     // method ?
     if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
     {
-      writeResultKeyToResponse();
+      response_.writeResultKey();
       methodHelp(false,request_method_index_);
     }
     // method ??
     else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
     {
-      writeResultKeyToResponse();
+      response_.writeResultKey();
       methodHelp(true,request_method_index_);
     }
     // method parameter ?
@@ -378,7 +352,7 @@ void Server::processRequestArray()
       int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
       Parameter * parameter_ptr;
       parameter_ptr = methods_[request_method_index_].parameter_ptrs_[parameter_index];
-      writeResultKeyToResponse();
+      response_.writeResultKey();
       parameterHelp(*parameter_ptr);
     }
     // execute private method without checking parameters
@@ -388,29 +362,7 @@ void Server::processRequestArray()
     }
     else if (parameter_count != methods_[request_method_index_].getParameterCount())
     {
-      error_ = true;
-      writeKeyToResponse(constants::error_constant_string);
-      beginResponseObject();
-      writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-      char incorrect_parameter_number[constants::incorrect_parameter_number_error_data.length()+1];
-      constants::incorrect_parameter_number_error_data.copy(incorrect_parameter_number);
-      char error_str[constants::STRING_LENGTH_ERROR];
-      error_str[0] = '\0';
-      strcat(error_str,incorrect_parameter_number);
-      char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
-      dtostrf(parameter_count,0,0,parameter_count_str);
-      strcat(error_str,parameter_count_str);
-      char given_str[constants::given_constant_string.length()+1];
-      constants::given_constant_string.copy(given_str);
-      strcat(error_str,given_str);
-      dtostrf(methods_[request_method_index_].getParameterCount(),0,0,parameter_count_str);
-      strcat(error_str,parameter_count_str);
-      char needed_str[constants::needed_constant_string.length()+1];
-      constants::needed_constant_string.copy(needed_str);
-      strcat(error_str,needed_str);
-      writeToResponse(constants::data_constant_string,error_str);
-      writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-      endResponseObject();
+      response_.returnParameterCountError(parameter_count,methods_[request_method_index_].getParameterCount());
     }
     else
     {
@@ -423,12 +375,7 @@ void Server::processRequestArray()
   }
   else
   {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::method_not_found_error_message);
-    writeToResponse(constants::code_constant_string,constants::method_not_found_error_code);
-    endResponseObject();
+    response_.returnMethodNotFoundError();
   }
 }
 
@@ -441,17 +388,17 @@ int Server::findRequestMethodIndex(const char * method_string)
   if (strcmp(method_string,zero_str) == 0)
   {
     method_index = 0;
-    writeToResponse(constants::id_constant_string,0);
+    response_.write(constants::id_constant_string,0);
   }
   else if (method_id > 0)
   {
     method_index = method_id;
-    writeToResponse(constants::id_constant_string,method_id);
+    response_.write(constants::id_constant_string,method_id);
   }
   else
   {
     method_index = findMethodIndex(method_string);
-    writeToResponse(constants::id_constant_string,method_string);
+    response_.write(constants::id_constant_string,method_string);
   }
   return method_index;
 }
@@ -475,12 +422,12 @@ void Server::methodHelp(bool verbose, int method_index)
     return;
   }
 
-  beginResponseObject();
+  response_.beginObject();
 
   const ConstantString & method_name = methods_[method_index].getName();
-  writeToResponse(constants::name_constant_string,method_name);
+  response_.write(constants::name_constant_string,method_name);
 
-  writeKeyToResponse(constants::parameters_constant_string);
+  response_.writeKey(constants::parameters_constant_string);
   json_stream_.beginArray();
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
   parameter_ptrs_ptr = &methods_[method_index].parameter_ptrs_;
@@ -493,14 +440,14 @@ void Server::methodHelp(bool verbose, int method_index)
     else
     {
       const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
-      writeToResponse(parameter_name);
+      response_.write(parameter_name);
     }
   }
   json_stream_.endArray();
 
-  writeToResponse(constants::result_type_constant_string,methods_[method_index].getReturnType());
+  response_.write(constants::result_type_constant_string,methods_[method_index].getReturnType());
 
-  endResponseObject();
+  response_.endObject();
 }
 
 int Server::processParameterString(const char * parameter_string)
@@ -525,13 +472,7 @@ int Server::processParameterString(const char * parameter_string)
   parameter_ptrs_ptr = &methods_[request_method_index_].parameter_ptrs_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs_ptr->size()))
   {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    writeToResponse(constants::data_constant_string,constants::parameter_not_found_error_data);
-    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-    endResponseObject();
+    response_.returnParameterNotFoundError();
     parameter_index = -1;
   }
   return parameter_index;
@@ -539,50 +480,50 @@ int Server::processParameterString(const char * parameter_string)
 
 void Server::parameterHelp(Parameter & parameter, bool end_object)
 {
-  beginResponseObject();
+  response_.beginObject();
   const ConstantString & parameter_name = parameter.getName();
-  writeToResponse(constants::name_constant_string,parameter_name);
+  response_.write(constants::name_constant_string,parameter_name);
 
   const ConstantString & units = parameter.getUnits();
   if (units.length() != 0)
   {
-    writeToResponse(constants::units_constant_string,units);
+    response_.write(constants::units_constant_string,units);
   }
   JsonStream::JsonTypes type = parameter.getType();
   switch (type)
   {
     case JsonStream::LONG_TYPE:
     {
-      writeToResponse(constants::type_constant_string,JsonStream::LONG_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::LONG_TYPE);
       if (parameter.subsetIsSet())
       {
-        writeKeyToResponse(constants::subset_constant_string);
-        writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
+        response_.writeKey(constants::subset_constant_string);
+        response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
       }
       if (parameter.rangeIsSet())
       {
         long min = parameter.getMin().l;
         long max = parameter.getMax().l;
-        writeToResponse(constants::min_constant_string,min);
-        writeToResponse(constants::max_constant_string,max);
+        response_.write(constants::min_constant_string,min);
+        response_.write(constants::max_constant_string,max);
       }
       break;
     }
     case JsonStream::DOUBLE_TYPE:
     {
-      writeToResponse(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
       if (parameter.rangeIsSet())
       {
         double min = parameter.getMin().d;
         double max = parameter.getMax().d;
-        writeToResponse(constants::min_constant_string,min);
-        writeToResponse(constants::max_constant_string,max);
+        response_.write(constants::min_constant_string,min);
+        response_.write(constants::max_constant_string,max);
       }
       break;
     }
     case JsonStream::BOOL_TYPE:
     {
-      writeToResponse(constants::type_constant_string,JsonStream::BOOL_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::BOOL_TYPE);
       break;
     }
     case JsonStream::NULL_TYPE:
@@ -591,57 +532,57 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
     }
     case JsonStream::STRING_TYPE:
     {
-      writeToResponse(constants::type_constant_string,JsonStream::STRING_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::STRING_TYPE);
       if (parameter.subsetIsSet())
       {
-        writeKeyToResponse(constants::subset_constant_string);
-        writeToResponse(parameter.getSubset(),JsonStream::STRING_TYPE);
+        response_.writeKey(constants::subset_constant_string);
+        response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
       }
       break;
     }
     case JsonStream::OBJECT_TYPE:
     {
-      writeToResponse(constants::type_constant_string,JsonStream::OBJECT_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::OBJECT_TYPE);
       break;
     }
     case JsonStream::ARRAY_TYPE:
     {
-      writeToResponse(constants::type_constant_string,JsonStream::ARRAY_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::ARRAY_TYPE);
       JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
       switch (array_element_type)
       {
         case JsonStream::LONG_TYPE:
         {
-          writeToResponse(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
+          response_.write(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
           if (parameter.subsetIsSet())
           {
-            writeKeyToResponse(constants::array_element_subset_constant_string);
-            writeToResponse(parameter.getSubset(),JsonStream::LONG_TYPE);
+            response_.writeKey(constants::array_element_subset_constant_string);
+            response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
           }
           if (parameter.rangeIsSet())
           {
             long min = parameter.getMin().l;
             long max = parameter.getMax().l;
-            writeToResponse(constants::array_element_min_constant_string,min);
-            writeToResponse(constants::array_element_max_constant_string,max);
+            response_.write(constants::array_element_min_constant_string,min);
+            response_.write(constants::array_element_max_constant_string,max);
           }
           break;
         }
         case JsonStream::DOUBLE_TYPE:
         {
-          writeToResponse(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
+          response_.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
           if (parameter.rangeIsSet())
           {
             double min = parameter.getMin().d;
             double max = parameter.getMax().d;
-            writeToResponse(constants::array_element_min_constant_string,min);
-            writeToResponse(constants::array_element_max_constant_string,max);
+            response_.write(constants::array_element_min_constant_string,min);
+            response_.write(constants::array_element_max_constant_string,max);
           }
           break;
         }
         case JsonStream::BOOL_TYPE:
         {
-          writeToResponse(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
+          response_.write(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
           break;
         }
         case JsonStream::NULL_TYPE:
@@ -650,22 +591,22 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
         }
         case JsonStream::STRING_TYPE:
         {
-          writeToResponse(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
+          response_.write(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
           if (parameter.subsetIsSet())
           {
-            writeKeyToResponse(constants::array_element_subset_constant_string);
-            writeToResponse(parameter.getSubset(),JsonStream::STRING_TYPE);
+            response_.writeKey(constants::array_element_subset_constant_string);
+            response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
           }
           break;
         }
         case JsonStream::OBJECT_TYPE:
         {
-          writeToResponse(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
+          response_.write(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
           break;
         }
         case JsonStream::ARRAY_TYPE:
         {
-          writeToResponse(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
+          response_.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
           break;
         }
         case JsonStream::VALUE_TYPE:
@@ -677,31 +618,31 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
       {
         size_t array_length_min = parameter.getArrayLengthMin();
         size_t array_length_max = parameter.getArrayLengthMax();
-        writeToResponse(constants::array_length_min_constant_string,array_length_min);
-        writeToResponse(constants::array_length_max_constant_string,array_length_max);
+        response_.write(constants::array_length_min_constant_string,array_length_min);
+        response_.write(constants::array_length_max_constant_string,array_length_max);
       }
       break;
     }
     case JsonStream::VALUE_TYPE:
     {
-      writeToResponse(constants::type_constant_string,JsonStream::VALUE_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::VALUE_TYPE);
       break;
     }
   }
   if (end_object)
   {
-    endResponseObject();
+    response_.endObject();
   }
 }
 
 void Server::fieldHelp(Field & field)
 {
   parameterHelp(field.parameter(),false);
-  writeKeyToResponse(constants::value_constant_string);
+  response_.writeKey(constants::value_constant_string);
   writeFieldToResponse(field,false,false);
-  writeKeyToResponse(constants::default_value_constant_string);
+  response_.writeKey(constants::default_value_constant_string);
   writeFieldToResponse(field,false,true);
-  endResponseObject();
+  response_.endObject();
 }
 
 bool Server::checkParameters()
@@ -841,81 +782,33 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
   if (!in_subset)
   {
     Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
-    writeParameterNotInSubsetErrorToResponse(parameter,subset);
+    char subset_str[constants::STRING_LENGTH_ERROR];
+    subsetToString(subset_str,
+                   subset,
+                   parameter.getType(),
+                   parameter.getArrayElementType(),
+                   constants::STRING_LENGTH_ERROR-1);
+    response_.returnParameterNotInSubsetError(subset_str,
+                                              parameter.getType());
   }
   else if (!in_range)
   {
-    writeParameterNotInRangeErrorToResponse(parameter,min_str,max_str);
+    response_.returnParameterNotInRangeError(parameter.getName(),
+                                             parameter.getType(),
+                                             min_str,
+                                             max_str);
   }
   else if (!array_length_in_range)
   {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = '\0';
-    constants::array_parameter_length_error_error_data.copy(error_str);
-    char value_not_in_range_str[constants::value_not_in_range_error_data.length() + 1];
-    constants::value_not_in_range_error_data.copy(value_not_in_range_str);
-    strcat(error_str,value_not_in_range_str);
-    strcat(error_str,min_str);
-    char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
-    constants::less_than_equal_constant_string.copy(less_than_equal_str);
-    strcat(error_str,less_than_equal_str);
-    const ConstantString & name = parameter.getName();
-    char parameter_name[name.length()+1];
-    parameter_name[0] = '\0';
-    name.copy(parameter_name);
-    strcat(error_str,parameter_name);
-    char array_length_str[constants::array_length_constant_string.length()+1];
-    constants::array_length_constant_string.copy(array_length_str);
-    strcat(error_str,array_length_str);
-    strcat(error_str,less_than_equal_str);
-    strcat(error_str,max_str);
-    writeToResponse(constants::data_constant_string,error_str);
-    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-    endResponseObject();
+    response_.returnParameterArrayLengthError(parameter.getName(),min_str,max_str);
   }
   else if (object_parse_unsuccessful)
   {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    const ConstantString & name = parameter.getName();
-    char parameter_name[name.length()+1];
-    parameter_name[0] = '\0';
-    name.copy(parameter_name);
-    char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = '\0';
-    strcat(error_str,parameter_name);
-    char invalid_json_object[constants::invalid_json_object_error_data.length()+1];
-    constants::invalid_json_object_error_data.copy(invalid_json_object);
-    strcat(error_str,invalid_json_object);
-    writeToResponse(constants::data_constant_string,error_str);
-    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-    endResponseObject();
+    response_.returnParameterObjectParseError(parameter.getName());
   }
   else if (array_parse_unsuccessful)
   {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    const ConstantString & name = parameter.getName();
-    char parameter_name[name.length()+1];
-    parameter_name[0] = '\0';
-    name.copy(parameter_name);
-    char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = '\0';
-    strcat(error_str,parameter_name);
-    char invalid_json_array[constants::invalid_json_array_error_data.length()+1];
-    constants::invalid_json_array_error_data.copy(invalid_json_array);
-    strcat(error_str,invalid_json_array);
-    writeToResponse(constants::data_constant_string,error_str);
-    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-    endResponseObject();
+    response_.returnParameterArrayParseError(parameter.getName());
   }
   bool parameter_ok = in_subset && in_range && array_length_in_range && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
   return parameter_ok;
@@ -1032,11 +925,21 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
   if (!in_subset)
   {
     Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
-    writeParameterNotInSubsetErrorToResponse(parameter,subset);
+    char subset_str[constants::STRING_LENGTH_ERROR];
+    subsetToString(subset_str,
+                   subset,
+                   parameter.getType(),
+                   parameter.getArrayElementType(),
+                   constants::STRING_LENGTH_ERROR-1);
+    response_.returnParameterNotInSubsetError(subset_str,
+                                              parameter.getType());
   }
   else if (!in_range)
   {
-    writeParameterNotInRangeErrorToResponse(parameter,min_str,max_str);
+    response_.returnParameterNotInRangeError(parameter.getName(),
+                                             parameter.getType(),
+                                             min_str,
+                                             max_str);
   }
   bool parameter_ok = in_subset && in_range;
   return parameter_ok;
@@ -1078,22 +981,22 @@ void Server::help(bool verbose)
   if (parameter_count == 0)
   {
     param_error = false;
-    writeResultKeyToResponse();
-    beginResponseObject();
+    response_.writeResultKey();
+    response_.beginObject();
 
-    writeKeyToResponse(constants::device_id_constant_string);
+    response_.writeKey(constants::device_id_constant_string);
     writeDeviceIdToResponse();
 
     if (verbose)
     {
-      writeKeyToResponse(constants::device_info_constant_string);
+      response_.writeKey(constants::device_info_constant_string);
       writeDeviceInfoToResponse();
     }
 
-    writeKeyToResponse(constants::api_constant_string);
+    response_.writeKey(constants::api_constant_string);
     writeApiToResponse(verbose);
 
-    endResponseObject();
+    response_.endObject();
   }
   // ? method
   // ? parameter
@@ -1109,7 +1012,7 @@ void Server::help(bool verbose)
     {
       // ? method
       param_error = false;
-      writeResultKeyToResponse();
+      response_.writeResultKey();
       methodHelp(verbose,method_index);
     }
     else
@@ -1120,7 +1023,7 @@ void Server::help(bool verbose)
         // ? parameter
         // ?? parameter
         param_error = false;
-        writeResultKeyToResponse();
+        response_.writeResultKey();
         parameterHelp(parameters_[parameter_index]);
       }
       else
@@ -1131,7 +1034,7 @@ void Server::help(bool verbose)
           // ? field
           // ?? field
           param_error = false;
-          writeResultKeyToResponse();
+          response_.writeResultKey();
           fieldHelp(fields_[field_index]);
         }
       }
@@ -1149,7 +1052,7 @@ void Server::help(bool verbose)
       if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
       {
         param_error = false;
-        writeResultKeyToResponse();
+        response_.writeResultKey();
         parameterHelp(*methods_[method_index].parameter_ptrs_[parameter_index]);
       }
     }
@@ -1160,130 +1063,128 @@ void Server::help(bool verbose)
   // ?? method unknown
   if (param_error)
   {
-    error_ = true;
-    writeKeyToResponse(constants::error_constant_string);
-    beginResponseObject();
-    writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-    writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-    endResponseObject();
+    response_.returnParameterInvalidError(constants::empty_constant_string);
   }
 }
 
 void Server::writeDeviceIdToResponse()
 {
-  beginResponseObject();
+  response_.beginObject();
 
-  writeToResponse(constants::name_constant_string,device_name_ptr_);
-  writeToResponse(constants::form_factor_constant_string,form_factor_ptr_);
-  writeToResponse(constants::serial_number_field_name,getSerialNumber());
+  response_.write(constants::name_constant_string,device_name_ptr_);
+  response_.write(constants::form_factor_constant_string,form_factor_ptr_);
+  response_.write(constants::serial_number_field_name,getSerialNumber());
 
-  endResponseObject();
+  response_.endObject();
 }
 
 void Server::writeFirmwareInfoToResponse()
 {
   char version_str[constants::STRING_LENGTH_VERSION];
 
-  beginResponseArray();
+  response_.beginArray();
   for (size_t i=0; i<firmware_info_array_.size(); ++i)
   {
     const constants::FirmwareInfo * firmware_info_ptr = firmware_info_array_[i];
-    beginResponseObject();
-    writeToResponse(constants::name_constant_string,firmware_info_ptr->name_ptr);
+    response_.beginObject();
+    response_.write(constants::name_constant_string,firmware_info_ptr->name_ptr);
     versionToString(version_str,
                     firmware_info_ptr->version_major,
                     firmware_info_ptr->version_minor,
-                    firmware_info_ptr->version_patch);
+                    firmware_info_ptr->version_patch,
+                    constants::STRING_LENGTH_VERSION-1);
     if (strlen(version_str) > 0)
     {
-      writeToResponse(constants::version_constant_string,version_str);
+      response_.write(constants::version_constant_string,version_str);
     }
-    endResponseObject();
+    response_.endObject();
   }
-  endResponseArray();
+  response_.endArray();
 }
 
 void Server::writeHardwareInfoToResponse()
 {
   char version_str[constants::STRING_LENGTH_VERSION];
 
-  beginResponseArray();
+  response_.beginArray();
   for (size_t i=0; i<hardware_info_array_.size(); ++i)
   {
     const constants::HardwareInfo * hardware_info_ptr = hardware_info_array_[i];
-    beginResponseObject();
-    writeToResponse(constants::name_constant_string,hardware_info_ptr->name_ptr);
+    response_.beginObject();
+    response_.write(constants::name_constant_string,hardware_info_ptr->name_ptr);
     if (hardware_info_ptr->part_number > 0)
     {
-      writeToResponse(constants::part_number_constant_string,hardware_info_ptr->part_number);
+      response_.write(constants::part_number_constant_string,hardware_info_ptr->part_number);
     }
     versionToString(version_str,
                     hardware_info_ptr->version_major,
-                    hardware_info_ptr->version_minor);
+                    hardware_info_ptr->version_minor,
+                    -1,
+                    constants::STRING_LENGTH_VERSION-1);
     if (strlen(version_str) > 0)
     {
-      writeToResponse(constants::version_constant_string,version_str);
+      response_.write(constants::version_constant_string,version_str);
     }
-    endResponseObject();
+    response_.endObject();
   }
-  endResponseArray();
+  response_.endArray();
 }
 
 void Server::writeDeviceInfoToResponse()
 {
-  beginResponseObject();
+  response_.beginObject();
 
-  writeToResponse(constants::processor_constant_string,constants::processor_name_constant_string);
+  response_.write(constants::processor_constant_string,constants::processor_name_constant_string);
 
-  writeKeyToResponse(constants::hardware_constant_string);
+  response_.writeKey(constants::hardware_constant_string);
   writeHardwareInfoToResponse();
 
-  writeKeyToResponse(constants::firmware_constant_string);
+  response_.writeKey(constants::firmware_constant_string);
   writeFirmwareInfoToResponse();
 
-  endResponseObject();
+  response_.endObject();
 }
 
 void Server::writeApiToResponse(bool verbose)
 {
-  beginResponseObject();
+  response_.beginObject();
 
   if (!verbose)
   {
-    writeKeyToResponse(constants::methods_constant_string);
-    beginResponseArray();
+    response_.writeKey(constants::methods_constant_string);
+    response_.beginArray();
     for (size_t method_index=0; method_index<methods_.size(); ++method_index)
     {
       if (method_index > private_method_index_)
       {
         const ConstantString & method_name = methods_[method_index].getName();
-        writeToResponse(method_name);
+        response_.write(method_name);
       }
     }
-    endResponseArray();
+    response_.endArray();
 
-    writeKeyToResponse(constants::parameters_constant_string);
-    beginResponseArray();
+    response_.writeKey(constants::parameters_constant_string);
+    response_.beginArray();
     for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
     {
       const ConstantString & parameter_name = parameters_[parameter_index].getName();
-      writeToResponse(parameter_name);
+      response_.write(parameter_name);
     }
-    endResponseArray();
+    response_.endArray();
 
-    writeKeyToResponse(constants::fields_constant_string);
-    beginResponseArray();
+    response_.writeKey(constants::fields_constant_string);
+    response_.beginArray();
     for (size_t field_index=0; field_index<fields_.size(); ++field_index)
     {
       const ConstantString & field_name = fields_[field_index].getName();
-      writeToResponse(field_name);
+      response_.write(field_name);
     }
-    endResponseArray();
+    response_.endArray();
   }
   else
   {
-    writeKeyToResponse(constants::methods_constant_string);
-    beginResponseArray();
+    response_.writeKey(constants::methods_constant_string);
+    response_.beginArray();
     for (size_t method_index=0; method_index<methods_.size(); ++method_index)
     {
       if (method_index > private_method_index_)
@@ -1291,33 +1192,36 @@ void Server::writeApiToResponse(bool verbose)
         methodHelp(false,method_index);
       }
     }
-    endResponseArray();
+    response_.endArray();
 
-    writeKeyToResponse(constants::parameters_constant_string);
-    beginResponseArray();
+    response_.writeKey(constants::parameters_constant_string);
+    response_.beginArray();
     for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
     {
       parameterHelp(parameters_[parameter_index]);
     }
-    endResponseArray();
+    response_.endArray();
 
-    writeKeyToResponse(constants::fields_constant_string);
-    beginResponseArray();
+    response_.writeKey(constants::fields_constant_string);
+    response_.beginArray();
     for (size_t field_index=0; field_index<fields_.size(); ++field_index)
     {
       fieldHelp(fields_[field_index]);
     }
-    endResponseArray();
+    response_.endArray();
   }
-  endResponseObject();
+  response_.endObject();
 }
 
-void Server::writeFieldToResponse(Field & field, bool write_key, bool write_default, int element_index)
+void Server::writeFieldToResponse(Field & field,
+                                  bool write_key,
+                                  bool write_default,
+                                  int element_index)
 {
   const ConstantString & field_name = field.getName();
   if (write_key)
   {
-    writeKeyToResponse(field_name);
+    response_.writeKey(field_name);
   }
   JsonStream::JsonTypes field_type = field.getType();
   switch (field_type)
@@ -1326,7 +1230,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
     {
       if (element_index >= 0)
       {
-        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
         return;
       }
       long field_value;
@@ -1338,14 +1242,14 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       {
         field.getValue(field_value);
       }
-      writeToResponse(field_value);
+      response_.write(field_value);
       break;
     }
     case JsonStream::DOUBLE_TYPE:
     {
       if (element_index >= 0)
       {
-        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
         return;
       }
       double field_value;
@@ -1357,14 +1261,14 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       {
         field.getValue(field_value);
       }
-      writeToResponse(field_value);
+      response_.write(field_value);
       break;
     }
     case JsonStream::BOOL_TYPE:
     {
       if (element_index >= 0)
       {
-        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
         return;
       }
       bool field_value;
@@ -1376,7 +1280,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       {
         field.getValue(field_value);
       }
-      writeToResponse(field_value);
+      response_.write(field_value);
       break;
     }
     case JsonStream::STRING_TYPE:
@@ -1386,7 +1290,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       {
         if (element_index >= ((int)array_length-1))
         {
-          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+          response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
           return;
         }
         size_t array_length = 2;
@@ -1402,7 +1306,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
         {
           char_array[0] = '\0';
         }
-        writeToResponse(char_array);
+        response_.write(char_array);
         return;
       }
       char char_array[array_length];
@@ -1414,7 +1318,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       {
         field.getValue(char_array,array_length);
       }
-      writeToResponse(char_array);
+      response_.write(char_array);
       break;
     }
     case JsonStream::ARRAY_TYPE:
@@ -1423,7 +1327,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
       size_t array_length = field.getArrayLength();
       if (element_index >= (int)array_length)
       {
-        writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+        response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
         return;
       }
       switch (array_element_type)
@@ -1441,7 +1345,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             {
               field.getValue(field_value,array_length);
             }
-            writeArrayToResponse(field_value,array_length);
+            response_.writeArray(field_value,array_length);
           }
           else
           {
@@ -1454,7 +1358,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             {
               field.getElementValue(element_index,field_value);
             }
-            writeToResponse(field_value);
+            response_.write(field_value);
           }
           break;
         }
@@ -1471,7 +1375,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             {
               field.getValue(field_value,array_length);
             }
-            writeArrayToResponse(field_value,array_length);
+            response_.writeArray(field_value,array_length);
           }
           else
           {
@@ -1484,7 +1388,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             {
               field.getElementValue(element_index,field_value);
             }
-            writeToResponse(field_value);
+            response_.write(field_value);
           }
           break;
         }
@@ -1501,7 +1405,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             {
               field.getValue(field_value,array_length);
             }
-            writeArrayToResponse(field_value,array_length);
+            response_.writeArray(field_value,array_length);
           }
           else
           {
@@ -1514,7 +1418,7 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
             {
               field.getElementValue(element_index,field_value);
             }
-            writeToResponse(field_value);
+            response_.write(field_value);
           }
           break;
         }
@@ -1548,89 +1452,17 @@ void Server::writeFieldToResponse(Field & field, bool write_key, bool write_defa
   }
 }
 
-void Server::writeParameterNotInSubsetErrorToResponse(Parameter & parameter, Vector<const constants::SubsetMemberType> & subset)
+void Server::versionToString(char* destination,
+                             const size_t major,
+                             const size_t minor,
+                             const size_t patch,
+                             const size_t num)
 {
-  error_ = true;
-  writeKeyToResponse(constants::error_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-  char error_str[constants::STRING_LENGTH_ERROR];
-  error_str[0] = '\0';
-  JsonStream::JsonTypes type = parameter.getType();
-  if (type != JsonStream::ARRAY_TYPE)
+  size_t length_left = num;
+  if (length_left == 0)
   {
-    constants::parameter_error_error_data.copy(error_str);
+    return;
   }
-  else
-  {
-    constants::array_parameter_error_error_data.copy(error_str);
-    type = parameter.getArrayElementType();
-  }
-  char value_not_in_subset_str[constants::value_not_in_subset_error_data.length() + 1];
-  constants::value_not_in_subset_error_data.copy(value_not_in_subset_str);
-  strcat(error_str,value_not_in_subset_str);
-  size_t length_left = constants::STRING_LENGTH_ERROR - strlen(error_str) - 1;
-  subsetToString(error_str,subset,type,length_left);
-  writeToResponse(constants::data_constant_string,error_str);
-  writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-  endResponseObject();
-}
-
-void Server::writeParameterNotInRangeErrorToResponse(Parameter & parameter, char min_str[], char max_str[])
-{
-  error_ = true;
-  writeKeyToResponse(constants::error_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-  char error_str[constants::STRING_LENGTH_ERROR];
-  error_str[0] = '\0';
-  JsonStream::JsonTypes type = parameter.getType();
-  if (type != JsonStream::ARRAY_TYPE)
-  {
-    constants::parameter_error_error_data.copy(error_str);
-  }
-  else
-  {
-    constants::array_parameter_error_error_data.copy(error_str);
-  }
-  char value_not_in_range_str[constants::value_not_in_range_error_data.length() + 1];
-  constants::value_not_in_range_error_data.copy(value_not_in_range_str);
-  strcat(error_str,value_not_in_range_str);
-  strcat(error_str,min_str);
-  char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
-  constants::less_than_equal_constant_string.copy(less_than_equal_str);
-  strcat(error_str,less_than_equal_str);
-  const ConstantString & name = parameter.getName();
-  char parameter_name[name.length()+1];
-  parameter_name[0] = '\0';
-  name.copy(parameter_name);
-  strcat(error_str,parameter_name);
-  if (type == JsonStream::ARRAY_TYPE)
-  {
-    char element_str[constants::element_constant_string.length()+1];
-    constants::element_constant_string.copy(element_str);
-    strcat(error_str,element_str);
-  }
-  strcat(error_str,less_than_equal_str);
-  strcat(error_str,max_str);
-  writeToResponse(constants::data_constant_string,error_str);
-  writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-  endResponseObject();
-}
-
-void Server::writeFieldErrorToResponse(const ConstantString & error)
-{
-  error_ = true;
-  writeKeyToResponse(constants::error_constant_string);
-  beginResponseObject();
-  writeToResponse(constants::message_constant_string,constants::invalid_params_error_message);
-  writeToResponse(constants::data_constant_string,error);
-  writeToResponse(constants::code_constant_string,constants::invalid_params_error_code);
-  endResponseObject();
-}
-
-void Server::versionToString(char* destination, const long major, const long minor, const long patch)
-{
   destination[0] = '\0';
   if ((major == 0) && (minor == 0) && (patch <= 0))
   {
@@ -1640,22 +1472,42 @@ void Server::versionToString(char* destination, const long major, const long min
   char version_field_sep_str[constants::version_field_separator_constant_string.length()+1];
   constants::version_field_separator_constant_string.copy(version_field_sep_str);
 
-  ltoa(major,destination,10);
-  strcat(destination,version_field_sep_str);
+  // major
+  version_field_str[0] = '\0';
+  ltoa(major,version_field_str,10);
+  strncat(destination,version_field_str,length_left);
+  length_left = num - strlen(destination);
+  strncat(destination,version_field_sep_str,length_left);
+  length_left = num - strlen(destination);
+
+  // minor
   version_field_str[0] = '\0';
   ltoa(minor,version_field_str,10);
-  strcat(destination,version_field_str);
+  strncat(destination,version_field_str,length_left);
+  length_left = num - strlen(destination);
+
+  // patch
   if (patch >= 0)
   {
-    strcat(destination,version_field_sep_str);
+    strncat(destination,version_field_sep_str,length_left);
+    length_left = num - strlen(destination);
     version_field_str[0] = '\0';
     ltoa(patch,version_field_str,10);
-    strcat(destination,version_field_str);
+    strncat(destination,version_field_str,length_left);
   }
 }
 
-void Server::subsetToString(char * destination, Vector<const constants::SubsetMemberType> & subset, const JsonStream::JsonTypes type, const size_t num)
+void Server::subsetToString(char * destination,
+                            Vector<const constants::SubsetMemberType> & subset,
+                            const JsonStream::JsonTypes & parameter_type,
+                            const JsonStream::JsonTypes & parameter_array_element_type,
+                            const size_t num)
 {
+  JsonStream::JsonTypes type = parameter_type;
+  if (type == JsonStream::ARRAY_TYPE)
+  {
+    type = parameter_array_element_type;
+  }
   size_t length_left = num;
   size_t length = constants::array_open_constant_string.length();
   if (length_left < length)
@@ -1744,17 +1596,17 @@ void Server::subsetToString(char * destination, Vector<const constants::SubsetMe
 // Callbacks
 void Server::getMethodIdsCallback()
 {
-  writeResultKeyToResponse();
-  beginResponseObject();
+  response_.writeResultKey();
+  response_.beginObject();
   for (size_t method_index=0; method_index<methods_.size(); ++method_index)
   {
     if (method_index > private_method_index_)
     {
       const ConstantString & method_name = methods_[method_index].getName();
-      writeToResponse(method_name,method_index);
+      response_.write(method_name,method_index);
     }
   }
-  endResponseObject();
+  response_.endObject();
 }
 
 void Server::helpCallback()
@@ -1769,39 +1621,39 @@ void Server::verboseHelpCallback()
 
 void Server::getDeviceIdCallback()
 {
-  writeResultKeyToResponse();
+  response_.writeResultKey();
   writeDeviceIdToResponse();
 }
 
 void Server::getDeviceInfoCallback()
 {
-  writeResultKeyToResponse();
+  response_.writeResultKey();
   writeDeviceInfoToResponse();
 }
 
 void Server::getApiCallback()
 {
-  writeResultKeyToResponse();
+  response_.writeResultKey();
   writeApiToResponse(true);
 }
 
 #ifdef __AVR__
 void Server::getMemoryFreeCallback()
 {
-  writeResultToResponse(freeMemory());
+  response_.returnResult(freeMemory());
 }
 #endif
 
 void Server::getFieldDefaultValuesCallback()
 {
-  writeResultKeyToResponse();
-  beginResponseObject();
+  response_.writeResultKey();
+  response_.beginObject();
   for (size_t i=0; i<fields_.size(); ++i)
   {
     Field & field = fields_[i];
     writeFieldToResponse(field,true,true);
   }
-  endResponseObject();
+  response_.endObject();
 }
 
 void Server::setFieldsToDefaultsCallback()
@@ -1820,25 +1672,25 @@ void Server::setFieldToDefaultCallback()
   }
   else
   {
-    writeFieldErrorToResponse(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::field_not_found_error_data);
   }
 }
 
 void Server::getFieldValuesCallback()
 {
-  writeResultKeyToResponse();
-  beginResponseObject();
+  response_.writeResultKey();
+  response_.beginObject();
   for (size_t i=0; i<fields_.size(); ++i)
   {
     Field & field = fields_[i];
     writeFieldToResponse(field,true,false);
   }
-  endResponseObject();
+  response_.endObject();
 }
 
 void Server::getFieldValueCallback()
 {
-  writeResultKeyToResponse();
+  response_.writeResultKey();
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index = findFieldIndex(field_name);
   if ((field_index >= 0) && (field_index < (int)fields_.size()))
@@ -1848,18 +1700,18 @@ void Server::getFieldValueCallback()
   }
   else
   {
-    writeFieldErrorToResponse(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::field_not_found_error_data);
   }
 }
 
 void Server::getFieldElementValueCallback()
 {
-  writeResultKeyToResponse();
+  response_.writeResultKey();
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
   if (field_element_index < 0)
   {
-    writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+    response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
     return;
   }
   int field_index = findFieldIndex(field_name);
@@ -1870,7 +1722,7 @@ void Server::getFieldElementValueCallback()
   }
   else
   {
-    writeFieldErrorToResponse(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::field_not_found_error_data);
   }
 }
 
@@ -1937,7 +1789,7 @@ void Server::setFieldValueCallback()
   }
   else
   {
-    writeFieldErrorToResponse(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::field_not_found_error_data);
   }
 }
 
@@ -1947,7 +1799,7 @@ void Server::setFieldElementValueCallback()
   long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
   if (field_element_index < 0)
   {
-    writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+    response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
     return;
   }
   int field_index = findFieldIndex(field_name);
@@ -1965,17 +1817,17 @@ void Server::setFieldElementValueCallback()
     {
       case JsonStream::LONG_TYPE:
       {
-        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
         break;
       }
       case JsonStream::DOUBLE_TYPE:
       {
-        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
         break;
       }
       case JsonStream::BOOL_TYPE:
       {
-        writeFieldErrorToResponse(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
         break;
       }
       case JsonStream::NULL_TYPE:
@@ -1986,13 +1838,13 @@ void Server::setFieldElementValueCallback()
       {
         if (!field.stringIsSavedAsCharArray())
         {
-          writeFieldErrorToResponse(constants::cannot_set_element_in_string_field_with_subset_error_data);
+          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_field_with_subset_error_data);
           break;
         }
         size_t array_length = field.getArrayLength();
         if ((size_t)field_element_index >= (array_length - 1))
         {
-          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+          response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
           return;
         }
         const char * field_value = getParameterValue(constants::field_value_parameter_name);
@@ -2013,7 +1865,7 @@ void Server::setFieldElementValueCallback()
         size_t array_length = field.getArrayLength();
         if ((size_t)field_element_index >= array_length)
         {
-          writeFieldErrorToResponse(constants::field_element_index_out_of_bounds_error_data);
+          response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
           return;
         }
         JsonStream::JsonTypes array_element_type = field.getArrayElementType();
@@ -2068,7 +1920,7 @@ void Server::setFieldElementValueCallback()
   }
   else
   {
-    writeFieldErrorToResponse(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::field_not_found_error_data);
   }
 }
 
@@ -2108,7 +1960,7 @@ void Server::setAllFieldElementValuesCallback()
       {
         if (!field.stringIsSavedAsCharArray())
         {
-          writeFieldErrorToResponse(constants::cannot_set_element_in_string_field_with_subset_error_data);
+          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_field_with_subset_error_data);
           break;
         }
         const char * field_value = getParameterValue(constants::field_value_parameter_name);
@@ -2178,7 +2030,7 @@ void Server::setAllFieldElementValuesCallback()
   }
   else
   {
-    writeFieldErrorToResponse(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::field_not_found_error_data);
   }
 }
 
