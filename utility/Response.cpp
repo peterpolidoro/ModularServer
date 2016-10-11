@@ -97,7 +97,7 @@ void Response::endArray()
   json_stream_ptr_->endArray();
 }
 
-// protected
+// private
 Response::Response()
 {
   json_stream_ptr_ = NULL;

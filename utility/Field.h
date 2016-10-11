@@ -28,21 +28,6 @@ class Field
 {
 public:
   Field();
-  template <typename T>
-  Field(const ConstantString & name,
-        const T & default_value);
-  template <size_t N>
-  Field(const ConstantString & name,
-        const long (&default_value)[N]);
-  template <size_t N>
-  Field(const ConstantString & name,
-        const double (&default_value)[N]);
-  template <size_t N>
-  Field(const ConstantString & name,
-        const bool (&default_value)[N]);
-  template <size_t N>
-  Field(const ConstantString & name,
-        const char (&default_value)[N]);
 
   void setUnits(const ConstantString & name);
   void setRange(const long min, const long max);
@@ -104,6 +89,7 @@ public:
   bool valueIsDefault();
   size_t getArrayLength();
   size_t getStringLength();
+
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;
@@ -112,6 +98,23 @@ private:
   Functor0 post_set_value_callback_;
   Functor1<const size_t> post_set_element_value_callback_;
   bool string_saved_as_char_array_;
+
+  template <typename T>
+  Field(const ConstantString & name,
+        const T & default_value);
+  template <size_t N>
+  Field(const ConstantString & name,
+        const long (&default_value)[N]);
+  template <size_t N>
+  Field(const ConstantString & name,
+        const double (&default_value)[N]);
+  template <size_t N>
+  Field(const ConstantString & name,
+        const bool (&default_value)[N]);
+  template <size_t N>
+  Field(const ConstantString & name,
+        const char (&default_value)[N]);
+
   Parameter & parameter();
   const ConstantString & getName();
   JsonStream::JsonTypes getType();
@@ -125,6 +128,7 @@ private:
   void postSetValueCallback();
   void postSetElementValueCallback(const size_t element_index);
   friend class Server;
+
 };
 }
 #include "FieldDefinitions.h"

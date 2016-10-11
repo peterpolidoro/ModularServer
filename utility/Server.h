@@ -112,24 +112,24 @@ private:
   void processRequestArray();
   int findRequestMethodIndex(const char * method_string);
   template <typename T>
-  int findMethodIndex(T const & method_name);
-  int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
-  void methodHelp(bool verbose, int method_index);
-  int processParameterString(const char * parameter_string);
+  int findFieldIndex(T const & field_name);
   template <typename T>
   int findParameterIndex(T const & parameter_name);
   template <typename T>
   int findMethodParameterIndex(int method_index, T const & parameter_name);
-  void parameterHelp(Parameter & parameter, bool end_object=true);
-  void fieldHelp(Field & field);
+  template <typename T>
+  int findMethodIndex(T const & method_name);
+  int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
+  int processParameterString(const char * parameter_string);
   bool checkParameters();
   bool checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   bool checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
-  template <typename T>
-  int findFieldIndex(T const & field_name);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
+  void fieldHelp(Field & field);
+  void parameterHelp(Parameter & parameter, bool end_object=true);
+  void methodHelp(bool verbose, int method_index);
   void help(bool verbose);
   void writeDeviceIdToResponse();
   void writeFirmwareInfoToResponse();

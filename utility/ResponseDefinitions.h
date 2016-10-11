@@ -109,7 +109,7 @@ void Response::writeNull(K key)
   json_stream_ptr_->writeNull(key);
 }
 
-// protected
+// private
 
 }
 #endif

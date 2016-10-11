@@ -10,21 +10,10 @@
 
 namespace modular_server
 {
-// Method
+// public
 Method::Method()
 {
   setup(constants::empty_constant_string);
-}
-
-Method::Method(const ConstantString & name)
-{
-  setup(name);
-}
-
-void Method::setup(const ConstantString & name)
-{
-  setName(name);
-  return_type_ = JsonStream::NULL_TYPE;
 }
 
 void Method::setName(const ConstantString & name)
@@ -45,51 +34,6 @@ void Method::addParameter(Parameter & parameter)
   {
     parameter_ptrs_.push_back(&parameter);
   }
-}
-
-bool Method::compareName(const char * name_to_compare)
-{
-  char name[name_ptr_->length()+1];
-  name[0] = '\0';
-  name_ptr_->copy(name);
-  return String(name).equalsIgnoreCase(name_to_compare);
-}
-
-bool Method::compareName(const ConstantString & name_to_compare)
-{
-  return (&name_to_compare == name_ptr_);
-}
-
-const ConstantString & Method::getName()
-{
-  return *name_ptr_;
-}
-
-size_t Method::getParameterCount()
-{
-  return parameter_ptrs_.size();
-}
-
-void Method::callback()
-{
-  if (callback_)
-  {
-    callback_();
-  }
-}
-
-int Method::findParameterIndex(const ConstantString & parameter_name)
-{
-  int parameter_index = -1;
-  for (size_t i=0; i<parameter_ptrs_.size(); ++i)
-  {
-    if (parameter_ptrs_[i]->compareName(parameter_name))
-    {
-      parameter_index = i;
-      break;
-    }
-  }
-  return parameter_index;
 }
 
 void Method::setReturnTypeLong()
@@ -136,4 +80,64 @@ JsonStream::JsonTypes Method::getReturnType()
 {
   return return_type_;
 }
+
+// protected
+
+// private
+Method::Method(const ConstantString & name)
+{
+  setup(name);
+}
+
+void Method::setup(const ConstantString & name)
+{
+  setName(name);
+  return_type_ = JsonStream::NULL_TYPE;
+}
+
+bool Method::compareName(const char * name_to_compare)
+{
+  char name[name_ptr_->length()+1];
+  name[0] = '\0';
+  name_ptr_->copy(name);
+  return String(name).equalsIgnoreCase(name_to_compare);
+}
+
+bool Method::compareName(const ConstantString & name_to_compare)
+{
+  return (&name_to_compare == name_ptr_);
+}
+
+const ConstantString & Method::getName()
+{
+  return *name_ptr_;
+}
+
+int Method::findParameterIndex(const ConstantString & parameter_name)
+{
+  int parameter_index = -1;
+  for (size_t i=0; i<parameter_ptrs_.size(); ++i)
+  {
+    if (parameter_ptrs_[i]->compareName(parameter_name))
+    {
+      parameter_index = i;
+      break;
+    }
+  }
+  return parameter_index;
+}
+
+size_t Method::getParameterCount()
+{
+  return parameter_ptrs_.size();
+}
+
+void Method::callback()
+{
+  if (callback_)
+  {
+    callback_();
+  }
+}
+
 }

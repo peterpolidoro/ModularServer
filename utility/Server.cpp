@@ -10,12 +10,192 @@
 
 namespace modular_server
 {
+// public
 Server::Server() :
   eeprom_initialized_sv_(constants::eeprom_initialized_default_value)
 {
   setup();
 }
 
+// Streams
+void Server::addServerStream(Stream & stream)
+{
+  bool stream_found = false;
+  for (size_t i=0;i<server_stream_ptrs_.size();++i)
+  {
+    if (server_stream_ptrs_[i] == &stream)
+    {
+      stream_found = true;
+    }
+  }
+  if (!stream_found)
+  {
+    server_stream_ptrs_.push_back(&stream);
+  }
+  json_stream_.setStream(stream);
+}
+
+// Device ID
+void Server::setDeviceName(const ConstantString & device_name)
+{
+  device_name_ptr_ = &device_name;
+}
+
+void Server::setFormFactor(const ConstantString & form_factor)
+{
+  form_factor_ptr_ = &form_factor;
+}
+
+// Hardware Info
+void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
+{
+  hardware_info_array_.push_back(&hardware_info);
+}
+
+// Firmware
+
+// Fields
+Field & Server::field(const ConstantString & field_name)
+{
+  int field_index = findFieldIndex(field_name);
+  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  {
+    return fields_[field_index];
+  }
+}
+
+void Server::setFieldsToDefaults()
+{
+  for (size_t i=0; i<fields_.size(); ++i)
+  {
+    fields_[i].setValueToDefault();
+  }
+}
+
+// Parameters
+Parameter & Server::createParameter(const ConstantString & parameter_name)
+{
+  int parameter_index = findParameterIndex(parameter_name);
+  if (parameter_index < 0)
+  {
+    parameters_.push_back(Parameter(parameter_name));
+    return parameters_.back();
+  }
+}
+
+Parameter & Server::parameter(const ConstantString & parameter_name)
+{
+  int parameter_index = findParameterIndex(parameter_name);
+  if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
+  {
+    return parameters_[parameter_index];
+  }
+}
+
+Parameter & Server::copyParameter(Parameter parameter,const ConstantString & parameter_name)
+{
+  parameters_.push_back(parameter);
+  parameters_.back().setName(parameter_name);
+  return parameters_.back();
+}
+
+// Methods
+Method & Server::createMethod(const ConstantString & method_name)
+{
+  int method_index = findMethodIndex(method_name);
+  if (method_index < 0)
+  {
+    methods_.push_back(Method(method_name));
+    return methods_.back();
+  }
+}
+
+Method & Server::method(const ConstantString & method_name)
+{
+  int method_index = findMethodIndex(method_name);
+  if ((method_index >= 0) && (method_index < (int)methods_.size()))
+  {
+    return methods_[method_index];
+  }
+}
+
+Method & Server::copyMethod(Method method,const ConstantString & method_name)
+{
+  methods_.push_back(method);
+  methods_.back().setName(method_name);
+  return methods_.back();
+}
+
+// Response
+Response & Server::response()
+{
+  return response_;
+}
+
+// Server
+void Server::startServer()
+{
+  if (!eeprom_initialized_)
+  {
+    initializeEeprom();
+  }
+  server_running_ = true;
+}
+
+void Server::stopServer()
+{
+  server_running_ = false;
+}
+
+void Server::handleRequest()
+{
+  if (server_running_ && (server_stream_ptrs_.size() > 0) && (json_stream_.available() > 0))
+  {
+    int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
+    if (bytes_read > 0)
+    {
+      JsonSanitizer<constants::JSON_TOKEN_MAX> sanitizer;
+      if (sanitizer.firstCharIsValidJson(request_))
+      {
+        response_.setCompactPrint();
+      }
+      else
+      {
+        response_.setPrettyPrint();
+      }
+      response_.begin();
+      sanitizer.sanitizeBuffer(request_);
+      StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
+      if (sanitizer.firstCharIsValidJsonObject(request_))
+      {
+        response_.returnError(constants::object_request_error_data);
+      }
+      else
+      {
+        request_json_array_ptr_ = &(json_buffer.parseArray(request_));
+        if (request_json_array_ptr_->success())
+        {
+          processRequestArray();
+        }
+        else
+        {
+          response_.returnRequestParseError(request_);
+        }
+      }
+      response_.end();
+    }
+    else if (bytes_read < 0)
+    {
+      response_.setCompactPrint();
+      response_.begin();
+      response_.returnError(constants::request_length_error_data);
+      response_.end();
+    }
+  }
+  incrementServerStream();
+}
+
+// private
 void Server::setup()
 {
   request_method_index_ = -1;
@@ -134,189 +314,11 @@ void Server::setup()
   server_running_ = false;
 }
 
-// Streams
-void Server::addServerStream(Stream & stream)
-{
-  bool stream_found = false;
-  for (size_t i=0;i<server_stream_ptrs_.size();++i)
-  {
-    if (server_stream_ptrs_[i] == &stream)
-    {
-      stream_found = true;
-    }
-  }
-  if (!stream_found)
-  {
-    server_stream_ptrs_.push_back(&stream);
-  }
-  json_stream_.setStream(stream);
-}
-
-// Device ID
-void Server::setDeviceName(const ConstantString & device_name)
-{
-  device_name_ptr_ = &device_name;
-}
-
-void Server::setFormFactor(const ConstantString & form_factor)
-{
-  form_factor_ptr_ = &form_factor;
-}
-
-// Hardware Info
-void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
-{
-  hardware_info_array_.push_back(&hardware_info);
-}
-
-// Firmware
-
-// Fields
-Field & Server::field(const ConstantString & field_name)
-{
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
-  {
-    return fields_[field_index];
-  }
-}
-
-void Server::setFieldsToDefaults()
-{
-  for (size_t i=0; i<fields_.size(); ++i)
-  {
-    fields_[i].setValueToDefault();
-  }
-}
-
-// Parameters
-Parameter & Server::createParameter(const ConstantString & parameter_name)
-{
-  int parameter_index = findParameterIndex(parameter_name);
-  if (parameter_index < 0)
-  {
-    parameters_.push_back(Parameter(parameter_name));
-    return parameters_.back();
-  }
-}
-
-Parameter & Server::parameter(const ConstantString & parameter_name)
-{
-  int parameter_index = findParameterIndex(parameter_name);
-  if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
-  {
-    return parameters_[parameter_index];
-  }
-}
-
-Parameter & Server::copyParameter(Parameter parameter,const ConstantString & parameter_name)
-{
-  parameters_.push_back(parameter);
-  parameters_.back().setName(parameter_name);
-  return parameters_.back();
-}
-
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
 {
   int parameter_index = findMethodParameterIndex(request_method_index_,parameter_name);
   // index 0 is the method, index 1 is the first parameter
   return (*request_json_array_ptr_)[parameter_index+1];
-}
-
-// Methods
-Method & Server::createMethod(const ConstantString & method_name)
-{
-  int method_index = findMethodIndex(method_name);
-  if (method_index < 0)
-  {
-    methods_.push_back(Method(method_name));
-    return methods_.back();
-  }
-}
-
-Method & Server::method(const ConstantString & method_name)
-{
-  int method_index = findMethodIndex(method_name);
-  if ((method_index >= 0) && (method_index < (int)methods_.size()))
-  {
-    return methods_[method_index];
-  }
-}
-
-Method & Server::copyMethod(Method method,const ConstantString & method_name)
-{
-  methods_.push_back(method);
-  methods_.back().setName(method_name);
-  return methods_.back();
-}
-
-// Response
-Response & Server::response()
-{
-  return response_;
-}
-
-// Server
-void Server::startServer()
-{
-  if (!eeprom_initialized_)
-  {
-    initializeEeprom();
-  }
-  server_running_ = true;
-}
-
-void Server::stopServer()
-{
-  server_running_ = false;
-}
-
-void Server::handleRequest()
-{
-  if (server_running_ && (server_stream_ptrs_.size() > 0) && (json_stream_.available() > 0))
-  {
-    int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
-    if (bytes_read > 0)
-    {
-      JsonSanitizer<constants::JSON_TOKEN_MAX> sanitizer;
-      if (sanitizer.firstCharIsValidJson(request_))
-      {
-        response_.setCompactPrint();
-      }
-      else
-      {
-        response_.setPrettyPrint();
-      }
-      response_.begin();
-      sanitizer.sanitizeBuffer(request_);
-      StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
-      if (sanitizer.firstCharIsValidJsonObject(request_))
-      {
-        response_.returnError(constants::object_request_error_data);
-      }
-      else
-      {
-        request_json_array_ptr_ = &(json_buffer.parseArray(request_));
-        if (request_json_array_ptr_->success())
-        {
-          processRequestArray();
-        }
-        else
-        {
-          response_.returnRequestParseError(request_);
-        }
-      }
-      response_.end();
-    }
-    else if (bytes_read < 0)
-    {
-      response_.setCompactPrint();
-      response_.begin();
-      response_.returnError(constants::request_length_error_data);
-      response_.end();
-    }
-  }
-  incrementServerStream();
 }
 
 void Server::processRequestArray()
@@ -415,41 +417,6 @@ int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
   return elements_count;
 }
 
-void Server::methodHelp(bool verbose, int method_index)
-{
-  if ((method_index < 0) || (method_index >= (int)methods_.max_size()))
-  {
-    return;
-  }
-
-  response_.beginObject();
-
-  const ConstantString & method_name = methods_[method_index].getName();
-  response_.write(constants::name_constant_string,method_name);
-
-  response_.writeKey(constants::parameters_constant_string);
-  json_stream_.beginArray();
-  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &methods_[method_index].parameter_ptrs_;
-  for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
-  {
-    if (verbose)
-    {
-      parameterHelp(*((*parameter_ptrs_ptr)[i]));
-    }
-    else
-    {
-      const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
-      response_.write(parameter_name);
-    }
-  }
-  json_stream_.endArray();
-
-  response_.write(constants::result_type_constant_string,methods_[method_index].getReturnType());
-
-  response_.endObject();
-}
-
 int Server::processParameterString(const char * parameter_string)
 {
   int parameter_index = -1;
@@ -476,173 +443,6 @@ int Server::processParameterString(const char * parameter_string)
     parameter_index = -1;
   }
   return parameter_index;
-}
-
-void Server::parameterHelp(Parameter & parameter, bool end_object)
-{
-  response_.beginObject();
-  const ConstantString & parameter_name = parameter.getName();
-  response_.write(constants::name_constant_string,parameter_name);
-
-  const ConstantString & units = parameter.getUnits();
-  if (units.length() != 0)
-  {
-    response_.write(constants::units_constant_string,units);
-  }
-  JsonStream::JsonTypes type = parameter.getType();
-  switch (type)
-  {
-    case JsonStream::LONG_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::LONG_TYPE);
-      if (parameter.subsetIsSet())
-      {
-        response_.writeKey(constants::subset_constant_string);
-        response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
-      }
-      if (parameter.rangeIsSet())
-      {
-        long min = parameter.getMin().l;
-        long max = parameter.getMax().l;
-        response_.write(constants::min_constant_string,min);
-        response_.write(constants::max_constant_string,max);
-      }
-      break;
-    }
-    case JsonStream::DOUBLE_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
-      if (parameter.rangeIsSet())
-      {
-        double min = parameter.getMin().d;
-        double max = parameter.getMax().d;
-        response_.write(constants::min_constant_string,min);
-        response_.write(constants::max_constant_string,max);
-      }
-      break;
-    }
-    case JsonStream::BOOL_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::BOOL_TYPE);
-      break;
-    }
-    case JsonStream::NULL_TYPE:
-    {
-      break;
-    }
-    case JsonStream::STRING_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::STRING_TYPE);
-      if (parameter.subsetIsSet())
-      {
-        response_.writeKey(constants::subset_constant_string);
-        response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
-      }
-      break;
-    }
-    case JsonStream::OBJECT_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::OBJECT_TYPE);
-      break;
-    }
-    case JsonStream::ARRAY_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::ARRAY_TYPE);
-      JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
-      switch (array_element_type)
-      {
-        case JsonStream::LONG_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
-          if (parameter.subsetIsSet())
-          {
-            response_.writeKey(constants::array_element_subset_constant_string);
-            response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
-          }
-          if (parameter.rangeIsSet())
-          {
-            long min = parameter.getMin().l;
-            long max = parameter.getMax().l;
-            response_.write(constants::array_element_min_constant_string,min);
-            response_.write(constants::array_element_max_constant_string,max);
-          }
-          break;
-        }
-        case JsonStream::DOUBLE_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
-          if (parameter.rangeIsSet())
-          {
-            double min = parameter.getMin().d;
-            double max = parameter.getMax().d;
-            response_.write(constants::array_element_min_constant_string,min);
-            response_.write(constants::array_element_max_constant_string,max);
-          }
-          break;
-        }
-        case JsonStream::BOOL_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
-          break;
-        }
-        case JsonStream::NULL_TYPE:
-        {
-          break;
-        }
-        case JsonStream::STRING_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
-          if (parameter.subsetIsSet())
-          {
-            response_.writeKey(constants::array_element_subset_constant_string);
-            response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
-          }
-          break;
-        }
-        case JsonStream::OBJECT_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
-          break;
-        }
-        case JsonStream::ARRAY_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
-          break;
-        }
-        case JsonStream::VALUE_TYPE:
-        {
-          break;
-        }
-      }
-      if (parameter.arrayLengthRangeIsSet())
-      {
-        size_t array_length_min = parameter.getArrayLengthMin();
-        size_t array_length_max = parameter.getArrayLengthMax();
-        response_.write(constants::array_length_min_constant_string,array_length_min);
-        response_.write(constants::array_length_max_constant_string,array_length_max);
-      }
-      break;
-    }
-    case JsonStream::VALUE_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::VALUE_TYPE);
-      break;
-    }
-  }
-  if (end_object)
-  {
-    response_.endObject();
-  }
-}
-
-void Server::fieldHelp(Field & field)
-{
-  parameterHelp(field.parameter(),false);
-  response_.writeKey(constants::value_constant_string);
-  writeFieldToResponse(field,false,false);
-  response_.writeKey(constants::default_value_constant_string);
-  writeFieldToResponse(field,false,true);
-  response_.endObject();
 }
 
 bool Server::checkParameters()
@@ -969,6 +769,208 @@ void Server::incrementServerStream()
     server_stream_index_ = (server_stream_index_ + 1) % server_stream_ptrs_.size();
     json_stream_.setStream(*server_stream_ptrs_[server_stream_index_]);
   }
+}
+
+void Server::fieldHelp(Field & field)
+{
+  parameterHelp(field.parameter(),false);
+  response_.writeKey(constants::value_constant_string);
+  writeFieldToResponse(field,false,false);
+  response_.writeKey(constants::default_value_constant_string);
+  writeFieldToResponse(field,false,true);
+  response_.endObject();
+}
+
+void Server::parameterHelp(Parameter & parameter, bool end_object)
+{
+  response_.beginObject();
+  const ConstantString & parameter_name = parameter.getName();
+  response_.write(constants::name_constant_string,parameter_name);
+
+  const ConstantString & units = parameter.getUnits();
+  if (units.length() != 0)
+  {
+    response_.write(constants::units_constant_string,units);
+  }
+  JsonStream::JsonTypes type = parameter.getType();
+  switch (type)
+  {
+    case JsonStream::LONG_TYPE:
+    {
+      response_.write(constants::type_constant_string,JsonStream::LONG_TYPE);
+      if (parameter.subsetIsSet())
+      {
+        response_.writeKey(constants::subset_constant_string);
+        response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
+      }
+      if (parameter.rangeIsSet())
+      {
+        long min = parameter.getMin().l;
+        long max = parameter.getMax().l;
+        response_.write(constants::min_constant_string,min);
+        response_.write(constants::max_constant_string,max);
+      }
+      break;
+    }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      response_.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
+      if (parameter.rangeIsSet())
+      {
+        double min = parameter.getMin().d;
+        double max = parameter.getMax().d;
+        response_.write(constants::min_constant_string,min);
+        response_.write(constants::max_constant_string,max);
+      }
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      response_.write(constants::type_constant_string,JsonStream::BOOL_TYPE);
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::STRING_TYPE:
+    {
+      response_.write(constants::type_constant_string,JsonStream::STRING_TYPE);
+      if (parameter.subsetIsSet())
+      {
+        response_.writeKey(constants::subset_constant_string);
+        response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
+      }
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
+      response_.write(constants::type_constant_string,JsonStream::OBJECT_TYPE);
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      response_.write(constants::type_constant_string,JsonStream::ARRAY_TYPE);
+      JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+      switch (array_element_type)
+      {
+        case JsonStream::LONG_TYPE:
+        {
+          response_.write(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
+          if (parameter.subsetIsSet())
+          {
+            response_.writeKey(constants::array_element_subset_constant_string);
+            response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
+          }
+          if (parameter.rangeIsSet())
+          {
+            long min = parameter.getMin().l;
+            long max = parameter.getMax().l;
+            response_.write(constants::array_element_min_constant_string,min);
+            response_.write(constants::array_element_max_constant_string,max);
+          }
+          break;
+        }
+        case JsonStream::DOUBLE_TYPE:
+        {
+          response_.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
+          if (parameter.rangeIsSet())
+          {
+            double min = parameter.getMin().d;
+            double max = parameter.getMax().d;
+            response_.write(constants::array_element_min_constant_string,min);
+            response_.write(constants::array_element_max_constant_string,max);
+          }
+          break;
+        }
+        case JsonStream::BOOL_TYPE:
+        {
+          response_.write(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
+          break;
+        }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          response_.write(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
+          if (parameter.subsetIsSet())
+          {
+            response_.writeKey(constants::array_element_subset_constant_string);
+            response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
+          }
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          response_.write(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          response_.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
+          break;
+        }
+        case JsonStream::VALUE_TYPE:
+        {
+          break;
+        }
+      }
+      if (parameter.arrayLengthRangeIsSet())
+      {
+        size_t array_length_min = parameter.getArrayLengthMin();
+        size_t array_length_max = parameter.getArrayLengthMax();
+        response_.write(constants::array_length_min_constant_string,array_length_min);
+        response_.write(constants::array_length_max_constant_string,array_length_max);
+      }
+      break;
+    }
+    case JsonStream::VALUE_TYPE:
+    {
+      response_.write(constants::type_constant_string,JsonStream::VALUE_TYPE);
+      break;
+    }
+  }
+  if (end_object)
+  {
+    response_.endObject();
+  }
+}
+
+void Server::methodHelp(bool verbose, int method_index)
+{
+  if ((method_index < 0) || (method_index >= (int)methods_.max_size()))
+  {
+    return;
+  }
+
+  response_.beginObject();
+
+  const ConstantString & method_name = methods_[method_index].getName();
+  response_.write(constants::name_constant_string,method_name);
+
+  response_.writeKey(constants::parameters_constant_string);
+  json_stream_.beginArray();
+  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
+  parameter_ptrs_ptr = &methods_[method_index].parameter_ptrs_;
+  for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
+  {
+    if (verbose)
+    {
+      parameterHelp(*((*parameter_ptrs_ptr)[i]));
+    }
+    else
+    {
+      const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
+      response_.write(parameter_name);
+    }
+  }
+  json_stream_.endArray();
+
+  response_.write(constants::result_type_constant_string,methods_[method_index].getReturnType());
+
+  response_.endObject();
 }
 
 void Server::help(bool verbose)

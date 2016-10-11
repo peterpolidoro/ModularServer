@@ -19,13 +19,11 @@
 
 namespace modular_server
 {
-class Server;
-
 class Method
 {
 public:
   Method();
-  Method(const ConstantString & name);
+
   void setName(const ConstantString & name);
   void attachCallback(const Functor0 & callback);
   void addParameter(Parameter & parameter);
@@ -38,16 +36,18 @@ public:
   void setReturnTypeArray();
   void setReturnTypeValue();
   JsonStream::JsonTypes getReturnType();
-protected:
+
+private:
   const ConstantString * name_ptr_;
   Functor0 callback_;
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
-  int findParameterIndex(const ConstantString & parameter_name);
   JsonStream::JsonTypes return_type_;
+  Method(const ConstantString & name);
   void setup(const ConstantString & name);
   bool compareName(const char * name_to_compare);
   bool compareName(const ConstantString & name_to_compare);
   const ConstantString &  getName();
+  int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();
   void callback();
   friend class Server;

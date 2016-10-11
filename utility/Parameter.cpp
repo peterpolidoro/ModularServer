@@ -12,20 +12,10 @@ namespace modular_server
 {
 Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Parameter::get_value_callback_;
 
+// public
 Parameter::Parameter()
 {
   setName(constants::empty_constant_string);
-  setUnits(constants::empty_constant_string);
-  type_ = JsonStream::LONG_TYPE;
-  array_element_type_ = JsonStream::LONG_TYPE;
-  range_is_set_ = false;
-  array_length_range_is_set_ = false;
-  subset_is_set_ = false;
-}
-
-Parameter::Parameter(const ConstantString & name)
-{
-  setName(name);
   setUnits(constants::empty_constant_string);
   type_ = JsonStream::LONG_TYPE;
   array_element_type_ = JsonStream::LONG_TYPE;
@@ -248,6 +238,18 @@ bool Parameter::getValue(ArduinoJson::JsonObject * & value)
   ArduinoJson::JsonObject & object = get_value_callback_(getName());
   value = &object;
   return true;
+}
+
+// private
+Parameter::Parameter(const ConstantString & name)
+{
+  setName(name);
+  setUnits(constants::empty_constant_string);
+  type_ = JsonStream::LONG_TYPE;
+  array_element_type_ = JsonStream::LONG_TYPE;
+  range_is_set_ = false;
+  array_length_range_is_set_ = false;
+  subset_is_set_ = false;
 }
 
 bool Parameter::compareName(const char * name_to_compare)

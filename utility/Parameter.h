@@ -27,7 +27,7 @@ class Parameter
 {
 public:
   Parameter();
-  Parameter(const ConstantString & name);
+
   void setName(const ConstantString & name);
   void setUnits(const ConstantString & name);
   void setTypeLong();
@@ -48,11 +48,13 @@ public:
   template <size_t N>
   void setSubset(const constants::SubsetMemberType (&subset)[N]);
   void removeSubset();
+
   template <typename T>
   bool getValue(T & value);
   bool getValue(const char * & value);
   bool getValue(ArduinoJson::JsonArray * & value);
   bool getValue(ArduinoJson::JsonObject * & value);
+
 private:
   const ConstantString * name_ptr_;
   const ConstantString * units_ptr_;
@@ -66,6 +68,7 @@ private:
   bool array_length_range_is_set_;
   Vector<const constants::SubsetMemberType> subset_;
   bool subset_is_set_;
+  Parameter(const ConstantString & name);
   bool compareName(const char * name_to_compare);
   bool compareName(const ConstantString & name_to_compare);
   const ConstantString & getName();
@@ -93,6 +96,7 @@ private:
   friend class Field;
   friend class Method;
   friend class Server;
+
 };
 }
 #include "ParameterDefinitions.h"

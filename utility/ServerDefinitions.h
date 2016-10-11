@@ -11,6 +11,8 @@
 
 namespace modular_server
 {
+// public
+
 // Streams
 
 // Device ID
@@ -65,6 +67,7 @@ Field & Server::createField(const ConstantString & field_name,
 
 // Response
 
+// private
 template <typename T>
 int Server::findFieldIndex(T const & field_name)
 {
@@ -78,21 +81,6 @@ int Server::findFieldIndex(T const & field_name)
     }
   }
   return field_index;
-}
-
-template <typename T>
-int Server::findMethodIndex(T const & method_name)
-{
-  int method_index = -1;
-  for (size_t i=0; i<methods_.size(); ++i)
-  {
-    if (methods_[i].compareName(method_name))
-    {
-      method_index = i;
-      break;
-    }
-  }
-  return method_index;
 }
 
 template <typename T>
@@ -128,6 +116,21 @@ int Server::findMethodParameterIndex(int method_index, T const & parameter_name)
     }
   }
   return parameter_index;
+}
+
+template <typename T>
+int Server::findMethodIndex(T const & method_name)
+{
+  int method_index = -1;
+  for (size_t i=0; i<methods_.size(); ++i)
+  {
+    if (methods_[i].compareName(method_name))
+    {
+      method_index = i;
+      break;
+    }
+  }
+  return method_index;
 }
 
 }

@@ -11,6 +11,7 @@
 
 namespace modular_server
 {
+// public
 template <typename T>
 void Parameter::setRange(const T min, const T max)
 {
@@ -51,6 +52,7 @@ bool Parameter::getValue(T & value)
   return false;
 }
 
+// private
 template <typename T>
 bool Parameter::valueInRange(const T value)
 {

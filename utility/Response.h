@@ -54,7 +54,7 @@ public:
   void beginArray();
   void endArray();
 
-protected:
+private:
   JsonStream * json_stream_ptr_;
   bool error_;
   bool result_key_in_response_;

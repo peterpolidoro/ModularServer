@@ -10,45 +10,9 @@
 
 namespace modular_server
 {
+// public
 Field::Field()
 {
-}
-
-template <>
-Field::Field<long>(const ConstantString & name,
-                   const long & default_value) :
-parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeLong();
-}
-
-template <>
-Field::Field<double>(const ConstantString & name,
-                     const double & default_value) :
-parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeDouble();
-}
-
-template <>
-Field::Field<bool>(const ConstantString & name,
-                   const bool & default_value) :
-parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeBool();
-}
-
-template <>
-Field::Field<const ConstantString *>(const ConstantString & name,
-                                     const ConstantString * const & default_value) :
-  parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeString();
-  string_saved_as_char_array_ = false;
 }
 
 void Field::setUnits(const ConstantString & name)
@@ -582,6 +546,44 @@ size_t Field::getStringLength()
     return array_length_max;
   }
   return length;
+}
+
+// private
+template <>
+Field::Field<long>(const ConstantString & name,
+                   const long & default_value) :
+parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeLong();
+}
+
+template <>
+Field::Field<double>(const ConstantString & name,
+                     const double & default_value) :
+parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeDouble();
+}
+
+template <>
+Field::Field<bool>(const ConstantString & name,
+                   const bool & default_value) :
+parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeBool();
+}
+
+template <>
+Field::Field<const ConstantString *>(const ConstantString & name,
+                                     const ConstantString * const & default_value) :
+  parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeString();
+  string_saved_as_char_array_ = false;
 }
 
 Parameter & Field::parameter()

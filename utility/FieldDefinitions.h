@@ -11,46 +11,7 @@
 
 namespace modular_server
 {
-template <size_t N>
-Field::Field(const ConstantString & name,
-             const long (&default_value)[N]):
-  parameter_(name),
-  saved_variable_(default_value,N)
-{
-  parameter_.setTypeLong();
-  parameter_.setArrayLengthRange(1,N);
-}
-
-template <size_t N>
-Field::Field(const ConstantString & name,
-             const double (&default_value)[N]) :
-  parameter_(name),
-  saved_variable_(default_value,N)
-{
-  parameter_.setTypeDouble();
-  parameter_.setArrayLengthRange(1,N);
-}
-
-template <size_t N>
-Field::Field(const ConstantString & name,
-             const bool (&default_value)[N]) :
-  parameter_(name),
-  saved_variable_(default_value,N)
-{
-  parameter_.setTypeBool();
-  parameter_.setArrayLengthRange(1,N);
-}
-
-template <size_t N>
-Field::Field(const ConstantString & name,
-             const char (&default_value)[N]) :
-  parameter_(name),
-  saved_variable_(default_value,N)
-{
-  parameter_.setTypeString();
-  string_saved_as_char_array_ = true;
-}
-
+// public
 template <size_t N>
 void Field::setSubset(const constants::SubsetMemberType (&subset)[N])
 {
@@ -325,6 +286,47 @@ bool Field::setAllElementValues(const T & value)
 // {
 //   return saved_variable_.setDefaultValue(default_value);
 // };
+
+// private
+template <size_t N>
+Field::Field(const ConstantString & name,
+             const long (&default_value)[N]):
+  parameter_(name),
+  saved_variable_(default_value,N)
+{
+  parameter_.setTypeLong();
+  parameter_.setArrayLengthRange(1,N);
+}
+
+template <size_t N>
+Field::Field(const ConstantString & name,
+             const double (&default_value)[N]) :
+  parameter_(name),
+  saved_variable_(default_value,N)
+{
+  parameter_.setTypeDouble();
+  parameter_.setArrayLengthRange(1,N);
+}
+
+template <size_t N>
+Field::Field(const ConstantString & name,
+             const bool (&default_value)[N]) :
+  parameter_(name),
+  saved_variable_(default_value,N)
+{
+  parameter_.setTypeBool();
+  parameter_.setArrayLengthRange(1,N);
+}
+
+template <size_t N>
+Field::Field(const ConstantString & name,
+             const char (&default_value)[N]) :
+  parameter_(name),
+  saved_variable_(default_value,N)
+{
+  parameter_.setTypeString();
+  string_saved_as_char_array_ = true;
+}
 
 }
 #endif
