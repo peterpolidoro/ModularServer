@@ -1467,9 +1467,9 @@ void Server::writeFieldToResponse(Field & field,
 }
 
 void Server::versionToString(char* destination,
-                             const size_t major,
-                             const size_t minor,
-                             const size_t patch,
+                             const long major,
+                             const long minor,
+                             const long patch,
                              const size_t num)
 {
   size_t length_left = num;

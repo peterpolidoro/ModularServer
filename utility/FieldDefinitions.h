@@ -12,8 +12,8 @@
 namespace modular_server
 {
 // public
-template <size_t N>
-void Field::setSubset(const constants::SubsetMemberType (&subset)[N])
+template <size_t MAX_SIZE>
+void Field::setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
 {
   parameter_.setSubset(subset);
 }

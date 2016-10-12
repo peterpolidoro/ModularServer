@@ -32,8 +32,8 @@ public:
   void setUnits(const ConstantString & name);
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
-  template <size_t N>
-  void setSubset(const constants::SubsetMemberType (&subset)[N]);
+  template <size_t MAX_SIZE>
+  void setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
 
   void attachPreSetValueCallback(const Functor0 & callback);
   void attachPreSetElementValueCallback(const Functor1<const size_t> & callback);

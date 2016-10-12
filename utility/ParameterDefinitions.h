@@ -21,10 +21,10 @@ void Parameter::setRange(const T min, const T max)
   range_is_set_ = true;
 }
 
-template <size_t N>
-void Parameter::setSubset(const constants::SubsetMemberType (&subset)[N])
+template <size_t MAX_SIZE>
+void Parameter::setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
 {
-  subset_.setStorage(subset,N);
+  subset_.setStorage(subset,size);
   subset_is_set_ = true;
 }
 

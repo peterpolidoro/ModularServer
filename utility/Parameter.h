@@ -45,8 +45,8 @@ public:
   void setArrayLengthRange(const size_t array_length_min,
                            const size_t array_length_max);
   void removeArrayLengthRange();
-  template <size_t N>
-  void setSubset(const constants::SubsetMemberType (&subset)[N]);
+  template <size_t MAX_SIZE>
+  void setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
   void removeSubset();
 
   template <typename T>

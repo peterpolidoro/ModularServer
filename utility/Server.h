@@ -99,7 +99,7 @@ private:
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
   Array<const constants::FirmwareInfo *,constants::STORAGE_ARRAY_COUNT_MAX> firmware_info_array_;
-  Array<const constants::SubsetMemberType,constants::STORAGE_ARRAY_COUNT_MAX> firmware_name_subset_;
+  Array<const constants::SubsetMemberType,constants::STORAGE_ARRAY_COUNT_MAX> firmware_names_[constants::STORAGE_ARRAY_COUNT_MAX];
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
   int request_method_index_;
@@ -142,9 +142,9 @@ private:
                             bool write_default=false,
                             int element_index=-1);
   void versionToString(char * destination,
-                       const size_t major,
-                       const size_t minor,
-                       const size_t patch,
+                       const long major,
+                       const long minor,
+                       const long patch,
                        const size_t num);
   void subsetToString(char * destination,
                       Vector<const constants::SubsetMemberType> & subset,
