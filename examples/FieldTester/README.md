@@ -737,6 +737,9 @@ serial_port = '/dev/ttyACM0'     % example Linux serial port
 serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
 % Windows
 getAvailableComPorts()
+ans =
+  'COM1'
+  'COM4'
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularClient(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
@@ -746,37 +749,38 @@ ans =
   form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
-Modular Device Methods
----------------------
-getDeviceId
-getDeviceInfo
-getApi
-getFieldDefaultValues
-setFieldsToDefaults
-getFieldValues
-getFieldValue
-getFieldElementValue
-setFieldValue
-setFieldElementValue
-setAllFieldElementValues
-getMemoryFree
-getDoubled
-getBool
-getLongArrayFixed
-getLongArrayVariable
-setLongArrayFixed
-setLongArrayVariable
-setLongArrayParameter
-getStringAll
-getStringSome
-getCount
-getCountArray
-getDirection
-getDirectionArray
-checkMode
-incrementMode
+  Modular Device Methods
+  ---------------------
+  getDeviceId
+  getDeviceInfo
+  getApi
+  getApiVerbose
+  getFieldDefaultValues
+  setFieldsToDefaults
+  getFieldValues
+  getFieldValue
+  getFieldElementValue
+  setFieldValue
+  setFieldElementValue
+  setAllFieldElementValues
+  getMemoryFree
+  getDoubled
+  getBool
+  getLongArrayFixed
+  getLongArrayVariable
+  setLongArrayFixed
+  setLongArrayVariable
+  setLongArrayParameter
+  getStringAll
+  getStringSome
+  getCount
+  getCountArray
+  getDirection
+  getDirectionArray
+  checkMode
+  incrementMode
 dev.getFieldValues()
-ans =
+  ans =
   serial_number: 0
   double: 3.1416
   bool: 0

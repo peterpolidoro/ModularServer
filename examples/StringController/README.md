@@ -573,6 +573,9 @@ serial_port = '/dev/ttyACM0'     % example Linux serial port
 serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
 % Windows
 getAvailableComPorts()
+ans =
+  'COM1'
+  'COM4'
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularClient(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
@@ -582,30 +585,31 @@ ans =
   form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
-Modular Device Methods
----------------------
-getDeviceId
-getDeviceInfo
-getApi
-getFieldDefaultValues
-setFieldsToDefaults
-getFieldValues
-getFieldValue
-getFieldElementValue
-setFieldValue
-setFieldElementValue
-setAllFieldElementValues
-getMemoryFree
-echo
-length
-startsWith
-repeat
-charsAt
-startingChars
-setStartingCharsCount
-getStartingCharsCount
-setStoredString
-getStoredString
+  Modular Device Methods
+  ---------------------
+  getDeviceId
+  getDeviceInfo
+  getApi
+  getApiVerbose
+  getFieldDefaultValues
+  setFieldsToDefaults
+  getFieldValues
+  getFieldValue
+  getFieldElementValue
+  setFieldValue
+  setFieldElementValue
+  setAllFieldElementValues
+  getMemoryFree
+  echo
+  length
+  startsWith
+  repeat
+  charsAt
+  startingChars
+  setStartingCharsCount
+  getStartingCharsCount
+  setStoredString
+  getStoredString
 dev.repeat()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
@@ -623,10 +627,10 @@ dev.repeat('I am a string to repeat.',-1)
 device responded with error, Parameter value out of range: 1 <= count <= 100
 dev.repeat('I am a string to repeat.',4)
 ans =
-I am a string to repeat.
-I am a string to repeat.
-I am a string to repeat.
-I am a string to repeat.
+  I am a string to repeat.
+  I am a string to repeat.
+  I am a string to repeat.
+  I am a string to repeat.
 chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =

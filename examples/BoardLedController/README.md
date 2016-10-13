@@ -539,12 +539,15 @@ Example Matlab session:
 ```matlab
 % Linux and Mac OS X
 ls /dev/tty*
-serial_port = '/dev/ttyACM0'     % example Linux serial port
-serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
+serial_port = '/dev/ttyACM0';    % example Linux serial port
+serial_port = '/dev/tty.usbmodem262471';% example Mac OS X serial port
 % Windows
 getAvailableComPorts()
-serial_port = 'COM4'             % example Windows serial port
-dev = ModularClient(serial_port) % creates a device object
+ans =
+  'COM1'
+  'COM4'
+serial_port = 'COM4';            % example Windows serial port
+dev = ModularClient(serial_port);% creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
@@ -552,46 +555,48 @@ ans =
   form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
-Modular Device Methods
----------------------
-getDeviceId
-getDeviceInfo
-getApi
-getFieldDefaultValues
-setFieldsToDefaults
-getFieldValues
-getFieldValue
-getFieldElementValue
-setFieldValue
-setFieldElementValue
-setAllFieldElementValues
-getMemoryFree
-setLedOn
-setLedOff
-getLedPin
-blinkLed
-dev.setLedOn();
-dev.setLedOff();
-dev.blinkLed();
+  Modular Device Methods
+  ---------------------
+  getDeviceId
+  getDeviceInfo
+  getApi
+  getApiVerbose
+  getFieldDefaultValues
+  setFieldsToDefaults
+  setFieldToDefault
+  getFieldValues
+  getFieldValue
+  getFieldElementValue
+  setFieldValue
+  setFieldElementValue
+  setAllFieldElementValues
+  getMemoryFree
+  setLedOn
+  setLedOff
+  getLedPin
+  blinkLed
+dev.blinkLed()
 Error using ModularClient/sendRequest (line 301)
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
 method_info = dev.blinkLed('?')
 method_info =
   name: 'blinkLed'
-  parameters: {'duration_on'    'duration_off'    'count'}
+  firmware: 'BoardLedController'
+  parameters: {'duration_on'  'duration_off'  'count'}
   result_type: []
 parameter_info = dev.blinkLed('duration_on','?')
 parameter_info =
   name: 'duration_on'
+  firmware: 'BoardLedController'
   units: 'seconds'
   type: 'double'
-  min: 0.100000
-  max: 2.500000
+  min: 0.1000
+  max: 2.5000
 dev.blinkLed(3.0,0.2,20)
 (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.blinkLed(0.5,0.2,20);
-dev.getLedPin()
-ans =
+led_pin = dev.getLedPin()
+led_pin =
   13
 led_pin = dev.callServerMethod('getLedPin')
 led_pin =
@@ -601,6 +606,12 @@ led_pin =
   13
 dev.callServerMethod('blinkLed',0.5,0.2,20)
 dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')
+dev.getApi({'BoardLedController'})
+ans =
+  firmware: {'BoardLedController'}
+  methods: {'setLedOn'  'setLedOff'  'getLedPin'  'blinkLed'}
+  parameters: {'duration_on'  'duration_off'  'count'}
+  fields: {0x1 cell}
 dev.close()
 clear dev
 ```

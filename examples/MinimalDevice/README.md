@@ -651,6 +651,9 @@ serial_port = '/dev/ttyACM0'     % example Linux serial port
 serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
 % Windows
 getAvailableComPorts()
+ans =
+  'COM1'
+  'COM4'
 serial_port = 'COM4'             % example Windows serial port
 dev = ModularClient(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
@@ -660,29 +663,31 @@ ans =
   form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
-Modular Device Methods
----------------------
-getDeviceId
-getDeviceInfo
-getApi
-getFieldDefaultValues
-setFieldsToDefaults
-getFieldValues
-getFieldValue
-getFieldElementValue
-setFieldValue
-setFieldElementValue
-setAllFieldElementValues
-getMemoryFree
+  Modular Device Methods
+  ---------------------
+  getDeviceId
+  getDeviceInfo
+  getApi
+  getApiVerbose
+  getFieldDefaultValues
+  setFieldsToDefaults
+  getFieldValues
+  getFieldValue
+  getFieldElementValue
+  setFieldValue
+  setFieldElementValue
+  setAllFieldElementValues
+  getMemoryFree
 dev.getMemoryFree()
 ans =
-  5392
+  5080
 dev.getFieldValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.getFieldValue('?')
 method_info
 ans =
   name: 'getFieldValue'
+  firmware: 'ModularServer'
   parameters: {'field_name'}
   result_type: 'value'
 dev.getFieldValue('serial_number')
@@ -692,7 +697,7 @@ dev.setFieldValue('serial_number',-1)
 (from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
 dev.setFieldValue('serial_number',13);
 result = dev.callServerMethod('?');
-result.device_info.serial_number
+result.device_id.serial_number
 ans =
   13
 json = dev.convertToJson(result.device_info.firmware_version)
