@@ -102,7 +102,7 @@ private:
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
   Array<const constants::FirmwareInfo *,constants::FIRMWARE_COUNT_MAX> firmware_info_array_;
-  Array<const constants::SubsetMemberType,constants::FIRMWARE_COUNT_MAX> firmware_name_subset_;
+  Array<const constants::SubsetMemberType,constants::FIRMWARE_COUNT_MAX+1> firmware_name_array_;
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
   int request_method_index_;
@@ -139,7 +139,7 @@ private:
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
-  void writeApiToResponse(bool verbose, Array<const char *,constants::FIRMWARE_COUNT_MAX> firmware_names);
+  void writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array);
   void writeFieldToResponse(Field & field,
                             bool write_key=false,
                             bool write_default=false,

@@ -66,6 +66,7 @@ private:
   void end();
   void setCompactPrint();
   void setPrettyPrint();
+  bool error();
   void returnRequestParseError(const char * const request);
   void returnParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
   void returnMethodNotFoundError();

@@ -30,12 +30,13 @@ enum{STRING_LENGTH_REQUEST=257};
 enum{STRING_LENGTH_ERROR=257};
 enum{STRING_LENGTH_PARAMETER_COUNT=3};
 enum{STRING_LENGTH_SUBSET=257};
-enum{STRING_LENGTH_SUBSET_ELEMENT=12};
+enum{STRING_LENGTH_SUBSET_ELEMENT=32};
 enum{STRING_LENGTH_VERSION=18};
 enum{STRING_LENGTH_VERSION_FIELD=6};
 enum{SUBSET_ELEMENT_COUNT_MAX=20};
 
 enum {JSON_TOKEN_MAX=32};
+enum {JSON_BUFFER_SIZE=32};
 
 struct FirmwareInfo
 {
@@ -178,6 +179,7 @@ extern ConstantString array_close_constant_string;
 extern ConstantString array_separator_constant_string;
 extern ConstantString version_field_separator_constant_string;
 extern ConstantString subset_constant_string;
+extern ConstantString all_constant_string;
 extern ConstantString array_element_subset_constant_string;
 extern ConstantString processor_constant_string;
 extern ConstantString processor_name_constant_string;

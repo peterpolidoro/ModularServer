@@ -211,6 +211,10 @@ void Server::setup()
 
   eeprom_initialized_ = false;
 
+  constants::SubsetMemberType firmware_name_ptr;
+  firmware_name_ptr.cs_ptr = &constants::all_constant_string;
+  firmware_name_array_.push_back(firmware_name_ptr);
+
   // Streams
   response_.setJsonStream(json_stream_);
 
@@ -235,10 +239,10 @@ void Server::setup()
 
   Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
   firmware_parameter.setTypeString();
-  firmware_parameter.setArrayLengthRange(0,firmware_name_subset_.max_size());
-  firmware_parameter.setSubset(firmware_name_subset_.data(),
-                               firmware_name_subset_.max_size(),
-                               firmware_name_subset_.size());
+  firmware_parameter.setArrayLengthRange(1,constants::FIRMWARE_COUNT_MAX);
+  firmware_parameter.setSubset(firmware_name_array_.data(),
+                               firmware_name_array_.max_size(),
+                               firmware_name_array_.size());
 
   Parameter & field_name_parameter = createParameter(constants::field_name_parameter_name);
   field_name_parameter.setTypeString();
@@ -603,6 +607,7 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
   {
     Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
     char subset_str[constants::STRING_LENGTH_ERROR];
+    subset_str[0] = '\0';
     subsetToString(subset_str,
                    subset,
                    parameter.getType(),
@@ -746,6 +751,7 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
   {
     Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
     char subset_str[constants::STRING_LENGTH_ERROR];
+    subset_str[0] = '\0';
     subsetToString(subset_str,
                    subset,
                    parameter.getType(),
@@ -1020,8 +1026,13 @@ void Server::help(bool verbose)
     }
 
     response_.writeKey(constants::api_constant_string);
-    Array<const char *,constants::FIRMWARE_COUNT_MAX> firmware_names;
-    writeApiToResponse(verbose,firmware_names);
+    char all_str[constants::all_constant_string.length() + 1];
+    all_str[0] = '\0';
+    constants::all_constant_string.copy(all_str);
+    ArduinoJson::StaticJsonBuffer<constants::JSON_BUFFER_SIZE> json_buffer;
+    ArduinoJson::JsonArray& firmware_name_array = json_buffer.createArray();
+    firmware_name_array.add(all_str);
+    writeApiToResponse(verbose,firmware_name_array);
 
     response_.endObject();
   }
@@ -1096,6 +1107,10 @@ void Server::help(bool verbose)
 
 void Server::writeDeviceIdToResponse()
 {
+  if (response_.error())
+  {
+    return;
+  }
   response_.beginObject();
 
   response_.write(constants::name_constant_string,device_name_ptr_);
@@ -1107,6 +1122,10 @@ void Server::writeDeviceIdToResponse()
 
 void Server::writeFirmwareInfoToResponse()
 {
+  if (response_.error())
+  {
+    return;
+  }
   char version_str[constants::STRING_LENGTH_VERSION];
 
   response_.beginArray();
@@ -1131,6 +1150,10 @@ void Server::writeFirmwareInfoToResponse()
 
 void Server::writeHardwareInfoToResponse()
 {
+  if (response_.error())
+  {
+    return;
+  }
   char version_str[constants::STRING_LENGTH_VERSION];
 
   response_.beginArray();
@@ -1159,6 +1182,10 @@ void Server::writeHardwareInfoToResponse()
 
 void Server::writeDeviceInfoToResponse()
 {
+  if (response_.error())
+  {
+    return;
+  }
   response_.beginObject();
 
   response_.write(constants::processor_constant_string,constants::processor_name_constant_string);
@@ -1172,8 +1199,12 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::writeApiToResponse(bool verbose, Array<const char *,constants::FIRMWARE_COUNT_MAX> firmware_names)
+void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array)
 {
+  if (response_.error())
+  {
+    return;
+  }
   response_.beginObject();
 
   if (!verbose)
@@ -1185,7 +1216,7 @@ void Server::writeApiToResponse(bool verbose, Array<const char *,constants::FIRM
       if (method_index > private_method_index_)
       {
         Method & method = methods_[method_index];
-        if ((firmware_names.size() == 0) || (method.compareFirmwareName(firmware_name)))
+        if (method.firmwareNameInArray(firmware_name_array))
         {
           const ConstantString & method_name = method.getName();
           response_.write(method_name);
@@ -1199,7 +1230,7 @@ void Server::writeApiToResponse(bool verbose, Array<const char *,constants::FIRM
     for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
     {
       Parameter & parameter = parameters_[parameter_index];
-      if ((firmware_names.size() == 0) || (parameter.compareFirmwareName(firmware_name)))
+      if (parameter.firmwareNameInArray(firmware_name_array))
       {
         const ConstantString & parameter_name = parameter.getName();
         response_.write(parameter_name);
@@ -1212,7 +1243,7 @@ void Server::writeApiToResponse(bool verbose, Array<const char *,constants::FIRM
     for (size_t field_index=0; field_index<fields_.size(); ++field_index)
     {
       Field & field = fields_[field_index];
-      if ((firmware_names.size() == 0) || (field.compareFirmwareName(firmware_name)))
+      if (field.firmwareNameInArray(firmware_name_array))
       {
         const ConstantString & field_name = fields_[field_index].getName();
         response_.write(field_name);
@@ -1257,6 +1288,10 @@ void Server::writeFieldToResponse(Field & field,
                                   bool write_default,
                                   int element_index)
 {
+  if (response_.error())
+  {
+    return;
+  }
   const ConstantString & field_name = field.getName();
   if (write_key)
   {
@@ -1672,19 +1707,18 @@ void Server::getDeviceInfoCallback()
 
 void Server::getApiCallback()
 {
-  ArduinoJson::JsonArray & json_array
-  const char * firmware_name;
-  parameter(constants::firmware_constant_string).getValue(firmware_name);
+  ArduinoJson::JsonArray * firmware_name_array_ptr;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
   response_.writeResultKey();
-  writeApiToResponse(false,firmware_name);
+  writeApiToResponse(false,*firmware_name_array_ptr);
 }
 
 void Server::getApiVerboseCallback()
 {
-  const char * firmware_name;
-  parameter(constants::firmware_constant_string).getValue(firmware_name);
+  ArduinoJson::JsonArray * firmware_name_array_ptr;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
   response_.writeResultKey();
-  writeApiToResponse(true,firmware_name);
+  writeApiToResponse(true,*firmware_name_array_ptr);
 }
 
 #ifdef __AVR__

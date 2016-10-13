@@ -120,6 +120,7 @@ private:
   Parameter & parameter();
   const ConstantString & getName();
   const ConstantString &  getFirmwareName();
+  bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool stringIsSavedAsCharArray();

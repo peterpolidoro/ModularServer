@@ -611,6 +611,11 @@ const ConstantString & Field::getFirmwareName()
   return parameter_.getFirmwareName();
 }
 
+bool Field::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array)
+{
+  return parameter_.firmwareNameInArray(firmware_name_array);
+}
+
 JsonStream::JsonTypes Field::getType()
 {
   return parameter_.getType();

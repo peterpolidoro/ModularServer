@@ -141,6 +141,11 @@ void Response::setPrettyPrint()
   json_stream_ptr_->setPrettyPrint();
 }
 
+bool Response::error()
+{
+  return error_;
+}
+
 void Response::returnRequestParseError(const char * const request)
 {
   // Prevent multiple errors in one response
@@ -166,19 +171,23 @@ void Response::returnParameterCountError(const size_t parameter_count, const siz
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
     char incorrect_parameter_number_str[constants::incorrect_parameter_number_error_data.length()+1];
+    incorrect_parameter_number_str[0] = '\0';
     constants::incorrect_parameter_number_error_data.copy(incorrect_parameter_number_str);
     char error_str[constants::STRING_LENGTH_ERROR];
     error_str[0] = '\0';
     strcat(error_str,incorrect_parameter_number_str);
     char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
+    parameter_count_str[0] = '\0';
     dtostrf(parameter_count,0,0,parameter_count_str);
     strcat(error_str,parameter_count_str);
     char given_str[constants::given_constant_string.length()+1];
+    given_str[0] = '\0';
     constants::given_constant_string.copy(given_str);
     strcat(error_str,given_str);
     dtostrf(parameter_count_needed,0,0,parameter_count_str);
     strcat(error_str,parameter_count_str);
     char needed_str[constants::needed_constant_string.length()+1];
+    needed_str[0] = '\0';
     constants::needed_constant_string.copy(needed_str);
     strcat(error_str,needed_str);
     write(constants::data_constant_string,error_str);
@@ -235,6 +244,7 @@ void Response::returnParameterArrayLengthError(const ConstantString & parameter_
     strcat(error_str,value_not_in_range_str);
     strcat(error_str,min_str);
     char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
+    less_than_equal_str[0] = '\0';
     constants::less_than_equal_constant_string.copy(less_than_equal_str);
     strcat(error_str,less_than_equal_str);
     char parameter_name_str[parameter_name.length()+1];
@@ -242,6 +252,7 @@ void Response::returnParameterArrayLengthError(const ConstantString & parameter_
     parameter_name.copy(parameter_name_str);
     strcat(error_str,parameter_name_str);
     char array_length_str[constants::array_length_constant_string.length()+1];
+    array_length_str[0] = '\0';
     constants::array_length_constant_string.copy(array_length_str);
     strcat(error_str,array_length_str);
     strcat(error_str,less_than_equal_str);
@@ -268,6 +279,7 @@ void Response::returnParameterObjectParseError(const ConstantString & parameter_
     error_str[0] = '\0';
     strcat(error_str,parameter_name_str);
     char invalid_json_object_str[constants::invalid_json_object_error_data.length()+1];
+    invalid_json_object_str[0] = '\0';
     constants::invalid_json_object_error_data.copy(invalid_json_object_str);
     strcat(error_str,invalid_json_object_str);
     write(constants::data_constant_string,error_str);
@@ -292,6 +304,7 @@ void Response::returnParameterArrayParseError(const ConstantString & parameter_n
     error_str[0] = '\0';
     strcat(error_str,parameter_name_str);
     char invalid_json_array_str[constants::invalid_json_array_error_data.length()+1];
+    invalid_json_array_str[0] = '\0';
     constants::invalid_json_array_error_data.copy(invalid_json_array_str);
     strcat(error_str,invalid_json_array_str);
     write(constants::data_constant_string,error_str);
@@ -336,6 +349,7 @@ void Response::returnParameterNotInSubsetError(const char * const subset_str,
       constants::array_parameter_error_error_data.copy(error_str);
     }
     char value_not_in_subset_str[constants::value_not_in_subset_error_data.length() + 1];
+    value_not_in_subset_str[0] = '\0';
     constants::value_not_in_subset_error_data.copy(value_not_in_subset_str);
     strcat(error_str,value_not_in_subset_str);
     size_t length_left = constants::STRING_LENGTH_ERROR - strlen(error_str) - 1;
@@ -369,10 +383,12 @@ void Response::returnParameterNotInRangeError(const ConstantString & parameter_n
       constants::array_parameter_error_error_data.copy(error_str);
     }
     char value_not_in_range_str[constants::value_not_in_range_error_data.length() + 1];
+    value_not_in_range_str[0] = '\0';
     constants::value_not_in_range_error_data.copy(value_not_in_range_str);
     strcat(error_str,value_not_in_range_str);
     strcat(error_str,min_str);
     char less_than_equal_str[constants::less_than_equal_constant_string.length()+1];
+    less_than_equal_str[0] = '\0';
     constants::less_than_equal_constant_string.copy(less_than_equal_str);
     strcat(error_str,less_than_equal_str);
     char parameter_name_str[parameter_name.length()+1];
@@ -382,6 +398,7 @@ void Response::returnParameterNotInRangeError(const ConstantString & parameter_n
     if (parameter_type == JsonStream::ARRAY_TYPE)
     {
       char element_str[constants::element_constant_string.length()+1];
+      element_str[0] = '\0';
       constants::element_constant_string.copy(element_str);
       strcat(error_str,element_str);
     }
