@@ -33,6 +33,8 @@ extern const modular_server::HardwareInfo hardware_info;
 
 // Fields
 // Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
+extern const long serial_number_default_new;
+
 extern ConstantString starting_chars_count_field_name;
 extern const long starting_chars_count_min;
 extern const long starting_chars_count_max;

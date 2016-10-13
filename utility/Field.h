@@ -84,8 +84,8 @@ public:
   bool setValue(T * value, const size_t N);
   template <typename T>
   bool setAllElementValues(const T & value);
-  // template <typename T>
-  // bool setDefaultValue(T & default_value);
+  template <typename T>
+  bool setDefaultValue(T & default_value);
   void setValueToDefault();
 
   bool valueIsDefault();

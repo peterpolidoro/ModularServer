@@ -38,10 +38,12 @@ Example Response:
       "serial_number":0
     },
     "API":{
+      "firmware":["All"],
       "methods":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
+        "getApiVerbose",
         "getFieldDefaultValues",
         "setFieldsToDefaults",
         "setFieldToDefault",
@@ -54,6 +56,7 @@ Example Response:
         "getMemoryFree"
       ],
       "parameters":[
+        "firmware",
         "field_name",
         "field_value",
         "field_element_index"
@@ -81,7 +84,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5392
+  "result":5080
 }
 ```
 
@@ -124,34 +127,51 @@ Example Response:
       ]
     },
     "API":{
+      "firmware":["All"],
       "methods":[
         {
           "name":"getDeviceId",
+          "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
         },
         {
           "name":"getDeviceInfo",
+          "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
         },
         {
           "name":"getApi",
-          "parameters":[],
+          "firmware":"ModularServer",
+          "parameters":[
+            "firmware"
+          ],
+          "result_type":"object"
+        },
+        {
+          "name":"getApiVerbose",
+          "firmware":"ModularServer",
+          "parameters":[
+            "firmware"
+          ],
           "result_type":"object"
         },
         {
           "name":"getFieldDefaultValues",
+          "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
         },
         {
           "name":"setFieldsToDefaults",
+          "firmware":"ModularServer",
           "parameters":[],
           "result_type":null
         },
         {
           "name":"setFieldToDefault",
+          "firmware":"ModularServer",
           "parameters":[
             "field_name"
           ],
@@ -159,11 +179,13 @@ Example Response:
         },
         {
           "name":"getFieldValues",
+          "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
         },
         {
           "name":"getFieldValue",
+          "firmware":"ModularServer",
           "parameters":[
             "field_name"
           ],
@@ -171,6 +193,7 @@ Example Response:
         },
         {
           "name":"getFieldElementValue",
+          "firmware":"ModularServer",
           "parameters":[
             "field_name",
             "field_element_index"
@@ -179,6 +202,7 @@ Example Response:
         },
         {
           "name":"setFieldValue",
+          "firmware":"ModularServer",
           "parameters":[
             "field_name",
             "field_value"
@@ -187,6 +211,7 @@ Example Response:
         },
         {
           "name":"setFieldElementValue",
+          "firmware":"ModularServer",
           "parameters":[
             "field_name",
             "field_element_index",
@@ -196,6 +221,7 @@ Example Response:
         },
         {
           "name":"setAllFieldElementValues",
+          "firmware":"ModularServer",
           "parameters":[
             "field_name",
             "field_value"
@@ -204,27 +230,45 @@ Example Response:
         },
         {
           "name":"getMemoryFree",
+          "firmware":"ModularServer",
           "parameters":[],
           "result_type":"long"
         }
       ],
       "parameters":[
         {
+          "name":"firmware",
+          "firmware":"ModularServer",
+          "type":"array",
+          "array_element_type":"string",
+          "array_element_subset":[
+            "All",
+            "ModularServer",
+            "MinimalDevice"
+          ],
+          "array_length_min":1,
+          "array_length_max":8
+        },
+        {
           "name":"field_name",
+          "firmware":"ModularServer",
           "type":"string"
         },
         {
           "name":"field_value",
+          "firmware":"ModularServer",
           "type":"value"
         },
         {
           "name":"field_element_index",
+          "firmware":"ModularServer",
           "type":"long"
         }
       ],
       "fields":[
         {
           "name":"serial_number",
+          "firmware":"ModularServer",
           "type":"long",
           "min":0,
           "max":65535,
@@ -277,6 +321,7 @@ Example Response:
   "id":"getFieldValue",
   "result":{
     "name":"getFieldValue",
+    "firmware":"ModularServer",
     "parameters":[
       "field_name"
     ],
@@ -300,6 +345,7 @@ Example Response:
   "id":"?",
   "result":{
     "name":"getFieldValue",
+    "firmware":"ModularServer",
     "parameters":[
       "field_name"
     ],
@@ -322,9 +368,11 @@ Example Response:
   "id":"getFieldValue",
   "result":{
     "name":"getFieldValue",
+    "firmware":"ModularServer",
     "parameters":[
       {
         "name":"field_name",
+        "firmware":"ModularServer",
         "type":"string"
       }
     ],
@@ -411,6 +459,133 @@ Example Response:
 }
 ```
 
+Use the getDeviceId method to get a unique set of values to identify
+the device.
+
+Example:
+
+```shell
+getDeviceId
+```
+
+Example Response:
+
+```json
+{
+  "id":"getDeviceId",
+  "result":{
+    "name":"minimal_device",
+    "form_factor":"5x3",
+    "serial_number":0
+  }
+}
+```
+
+The serial\_number field can be changed to uniquely identify devices
+with the same name and form\_factor.
+
+Use the getDeviceInfo method to get information about the hardware and
+firmware of the device.
+
+Example:
+
+```shell
+getDeviceInfo
+```
+
+Example Response:
+
+```json
+{
+  "id":"getDeviceInfo",
+  "result":{
+    "processor":"ATmega2560",
+    "hardware":[
+      {
+        "name":"Mega2560"
+      }
+    ],
+    "firmware":[
+      {
+        "name":"ModularServer",
+        "version":"1.0.0"
+      },
+      {
+        "name":"MinimalDevice",
+        "version":"1.0.0"
+      }
+    ]
+  }
+}
+```
+
+Every method, parameter, and field belongs to one firmware set.
+
+To get the API limited to one or more firmware sets, use the getApi
+method.
+
+Example:
+
+```shell
+getApi ["All"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["All"],
+    "methods":[
+      "getDeviceId",
+      "getDeviceInfo",
+      "getApi",
+      "getApiVerbose",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "getMemoryFree"
+    ],
+    "parameters":[
+      "firmware",
+      "field_name",
+      "field_value",
+      "field_element_index"
+    ],
+    "fields":[
+      "serial_number"
+    ]
+  }
+}
+```
+
+Example:
+
+```shell
+getApi ["MinimalDevice"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["MinimalDevice"],
+    "methods":[],
+    "parameters":[],
+    "fields":[]
+  }
+}
+```
+
 ###Python
 
 Example Python session:
@@ -419,13 +594,14 @@ Example Python session:
 from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '', 'name': 'minimal_device', 'serial_number': 0}
+{'form_factor': '5x3', 'name': 'minimal_device', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
+ 'set_field_element_value',
  'get_field_value',
  'get_field_element_value',
  'get_api',
- 'set_field_element_value',
+ 'get_api_verbose',
  'set_all_field_element_values',
  'set_fields_to_defaults',
  'get_device_id',
@@ -435,24 +611,29 @@ dev.get_methods()
  'get_field_values',
  'get_device_info']
 dev.get_memory_free()
-5392
+5080
 dev.get_field_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_field_value('?')
-{'name': 'getFieldValue', 'parameters': ['field_name'], 'result_type': 'value'}
+{'firmware': 'ModularServer',
+ 'name': 'getFieldValue',
+ 'parameters': ['field_name'],
+ 'result_type': 'value'}
 dev.get_field_value('serial_number')
 0
 dev.set_field_value('serial_number',-1)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
 dev.set_field_value('serial_number',12)
 result = dev.call_server_method('?')
-result['device_info']['serial_number']
+result['device_id']['serial_number']
 12
-dev.convert_to_json(result['device_info']['firmware_version'])
-'{"major":0,"minor":1,"patch":0}'
+dev.convert_to_json(result['device_id'])
+'{"serial_number":12,"name":"minimal_device","form_factor":"5x3"}'
 dev.send_json_request('["set_fields_to_defaults"]')
 dev.get_field_value('serial_number')
 0
+dev.get_api(["MinimalDevice"])
+{'fields': [], 'firmware': ['MinimalDevice'], 'methods': [], 'parameters': []}
 ```
 
 For more details on the Python interface:

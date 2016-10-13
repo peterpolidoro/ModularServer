@@ -65,6 +65,8 @@ const modular_server::HardwareInfo hardware_info =
 // Units
 
 // Fields
+const long serial_number_default_new = 77;
+
 CONSTANT_STRING(starting_chars_count_field_name,"starting_chars_count");
 const long starting_chars_count_min = 1;
 const long starting_chars_count_max = 10;

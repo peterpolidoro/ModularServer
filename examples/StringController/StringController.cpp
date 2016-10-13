@@ -28,6 +28,9 @@ void StringController::setup()
                               methods_);
 
   // Fields
+  modular_server::Field & serial_number_field = modular_server_.field(modular_server::constants::serial_number_field_name);
+  serial_number_field.setDefaultValue(constants::serial_number_default_new);
+
   modular_server::Field & starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);
   starting_chars_count_field.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
 

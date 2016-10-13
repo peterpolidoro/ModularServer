@@ -35,13 +35,15 @@ Example Response:
     "device_id":{
       "name":"string_controller",
       "form_factor":"5x3",
-      "serial_number":0
+      "serial_number":77
     },
     "API":{
+      "firmware":["All"],
       "methods":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
+        "getApiVerbose",
         "getFieldDefaultValues",
         "setFieldsToDefaults",
         "setFieldToDefault",
@@ -62,6 +64,7 @@ Example Response:
         "getStoredString"
       ],
       "parameters":[
+        "firmware",
         "field_name",
         "field_value",
         "field_element_index",
@@ -135,6 +138,7 @@ Example Response:
   "id":"repeat",
   "result":{
     "name":"repeat",
+    "firmware":"StringController",
     "parameters":[
       "string",
       "count"
@@ -162,13 +166,16 @@ Example Response:
   "id":"repeat",
   "result":{
     "name":"repeat",
+    "firmware":"StringController",
     "parameters":[
       {
         "name":"string",
+        "firmware":"StringController",
         "type":"string"
       },
       {
         "name":"count",
+        "firmware":"StringController",
         "type":"long",
         "min":1,
         "max":100
@@ -195,6 +202,7 @@ Example Response:
   "id":"repeat",
   "result":{
     "name":"count",
+    "firmware":"StringController",
     "type":"long",
     "min":1,
     "max":100
@@ -295,6 +303,166 @@ Example Response:
 }
 ```
 
+Use the getDeviceId method to get a unique set of values to identify
+the device.
+
+Example:
+
+```shell
+getDeviceId
+```
+
+Example Response:
+
+```json
+{
+  "id":"getDeviceId",
+  "result":{
+    "name":"string_controller",
+    "form_factor":"5x3",
+    "serial_number":77
+  }
+}
+```
+
+The serial\_number field can be changed to uniquely identify devices
+with the same name and form\_factor.
+
+Use the getDeviceInfo method to get information about the hardware and
+firmware of the device.
+
+Example:
+
+```shell
+getDeviceInfo
+```
+
+Example Response:
+
+```json
+{
+  "id":"getDeviceInfo",
+  "result":{
+    "processor":"ATmega2560",
+    "hardware":[
+      {
+        "name":"Mega2560"
+      }
+    ],
+    "firmware":[
+      {
+        "name":"ModularServer",
+        "version":"1.0.0"
+      },
+      {
+        "name":"StringController",
+        "version":"1.0.0"
+      }
+    ]
+  }
+}
+```
+
+Every method, parameter, and field belongs to one firmware set.
+
+To get the API limited to one or more firmware sets, use the getApi
+method.
+
+Example:
+
+```shell
+getApi ["All"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["All"],
+    "methods":[
+      "getDeviceId",
+      "getDeviceInfo",
+      "getApi",
+      "getApiVerbose",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "getMemoryFree",
+      "echo",
+      "length",
+      "startsWith",
+      "repeat",
+      "charsAt",
+      "startingChars",
+      "setStoredString",
+      "getStoredString"
+    ],
+    "parameters":[
+      "firmware",
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "string",
+      "string2",
+      "count",
+      "index_array",
+      "double_echo"
+    ],
+    "fields":[
+      "serial_number",
+      "starting_chars_count",
+      "stored_string"
+    ]
+  }
+}
+```
+
+Example:
+
+```shell
+getApi ["StringController"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["StringController"],
+    "methods":[
+      "echo",
+      "length",
+      "startsWith",
+      "repeat",
+      "charsAt",
+      "startingChars",
+      "setStoredString",
+      "getStoredString"
+    ],
+    "parameters":[
+      "string",
+      "string2",
+      "count",
+      "index_array",
+      "double_echo"
+    ],
+    "fields":[
+      "starting_chars_count",
+      "stored_string"
+    ]
+  }
+}
+```
+
 ###Python
 
 Example Python session:
@@ -303,40 +471,55 @@ Example Python session:
 from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '5x3', 'name': 'string_controller', 'serial_number': 0}
+{'form_factor': '5x3', 'name': 'string_controller', 'serial_number': 77}
 dev.get_methods()
-['starts_with',
+['echo',
+ 'get_field_default_values',
+ 'set_field_value',
+ 'get_device_info',
+ 'starts_with',
  'get_memory_free',
- 'repeat',
- 'set_all_field_element_values',
- 'starting_chars',
- 'get_field_value',
- 'get_field_element_value',
- 'get_api',
  'set_field_element_value',
- 'length',
- 'echo',
  'set_fields_to_defaults',
  'get_device_id',
- 'get_field_default_values',
- 'get_stored_string',
  'chars_at',
  'set_stored_string',
- 'set_field_value',
+ 'repeat',
+ 'get_stored_string',
+ 'set_all_field_element_values',
+ 'get_field_value',
+ 'starting_chars',
+ 'get_field_element_value',
+ 'get_api',
+ 'get_api_verbose',
+ 'length',
  'set_field_to_default',
- 'get_field_values',
- 'get_device_info']
+ 'get_field_values']
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
-{'name': 'repeat', 'parameters': ['string', 'count'], 'result_type': 'array'}
+{'firmware': 'StringController',
+ 'name': 'repeat',
+ 'parameters': ['string', 'count'],
+ 'result_type': 'array'}
 dev.repeat('??')
-{'name': 'repeat',
- 'parameters': [{'name': 'string', 'type': 'string'},
-  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+{'firmware': 'StringController',
+ 'name': 'repeat',
+ 'parameters': [{'firmware': 'StringController',
+   'name': 'string',
+   'type': 'string'},
+  {'firmware': 'StringController',
+   'max': 100,
+   'min': 1,
+   'name': 'count',
+   'type': 'long'}],
  'result_type': 'array'}
 dev.repeat('count','?')
-{'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}
+{'firmware': 'StringController',
+ 'max': 100,
+ 'min': 1,
+ 'name': 'count',
+ 'type': 'long'}
 dev.repeat('"I am a string to repeat."',-1)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 1 <= count <= 100, code: -32602
 dev.repeat('I am a string to repeat.',4)
@@ -349,18 +532,30 @@ dev.chars_at('I am an input string!',[0,6,8])
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
 dev.get_field_value('starting_chars_count')
-2
+5
 dev.set_field_value('starting_chars_count',3)
 dev.call_server_method('set_field_value','starting_chars_count',7)
 dev.send_json_request('["set_field_value","starting_chars_count",5]')
 dev.get_field_value('starting_chars_count')
-5
+3
 dev.starting_chars('Fantastic!')
-'Fanta'
+'Fan'
 dev.call_server_method('starting_chars','Fantastic!')
-'Fanta'
+'Fan'
 dev.send_json_request('["starting_chars","Fantastic!"]')
-'Fanta'
+'Fan'
+dev.get_api(["StringController"])
+{'fields': ['starting_chars_count', 'stored_string'],
+ 'firmware': ['StringController'],
+ 'methods': ['echo',
+  'length',
+  'startsWith',
+  'repeat',
+  'charsAt',
+  'startingChars',
+  'setStoredString',
+  'getStoredString'],
+ 'parameters': ['string', 'string2', 'count', 'index_array', 'double_echo']}
 ```
 
 For more details on the Python interface:

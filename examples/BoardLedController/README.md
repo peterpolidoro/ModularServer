@@ -38,10 +38,12 @@ Example Response:
       "serial_number":0
     },
     "API":{
+      "firmware":["All"],
       "methods":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
+        "getApiVerbose",
         "getFieldDefaultValues",
         "setFieldsToDefaults",
         "setFieldToDefault",
@@ -58,6 +60,7 @@ Example Response:
         "blinkLed"
       ],
       "parameters":[
+        "firmware",
         "field_name",
         "field_value",
         "field_element_index",
@@ -134,6 +137,7 @@ Example Response:
   "id":"blinkLed",
   "result":{
     "name":"blinkLed",
+    "firmware":"BoardLedController",
     "parameters":[
       "duration_on",
       "duration_off",
@@ -162,6 +166,7 @@ Example Response:
   "id":"blinkLed",
   "result":{
     "name":"duration_on",
+    "firmware":"BoardLedController",
     "units":"seconds",
     "type":"double",
     "min":0.100000,
@@ -184,9 +189,11 @@ Example Response:
   "id":"blinkLed",
   "result":{
     "name":"blinkLed",
+    "firmware":"BoardLedController",
     "parameters":[
       {
         "name":"duration_on",
+        "firmware":"BoardLedController",
         "units":"seconds",
         "type":"double",
         "min":0.100000,
@@ -194,6 +201,7 @@ Example Response:
       },
       {
         "name":"duration_off",
+        "firmware":"BoardLedController",
         "units":"seconds",
         "type":"double",
         "min":0.100000,
@@ -201,6 +209,7 @@ Example Response:
       },
       {
         "name":"count",
+        "firmware":"BoardLedController",
         "type":"long",
         "min":1,
         "max":100
@@ -268,6 +277,7 @@ Example Response:
   "id":"getLedPin",
   "result":{
     "name":"getLedPin",
+    "firmware":"BoardLedController",
     "parameters":[],
     "result_type":"long"
   }
@@ -289,6 +299,149 @@ Example Response:
 }
 ```
 
+Use the getDeviceId method to get a unique set of values to identify
+the device.
+
+Example:
+
+```shell
+getDeviceId
+```
+
+Example Response:
+
+```json
+{
+  "id":"getDeviceId",
+  "result":{
+    "name":"board_led_controller",
+    "form_factor":"5x3",
+    "serial_number":0
+  }
+}
+```
+
+The serial\_number field can be changed to uniquely identify devices
+with the same name and form\_factor.
+
+Use the getDeviceInfo method to get information about the hardware and
+firmware of the device.
+
+Example:
+
+```shell
+getDeviceInfo
+```
+
+Example Response:
+
+```json
+{
+  "id":"getDeviceInfo",
+  "result":{
+    "processor":"ATmega2560",
+    "hardware":[
+      {
+        "name":"Mega2560"
+      }
+    ],
+    "firmware":[
+      {
+        "name":"ModularServer",
+        "version":"1.0.0"
+      },
+      {
+        "name":"BoardLedController",
+        "version":"1.0.0"
+      }
+    ]
+  }
+}
+```
+
+Every method, parameter, and field belongs to one firmware set.
+
+To get the API limited to one or more firmware sets, use the getApi
+method.
+
+Example:
+
+```shell
+getApi ["All"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["All"],
+    "methods":[
+      "getDeviceId",
+      "getDeviceInfo",
+      "getApi",
+      "getApiVerbose",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "getMemoryFree",
+      "setLedOn",
+      "setLedOff",
+      "getLedPin",
+      "blinkLed"
+    ],
+    "parameters":[
+      "firmware",
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "duration_on",
+      "duration_off",
+      "count"
+    ],
+    "fields":[
+      "serial_number"
+    ]
+  }
+}
+```
+
+Example:
+
+```shell
+getApi ["BoardLedController"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["BoardLedController"],
+    "methods":[
+      "setLedOn",
+      "setLedOff",
+      "getLedPin",
+      "blinkLed"
+    ],
+    "parameters":[
+      "duration_on",
+      "duration_off",
+      "count"
+    ],
+    "fields":[]
+  }
+}
+```
+
 ###Python
 
 Example Python session:
@@ -300,12 +453,13 @@ dev.get_device_id()
 {'form_factor': '', 'name': 'board_led_controller', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
+ 'set_field_element_value',
  'get_field_value',
  'get_field_element_value',
  'set_led_on',
  'get_led_pin',
  'get_api',
- 'set_field_element_value',
+ 'get_api_verbose',
  'set_all_field_element_values',
  'set_fields_to_defaults',
  'get_device_id',
@@ -316,40 +470,49 @@ dev.get_methods()
  'set_field_to_default',
  'get_field_values',
  'get_device_info']
- dev.set_led_on()
+dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
 dev.blink_led('?')
-{'name': 'blinkLed',
+{'firmware': 'BoardLedController',
+ 'name': 'blinkLed',
  'parameters': ['duration_on', 'duration_off', 'count'],
  'result_type': None}
 dev.blink_led('duration_on','?')
-{'max': 2.5,
+{'firmware': 'BoardLedController',
+ 'max': 2.5,
  'min': 0.1,
  'name': 'duration_on',
  'type': 'double',
  'units': 'seconds'}
 dev.blink_led('??')
-{'name': 'blinkLed',
- 'parameters': [{'max': 2.5,
+{'firmware': 'BoardLedController',
+ 'name': 'blinkLed',
+ 'parameters': [{'firmware': 'BoardLedController',
+   'max': 2.5,
    'min': 0.1,
    'name': 'duration_on',
    'type': 'double',
    'units': 'seconds'},
-  {'max': 2.5,
+  {'firmware': 'BoardLedController',
+   'max': 2.5,
    'min': 0.1,
    'name': 'duration_off',
    'type': 'double',
    'units': 'seconds'},
-  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+  {'firmware': 'BoardLedController',
+   'max': 100,
+   'min': 1,
+   'name': 'count',
+   'type': 'long'}],
  'result_type': None}
 dev.blink_led(3.0,0.2,20)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.blink_led(0.5,0.2,20)
 result = dev.get_led_pin('?')
 dev.convert_to_json(result)
-'{"name":"getLedPin","parameters":[],"result_type":"long"}'
+'{"firmware":"BoardLedController","name":"getLedPin","parameters":[],"result_type":"long"}'
 dev.get_led_pin()
 13
 dev.call_server_method("get_led_pin")
@@ -358,6 +521,11 @@ dev.send_json_request('["get_led_pin"]')
 13
 dev.call_server_method("blink_led",0.5,0.2,20)
 dev.send_json_request('["blink_led",0.5,0.2,20]')
+dev.get_api(["BoardLedController"])
+{'fields': [],
+ 'firmware': ['BoardLedController'],
+ 'methods': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
+ 'parameters': ['duration_on', 'duration_off', 'count']}
 ```
 
 For more details on the Python interface:

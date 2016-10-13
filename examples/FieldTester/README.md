@@ -38,10 +38,12 @@ Example Response:
       "serial_number":0
     },
     "API":{
+      "firmware":["All"],
       "methods":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
+        "getApiVerbose",
         "getFieldDefaultValues",
         "setFieldsToDefaults",
         "setFieldToDefault",
@@ -69,6 +71,7 @@ Example Response:
         "incrementMode"
       ],
       "parameters":[
+        "firmware",
         "field_name",
         "field_value",
         "field_element_index",
@@ -99,6 +102,21 @@ Example Response:
 "methods" is an array of user methods. To execute a method, simply
 type it into the input field and press the 'Send' button or press the
 'Enter' key.
+
+Example Method:
+
+```shell
+setFieldsToDefaults
+```
+
+Example Response:
+
+```json
+{
+  "id":"setFieldsToDefaults",
+  "result":null
+}
+```
 
 Example Method:
 
@@ -398,18 +416,193 @@ Example Response:
 }
 ```
 
-Example Method:
+Use the getDeviceId method to get a unique set of values to identify
+the device.
+
+Example:
 
 ```shell
-setFieldsToDefaults
+getDeviceId
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldsToDefaults",
-  "result":null
+  "id":"getDeviceId",
+  "result":{
+    "name":"field_tester",
+    "form_factor":"5x3",
+    "serial_number":0
+  }
+}
+```
+
+The serial\_number field can be changed to uniquely identify devices
+with the same name and form\_factor.
+
+Use the getDeviceInfo method to get information about the hardware and
+firmware of the device.
+
+Example:
+
+```shell
+getDeviceInfo
+```
+
+Example Response:
+
+```json
+{
+  "id":"getDeviceInfo",
+  "result":{
+    "processor":"ATmega2560",
+    "hardware":[
+      {
+        "name":"Mega2560"
+      }
+    ],
+    "firmware":[
+      {
+        "name":"ModularServer",
+        "version":"1.0.0"
+      },
+      {
+        "name":"FieldTester",
+        "version":"1.0.0"
+      }
+    ]
+  }
+}
+```
+
+Every method, parameter, and field belongs to one firmware set.
+
+To get the API limited to one or more firmware sets, use the getApi
+method.
+
+Example:
+
+```shell
+getApi ["All"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["All"],
+    "methods":[
+      "getDeviceId",
+      "getDeviceInfo",
+      "getApi",
+      "getApiVerbose",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "getMemoryFree",
+      "getDoubled",
+      "getBool",
+      "getLongArrayFixed",
+      "getLongArrayVariable",
+      "setLongArrayFixed",
+      "setLongArrayVariable",
+      "setLongArrayParameter",
+      "getStringAll",
+      "getStringSome",
+      "getCount",
+      "getCountArray",
+      "getDirection",
+      "getDirectionArray",
+      "checkMode",
+      "incrementMode"
+    ],
+    "parameters":[
+      "firmware",
+      "field_name",
+      "field_value",
+      "field_element_index",
+      "long_array_parameter",
+      "length_parameter",
+      "count",
+      "count_array",
+      "direction",
+      "direction_array"
+    ],
+    "fields":[
+      "serial_number",
+      "double",
+      "bool",
+      "long_array",
+      "double_array",
+      "bool_array",
+      "string",
+      "odd",
+      "mode",
+      "odd_array"
+    ]
+  }
+}
+```
+
+Example:
+
+```shell
+getApi ["FieldTester"]
+```
+
+Example Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["FieldTester"],
+    "methods":[
+      "getDoubled",
+      "getBool",
+      "getLongArrayFixed",
+      "getLongArrayVariable",
+      "setLongArrayFixed",
+      "setLongArrayVariable",
+      "setLongArrayParameter",
+      "getStringAll",
+      "getStringSome",
+      "getCount",
+      "getCountArray",
+      "getDirection",
+      "getDirectionArray",
+      "checkMode",
+      "incrementMode"
+    ],
+    "parameters":[
+      "long_array_parameter",
+      "length_parameter",
+      "count",
+      "count_array",
+      "direction",
+      "direction_array"
+    ],
+    "fields":[
+      "double",
+      "bool",
+      "long_array",
+      "double_array",
+      "bool_array",
+      "string",
+      "odd",
+      "mode",
+      "odd_array"
+    ]
+  }
 }
 ```
 
@@ -447,10 +640,12 @@ dev.get_methods()
  'get_field_value',
  'get_field_element_value',
  'get_api',
+ 'get_api_verbose',
  'get_doubled',
  'get_bool',
  'set_field_to_default',
  'get_field_values']
+dev.set_fields_to_defaults()
 dev.get_field_values()
 {'bool': False,
  'bool_array': [False, True],
@@ -493,7 +688,38 @@ dev.get_field_values()
  'odd_array': [9, 9],
  'serial_number': 0,
  'string': 'asdXghjkl'}
-dev.set_fields_to_defaults()
+dev.get_api(["FieldTester"])
+{'fields': ['double',
+  'bool',
+  'long_array',
+  'double_array',
+  'bool_array',
+  'string',
+  'odd',
+  'mode',
+  'odd_array'],
+ 'firmware': ['FieldTester'],
+ 'methods': ['getDoubled',
+  'getBool',
+  'getLongArrayFixed',
+  'getLongArrayVariable',
+  'setLongArrayFixed',
+  'setLongArrayVariable',
+  'setLongArrayParameter',
+  'getStringAll',
+  'getStringSome',
+  'getCount',
+  'getCountArray',
+  'getDirection',
+  'getDirectionArray',
+  'checkMode',
+  'incrementMode'],
+ 'parameters': ['long_array_parameter',
+  'length_parameter',
+  'count',
+  'count_array',
+  'direction',
+  'direction_array']}
 ```
 
 For more details on the Python interface:

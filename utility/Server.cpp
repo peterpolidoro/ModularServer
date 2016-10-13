@@ -1207,6 +1207,8 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
   }
   response_.beginObject();
 
+  response_.write(constants::firmware_constant_string,&firmware_name_array);
+
   if (!verbose)
   {
     response_.writeKey(constants::methods_constant_string);

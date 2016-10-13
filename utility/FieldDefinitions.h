@@ -281,11 +281,11 @@ bool Field::setAllElementValues(const T & value)
   return success;
 }
 
-// template <typename T>
-// bool Field::setDefaultValue(T & default_value)
-// {
-//   return saved_variable_.setDefaultValue(default_value);
-// };
+template <typename T>
+bool Field::setDefaultValue(T & default_value)
+{
+  return saved_variable_.setDefaultValue(default_value);
+};
 
 // private
 template <size_t N>
