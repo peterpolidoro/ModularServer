@@ -235,7 +235,7 @@ void Server::setup()
 
   Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
   firmware_parameter.setTypeString();
-  // firmware_parameter.setArrayLengthRange(0,firmware_name_subset_.max_size());
+  firmware_parameter.setArrayLengthRange(0,firmware_name_subset_.max_size());
   firmware_parameter.setSubset(firmware_name_subset_.data(),
                                firmware_name_subset_.max_size(),
                                firmware_name_subset_.size());
@@ -1020,7 +1020,8 @@ void Server::help(bool verbose)
     }
 
     response_.writeKey(constants::api_constant_string);
-    writeApiToResponse(verbose,"");
+    Array<const char *,constants::FIRMWARE_COUNT_MAX> firmware_names;
+    writeApiToResponse(verbose,firmware_names);
 
     response_.endObject();
   }
@@ -1171,7 +1172,7 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::writeApiToResponse(bool verbose, const char * firmware_name)
+void Server::writeApiToResponse(bool verbose, Array<const char *,constants::FIRMWARE_COUNT_MAX> firmware_names)
 {
   response_.beginObject();
 
@@ -1184,7 +1185,7 @@ void Server::writeApiToResponse(bool verbose, const char * firmware_name)
       if (method_index > private_method_index_)
       {
         Method & method = methods_[method_index];
-        if ((strlen(firmware_name) == 0) || (method.compareFirmwareName(firmware_name)))
+        if ((firmware_names.size() == 0) || (method.compareFirmwareName(firmware_name)))
         {
           const ConstantString & method_name = method.getName();
           response_.write(method_name);
@@ -1198,7 +1199,7 @@ void Server::writeApiToResponse(bool verbose, const char * firmware_name)
     for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
     {
       Parameter & parameter = parameters_[parameter_index];
-      if ((strlen(firmware_name) == 0) || (parameter.compareFirmwareName(firmware_name)))
+      if ((firmware_names.size() == 0) || (parameter.compareFirmwareName(firmware_name)))
       {
         const ConstantString & parameter_name = parameter.getName();
         response_.write(parameter_name);
@@ -1211,7 +1212,7 @@ void Server::writeApiToResponse(bool verbose, const char * firmware_name)
     for (size_t field_index=0; field_index<fields_.size(); ++field_index)
     {
       Field & field = fields_[field_index];
-      if ((strlen(firmware_name) == 0) || (field.compareFirmwareName(firmware_name)))
+      if ((firmware_names.size() == 0) || (field.compareFirmwareName(firmware_name)))
       {
         const ConstantString & field_name = fields_[field_index].getName();
         response_.write(field_name);
@@ -1671,6 +1672,7 @@ void Server::getDeviceInfoCallback()
 
 void Server::getApiCallback()
 {
+  ArduinoJson::JsonArray & json_array
   const char * firmware_name;
   parameter(constants::firmware_constant_string).getValue(firmware_name);
   response_.writeResultKey();
