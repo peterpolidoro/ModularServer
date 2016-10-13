@@ -34,6 +34,8 @@ public:
   void setRange(const double min, const double max);
   template <size_t MAX_SIZE>
   void setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
+  void setSubset(const constants::SubsetMemberType * subset, size_t max_size, size_t size);
+  void addValueToSubset(const constants::SubsetMemberType & value);
 
   void attachPreSetValueCallback(const Functor0 & callback);
   void attachPreSetElementValueCallback(const Functor1<const size_t> & callback);

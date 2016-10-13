@@ -62,6 +62,7 @@ Field & Server::field(const ConstantString & field_name)
   {
     return fields_[field_index];
   }
+  return dummy_field_;
 }
 
 void Server::setFieldsToDefaults()
@@ -92,6 +93,7 @@ Parameter & Server::parameter(const ConstantString & parameter_name)
   {
     return parameters_[parameter_index];
   }
+  return dummy_parameter_;
 }
 
 Parameter & Server::copyParameter(Parameter parameter,const ConstantString & parameter_name)
@@ -121,6 +123,7 @@ Method & Server::method(const ConstantString & method_name)
   {
     return methods_[method_index];
   }
+  return dummy_method_;
 }
 
 Method & Server::copyMethod(Method method,const ConstantString & method_name)
@@ -229,6 +232,12 @@ void Server::setup()
 
   // Parameters
   Parameter::get_value_callback_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+
+  Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
+  firmware_parameter.setTypeString();
+  firmware_parameter.setSubset(firmware_name_subset_.data(),
+                               firmware_name_subset_.max_size(),
+                               firmware_name_subset_.size());
 
   Parameter & field_name_parameter = createParameter(constants::field_name_parameter_name);
   field_name_parameter.setTypeString();

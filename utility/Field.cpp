@@ -30,6 +30,16 @@ void Field::setRange(const double min, const double max)
   parameter_.setRange(min,max);
 }
 
+void Field::setSubset(const constants::SubsetMemberType * subset, size_t max_size, size_t size)
+{
+  parameter_.setSubset(subset,max_size,size);
+}
+
+void Field::addValueToSubset(const constants::SubsetMemberType & value)
+{
+  parameter_.addValueToSubset(value);
+}
+
 void Field::attachPreSetValueCallback(const Functor0 & callback)
 {
   pre_set_value_callback_ = callback;

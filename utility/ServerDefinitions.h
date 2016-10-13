@@ -32,6 +32,7 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
   constants::SubsetMemberType firmware_name_ptr;
   firmware_name_ptr.cs_ptr = firmware_info.name_ptr;
   firmware_name_subset_.push_back(firmware_name_ptr);
+  parameter(constants::firmware_constant_string).addValueToSubset(firmware_name_subset_.back());
   fields_.addArray(fields);
   parameters_.addArray(parameters);
   methods_.addArray(methods);
