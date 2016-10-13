@@ -92,17 +92,17 @@ private:
   Field server_fields_[constants::SERVER_FIELD_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
   Method server_methods_[constants::SERVER_METHOD_COUNT_MAX];
-  ConcatenatedArray<Field,constants::STORAGE_ARRAY_COUNT_MAX> fields_;
-  ConcatenatedArray<Parameter,constants::STORAGE_ARRAY_COUNT_MAX> parameters_;
-  ConcatenatedArray<Method,constants::STORAGE_ARRAY_COUNT_MAX> methods_;
+  ConcatenatedArray<Field,constants::FIRMWARE_ARRAY_COUNT_MAX> fields_;
+  ConcatenatedArray<Parameter,constants::FIRMWARE_ARRAY_COUNT_MAX> parameters_;
+  ConcatenatedArray<Method,constants::FIRMWARE_ARRAY_COUNT_MAX> methods_;
   Field dummy_field_;
   Parameter dummy_parameter_;
   Method dummy_method_;
   int private_method_index_;
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
-  Array<const constants::FirmwareInfo *,constants::STORAGE_ARRAY_COUNT_MAX> firmware_info_array_;
-  Array<const constants::SubsetMemberType,constants::STORAGE_ARRAY_COUNT_MAX> firmware_name_subset_;
+  Array<const constants::FirmwareInfo *,constants::FIRMWARE_ARRAY_COUNT_MAX> firmware_info_array_;
+  Array<const constants::SubsetMemberType,constants::FIRMWARE_ARRAY_COUNT_MAX> firmware_name_subset_;
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
   int request_method_index_;
@@ -139,7 +139,7 @@ private:
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
-  void writeApiToResponse(bool verbose);
+  void writeApiToResponse(bool verbose, const char * firmware_name);
   void writeFieldToResponse(Field & field,
                             bool write_key=false,
                             bool write_default=false,

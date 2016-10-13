@@ -235,6 +235,7 @@ void Server::setup()
 
   Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
   firmware_parameter.setTypeString();
+  // firmware_parameter.setArrayLengthRange(0,firmware_name_subset_.max_size());
   firmware_parameter.setSubset(firmware_name_subset_.data(),
                                firmware_name_subset_.max_size(),
                                firmware_name_subset_.size());
@@ -274,10 +275,12 @@ void Server::setup()
 
   Method & get_api_method = createMethod(constants::get_api_method_name);
   get_api_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getApiCallback));
+  get_api_method.addParameter(firmware_parameter);
   get_api_method.setReturnTypeObject();
 
   Method & get_api_verbose_method = createMethod(constants::get_api_verbose_method_name);
   get_api_verbose_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseCallback));
+  get_api_verbose_method.addParameter(firmware_parameter);
   get_api_verbose_method.setReturnTypeObject();
 
   Method & get_field_default_values_method = createMethod(constants::get_field_default_values_method_name);
@@ -1017,7 +1020,7 @@ void Server::help(bool verbose)
     }
 
     response_.writeKey(constants::api_constant_string);
-    writeApiToResponse(verbose);
+    writeApiToResponse(verbose,"");
 
     response_.endObject();
   }
@@ -1168,7 +1171,7 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::writeApiToResponse(bool verbose)
+void Server::writeApiToResponse(bool verbose, const char * firmware_name)
 {
   response_.beginObject();
 
@@ -1180,8 +1183,12 @@ void Server::writeApiToResponse(bool verbose)
     {
       if (method_index > private_method_index_)
       {
-        const ConstantString & method_name = methods_[method_index].getName();
-        response_.write(method_name);
+        Method & method = methods_[method_index];
+        if ((strlen(firmware_name) == 0) || (method.compareFirmwareName(firmware_name)))
+        {
+          const ConstantString & method_name = method.getName();
+          response_.write(method_name);
+        }
       }
     }
     response_.endArray();
@@ -1190,8 +1197,12 @@ void Server::writeApiToResponse(bool verbose)
     response_.beginArray();
     for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
     {
-      const ConstantString & parameter_name = parameters_[parameter_index].getName();
-      response_.write(parameter_name);
+      Parameter & parameter = parameters_[parameter_index];
+      if ((strlen(firmware_name) == 0) || (parameter.compareFirmwareName(firmware_name)))
+      {
+        const ConstantString & parameter_name = parameter.getName();
+        response_.write(parameter_name);
+      }
     }
     response_.endArray();
 
@@ -1199,8 +1210,12 @@ void Server::writeApiToResponse(bool verbose)
     response_.beginArray();
     for (size_t field_index=0; field_index<fields_.size(); ++field_index)
     {
-      const ConstantString & field_name = fields_[field_index].getName();
-      response_.write(field_name);
+      Field & field = fields_[field_index];
+      if ((strlen(firmware_name) == 0) || (field.compareFirmwareName(firmware_name)))
+      {
+        const ConstantString & field_name = fields_[field_index].getName();
+        response_.write(field_name);
+      }
     }
     response_.endArray();
   }
@@ -1656,14 +1671,18 @@ void Server::getDeviceInfoCallback()
 
 void Server::getApiCallback()
 {
+  const char * firmware_name;
+  parameter(constants::firmware_constant_string).getValue(firmware_name);
   response_.writeResultKey();
-  writeApiToResponse(false);
+  writeApiToResponse(false,firmware_name);
 }
 
 void Server::getApiVerboseCallback()
 {
+  const char * firmware_name;
+  parameter(constants::firmware_constant_string).getValue(firmware_name);
   response_.writeResultKey();
-  writeApiToResponse(true);
+  writeApiToResponse(true,firmware_name);
 }
 
 #ifdef __AVR__
