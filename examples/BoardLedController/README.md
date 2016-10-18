@@ -450,7 +450,7 @@ Example Python session:
 from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '', 'name': 'board_led_controller', 'serial_number': 0}
+{'form_factor': '5x3', 'name': 'board_led_controller', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
  'set_field_element_value',
