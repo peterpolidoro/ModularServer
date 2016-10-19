@@ -93,7 +93,8 @@ Example Response:
         "odd",
         "mode",
         "odd_array"
-      ]
+      ],
+      "interrupts":[]
     }
   }
 }
@@ -548,7 +549,8 @@ Example Response:
       "odd",
       "mode",
       "odd_array"
-    ]
+    ],
+    "interrupts":[]
   }
 }
 ```
@@ -601,7 +603,8 @@ Example Response:
       "odd",
       "mode",
       "odd_array"
-    ]
+    ],
+    "interrupts":[]
   }
 }
 ```
@@ -699,6 +702,7 @@ dev.get_api(["FieldTester"])
   'mode',
   'odd_array'],
  'firmware': ['FieldTester'],
+ 'interrupts': [],
  'methods': ['getDoubled',
   'getBool',
   'getLongArrayFixed',

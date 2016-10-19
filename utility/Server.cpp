@@ -133,6 +133,29 @@ Method & Server::copyMethod(Method method,const ConstantString & method_name)
   return methods_.back();
 }
 
+// Interrupts
+Interrupt & Server::createInterrupt(const ConstantString & interrupt_name)
+{
+  int interrupt_index = findInterruptIndex(interrupt_name);
+  if (interrupt_index < 0)
+  {
+    interrupts_.push_back(Interrupt(interrupt_name));
+    const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
+    interrupts_.back().setFirmwareName(*firmware_name_ptr);
+    return interrupts_.back();
+  }
+}
+
+Interrupt & Server::interrupt(const ConstantString & interrupt_name)
+{
+  int interrupt_index = findInterruptIndex(interrupt_name);
+  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  {
+    return interrupts_[interrupt_index];
+  }
+  return dummy_interrupt_;
+}
+
 // Response
 Response & Server::response()
 {
@@ -228,7 +251,8 @@ void Server::setup()
   addFirmware(constants::firmware_info,
               server_fields_,
               server_parameters_,
-              server_methods_);
+              server_methods_,
+              server_interrupts_);
 
   // Fields
   Field & serial_number_field = createField(constants::serial_number_field_name,constants::serial_number_default);
@@ -334,6 +358,8 @@ void Server::setup()
   get_memory_free_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeCallback));
   get_memory_free_method.setReturnTypeLong();
 #endif
+
+  // Interrupts
 
   server_running_ = false;
 }
@@ -1003,6 +1029,41 @@ void Server::methodHelp(bool verbose, int method_index)
   response_.endObject();
 }
 
+void Server::interruptHelp(bool verbose, int interrupt_index)
+{
+  if ((interrupt_index < 0) || (interrupt_index >= (int)interrupts_.max_size()))
+  {
+    return;
+  }
+
+  response_.beginObject();
+
+  const ConstantString & interrupt_name = interrupts_[interrupt_index].getName();
+  response_.write(constants::name_constant_string,interrupt_name);
+  const ConstantString & firmware_name = interrupts_[interrupt_index].getFirmwareName();
+  response_.write(constants::firmware_constant_string,firmware_name);
+
+  response_.writeKey(constants::fields_constant_string);
+  json_stream_.beginArray();
+  Array<Field *,constants::INTERRUPT_FIELD_COUNT_MAX> * field_ptrs_ptr = NULL;
+  field_ptrs_ptr = &interrupts_[interrupt_index].field_ptrs_;
+  for (size_t i=0; i<field_ptrs_ptr->size(); ++i)
+  {
+    if (verbose)
+    {
+      fieldHelp(*((*field_ptrs_ptr)[i]));
+    }
+    else
+    {
+      const ConstantString & field_name = (*field_ptrs_ptr)[i]->getName();
+      response_.write(field_name);
+    }
+  }
+  json_stream_.endArray();
+
+  response_.endObject();
+}
+
 void Server::help(bool verbose)
 {
   int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
@@ -1039,9 +1100,11 @@ void Server::help(bool verbose)
   // ? method
   // ? parameter
   // ? field
+  // ? interrupt
   // ?? method
   // ?? parameter
   // ?? field
+  // ?? interrupt
   else if (parameter_count == 1)
   {
     const char * param_string = (*request_json_array_ptr_)[1];
@@ -1074,6 +1137,18 @@ void Server::help(bool verbose)
           param_error = false;
           response_.writeResultKey();
           fieldHelp(fields_[field_index]);
+        }
+        else
+        {
+          int interrupt_index = findInterruptIndex(param_string);
+          if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.max_size()))
+          {
+            // ? interrupt
+            // ?? interrupt
+            param_error = false;
+            response_.writeResultKey();
+            interruptHelp(verbose,interrupt_index);
+          }
         }
       }
     }
@@ -1252,6 +1327,19 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
       }
     }
     response_.endArray();
+
+    response_.writeKey(constants::interrupts_constant_string);
+    response_.beginArray();
+    for (size_t interrupt_index=0; interrupt_index<interrupts_.size(); ++interrupt_index)
+    {
+      Interrupt & interrupt = interrupts_[interrupt_index];
+      if (interrupt.firmwareNameInArray(firmware_name_array))
+      {
+        const ConstantString & interrupt_name = interrupt.getName();
+        response_.write(interrupt_name);
+      }
+    }
+    response_.endArray();
   }
   else
   {
@@ -1279,6 +1367,14 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     for (size_t field_index=0; field_index<fields_.size(); ++field_index)
     {
       fieldHelp(fields_[field_index]);
+    }
+    response_.endArray();
+
+    response_.writeKey(constants::interrupts_constant_string);
+    response_.beginArray();
+    for (size_t interrupt_index=0; interrupt_index<interrupts_.size(); ++interrupt_index)
+    {
+      interruptHelp(false,interrupt_index);
     }
     response_.endArray();
   }

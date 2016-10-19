@@ -23,6 +23,7 @@
 #include "Field.h"
 #include "Parameter.h"
 #include "Method.h"
+#include "Interrupt.h"
 #include "Response.h"
 #include "Constants.h"
 
@@ -47,11 +48,13 @@ public:
   // Firmware
   template <size_t FIELDS_MAX_SIZE,
             size_t PARAMETERS_MAX_SIZE,
-            size_t METHODS_MAX_SIZE>
+            size_t METHODS_MAX_SIZE,
+            size_t INTERRUPTS_MAX_SIZE>
   void addFirmware(const constants::FirmwareInfo & firmware_info,
                    Field (&fields)[FIELDS_MAX_SIZE],
                    Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                   Method (&methods)[METHODS_MAX_SIZE]);
+                   Method (&methods)[METHODS_MAX_SIZE],
+                   Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
 
   // Fields
   template <typename T>
@@ -73,6 +76,10 @@ public:
   Method & method(const ConstantString & method_name);
   Method & copyMethod(Method method,const ConstantString & method_name);
 
+  // Interrupts
+  Interrupt & createInterrupt(const ConstantString & interrupt_name);
+  Interrupt & interrupt(const ConstantString & interrupt_name);
+
   // Response
   Response & response();
 
@@ -92,12 +99,15 @@ private:
   Field server_fields_[constants::SERVER_FIELD_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
   Method server_methods_[constants::SERVER_METHOD_COUNT_MAX];
+  Interrupt server_interrupts_[constants::SERVER_INTERRUPT_COUNT_MAX];
   ConcatenatedArray<Field,constants::FIRMWARE_COUNT_MAX> fields_;
   ConcatenatedArray<Parameter,constants::FIRMWARE_COUNT_MAX> parameters_;
   ConcatenatedArray<Method,constants::FIRMWARE_COUNT_MAX> methods_;
+  ConcatenatedArray<Interrupt,constants::FIRMWARE_COUNT_MAX> interrupts_;
   Field dummy_field_;
   Parameter dummy_parameter_;
   Method dummy_method_;
+  Interrupt dummy_interrupt_;
   int private_method_index_;
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
@@ -123,6 +133,8 @@ private:
   int findMethodParameterIndex(int method_index, T const & parameter_name);
   template <typename T>
   int findMethodIndex(T const & method_name);
+  template <typename T>
+  int findInterruptIndex(T const & interrupt_name);
   int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
   int processParameterString(const char * parameter_string);
   bool checkParameters();
@@ -134,6 +146,7 @@ private:
   void fieldHelp(Field & field);
   void parameterHelp(Parameter & parameter, bool end_object=true);
   void methodHelp(bool verbose, int method_index);
+  void interruptHelp(bool verbose, int interrupt_index);
   void help(bool verbose);
   void writeDeviceIdToResponse();
   void writeFirmwareInfoToResponse();

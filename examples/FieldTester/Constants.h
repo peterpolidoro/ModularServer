@@ -17,6 +17,7 @@ namespace constants
 enum{FIELD_COUNT_MAX=9};
 enum{PARAMETER_COUNT_MAX=6};
 enum{METHOD_COUNT_MAX=15};
+enum{INTERRUPT_COUNT_MAX=1};
 
 extern const size_t baudrate;
 
@@ -121,6 +122,8 @@ extern ConstantString get_direction_method_name;
 extern ConstantString get_direction_array_method_name;
 extern ConstantString check_mode_method_name;
 extern ConstantString increment_mode_method_name;
+
+// Interrupts
 
 // Errors
 extern ConstantString index_error;

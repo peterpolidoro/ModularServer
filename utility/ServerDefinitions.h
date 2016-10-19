@@ -22,11 +22,13 @@ namespace modular_server
 // Firmware
 template <size_t FIELDS_MAX_SIZE,
           size_t PARAMETERS_MAX_SIZE,
-          size_t METHODS_MAX_SIZE>
+          size_t METHODS_MAX_SIZE,
+          size_t INTERRUPTS_MAX_SIZE>
 void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
                          Field (&fields)[FIELDS_MAX_SIZE],
                          Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                         Method (&methods)[METHODS_MAX_SIZE])
+                         Method (&methods)[METHODS_MAX_SIZE],
+                         Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE])
 {
   firmware_info_array_.push_back(&firmware_info);
   constants::SubsetMemberType firmware_name_ptr;
@@ -36,6 +38,7 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
   fields_.addArray(fields);
   parameters_.addArray(parameters);
   methods_.addArray(methods);
+  interrupts_.addArray(interrupts);
 }
 
 // Fields
@@ -72,6 +75,8 @@ Field & Server::createField(const ConstantString & field_name,
 // Parameters
 
 // Methods
+
+// Interrupts
 
 // Response
 
@@ -139,6 +144,21 @@ int Server::findMethodIndex(T const & method_name)
     }
   }
   return method_index;
+}
+
+template <typename T>
+int Server::findInterruptIndex(T const & interrupt_name)
+{
+  int interrupt_index = -1;
+  for (size_t i=0; i<interrupts_.size(); ++i)
+  {
+    if (interrupts_[i].compareName(interrupt_name))
+    {
+      interrupt_index = i;
+      break;
+    }
+  }
+  return interrupt_index;
 }
 
 }

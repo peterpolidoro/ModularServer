@@ -25,7 +25,8 @@ void FieldTester::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               fields_,
                               parameters_,
-                              methods_);
+                              methods_,
+                              interrupts_);
 
   // Fields
   modular_server::Field & double_field = modular_server_.createField(constants::double_field_name,constants::double_default);
@@ -154,6 +155,8 @@ void FieldTester::setup()
   modular_server::Method & increment_mode_method = modular_server_.createMethod(constants::increment_mode_method_name);
   increment_mode_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::incrementModeCallback));
   increment_mode_method.setReturnTypeString();
+
+  // Interrupts
 
   // Begin Streams
   Serial.begin(constants::baudrate);

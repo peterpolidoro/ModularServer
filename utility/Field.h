@@ -118,6 +118,8 @@ private:
         const char (&default_value)[N]);
 
   Parameter & parameter();
+  bool compareName(const char * name_to_compare);
+  bool compareName(const ConstantString & name_to_compare);
   const ConstantString & getName();
   const ConstantString &  getFirmwareName();
   bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
@@ -131,6 +133,7 @@ private:
   void preSetElementValueCallback(const size_t element_index);
   void postSetValueCallback();
   void postSetElementValueCallback(const size_t element_index);
+  friend class Interrupt;
   friend class Server;
 
 };

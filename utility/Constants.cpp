@@ -52,6 +52,8 @@ CONSTANT_STRING(set_field_value_method_name,"setFieldValue");
 CONSTANT_STRING(set_field_element_value_method_name,"setFieldElementValue");
 CONSTANT_STRING(set_all_field_element_values_method_name,"setAllFieldElementValues");
 
+// Interrupts
+
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");
 CONSTANT_STRING(invalid_request_error_message,"Invalid Request");
@@ -101,9 +103,10 @@ CONSTANT_STRING(units_constant_string,"units");
 CONSTANT_STRING(result_constant_string,"result");
 CONSTANT_STRING(result_type_constant_string,"result_type");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
-CONSTANT_STRING(methods_constant_string,"methods");
-CONSTANT_STRING(parameters_constant_string,"parameters");
 CONSTANT_STRING(fields_constant_string,"fields");
+CONSTANT_STRING(parameters_constant_string,"parameters");
+CONSTANT_STRING(methods_constant_string,"methods");
+CONSTANT_STRING(interrupts_constant_string,"interrupts");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");
 CONSTANT_STRING(array_element_min_constant_string,"array_element_min");

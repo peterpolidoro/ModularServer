@@ -25,13 +25,16 @@ void MinimalDevice::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               fields_,
                               parameters_,
-                              methods_);
+                              methods_,
+                              interrupts_);
 
   // Fields
 
   // Parameters
 
   // Methods
+
+  // Interrupts
 
   // Begin Streams
   Serial.begin(constants::baudrate);

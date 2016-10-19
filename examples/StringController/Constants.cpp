@@ -102,6 +102,8 @@ CONSTANT_STRING(starting_chars_method_name,"startingChars");
 CONSTANT_STRING(set_stored_string_method_name,"setStoredString");
 CONSTANT_STRING(get_stored_string_method_name,"getStoredString");
 
+// Interrupts
+
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");
 

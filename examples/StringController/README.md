@@ -78,7 +78,8 @@ Example Response:
         "serial_number",
         "starting_chars_count",
         "stored_string"
-      ]
+      ],
+      "interrupts":[]
     }
   }
 }
@@ -420,7 +421,8 @@ Example Response:
       "serial_number",
       "starting_chars_count",
       "stored_string"
-    ]
+    ],
+    "interrupts":[]
   }
 }
 ```
@@ -458,7 +460,8 @@ Example Response:
     "fields":[
       "starting_chars_count",
       "stored_string"
-    ]
+    ],
+    "interrupts":[]
   }
 }
 ```
@@ -547,6 +550,7 @@ dev.send_json_request('["starting_chars","Fantastic!"]')
 dev.get_api(["StringController"])
 {'fields': ['starting_chars_count', 'stored_string'],
  'firmware': ['StringController'],
+ 'interrupts': [],
  'methods': ['echo',
   'length',
   'startsWith',

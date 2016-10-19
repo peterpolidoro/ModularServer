@@ -601,6 +601,16 @@ Parameter & Field::parameter()
   return parameter_;
 }
 
+bool Field::compareName(const char * name_to_compare)
+{
+  return parameter_.compareName(name_to_compare);
+}
+
+bool Field::compareName(const ConstantString & name_to_compare)
+{
+  return parameter_.compareName(name_to_compare);
+}
+
 const ConstantString & Field::getName()
 {
   return parameter_.getName();

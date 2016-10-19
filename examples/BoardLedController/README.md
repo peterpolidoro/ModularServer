@@ -70,7 +70,8 @@ Example Response:
       ],
       "fields":[
         "serial_number"
-      ]
+      ],
+      "interrupts":[]
     }
   }
 }
@@ -408,7 +409,8 @@ Example Response:
     ],
     "fields":[
       "serial_number"
-    ]
+    ],
+    "interrupts":[]
   }
 }
 ```
@@ -437,7 +439,8 @@ Example Response:
       "duration_off",
       "count"
     ],
-    "fields":[]
+    "fields":[],
+    "interrupts":[]
   }
 }
 ```
@@ -524,6 +527,7 @@ dev.send_json_request('["blink_led",0.5,0.2,20]')
 dev.get_api(["BoardLedController"])
 {'fields': [],
  'firmware': ['BoardLedController'],
+ 'interrupts': [],
  'methods': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
  'parameters': ['duration_on', 'duration_off', 'count']}
 ```
@@ -612,6 +616,7 @@ ans =
   methods: {'setLedOn'  'setLedOff'  'getLedPin'  'blinkLed'}
   parameters: {'duration_on'  'duration_off'  'count'}
   fields: {0x1 cell}
+  interrupts: {0x1 cell}
 dev.close()
 clear dev
 ```

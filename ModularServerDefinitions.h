@@ -20,16 +20,19 @@ namespace modular_server
 // Firmware
 template <size_t FIELDS_MAX_SIZE,
           size_t PARAMETERS_MAX_SIZE,
-          size_t METHODS_MAX_SIZE>
+          size_t METHODS_MAX_SIZE,
+          size_t INTERRUPTS_MAX_SIZE>
 void ModularServer::addFirmware(const FirmwareInfo & firmware_info,
                                 Field (&fields)[FIELDS_MAX_SIZE],
                                 Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                                Method (&methods)[METHODS_MAX_SIZE])
+                                Method (&methods)[METHODS_MAX_SIZE],
+                                Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE])
 {
   server_.addFirmware(firmware_info,
                       fields,
                       parameters,
-                      methods);
+                      methods,
+                      interrupts);
 }
 
 // Fields
@@ -50,6 +53,8 @@ Field & ModularServer::createField(const ConstantString & field_name,
 // Parameters
 
 // Methods
+
+// Interrupts
 
 // Response
 

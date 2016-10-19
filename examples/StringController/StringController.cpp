@@ -25,7 +25,8 @@ void StringController::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               fields_,
                               parameters_,
-                              methods_);
+                              methods_,
+                              interrupts_);
 
   // Fields
   modular_server::Field & serial_number_field = modular_server_.field(modular_server::constants::serial_number_field_name);
@@ -94,6 +95,8 @@ void StringController::setup()
   modular_server::Method & get_stored_string_method = modular_server_.createMethod(constants::get_stored_string_method_name);
   get_stored_string_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringCallback));
   get_stored_string_method.setReturnTypeString();
+
+  // Interrupts
 
   // Begin Streams
   Serial.begin(constants::baudrate);

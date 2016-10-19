@@ -26,7 +26,8 @@ void BoardLedController::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               fields_,
                               parameters_,
-                              methods_);
+                              methods_,
+                              interrupts_);
 
   // Fields
 
@@ -56,6 +57,10 @@ void BoardLedController::setup()
   blink_led_method.addParameter(duration_on_parameter);
   blink_led_method.addParameter(duration_off_parameter);
   blink_led_method.addParameter(count_parameter);
+
+  // Methods
+
+  // Interrupts
 
   // Begin Streams
   Serial.begin(constants::baudrate);

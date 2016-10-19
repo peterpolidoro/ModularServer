@@ -86,5 +86,7 @@ CONSTANT_STRING(led_off_method_name,"setLedOff");
 CONSTANT_STRING(get_led_pin_method_name,"getLedPin");
 CONSTANT_STRING(blink_led_method_name,"blinkLed");
 
+// Interrupts
+
 // Errors
 }

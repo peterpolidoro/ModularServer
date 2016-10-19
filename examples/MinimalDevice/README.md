@@ -63,7 +63,8 @@ Example Response:
       ],
       "fields":[
         "serial_number"
-      ]
+      ],
+      "interrupts":[]
     }
   }
 }
@@ -84,7 +85,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":5080
+  "result":4944
 }
 ```
 
@@ -275,7 +276,8 @@ Example Response:
           "value":0,
           "default_value":0
         }
-      ]
+      ],
+    "interrupts":[]
     }
   }
 }
@@ -561,7 +563,8 @@ Example Response:
     ],
     "fields":[
       "serial_number"
-    ]
+    ],
+    "interrupts":[]
   }
 }
 ```
@@ -581,7 +584,8 @@ Example Response:
     "firmware":["MinimalDevice"],
     "methods":[],
     "parameters":[],
-    "fields":[]
+    "fields":[],
+    "interrupts":[]
   }
 }
 ```
@@ -611,7 +615,7 @@ dev.get_methods()
  'get_field_values',
  'get_device_info']
 dev.get_memory_free()
-5080
+4944
 dev.get_field_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_field_value('?')
@@ -633,7 +637,7 @@ dev.send_json_request('["set_fields_to_defaults"]')
 dev.get_field_value('serial_number')
 0
 dev.get_api(["MinimalDevice"])
-{'fields': [], 'firmware': ['MinimalDevice'], 'methods': [], 'parameters': []}
+{'fields': [], 'firmware': ['MinimalDevice'], 'interrupts': [], 'methods': [], 'parameters': []}
 ```
 
 For more details on the Python interface:
@@ -680,7 +684,7 @@ dev.getMethods()                 % get device methods
   getMemoryFree
 dev.getMemoryFree()
 ans =
-  5080
+  4944
 dev.getFieldValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.getFieldValue('?')
