@@ -14,6 +14,42 @@ work with the Arduino Mega 2560 and Teensy 3.2.
 
 [Examples](./examples)
 
+##API
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["ModularServer"],
+    "methods":[
+      "getDeviceId",
+      "getDeviceInfo",
+      "getApi",
+      "getApiVerbose",
+      "getFieldDefaultValues",
+      "setFieldsToDefaults",
+      "setFieldToDefault",
+      "getFieldValues",
+      "getFieldValue",
+      "getFieldElementValue",
+      "setFieldValue",
+      "setFieldElementValue",
+      "setAllFieldElementValues",
+      "getMemoryFree"
+    ],
+    "parameters":[
+      "firmware",
+      "field_name",
+      "field_value",
+      "field_element_index"
+    ],
+    "fields":[
+      "serial_number"
+    ]
+  }
+}
+```
+
 ##More Detailed Modular Device Information
 
 [modular-devices](https://github.com/janelia-modular-devices/modular-devices)
