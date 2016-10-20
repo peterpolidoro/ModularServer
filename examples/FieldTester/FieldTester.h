@@ -26,26 +26,26 @@ private:
   modular_server::Method methods_[constants::METHOD_COUNT_MAX];
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
-  // Functors
-  void getDoubledFunctor();
-  void getBoolFunctor();
-  void getLongArrayFixedFunctor();
-  void getLongArrayVariableFunctor();
-  void setLongArrayFixedFunctor();
-  void setLongArrayVariableFunctor();
-  void setLongArrayParameterFunctor();
-  void getStringAllFunctor();
-  void getStringSomeFunctor();
-  void getCountFunctor();
-  void getCountArrayFunctor();
-  void getDirectionFunctor();
-  void getDirectionArrayFunctor();
-  void checkModeFunctor();
-  void incrementModeFunctor();
-  void preSetFieldValueFunctor();
-  void postSetFieldValueFunctor();
-  void preSetFieldElementValueFunctor(const size_t element_index);
-  void postSetFieldElementValueFunctor(const size_t element_index);
+  // Handlers
+  void getDoubledHandler();
+  void getBoolHandler();
+  void getLongArrayFixedHandler();
+  void getLongArrayVariableHandler();
+  void setLongArrayFixedHandler();
+  void setLongArrayVariableHandler();
+  void setLongArrayParameterHandler();
+  void getStringAllHandler();
+  void getStringSomeHandler();
+  void getCountHandler();
+  void getCountArrayHandler();
+  void getDirectionHandler();
+  void getDirectionArrayHandler();
+  void checkModeHandler();
+  void incrementModeHandler();
+  void preSetFieldValueHandler();
+  void postSetFieldValueHandler();
+  void preSetFieldElementValueHandler(const size_t element_index);
+  void postSetFieldElementValueHandler(const size_t element_index);
 
 };
 

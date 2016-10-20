@@ -48,7 +48,7 @@ void MinimalDevice::update()
   modular_server_.handleServerRequests();
 }
 
-// Functors must be non-blocking (avoid 'delay')
+// Handlers must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
 // fixed-point number (int, long, etc.)

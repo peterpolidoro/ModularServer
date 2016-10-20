@@ -26,15 +26,15 @@ private:
   modular_server::Method methods_[constants::METHOD_COUNT_MAX];
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
-  // Functors
-  void echoFunctor();
-  void lengthFunctor();
-  void startsWithFunctor();
-  void repeatFunctor();
-  void charsAtFunctor();
-  void startingCharsFunctor();
-  void setStoredStringFunctor();
-  void getStoredStringFunctor();
+  // Handlers
+  void echoHandler();
+  void lengthHandler();
+  void startsWithHandler();
+  void repeatHandler();
+  void charsAtHandler();
+  void startingCharsHandler();
+  void setStoredStringHandler();
+  void getStoredStringHandler();
 
 };
 

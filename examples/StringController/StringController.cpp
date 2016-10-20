@@ -55,45 +55,45 @@ void StringController::setup()
 
   // Methods
   modular_server::Method & echo_method = modular_server_.createMethod(constants::echo_method_name);
-  echo_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::echoFunctor));
+  echo_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::echoHandler));
   echo_method.addParameter(string_parameter);
   echo_method.addParameter(double_echo_parameter);
   echo_method.setReturnTypeString();
 
   modular_server::Method & length_method = modular_server_.createMethod(constants::length_method_name);
-  length_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::lengthFunctor));
+  length_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::lengthHandler));
   length_method.addParameter(string_parameter);
   length_method.setReturnTypeLong();
 
   modular_server::Method & starts_with_method = modular_server_.createMethod(constants::starts_with_method_name);
-  starts_with_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startsWithFunctor));
+  starts_with_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startsWithHandler));
   starts_with_method.addParameter(string_parameter);
   starts_with_method.addParameter(string2_parameter);
   starts_with_method.setReturnTypeBool();
 
   modular_server::Method & repeat_method = modular_server_.createMethod(constants::repeat_method_name);
-  repeat_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::repeatFunctor));
+  repeat_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::repeatHandler));
   repeat_method.addParameter(string_parameter);
   repeat_method.addParameter(count_parameter);
   repeat_method.setReturnTypeArray();
 
   modular_server::Method & chars_at_method = modular_server_.createMethod(constants::chars_at_method_name);
-  chars_at_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::charsAtFunctor));
+  chars_at_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::charsAtHandler));
   chars_at_method.addParameter(string_parameter);
   chars_at_method.addParameter(index_array_parameter);
   chars_at_method.setReturnTypeArray();
 
   modular_server::Method & starting_chars_method = modular_server_.createMethod(constants::starting_chars_method_name);
-  starting_chars_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startingCharsFunctor));
+  starting_chars_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startingCharsHandler));
   starting_chars_method.addParameter(string_parameter);
   starting_chars_method.setReturnTypeString();
 
   modular_server::Method & set_stored_string_method = modular_server_.createMethod(constants::set_stored_string_method_name);
-  set_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::setStoredStringFunctor));
+  set_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::setStoredStringHandler));
   set_stored_string_method.addParameter(string_parameter);
 
   modular_server::Method & get_stored_string_method = modular_server_.createMethod(constants::get_stored_string_method_name);
-  get_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringFunctor));
+  get_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringHandler));
   get_stored_string_method.setReturnTypeString();
 
   // Callbacks
@@ -110,7 +110,7 @@ void StringController::update()
   modular_server_.handleServerRequests();
 }
 
-// Functors must be non-blocking (avoid 'delay')
+// Handlers must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
 // fixed-point number (int, long, etc.)
@@ -127,7 +127,7 @@ void StringController::update()
 // modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
 // modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type
 
-void StringController::echoFunctor()
+void StringController::echoHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -145,14 +145,14 @@ void StringController::echoFunctor()
   }
 }
 
-void StringController::lengthFunctor()
+void StringController::lengthHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   modular_server_.response().returnResult(strlen(string));
 }
 
-void StringController::startsWithFunctor()
+void StringController::startsWithHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -161,7 +161,7 @@ void StringController::startsWithFunctor()
   modular_server_.response().returnResult((bool)String(string).startsWith(string2));
 }
 
-void StringController::repeatFunctor()
+void StringController::repeatHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -177,7 +177,7 @@ void StringController::repeatFunctor()
   response.endArray();
 }
 
-void StringController::charsAtFunctor()
+void StringController::charsAtHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -211,7 +211,7 @@ void StringController::charsAtFunctor()
   response.endArray();
 }
 
-void StringController::startingCharsFunctor()
+void StringController::startingCharsHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -220,7 +220,7 @@ void StringController::startingCharsFunctor()
   modular_server_.response().returnResult(String(string).substring(0,starting_chars_count));
 }
 
-void StringController::setStoredStringFunctor()
+void StringController::setStoredStringHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -228,7 +228,7 @@ void StringController::setStoredStringFunctor()
   modular_server_.field(constants::stored_string_field_name).setValue(string,array_length);
 }
 
-void StringController::getStoredStringFunctor()
+void StringController::getStoredStringHandler()
 {
   modular_server::Field & field = modular_server_.field(constants::stored_string_field_name);
   size_t array_length = field.getArrayLength();

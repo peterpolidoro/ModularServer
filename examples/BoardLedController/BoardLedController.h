@@ -27,11 +27,11 @@ private:
   modular_server::Method methods_[constants::METHOD_COUNT_MAX];
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
-  // Functors
-  void setLedOnFunctor();
-  void setLedOffFunctor();
-  void getLedPinFunctor();
-  void blinkLedFunctor();
+  // Handlers
+  void setLedOnHandler();
+  void setLedOffHandler();
+  void getLedPinHandler();
+  void blinkLedHandler();
 
 };
 

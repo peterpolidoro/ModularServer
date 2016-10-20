@@ -43,17 +43,17 @@ void BoardLedController::setup()
 
   // Methods
   modular_server::Method & led_on_method = modular_server_.createMethod(constants::led_on_method_name);
-  led_on_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOnFunctor));
+  led_on_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOnHandler));
 
   modular_server::Method & led_off_method = modular_server_.createMethod(constants::led_off_method_name);
-  led_off_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOffFunctor));
+  led_off_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOffHandler));
 
   modular_server::Method & get_led_pin_method = modular_server_.createMethod(constants::get_led_pin_method_name);
-  get_led_pin_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinFunctor));
+  get_led_pin_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinHandler));
   get_led_pin_method.setReturnTypeLong();
 
   modular_server::Method & blink_led_method = modular_server_.createMethod(constants::blink_led_method_name);
-  blink_led_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::blinkLedFunctor));
+  blink_led_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::blinkLedHandler));
   blink_led_method.addParameter(duration_on_parameter);
   blink_led_method.addParameter(duration_off_parameter);
   blink_led_method.addParameter(count_parameter);
@@ -75,7 +75,7 @@ void BoardLedController::update()
   non_block_blink.update();
 }
 
-// Functors must be non-blocking (avoid 'delay')
+// Handlers must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
 // fixed-point number (int, long, etc.)
@@ -92,24 +92,24 @@ void BoardLedController::update()
 // modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
 // modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type
 
-void BoardLedController::setLedOnFunctor()
+void BoardLedController::setLedOnHandler()
 {
   non_block_blink.stop();
   digitalWrite(constants::led_pin, HIGH);
 }
 
-void BoardLedController::setLedOffFunctor()
+void BoardLedController::setLedOffHandler()
 {
   non_block_blink.stop();
   digitalWrite(constants::led_pin, LOW);
 }
 
-void BoardLedController::getLedPinFunctor()
+void BoardLedController::getLedPinHandler()
 {
   modular_server_.response().returnResult(constants::led_pin);
 }
 
-void BoardLedController::blinkLedFunctor()
+void BoardLedController::blinkLedHandler()
 {
   float duration_on;
   modular_server_.parameter(constants::duration_on_parameter_name).getValue(duration_on);
