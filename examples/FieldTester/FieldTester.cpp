@@ -26,14 +26,14 @@ void FieldTester::setup()
                               fields_,
                               parameters_,
                               methods_,
-                              interrupts_);
+                              callbacks_);
 
   // Fields
   modular_server::Field & double_field = modular_server_.createField(constants::double_field_name,constants::double_default);
 
   modular_server::Field & bool_field = modular_server_.createField(constants::bool_field_name,constants::bool_default);
-  bool_field.attachPreSetValueCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::preSetFieldValueCallback));
-  bool_field.attachPostSetValueCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::postSetFieldValueCallback));
+  bool_field.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::preSetFieldValueFunctor));
+  bool_field.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::postSetFieldValueFunctor));
 
   modular_server::Field & long_array_field = modular_server_.createField(constants::long_array_field_name,constants::long_array_default);
   long_array_field.setRange(constants::long_array_element_min,constants::long_array_element_max);
@@ -42,16 +42,16 @@ void FieldTester::setup()
   double_array_field.setRange(constants::double_array_element_min,constants::double_array_element_max);
 
   modular_server::Field & bool_array_field = modular_server_.createField(constants::bool_array_field_name,constants::bool_array_default);
-  bool_array_field.attachPreSetValueCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::preSetFieldValueCallback));
-  bool_array_field.attachPostSetValueCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::postSetFieldValueCallback));
-  bool_array_field.attachPreSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::preSetFieldElementValueCallback));
-  bool_array_field.attachPostSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::postSetFieldElementValueCallback));
+  bool_array_field.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::preSetFieldValueFunctor));
+  bool_array_field.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::postSetFieldValueFunctor));
+  bool_array_field.attachPreSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::preSetFieldElementValueFunctor));
+  bool_array_field.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::postSetFieldElementValueFunctor));
 
   modular_server::Field & string_field = modular_server_.createField(constants::string_field_name,constants::string_default);
-  string_field.attachPreSetValueCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::preSetFieldValueCallback));
-  string_field.attachPostSetValueCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::postSetFieldValueCallback));
-  string_field.attachPreSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::preSetFieldElementValueCallback));
-  string_field.attachPostSetElementValueCallback(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::postSetFieldElementValueCallback));
+  string_field.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::preSetFieldValueFunctor));
+  string_field.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::postSetFieldValueFunctor));
+  string_field.attachPreSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::preSetFieldElementValueFunctor));
+  string_field.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&FieldTester::postSetFieldElementValueFunctor));
 
   modular_server::Field & odd_field = modular_server_.createField(constants::odd_field_name,constants::odd_default);
   odd_field.setSubset(constants::odd_subset);
@@ -91,72 +91,72 @@ void FieldTester::setup()
 
   // Methods
   modular_server::Method & get_doubled_method = modular_server_.createMethod(constants::get_doubled_method_name);
-  get_doubled_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getDoubledCallback));
+  get_doubled_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getDoubledFunctor));
   get_doubled_method.setReturnTypeDouble();
 
   modular_server::Method & get_bool_method = modular_server_.createMethod(constants::get_bool_method_name);
-  get_bool_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getBoolCallback));
+  get_bool_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getBoolFunctor));
   get_bool_method.setReturnTypeBool();
 
   modular_server::Method & get_long_array_fixed_method = modular_server_.createMethod(constants::get_long_array_fixed_method_name);
-  get_long_array_fixed_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getLongArrayFixedCallback));
+  get_long_array_fixed_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getLongArrayFixedFunctor));
   get_long_array_fixed_method.setReturnTypeArray();
 
   modular_server::Method & get_long_array_variable_method = modular_server_.createMethod(constants::get_long_array_variable_method_name);
-  get_long_array_variable_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getLongArrayVariableCallback));
+  get_long_array_variable_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getLongArrayVariableFunctor));
   get_long_array_variable_method.setReturnTypeArray();
 
   modular_server::Method & set_long_array_fixed_method = modular_server_.createMethod(constants::set_long_array_fixed_method_name);
-  set_long_array_fixed_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::setLongArrayFixedCallback));
+  set_long_array_fixed_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::setLongArrayFixedFunctor));
   set_long_array_fixed_method.setReturnTypeBool();
 
   modular_server::Method & set_long_array_variable_method = modular_server_.createMethod(constants::set_long_array_variable_method_name);
-  set_long_array_variable_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::setLongArrayVariableCallback));
+  set_long_array_variable_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::setLongArrayVariableFunctor));
   set_long_array_variable_method.setReturnTypeBool();
 
   modular_server::Method & set_long_array_parameter_method = modular_server_.createMethod(constants::set_long_array_parameter_method_name);
-  set_long_array_parameter_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::setLongArrayParameterCallback));
+  set_long_array_parameter_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::setLongArrayParameterFunctor));
   set_long_array_parameter_method.addParameter(long_array_parameter);
   set_long_array_parameter_method.setReturnTypeBool();
 
   modular_server::Method & get_string_all_method = modular_server_.createMethod(constants::get_string_all_method_name);
-  get_string_all_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getStringAllCallback));
+  get_string_all_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getStringAllFunctor));
   get_string_all_method.setReturnTypeString();
 
   modular_server::Method & get_string_some_method = modular_server_.createMethod(constants::get_string_some_method_name);
-  get_string_some_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getStringSomeCallback));
+  get_string_some_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getStringSomeFunctor));
   get_string_some_method.addParameter(length_parameter);
   get_string_some_method.setReturnTypeString();
 
   modular_server::Method & get_count_method = modular_server_.createMethod(constants::get_count_method_name);
-  get_count_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getCountCallback));
+  get_count_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getCountFunctor));
   get_count_method.addParameter(count_parameter);
   get_count_method.setReturnTypeString();
 
   modular_server::Method & get_count_array_method = modular_server_.createMethod(constants::get_count_array_method_name);
-  get_count_array_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getCountArrayCallback));
+  get_count_array_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getCountArrayFunctor));
   get_count_array_method.addParameter(count_array_parameter);
   get_count_array_method.setReturnTypeArray();
 
   modular_server::Method & get_direction_method = modular_server_.createMethod(constants::get_direction_method_name);
-  get_direction_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getDirectionCallback));
+  get_direction_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getDirectionFunctor));
   get_direction_method.addParameter(direction_parameter);
   get_direction_method.setReturnTypeString();
 
   modular_server::Method & get_direction_array_method = modular_server_.createMethod(constants::get_direction_array_method_name);
-  get_direction_array_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::getDirectionArrayCallback));
+  get_direction_array_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::getDirectionArrayFunctor));
   get_direction_array_method.addParameter(direction_array_parameter);
   get_direction_array_method.setReturnTypeArray();
 
   modular_server::Method & check_mode_method = modular_server_.createMethod(constants::check_mode_method_name);
-  check_mode_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::checkModeCallback));
+  check_mode_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::checkModeFunctor));
   check_mode_method.setReturnTypeString();
 
   modular_server::Method & increment_mode_method = modular_server_.createMethod(constants::increment_mode_method_name);
-  increment_mode_method.attachCallback(makeFunctor((Functor0 *)0,*this,&FieldTester::incrementModeCallback));
+  increment_mode_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&FieldTester::incrementModeFunctor));
   increment_mode_method.setReturnTypeString();
 
-  // Interrupts
+  // Callbacks
 
   // Begin Streams
   Serial.begin(constants::baudrate);
@@ -170,7 +170,7 @@ void FieldTester::update()
   modular_server_.handleServerRequests();
 }
 
-// Callbacks must be non-blocking (avoid 'delay')
+// Functors must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
 // fixed-point number (int, long, etc.)
@@ -187,7 +187,7 @@ void FieldTester::update()
 // modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
 // modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type
 
-void FieldTester::getDoubledCallback()
+void FieldTester::getDoubledFunctor()
 {
   double value;
   modular_server_.field(constants::double_field_name).getValue(value);
@@ -195,21 +195,21 @@ void FieldTester::getDoubledCallback()
   modular_server_.response().returnResult(value);
 }
 
-void FieldTester::getBoolCallback()
+void FieldTester::getBoolFunctor()
 {
   bool value;
   modular_server_.field(constants::bool_field_name).getValue(value);
   modular_server_.response().returnResult(value);
 }
 
-void FieldTester::getLongArrayFixedCallback()
+void FieldTester::getLongArrayFixedFunctor()
 {
   long long_array[constants::LONG_ARRAY_LENGTH];
   modular_server_.field(constants::long_array_field_name).getValue(long_array);
   modular_server_.response().returnResult(long_array);
 }
 
-void FieldTester::getLongArrayVariableCallback()
+void FieldTester::getLongArrayVariableFunctor()
 {
   modular_server::Field & field = modular_server_.field(constants::long_array_field_name);
   size_t array_length = field.getArrayLength();
@@ -218,7 +218,7 @@ void FieldTester::getLongArrayVariableCallback()
   modular_server_.response().returnResult(long_array,array_length);
 }
 
-void FieldTester::setLongArrayFixedCallback()
+void FieldTester::setLongArrayFixedFunctor()
 {
   long long_array[constants::LONG_ARRAY_LENGTH];
   long_array[0] = 1;
@@ -229,7 +229,7 @@ void FieldTester::setLongArrayFixedCallback()
   modular_server_.response().returnResult(success);
 }
 
-void FieldTester::setLongArrayVariableCallback()
+void FieldTester::setLongArrayVariableFunctor()
 {
   modular_server::Field & field = modular_server_.field(constants::long_array_field_name);
   size_t array_length = field.getArrayLength();
@@ -241,7 +241,7 @@ void FieldTester::setLongArrayVariableCallback()
   modular_server_.response().returnResult(success);
 }
 
-void FieldTester::setLongArrayParameterCallback()
+void FieldTester::setLongArrayParameterFunctor()
 {
   ArduinoJson::JsonArray * long_array_ptr;
   modular_server_.parameter(constants::long_array_parameter_name).getValue(long_array_ptr);
@@ -249,7 +249,7 @@ void FieldTester::setLongArrayParameterCallback()
   modular_server_.response().returnResult(success);
 }
 
-void FieldTester::getStringAllCallback()
+void FieldTester::getStringAllFunctor()
 {
   modular_server::Field & field = modular_server_.field(constants::string_field_name);
   size_t array_length = field.getArrayLength();
@@ -258,7 +258,7 @@ void FieldTester::getStringAllCallback()
   modular_server_.response().returnResult(string);
 }
 
-void FieldTester::getStringSomeCallback()
+void FieldTester::getStringSomeFunctor()
 {
   long length;
   modular_server_.parameter(constants::length_parameter_name).getValue(length);
@@ -268,7 +268,7 @@ void FieldTester::getStringSomeCallback()
   modular_server_.response().returnResult(string);
 }
 
-void FieldTester::getCountCallback()
+void FieldTester::getCountFunctor()
 {
   long count;
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
@@ -317,28 +317,28 @@ void FieldTester::getCountCallback()
   }
 }
 
-void FieldTester::getCountArrayCallback()
+void FieldTester::getCountArrayFunctor()
 {
   ArduinoJson::JsonArray * count_array_ptr;
   bool success = modular_server_.parameter(constants::count_array_parameter_name).getValue(count_array_ptr);
   modular_server_.response().returnResult(count_array_ptr);
 }
 
-void FieldTester::getDirectionCallback()
+void FieldTester::getDirectionFunctor()
 {
   const char * direction;
   modular_server_.parameter(constants::direction_parameter_name).getValue(direction);
   modular_server_.response().returnResult(direction);
 }
 
-void FieldTester::getDirectionArrayCallback()
+void FieldTester::getDirectionArrayFunctor()
 {
   ArduinoJson::JsonArray * direction_array_ptr;
   modular_server_.parameter(constants::direction_array_parameter_name).getValue(direction_array_ptr);
   modular_server_.response().returnResult(direction_array_ptr);
 }
 
-void FieldTester::checkModeCallback()
+void FieldTester::checkModeFunctor()
 {
   const ConstantString * mode_ptr;
   modular_server_.field(constants::mode_field_name).getValue(mode_ptr);
@@ -360,7 +360,7 @@ void FieldTester::checkModeCallback()
   }
 }
 
-void FieldTester::incrementModeCallback()
+void FieldTester::incrementModeFunctor()
 {
   modular_server::Field & field = modular_server_.field(constants::mode_field_name);
   const ConstantString * mode_ptr;
@@ -386,38 +386,38 @@ void FieldTester::incrementModeCallback()
   }
 }
 
-void FieldTester::preSetFieldValueCallback()
+void FieldTester::preSetFieldValueFunctor()
 {
   // Writing to Serial like this makes response invalid!
   // Do not do this in a real device!
-  // Uncomment next line just to demonstrate setFieldValueCallback
+  // Uncomment next line just to demonstrate setFieldValueFunctor
 
   // Serial << " setting field value! ";
 }
 
-void FieldTester::postSetFieldValueCallback()
+void FieldTester::postSetFieldValueFunctor()
 {
   // Writing to Serial like this makes response invalid!
   // Do not do this in a real device!
-  // Uncomment next line just to demonstrate setFieldValueCallback
+  // Uncomment next line just to demonstrate setFieldValueFunctor
 
   // Serial << " set field value! ";
 }
 
-void FieldTester::preSetFieldElementValueCallback(const size_t element_index)
+void FieldTester::preSetFieldElementValueFunctor(const size_t element_index)
 {
   // Writing to Serial like this makes response invalid!
   // Do not do this in a real device!
-  // Uncomment next line just to demonstrate setFieldElementValueCallback
+  // Uncomment next line just to demonstrate setFieldElementValueFunctor
 
   // Serial << " setting field element value at index " << element_index << "! ";
 }
 
-void FieldTester::postSetFieldElementValueCallback(const size_t element_index)
+void FieldTester::postSetFieldElementValueFunctor(const size_t element_index)
 {
   // Writing to Serial like this makes response invalid!
   // Do not do this in a real device!
-  // Uncomment next line just to demonstrate setFieldElementValueCallback
+  // Uncomment next line just to demonstrate setFieldElementValueFunctor
 
   // Serial << " set field element value at index " << element_index << "! ";
 }

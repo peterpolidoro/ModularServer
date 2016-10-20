@@ -37,10 +37,10 @@ public:
   void setSubset(const constants::SubsetMemberType * subset, size_t max_size, size_t size);
   void addValueToSubset(const constants::SubsetMemberType & value);
 
-  void attachPreSetValueCallback(const Functor0 & callback);
-  void attachPreSetElementValueCallback(const Functor1<const size_t> & callback);
-  void attachPostSetValueCallback(const Functor0 & callback);
-  void attachPostSetElementValueCallback(const Functor1<const size_t> & callback);
+  void attachPreSetValueFunctor(const Functor0 & functor);
+  void attachPreSetElementValueFunctor(const Functor1<const size_t> & functor);
+  void attachPostSetValueFunctor(const Functor0 & functor);
+  void attachPostSetElementValueFunctor(const Functor1<const size_t> & functor);
 
   template <typename T>
   bool getValue(T & value);
@@ -95,10 +95,10 @@ public:
 private:
   Parameter parameter_;
   SavedVariable saved_variable_;
-  Functor0 pre_set_value_callback_;
-  Functor1<const size_t> pre_set_element_value_callback_;
-  Functor0 post_set_value_callback_;
-  Functor1<const size_t> post_set_element_value_callback_;
+  Functor0 pre_set_value_functor_;
+  Functor1<const size_t> pre_set_element_value_functor_;
+  Functor0 post_set_value_functor_;
+  Functor1<const size_t> post_set_element_value_functor_;
   bool string_saved_as_char_array_;
 
   template <typename T>
@@ -129,11 +129,11 @@ private:
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
   Vector<const constants::SubsetMemberType> & getSubset();
-  void preSetValueCallback();
-  void preSetElementValueCallback(const size_t element_index);
-  void postSetValueCallback();
-  void postSetElementValueCallback(const size_t element_index);
-  friend class Interrupt;
+  void preSetValueFunctor();
+  void preSetElementValueFunctor(const size_t element_index);
+  void postSetValueFunctor();
+  void postSetElementValueFunctor(const size_t element_index);
+  friend class Callback;
   friend class Server;
 
 };

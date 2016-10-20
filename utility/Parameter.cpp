@@ -10,7 +10,7 @@
 
 namespace modular_server
 {
-Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Parameter::get_value_callback_;
+Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Parameter::get_value_functor_;
 
 // public
 Parameter::Parameter()
@@ -165,7 +165,7 @@ bool Parameter::getValue<long>(long & value)
       (getType() == JsonStream::BOOL_TYPE) ||
       (getType() == JsonStream::VALUE_TYPE))
   {
-    long v = get_value_callback_(getName());
+    long v = get_value_functor_(getName());
     value = v;
     return true;
   }
@@ -180,7 +180,7 @@ bool Parameter::getValue<double>(double & value)
       (getType() == JsonStream::BOOL_TYPE) ||
       (getType() == JsonStream::VALUE_TYPE))
   {
-    double v = get_value_callback_(getName());
+    double v = get_value_functor_(getName());
     value = v;
     return true;
   }
@@ -195,7 +195,7 @@ bool Parameter::getValue<float>(float & value)
       (getType() == JsonStream::BOOL_TYPE) ||
       (getType() == JsonStream::VALUE_TYPE))
   {
-    double v = get_value_callback_(getName());
+    double v = get_value_functor_(getName());
     value = v;
     return true;
   }
@@ -210,7 +210,7 @@ bool Parameter::getValue<bool>(bool & value)
       (getType() == JsonStream::BOOL_TYPE) ||
       (getType() == JsonStream::VALUE_TYPE))
   {
-    bool v = get_value_callback_(getName());
+    bool v = get_value_functor_(getName());
     value = v;
     return true;
   }
@@ -223,7 +223,7 @@ bool Parameter::getValue(const char * & value)
   {
     return false;
   }
-  value = get_value_callback_(getName());
+  value = get_value_functor_(getName());
   return true;
 }
 
@@ -233,7 +233,7 @@ bool Parameter::getValue(ArduinoJson::JsonArray * & value)
   {
     return false;
   }
-  ArduinoJson::JsonArray & array = get_value_callback_(getName());
+  ArduinoJson::JsonArray & array = get_value_functor_(getName());
   value = &array;
   return true;
 }
@@ -244,7 +244,7 @@ bool Parameter::getValue(ArduinoJson::JsonObject * & value)
   {
     return false;
   }
-  ArduinoJson::JsonObject & object = get_value_callback_(getName());
+  ArduinoJson::JsonObject & object = get_value_functor_(getName());
   value = &object;
   return true;
 }

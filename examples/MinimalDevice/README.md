@@ -64,7 +64,7 @@ Example Response:
       "fields":[
         "serial_number"
       ],
-      "interrupts":[]
+      "callbacks":[]
     }
   }
 }
@@ -277,7 +277,7 @@ Example Response:
           "default_value":0
         }
       ],
-    "interrupts":[]
+    "callbacks":[]
     }
   }
 }
@@ -564,7 +564,7 @@ Example Response:
     "fields":[
       "serial_number"
     ],
-    "interrupts":[]
+    "callbacks":[]
   }
 }
 ```
@@ -585,7 +585,7 @@ Example Response:
     "methods":[],
     "parameters":[],
     "fields":[],
-    "interrupts":[]
+    "callbacks":[]
   }
 }
 ```
@@ -637,7 +637,7 @@ dev.send_json_request('["set_fields_to_defaults"]')
 dev.get_field_value('serial_number')
 0
 dev.get_api(["MinimalDevice"])
-{'fields': [], 'firmware': ['MinimalDevice'], 'interrupts': [], 'methods': [], 'parameters': []}
+{'fields': [], 'firmware': ['MinimalDevice'], 'callbacks': [], 'methods': [], 'parameters': []}
 ```
 
 For more details on the Python interface:

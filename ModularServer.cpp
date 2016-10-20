@@ -82,15 +82,15 @@ Method & ModularServer::copyMethod(Method & method,const ConstantString & method
   return server_.copyMethod(method,method_name);
 }
 
-// Interrupts
-Interrupt & ModularServer::createInterrupt(const ConstantString & interrupt_name)
+// Callbacks
+Callback & ModularServer::createCallback(const ConstantString & callback_name)
 {
-  return server_.createInterrupt(interrupt_name);
+  return server_.createCallback(callback_name);
 }
 
-Interrupt & ModularServer::interrupt(const ConstantString & interrupt_name)
+Callback & ModularServer::callback(const ConstantString & callback_name)
 {
-  return server_.interrupt(interrupt_name);
+  return server_.callback(callback_name);
 }
 
 // Response

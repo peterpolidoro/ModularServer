@@ -25,7 +25,7 @@ class Method : private FirmwareElement
 public:
   Method();
 
-  void attachCallback(const Functor0 & callback);
+  void attachFunctor(const Functor0 & functor);
   void addParameter(Parameter & parameter);
   void setReturnTypeLong();
   void setReturnTypeDouble();
@@ -38,14 +38,14 @@ public:
   JsonStream::JsonTypes getReturnType();
 
 private:
-  Functor0 callback_;
+  Functor0 functor_;
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
   JsonStream::JsonTypes return_type_;
   Method(const ConstantString & name);
   void setup(const ConstantString & name);
   int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();
-  void callback();
+  void functor();
   friend class Server;
 };
 }

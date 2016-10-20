@@ -26,7 +26,7 @@ void MinimalDevice::setup()
                               fields_,
                               parameters_,
                               methods_,
-                              interrupts_);
+                              callbacks_);
 
   // Fields
 
@@ -34,7 +34,7 @@ void MinimalDevice::setup()
 
   // Methods
 
-  // Interrupts
+  // Callbacks
 
   // Begin Streams
   Serial.begin(constants::baudrate);
@@ -48,7 +48,7 @@ void MinimalDevice::update()
   modular_server_.handleServerRequests();
 }
 
-// Callbacks must be non-blocking (avoid 'delay')
+// Functors must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
 // fixed-point number (int, long, etc.)

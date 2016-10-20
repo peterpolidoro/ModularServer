@@ -40,24 +40,24 @@ void Field::addValueToSubset(const constants::SubsetMemberType & value)
   parameter_.addValueToSubset(value);
 }
 
-void Field::attachPreSetValueCallback(const Functor0 & callback)
+void Field::attachPreSetValueFunctor(const Functor0 & functor)
 {
-  pre_set_value_callback_ = callback;
+  pre_set_value_functor_ = functor;
 }
 
-void Field::attachPreSetElementValueCallback(const Functor1<const size_t> & callback)
+void Field::attachPreSetElementValueFunctor(const Functor1<const size_t> & functor)
 {
-  pre_set_element_value_callback_ = callback;
+  pre_set_element_value_functor_ = functor;
 }
 
-void Field::attachPostSetValueCallback(const Functor0 & callback)
+void Field::attachPostSetValueFunctor(const Functor0 & functor)
 {
-  post_set_value_callback_ = callback;
+  post_set_value_functor_ = functor;
 }
 
-void Field::attachPostSetElementValueCallback(const Functor1<const size_t> & callback)
+void Field::attachPostSetElementValueFunctor(const Functor1<const size_t> & functor)
 {
-  post_set_element_value_callback_ = callback;
+  post_set_element_value_functor_ = functor;
 }
 
 template <>
@@ -266,7 +266,7 @@ template <>
 bool Field::setElementValue<long>(const size_t element_index, const long & value)
 {
   bool success = false;
-  preSetElementValueCallback(element_index);
+  preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::LONG_TYPE))
   {
@@ -284,7 +284,7 @@ bool Field::setElementValue<long>(const size_t element_index, const long & value
       success = saved_variable_.setElementValue(element_index,value);
     }
   }
-  postSetElementValueCallback(element_index);
+  postSetElementValueFunctor(element_index);
   return success;
 }
 
@@ -292,7 +292,7 @@ template <>
 bool Field::setElementValue<double>(const size_t element_index, const double & value)
 {
   bool success = false;
-  preSetElementValueCallback(element_index);
+  preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::DOUBLE_TYPE))
   {
@@ -310,7 +310,7 @@ bool Field::setElementValue<double>(const size_t element_index, const double & v
       success = saved_variable_.setElementValue(element_index,value);
     }
   }
-  postSetElementValueCallback(element_index);
+  postSetElementValueFunctor(element_index);
   return success;
 }
 
@@ -318,13 +318,13 @@ template <>
 bool Field::setElementValue<bool>(const size_t element_index, const bool & value)
 {
   bool success = false;
-  preSetElementValueCallback(element_index);
+  preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::BOOL_TYPE))
   {
     success = saved_variable_.setElementValue(element_index,value);
   }
-  postSetElementValueCallback(element_index);
+  postSetElementValueFunctor(element_index);
   return success;
 }
 
@@ -332,13 +332,13 @@ template <>
 bool Field::setElementValue<char>(const size_t element_index, const char & value)
 {
   bool success = false;
-  preSetElementValueCallback(element_index);
+  preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::STRING_TYPE) &&
       (stringIsSavedAsCharArray()))
   {
     success = saved_variable_.setElementValue(element_index,value);
   }
-  postSetElementValueCallback(element_index);
+  postSetElementValueFunctor(element_index);
   return success;
 }
 
@@ -346,7 +346,7 @@ template <>
 bool Field::setValue<long>(const long & value)
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if (getType() == JsonStream::LONG_TYPE)
   {
     if (parameter_.rangeIsSet())
@@ -363,7 +363,7 @@ bool Field::setValue<long>(const long & value)
       success = saved_variable_.setValue(value);
     }
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -371,7 +371,7 @@ template <>
 bool Field::setValue<double>(const double & value)
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if (getType() == JsonStream::DOUBLE_TYPE)
   {
     if (parameter_.rangeIsSet())
@@ -388,7 +388,7 @@ bool Field::setValue<double>(const double & value)
       success = saved_variable_.setValue(value);
     }
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -396,12 +396,12 @@ template <>
 bool Field::setValue<bool>(const bool & value)
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if (getType() == JsonStream::BOOL_TYPE)
   {
     success = saved_variable_.setValue(value);
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -409,13 +409,13 @@ template <>
 bool Field::setValue<const ConstantString *>(const ConstantString * const & value)
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if ((getType() == JsonStream::STRING_TYPE) &&
       !stringIsSavedAsCharArray())
   {
     success = saved_variable_.setValue(value);
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -423,13 +423,13 @@ template <>
 bool Field::setValue<ConstantString *>(ConstantString * const & value)
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if ((getType() == JsonStream::STRING_TYPE) &&
       !stringIsSavedAsCharArray())
   {
     success = saved_variable_.setValue(value);
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -443,7 +443,7 @@ bool Field::setValue(ArduinoJson::JsonArray & value)
     size_t N = value.size();
     size_t array_length_min = min(array_length,N);
     JsonStream::JsonTypes array_element_type = getArrayElementType();
-    preSetValueCallback();
+    preSetValueFunctor();
     switch (array_element_type)
     {
       case JsonStream::LONG_TYPE:
@@ -506,16 +506,16 @@ bool Field::setValue(ArduinoJson::JsonArray & value)
         break;
       }
     }
-    postSetValueCallback();
+    postSetValueFunctor();
   }
   return success;
 }
 
 void Field::setValueToDefault()
 {
-  preSetValueCallback();
+  preSetValueFunctor();
   saved_variable_.setValueToDefault();
-  postSetValueCallback();
+  postSetValueFunctor();
 }
 
 bool Field::valueIsDefault()
@@ -656,35 +656,35 @@ Vector<const constants::SubsetMemberType> & Field::getSubset()
   return parameter_.getSubset();
 }
 
-void Field::preSetValueCallback()
+void Field::preSetValueFunctor()
 {
-  if (pre_set_value_callback_)
+  if (pre_set_value_functor_)
   {
-    pre_set_value_callback_();
+    pre_set_value_functor_();
   }
 }
 
-void Field::preSetElementValueCallback(const size_t element_index)
+void Field::preSetElementValueFunctor(const size_t element_index)
 {
-  if (pre_set_element_value_callback_)
+  if (pre_set_element_value_functor_)
   {
-    pre_set_element_value_callback_(element_index);
+    pre_set_element_value_functor_(element_index);
   }
 }
 
-void Field::postSetValueCallback()
+void Field::postSetValueFunctor()
 {
-  if (post_set_value_callback_)
+  if (post_set_value_functor_)
   {
-    post_set_value_callback_();
+    post_set_value_functor_();
   }
 }
 
-void Field::postSetElementValueCallback(const size_t element_index)
+void Field::postSetElementValueFunctor(const size_t element_index)
 {
-  if (post_set_element_value_callback_)
+  if (post_set_element_value_functor_)
   {
-    post_set_element_value_callback_(element_index);
+    post_set_element_value_functor_(element_index);
   }
 }
 

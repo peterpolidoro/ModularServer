@@ -176,7 +176,7 @@ CONSTANT_STRING(get_direction_array_method_name,"getDirectionArray");
 CONSTANT_STRING(check_mode_method_name,"checkMode");
 CONSTANT_STRING(increment_mode_method_name,"incrementMode");
 
-// Interrupts
+// Callbacks
 
 // Errors
 CONSTANT_STRING(index_error,"Invalid index.");

@@ -17,7 +17,7 @@ namespace constants
 enum{FIELD_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=3};
 enum{METHOD_COUNT_MAX=4};
-enum{INTERRUPT_COUNT_MAX=1};
+enum{CALLBACK_COUNT_MAX=1};
 
 extern const size_t baudrate;
 
@@ -55,7 +55,7 @@ extern ConstantString led_off_method_name;
 extern ConstantString get_led_pin_method_name;
 extern ConstantString blink_led_method_name;
 
-// Interrupts
+// Callbacks
 
 // Errors
 }

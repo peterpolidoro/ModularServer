@@ -1,27 +1,27 @@
 // ----------------------------------------------------------------------------
-// Interrupt.cpp
+// Callback.cpp
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "Interrupt.h"
+#include "Callback.h"
 
 
 namespace modular_server
 {
 // public
-Interrupt::Interrupt()
+Callback::Callback()
 {
   setup(constants::empty_constant_string);
 }
 
-void Interrupt::attachCallback(const Functor0 & callback)
+void Callback::attachFunctor(const Functor0 & functor)
 {
-  callback_ = callback;
+  functor_ = functor;
 }
 
-void Interrupt::addField(Field & field)
+void Callback::addField(Field & field)
 {
   const ConstantString & field_name = field.getName();
   int field_index = findFieldIndex(field_name);
@@ -34,17 +34,17 @@ void Interrupt::addField(Field & field)
 // protected
 
 // private
-Interrupt::Interrupt(const ConstantString & name)
+Callback::Callback(const ConstantString & name)
 {
   setup(name);
 }
 
-void Interrupt::setup(const ConstantString & name)
+void Callback::setup(const ConstantString & name)
 {
   setName(name);
 }
 
-int Interrupt::findFieldIndex(const ConstantString & field_name)
+int Callback::findFieldIndex(const ConstantString & field_name)
 {
   int field_index = -1;
   for (size_t i=0; i<field_ptrs_.size(); ++i)
@@ -58,16 +58,16 @@ int Interrupt::findFieldIndex(const ConstantString & field_name)
   return field_index;
 }
 
-size_t Interrupt::getFieldCount()
+size_t Callback::getFieldCount()
 {
   return field_ptrs_.size();
 }
 
-void Interrupt::callback()
+void Callback::functor()
 {
-  if (callback_)
+  if (functor_)
   {
-    callback_();
+    functor_();
   }
 }
 

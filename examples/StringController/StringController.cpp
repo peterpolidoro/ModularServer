@@ -26,7 +26,7 @@ void StringController::setup()
                               fields_,
                               parameters_,
                               methods_,
-                              interrupts_);
+                              callbacks_);
 
   // Fields
   modular_server::Field & serial_number_field = modular_server_.field(modular_server::constants::serial_number_field_name);
@@ -55,48 +55,48 @@ void StringController::setup()
 
   // Methods
   modular_server::Method & echo_method = modular_server_.createMethod(constants::echo_method_name);
-  echo_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::echoCallback));
+  echo_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::echoFunctor));
   echo_method.addParameter(string_parameter);
   echo_method.addParameter(double_echo_parameter);
   echo_method.setReturnTypeString();
 
   modular_server::Method & length_method = modular_server_.createMethod(constants::length_method_name);
-  length_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::lengthCallback));
+  length_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::lengthFunctor));
   length_method.addParameter(string_parameter);
   length_method.setReturnTypeLong();
 
   modular_server::Method & starts_with_method = modular_server_.createMethod(constants::starts_with_method_name);
-  starts_with_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::startsWithCallback));
+  starts_with_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startsWithFunctor));
   starts_with_method.addParameter(string_parameter);
   starts_with_method.addParameter(string2_parameter);
   starts_with_method.setReturnTypeBool();
 
   modular_server::Method & repeat_method = modular_server_.createMethod(constants::repeat_method_name);
-  repeat_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::repeatCallback));
+  repeat_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::repeatFunctor));
   repeat_method.addParameter(string_parameter);
   repeat_method.addParameter(count_parameter);
   repeat_method.setReturnTypeArray();
 
   modular_server::Method & chars_at_method = modular_server_.createMethod(constants::chars_at_method_name);
-  chars_at_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::charsAtCallback));
+  chars_at_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::charsAtFunctor));
   chars_at_method.addParameter(string_parameter);
   chars_at_method.addParameter(index_array_parameter);
   chars_at_method.setReturnTypeArray();
 
   modular_server::Method & starting_chars_method = modular_server_.createMethod(constants::starting_chars_method_name);
-  starting_chars_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::startingCharsCallback));
+  starting_chars_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startingCharsFunctor));
   starting_chars_method.addParameter(string_parameter);
   starting_chars_method.setReturnTypeString();
 
   modular_server::Method & set_stored_string_method = modular_server_.createMethod(constants::set_stored_string_method_name);
-  set_stored_string_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::setStoredStringCallback));
+  set_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::setStoredStringFunctor));
   set_stored_string_method.addParameter(string_parameter);
 
   modular_server::Method & get_stored_string_method = modular_server_.createMethod(constants::get_stored_string_method_name);
-  get_stored_string_method.attachCallback(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringCallback));
+  get_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringFunctor));
   get_stored_string_method.setReturnTypeString();
 
-  // Interrupts
+  // Callbacks
 
   // Begin Streams
   Serial.begin(constants::baudrate);
@@ -110,7 +110,7 @@ void StringController::update()
   modular_server_.handleServerRequests();
 }
 
-// Callbacks must be non-blocking (avoid 'delay')
+// Functors must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
 // fixed-point number (int, long, etc.)
@@ -127,7 +127,7 @@ void StringController::update()
 // modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
 // modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type
 
-void StringController::echoCallback()
+void StringController::echoFunctor()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -145,14 +145,14 @@ void StringController::echoCallback()
   }
 }
 
-void StringController::lengthCallback()
+void StringController::lengthFunctor()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   modular_server_.response().returnResult(strlen(string));
 }
 
-void StringController::startsWithCallback()
+void StringController::startsWithFunctor()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -161,7 +161,7 @@ void StringController::startsWithCallback()
   modular_server_.response().returnResult((bool)String(string).startsWith(string2));
 }
 
-void StringController::repeatCallback()
+void StringController::repeatFunctor()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -177,7 +177,7 @@ void StringController::repeatCallback()
   response.endArray();
 }
 
-void StringController::charsAtCallback()
+void StringController::charsAtFunctor()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -211,7 +211,7 @@ void StringController::charsAtCallback()
   response.endArray();
 }
 
-void StringController::startingCharsCallback()
+void StringController::startingCharsFunctor()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -220,7 +220,7 @@ void StringController::startingCharsCallback()
   modular_server_.response().returnResult(String(string).substring(0,starting_chars_count));
 }
 
-void StringController::setStoredStringCallback()
+void StringController::setStoredStringFunctor()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
@@ -228,7 +228,7 @@ void StringController::setStoredStringCallback()
   modular_server_.field(constants::stored_string_field_name).setValue(string,array_length);
 }
 
-void StringController::getStoredStringCallback()
+void StringController::getStoredStringFunctor()
 {
   modular_server::Field & field = modular_server_.field(constants::stored_string_field_name);
   size_t array_length = field.getArrayLength();

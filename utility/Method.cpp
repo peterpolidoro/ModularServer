@@ -16,9 +16,9 @@ Method::Method()
   setup(constants::empty_constant_string);
 }
 
-void Method::attachCallback(const Functor0 & callback)
+void Method::attachFunctor(const Functor0 & functor)
 {
-  callback_ = callback;
+  functor_ = functor;
 }
 
 void Method::addParameter(Parameter & parameter)
@@ -109,11 +109,11 @@ size_t Method::getParameterCount()
   return parameter_ptrs_.size();
 }
 
-void Method::callback()
+void Method::functor()
 {
-  if (callback_)
+  if (functor_)
   {
-    callback_();
+    functor_();
   }
 }
 

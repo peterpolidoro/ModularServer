@@ -35,12 +35,12 @@ public:
   template <size_t FIELDS_MAX_SIZE,
             size_t PARAMETERS_MAX_SIZE,
             size_t METHODS_MAX_SIZE,
-            size_t INTERRUPTS_MAX_SIZE>
+            size_t CALLBACKS_MAX_SIZE>
   void addFirmware(const FirmwareInfo & firmware_info,
                    Field (&fields)[FIELDS_MAX_SIZE],
                    Parameter (&parameters)[PARAMETERS_MAX_SIZE],
                    Method (&methods)[METHODS_MAX_SIZE],
-                   Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
+                   Callback (&callbacks)[CALLBACKS_MAX_SIZE]);
 
   // Fields
   template <typename T>
@@ -62,9 +62,9 @@ public:
   Method & method(const ConstantString & method_name);
   Method & copyMethod(Method & method,const ConstantString & method_name);
 
-  // Interrupts
-  Interrupt & createInterrupt(const ConstantString & interrupt_name);
-  Interrupt & interrupt(const ConstantString & interrupt_name);
+  // Callbacks
+  Callback & createCallback(const ConstantString & callback_name);
+  Callback & callback(const ConstantString & callback_name);
 
   // Response
   Response & response();

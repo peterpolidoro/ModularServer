@@ -25,13 +25,13 @@ private:
   modular_server::Field fields_[constants::FIELD_COUNT_MAX];
   modular_server::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
   modular_server::Method methods_[constants::METHOD_COUNT_MAX];
-  modular_server::Interrupt interrupts_[constants::INTERRUPT_COUNT_MAX];
+  modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
-  // Callbacks
-  void setLedOnCallback();
-  void setLedOffCallback();
-  void getLedPinCallback();
-  void blinkLedCallback();
+  // Functors
+  void setLedOnFunctor();
+  void setLedOffFunctor();
+  void getLedPinFunctor();
+  void blinkLedFunctor();
 
 };
 

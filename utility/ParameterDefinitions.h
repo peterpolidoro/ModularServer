@@ -33,19 +33,19 @@ bool Parameter::getValue(T & value)
 {
   if (getType() == JsonStream::LONG_TYPE)
   {
-    long v = get_value_callback_(getName());
+    long v = get_value_functor_(getName());
     value = v;
     return true;
   }
   else if (getType() == JsonStream::DOUBLE_TYPE)
   {
-    double v = get_value_callback_(getName());
+    double v = get_value_functor_(getName());
     value = v;
     return true;
   }
   else if (getType() == JsonStream::BOOL_TYPE)
   {
-    bool v = get_value_callback_(getName());
+    bool v = get_value_functor_(getName());
     value = v;
     return true;
   }

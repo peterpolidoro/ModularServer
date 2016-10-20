@@ -24,17 +24,17 @@ private:
   modular_server::Field fields_[constants::FIELD_COUNT_MAX];
   modular_server::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
   modular_server::Method methods_[constants::METHOD_COUNT_MAX];
-  modular_server::Interrupt interrupts_[constants::INTERRUPT_COUNT_MAX];
+  modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
-  // Callbacks
-  void echoCallback();
-  void lengthCallback();
-  void startsWithCallback();
-  void repeatCallback();
-  void charsAtCallback();
-  void startingCharsCallback();
-  void setStoredStringCallback();
-  void getStoredStringCallback();
+  // Functors
+  void echoFunctor();
+  void lengthFunctor();
+  void startsWithFunctor();
+  void repeatFunctor();
+  void charsAtFunctor();
+  void startingCharsFunctor();
+  void setStoredStringFunctor();
+  void getStoredStringFunctor();
 
 };
 

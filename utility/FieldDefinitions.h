@@ -144,7 +144,7 @@ template <size_t N>
 bool Field::setValue(const long (&value)[N])
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::LONG_TYPE) &&
       (getArrayLength() == N))
@@ -158,7 +158,7 @@ bool Field::setValue(const long (&value)[N])
       }
     }
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -166,7 +166,7 @@ template <size_t N>
 bool Field::setValue(const double (&value)[N])
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::DOUBLE_TYPE) &&
       (getArrayLength() &= N))
@@ -180,7 +180,7 @@ bool Field::setValue(const double (&value)[N])
       }
     }
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -188,7 +188,7 @@ template <size_t N>
 bool Field::setValue(const bool (&value)[N])
 {
   bool success = false;
-  preSetValueCallback();
+  preSetValueFunctor();
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::BOOL_TYPE) &&
       (getArrayLength() == N))
@@ -202,7 +202,7 @@ bool Field::setValue(const bool (&value)[N])
       }
     }
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -225,7 +225,7 @@ bool Field::setValue(T * value, const size_t N)
   }
   size_t array_length = getArrayLength();
   size_t array_length_min = min(array_length,N);
-  preSetValueCallback();
+  preSetValueFunctor();
   for (size_t i=0; i<array_length_min; ++i)
   {
     T v = value[i];
@@ -244,7 +244,7 @@ bool Field::setValue(T * value, const size_t N)
     // terminate string just in case
     setElementValue<char>(array_length_min-1,'\0');
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 
@@ -259,7 +259,7 @@ bool Field::setAllElementValues(const T & value)
     return success;
   }
   size_t array_length = getArrayLength();
-  preSetValueCallback();
+  preSetValueFunctor();
   for (size_t i=0; i<array_length; ++i)
   {
     success = setElementValue(i,value);
@@ -277,7 +277,7 @@ bool Field::setAllElementValues(const T & value)
     // terminate string just in case
     setElementValue<char>(array_length-1,'\0');
   }
-  postSetValueCallback();
+  postSetValueFunctor();
   return success;
 }
 

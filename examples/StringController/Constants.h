@@ -17,7 +17,7 @@ namespace constants
 enum{FIELD_COUNT_MAX=2};
 enum{PARAMETER_COUNT_MAX=5};
 enum{METHOD_COUNT_MAX=8};
-enum{INTERRUPT_COUNT_MAX=1};
+enum{CALLBACK_COUNT_MAX=1};
 
 extern const size_t baudrate;
 

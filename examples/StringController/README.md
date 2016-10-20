@@ -79,7 +79,7 @@ Example Response:
         "starting_chars_count",
         "stored_string"
       ],
-      "interrupts":[]
+      "callbacks":[]
     }
   }
 }
@@ -422,7 +422,7 @@ Example Response:
       "starting_chars_count",
       "stored_string"
     ],
-    "interrupts":[]
+    "callbacks":[]
   }
 }
 ```
@@ -461,7 +461,7 @@ Example Response:
       "starting_chars_count",
       "stored_string"
     ],
-    "interrupts":[]
+    "callbacks":[]
   }
 }
 ```
@@ -550,7 +550,7 @@ dev.send_json_request('["starting_chars","Fantastic!"]')
 dev.get_api(["StringController"])
 {'fields': ['starting_chars_count', 'stored_string'],
  'firmware': ['StringController'],
- 'interrupts': [],
+ 'callbacks': [],
  'methods': ['echo',
   'length',
   'startsWith',

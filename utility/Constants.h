@@ -21,10 +21,10 @@ enum {HARDWARE_INFO_ARRAY_COUNT_MAX=4};
 enum{SERVER_FIELD_COUNT_MAX=1};
 enum{SERVER_PARAMETER_COUNT_MAX=4};
 enum{SERVER_METHOD_COUNT_MAX=17};
-enum{SERVER_INTERRUPT_COUNT_MAX=1};
+enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
-enum {INTERRUPT_FIELD_COUNT_MAX=6};
+enum {CALLBACK_FIELD_COUNT_MAX=6};
 
 enum{SERVER_STREAM_COUNT_MAX=4};
 
@@ -102,7 +102,7 @@ extern ConstantString set_field_value_method_name;
 extern ConstantString set_field_element_value_method_name;
 extern ConstantString set_all_field_element_values_method_name;
 
-// Interrupts
+// Callbacks
 
 // Errors
 extern ConstantString parse_error_message;
@@ -157,7 +157,7 @@ extern ConstantString array_element_type_constant_string;
 extern ConstantString fields_constant_string;
 extern ConstantString parameters_constant_string;
 extern ConstantString methods_constant_string;
-extern ConstantString interrupts_constant_string;
+extern ConstantString callbacks_constant_string;
 extern ConstantString min_constant_string;
 extern ConstantString max_constant_string;
 extern ConstantString array_element_min_constant_string;

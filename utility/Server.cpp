@@ -133,27 +133,27 @@ Method & Server::copyMethod(Method method,const ConstantString & method_name)
   return methods_.back();
 }
 
-// Interrupts
-Interrupt & Server::createInterrupt(const ConstantString & interrupt_name)
+// Callbacks
+Callback & Server::createCallback(const ConstantString & callback_name)
 {
-  int interrupt_index = findInterruptIndex(interrupt_name);
-  if (interrupt_index < 0)
+  int callback_index = findCallbackIndex(callback_name);
+  if (callback_index < 0)
   {
-    interrupts_.push_back(Interrupt(interrupt_name));
+    callbacks_.push_back(Callback(callback_name));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
-    interrupts_.back().setFirmwareName(*firmware_name_ptr);
-    return interrupts_.back();
+    callbacks_.back().setFirmwareName(*firmware_name_ptr);
+    return callbacks_.back();
   }
 }
 
-Interrupt & Server::interrupt(const ConstantString & interrupt_name)
+Callback & Server::callback(const ConstantString & callback_name)
 {
-  int interrupt_index = findInterruptIndex(interrupt_name);
-  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  int callback_index = findCallbackIndex(callback_name);
+  if ((callback_index >= 0) && (callback_index < (int)callbacks_.size()))
   {
-    return interrupts_[interrupt_index];
+    return callbacks_[callback_index];
   }
-  return dummy_interrupt_;
+  return dummy_callback_;
 }
 
 // Response
@@ -252,14 +252,14 @@ void Server::setup()
               server_fields_,
               server_parameters_,
               server_methods_,
-              server_interrupts_);
+              server_callbacks_);
 
   // Fields
   Field & serial_number_field = createField(constants::serial_number_field_name,constants::serial_number_default);
   serial_number_field.setRange(constants::serial_number_min,constants::serial_number_max);
 
   // Parameters
-  Parameter::get_value_callback_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+  Parameter::get_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
   firmware_parameter.setTypeString();
@@ -279,87 +279,87 @@ void Server::setup()
 
   // Methods
   Method & get_method_ids_method = createMethod(constants::get_method_ids_method_name);
-  get_method_ids_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsCallback));
+  get_method_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsFunctor));
   get_method_ids_method.setReturnTypeObject();
   private_method_index_ = 0;
 
   Method & help_method = createMethod(constants::help_method_name);
-  help_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::helpCallback));
+  help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpFunctor));
   help_method.setReturnTypeObject();
   private_method_index_++;
 
   Method & verbose_help_method = createMethod(constants::verbose_help_method_name);
-  verbose_help_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpCallback));
+  verbose_help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpFunctor));
   verbose_help_method.setReturnTypeObject();
   private_method_index_++;
 
   Method & get_device_id_method = createMethod(constants::get_device_id_method_name);
-  get_device_id_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdCallback));
+  get_device_id_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdFunctor));
   get_device_id_method.setReturnTypeObject();
 
   Method & get_device_info_method = createMethod(constants::get_device_info_method_name);
-  get_device_info_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoCallback));
+  get_device_info_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoFunctor));
   get_device_info_method.setReturnTypeObject();
 
   Method & get_api_method = createMethod(constants::get_api_method_name);
-  get_api_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getApiCallback));
+  get_api_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiFunctor));
   get_api_method.addParameter(firmware_parameter);
   get_api_method.setReturnTypeObject();
 
   Method & get_api_verbose_method = createMethod(constants::get_api_verbose_method_name);
-  get_api_verbose_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseCallback));
+  get_api_verbose_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseFunctor));
   get_api_verbose_method.addParameter(firmware_parameter);
   get_api_verbose_method.setReturnTypeObject();
 
   Method & get_field_default_values_method = createMethod(constants::get_field_default_values_method_name);
-  get_field_default_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesCallback));
+  get_field_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesFunctor));
   get_field_default_values_method.setReturnTypeObject();
 
   Method & set_fields_to_defaults_method = createMethod(constants::set_fields_to_defaults_method_name);
-  set_fields_to_defaults_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldsToDefaultsCallback));
+  set_fields_to_defaults_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldsToDefaultsFunctor));
 
   Method & set_field_to_default_method = createMethod(constants::set_field_to_default_method_name);
-  set_field_to_default_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldToDefaultCallback));
+  set_field_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldToDefaultFunctor));
   set_field_to_default_method.addParameter(field_name_parameter);
 
   Method & get_field_values_method = createMethod(constants::get_field_values_method_name);
-  get_field_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldValuesCallback));
+  get_field_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValuesFunctor));
   get_field_values_method.setReturnTypeObject();
 
   Method & get_field_value_method = createMethod(constants::get_field_value_method_name);
-  get_field_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldValueCallback));
+  get_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValueFunctor));
   get_field_value_method.addParameter(field_name_parameter);
   get_field_value_method.setReturnTypeValue();
 
   Method & get_field_element_value_method = createMethod(constants::get_field_element_value_method_name);
-  get_field_element_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getFieldElementValueCallback));
+  get_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldElementValueFunctor));
   get_field_element_value_method.addParameter(field_name_parameter);
   get_field_element_value_method.addParameter(field_element_index_parameter);
   get_field_element_value_method.setReturnTypeValue();
 
   Method & set_field_value_method = createMethod(constants::set_field_value_method_name);
-  set_field_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldValueCallback));
+  set_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldValueFunctor));
   set_field_value_method.addParameter(field_name_parameter);
   set_field_value_method.addParameter(field_value_parameter);
 
   Method & set_field_element_value_method = createMethod(constants::set_field_element_value_method_name);
-  set_field_element_value_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setFieldElementValueCallback));
+  set_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldElementValueFunctor));
   set_field_element_value_method.addParameter(field_name_parameter);
   set_field_element_value_method.addParameter(field_element_index_parameter);
   set_field_element_value_method.addParameter(field_value_parameter);
 
   Method & set_all_field_element_values_method = createMethod(constants::set_all_field_element_values_method_name);
-  set_all_field_element_values_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::setAllFieldElementValuesCallback));
+  set_all_field_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllFieldElementValuesFunctor));
   set_all_field_element_values_method.addParameter(field_name_parameter);
   set_all_field_element_values_method.addParameter(field_value_parameter);
 
 #ifdef __AVR__
   Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
-  get_memory_free_method.attachCallback(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeCallback));
+  get_memory_free_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeFunctor));
   get_memory_free_method.setReturnTypeLong();
 #endif
 
-  // Interrupts
+  // Callbacks
 
   server_running_ = false;
 }
@@ -410,7 +410,7 @@ void Server::processRequestArray()
     // execute private method without checking parameters
     else if (request_method_index_ <= private_method_index_)
     {
-      methods_[request_method_index_].callback();
+      methods_[request_method_index_].functor();
     }
     else if (parameter_count != methods_[request_method_index_].getParameterCount())
     {
@@ -421,7 +421,7 @@ void Server::processRequestArray()
       bool parameters_ok = checkParameters();
       if (parameters_ok)
       {
-        methods_[request_method_index_].callback();
+        methods_[request_method_index_].functor();
       }
     }
   }
@@ -1029,24 +1029,24 @@ void Server::methodHelp(bool verbose, int method_index)
   response_.endObject();
 }
 
-void Server::interruptHelp(bool verbose, int interrupt_index)
+void Server::callbackHelp(bool verbose, int callback_index)
 {
-  if ((interrupt_index < 0) || (interrupt_index >= (int)interrupts_.max_size()))
+  if ((callback_index < 0) || (callback_index >= (int)callbacks_.max_size()))
   {
     return;
   }
 
   response_.beginObject();
 
-  const ConstantString & interrupt_name = interrupts_[interrupt_index].getName();
-  response_.write(constants::name_constant_string,interrupt_name);
-  const ConstantString & firmware_name = interrupts_[interrupt_index].getFirmwareName();
+  const ConstantString & callback_name = callbacks_[callback_index].getName();
+  response_.write(constants::name_constant_string,callback_name);
+  const ConstantString & firmware_name = callbacks_[callback_index].getFirmwareName();
   response_.write(constants::firmware_constant_string,firmware_name);
 
   response_.writeKey(constants::fields_constant_string);
   json_stream_.beginArray();
-  Array<Field *,constants::INTERRUPT_FIELD_COUNT_MAX> * field_ptrs_ptr = NULL;
-  field_ptrs_ptr = &interrupts_[interrupt_index].field_ptrs_;
+  Array<Field *,constants::CALLBACK_FIELD_COUNT_MAX> * field_ptrs_ptr = NULL;
+  field_ptrs_ptr = &callbacks_[callback_index].field_ptrs_;
   for (size_t i=0; i<field_ptrs_ptr->size(); ++i)
   {
     if (verbose)
@@ -1100,11 +1100,11 @@ void Server::help(bool verbose)
   // ? method
   // ? parameter
   // ? field
-  // ? interrupt
+  // ? callback
   // ?? method
   // ?? parameter
   // ?? field
-  // ?? interrupt
+  // ?? callback
   else if (parameter_count == 1)
   {
     const char * param_string = (*request_json_array_ptr_)[1];
@@ -1140,14 +1140,14 @@ void Server::help(bool verbose)
         }
         else
         {
-          int interrupt_index = findInterruptIndex(param_string);
-          if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.max_size()))
+          int callback_index = findCallbackIndex(param_string);
+          if ((callback_index >= 0) && (callback_index < (int)callbacks_.max_size()))
           {
-            // ? interrupt
-            // ?? interrupt
+            // ? callback
+            // ?? callback
             param_error = false;
             response_.writeResultKey();
-            interruptHelp(verbose,interrupt_index);
+            callbackHelp(verbose,callback_index);
           }
         }
       }
@@ -1328,15 +1328,15 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     }
     response_.endArray();
 
-    response_.writeKey(constants::interrupts_constant_string);
+    response_.writeKey(constants::callbacks_constant_string);
     response_.beginArray();
-    for (size_t interrupt_index=0; interrupt_index<interrupts_.size(); ++interrupt_index)
+    for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
     {
-      Interrupt & interrupt = interrupts_[interrupt_index];
-      if (interrupt.firmwareNameInArray(firmware_name_array))
+      Callback & callback = callbacks_[callback_index];
+      if (callback.firmwareNameInArray(firmware_name_array))
       {
-        const ConstantString & interrupt_name = interrupt.getName();
-        response_.write(interrupt_name);
+        const ConstantString & callback_name = callback.getName();
+        response_.write(callback_name);
       }
     }
     response_.endArray();
@@ -1370,11 +1370,11 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     }
     response_.endArray();
 
-    response_.writeKey(constants::interrupts_constant_string);
+    response_.writeKey(constants::callbacks_constant_string);
     response_.beginArray();
-    for (size_t interrupt_index=0; interrupt_index<interrupts_.size(); ++interrupt_index)
+    for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
     {
-      interruptHelp(false,interrupt_index);
+      callbackHelp(false,callback_index);
     }
     response_.endArray();
   }
@@ -1765,8 +1765,8 @@ void Server::subsetToString(char * destination,
   strcat(destination,array_close_str);
 }
 
-// Callbacks
-void Server::getMethodIdsCallback()
+// Functors
+void Server::getMethodIdsFunctor()
 {
   response_.writeResultKey();
   response_.beginObject();
@@ -1781,29 +1781,29 @@ void Server::getMethodIdsCallback()
   response_.endObject();
 }
 
-void Server::helpCallback()
+void Server::helpFunctor()
 {
   help(false);
 }
 
-void Server::verboseHelpCallback()
+void Server::verboseHelpFunctor()
 {
   help(true);
 }
 
-void Server::getDeviceIdCallback()
+void Server::getDeviceIdFunctor()
 {
   response_.writeResultKey();
   writeDeviceIdToResponse();
 }
 
-void Server::getDeviceInfoCallback()
+void Server::getDeviceInfoFunctor()
 {
   response_.writeResultKey();
   writeDeviceInfoToResponse();
 }
 
-void Server::getApiCallback()
+void Server::getApiFunctor()
 {
   ArduinoJson::JsonArray * firmware_name_array_ptr;
   parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
@@ -1811,7 +1811,7 @@ void Server::getApiCallback()
   writeApiToResponse(false,*firmware_name_array_ptr);
 }
 
-void Server::getApiVerboseCallback()
+void Server::getApiVerboseFunctor()
 {
   ArduinoJson::JsonArray * firmware_name_array_ptr;
   parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
@@ -1820,13 +1820,13 @@ void Server::getApiVerboseCallback()
 }
 
 #ifdef __AVR__
-void Server::getMemoryFreeCallback()
+void Server::getMemoryFreeFunctor()
 {
   response_.returnResult(freeMemory());
 }
 #endif
 
-void Server::getFieldDefaultValuesCallback()
+void Server::getFieldDefaultValuesFunctor()
 {
   response_.writeResultKey();
   response_.beginObject();
@@ -1838,12 +1838,12 @@ void Server::getFieldDefaultValuesCallback()
   response_.endObject();
 }
 
-void Server::setFieldsToDefaultsCallback()
+void Server::setFieldsToDefaultsFunctor()
 {
   setFieldsToDefaults();
 }
 
-void Server::setFieldToDefaultCallback()
+void Server::setFieldToDefaultFunctor()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index = findFieldIndex(field_name);
@@ -1858,7 +1858,7 @@ void Server::setFieldToDefaultCallback()
   }
 }
 
-void Server::getFieldValuesCallback()
+void Server::getFieldValuesFunctor()
 {
   response_.writeResultKey();
   response_.beginObject();
@@ -1870,7 +1870,7 @@ void Server::getFieldValuesCallback()
   response_.endObject();
 }
 
-void Server::getFieldValueCallback()
+void Server::getFieldValueFunctor()
 {
   response_.writeResultKey();
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
@@ -1886,7 +1886,7 @@ void Server::getFieldValueCallback()
   }
 }
 
-void Server::getFieldElementValueCallback()
+void Server::getFieldElementValueFunctor()
 {
   response_.writeResultKey();
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
@@ -1908,7 +1908,7 @@ void Server::getFieldElementValueCallback()
   }
 }
 
-void Server::setFieldValueCallback()
+void Server::setFieldValueFunctor()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index = findFieldIndex(field_name);
@@ -1975,7 +1975,7 @@ void Server::setFieldValueCallback()
   }
 }
 
-void Server::setFieldElementValueCallback()
+void Server::setFieldElementValueFunctor()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
@@ -2106,7 +2106,7 @@ void Server::setFieldElementValueCallback()
   }
 }
 
-void Server::setAllFieldElementValuesCallback()
+void Server::setAllFieldElementValuesFunctor()
 {
   const char * field_name = getParameterValue(constants::field_name_parameter_name);
   int field_index = findFieldIndex(field_name);

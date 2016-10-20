@@ -23,7 +23,7 @@
 #include "Field.h"
 #include "Parameter.h"
 #include "Method.h"
-#include "Interrupt.h"
+#include "Callback.h"
 #include "Response.h"
 #include "Constants.h"
 
@@ -49,12 +49,12 @@ public:
   template <size_t FIELDS_MAX_SIZE,
             size_t PARAMETERS_MAX_SIZE,
             size_t METHODS_MAX_SIZE,
-            size_t INTERRUPTS_MAX_SIZE>
+            size_t CALLBACKS_MAX_SIZE>
   void addFirmware(const constants::FirmwareInfo & firmware_info,
                    Field (&fields)[FIELDS_MAX_SIZE],
                    Parameter (&parameters)[PARAMETERS_MAX_SIZE],
                    Method (&methods)[METHODS_MAX_SIZE],
-                   Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
+                   Callback (&callbacks)[CALLBACKS_MAX_SIZE]);
 
   // Fields
   template <typename T>
@@ -76,9 +76,9 @@ public:
   Method & method(const ConstantString & method_name);
   Method & copyMethod(Method method,const ConstantString & method_name);
 
-  // Interrupts
-  Interrupt & createInterrupt(const ConstantString & interrupt_name);
-  Interrupt & interrupt(const ConstantString & interrupt_name);
+  // Callbacks
+  Callback & createCallback(const ConstantString & callback_name);
+  Callback & callback(const ConstantString & callback_name);
 
   // Response
   Response & response();
@@ -99,15 +99,15 @@ private:
   Field server_fields_[constants::SERVER_FIELD_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
   Method server_methods_[constants::SERVER_METHOD_COUNT_MAX];
-  Interrupt server_interrupts_[constants::SERVER_INTERRUPT_COUNT_MAX];
+  Callback server_callbacks_[constants::SERVER_CALLBACK_COUNT_MAX];
   ConcatenatedArray<Field,constants::FIRMWARE_COUNT_MAX> fields_;
   ConcatenatedArray<Parameter,constants::FIRMWARE_COUNT_MAX> parameters_;
   ConcatenatedArray<Method,constants::FIRMWARE_COUNT_MAX> methods_;
-  ConcatenatedArray<Interrupt,constants::FIRMWARE_COUNT_MAX> interrupts_;
+  ConcatenatedArray<Callback,constants::FIRMWARE_COUNT_MAX> callbacks_;
   Field dummy_field_;
   Parameter dummy_parameter_;
   Method dummy_method_;
-  Interrupt dummy_interrupt_;
+  Callback dummy_callback_;
   int private_method_index_;
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
@@ -134,7 +134,7 @@ private:
   template <typename T>
   int findMethodIndex(T const & method_name);
   template <typename T>
-  int findInterruptIndex(T const & interrupt_name);
+  int findCallbackIndex(T const & callback_name);
   int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
   int processParameterString(const char * parameter_string);
   bool checkParameters();
@@ -146,7 +146,7 @@ private:
   void fieldHelp(Field & field);
   void parameterHelp(Parameter & parameter, bool end_object=true);
   void methodHelp(bool verbose, int method_index);
-  void interruptHelp(bool verbose, int interrupt_index);
+  void callbackHelp(bool verbose, int callback_index);
   void help(bool verbose);
   void writeDeviceIdToResponse();
   void writeFirmwareInfoToResponse();
@@ -168,24 +168,24 @@ private:
                       const JsonStream::JsonTypes & parameter_array_element_type,
                       const size_t num);
 
-  // Callbacks
-  void getMethodIdsCallback();
-  void helpCallback();
-  void verboseHelpCallback();
-  void getDeviceIdCallback();
-  void getDeviceInfoCallback();
-  void getApiCallback();
-  void getApiVerboseCallback();
-  void getMemoryFreeCallback();
-  void getFieldDefaultValuesCallback();
-  void setFieldsToDefaultsCallback();
-  void setFieldToDefaultCallback();
-  void getFieldValuesCallback();
-  void getFieldValueCallback();
-  void getFieldElementValueCallback();
-  void setFieldValueCallback();
-  void setFieldElementValueCallback();
-  void setAllFieldElementValuesCallback();
+  // Functors
+  void getMethodIdsFunctor();
+  void helpFunctor();
+  void verboseHelpFunctor();
+  void getDeviceIdFunctor();
+  void getDeviceInfoFunctor();
+  void getApiFunctor();
+  void getApiVerboseFunctor();
+  void getMemoryFreeFunctor();
+  void getFieldDefaultValuesFunctor();
+  void setFieldsToDefaultsFunctor();
+  void setFieldToDefaultFunctor();
+  void getFieldValuesFunctor();
+  void getFieldValueFunctor();
+  void getFieldElementValueFunctor();
+  void setFieldValueFunctor();
+  void setFieldElementValueFunctor();
+  void setAllFieldElementValuesFunctor();
 
 };
 }

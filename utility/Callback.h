@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// Interrupt.h
+// Callback.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_SERVER_INTERRUPT_H_
-#define _MODULAR_SERVER_INTERRUPT_H_
+#ifndef _MODULAR_SERVER_CALLBACK_H_
+#define _MODULAR_SERVER_CALLBACK_H_
 #include "Streaming.h"
 #include "Array.h"
 #include "ConstantVariable.h"
@@ -20,22 +20,22 @@
 
 namespace modular_server
 {
-class Interrupt : private FirmwareElement
+class Callback : private FirmwareElement
 {
 public:
-  Interrupt();
+  Callback();
 
-  void attachCallback(const Functor0 & callback);
+  void attachFunctor(const Functor0 & functor);
   void addField(Field & field);
 
 private:
-  Functor0 callback_;
-  Array<Field *,constants::INTERRUPT_FIELD_COUNT_MAX> field_ptrs_;
-  Interrupt(const ConstantString & name);
+  Functor0 functor_;
+  Array<Field *,constants::CALLBACK_FIELD_COUNT_MAX> field_ptrs_;
+  Callback(const ConstantString & name);
   void setup(const ConstantString & name);
   int findFieldIndex(const ConstantString & field_name);
   size_t getFieldCount();
-  void callback();
+  void functor();
   friend class Server;
 };
 }
