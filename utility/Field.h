@@ -33,9 +33,9 @@ public:
   void setRange(const long min, const long max);
   void setRange(const double min, const double max);
   template <size_t MAX_SIZE>
-  void setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
-  void setSubset(const constants::SubsetMemberType * subset, size_t max_size, size_t size);
-  void addValueToSubset(const constants::SubsetMemberType & value);
+  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
+  void setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size);
+  void addValueToSubset(constants::SubsetMemberType & value);
 
   void attachPreSetValueFunctor(const Functor0 & functor);
   void attachPreSetElementValueFunctor(const Functor1<const size_t> & functor);
@@ -128,7 +128,7 @@ private:
   bool stringIsSavedAsCharArray();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
-  Vector<const constants::SubsetMemberType> & getSubset();
+  Vector<constants::SubsetMemberType> & getSubset();
   void preSetValueFunctor();
   void preSetElementValueFunctor(const size_t element_index);
   void postSetValueFunctor();

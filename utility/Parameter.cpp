@@ -138,13 +138,13 @@ void Parameter::removeArrayLengthRange()
   array_length_range_is_set_ = false;
 }
 
-void Parameter::setSubset(const constants::SubsetMemberType * subset, size_t max_size, size_t size)
+void Parameter::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
 {
   subset_.setStorage(subset,max_size,size);
   subset_is_set_ = true;
 }
 
-void Parameter::addValueToSubset(const constants::SubsetMemberType & value)
+void Parameter::addValueToSubset(constants::SubsetMemberType & value)
 {
   if (subset_is_set_)
   {
@@ -412,7 +412,7 @@ bool Parameter::valueInSubset(const char * value)
   return in_subset;
 }
 
-Vector<const constants::SubsetMemberType> & Parameter::getSubset()
+Vector<constants::SubsetMemberType> & Parameter::getSubset()
 {
   return subset_;
 }

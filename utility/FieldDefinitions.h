@@ -13,7 +13,7 @@ namespace modular_server
 {
 // public
 template <size_t MAX_SIZE>
-void Field::setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
+void Field::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
 {
   parameter_.setSubset(subset);
 }
@@ -217,7 +217,7 @@ bool Field::setValue(T * value, const size_t N)
     int subset_value_index = findSubsetValueIndex((const char *)value);
     if (subset_value_index >= 0)
     {
-      Vector<const constants::SubsetMemberType> & subset = getSubset();
+      Vector<constants::SubsetMemberType> & subset = getSubset();
       const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
       success = setValue(subset_value);
     }

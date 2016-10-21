@@ -31,9 +31,9 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
                          Callback (&callbacks)[CALLBACKS_MAX_SIZE])
 {
   firmware_info_array_.push_back(&firmware_info);
-  constants::SubsetMemberType firmware_name_ptr;
-  firmware_name_ptr.cs_ptr = firmware_info.name_ptr;
-  firmware_name_array_.push_back(firmware_name_ptr);
+  constants::SubsetMemberType firmware_name;
+  firmware_name.cs_ptr = firmware_info.name_ptr;
+  firmware_name_array_.push_back(firmware_name);
   parameter(constants::firmware_constant_string).addValueToSubset(firmware_name_array_.back());
   fields_.addArray(fields);
   parameters_.addArray(parameters);

@@ -112,7 +112,7 @@ private:
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
   Array<const constants::FirmwareInfo *,constants::FIRMWARE_COUNT_MAX> firmware_info_array_;
-  Array<const constants::SubsetMemberType,constants::FIRMWARE_COUNT_MAX+1> firmware_name_array_;
+  Array<constants::SubsetMemberType,constants::FIRMWARE_COUNT_MAX+1> firmware_name_array_;
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
   int request_method_index_;
@@ -163,7 +163,7 @@ private:
                        const long patch,
                        const size_t num);
   void subsetToString(char * destination,
-                      Vector<const constants::SubsetMemberType> & subset,
+                      Vector<constants::SubsetMemberType> & subset,
                       const JsonStream::JsonTypes & parameter_type,
                       const JsonStream::JsonTypes & parameter_array_element_type,
                       const size_t num);

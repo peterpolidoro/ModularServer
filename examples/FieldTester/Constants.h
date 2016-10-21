@@ -62,7 +62,7 @@ extern const char string_default[STRING_LENGTH_MAX];
 
 extern ConstantString odd_field_name;
 enum{ODD_SUBSET_LENGTH=5};
-extern const modular_server::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
+extern modular_server::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
 extern const long & odd_default;
 
 extern ConstantString mode_field_name;
@@ -70,7 +70,7 @@ enum{MODE_SUBSET_LENGTH=3};
 extern ConstantString mode_rising;
 extern ConstantString mode_falling;
 extern ConstantString mode_change;
-extern const modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
+extern modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 extern const ConstantString * const mode_ptr_default;
 
 extern ConstantString odd_array_field_name;
@@ -86,7 +86,7 @@ extern const long length_max;
 
 extern ConstantString count_parameter_name;
 enum{COUNT_SUBSET_LENGTH=7};
-extern const modular_server::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH];
+extern modular_server::SubsetMemberType count_subset[COUNT_SUBSET_LENGTH];
 
 extern ConstantString count_array_parameter_name;
 extern const size_t count_array_element_min;
@@ -100,7 +100,7 @@ extern ConstantString direction_up;
 extern ConstantString direction_down;
 extern ConstantString direction_left;
 extern ConstantString direction_right;
-extern const modular_server::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH];
+extern modular_server::SubsetMemberType direction_ptr_subset[DIRECTION_SUBSET_LENGTH];
 
 extern ConstantString direction_array_parameter_name;
 extern const size_t direction_array_length_min;

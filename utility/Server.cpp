@@ -234,9 +234,9 @@ void Server::setup()
 
   eeprom_initialized_ = false;
 
-  constants::SubsetMemberType firmware_name_ptr;
-  firmware_name_ptr.cs_ptr = &constants::all_constant_string;
-  firmware_name_array_.push_back(firmware_name_ptr);
+  constants::SubsetMemberType firmware_name;
+  firmware_name.cs_ptr = &constants::all_constant_string;
+  firmware_name_array_.push_back(firmware_name);
 
   // Streams
   response_.setJsonStream(json_stream_);
@@ -631,7 +631,7 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
   }
   if (!in_subset)
   {
-    Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
+    Vector<constants::SubsetMemberType> & subset = parameter.getSubset();
     char subset_str[constants::STRING_LENGTH_ERROR];
     subset_str[0] = '\0';
     subsetToString(subset_str,
@@ -775,7 +775,7 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
   }
   if (!in_subset)
   {
-    Vector<const constants::SubsetMemberType> & subset = parameter.getSubset();
+    Vector<constants::SubsetMemberType> & subset = parameter.getSubset();
     char subset_str[constants::STRING_LENGTH_ERROR];
     subset_str[0] = '\0';
     subsetToString(subset_str,
@@ -1670,7 +1670,7 @@ void Server::versionToString(char* destination,
 }
 
 void Server::subsetToString(char * destination,
-                            Vector<const constants::SubsetMemberType> & subset,
+                            Vector<constants::SubsetMemberType> & subset,
                             const JsonStream::JsonTypes & parameter_type,
                             const JsonStream::JsonTypes & parameter_array_element_type,
                             const size_t num)

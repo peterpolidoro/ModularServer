@@ -30,12 +30,12 @@ void Field::setRange(const double min, const double max)
   parameter_.setRange(min,max);
 }
 
-void Field::setSubset(const constants::SubsetMemberType * subset, size_t max_size, size_t size)
+void Field::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
 {
   parameter_.setSubset(subset,max_size,size);
 }
 
-void Field::addValueToSubset(const constants::SubsetMemberType & value)
+void Field::addValueToSubset(constants::SubsetMemberType & value)
 {
   parameter_.addValueToSubset(value);
 }
@@ -651,7 +651,7 @@ int Field::findSubsetValueIndex(const char * value)
   return parameter_.findSubsetValueIndex(value);
 }
 
-Vector<const constants::SubsetMemberType> & Field::getSubset()
+Vector<constants::SubsetMemberType> & Field::getSubset()
 {
   return parameter_.getSubset();
 }

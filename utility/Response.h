@@ -36,7 +36,7 @@ public:
   void write(T value);
   template <typename T, size_t N>
   void write(T (&value)[N]);
-  void write(Vector<const constants::SubsetMemberType> & value, JsonStream::JsonTypes type);
+  void write(Vector<constants::SubsetMemberType> & value, JsonStream::JsonTypes type);
   template <typename K, typename T>
   void write(K key, T value);
   template <typename K, typename T, size_t N>
@@ -61,7 +61,7 @@ private:
 
   Response();
   void reset();
-  void setJsonStream(const JsonStream & json_stream);
+  void setJsonStream(JsonStream & json_stream);
   void begin();
   void end();
   void setCompactPrint();

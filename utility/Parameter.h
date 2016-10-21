@@ -46,9 +46,9 @@ public:
                            const size_t array_length_max);
   void removeArrayLengthRange();
   template <size_t MAX_SIZE>
-  void setSubset(const constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
-  void setSubset(const constants::SubsetMemberType * subset, size_t max_size, size_t size);
-  void addValueToSubset(const constants::SubsetMemberType & value);
+  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
+  void setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size);
+  void addValueToSubset(constants::SubsetMemberType & value);
   void removeSubset();
 
   template <typename T>
@@ -67,7 +67,7 @@ private:
   size_t array_length_min_;
   size_t array_length_max_;
   bool array_length_range_is_set_;
-  Vector<const constants::SubsetMemberType> subset_;
+  Vector<constants::SubsetMemberType> subset_;
   bool subset_is_set_;
   Parameter(const ConstantString & name);
   const ConstantString & getUnits();
@@ -89,7 +89,7 @@ private:
   int findSubsetValueIndex(const char * value);
   bool valueInSubset(const long value);
   bool valueInSubset(const char * value);
-  Vector<const constants::SubsetMemberType> & getSubset();
+  Vector<constants::SubsetMemberType> & getSubset();
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
   friend class Field;
   friend class Method;

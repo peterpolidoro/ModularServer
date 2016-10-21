@@ -21,7 +21,7 @@ void Response::writeResultKey()
   }
 }
 
-void Response::write(Vector<const constants::SubsetMemberType> & value, JsonStream::JsonTypes type)
+void Response::write(Vector<constants::SubsetMemberType> & value, JsonStream::JsonTypes type)
 {
   switch (type)
   {
@@ -49,7 +49,7 @@ void Response::write(Vector<const constants::SubsetMemberType> & value, JsonStre
     }
     case JsonStream::STRING_TYPE:
     {
-      Array<ConstantString *,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
+      Array<const ConstantString *,constants::SUBSET_ELEMENT_COUNT_MAX> subset_elements_array;
       for (size_t i=0; i<value.size(); ++i)
       {
         subset_elements_array.push_back(value[i].cs_ptr);
@@ -110,7 +110,7 @@ void Response::reset()
   result_key_in_response_ = false;
 }
 
-void Response::setJsonStream(const JsonStream & json_stream)
+void Response::setJsonStream(JsonStream & json_stream)
 {
   json_stream_ptr_ = &json_stream;
 }

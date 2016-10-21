@@ -65,7 +65,7 @@ union NumberType
 union SubsetMemberType
 {
   long l;
-  ConstantString * cs_ptr;
+  const ConstantString * cs_ptr;
 };
 
 extern ConstantString firmware_name;
