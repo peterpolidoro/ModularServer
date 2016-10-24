@@ -9,6 +9,9 @@
 
 void MinimalDevice::setup()
 {
+  // Server Setup
+  modular_server_.setup();
+
   // Pin Setup
 
   // Add Server Streams

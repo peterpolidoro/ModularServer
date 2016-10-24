@@ -9,6 +9,9 @@
 
 void BoardLedController::setup()
 {
+  // Server Setup
+  modular_server_.setup();
+
   // Pin Setup
   pinMode(constants::led_pin, OUTPUT);
 

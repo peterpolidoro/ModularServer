@@ -14,7 +14,144 @@ namespace modular_server
 Server::Server() :
   eeprom_initialized_sv_(constants::eeprom_initialized_default_value)
 {
-  setup();
+}
+
+void Server::setup()
+{
+  request_method_index_ = -1;
+  parameter_count_ = 0;
+  server_stream_index_ = 0;
+
+  eeprom_initialized_ = false;
+
+  constants::SubsetMemberType firmware_name;
+  firmware_name.cs_ptr = &constants::all_constant_string;
+  firmware_name_array_.push_back(firmware_name);
+
+  // Streams
+  response_.setJsonStream(json_stream_);
+
+  // Device ID
+  setDeviceName(constants::empty_constant_string);
+  setFormFactor(constants::empty_constant_string);
+
+  // Hardware Info
+
+  // Firmware
+  addFirmware(constants::firmware_info,
+              server_fields_,
+              server_parameters_,
+              server_methods_,
+              server_callbacks_);
+
+  // Fields
+  Field & serial_number_field = createField(constants::serial_number_field_name,constants::serial_number_default);
+  serial_number_field.setRange(constants::serial_number_min,constants::serial_number_max);
+
+  // Parameters
+  Parameter::get_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+
+  Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
+  firmware_parameter.setTypeString();
+  firmware_parameter.setArrayLengthRange(1,constants::FIRMWARE_COUNT_MAX);
+  firmware_parameter.setSubset(firmware_name_array_.data(),
+                               firmware_name_array_.max_size(),
+                               firmware_name_array_.size());
+
+  Parameter & field_name_parameter = createParameter(constants::field_name_parameter_name);
+  field_name_parameter.setTypeString();
+
+  Parameter & field_value_parameter = createParameter(constants::field_value_parameter_name);
+  field_value_parameter.setTypeValue();
+
+  Parameter & field_element_index_parameter = createParameter(constants::field_element_index_parameter_name);
+  field_element_index_parameter.setTypeLong();
+
+  // Methods
+  Method & get_method_ids_method = createMethod(constants::get_method_ids_method_name);
+  get_method_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsFunctor));
+  get_method_ids_method.setReturnTypeObject();
+  private_method_index_ = 0;
+
+  Method & help_method = createMethod(constants::help_method_name);
+  help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpFunctor));
+  help_method.setReturnTypeObject();
+  private_method_index_++;
+
+  Method & verbose_help_method = createMethod(constants::verbose_help_method_name);
+  verbose_help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpFunctor));
+  verbose_help_method.setReturnTypeObject();
+  private_method_index_++;
+
+  Method & get_device_id_method = createMethod(constants::get_device_id_method_name);
+  get_device_id_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdFunctor));
+  get_device_id_method.setReturnTypeObject();
+
+  Method & get_device_info_method = createMethod(constants::get_device_info_method_name);
+  get_device_info_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoFunctor));
+  get_device_info_method.setReturnTypeObject();
+
+  Method & get_api_method = createMethod(constants::get_api_method_name);
+  get_api_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiFunctor));
+  get_api_method.addParameter(firmware_parameter);
+  get_api_method.setReturnTypeObject();
+
+  Method & get_api_verbose_method = createMethod(constants::get_api_verbose_method_name);
+  get_api_verbose_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseFunctor));
+  get_api_verbose_method.addParameter(firmware_parameter);
+  get_api_verbose_method.setReturnTypeObject();
+
+  Method & get_field_default_values_method = createMethod(constants::get_field_default_values_method_name);
+  get_field_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesFunctor));
+  get_field_default_values_method.setReturnTypeObject();
+
+  Method & set_fields_to_defaults_method = createMethod(constants::set_fields_to_defaults_method_name);
+  set_fields_to_defaults_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldsToDefaultsFunctor));
+
+  Method & set_field_to_default_method = createMethod(constants::set_field_to_default_method_name);
+  set_field_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldToDefaultFunctor));
+  set_field_to_default_method.addParameter(field_name_parameter);
+
+  Method & get_field_values_method = createMethod(constants::get_field_values_method_name);
+  get_field_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValuesFunctor));
+  get_field_values_method.setReturnTypeObject();
+
+  Method & get_field_value_method = createMethod(constants::get_field_value_method_name);
+  get_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValueFunctor));
+  get_field_value_method.addParameter(field_name_parameter);
+  get_field_value_method.setReturnTypeValue();
+
+  Method & get_field_element_value_method = createMethod(constants::get_field_element_value_method_name);
+  get_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldElementValueFunctor));
+  get_field_element_value_method.addParameter(field_name_parameter);
+  get_field_element_value_method.addParameter(field_element_index_parameter);
+  get_field_element_value_method.setReturnTypeValue();
+
+  Method & set_field_value_method = createMethod(constants::set_field_value_method_name);
+  set_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldValueFunctor));
+  set_field_value_method.addParameter(field_name_parameter);
+  set_field_value_method.addParameter(field_value_parameter);
+
+  Method & set_field_element_value_method = createMethod(constants::set_field_element_value_method_name);
+  set_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldElementValueFunctor));
+  set_field_element_value_method.addParameter(field_name_parameter);
+  set_field_element_value_method.addParameter(field_element_index_parameter);
+  set_field_element_value_method.addParameter(field_value_parameter);
+
+  Method & set_all_field_element_values_method = createMethod(constants::set_all_field_element_values_method_name);
+  set_all_field_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllFieldElementValuesFunctor));
+  set_all_field_element_values_method.addParameter(field_name_parameter);
+  set_all_field_element_values_method.addParameter(field_value_parameter);
+
+#ifdef __AVR__
+  Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
+  get_memory_free_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeFunctor));
+  get_memory_free_method.setReturnTypeLong();
+#endif
+
+  // Callbacks
+
+  server_running_ = false;
 }
 
 // Streams
@@ -226,144 +363,6 @@ void Server::handleRequest()
 }
 
 // private
-void Server::setup()
-{
-  request_method_index_ = -1;
-  parameter_count_ = 0;
-  server_stream_index_ = 0;
-
-  eeprom_initialized_ = false;
-
-  constants::SubsetMemberType firmware_name;
-  firmware_name.cs_ptr = &constants::all_constant_string;
-  firmware_name_array_.push_back(firmware_name);
-
-  // Streams
-  response_.setJsonStream(json_stream_);
-
-  // Device ID
-  setDeviceName(constants::empty_constant_string);
-  setFormFactor(constants::empty_constant_string);
-
-  // Hardware Info
-
-  // Firmware
-  addFirmware(constants::firmware_info,
-              server_fields_,
-              server_parameters_,
-              server_methods_,
-              server_callbacks_);
-
-  // Fields
-  Field & serial_number_field = createField(constants::serial_number_field_name,constants::serial_number_default);
-  serial_number_field.setRange(constants::serial_number_min,constants::serial_number_max);
-
-  // Parameters
-  Parameter::get_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
-
-  Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
-  firmware_parameter.setTypeString();
-  firmware_parameter.setArrayLengthRange(1,constants::FIRMWARE_COUNT_MAX);
-  firmware_parameter.setSubset(firmware_name_array_.data(),
-                               firmware_name_array_.max_size(),
-                               firmware_name_array_.size());
-
-  Parameter & field_name_parameter = createParameter(constants::field_name_parameter_name);
-  field_name_parameter.setTypeString();
-
-  Parameter & field_value_parameter = createParameter(constants::field_value_parameter_name);
-  field_value_parameter.setTypeValue();
-
-  Parameter & field_element_index_parameter = createParameter(constants::field_element_index_parameter_name);
-  field_element_index_parameter.setTypeLong();
-
-  // Methods
-  Method & get_method_ids_method = createMethod(constants::get_method_ids_method_name);
-  get_method_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsFunctor));
-  get_method_ids_method.setReturnTypeObject();
-  private_method_index_ = 0;
-
-  Method & help_method = createMethod(constants::help_method_name);
-  help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpFunctor));
-  help_method.setReturnTypeObject();
-  private_method_index_++;
-
-  Method & verbose_help_method = createMethod(constants::verbose_help_method_name);
-  verbose_help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpFunctor));
-  verbose_help_method.setReturnTypeObject();
-  private_method_index_++;
-
-  Method & get_device_id_method = createMethod(constants::get_device_id_method_name);
-  get_device_id_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdFunctor));
-  get_device_id_method.setReturnTypeObject();
-
-  Method & get_device_info_method = createMethod(constants::get_device_info_method_name);
-  get_device_info_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoFunctor));
-  get_device_info_method.setReturnTypeObject();
-
-  Method & get_api_method = createMethod(constants::get_api_method_name);
-  get_api_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiFunctor));
-  get_api_method.addParameter(firmware_parameter);
-  get_api_method.setReturnTypeObject();
-
-  Method & get_api_verbose_method = createMethod(constants::get_api_verbose_method_name);
-  get_api_verbose_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseFunctor));
-  get_api_verbose_method.addParameter(firmware_parameter);
-  get_api_verbose_method.setReturnTypeObject();
-
-  Method & get_field_default_values_method = createMethod(constants::get_field_default_values_method_name);
-  get_field_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesFunctor));
-  get_field_default_values_method.setReturnTypeObject();
-
-  Method & set_fields_to_defaults_method = createMethod(constants::set_fields_to_defaults_method_name);
-  set_fields_to_defaults_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldsToDefaultsFunctor));
-
-  Method & set_field_to_default_method = createMethod(constants::set_field_to_default_method_name);
-  set_field_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldToDefaultFunctor));
-  set_field_to_default_method.addParameter(field_name_parameter);
-
-  Method & get_field_values_method = createMethod(constants::get_field_values_method_name);
-  get_field_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValuesFunctor));
-  get_field_values_method.setReturnTypeObject();
-
-  Method & get_field_value_method = createMethod(constants::get_field_value_method_name);
-  get_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValueFunctor));
-  get_field_value_method.addParameter(field_name_parameter);
-  get_field_value_method.setReturnTypeValue();
-
-  Method & get_field_element_value_method = createMethod(constants::get_field_element_value_method_name);
-  get_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldElementValueFunctor));
-  get_field_element_value_method.addParameter(field_name_parameter);
-  get_field_element_value_method.addParameter(field_element_index_parameter);
-  get_field_element_value_method.setReturnTypeValue();
-
-  Method & set_field_value_method = createMethod(constants::set_field_value_method_name);
-  set_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldValueFunctor));
-  set_field_value_method.addParameter(field_name_parameter);
-  set_field_value_method.addParameter(field_value_parameter);
-
-  Method & set_field_element_value_method = createMethod(constants::set_field_element_value_method_name);
-  set_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldElementValueFunctor));
-  set_field_element_value_method.addParameter(field_name_parameter);
-  set_field_element_value_method.addParameter(field_element_index_parameter);
-  set_field_element_value_method.addParameter(field_value_parameter);
-
-  Method & set_all_field_element_values_method = createMethod(constants::set_all_field_element_values_method_name);
-  set_all_field_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllFieldElementValuesFunctor));
-  set_all_field_element_values_method.addParameter(field_name_parameter);
-  set_all_field_element_values_method.addParameter(field_value_parameter);
-
-#ifdef __AVR__
-  Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
-  get_memory_free_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeFunctor));
-  get_memory_free_method.setReturnTypeLong();
-#endif
-
-  // Callbacks
-
-  server_running_ = false;
-}
-
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
 {
   int parameter_index = findMethodParameterIndex(request_method_index_,parameter_name);

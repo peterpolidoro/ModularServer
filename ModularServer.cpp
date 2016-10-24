@@ -14,6 +14,11 @@ ModularServer::ModularServer()
 {
 }
 
+void ModularServer::setup()
+{
+  server_.setup();
+}
+
 // Streams
 void ModularServer::addServerStream(Stream & stream)
 {

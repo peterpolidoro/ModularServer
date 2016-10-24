@@ -20,6 +20,7 @@ class ModularServer
 {
 public:
   ModularServer();
+  void setup();
 
   // Streams
   void addServerStream(Stream & stream);

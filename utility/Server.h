@@ -34,6 +34,7 @@ class Server
 {
 public:
   Server();
+  void setup();
 
   // Streams
   void addServerStream(Stream & stream);
@@ -121,7 +122,6 @@ private:
   SavedVariable eeprom_initialized_sv_;
   bool server_running_;
 
-  void setup();
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   void processRequestArray();
   int findRequestMethodIndex(const char * method_string);
