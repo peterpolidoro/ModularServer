@@ -19,7 +19,7 @@ enum{PARAMETER_COUNT_MAX=1};
 enum{METHOD_COUNT_MAX=1};
 enum{CALLBACK_COUNT_MAX=1};
 
-extern const size_t baudrate;
+extern const long baudrate;
 
 extern ConstantString device_name;
 

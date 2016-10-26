@@ -10,7 +10,7 @@
 
 namespace constants
 {
-const size_t baudrate = 9600;
+const long baudrate = 115200;
 
 CONSTANT_STRING(device_name,"board_led_controller");
 

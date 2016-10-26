@@ -14,7 +14,7 @@ License:
 
 Open the Serial Monitor in the Arduino IDE.
 
-Set the baudrate to match the value in the Arduino sketch (9600).
+Set the baudrate to match the value in the Arduino sketch (115200).
 
 Set the line ending to 'Newline'.
 
