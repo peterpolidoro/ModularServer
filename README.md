@@ -26,24 +26,24 @@ work with the Arduino Mega 2560 and Teensy 3.2.
       "getDeviceInfo",
       "getApi",
       "getApiVerbose",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
+      "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
+      "setPropertyToDefault",
+      "getPropertyValues",
+      "getPropertyValue",
+      "getPropertyElementValue",
+      "setPropertyValue",
+      "setPropertyElementValue",
+      "setAllPropertyElementValues",
       "getMemoryFree"
     ],
     "parameters":[
       "firmware",
-      "field_name",
-      "field_value",
-      "field_element_index"
+      "property_name",
+      "property_value",
+      "property_element_index"
     ],
-    "fields":[
+    "properties":[
       "serial_number"
     ]
   }

@@ -12,9 +12,9 @@ namespace constants
 {
 const long baudrate = 115200;
 
-CONSTANT_STRING(device_name,"field_tester");
+CONSTANT_STRING(device_name,"property_tester");
 
-CONSTANT_STRING(firmware_name,"FieldTester");
+CONSTANT_STRING(firmware_name,"PropertyTester");
 // Use semantic versioning http://semver.org/
 const modular_server::FirmwareInfo firmware_info =
   {
@@ -64,30 +64,30 @@ const modular_server::HardwareInfo hardware_info =
 
 // Units
 
-// Fields
-CONSTANT_STRING(double_field_name,"double");
+// Properties
+CONSTANT_STRING(double_property_name,"double");
 const double double_default = 3.14159;
 
-CONSTANT_STRING(bool_field_name,"bool");
+CONSTANT_STRING(bool_property_name,"bool");
 const bool bool_default = false;
 
-CONSTANT_STRING(long_array_field_name,"long_array");
+CONSTANT_STRING(long_array_property_name,"long_array");
 const long long_array_default[LONG_ARRAY_LENGTH] = {5,4,3,2};
 const long long_array_element_min = -3;
 const long long_array_element_max = 10;
 
-CONSTANT_STRING(double_array_field_name,"double_array");
+CONSTANT_STRING(double_array_property_name,"double_array");
 const double double_array_default[DOUBLE_ARRAY_LENGTH] = {-1.1,2.2,3.3};
 const double double_array_element_min = -33.333;
 const double double_array_element_max = 100.0;
 
-CONSTANT_STRING(bool_array_field_name,"bool_array");
+CONSTANT_STRING(bool_array_property_name,"bool_array");
 const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
 
-CONSTANT_STRING(string_field_name,"string");
+CONSTANT_STRING(string_property_name,"string");
 const char string_default[STRING_LENGTH_MAX] = "abcdef";
 
-CONSTANT_STRING(odd_field_name,"odd");
+CONSTANT_STRING(odd_property_name,"odd");
 modular_server::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH] =
   {
     {.l=1},
@@ -98,7 +98,7 @@ modular_server::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH] =
   };
 const long & odd_default = odd_subset[2].l;
 
-CONSTANT_STRING(mode_field_name,"mode");
+CONSTANT_STRING(mode_property_name,"mode");
 CONSTANT_STRING(mode_rising,"RISING");
 CONSTANT_STRING(mode_falling,"FALLING");
 CONSTANT_STRING(mode_change,"CHANGE");
@@ -110,7 +110,7 @@ modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   };
 const ConstantString * const mode_ptr_default = &mode_rising;
 
-CONSTANT_STRING(odd_array_field_name,"odd_array");
+CONSTANT_STRING(odd_array_property_name,"odd_array");
 const long odd_array_default[ODD_ARRAY_LENGTH] =
   {
     odd_subset[0].l,

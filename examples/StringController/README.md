@@ -19,7 +19,7 @@ Set the baudrate to match the value in the Arduino sketch (115200).
 Set the line ending to 'Newline'.
 
 To get help information about the modular device, type a single
-question mark ? into the input field and press the 'Send' button or
+question mark ? into the input property and press the 'Send' button or
 press the 'Enter' key.
 
 ```shell
@@ -44,15 +44,15 @@ Example Response:
         "getDeviceInfo",
         "getApi",
         "getApiVerbose",
-        "getFieldDefaultValues",
-        "setFieldsToDefaults",
-        "setFieldToDefault",
-        "getFieldValues",
-        "getFieldValue",
-        "getFieldElementValue",
-        "setFieldValue",
-        "setFieldElementValue",
-        "setAllFieldElementValues",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "setPropertyToDefault",
+        "getPropertyValues",
+        "getPropertyValue",
+        "getPropertyElementValue",
+        "setPropertyValue",
+        "setPropertyElementValue",
+        "setAllPropertyElementValues",
         "getMemoryFree",
         "echo",
         "length",
@@ -65,16 +65,16 @@ Example Response:
       ],
       "parameters":[
         "firmware",
-        "field_name",
-        "field_value",
-        "field_element_index",
+        "property_name",
+        "property_value",
+        "property_element_index",
         "string",
         "string2",
         "count",
         "index_array",
         "double_echo"
       ],
-      "fields":[
+      "properties":[
         "serial_number",
         "starting_chars_count",
         "stored_string"
@@ -86,7 +86,7 @@ Example Response:
 ```
 
 "methods" is an array of user methods. To execute a method, simply
-type it into the input field and press the 'Send' button or press the
+type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
 Example Method:
@@ -277,14 +277,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldValue starting_chars_count 5
+setPropertyValue starting_chars_count 5
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "result":null
 }
 ```
@@ -326,7 +326,7 @@ Example Response:
 }
 ```
 
-The serial\_number field can be changed to uniquely identify devices
+The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
 Use the getDeviceInfo method to get information about the hardware and
@@ -364,7 +364,7 @@ Example Response:
 }
 ```
 
-Every method, parameter, and field belongs to one firmware set.
+Every method, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 method.
@@ -387,15 +387,15 @@ Example Response:
       "getDeviceInfo",
       "getApi",
       "getApiVerbose",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
+      "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
+      "setPropertyToDefault",
+      "getPropertyValues",
+      "getPropertyValue",
+      "getPropertyElementValue",
+      "setPropertyValue",
+      "setPropertyElementValue",
+      "setAllPropertyElementValues",
       "getMemoryFree",
       "echo",
       "length",
@@ -408,16 +408,16 @@ Example Response:
     ],
     "parameters":[
       "firmware",
-      "field_name",
-      "field_value",
-      "field_element_index",
+      "property_name",
+      "property_value",
+      "property_element_index",
       "string",
       "string2",
       "count",
       "index_array",
       "double_echo"
     ],
-    "fields":[
+    "properties":[
       "serial_number",
       "starting_chars_count",
       "stored_string"
@@ -457,7 +457,7 @@ Example Response:
       "index_array",
       "double_echo"
     ],
-    "fields":[
+    "properties":[
       "starting_chars_count",
       "stored_string"
     ],
@@ -477,27 +477,27 @@ dev.get_device_id()
 {'form_factor': '5x3', 'name': 'string_controller', 'serial_number': 77}
 dev.get_methods()
 ['echo',
- 'get_field_default_values',
- 'set_field_value',
+ 'get_property_default_values',
+ 'set_property_value',
  'get_device_info',
  'starts_with',
  'get_memory_free',
- 'set_field_element_value',
- 'set_fields_to_defaults',
+ 'set_property_element_value',
+ 'set_properties_to_defaults',
  'get_device_id',
  'chars_at',
  'set_stored_string',
  'repeat',
  'get_stored_string',
- 'set_all_field_element_values',
- 'get_field_value',
+ 'set_all_property_element_values',
+ 'get_property_value',
  'starting_chars',
- 'get_field_element_value',
+ 'get_property_element_value',
  'get_api',
  'get_api_verbose',
  'length',
- 'set_field_to_default',
- 'get_field_values']
+ 'set_property_to_default',
+ 'get_property_values']
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
@@ -534,12 +534,12 @@ dev.chars_at('I am an input string!',[0,6,8])
 [{'char': 'I', 'index': 0},
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
-dev.get_field_value('starting_chars_count')
+dev.get_property_value('starting_chars_count')
 5
-dev.set_field_value('starting_chars_count',3)
-dev.call_server_method('set_field_value','starting_chars_count',7)
-dev.send_json_request('["set_field_value","starting_chars_count",5]')
-dev.get_field_value('starting_chars_count')
+dev.set_property_value('starting_chars_count',3)
+dev.call_server_method('set_property_value','starting_chars_count',7)
+dev.send_json_request('["set_property_value","starting_chars_count",5]')
+dev.get_property_value('starting_chars_count')
 3
 dev.starting_chars('Fantastic!')
 'Fan'
@@ -548,7 +548,7 @@ dev.call_server_method('starting_chars','Fantastic!')
 dev.send_json_request('["starting_chars","Fantastic!"]')
 'Fan'
 dev.get_api(["StringController"])
-{'fields': ['starting_chars_count', 'stored_string'],
+{'properties': ['starting_chars_count', 'stored_string'],
  'firmware': ['StringController'],
  'callbacks': [],
  'methods': ['echo',
@@ -595,14 +595,14 @@ dev.getMethods()                 % get device methods
   getDeviceInfo
   getApi
   getApiVerbose
-  getFieldDefaultValues
-  setFieldsToDefaults
-  getFieldValues
-  getFieldValue
-  getFieldElementValue
-  setFieldValue
-  setFieldElementValue
-  setAllFieldElementValues
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getPropertyValue
+  getPropertyElementValue
+  setPropertyValue
+  setPropertyElementValue
+  setAllPropertyElementValues
   getMemoryFree
   echo
   length
@@ -639,7 +639,7 @@ chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =
   [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
-dev.getFieldValue('starting_chars_count')
+dev.getPropertyValue('starting_chars_count')
 ans =
      5
 dev.startingChars('Fantastic!')

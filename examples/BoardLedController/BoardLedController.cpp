@@ -27,12 +27,12 @@ void BoardLedController::setup()
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
-                              fields_,
+                              properties_,
                               parameters_,
                               methods_,
                               callbacks_);
 
-  // Fields
+  // Properties
 
   // Parameters
   modular_server::Parameter & duration_on_parameter = modular_server_.createParameter(constants::duration_on_parameter_name);
@@ -90,10 +90,10 @@ void BoardLedController::update()
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// modular_server_.field(field_name).getValue(value) value type must match the field default type
-// modular_server_.field(field_name).setValue(value) value type must match the field default type
-// modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
-// modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type
+// modular_server_.property(property_name).getValue(value) value type must match the property default type
+// modular_server_.property(property_name).setValue(value) value type must match the property default type
+// modular_server_.property(property_name).getElementValue(value) value type must match the property array element default type
+// modular_server_.property(property_name).setElementValue(value) value type must match the property array element default type
 
 void BoardLedController::setLedOnHandler()
 {

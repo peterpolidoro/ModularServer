@@ -14,7 +14,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=2};
+enum{PROPERTY_COUNT_MAX=2};
 enum{PARAMETER_COUNT_MAX=5};
 enum{METHOD_COUNT_MAX=8};
 enum{CALLBACK_COUNT_MAX=1};
@@ -32,16 +32,16 @@ extern const modular_server::HardwareInfo hardware_info;
 
 // Units
 
-// Fields
-// Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
+// Properties
+// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
 extern const long serial_number_default_new;
 
-extern ConstantString starting_chars_count_field_name;
+extern ConstantString starting_chars_count_property_name;
 extern const long starting_chars_count_min;
 extern const long starting_chars_count_max;
 extern const long starting_chars_count_default;
 
-extern ConstantString stored_string_field_name;
+extern ConstantString stored_string_property_name;
 enum{STORED_STRING_LENGTH_MAX=30};
 extern const char stored_string_default[STORED_STRING_LENGTH_MAX];
 

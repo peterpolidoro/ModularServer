@@ -18,36 +18,36 @@ namespace modular_server
 // Hardware Info
 
 // Firmware
-template <size_t FIELDS_MAX_SIZE,
+template <size_t PROPERTIES_MAX_SIZE,
           size_t PARAMETERS_MAX_SIZE,
           size_t METHODS_MAX_SIZE,
           size_t CALLBACKS_MAX_SIZE>
 void ModularServer::addFirmware(const FirmwareInfo & firmware_info,
-                                Field (&fields)[FIELDS_MAX_SIZE],
+                                Property (&properties)[PROPERTIES_MAX_SIZE],
                                 Parameter (&parameters)[PARAMETERS_MAX_SIZE],
                                 Method (&methods)[METHODS_MAX_SIZE],
                                 Callback (&callbacks)[CALLBACKS_MAX_SIZE])
 {
   server_.addFirmware(firmware_info,
-                      fields,
+                      properties,
                       parameters,
                       methods,
                       callbacks);
 }
 
-// Fields
+// Properties
 template <typename T>
-Field & ModularServer::createField(const ConstantString & field_name,
+Property & ModularServer::createProperty(const ConstantString & property_name,
                                    const T & default_value)
 {
-  return server_.createField(field_name,default_value);
+  return server_.createProperty(property_name,default_value);
 }
 
 template <typename T, size_t N>
-Field & ModularServer::createField(const ConstantString & field_name,
+Property & ModularServer::createProperty(const ConstantString & property_name,
                                    const T (&default_value)[N])
 {
-  return server_.createField(field_name,default_value);
+  return server_.createProperty(property_name,default_value);
 }
 
 // Parameters

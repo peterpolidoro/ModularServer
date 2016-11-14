@@ -20,12 +20,12 @@ namespace modular_server
 // Hardware Info
 
 // Firmware
-template <size_t FIELDS_MAX_SIZE,
+template <size_t PROPERTIES_MAX_SIZE,
           size_t PARAMETERS_MAX_SIZE,
           size_t METHODS_MAX_SIZE,
           size_t CALLBACKS_MAX_SIZE>
 void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
-                         Field (&fields)[FIELDS_MAX_SIZE],
+                         Property (&properties)[PROPERTIES_MAX_SIZE],
                          Parameter (&parameters)[PARAMETERS_MAX_SIZE],
                          Method (&methods)[METHODS_MAX_SIZE],
                          Callback (&callbacks)[CALLBACKS_MAX_SIZE])
@@ -35,40 +35,40 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
   firmware_name.cs_ptr = firmware_info.name_ptr;
   firmware_name_array_.push_back(firmware_name);
   parameter(constants::firmware_constant_string).addValueToSubset(firmware_name_array_.back());
-  fields_.addArray(fields);
+  properties_.addArray(properties);
   parameters_.addArray(parameters);
   methods_.addArray(methods);
   callbacks_.addArray(callbacks);
 }
 
-// Fields
+// Properties
 template <typename T>
-Field & Server::createField(const ConstantString & field_name,
+Property & Server::createProperty(const ConstantString & property_name,
                            const T & default_value)
 {
-  int field_index = findFieldIndex(field_name);
-  if (field_index < 0)
+  int property_index = findPropertyIndex(property_name);
+  if (property_index < 0)
   {
-    fields_.push_back(Field(field_name,
+    properties_.push_back(Property(property_name,
                             default_value));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
-    fields_.back().parameter().setFirmwareName(*firmware_name_ptr);
-    return fields_.back();
+    properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
+    return properties_.back();
   }
 }
 
 template <typename T, size_t N>
-Field & Server::createField(const ConstantString & field_name,
+Property & Server::createProperty(const ConstantString & property_name,
                            const T (&default_value)[N])
 {
-  int field_index = findFieldIndex(field_name);
-  if (field_index < 0)
+  int property_index = findPropertyIndex(property_name);
+  if (property_index < 0)
   {
-    fields_.push_back(Field(field_name,
+    properties_.push_back(Property(property_name,
                             default_value));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
-    fields_.back().parameter().setFirmwareName(*firmware_name_ptr);
-    return fields_.back();
+    properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
+    return properties_.back();
   }
 }
 
@@ -82,18 +82,18 @@ Field & Server::createField(const ConstantString & field_name,
 
 // private
 template <typename T>
-int Server::findFieldIndex(T const & field_name)
+int Server::findPropertyIndex(T const & property_name)
 {
-  int field_index = -1;
-  for (size_t i=0; i<fields_.size(); ++i)
+  int property_index = -1;
+  for (size_t i=0; i<properties_.size(); ++i)
   {
-    if (fields_[i].parameter().compareName(field_name))
+    if (properties_[i].parameter().compareName(property_name))
     {
-      field_index = i;
+      property_index = i;
       break;
     }
   }
-  return field_index;
+  return property_index;
 }
 
 template <typename T>

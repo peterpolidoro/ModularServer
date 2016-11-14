@@ -26,19 +26,19 @@ void StringController::setup()
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
-                              fields_,
+                              properties_,
                               parameters_,
                               methods_,
                               callbacks_);
 
-  // Fields
-  modular_server::Field & serial_number_field = modular_server_.field(modular_server::constants::serial_number_field_name);
-  serial_number_field.setDefaultValue(constants::serial_number_default_new);
+  // Properties
+  modular_server::Property & serial_number_property = modular_server_.property(modular_server::constants::serial_number_property_name);
+  serial_number_property.setDefaultValue(constants::serial_number_default_new);
 
-  modular_server::Field & starting_chars_count_field = modular_server_.createField(constants::starting_chars_count_field_name,constants::starting_chars_count_default);
-  starting_chars_count_field.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
+  modular_server::Property & starting_chars_count_property = modular_server_.createProperty(constants::starting_chars_count_property_name,constants::starting_chars_count_default);
+  starting_chars_count_property.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
 
-  modular_server::Field & stored_string_field = modular_server_.createField(constants::stored_string_field_name,constants::stored_string_default);
+  modular_server::Property & stored_string_property = modular_server_.createProperty(constants::stored_string_property_name,constants::stored_string_default);
 
   // Parameters
   modular_server::Parameter & string_parameter = modular_server_.createParameter(constants::string_parameter_name);
@@ -125,10 +125,10 @@ void StringController::update()
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
-// modular_server_.field(field_name).getValue(value) value type must match the field default type
-// modular_server_.field(field_name).setValue(value) value type must match the field default type
-// modular_server_.field(field_name).getElementValue(value) value type must match the field array element default type
-// modular_server_.field(field_name).setElementValue(value) value type must match the field array element default type
+// modular_server_.property(property_name).getValue(value) value type must match the property default type
+// modular_server_.property(property_name).setValue(value) value type must match the property default type
+// modular_server_.property(property_name).getElementValue(value) value type must match the property array element default type
+// modular_server_.property(property_name).setElementValue(value) value type must match the property array element default type
 
 void StringController::echoHandler()
 {
@@ -219,7 +219,7 @@ void StringController::startingCharsHandler()
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   long starting_chars_count;
-  modular_server_.field(constants::starting_chars_count_field_name).getValue(starting_chars_count);
+  modular_server_.property(constants::starting_chars_count_property_name).getValue(starting_chars_count);
   modular_server_.response().returnResult(String(string).substring(0,starting_chars_count));
 }
 
@@ -228,14 +228,14 @@ void StringController::setStoredStringHandler()
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
   size_t array_length = strlen(string) + 1;
-  modular_server_.field(constants::stored_string_field_name).setValue(string,array_length);
+  modular_server_.property(constants::stored_string_property_name).setValue(string,array_length);
 }
 
 void StringController::getStoredStringHandler()
 {
-  modular_server::Field & field = modular_server_.field(constants::stored_string_field_name);
-  size_t array_length = field.getArrayLength();
+  modular_server::Property & property = modular_server_.property(constants::stored_string_property_name);
+  size_t array_length = property.getArrayLength();
   char stored_string[array_length];
-  field.getValue(stored_string,array_length);
+  property.getValue(stored_string,array_length);
   modular_server_.response().returnResult(stored_string);
 }

@@ -91,7 +91,7 @@ private:
   bool valueInSubset(const char * value);
   Vector<constants::SubsetMemberType> & getSubset();
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
-  friend class Field;
+  friend class Property;
   friend class Method;
   friend class Server;
 

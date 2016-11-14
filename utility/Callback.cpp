@@ -21,13 +21,13 @@ void Callback::attachFunctor(const Functor0 & functor)
   functor_ = functor;
 }
 
-void Callback::addField(Field & field)
+void Callback::addProperty(Property & property)
 {
-  const ConstantString & field_name = field.getName();
-  int field_index = findFieldIndex(field_name);
-  if (field_index < 0)
+  const ConstantString & property_name = property.getName();
+  int property_index = findPropertyIndex(property_name);
+  if (property_index < 0)
   {
-    field_ptrs_.push_back(&field);
+    property_ptrs_.push_back(&property);
   }
 }
 
@@ -44,23 +44,23 @@ void Callback::setup(const ConstantString & name)
   setName(name);
 }
 
-int Callback::findFieldIndex(const ConstantString & field_name)
+int Callback::findPropertyIndex(const ConstantString & property_name)
 {
-  int field_index = -1;
-  for (size_t i=0; i<field_ptrs_.size(); ++i)
+  int property_index = -1;
+  for (size_t i=0; i<property_ptrs_.size(); ++i)
   {
-    if (field_ptrs_[i]->compareName(field_name))
+    if (property_ptrs_[i]->compareName(property_name))
     {
-      field_index = i;
+      property_index = i;
       break;
     }
   }
-  return field_index;
+  return property_index;
 }
 
-size_t Callback::getFieldCount()
+size_t Callback::getPropertyCount()
 {
-  return field_ptrs_.size();
+  return property_ptrs_.size();
 }
 
 void Callback::functor()

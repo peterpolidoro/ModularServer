@@ -1,25 +1,25 @@
 // ----------------------------------------------------------------------------
-// FieldDefinitions.h
+// PropertyDefinitions.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_SERVER_FIELD_DEFINITIONS_H_
-#define _MODULAR_SERVER_FIELD_DEFINITIONS_H_
+#ifndef _MODULAR_SERVER_PROPERTY_DEFINITIONS_H_
+#define _MODULAR_SERVER_PROPERTY_DEFINITIONS_H_
 
 
 namespace modular_server
 {
 // public
 template <size_t MAX_SIZE>
-void Field::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
+void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
 {
   parameter_.setSubset(subset);
 }
 
 template <size_t N>
-bool Field::getValue(long (&value)[N])
+bool Property::getValue(long (&value)[N])
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE) ||
@@ -31,7 +31,7 @@ bool Field::getValue(long (&value)[N])
 }
 
 template <size_t N>
-bool Field::getValue(double (&value)[N])
+bool Property::getValue(double (&value)[N])
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
@@ -43,7 +43,7 @@ bool Field::getValue(double (&value)[N])
 }
 
 template <size_t N>
-bool Field::getValue(bool (&value)[N])
+bool Property::getValue(bool (&value)[N])
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE) ||
@@ -55,7 +55,7 @@ bool Field::getValue(bool (&value)[N])
 }
 
 template <typename T>
-bool Field::getValue(T * value, const size_t N)
+bool Property::getValue(T * value, const size_t N)
 {
   JsonStream::JsonTypes type = getType();
   size_t array_length = getArrayLength();
@@ -86,7 +86,7 @@ bool Field::getValue(T * value, const size_t N)
 }
 
 template <size_t N>
-bool Field::getDefaultValue(long (&value)[N])
+bool Property::getDefaultValue(long (&value)[N])
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE) ||
@@ -98,7 +98,7 @@ bool Field::getDefaultValue(long (&value)[N])
 }
 
 template <size_t N>
-bool Field::getDefaultValue(double (&value)[N])
+bool Property::getDefaultValue(double (&value)[N])
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE) ||
@@ -110,7 +110,7 @@ bool Field::getDefaultValue(double (&value)[N])
 }
 
 template <size_t N>
-bool Field::getDefaultValue(bool (&value)[N])
+bool Property::getDefaultValue(bool (&value)[N])
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE) ||
@@ -122,7 +122,7 @@ bool Field::getDefaultValue(bool (&value)[N])
 }
 
 template <typename T>
-bool Field::getDefaultValue(T * value, const size_t N)
+bool Property::getDefaultValue(T * value, const size_t N)
 {
   size_t array_length = getArrayLength();
   size_t array_length_min = min(array_length,N);
@@ -141,7 +141,7 @@ bool Field::getDefaultValue(T * value, const size_t N)
 }
 
 template <size_t N>
-bool Field::setValue(const long (&value)[N])
+bool Property::setValue(const long (&value)[N])
 {
   bool success = false;
   preSetValueFunctor();
@@ -163,7 +163,7 @@ bool Field::setValue(const long (&value)[N])
 }
 
 template <size_t N>
-bool Field::setValue(const double (&value)[N])
+bool Property::setValue(const double (&value)[N])
 {
   bool success = false;
   preSetValueFunctor();
@@ -185,7 +185,7 @@ bool Field::setValue(const double (&value)[N])
 }
 
 template <size_t N>
-bool Field::setValue(const bool (&value)[N])
+bool Property::setValue(const bool (&value)[N])
 {
   bool success = false;
   preSetValueFunctor();
@@ -207,7 +207,7 @@ bool Field::setValue(const bool (&value)[N])
 }
 
 template <typename T>
-bool Field::setValue(T * value, const size_t N)
+bool Property::setValue(T * value, const size_t N)
 {
   bool success = false;
   JsonStream::JsonTypes type = getType();
@@ -249,7 +249,7 @@ bool Field::setValue(T * value, const size_t N)
 }
 
 template <typename T>
-bool Field::setAllElementValues(const T & value)
+bool Property::setAllElementValues(const T & value)
 {
   bool success = false;
   JsonStream::JsonTypes type = getType();
@@ -282,14 +282,14 @@ bool Field::setAllElementValues(const T & value)
 }
 
 template <typename T>
-bool Field::setDefaultValue(T & default_value)
+bool Property::setDefaultValue(T & default_value)
 {
   return saved_variable_.setDefaultValue(default_value);
 };
 
 // private
 template <size_t N>
-Field::Field(const ConstantString & name,
+Property::Property(const ConstantString & name,
              const long (&default_value)[N]):
   parameter_(name),
   saved_variable_(default_value,N)
@@ -299,7 +299,7 @@ Field::Field(const ConstantString & name,
 }
 
 template <size_t N>
-Field::Field(const ConstantString & name,
+Property::Property(const ConstantString & name,
              const double (&default_value)[N]) :
   parameter_(name),
   saved_variable_(default_value,N)
@@ -309,7 +309,7 @@ Field::Field(const ConstantString & name,
 }
 
 template <size_t N>
-Field::Field(const ConstantString & name,
+Property::Property(const ConstantString & name,
              const bool (&default_value)[N]) :
   parameter_(name),
   saved_variable_(default_value,N)
@@ -319,7 +319,7 @@ Field::Field(const ConstantString & name,
 }
 
 template <size_t N>
-Field::Field(const ConstantString & name,
+Property::Property(const ConstantString & name,
              const char (&default_value)[N]) :
   parameter_(name),
   saved_variable_(default_value,N)

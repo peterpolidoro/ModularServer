@@ -1,67 +1,67 @@
 // ----------------------------------------------------------------------------
-// Field.cpp
+// Property.cpp
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "Field.h"
+#include "Property.h"
 
 
 namespace modular_server
 {
 // public
-Field::Field()
+Property::Property()
 {
 }
 
-void Field::setUnits(const ConstantString & name)
+void Property::setUnits(const ConstantString & name)
 {
   parameter_.setUnits(name);
 }
 
-void Field::setRange(const long min, const long max)
+void Property::setRange(const long min, const long max)
 {
   parameter_.setRange(min,max);
 }
 
-void Field::setRange(const double min, const double max)
+void Property::setRange(const double min, const double max)
 {
   parameter_.setRange(min,max);
 }
 
-void Field::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
+void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
 {
   parameter_.setSubset(subset,max_size,size);
 }
 
-void Field::addValueToSubset(constants::SubsetMemberType & value)
+void Property::addValueToSubset(constants::SubsetMemberType & value)
 {
   parameter_.addValueToSubset(value);
 }
 
-void Field::attachPreSetValueFunctor(const Functor0 & functor)
+void Property::attachPreSetValueFunctor(const Functor0 & functor)
 {
   pre_set_value_functor_ = functor;
 }
 
-void Field::attachPreSetElementValueFunctor(const Functor1<const size_t> & functor)
+void Property::attachPreSetElementValueFunctor(const Functor1<const size_t> & functor)
 {
   pre_set_element_value_functor_ = functor;
 }
 
-void Field::attachPostSetValueFunctor(const Functor0 & functor)
+void Property::attachPostSetValueFunctor(const Functor0 & functor)
 {
   post_set_value_functor_ = functor;
 }
 
-void Field::attachPostSetElementValueFunctor(const Functor1<const size_t> & functor)
+void Property::attachPostSetElementValueFunctor(const Functor1<const size_t> & functor)
 {
   post_set_element_value_functor_ = functor;
 }
 
 template <>
-bool Field::getValue<long>(long & value)
+bool Property::getValue<long>(long & value)
 {
   if (getType() != JsonStream::LONG_TYPE)
   {
@@ -71,7 +71,7 @@ bool Field::getValue<long>(long & value)
 }
 
 template <>
-bool Field::getValue<double>(double & value)
+bool Property::getValue<double>(double & value)
 {
   if (getType() != JsonStream::DOUBLE_TYPE)
   {
@@ -81,7 +81,7 @@ bool Field::getValue<double>(double & value)
 }
 
 template <>
-bool Field::getValue<bool>(bool & value)
+bool Property::getValue<bool>(bool & value)
 {
   if (getType() != JsonStream::BOOL_TYPE)
   {
@@ -90,7 +90,7 @@ bool Field::getValue<bool>(bool & value)
   return saved_variable_.getValue(value);
 }
 
-bool Field::getValue(const ConstantString * & value)
+bool Property::getValue(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       stringIsSavedAsCharArray())
@@ -102,7 +102,7 @@ bool Field::getValue(const ConstantString * & value)
 }
 
 template <>
-bool Field::getElementValue<long>(const size_t element_index, long & value)
+bool Property::getElementValue<long>(const size_t element_index, long & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE))
@@ -113,7 +113,7 @@ bool Field::getElementValue<long>(const size_t element_index, long & value)
 }
 
 template <>
-bool Field::getElementValue<double>(const size_t element_index, double & value)
+bool Property::getElementValue<double>(const size_t element_index, double & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE))
@@ -124,7 +124,7 @@ bool Field::getElementValue<double>(const size_t element_index, double & value)
 }
 
 template <>
-bool Field::getElementValue<bool>(const size_t element_index, bool & value)
+bool Property::getElementValue<bool>(const size_t element_index, bool & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE))
@@ -135,7 +135,7 @@ bool Field::getElementValue<bool>(const size_t element_index, bool & value)
 }
 
 template <>
-bool Field::getElementValue<char>(const size_t element_index, char & value)
+bool Property::getElementValue<char>(const size_t element_index, char & value)
 {
   if (getType() != JsonStream::STRING_TYPE)
   {
@@ -162,7 +162,7 @@ bool Field::getElementValue<char>(const size_t element_index, char & value)
 }
 
 template <>
-bool Field::getDefaultValue<long>(long & value)
+bool Property::getDefaultValue<long>(long & value)
 {
   if (getType() != JsonStream::LONG_TYPE)
   {
@@ -172,7 +172,7 @@ bool Field::getDefaultValue<long>(long & value)
 }
 
 template <>
-bool Field::getDefaultValue<double>(double & value)
+bool Property::getDefaultValue<double>(double & value)
 {
   if (getType() != JsonStream::DOUBLE_TYPE)
   {
@@ -182,7 +182,7 @@ bool Field::getDefaultValue<double>(double & value)
 }
 
 template <>
-bool Field::getDefaultValue<bool>(bool & value)
+bool Property::getDefaultValue<bool>(bool & value)
 {
   if (getType() != JsonStream::BOOL_TYPE)
   {
@@ -191,7 +191,7 @@ bool Field::getDefaultValue<bool>(bool & value)
   return saved_variable_.getDefaultValue(value);
 }
 
-bool Field::getDefaultValue(const ConstantString * & value)
+bool Property::getDefaultValue(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       stringIsSavedAsCharArray())
@@ -203,7 +203,7 @@ bool Field::getDefaultValue(const ConstantString * & value)
 }
 
 template <>
-bool Field::getDefaultElementValue<long>(const size_t element_index, long & value)
+bool Property::getDefaultElementValue<long>(const size_t element_index, long & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE))
@@ -214,7 +214,7 @@ bool Field::getDefaultElementValue<long>(const size_t element_index, long & valu
 }
 
 template <>
-bool Field::getDefaultElementValue<double>(const size_t element_index, double & value)
+bool Property::getDefaultElementValue<double>(const size_t element_index, double & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE))
@@ -225,7 +225,7 @@ bool Field::getDefaultElementValue<double>(const size_t element_index, double & 
 }
 
 template <>
-bool Field::getDefaultElementValue<bool>(const size_t element_index, bool & value)
+bool Property::getDefaultElementValue<bool>(const size_t element_index, bool & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE))
@@ -236,7 +236,7 @@ bool Field::getDefaultElementValue<bool>(const size_t element_index, bool & valu
 }
 
 template <>
-bool Field::getDefaultElementValue<char>(const size_t element_index, char & value)
+bool Property::getDefaultElementValue<char>(const size_t element_index, char & value)
 {
   if (getType() != JsonStream::STRING_TYPE)
   {
@@ -263,7 +263,7 @@ bool Field::getDefaultElementValue<char>(const size_t element_index, char & valu
 }
 
 template <>
-bool Field::setElementValue<long>(const size_t element_index, const long & value)
+bool Property::setElementValue<long>(const size_t element_index, const long & value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
@@ -289,7 +289,7 @@ bool Field::setElementValue<long>(const size_t element_index, const long & value
 }
 
 template <>
-bool Field::setElementValue<double>(const size_t element_index, const double & value)
+bool Property::setElementValue<double>(const size_t element_index, const double & value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
@@ -315,7 +315,7 @@ bool Field::setElementValue<double>(const size_t element_index, const double & v
 }
 
 template <>
-bool Field::setElementValue<bool>(const size_t element_index, const bool & value)
+bool Property::setElementValue<bool>(const size_t element_index, const bool & value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
@@ -329,7 +329,7 @@ bool Field::setElementValue<bool>(const size_t element_index, const bool & value
 }
 
 template <>
-bool Field::setElementValue<char>(const size_t element_index, const char & value)
+bool Property::setElementValue<char>(const size_t element_index, const char & value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
@@ -343,7 +343,7 @@ bool Field::setElementValue<char>(const size_t element_index, const char & value
 }
 
 template <>
-bool Field::setValue<long>(const long & value)
+bool Property::setValue<long>(const long & value)
 {
   bool success = false;
   preSetValueFunctor();
@@ -368,7 +368,7 @@ bool Field::setValue<long>(const long & value)
 }
 
 template <>
-bool Field::setValue<double>(const double & value)
+bool Property::setValue<double>(const double & value)
 {
   bool success = false;
   preSetValueFunctor();
@@ -393,7 +393,7 @@ bool Field::setValue<double>(const double & value)
 }
 
 template <>
-bool Field::setValue<bool>(const bool & value)
+bool Property::setValue<bool>(const bool & value)
 {
   bool success = false;
   preSetValueFunctor();
@@ -406,7 +406,7 @@ bool Field::setValue<bool>(const bool & value)
 }
 
 template <>
-bool Field::setValue<const ConstantString *>(const ConstantString * const & value)
+bool Property::setValue<const ConstantString *>(const ConstantString * const & value)
 {
   bool success = false;
   preSetValueFunctor();
@@ -420,7 +420,7 @@ bool Field::setValue<const ConstantString *>(const ConstantString * const & valu
 }
 
 template <>
-bool Field::setValue<ConstantString *>(ConstantString * const & value)
+bool Property::setValue<ConstantString *>(ConstantString * const & value)
 {
   bool success = false;
   preSetValueFunctor();
@@ -433,12 +433,12 @@ bool Field::setValue<ConstantString *>(ConstantString * const & value)
   return success;
 }
 
-bool Field::setValue(ArduinoJson::JsonArray & value)
+bool Property::setValue(ArduinoJson::JsonArray & value)
 {
   bool success = false;
   size_t array_length = getArrayLength();
-  JsonStream::JsonTypes field_type = getType();
-  if (field_type == JsonStream::ARRAY_TYPE)
+  JsonStream::JsonTypes property_type = getType();
+  if (property_type == JsonStream::ARRAY_TYPE)
   {
     size_t N = value.size();
     size_t array_length_min = min(array_length,N);
@@ -511,19 +511,19 @@ bool Field::setValue(ArduinoJson::JsonArray & value)
   return success;
 }
 
-void Field::setValueToDefault()
+void Property::setValueToDefault()
 {
   preSetValueFunctor();
   saved_variable_.setValueToDefault();
   postSetValueFunctor();
 }
 
-bool Field::valueIsDefault()
+bool Property::valueIsDefault()
 {
   return saved_variable_.valueIsDefault();
 }
 
-size_t Field::getArrayLength()
+size_t Property::getArrayLength()
 {
   if ((getType() == JsonStream::STRING_TYPE) &&
       (!stringIsSavedAsCharArray()))
@@ -535,11 +535,11 @@ size_t Field::getArrayLength()
   return saved_variable_.getArrayLength();
 }
 
-size_t Field::getStringLength()
+size_t Property::getStringLength()
 {
   size_t length = 0;
-  JsonStream::JsonTypes field_type = getType();
-  if (field_type == JsonStream::STRING_TYPE)
+  JsonStream::JsonTypes property_type = getType();
+  if (property_type == JsonStream::STRING_TYPE)
   {
     size_t array_length_max = getArrayLength();
     size_t array_length = 1;
@@ -560,7 +560,7 @@ size_t Field::getStringLength()
 
 // private
 template <>
-Field::Field<long>(const ConstantString & name,
+Property::Property<long>(const ConstantString & name,
                    const long & default_value) :
 parameter_(name),
   saved_variable_(default_value)
@@ -569,7 +569,7 @@ parameter_(name),
 }
 
 template <>
-Field::Field<double>(const ConstantString & name,
+Property::Property<double>(const ConstantString & name,
                      const double & default_value) :
 parameter_(name),
   saved_variable_(default_value)
@@ -578,7 +578,7 @@ parameter_(name),
 }
 
 template <>
-Field::Field<bool>(const ConstantString & name,
+Property::Property<bool>(const ConstantString & name,
                    const bool & default_value) :
 parameter_(name),
   saved_variable_(default_value)
@@ -587,7 +587,7 @@ parameter_(name),
 }
 
 template <>
-Field::Field<const ConstantString *>(const ConstantString & name,
+Property::Property<const ConstantString *>(const ConstantString & name,
                                      const ConstantString * const & default_value) :
   parameter_(name),
   saved_variable_(default_value)
@@ -596,67 +596,67 @@ Field::Field<const ConstantString *>(const ConstantString & name,
   string_saved_as_char_array_ = false;
 }
 
-Parameter & Field::parameter()
+Parameter & Property::parameter()
 {
   return parameter_;
 }
 
-bool Field::compareName(const char * name_to_compare)
+bool Property::compareName(const char * name_to_compare)
 {
   return parameter_.compareName(name_to_compare);
 }
 
-bool Field::compareName(const ConstantString & name_to_compare)
+bool Property::compareName(const ConstantString & name_to_compare)
 {
   return parameter_.compareName(name_to_compare);
 }
 
-const ConstantString & Field::getName()
+const ConstantString & Property::getName()
 {
   return parameter_.getName();
 }
 
-const ConstantString & Field::getFirmwareName()
+const ConstantString & Property::getFirmwareName()
 {
   return parameter_.getFirmwareName();
 }
 
-bool Field::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array)
+bool Property::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array)
 {
   return parameter_.firmwareNameInArray(firmware_name_array);
 }
 
-JsonStream::JsonTypes Field::getType()
+JsonStream::JsonTypes Property::getType()
 {
   return parameter_.getType();
 }
 
-JsonStream::JsonTypes Field::getArrayElementType()
+JsonStream::JsonTypes Property::getArrayElementType()
 {
   return parameter_.getArrayElementType();
 }
 
-bool Field::stringIsSavedAsCharArray()
+bool Property::stringIsSavedAsCharArray()
 {
   return string_saved_as_char_array_;
 }
 
-int Field::findSubsetValueIndex(const long value)
+int Property::findSubsetValueIndex(const long value)
 {
   return parameter_.findSubsetValueIndex(value);
 }
 
-int Field::findSubsetValueIndex(const char * value)
+int Property::findSubsetValueIndex(const char * value)
 {
   return parameter_.findSubsetValueIndex(value);
 }
 
-Vector<constants::SubsetMemberType> & Field::getSubset()
+Vector<constants::SubsetMemberType> & Property::getSubset()
 {
   return parameter_.getSubset();
 }
 
-void Field::preSetValueFunctor()
+void Property::preSetValueFunctor()
 {
   if (pre_set_value_functor_)
   {
@@ -664,7 +664,7 @@ void Field::preSetValueFunctor()
   }
 }
 
-void Field::preSetElementValueFunctor(const size_t element_index)
+void Property::preSetElementValueFunctor(const size_t element_index)
 {
   if (pre_set_element_value_functor_)
   {
@@ -672,7 +672,7 @@ void Field::preSetElementValueFunctor(const size_t element_index)
   }
 }
 
-void Field::postSetValueFunctor()
+void Property::postSetValueFunctor()
 {
   if (post_set_value_functor_)
   {
@@ -680,7 +680,7 @@ void Field::postSetValueFunctor()
   }
 }
 
-void Field::postSetElementValueFunctor(const size_t element_index)
+void Property::postSetElementValueFunctor(const size_t element_index)
 {
   if (post_set_element_value_functor_)
   {

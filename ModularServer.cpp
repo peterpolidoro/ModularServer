@@ -44,15 +44,15 @@ void ModularServer::addHardwareInfo(const HardwareInfo & hardware_info)
 
 // Firmware
 
-// Fields
-Field & ModularServer::field(const ConstantString & field_name)
+// Properties
+Property & ModularServer::property(const ConstantString & property_name)
 {
-  return server_.field(field_name);
+  return server_.property(property_name);
 }
 
-void ModularServer::setFieldsToDefaults()
+void ModularServer::setPropertiesToDefaults()
 {
-  server_.setFieldsToDefaults();
+  server_.setPropertiesToDefaults();
 }
 
 // Parameters

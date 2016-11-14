@@ -67,7 +67,7 @@ const size_t led_pin = 13;
 // Units
 CONSTANT_STRING(seconds_unit,"seconds");
 
-// Fields
+// Properties
 
 // Parameters
 CONSTANT_STRING(duration_on_parameter_name,"duration_on");

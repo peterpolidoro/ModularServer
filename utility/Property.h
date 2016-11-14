@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// Field.h
+// Property.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_SERVER_FIELD_H_
-#define _MODULAR_SERVER_FIELD_H_
+#ifndef _MODULAR_SERVER_PROPERTY_H_
+#define _MODULAR_SERVER_PROPERTY_H_
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -24,10 +24,10 @@
 
 namespace modular_server
 {
-class Field
+class Property
 {
 public:
-  Field();
+  Property();
 
   void setUnits(const ConstantString & name);
   void setRange(const long min, const long max);
@@ -102,19 +102,19 @@ private:
   bool string_saved_as_char_array_;
 
   template <typename T>
-  Field(const ConstantString & name,
+  Property(const ConstantString & name,
         const T & default_value);
   template <size_t N>
-  Field(const ConstantString & name,
+  Property(const ConstantString & name,
         const long (&default_value)[N]);
   template <size_t N>
-  Field(const ConstantString & name,
+  Property(const ConstantString & name,
         const double (&default_value)[N]);
   template <size_t N>
-  Field(const ConstantString & name,
+  Property(const ConstantString & name,
         const bool (&default_value)[N]);
   template <size_t N>
-  Field(const ConstantString & name,
+  Property(const ConstantString & name,
         const char (&default_value)[N]);
 
   Parameter & parameter();
@@ -138,6 +138,6 @@ private:
 
 };
 }
-#include "FieldDefinitions.h"
+#include "PropertyDefinitions.h"
 
 #endif

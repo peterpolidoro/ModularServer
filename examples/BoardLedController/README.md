@@ -19,7 +19,7 @@ Set the baudrate to match the value in the Arduino sketch (115200).
 Set the line ending to 'Newline'.
 
 To get help information about the modular device, type a single
-question mark ? into the input field and press the 'Send' button or
+question mark ? into the input property and press the 'Send' button or
 press the 'Enter' key.
 
 ```shell
@@ -44,15 +44,15 @@ Example Response:
         "getDeviceInfo",
         "getApi",
         "getApiVerbose",
-        "getFieldDefaultValues",
-        "setFieldsToDefaults",
-        "setFieldToDefault",
-        "getFieldValues",
-        "getFieldValue",
-        "getFieldElementValue",
-        "setFieldValue",
-        "setFieldElementValue",
-        "setAllFieldElementValues",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "setPropertyToDefault",
+        "getPropertyValues",
+        "getPropertyValue",
+        "getPropertyElementValue",
+        "setPropertyValue",
+        "setPropertyElementValue",
+        "setAllPropertyElementValues",
         "getMemoryFree",
         "setLedOn",
         "setLedOff",
@@ -61,14 +61,14 @@ Example Response:
       ],
       "parameters":[
         "firmware",
-        "field_name",
-        "field_value",
-        "field_element_index",
+        "property_name",
+        "property_value",
+        "property_element_index",
         "duration_on",
         "duration_off",
         "count"
       ],
-      "fields":[
+      "properties":[
         "serial_number"
       ],
       "callbacks":[]
@@ -78,7 +78,7 @@ Example Response:
 ```
 
 "methods" is an array of user methods. To execute a method, simply
-type it into the input field and press the 'Send' button or press the
+type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
 Example Method:
@@ -118,9 +118,9 @@ Example Response:
 ```
 
 When a method executes successfully, the response will contain a
-"result" field. In some cases the result may be null, but the method
+"result" property. In some cases the result may be null, but the method
 execution was still successful. When there is an error, there will not
-exist a "result" field, but there will exist an "error" field.
+exist a "result" property, but there will exist an "error" property.
 
 To get more information about a method, enter the method followed by
 a question mark ?
@@ -322,7 +322,7 @@ Example Response:
 }
 ```
 
-The serial\_number field can be changed to uniquely identify devices
+The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
 Use the getDeviceInfo method to get information about the hardware and
@@ -360,7 +360,7 @@ Example Response:
 }
 ```
 
-Every method, parameter, and field belongs to one firmware set.
+Every method, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 method.
@@ -383,15 +383,15 @@ Example Response:
       "getDeviceInfo",
       "getApi",
       "getApiVerbose",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
+      "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
+      "setPropertyToDefault",
+      "getPropertyValues",
+      "getPropertyValue",
+      "getPropertyElementValue",
+      "setPropertyValue",
+      "setPropertyElementValue",
+      "setAllPropertyElementValues",
       "getMemoryFree",
       "setLedOn",
       "setLedOff",
@@ -400,14 +400,14 @@ Example Response:
     ],
     "parameters":[
       "firmware",
-      "field_name",
-      "field_value",
-      "field_element_index",
+      "property_name",
+      "property_value",
+      "property_element_index",
       "duration_on",
       "duration_off",
       "count"
     ],
-    "fields":[
+    "properties":[
       "serial_number"
     ],
     "callbacks":[]
@@ -439,7 +439,7 @@ Example Response:
       "duration_off",
       "count"
     ],
-    "fields":[],
+    "properties":[],
     "callbacks":[]
   }
 }
@@ -456,22 +456,22 @@ dev.get_device_id()
 {'form_factor': '5x3', 'name': 'board_led_controller', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
- 'set_field_element_value',
- 'get_field_value',
- 'get_field_element_value',
+ 'set_property_element_value',
+ 'get_property_value',
+ 'get_property_element_value',
  'set_led_on',
  'get_led_pin',
  'get_api',
  'get_api_verbose',
- 'set_all_field_element_values',
- 'set_fields_to_defaults',
+ 'set_all_property_element_values',
+ 'set_properties_to_defaults',
  'get_device_id',
- 'get_field_default_values',
+ 'get_property_default_values',
  'blink_led',
  'set_led_off',
- 'set_field_value',
- 'set_field_to_default',
- 'get_field_values',
+ 'set_property_value',
+ 'set_property_to_default',
+ 'get_property_values',
  'get_device_info']
 dev.set_led_on()
 dev.set_led_off()
@@ -525,7 +525,7 @@ dev.send_json_request('["get_led_pin"]')
 dev.call_server_method("blink_led",0.5,0.2,20)
 dev.send_json_request('["blink_led",0.5,0.2,20]')
 dev.get_api(["BoardLedController"])
-{'fields': [],
+{'properties': [],
  'firmware': ['BoardLedController'],
  'callbacks': [],
  'methods': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
@@ -565,15 +565,15 @@ dev.getMethods()                 % get device methods
   getDeviceInfo
   getApi
   getApiVerbose
-  getFieldDefaultValues
-  setFieldsToDefaults
-  setFieldToDefault
-  getFieldValues
-  getFieldValue
-  getFieldElementValue
-  setFieldValue
-  setFieldElementValue
-  setAllFieldElementValues
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  setPropertyToDefault
+  getPropertyValues
+  getPropertyValue
+  getPropertyElementValue
+  setPropertyValue
+  setPropertyElementValue
+  setAllPropertyElementValues
   getMemoryFree
   setLedOn
   setLedOff
@@ -615,7 +615,7 @@ ans =
   firmware: {'BoardLedController'}
   methods: {'setLedOn'  'setLedOff'  'getLedPin'  'blinkLed'}
   parameters: {'duration_on'  'duration_off'  'count'}
-  fields: {0x1 cell}
+  properties: {0x1 cell}
   callbacks: {0x1 cell}
 dev.close()
 clear dev

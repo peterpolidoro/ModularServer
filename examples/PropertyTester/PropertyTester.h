@@ -1,18 +1,18 @@
 // ----------------------------------------------------------------------------
-// FieldTester.h
+// PropertyTester.h
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef FIELD_TESTER_H
-#define FIELD_TESTER_H
+#ifndef PROPERTY_TESTER_H
+#define PROPERTY_TESTER_H
 #include "Functor.h"
 #include "ModularServer.h"
 
 #include "Constants.h"
 
 
-class FieldTester
+class PropertyTester
 {
 public:
   void setup();
@@ -21,7 +21,7 @@ public:
 private:
   modular_server::ModularServer modular_server_;
 
-  modular_server::Field fields_[constants::FIELD_COUNT_MAX];
+  modular_server::Property properties_[constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
   modular_server::Method methods_[constants::METHOD_COUNT_MAX];
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
@@ -42,10 +42,10 @@ private:
   void getDirectionArrayHandler();
   void checkModeHandler();
   void incrementModeHandler();
-  void preSetFieldValueHandler();
-  void postSetFieldValueHandler();
-  void preSetFieldElementValueHandler(const size_t element_index);
-  void postSetFieldElementValueHandler(const size_t element_index);
+  void preSetPropertyValueHandler();
+  void postSetPropertyValueHandler();
+  void preSetPropertyElementValueHandler(const size_t element_index);
+  void postSetPropertyElementValueHandler(const size_t element_index);
 
 };
 

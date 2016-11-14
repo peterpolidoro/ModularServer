@@ -5,8 +5,8 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef FIELD_TESTER_CONSTANTS_H
-#define FIELD_TESTER_CONSTANTS_H
+#ifndef PROPERTY_TESTER_CONSTANTS_H
+#define PROPERTY_TESTER_CONSTANTS_H
 #include "ConstantVariable.h"
 #include "ModularServer.h"
 
@@ -14,7 +14,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=9};
+enum{PROPERTY_COUNT_MAX=9};
 enum{PARAMETER_COUNT_MAX=6};
 enum{METHOD_COUNT_MAX=15};
 enum{CALLBACK_COUNT_MAX=1};
@@ -32,40 +32,40 @@ extern const modular_server::HardwareInfo hardware_info;
 
 // Units
 
-// Fields
-// Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
-extern ConstantString double_field_name;
+// Properties
+// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
+extern ConstantString double_property_name;
 extern const double double_default;
 
-extern ConstantString bool_field_name;
+extern ConstantString bool_property_name;
 extern const bool bool_default;
 
-extern ConstantString long_array_field_name;
+extern ConstantString long_array_property_name;
 enum{LONG_ARRAY_LENGTH=4};
 extern const long long_array_default[LONG_ARRAY_LENGTH];
 extern const long long_array_element_min;
 extern const long long_array_element_max;
 
-extern ConstantString double_array_field_name;
+extern ConstantString double_array_property_name;
 enum{DOUBLE_ARRAY_LENGTH=3};
 extern const double double_array_default[DOUBLE_ARRAY_LENGTH];
 extern const double double_array_element_min;
 extern const double double_array_element_max;
 
-extern ConstantString bool_array_field_name;
+extern ConstantString bool_array_property_name;
 enum{BOOL_ARRAY_LENGTH=2};
 extern const bool bool_array_default[BOOL_ARRAY_LENGTH];
 
-extern ConstantString string_field_name;
+extern ConstantString string_property_name;
 enum{STRING_LENGTH_MAX=10};
 extern const char string_default[STRING_LENGTH_MAX];
 
-extern ConstantString odd_field_name;
+extern ConstantString odd_property_name;
 enum{ODD_SUBSET_LENGTH=5};
 extern modular_server::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
 extern const long & odd_default;
 
-extern ConstantString mode_field_name;
+extern ConstantString mode_property_name;
 enum{MODE_SUBSET_LENGTH=3};
 extern ConstantString mode_rising;
 extern ConstantString mode_falling;
@@ -73,7 +73,7 @@ extern ConstantString mode_change;
 extern modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 extern const ConstantString * const mode_ptr_default;
 
-extern ConstantString odd_array_field_name;
+extern ConstantString odd_array_property_name;
 enum{ODD_ARRAY_LENGTH=2};
 extern const long odd_array_default[ODD_ARRAY_LENGTH];
 

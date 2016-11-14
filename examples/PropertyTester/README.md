@@ -1,4 +1,4 @@
-#FieldTester
+#PropertyTester
 
 Authors:
 
@@ -19,7 +19,7 @@ Set the baudrate to match the value in the Arduino sketch (115200).
 Set the line ending to 'Newline'.
 
 To get help information about the modular device, type a single
-question mark ? into the input field and press the 'Send' button or
+question mark ? into the input property and press the 'Send' button or
 press the 'Enter' key.
 
 ```shell
@@ -33,7 +33,7 @@ Example Response:
   "id":"?",
   "result":{
     "device_id":{
-      "name":"field_tester",
+      "name":"property_tester",
       "form_factor":"5x3",
       "serial_number":0
     },
@@ -44,15 +44,15 @@ Example Response:
         "getDeviceInfo",
         "getApi",
         "getApiVerbose",
-        "getFieldDefaultValues",
-        "setFieldsToDefaults",
-        "setFieldToDefault",
-        "getFieldValues",
-        "getFieldValue",
-        "getFieldElementValue",
-        "setFieldValue",
-        "setFieldElementValue",
-        "setAllFieldElementValues",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "setPropertyToDefault",
+        "getPropertyValues",
+        "getPropertyValue",
+        "getPropertyElementValue",
+        "setPropertyValue",
+        "setPropertyElementValue",
+        "setAllPropertyElementValues",
         "getMemoryFree",
         "getDoubled",
         "getBool",
@@ -72,9 +72,9 @@ Example Response:
       ],
       "parameters":[
         "firmware",
-        "field_name",
-        "field_value",
-        "field_element_index",
+        "property_name",
+        "property_value",
+        "property_element_index",
         "long_array_parameter",
         "length_parameter",
         "count",
@@ -82,7 +82,7 @@ Example Response:
         "direction",
         "direction_array"
       ],
-      "fields":[
+      "properties":[
         "serial_number",
         "double",
         "bool",
@@ -101,20 +101,20 @@ Example Response:
 ```
 
 "methods" is an array of user methods. To execute a method, simply
-type it into the input field and press the 'Send' button or press the
+type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
 Example Method:
 
 ```shell
-setFieldsToDefaults
+setPropertiesToDefaults
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldsToDefaults",
+  "id":"setPropertiesToDefaults",
   "result":null
 }
 ```
@@ -122,14 +122,14 @@ Example Response:
 Example Method:
 
 ```shell
-getFieldValues
+getPropertyValues
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValues",
+  "id":"getPropertyValues",
   "result":{
     "serial_number":0,
     "double":3.141590,
@@ -163,14 +163,14 @@ Example Response:
 Example Method:
 
 ```shell
-getFieldValue long_array
+getPropertyValue long_array
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValue",
+  "id":"getPropertyValue",
   "result":[
     5,
     4,
@@ -183,14 +183,14 @@ Example Response:
 Example Method:
 
 ```shell
-getFieldElementValue double_array 1
+getPropertyElementValue double_array 1
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldElementValue",
+  "id":"getPropertyElementValue",
   "result":2.200000
 }
 ```
@@ -198,14 +198,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldValue bool_array [false,false]
+setPropertyValue bool_array [false,false]
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "result":null
 }
 ```
@@ -213,14 +213,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldValue string asdfghjkl
+setPropertyValue string asdfghjkl
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "result":null
 }
 ```
@@ -228,14 +228,14 @@ Example Response:
 Example Method:
 
 ```shell
-getFieldElementValue string 3
+getPropertyElementValue string 3
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldElementValue",
+  "id":"getPropertyElementValue",
   "result":"f"
 }
 ```
@@ -243,14 +243,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldElementValue string 3 X
+setPropertyElementValue string 3 X
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldElementValue",
+  "id":"setPropertyElementValue",
   "result":null
 }
 ```
@@ -258,14 +258,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldValue odd 2
+setPropertyValue odd 2
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "error":{
     "message":"Invalid params",
     "data":"Parameter value not valid. Value not in subset: [1,3,5,7,9]",
@@ -277,14 +277,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldValue odd 7
+setPropertyValue odd 7
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "result":null
 }
 ```
@@ -292,14 +292,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldValue mode test
+setPropertyValue mode test
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "error":{
     "message":"Invalid params",
     "data":"Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE]",
@@ -311,14 +311,14 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldValue mode CHANGE
+setPropertyValue mode CHANGE
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "result":null
 }
 ```
@@ -326,17 +326,17 @@ Example Response:
 Example Method:
 
 ```shell
-setFieldElementValue mode 3 t
+setPropertyElementValue mode 3 t
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldElementValue",
+  "id":"setPropertyElementValue",
   "error":{
     "message":"Invalid params",
-    "data":"Cannot set element in string field with subset.",
+    "data":"Cannot set element in string property with subset.",
     "code":-32602
   }
 }
@@ -345,14 +345,14 @@ Example Response:
 Example Method:
 
 ```shell
-setAllFieldElementValues odd_array 2
+setAllPropertyElementValues odd_array 2
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setAllFieldElementValues",
+  "id":"setAllPropertyElementValues",
   "error":{
     "message":"Invalid params",
     "data":"Array parameter element value not valid. Value not in subset: [1,3,5,7,9]",
@@ -364,14 +364,14 @@ Example Response:
 Example Method:
 
 ```shell
-setAllFieldElementValues odd_array 9
+setAllPropertyElementValues odd_array 9
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setAllFieldElementValues",
+  "id":"setAllPropertyElementValues",
   "result":null
 }
 ```
@@ -379,14 +379,14 @@ Example Response:
 Example Method:
 
 ```shell
-getFieldValues
+getPropertyValues
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValues",
+  "id":"getPropertyValues",
   "result":{
     "serial_number":0,
     "double":3.141590,
@@ -432,14 +432,14 @@ Example Response:
 {
   "id":"getDeviceId",
   "result":{
-    "name":"field_tester",
+    "name":"property_tester",
     "form_factor":"5x3",
     "serial_number":0
   }
 }
 ```
 
-The serial\_number field can be changed to uniquely identify devices
+The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
 Use the getDeviceInfo method to get information about the hardware and
@@ -469,7 +469,7 @@ Example Response:
         "version":"1.0.0"
       },
       {
-        "name":"FieldTester",
+        "name":"PropertyTester",
         "version":"1.0.0"
       }
     ]
@@ -477,7 +477,7 @@ Example Response:
 }
 ```
 
-Every method, parameter, and field belongs to one firmware set.
+Every method, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 method.
@@ -500,15 +500,15 @@ Example Response:
       "getDeviceInfo",
       "getApi",
       "getApiVerbose",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
+      "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
+      "setPropertyToDefault",
+      "getPropertyValues",
+      "getPropertyValue",
+      "getPropertyElementValue",
+      "setPropertyValue",
+      "setPropertyElementValue",
+      "setAllPropertyElementValues",
       "getMemoryFree",
       "getDoubled",
       "getBool",
@@ -528,9 +528,9 @@ Example Response:
     ],
     "parameters":[
       "firmware",
-      "field_name",
-      "field_value",
-      "field_element_index",
+      "property_name",
+      "property_value",
+      "property_element_index",
       "long_array_parameter",
       "length_parameter",
       "count",
@@ -538,7 +538,7 @@ Example Response:
       "direction",
       "direction_array"
     ],
-    "fields":[
+    "properties":[
       "serial_number",
       "double",
       "bool",
@@ -558,7 +558,7 @@ Example Response:
 Example:
 
 ```shell
-getApi ["FieldTester"]
+getApi ["PropertyTester"]
 ```
 
 Example Response:
@@ -567,7 +567,7 @@ Example Response:
 {
   "id":"getApi",
   "result":{
-    "firmware":["FieldTester"],
+    "firmware":["PropertyTester"],
     "methods":[
       "getDoubled",
       "getBool",
@@ -593,7 +593,7 @@ Example Response:
       "direction",
       "direction_array"
     ],
-    "fields":[
+    "properties":[
       "double",
       "bool",
       "long_array",
@@ -617,21 +617,21 @@ Example Python session:
 from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '5x3', 'name': 'field_tester', 'serial_number': 0}
+{'form_factor': '5x3', 'name': 'property_tester', 'serial_number': 0}
 dev.get_methods()
 ['get_count_array',
  'get_long_array_fixed',
- 'set_all_field_element_values',
+ 'set_all_property_element_values',
  'get_direction',
- 'get_field_default_values',
+ 'get_property_default_values',
  'get_count',
- 'set_field_value',
+ 'set_property_value',
  'get_string_some',
  'get_device_info',
  'get_memory_free',
- 'set_field_element_value',
+ 'set_property_element_value',
  'set_long_array_variable',
- 'set_fields_to_defaults',
+ 'set_properties_to_defaults',
  'get_device_id',
  'increment_mode',
  'get_direction_array',
@@ -640,16 +640,16 @@ dev.get_methods()
  'get_string_all',
  'get_long_array_variable',
  'check_mode',
- 'get_field_value',
- 'get_field_element_value',
+ 'get_property_value',
+ 'get_property_element_value',
  'get_api',
  'get_api_verbose',
  'get_doubled',
  'get_bool',
- 'set_field_to_default',
- 'get_field_values']
-dev.set_fields_to_defaults()
-dev.get_field_values()
+ 'set_property_to_default',
+ 'get_property_values']
+dev.set_properties_to_defaults()
+dev.get_property_values()
 {'bool': False,
  'bool_array': [False, True],
  'double': 3.14159,
@@ -660,27 +660,27 @@ dev.get_field_values()
  'odd_array': [1, 5],
  'serial_number': 0,
  'string': 'abcdef'}
-dev.get_field_value('long_array')
+dev.get_property_value('long_array')
 [5, 4, 3, 2]
-dev.get_field_element_value('double_array',1)
+dev.get_property_element_value('double_array',1)
 2.2
-dev.set_field_value('bool_array',[False,False])
-dev.set_field_value('string','asdfghjkl')
-dev.get_field_element_value('string',3)
+dev.set_property_value('bool_array',[False,False])
+dev.set_property_value('string','asdfghjkl')
+dev.get_property_element_value('string',3)
 'f'
-dev.set_field_element_value('string',3,'X')
-dev.set_field_value('odd',2)
+dev.set_property_element_value('string',3,'X')
+dev.set_property_value('odd',2)
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in subset: [1,3,5,7,9], code: -32602
-dev.set_field_value('odd',7)
-dev.set_field_value('mode','test')
+dev.set_property_value('odd',7)
+dev.set_property_value('mode','test')
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE], code: -32602
-dev.set_field_value('mode','CHANGE')
-dev.set_field_element_value('mode',3,'t')
-IOError: (from server) message: Invalid params, data: Cannot set element in string field with subset., code: -32602
-dev.set_all_field_element_values('odd_array',2)
+dev.set_property_value('mode','CHANGE')
+dev.set_property_element_value('mode',3,'t')
+IOError: (from server) message: Invalid params, data: Cannot set element in string property with subset., code: -32602
+dev.set_all_property_element_values('odd_array',2)
 IOError: (from server) message: Invalid params, data: Array parameter element value not valid. Value not in subset: [1,3,5,7,9], code: -32602
-dev.set_all_field_element_values('odd_array',9)
-dev.get_field_values()
+dev.set_all_property_element_values('odd_array',9)
+dev.get_property_values()
 {'bool': False,
  'bool_array': [False, False],
  'double': 3.14159,
@@ -691,8 +691,8 @@ dev.get_field_values()
  'odd_array': [9, 9],
  'serial_number': 0,
  'string': 'asdXghjkl'}
-dev.get_api(["FieldTester"])
-{'fields': ['double',
+dev.get_api(["PropertyTester"])
+{'properties': ['double',
   'bool',
   'long_array',
   'double_array',
@@ -701,7 +701,7 @@ dev.get_api(["FieldTester"])
   'odd',
   'mode',
   'odd_array'],
- 'firmware': ['FieldTester'],
+ 'firmware': ['PropertyTester'],
  'callbacks': [],
  'methods': ['getDoubled',
   'getBool',
@@ -749,7 +749,7 @@ dev = ModularClient(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
-  name: 'field_tester'
+  name: 'property_tester'
   form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
@@ -759,14 +759,14 @@ dev.getMethods()                 % get device methods
   getDeviceInfo
   getApi
   getApiVerbose
-  getFieldDefaultValues
-  setFieldsToDefaults
-  getFieldValues
-  getFieldValue
-  getFieldElementValue
-  setFieldValue
-  setFieldElementValue
-  setAllFieldElementValues
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getPropertyValue
+  getPropertyElementValue
+  setPropertyValue
+  setPropertyElementValue
+  setAllPropertyElementValues
   getMemoryFree
   getDoubled
   getBool
@@ -783,7 +783,7 @@ dev.getMethods()                 % get device methods
   getDirectionArray
   checkMode
   incrementMode
-dev.getFieldValues()
+dev.getPropertyValues()
   ans =
   serial_number: 0
   double: 3.1416
@@ -795,19 +795,19 @@ dev.getFieldValues()
   odd: 5
   mode: 'RISING'
   odd_array: [1 5]
-dev.getFieldValue('long_array')
+dev.getPropertyValue('long_array')
 ans =
   5   4   3   2
-dev.getFieldElementValue('double_array',1)
+dev.getPropertyElementValue('double_array',1)
 ans =
   2.2000
-dev.setFieldValue('bool_array',[0,0]);
-dev.setFieldValue('string','asdfghjkl');
-dev.getFieldElementValue('string',3)
+dev.setPropertyValue('bool_array',[0,0]);
+dev.setPropertyValue('string','asdfghjkl');
+dev.getPropertyElementValue('string',3)
 ans =
   f
-dev.setFieldElementValue('string',3,'X');
-dev.getFieldValues()
+dev.setPropertyElementValue('string',3,'X');
+dev.getPropertyValues()
 ans =
   serial_number: 0
   double: 3.1416
@@ -819,7 +819,7 @@ ans =
   odd: 5
   mode: 'RISING'
   odd_array: [1 5]
-dev.setFieldsToDefaults();
+dev.setPropertiesToDefaults();
 dev.close()
 clear dev
 ```

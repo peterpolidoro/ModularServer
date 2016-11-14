@@ -21,17 +21,17 @@ const FirmwareInfo firmware_info =
     .version_patch=0,
   };
 
-// Fields
-CONSTANT_STRING(serial_number_field_name,"serial_number");
+// Properties
+CONSTANT_STRING(serial_number_property_name,"serial_number");
 
 const long serial_number_min = 0;
 const long serial_number_max = 65535;
 const long serial_number_default = serial_number_min;
 
 // Parameters
-CONSTANT_STRING(field_name_parameter_name,"field_name");
-CONSTANT_STRING(field_value_parameter_name,"field_value");
-CONSTANT_STRING(field_element_index_parameter_name,"field_element_index");
+CONSTANT_STRING(property_name_parameter_name,"property_name");
+CONSTANT_STRING(property_value_parameter_name,"property_value");
+CONSTANT_STRING(property_element_index_parameter_name,"property_element_index");
 
 // Methods
 CONSTANT_STRING(get_method_ids_method_name,"getMethodIds");
@@ -42,15 +42,15 @@ CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
 CONSTANT_STRING(get_api_method_name,"getApi");
 CONSTANT_STRING(get_api_verbose_method_name,"getApiVerbose");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
-CONSTANT_STRING(get_field_default_values_method_name,"getFieldDefaultValues");
-CONSTANT_STRING(set_fields_to_defaults_method_name,"setFieldsToDefaults");
-CONSTANT_STRING(set_field_to_default_method_name,"setFieldToDefault");
-CONSTANT_STRING(get_field_values_method_name,"getFieldValues");
-CONSTANT_STRING(get_field_value_method_name,"getFieldValue");
-CONSTANT_STRING(get_field_element_value_method_name,"getFieldElementValue");
-CONSTANT_STRING(set_field_value_method_name,"setFieldValue");
-CONSTANT_STRING(set_field_element_value_method_name,"setFieldElementValue");
-CONSTANT_STRING(set_all_field_element_values_method_name,"setAllFieldElementValues");
+CONSTANT_STRING(get_property_default_values_method_name,"getPropertyDefaultValues");
+CONSTANT_STRING(set_properties_to_defaults_method_name,"setPropertiesToDefaults");
+CONSTANT_STRING(set_property_to_default_method_name,"setPropertyToDefault");
+CONSTANT_STRING(get_property_values_method_name,"getPropertyValues");
+CONSTANT_STRING(get_property_value_method_name,"getPropertyValue");
+CONSTANT_STRING(get_property_element_value_method_name,"getPropertyElementValue");
+CONSTANT_STRING(set_property_value_method_name,"setPropertyValue");
+CONSTANT_STRING(set_property_element_value_method_name,"setPropertyElementValue");
+CONSTANT_STRING(set_all_property_element_values_method_name,"setAllPropertyElementValues");
 
 // Callbacks
 
@@ -64,10 +64,10 @@ CONSTANT_STRING(server_error_error_message,"Server error");
 CONSTANT_STRING(object_request_error_data,"JSON object requests not supported. Must use compact JSON array format for requests.");
 CONSTANT_STRING(request_length_error_data,"Request length too long.");
 CONSTANT_STRING(parameter_not_found_error_data,"Parameter not found");
-CONSTANT_STRING(field_not_found_error_data,"Field not found");
-CONSTANT_STRING(field_not_array_type_error_data,"Field not array type");
-CONSTANT_STRING(field_element_index_out_of_bounds_error_data,"field_element_index out of bounds");
-CONSTANT_STRING(cannot_set_element_in_string_field_with_subset_error_data,"Cannot set element in string field with subset.");
+CONSTANT_STRING(property_not_found_error_data,"Property not found");
+CONSTANT_STRING(property_not_array_type_error_data,"Property not array type");
+CONSTANT_STRING(property_element_index_out_of_bounds_error_data,"property_element_index out of bounds");
+CONSTANT_STRING(cannot_set_element_in_string_property_with_subset_error_data,"Cannot set element in string property with subset.");
 CONSTANT_STRING(incorrect_parameter_number_error_data,"Incorrect number of parameters. ")
 CONSTANT_STRING(invalid_json_object_error_data," is not a valid JSON object.")
 CONSTANT_STRING(invalid_json_array_error_data," is not a valid JSON array.")
@@ -103,7 +103,7 @@ CONSTANT_STRING(units_constant_string,"units");
 CONSTANT_STRING(result_constant_string,"result");
 CONSTANT_STRING(result_type_constant_string,"result_type");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
-CONSTANT_STRING(fields_constant_string,"fields");
+CONSTANT_STRING(properties_constant_string,"properties");
 CONSTANT_STRING(parameters_constant_string,"parameters");
 CONSTANT_STRING(methods_constant_string,"methods");
 CONSTANT_STRING(callbacks_constant_string,"callbacks");
@@ -131,7 +131,7 @@ CONSTANT_STRING(array_length_constant_string," array length");
 CONSTANT_STRING(array_open_constant_string,"[");
 CONSTANT_STRING(array_close_constant_string,"]");
 CONSTANT_STRING(array_separator_constant_string,",");
-CONSTANT_STRING(version_field_separator_constant_string,".");
+CONSTANT_STRING(version_property_separator_constant_string,".");
 CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(all_constant_string,"All");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");

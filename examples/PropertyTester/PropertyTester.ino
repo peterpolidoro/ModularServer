@@ -14,10 +14,10 @@
 #include "Constants.h"
 
 #include "ModularServer.h"
-#include "FieldTester.h"
+#include "PropertyTester.h"
 
 
-FieldTester dev;
+PropertyTester dev;
 
 void setup()
 {

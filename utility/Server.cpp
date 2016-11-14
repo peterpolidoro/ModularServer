@@ -39,14 +39,14 @@ void Server::setup()
 
   // Firmware
   addFirmware(constants::firmware_info,
-              server_fields_,
+              server_properties_,
               server_parameters_,
               server_methods_,
               server_callbacks_);
 
-  // Fields
-  Field & serial_number_field = createField(constants::serial_number_field_name,constants::serial_number_default);
-  serial_number_field.setRange(constants::serial_number_min,constants::serial_number_max);
+  // Properties
+  Property & serial_number_property = createProperty(constants::serial_number_property_name,constants::serial_number_default);
+  serial_number_property.setRange(constants::serial_number_min,constants::serial_number_max);
 
   // Parameters
   Parameter::get_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
@@ -58,14 +58,14 @@ void Server::setup()
                                firmware_name_array_.max_size(),
                                firmware_name_array_.size());
 
-  Parameter & field_name_parameter = createParameter(constants::field_name_parameter_name);
-  field_name_parameter.setTypeString();
+  Parameter & property_name_parameter = createParameter(constants::property_name_parameter_name);
+  property_name_parameter.setTypeString();
 
-  Parameter & field_value_parameter = createParameter(constants::field_value_parameter_name);
-  field_value_parameter.setTypeValue();
+  Parameter & property_value_parameter = createParameter(constants::property_value_parameter_name);
+  property_value_parameter.setTypeValue();
 
-  Parameter & field_element_index_parameter = createParameter(constants::field_element_index_parameter_name);
-  field_element_index_parameter.setTypeLong();
+  Parameter & property_element_index_parameter = createParameter(constants::property_element_index_parameter_name);
+  property_element_index_parameter.setTypeLong();
 
   // Methods
   Method & get_method_ids_method = createMethod(constants::get_method_ids_method_name);
@@ -101,47 +101,47 @@ void Server::setup()
   get_api_verbose_method.addParameter(firmware_parameter);
   get_api_verbose_method.setReturnTypeObject();
 
-  Method & get_field_default_values_method = createMethod(constants::get_field_default_values_method_name);
-  get_field_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldDefaultValuesFunctor));
-  get_field_default_values_method.setReturnTypeObject();
+  Method & get_property_default_values_method = createMethod(constants::get_property_default_values_method_name);
+  get_property_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesFunctor));
+  get_property_default_values_method.setReturnTypeObject();
 
-  Method & set_fields_to_defaults_method = createMethod(constants::set_fields_to_defaults_method_name);
-  set_fields_to_defaults_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldsToDefaultsFunctor));
+  Method & set_properties_to_defaults_method = createMethod(constants::set_properties_to_defaults_method_name);
+  set_properties_to_defaults_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsFunctor));
 
-  Method & set_field_to_default_method = createMethod(constants::set_field_to_default_method_name);
-  set_field_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldToDefaultFunctor));
-  set_field_to_default_method.addParameter(field_name_parameter);
+  Method & set_property_to_default_method = createMethod(constants::set_property_to_default_method_name);
+  set_property_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyToDefaultFunctor));
+  set_property_to_default_method.addParameter(property_name_parameter);
 
-  Method & get_field_values_method = createMethod(constants::get_field_values_method_name);
-  get_field_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValuesFunctor));
-  get_field_values_method.setReturnTypeObject();
+  Method & get_property_values_method = createMethod(constants::get_property_values_method_name);
+  get_property_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesFunctor));
+  get_property_values_method.setReturnTypeObject();
 
-  Method & get_field_value_method = createMethod(constants::get_field_value_method_name);
-  get_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldValueFunctor));
-  get_field_value_method.addParameter(field_name_parameter);
-  get_field_value_method.setReturnTypeValue();
+  Method & get_property_value_method = createMethod(constants::get_property_value_method_name);
+  get_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValueFunctor));
+  get_property_value_method.addParameter(property_name_parameter);
+  get_property_value_method.setReturnTypeValue();
 
-  Method & get_field_element_value_method = createMethod(constants::get_field_element_value_method_name);
-  get_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getFieldElementValueFunctor));
-  get_field_element_value_method.addParameter(field_name_parameter);
-  get_field_element_value_method.addParameter(field_element_index_parameter);
-  get_field_element_value_method.setReturnTypeValue();
+  Method & get_property_element_value_method = createMethod(constants::get_property_element_value_method_name);
+  get_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyElementValueFunctor));
+  get_property_element_value_method.addParameter(property_name_parameter);
+  get_property_element_value_method.addParameter(property_element_index_parameter);
+  get_property_element_value_method.setReturnTypeValue();
 
-  Method & set_field_value_method = createMethod(constants::set_field_value_method_name);
-  set_field_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldValueFunctor));
-  set_field_value_method.addParameter(field_name_parameter);
-  set_field_value_method.addParameter(field_value_parameter);
+  Method & set_property_value_method = createMethod(constants::set_property_value_method_name);
+  set_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyValueFunctor));
+  set_property_value_method.addParameter(property_name_parameter);
+  set_property_value_method.addParameter(property_value_parameter);
 
-  Method & set_field_element_value_method = createMethod(constants::set_field_element_value_method_name);
-  set_field_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setFieldElementValueFunctor));
-  set_field_element_value_method.addParameter(field_name_parameter);
-  set_field_element_value_method.addParameter(field_element_index_parameter);
-  set_field_element_value_method.addParameter(field_value_parameter);
+  Method & set_property_element_value_method = createMethod(constants::set_property_element_value_method_name);
+  set_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyElementValueFunctor));
+  set_property_element_value_method.addParameter(property_name_parameter);
+  set_property_element_value_method.addParameter(property_element_index_parameter);
+  set_property_element_value_method.addParameter(property_value_parameter);
 
-  Method & set_all_field_element_values_method = createMethod(constants::set_all_field_element_values_method_name);
-  set_all_field_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllFieldElementValuesFunctor));
-  set_all_field_element_values_method.addParameter(field_name_parameter);
-  set_all_field_element_values_method.addParameter(field_value_parameter);
+  Method & set_all_property_element_values_method = createMethod(constants::set_all_property_element_values_method_name);
+  set_all_property_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllPropertyElementValuesFunctor));
+  set_all_property_element_values_method.addParameter(property_name_parameter);
+  set_all_property_element_values_method.addParameter(property_value_parameter);
 
 #ifdef __AVR__
   Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
@@ -191,22 +191,22 @@ void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
 
 // Firmware
 
-// Fields
-Field & Server::field(const ConstantString & field_name)
+// Properties
+Property & Server::property(const ConstantString & property_name)
 {
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  int property_index = findPropertyIndex(property_name);
+  if ((property_index >= 0) && (property_index < (int)properties_.size()))
   {
-    return fields_[field_index];
+    return properties_[property_index];
   }
-  return dummy_field_;
+  return dummy_property_;
 }
 
-void Server::setFieldsToDefaults()
+void Server::setPropertiesToDefaults()
 {
-  for (size_t i=0; i<fields_.size(); ++i)
+  for (size_t i=0; i<properties_.size(); ++i)
   {
-    fields_[i].setValueToDefault();
+    properties_[i].setValueToDefault();
   }
 }
 
@@ -799,7 +799,7 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
 long Server::getSerialNumber()
 {
   long serial_number;
-  field(constants::serial_number_field_name).getValue(serial_number);
+  property(constants::serial_number_property_name).getValue(serial_number);
   return serial_number;
 }
 
@@ -808,7 +808,7 @@ void Server::initializeEeprom()
   if (!eeprom_initialized_sv_.valueIsDefault())
   {
     eeprom_initialized_sv_.setValueToDefault();
-    setFieldsToDefaults();
+    setPropertiesToDefaults();
   }
   eeprom_initialized_ = true;
 }
@@ -822,13 +822,13 @@ void Server::incrementServerStream()
   }
 }
 
-void Server::fieldHelp(Field & field)
+void Server::propertyHelp(Property & property)
 {
-  parameterHelp(field.parameter(),false);
+  parameterHelp(property.parameter(),false);
   response_.writeKey(constants::value_constant_string);
-  writeFieldToResponse(field,false,false);
+  writePropertyToResponse(property,false,false);
   response_.writeKey(constants::default_value_constant_string);
-  writeFieldToResponse(field,false,true);
+  writePropertyToResponse(property,false,true);
   response_.endObject();
 }
 
@@ -1042,20 +1042,20 @@ void Server::callbackHelp(bool verbose, int callback_index)
   const ConstantString & firmware_name = callbacks_[callback_index].getFirmwareName();
   response_.write(constants::firmware_constant_string,firmware_name);
 
-  response_.writeKey(constants::fields_constant_string);
+  response_.writeKey(constants::properties_constant_string);
   json_stream_.beginArray();
-  Array<Field *,constants::CALLBACK_FIELD_COUNT_MAX> * field_ptrs_ptr = NULL;
-  field_ptrs_ptr = &callbacks_[callback_index].field_ptrs_;
-  for (size_t i=0; i<field_ptrs_ptr->size(); ++i)
+  Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
+  property_ptrs_ptr = &callbacks_[callback_index].property_ptrs_;
+  for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
   {
     if (verbose)
     {
-      fieldHelp(*((*field_ptrs_ptr)[i]));
+      propertyHelp(*((*property_ptrs_ptr)[i]));
     }
     else
     {
-      const ConstantString & field_name = (*field_ptrs_ptr)[i]->getName();
-      response_.write(field_name);
+      const ConstantString & property_name = (*property_ptrs_ptr)[i]->getName();
+      response_.write(property_name);
     }
   }
   json_stream_.endArray();
@@ -1091,18 +1091,18 @@ void Server::help(bool verbose)
     constants::all_constant_string.copy(all_str);
     ArduinoJson::StaticJsonBuffer<constants::JSON_BUFFER_SIZE> json_buffer;
     ArduinoJson::JsonArray& firmware_name_array = json_buffer.createArray();
-    firmware_name_array.add(all_str);
+    firmware_name_array.add<char *>(all_str);
     writeApiToResponse(verbose,firmware_name_array);
 
     response_.endObject();
   }
   // ? method
   // ? parameter
-  // ? field
+  // ? property
   // ? callback
   // ?? method
   // ?? parameter
-  // ?? field
+  // ?? property
   // ?? callback
   else if (parameter_count == 1)
   {
@@ -1128,14 +1128,14 @@ void Server::help(bool verbose)
       }
       else
       {
-        int field_index = findFieldIndex(param_string);
-        if ((field_index >= 0) && (field_index < (int)fields_.max_size()))
+        int property_index = findPropertyIndex(param_string);
+        if ((property_index >= 0) && (property_index < (int)properties_.max_size()))
         {
-          // ? field
-          // ?? field
+          // ? property
+          // ?? property
           param_error = false;
           response_.writeResultKey();
-          fieldHelp(fields_[field_index]);
+          propertyHelp(properties_[property_index]);
         }
         else
         {
@@ -1189,7 +1189,7 @@ void Server::writeDeviceIdToResponse()
 
   response_.write(constants::name_constant_string,device_name_ptr_);
   response_.write(constants::form_factor_constant_string,form_factor_ptr_);
-  response_.write(constants::serial_number_field_name,getSerialNumber());
+  response_.write(constants::serial_number_property_name,getSerialNumber());
 
   response_.endObject();
 }
@@ -1314,15 +1314,15 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     }
     response_.endArray();
 
-    response_.writeKey(constants::fields_constant_string);
+    response_.writeKey(constants::properties_constant_string);
     response_.beginArray();
-    for (size_t field_index=0; field_index<fields_.size(); ++field_index)
+    for (size_t property_index=0; property_index<properties_.size(); ++property_index)
     {
-      Field & field = fields_[field_index];
-      if (field.firmwareNameInArray(firmware_name_array))
+      Property & property = properties_[property_index];
+      if (property.firmwareNameInArray(firmware_name_array))
       {
-        const ConstantString & field_name = fields_[field_index].getName();
-        response_.write(field_name);
+        const ConstantString & property_name = properties_[property_index].getName();
+        response_.write(property_name);
       }
     }
     response_.endArray();
@@ -1361,11 +1361,11 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     }
     response_.endArray();
 
-    response_.writeKey(constants::fields_constant_string);
+    response_.writeKey(constants::properties_constant_string);
     response_.beginArray();
-    for (size_t field_index=0; field_index<fields_.size(); ++field_index)
+    for (size_t property_index=0; property_index<properties_.size(); ++property_index)
     {
-      fieldHelp(fields_[field_index]);
+      propertyHelp(properties_[property_index]);
     }
     response_.endArray();
 
@@ -1380,7 +1380,7 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
   response_.endObject();
 }
 
-void Server::writeFieldToResponse(Field & field,
+void Server::writePropertyToResponse(Property & property,
                                   bool write_key,
                                   bool write_default,
                                   int element_index)
@@ -1389,88 +1389,88 @@ void Server::writeFieldToResponse(Field & field,
   {
     return;
   }
-  const ConstantString & field_name = field.getName();
+  const ConstantString & property_name = property.getName();
   if (write_key)
   {
-    response_.writeKey(field_name);
+    response_.writeKey(property_name);
   }
-  JsonStream::JsonTypes field_type = field.getType();
-  switch (field_type)
+  JsonStream::JsonTypes property_type = property.getType();
+  switch (property_type)
   {
     case JsonStream::LONG_TYPE:
     {
       if (element_index >= 0)
       {
-        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
         return;
       }
-      long field_value;
+      long property_value;
       if (write_default)
       {
-        field.getDefaultValue(field_value);
+        property.getDefaultValue(property_value);
       }
       else
       {
-        field.getValue(field_value);
+        property.getValue(property_value);
       }
-      response_.write(field_value);
+      response_.write(property_value);
       break;
     }
     case JsonStream::DOUBLE_TYPE:
     {
       if (element_index >= 0)
       {
-        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
         return;
       }
-      double field_value;
+      double property_value;
       if (write_default)
       {
-        field.getDefaultValue(field_value);
+        property.getDefaultValue(property_value);
       }
       else
       {
-        field.getValue(field_value);
+        property.getValue(property_value);
       }
-      response_.write(field_value);
+      response_.write(property_value);
       break;
     }
     case JsonStream::BOOL_TYPE:
     {
       if (element_index >= 0)
       {
-        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
         return;
       }
-      bool field_value;
+      bool property_value;
       if (write_default)
       {
-        field.getDefaultValue(field_value);
+        property.getDefaultValue(property_value);
       }
       else
       {
-        field.getValue(field_value);
+        property.getValue(property_value);
       }
-      response_.write(field_value);
+      response_.write(property_value);
       break;
     }
     case JsonStream::STRING_TYPE:
     {
-      size_t array_length = field.getArrayLength();
+      size_t array_length = property.getArrayLength();
       if (element_index >= 0)
       {
         if (element_index >= ((int)array_length-1))
         {
-          response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
+          response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
           return;
         }
         size_t array_length = 2;
         char char_array[array_length];
-        char field_element_value;
-        bool success = field.getElementValue(element_index,field_element_value);
+        char property_element_value;
+        bool success = property.getElementValue(element_index,property_element_value);
         if (success)
         {
-          char_array[0] = field_element_value;
+          char_array[0] = property_element_value;
           char_array[1] = '\0';
         }
         else
@@ -1483,22 +1483,22 @@ void Server::writeFieldToResponse(Field & field,
       char char_array[array_length];
       if (write_default)
       {
-        field.getDefaultValue(char_array,array_length);
+        property.getDefaultValue(char_array,array_length);
       }
       else
       {
-        field.getValue(char_array,array_length);
+        property.getValue(char_array,array_length);
       }
       response_.write(char_array);
       break;
     }
     case JsonStream::ARRAY_TYPE:
     {
-      const JsonStream::JsonTypes array_element_type = field.getArrayElementType();
-      size_t array_length = field.getArrayLength();
+      const JsonStream::JsonTypes array_element_type = property.getArrayElementType();
+      size_t array_length = property.getArrayLength();
       if (element_index >= (int)array_length)
       {
-        response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
+        response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
         return;
       }
       switch (array_element_type)
@@ -1507,29 +1507,29 @@ void Server::writeFieldToResponse(Field & field,
         {
           if (element_index < 0)
           {
-            long field_value[array_length];
+            long property_value[array_length];
             if (write_default)
             {
-              field.getDefaultValue(field_value,array_length);
+              property.getDefaultValue(property_value,array_length);
             }
             else
             {
-              field.getValue(field_value,array_length);
+              property.getValue(property_value,array_length);
             }
-            response_.writeArray(field_value,array_length);
+            response_.writeArray(property_value,array_length);
           }
           else
           {
-            long field_value;
+            long property_value;
             if (write_default)
             {
-              field.getDefaultElementValue(element_index,field_value);
+              property.getDefaultElementValue(element_index,property_value);
             }
             else
             {
-              field.getElementValue(element_index,field_value);
+              property.getElementValue(element_index,property_value);
             }
-            response_.write(field_value);
+            response_.write(property_value);
           }
           break;
         }
@@ -1537,29 +1537,29 @@ void Server::writeFieldToResponse(Field & field,
         {
           if (element_index < 0)
           {
-            double field_value[array_length];
+            double property_value[array_length];
             if (write_default)
             {
-              field.getDefaultValue(field_value,array_length);
+              property.getDefaultValue(property_value,array_length);
             }
             else
             {
-              field.getValue(field_value,array_length);
+              property.getValue(property_value,array_length);
             }
-            response_.writeArray(field_value,array_length);
+            response_.writeArray(property_value,array_length);
           }
           else
           {
-            double field_value;
+            double property_value;
             if (write_default)
             {
-              field.getDefaultElementValue(element_index,field_value);
+              property.getDefaultElementValue(element_index,property_value);
             }
             else
             {
-              field.getElementValue(element_index,field_value);
+              property.getElementValue(element_index,property_value);
             }
-            response_.write(field_value);
+            response_.write(property_value);
           }
           break;
         }
@@ -1567,29 +1567,29 @@ void Server::writeFieldToResponse(Field & field,
         {
           if (element_index < 0)
           {
-            bool field_value[array_length];
+            bool property_value[array_length];
             if (write_default)
             {
-              field.getDefaultValue(field_value,array_length);
+              property.getDefaultValue(property_value,array_length);
             }
             else
             {
-              field.getValue(field_value,array_length);
+              property.getValue(property_value,array_length);
             }
-            response_.writeArray(field_value,array_length);
+            response_.writeArray(property_value,array_length);
           }
           else
           {
-            bool field_value;
+            bool property_value;
             if (write_default)
             {
-              field.getDefaultElementValue(element_index,field_value);
+              property.getDefaultElementValue(element_index,property_value);
             }
             else
             {
-              field.getElementValue(element_index,field_value);
+              property.getElementValue(element_index,property_value);
             }
-            response_.write(field_value);
+            response_.write(property_value);
           }
           break;
         }
@@ -1639,32 +1639,32 @@ void Server::versionToString(char* destination,
   {
     return;
   }
-  char version_field_str[constants::STRING_LENGTH_VERSION_FIELD];
-  char version_field_sep_str[constants::version_field_separator_constant_string.length()+1];
-  constants::version_field_separator_constant_string.copy(version_field_sep_str);
+  char version_property_str[constants::STRING_LENGTH_VERSION_PROPERTY];
+  char version_property_sep_str[constants::version_property_separator_constant_string.length()+1];
+  constants::version_property_separator_constant_string.copy(version_property_sep_str);
 
   // major
-  version_field_str[0] = '\0';
-  ltoa(major,version_field_str,10);
-  strncat(destination,version_field_str,length_left);
+  version_property_str[0] = '\0';
+  ltoa(major,version_property_str,10);
+  strncat(destination,version_property_str,length_left);
   length_left = num - strlen(destination);
-  strncat(destination,version_field_sep_str,length_left);
+  strncat(destination,version_property_sep_str,length_left);
   length_left = num - strlen(destination);
 
   // minor
-  version_field_str[0] = '\0';
-  ltoa(minor,version_field_str,10);
-  strncat(destination,version_field_str,length_left);
+  version_property_str[0] = '\0';
+  ltoa(minor,version_property_str,10);
+  strncat(destination,version_property_str,length_left);
   length_left = num - strlen(destination);
 
   // patch
   if (patch >= 0)
   {
-    strncat(destination,version_field_sep_str,length_left);
+    strncat(destination,version_property_sep_str,length_left);
     length_left = num - strlen(destination);
-    version_field_str[0] = '\0';
-    ltoa(patch,version_field_str,10);
-    strncat(destination,version_field_str,length_left);
+    version_property_str[0] = '\0';
+    ltoa(patch,version_property_str,10);
+    strncat(destination,version_property_str,length_left);
   }
 }
 
@@ -1825,120 +1825,120 @@ void Server::getMemoryFreeFunctor()
 }
 #endif
 
-void Server::getFieldDefaultValuesFunctor()
+void Server::getPropertyDefaultValuesFunctor()
 {
   response_.writeResultKey();
   response_.beginObject();
-  for (size_t i=0; i<fields_.size(); ++i)
+  for (size_t i=0; i<properties_.size(); ++i)
   {
-    Field & field = fields_[i];
-    writeFieldToResponse(field,true,true);
+    Property & property = properties_[i];
+    writePropertyToResponse(property,true,true);
   }
   response_.endObject();
 }
 
-void Server::setFieldsToDefaultsFunctor()
+void Server::setPropertiesToDefaultsFunctor()
 {
-  setFieldsToDefaults();
+  setPropertiesToDefaults();
 }
 
-void Server::setFieldToDefaultFunctor()
+void Server::setPropertyToDefaultFunctor()
 {
-  const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  int property_index = findPropertyIndex(property_name);
+  if ((property_index >= 0) && (property_index < (int)properties_.size()))
   {
-    Field & field = fields_[field_index];
-    field.setValueToDefault();
+    Property & property = properties_[property_index];
+    property.setValueToDefault();
   }
   else
   {
-    response_.returnParameterInvalidError(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::property_not_found_error_data);
   }
 }
 
-void Server::getFieldValuesFunctor()
+void Server::getPropertyValuesFunctor()
 {
   response_.writeResultKey();
   response_.beginObject();
-  for (size_t i=0; i<fields_.size(); ++i)
+  for (size_t i=0; i<properties_.size(); ++i)
   {
-    Field & field = fields_[i];
-    writeFieldToResponse(field,true,false);
+    Property & property = properties_[i];
+    writePropertyToResponse(property,true,false);
   }
   response_.endObject();
 }
 
-void Server::getFieldValueFunctor()
+void Server::getPropertyValueFunctor()
 {
   response_.writeResultKey();
-  const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  int property_index = findPropertyIndex(property_name);
+  if ((property_index >= 0) && (property_index < (int)properties_.size()))
   {
-    Field & field = fields_[field_index];
-    writeFieldToResponse(field,false,false);
+    Property & property = properties_[property_index];
+    writePropertyToResponse(property,false,false);
   }
   else
   {
-    response_.returnParameterInvalidError(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::property_not_found_error_data);
   }
 }
 
-void Server::getFieldElementValueFunctor()
+void Server::getPropertyElementValueFunctor()
 {
   response_.writeResultKey();
-  const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
-  if (field_element_index < 0)
+  const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
+  if (property_element_index < 0)
   {
-    response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
+    response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
     return;
   }
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  int property_index = findPropertyIndex(property_name);
+  if ((property_index >= 0) && (property_index < (int)properties_.size()))
   {
-    Field & field = fields_[field_index];
-    writeFieldToResponse(field,false,false,field_element_index);
+    Property & property = properties_[property_index];
+    writePropertyToResponse(property,false,false,property_element_index);
   }
   else
   {
-    response_.returnParameterInvalidError(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::property_not_found_error_data);
   }
 }
 
-void Server::setFieldValueFunctor()
+void Server::setPropertyValueFunctor()
 {
-  const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  int property_index = findPropertyIndex(property_name);
+  if ((property_index >= 0) && (property_index < (int)properties_.size()))
   {
-    Field & field = fields_[field_index];
-    ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-    bool parameter_ok = checkParameter(field.parameter(),json_value);
+    Property & property = properties_[property_index];
+    ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
+    bool parameter_ok = checkParameter(property.parameter(),json_value);
     if (!parameter_ok)
     {
       return;
     }
-    JsonStream::JsonTypes field_type = field.getType();
-    switch (field_type)
+    JsonStream::JsonTypes property_type = property.getType();
+    switch (property_type)
     {
       case JsonStream::LONG_TYPE:
       {
-        long field_value = getParameterValue(constants::field_value_parameter_name);
-        field.setValue(field_value);
+        long property_value = getParameterValue(constants::property_value_parameter_name);
+        property.setValue(property_value);
         break;
       }
       case JsonStream::DOUBLE_TYPE:
       {
-        double field_value = getParameterValue(constants::field_value_parameter_name);
-        field.setValue(field_value);
+        double property_value = getParameterValue(constants::property_value_parameter_name);
+        property.setValue(property_value);
         break;
       }
       case JsonStream::BOOL_TYPE:
       {
-        bool field_value = getParameterValue(constants::field_value_parameter_name);
-        field.setValue(field_value);
+        bool property_value = getParameterValue(constants::property_value_parameter_name);
+        property.setValue(property_value);
         break;
       }
       case JsonStream::NULL_TYPE:
@@ -1947,9 +1947,9 @@ void Server::setFieldValueFunctor()
       }
       case JsonStream::STRING_TYPE:
       {
-        const char * field_value = getParameterValue(constants::field_value_parameter_name);
-        size_t array_length = strlen(field_value) + 1;
-        field.setValue(field_value,array_length);
+        const char * property_value = getParameterValue(constants::property_value_parameter_name);
+        size_t array_length = strlen(property_value) + 1;
+        property.setValue(property_value,array_length);
         break;
       }
       case JsonStream::OBJECT_TYPE:
@@ -1958,8 +1958,8 @@ void Server::setFieldValueFunctor()
       }
       case JsonStream::ARRAY_TYPE:
       {
-        ArduinoJson::JsonArray & field_value = getParameterValue(constants::field_value_parameter_name);
-        field.setValue(field_value);
+        ArduinoJson::JsonArray & property_value = getParameterValue(constants::property_value_parameter_name);
+        property.setValue(property_value);
         break;
       }
       case JsonStream::VALUE_TYPE:
@@ -1970,45 +1970,45 @@ void Server::setFieldValueFunctor()
   }
   else
   {
-    response_.returnParameterInvalidError(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::property_not_found_error_data);
   }
 }
 
-void Server::setFieldElementValueFunctor()
+void Server::setPropertyElementValueFunctor()
 {
-  const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  long field_element_index = getParameterValue(constants::field_element_index_parameter_name);
-  if (field_element_index < 0)
+  const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
+  if (property_element_index < 0)
   {
-    response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
+    response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
     return;
   }
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  int property_index = findPropertyIndex(property_name);
+  if ((property_index >= 0) && (property_index < (int)properties_.size()))
   {
-    Field & field = fields_[field_index];
-    ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-    bool parameter_ok = checkArrayParameterElement(field.parameter(),json_value);
+    Property & property = properties_[property_index];
+    ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
+    bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
     if (!parameter_ok)
     {
       return;
     }
-    JsonStream::JsonTypes field_type = field.getType();
-    switch (field_type)
+    JsonStream::JsonTypes property_type = property.getType();
+    switch (property_type)
     {
       case JsonStream::LONG_TYPE:
       {
-        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
         break;
       }
       case JsonStream::DOUBLE_TYPE:
       {
-        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
         break;
       }
       case JsonStream::BOOL_TYPE:
       {
-        response_.returnParameterInvalidError(constants::field_not_array_type_error_data);
+        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
         break;
       }
       case JsonStream::NULL_TYPE:
@@ -2017,23 +2017,23 @@ void Server::setFieldElementValueFunctor()
       }
       case JsonStream::STRING_TYPE:
       {
-        if (!field.stringIsSavedAsCharArray())
+        if (!property.stringIsSavedAsCharArray())
         {
-          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_field_with_subset_error_data);
+          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
           break;
         }
-        size_t array_length = field.getArrayLength();
-        if ((size_t)field_element_index >= (array_length - 1))
+        size_t array_length = property.getArrayLength();
+        if ((size_t)property_element_index >= (array_length - 1))
         {
-          response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
+          response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
           return;
         }
-        const char * field_value = getParameterValue(constants::field_value_parameter_name);
-        size_t string_length = strlen(field_value);
+        const char * property_value = getParameterValue(constants::property_value_parameter_name);
+        size_t string_length = strlen(property_value);
         if (string_length >= 1)
         {
-          char v = field_value[0];
-          field.setElementValue(field_element_index,v);
+          char v = property_value[0];
+          property.setElementValue(property_element_index,v);
         }
         break;
       }
@@ -2043,31 +2043,31 @@ void Server::setFieldElementValueFunctor()
       }
       case JsonStream::ARRAY_TYPE:
       {
-        size_t array_length = field.getArrayLength();
-        if ((size_t)field_element_index >= array_length)
+        size_t array_length = property.getArrayLength();
+        if ((size_t)property_element_index >= array_length)
         {
-          response_.returnParameterInvalidError(constants::field_element_index_out_of_bounds_error_data);
+          response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
           return;
         }
-        JsonStream::JsonTypes array_element_type = field.getArrayElementType();
+        JsonStream::JsonTypes array_element_type = property.getArrayElementType();
         switch (array_element_type)
         {
           case JsonStream::LONG_TYPE:
           {
-            long field_value = getParameterValue(constants::field_value_parameter_name);
-            field.setElementValue(field_element_index,field_value);
+            long property_value = getParameterValue(constants::property_value_parameter_name);
+            property.setElementValue(property_element_index,property_value);
             break;
           }
           case JsonStream::DOUBLE_TYPE:
           {
-            double field_value = getParameterValue(constants::field_value_parameter_name);
-            field.setElementValue(field_element_index,field_value);
+            double property_value = getParameterValue(constants::property_value_parameter_name);
+            property.setElementValue(property_element_index,property_value);
             break;
           }
           case JsonStream::BOOL_TYPE:
           {
-            bool field_value = getParameterValue(constants::field_value_parameter_name);
-            field.setElementValue(field_element_index,field_value);
+            bool property_value = getParameterValue(constants::property_value_parameter_name);
+            property.setElementValue(property_element_index,property_value);
             break;
           }
           case JsonStream::NULL_TYPE:
@@ -2101,25 +2101,25 @@ void Server::setFieldElementValueFunctor()
   }
   else
   {
-    response_.returnParameterInvalidError(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::property_not_found_error_data);
   }
 }
 
-void Server::setAllFieldElementValuesFunctor()
+void Server::setAllPropertyElementValuesFunctor()
 {
-  const char * field_name = getParameterValue(constants::field_name_parameter_name);
-  int field_index = findFieldIndex(field_name);
-  if ((field_index >= 0) && (field_index < (int)fields_.size()))
+  const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  int property_index = findPropertyIndex(property_name);
+  if ((property_index >= 0) && (property_index < (int)properties_.size()))
   {
-    Field & field = fields_[field_index];
-    ArduinoJson::JsonVariant json_value = getParameterValue(constants::field_value_parameter_name);
-    bool parameter_ok = checkArrayParameterElement(field.parameter(),json_value);
+    Property & property = properties_[property_index];
+    ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
+    bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
     if (!parameter_ok)
     {
       return;
     }
-    JsonStream::JsonTypes field_type = field.getType();
-    switch (field_type)
+    JsonStream::JsonTypes property_type = property.getType();
+    switch (property_type)
     {
       case JsonStream::LONG_TYPE:
       {
@@ -2139,17 +2139,17 @@ void Server::setAllFieldElementValuesFunctor()
       }
       case JsonStream::STRING_TYPE:
       {
-        if (!field.stringIsSavedAsCharArray())
+        if (!property.stringIsSavedAsCharArray())
         {
-          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_field_with_subset_error_data);
+          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
           break;
         }
-        const char * field_value = getParameterValue(constants::field_value_parameter_name);
-        size_t string_length = strlen(field_value);
+        const char * property_value = getParameterValue(constants::property_value_parameter_name);
+        size_t string_length = strlen(property_value);
         if (string_length >= 1)
         {
-          char v = field_value[0];
-          field.setAllElementValues(v);
+          char v = property_value[0];
+          property.setAllElementValues(v);
         }
         break;
       }
@@ -2159,25 +2159,25 @@ void Server::setAllFieldElementValuesFunctor()
       }
       case JsonStream::ARRAY_TYPE:
       {
-        JsonStream::JsonTypes array_element_type = field.getArrayElementType();
+        JsonStream::JsonTypes array_element_type = property.getArrayElementType();
         switch (array_element_type)
         {
           case JsonStream::LONG_TYPE:
           {
-            long field_value = getParameterValue(constants::field_value_parameter_name);
-            field.setAllElementValues(field_value);
+            long property_value = getParameterValue(constants::property_value_parameter_name);
+            property.setAllElementValues(property_value);
             break;
           }
           case JsonStream::DOUBLE_TYPE:
           {
-            double field_value = getParameterValue(constants::field_value_parameter_name);
-            field.setAllElementValues(field_value);
+            double property_value = getParameterValue(constants::property_value_parameter_name);
+            property.setAllElementValues(property_value);
             break;
           }
           case JsonStream::BOOL_TYPE:
           {
-            bool field_value = getParameterValue(constants::field_value_parameter_name);
-            field.setAllElementValues(field_value);
+            bool property_value = getParameterValue(constants::property_value_parameter_name);
+            property.setAllElementValues(property_value);
             break;
           }
           case JsonStream::NULL_TYPE:
@@ -2211,7 +2211,7 @@ void Server::setAllFieldElementValuesFunctor()
   }
   else
   {
-    response_.returnParameterInvalidError(constants::field_not_found_error_data);
+    response_.returnParameterInvalidError(constants::property_not_found_error_data);
   }
 }
 

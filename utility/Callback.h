@@ -14,7 +14,7 @@
 #include "Functor.h"
 
 #include "FirmwareElement.h"
-#include "Field.h"
+#include "Property.h"
 #include "Constants.h"
 
 
@@ -26,15 +26,15 @@ public:
   Callback();
 
   void attachFunctor(const Functor0 & functor);
-  void addField(Field & field);
+  void addProperty(Property & property);
 
 private:
   Functor0 functor_;
-  Array<Field *,constants::CALLBACK_FIELD_COUNT_MAX> field_ptrs_;
+  Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> property_ptrs_;
   Callback(const ConstantString & name);
   void setup(const ConstantString & name);
-  int findFieldIndex(const ConstantString & field_name);
-  size_t getFieldCount();
+  int findPropertyIndex(const ConstantString & property_name);
+  size_t getPropertyCount();
   void functor();
   friend class Server;
 };

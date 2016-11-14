@@ -19,7 +19,7 @@ Set the baudrate to match the value in the Arduino sketch (115200).
 Set the line ending to 'Newline'.
 
 To get help information about the modular device, type a single
-question mark ? into the input field and press the 'Send' button or
+question mark ? into the input property and press the 'Send' button or
 press the 'Enter' key.
 
 ```shell
@@ -44,24 +44,24 @@ Example Response:
         "getDeviceInfo",
         "getApi",
         "getApiVerbose",
-        "getFieldDefaultValues",
-        "setFieldsToDefaults",
-        "setFieldToDefault",
-        "getFieldValues",
-        "getFieldValue",
-        "getFieldElementValue",
-        "setFieldValue",
-        "setFieldElementValue",
-        "setAllFieldElementValues",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "setPropertyToDefault",
+        "getPropertyValues",
+        "getPropertyValue",
+        "getPropertyElementValue",
+        "setPropertyValue",
+        "setPropertyElementValue",
+        "setAllPropertyElementValues",
         "getMemoryFree"
       ],
       "parameters":[
         "firmware",
-        "field_name",
-        "field_value",
-        "field_element_index"
+        "property_name",
+        "property_value",
+        "property_element_index"
       ],
-      "fields":[
+      "properties":[
         "serial_number"
       ],
       "callbacks":[]
@@ -71,7 +71,7 @@ Example Response:
 ```
 
 "methods" is an array of user methods. To execute a method, simply
-type it into the input field and press the 'Send' button or press the
+type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
 Example Method (This method only exists on AVR processors):
@@ -91,7 +91,7 @@ Example Response:
 
 To get more verbose help about the modular device, including
 information about the parameters each method takes, type two question
-marks ?? into the input field and press the 'Send' button or press the
+marks ?? into the input property and press the 'Send' button or press the
 'Enter' key.
 
 ```shell
@@ -159,73 +159,73 @@ Example Response:
           "result_type":"object"
         },
         {
-          "name":"getFieldDefaultValues",
+          "name":"getPropertyDefaultValues",
           "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
         },
         {
-          "name":"setFieldsToDefaults",
+          "name":"setPropertiesToDefaults",
           "firmware":"ModularServer",
           "parameters":[],
           "result_type":null
         },
         {
-          "name":"setFieldToDefault",
+          "name":"setPropertyToDefault",
           "firmware":"ModularServer",
           "parameters":[
-            "field_name"
+            "property_name"
           ],
           "result_type":null
         },
         {
-          "name":"getFieldValues",
+          "name":"getPropertyValues",
           "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
         },
         {
-          "name":"getFieldValue",
+          "name":"getPropertyValue",
           "firmware":"ModularServer",
           "parameters":[
-            "field_name"
+            "property_name"
           ],
           "result_type":"value"
         },
         {
-          "name":"getFieldElementValue",
+          "name":"getPropertyElementValue",
           "firmware":"ModularServer",
           "parameters":[
-            "field_name",
-            "field_element_index"
+            "property_name",
+            "property_element_index"
           ],
           "result_type":"value"
         },
         {
-          "name":"setFieldValue",
+          "name":"setPropertyValue",
           "firmware":"ModularServer",
           "parameters":[
-            "field_name",
-            "field_value"
+            "property_name",
+            "property_value"
           ],
           "result_type":null
         },
         {
-          "name":"setFieldElementValue",
+          "name":"setPropertyElementValue",
           "firmware":"ModularServer",
           "parameters":[
-            "field_name",
-            "field_element_index",
-            "field_value"
+            "property_name",
+            "property_element_index",
+            "property_value"
           ],
           "result_type":null
         },
         {
-          "name":"setAllFieldElementValues",
+          "name":"setAllPropertyElementValues",
           "firmware":"ModularServer",
           "parameters":[
-            "field_name",
-            "field_value"
+            "property_name",
+            "property_value"
           ],
           "result_type":null
         },
@@ -251,22 +251,22 @@ Example Response:
           "array_length_max":8
         },
         {
-          "name":"field_name",
+          "name":"property_name",
           "firmware":"ModularServer",
           "type":"string"
         },
         {
-          "name":"field_value",
+          "name":"property_value",
           "firmware":"ModularServer",
           "type":"value"
         },
         {
-          "name":"field_element_index",
+          "name":"property_element_index",
           "firmware":"ModularServer",
           "type":"long"
         }
       ],
-      "fields":[
+      "properties":[
         {
           "name":"serial_number",
           "firmware":"ModularServer",
@@ -286,14 +286,14 @@ Example Response:
 Example Method with Parameters:
 
 ```shell
-getFieldValue
+getPropertyValue
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValue",
+  "id":"getPropertyValue",
   "error":{
     "message":"Invalid params",
     "data":"Incorrect number of parameters. 0 given. 1 needed.",
@@ -303,9 +303,9 @@ Example Response:
 ```
 
 When a method executes successfully, the response will contain a
-"result" field. In some cases the result may be null, but the method
+"result" property. In some cases the result may be null, but the method
 execution was still successful. When there is an error, there will not
-exist a "result" field, but there will exist an "error" field.
+exist a "result" property, but there will exist an "error" property.
 
 To get more information about a method, enter the method followed by
 a question mark.
@@ -313,19 +313,19 @@ a question mark.
 Example Method Help:
 
 ```shell
-getFieldValue ?
+getPropertyValue ?
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValue",
+  "id":"getPropertyValue",
   "result":{
-    "name":"getFieldValue",
+    "name":"getPropertyValue",
     "firmware":"ModularServer",
     "parameters":[
-      "field_name"
+      "property_name"
     ],
     "result_type":"value"
   }
@@ -337,7 +337,7 @@ Or you can enter a question mark followed by the method.
 Example Method Help:
 
 ```shell
-? getFieldValue
+? getPropertyValue
 ```
 
 Example Response:
@@ -346,10 +346,10 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "name":"getFieldValue",
+    "name":"getPropertyValue",
     "firmware":"ModularServer",
     "parameters":[
-      "field_name"
+      "property_name"
     ],
     "result_type":"value"
   }
@@ -360,20 +360,20 @@ To get more verbose information about all of the parameters a method
 takes, enter the method followed by two questions marks.
 
 ```shell
-getFieldValue ??
+getPropertyValue ??
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValue",
+  "id":"getPropertyValue",
   "result":{
-    "name":"getFieldValue",
+    "name":"getPropertyValue",
     "firmware":"ModularServer",
     "parameters":[
       {
-        "name":"field_name",
+        "name":"property_name",
         "firmware":"ModularServer",
         "type":"string"
       }
@@ -386,14 +386,14 @@ Example Response:
 Example Method:
 
 ```shell
-getFieldValue serial_number
+getPropertyValue serial_number
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValue",
+  "id":"getPropertyValue",
   "result":0
 }
 ```
@@ -405,58 +405,58 @@ devices connected to a single host machine at one time.
 Example Method:
 
 ```shell
-setFieldValue serial_number 32
+setPropertyValue serial_number 32
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldValue",
+  "id":"setPropertyValue",
   "result":null
 }
 ```
 
 ```shell
-getFieldValue serial_number
+getPropertyValue serial_number
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValue",
+  "id":"getPropertyValue",
   "result":32
 }
 ```
 
-To reset the serial number to the default value, use the setFieldsToDefaults
+To reset the serial number to the default value, use the setPropertiesToDefaults
 method.
 
 Example Method:
 
 ```shell
-setFieldsToDefaults
+setPropertiesToDefaults
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setFieldsToDefaults",
+  "id":"setPropertiesToDefaults",
   "result":null
 }
 ```
 
 ```shell
-getFieldValue serial_number
+getPropertyValue serial_number
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getFieldValue",
+  "id":"getPropertyValue",
   "result":0
 }
 ```
@@ -483,7 +483,7 @@ Example Response:
 }
 ```
 
-The serial\_number field can be changed to uniquely identify devices
+The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
 Use the getDeviceInfo method to get information about the hardware and
@@ -521,7 +521,7 @@ Example Response:
 }
 ```
 
-Every method, parameter, and field belongs to one firmware set.
+Every method, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 method.
@@ -544,24 +544,24 @@ Example Response:
       "getDeviceInfo",
       "getApi",
       "getApiVerbose",
-      "getFieldDefaultValues",
-      "setFieldsToDefaults",
-      "setFieldToDefault",
-      "getFieldValues",
-      "getFieldValue",
-      "getFieldElementValue",
-      "setFieldValue",
-      "setFieldElementValue",
-      "setAllFieldElementValues",
+      "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
+      "setPropertyToDefault",
+      "getPropertyValues",
+      "getPropertyValue",
+      "getPropertyElementValue",
+      "setPropertyValue",
+      "setPropertyElementValue",
+      "setAllPropertyElementValues",
       "getMemoryFree"
     ],
     "parameters":[
       "firmware",
-      "field_name",
-      "field_value",
-      "field_element_index"
+      "property_name",
+      "property_value",
+      "property_element_index"
     ],
-    "fields":[
+    "properties":[
       "serial_number"
     ],
     "callbacks":[]
@@ -584,7 +584,7 @@ Example Response:
     "firmware":["MinimalDevice"],
     "methods":[],
     "parameters":[],
-    "fields":[],
+    "properties":[],
     "callbacks":[]
   }
 }
@@ -601,43 +601,43 @@ dev.get_device_id()
 {'form_factor': '5x3', 'name': 'minimal_device', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
- 'set_field_element_value',
- 'get_field_value',
- 'get_field_element_value',
+ 'set_property_element_value',
+ 'get_property_value',
+ 'get_property_element_value',
  'get_api',
  'get_api_verbose',
- 'set_all_field_element_values',
- 'set_fields_to_defaults',
+ 'set_all_property_element_values',
+ 'set_properties_to_defaults',
  'get_device_id',
- 'get_field_default_values',
- 'set_field_value',
- 'set_field_to_default',
- 'get_field_values',
+ 'get_property_default_values',
+ 'set_property_value',
+ 'set_property_to_default',
+ 'get_property_values',
  'get_device_info']
 dev.get_memory_free()
 4944
-dev.get_field_value()
+dev.get_property_value()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
-dev.get_field_value('?')
+dev.get_property_value('?')
 {'firmware': 'ModularServer',
- 'name': 'getFieldValue',
- 'parameters': ['field_name'],
+ 'name': 'getPropertyValue',
+ 'parameters': ['property_name'],
  'result_type': 'value'}
-dev.get_field_value('serial_number')
+dev.get_property_value('serial_number')
 0
-dev.set_field_value('serial_number',-1)
+dev.set_property_value('serial_number',-1)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
-dev.set_field_value('serial_number',12)
+dev.set_property_value('serial_number',12)
 result = dev.call_server_method('?')
 result['device_id']['serial_number']
 12
 dev.convert_to_json(result['device_id'])
 '{"serial_number":12,"name":"minimal_device","form_factor":"5x3"}'
-dev.send_json_request('["set_fields_to_defaults"]')
-dev.get_field_value('serial_number')
+dev.send_json_request('["set_properties_to_defaults"]')
+dev.get_property_value('serial_number')
 0
 dev.get_api(["MinimalDevice"])
-{'fields': [], 'firmware': ['MinimalDevice'], 'callbacks': [], 'methods': [], 'parameters': []}
+{'properties': [], 'firmware': ['MinimalDevice'], 'callbacks': [], 'methods': [], 'parameters': []}
 ```
 
 For more details on the Python interface:
@@ -673,33 +673,33 @@ dev.getMethods()                 % get device methods
   getDeviceInfo
   getApi
   getApiVerbose
-  getFieldDefaultValues
-  setFieldsToDefaults
-  getFieldValues
-  getFieldValue
-  getFieldElementValue
-  setFieldValue
-  setFieldElementValue
-  setAllFieldElementValues
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getPropertyValue
+  getPropertyElementValue
+  setPropertyValue
+  setPropertyElementValue
+  setAllPropertyElementValues
   getMemoryFree
 dev.getMemoryFree()
 ans =
   4944
-dev.getFieldValue()
+dev.getPropertyValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
-method_info = dev.getFieldValue('?')
+method_info = dev.getPropertyValue('?')
 method_info
 ans =
-  name: 'getFieldValue'
+  name: 'getPropertyValue'
   firmware: 'ModularServer'
-  parameters: {'field_name'}
+  parameters: {'property_name'}
   result_type: 'value'
-dev.getFieldValue('serial_number')
+dev.getPropertyValue('serial_number')
 ans =
   0
-dev.setFieldValue('serial_number',-1)
+dev.setPropertyValue('serial_number',-1)
 (from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
-dev.setFieldValue('serial_number',13);
+dev.setPropertyValue('serial_number',13);
 result = dev.callServerMethod('?');
 result.device_id.serial_number
 ans =
@@ -707,8 +707,8 @@ ans =
 json = dev.convertToJson(result.device_info.firmware_version)
 json =
   {"major": 0,"minor": 1,"patch": 0}
-dev.sendJsonRequest('["setFieldsToDefaults"]')
-dev.getFieldValue('serial_number')
+dev.sendJsonRequest('["setPropertiesToDefaults"]')
+dev.getPropertyValue('serial_number')
 ans =
   0
 dev.close()

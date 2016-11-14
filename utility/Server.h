@@ -20,7 +20,7 @@
 #include "JsonStream.h"
 #include "Functor.h"
 
-#include "Field.h"
+#include "Property.h"
 #include "Parameter.h"
 #include "Method.h"
 #include "Callback.h"
@@ -47,25 +47,25 @@ public:
   void addHardwareInfo(const constants::HardwareInfo & hardware_info);
 
   // Firmware
-  template <size_t FIELDS_MAX_SIZE,
+  template <size_t PROPERTIES_MAX_SIZE,
             size_t PARAMETERS_MAX_SIZE,
             size_t METHODS_MAX_SIZE,
             size_t CALLBACKS_MAX_SIZE>
   void addFirmware(const constants::FirmwareInfo & firmware_info,
-                   Field (&fields)[FIELDS_MAX_SIZE],
+                   Property (&properties)[PROPERTIES_MAX_SIZE],
                    Parameter (&parameters)[PARAMETERS_MAX_SIZE],
                    Method (&methods)[METHODS_MAX_SIZE],
                    Callback (&callbacks)[CALLBACKS_MAX_SIZE]);
 
-  // Fields
+  // Properties
   template <typename T>
-  Field & createField(const ConstantString & field_name,
+  Property & createProperty(const ConstantString & property_name,
                      const T & default_value);
   template <typename T, size_t N>
-  Field & createField(const ConstantString & field_name,
+  Property & createProperty(const ConstantString & property_name,
                      const T (&default_value)[N]);
-  Field & field(const ConstantString & field_name);
-  void setFieldsToDefaults();
+  Property & property(const ConstantString & property_name);
+  void setPropertiesToDefaults();
 
   // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);
@@ -97,15 +97,15 @@ private:
   ArduinoJson::JsonArray  * request_json_array_ptr_;
   Response response_;
 
-  Field server_fields_[constants::SERVER_FIELD_COUNT_MAX];
+  Property server_properties_[constants::SERVER_PROPERTY_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
   Method server_methods_[constants::SERVER_METHOD_COUNT_MAX];
   Callback server_callbacks_[constants::SERVER_CALLBACK_COUNT_MAX];
-  ConcatenatedArray<Field,constants::FIRMWARE_COUNT_MAX> fields_;
+  ConcatenatedArray<Property,constants::FIRMWARE_COUNT_MAX> properties_;
   ConcatenatedArray<Parameter,constants::FIRMWARE_COUNT_MAX> parameters_;
   ConcatenatedArray<Method,constants::FIRMWARE_COUNT_MAX> methods_;
   ConcatenatedArray<Callback,constants::FIRMWARE_COUNT_MAX> callbacks_;
-  Field dummy_field_;
+  Property dummy_property_;
   Parameter dummy_parameter_;
   Method dummy_method_;
   Callback dummy_callback_;
@@ -126,7 +126,7 @@ private:
   void processRequestArray();
   int findRequestMethodIndex(const char * method_string);
   template <typename T>
-  int findFieldIndex(T const & field_name);
+  int findPropertyIndex(T const & property_name);
   template <typename T>
   int findParameterIndex(T const & parameter_name);
   template <typename T>
@@ -143,7 +143,7 @@ private:
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
-  void fieldHelp(Field & field);
+  void propertyHelp(Property & property);
   void parameterHelp(Parameter & parameter, bool end_object=true);
   void methodHelp(bool verbose, int method_index);
   void callbackHelp(bool verbose, int callback_index);
@@ -153,7 +153,7 @@ private:
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
   void writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array);
-  void writeFieldToResponse(Field & field,
+  void writePropertyToResponse(Property & property,
                             bool write_key=false,
                             bool write_default=false,
                             int element_index=-1);
@@ -177,15 +177,15 @@ private:
   void getApiFunctor();
   void getApiVerboseFunctor();
   void getMemoryFreeFunctor();
-  void getFieldDefaultValuesFunctor();
-  void setFieldsToDefaultsFunctor();
-  void setFieldToDefaultFunctor();
-  void getFieldValuesFunctor();
-  void getFieldValueFunctor();
-  void getFieldElementValueFunctor();
-  void setFieldValueFunctor();
-  void setFieldElementValueFunctor();
-  void setAllFieldElementValuesFunctor();
+  void getPropertyDefaultValuesFunctor();
+  void setPropertiesToDefaultsFunctor();
+  void setPropertyToDefaultFunctor();
+  void getPropertyValuesFunctor();
+  void getPropertyValueFunctor();
+  void getPropertyElementValueFunctor();
+  void setPropertyValueFunctor();
+  void setPropertyElementValueFunctor();
+  void setAllPropertyElementValuesFunctor();
 
 };
 }

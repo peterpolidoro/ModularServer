@@ -14,7 +14,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{FIELD_COUNT_MAX=1};
+enum{PROPERTY_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=3};
 enum{METHOD_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=1};
@@ -35,8 +35,8 @@ extern const size_t led_pin;
 // Units
 extern ConstantString seconds_unit;
 
-// Fields
-// Field values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
+// Properties
+// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
 
 // Parameters
 extern ConstantString duration_on_parameter_name;
