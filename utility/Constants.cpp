@@ -34,7 +34,7 @@ CONSTANT_STRING(property_value_parameter_name,"property_value");
 CONSTANT_STRING(property_element_index_parameter_name,"property_element_index");
 
 // Methods
-CONSTANT_STRING(get_method_ids_method_name,"getMethodIds");
+CONSTANT_STRING(get_procedure_ids_method_name,"getProcedureIds");
 CONSTANT_STRING(help_method_name,"?");
 CONSTANT_STRING(verbose_help_method_name,"??");
 CONSTANT_STRING(get_device_id_method_name,"getDeviceId");

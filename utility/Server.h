@@ -169,7 +169,7 @@ private:
                       const size_t num);
 
   // Functors
-  void getMethodIdsFunctor();
+  void getProcedureIdsFunctor();
   void helpFunctor();
   void verboseHelpFunctor();
   void getDeviceIdFunctor();

@@ -68,9 +68,9 @@ void Server::setup()
   property_element_index_parameter.setTypeLong();
 
   // Methods
-  Method & get_method_ids_method = createMethod(constants::get_method_ids_method_name);
-  get_method_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsFunctor));
-  get_method_ids_method.setReturnTypeObject();
+  Method & get_procedure_ids_method = createMethod(constants::get_procedure_ids_method_name);
+  get_procedure_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getProcedureIdsFunctor));
+  get_procedure_ids_method.setReturnTypeObject();
   private_method_index_ = 0;
 
   Method & help_method = createMethod(constants::help_method_name);
@@ -1765,7 +1765,7 @@ void Server::subsetToString(char * destination,
 }
 
 // Functors
-void Server::getMethodIdsFunctor()
+void Server::getProcedureIdsFunctor()
 {
   response_.writeResultKey();
   response_.beginObject();

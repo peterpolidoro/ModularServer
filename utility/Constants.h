@@ -84,7 +84,7 @@ extern ConstantString property_value_parameter_name;
 extern ConstantString property_element_index_parameter_name;
 
 // Methods
-extern ConstantString get_method_ids_method_name;
+extern ConstantString get_procedure_ids_method_name;
 extern ConstantString help_method_name;
 extern ConstantString verbose_help_method_name;
 extern ConstantString get_device_id_method_name;
