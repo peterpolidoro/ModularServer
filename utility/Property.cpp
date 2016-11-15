@@ -501,7 +501,11 @@ bool Property::setValue(ArduinoJson::JsonArray & value)
       {
         break;
       }
-      case JsonStream::VALUE_TYPE:
+      case JsonStream::ANY_TYPE:
+      {
+        break;
+      }
+      case JsonStream::VOID_TYPE:
       {
         break;
       }

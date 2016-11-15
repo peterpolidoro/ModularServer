@@ -16,22 +16,44 @@ CONSTANT_STRING(firmware_name,"ModularServer");
 const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
-    .version_major=1,
+    .version_major=2,
     .version_minor=0,
     .version_patch=0,
   };
 
 // Properties
-CONSTANT_STRING(serial_number_property_name,"serial_number");
-
+CONSTANT_STRING(serial_number_property_name,"serialNumber");
 const long serial_number_min = 0;
 const long serial_number_max = 65535;
 const long serial_number_default = serial_number_min;
 
 // Parameters
-CONSTANT_STRING(property_name_parameter_name,"property_name");
-CONSTANT_STRING(property_value_parameter_name,"property_value");
+CONSTANT_STRING(property_method_parameter_name,"property_method");
+CONSTANT_STRING(property_method_get_value,"getValue");
+CONSTANT_STRING(property_method_set_value,"setValue");
+CONSTANT_STRING(property_method_get_default_value,"getDefaultValue");
+CONSTANT_STRING(property_method_set_to_default,"setToDefault");
+CONSTANT_STRING(property_method_get_element_value,"getElementValue");
+CONSTANT_STRING(property_method_set_element_value,"setElementValue");
+CONSTANT_STRING(property_method_get_default_element_value,"getDefaultElementValue");
+CONSTANT_STRING(property_method_set_element_to_default,"setElementToDefault");
+CONSTANT_STRING(property_method_set_all_element_values,"setAllElementValues");
+SubsetMemberType property_method_ptr_subset[PROPERTY_METHOD_SUBSET_LENGTH] =
+  {
+    {.cs_ptr=&property_method_get_value},
+    {.cs_ptr=&property_method_set_value},
+    {.cs_ptr=&property_method_get_default_value},
+    {.cs_ptr=&property_method_set_to_default},
+    {.cs_ptr=&property_method_get_element_value},
+    {.cs_ptr=&property_method_set_element_value},
+    {.cs_ptr=&property_method_get_default_element_value},
+    {.cs_ptr=&property_method_set_element_to_default},
+    {.cs_ptr=&property_method_set_all_element_values},
+  };
+
 CONSTANT_STRING(property_element_index_parameter_name,"property_element_index");
+
+CONSTANT_STRING(property_value_parameter_name,"property_value");
 
 // Methods
 CONSTANT_STRING(get_procedure_ids_method_name,"getProcedureIds");
@@ -41,23 +63,23 @@ CONSTANT_STRING(get_device_id_method_name,"getDeviceId");
 CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
 CONSTANT_STRING(get_api_method_name,"getApi");
 CONSTANT_STRING(get_api_verbose_method_name,"getApiVerbose");
-CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
 CONSTANT_STRING(get_property_default_values_method_name,"getPropertyDefaultValues");
-CONSTANT_STRING(set_properties_to_defaults_method_name,"setPropertiesToDefaults");
-CONSTANT_STRING(set_property_to_default_method_name,"setPropertyToDefault");
 CONSTANT_STRING(get_property_values_method_name,"getPropertyValues");
-CONSTANT_STRING(get_property_value_method_name,"getPropertyValue");
-CONSTANT_STRING(get_property_element_value_method_name,"getPropertyElementValue");
-CONSTANT_STRING(set_property_value_method_name,"setPropertyValue");
-CONSTANT_STRING(set_property_element_value_method_name,"setPropertyElementValue");
-CONSTANT_STRING(set_all_property_element_values_method_name,"setAllPropertyElementValues");
+CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
+// CONSTANT_STRING(set_property_to_default_method_name,"setPropertyToDefault");
+// CONSTANT_STRING(get_property_value_method_name,"getPropertyValue");
+// CONSTANT_STRING(get_property_element_value_method_name,"getPropertyElementValue");
+// CONSTANT_STRING(set_property_value_method_name,"setPropertyValue");
+// CONSTANT_STRING(set_property_element_value_method_name,"setPropertyElementValue");
+// CONSTANT_STRING(set_all_property_element_values_method_name,"setAllPropertyElementValues");
 
 // Callbacks
+CONSTANT_STRING(set_properties_to_defaults_callback_name,"setPropertiesToDefaults");
 
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");
 CONSTANT_STRING(invalid_request_error_message,"Invalid Request");
-CONSTANT_STRING(method_not_found_error_message,"Method not found");
+CONSTANT_STRING(procedure_not_found_error_message,"Procedure not found");
 CONSTANT_STRING(invalid_params_error_message,"Invalid params");
 CONSTANT_STRING(server_error_error_message,"Server error");
 
@@ -79,7 +101,7 @@ CONSTANT_STRING(value_not_in_range_error_data,"Value not in range: ");
 
 const int parse_error_code = -32700;
 const int invalid_request_error_code = -32600;
-const int method_not_found_error_code = -32601;
+const int procedure_not_found_error_code = -32601;
 const int invalid_params_error_code = -32602;
 const int internal_error_error_code = -32603;
 const int server_error_error_code = -32000;

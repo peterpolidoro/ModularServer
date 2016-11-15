@@ -91,15 +91,15 @@ void Parameter::setTypeArray()
   }
 }
 
-void Parameter::setTypeValue()
+void Parameter::setTypeAny()
 {
   if (type_ != JsonStream::ARRAY_TYPE)
   {
-    type_ = JsonStream::VALUE_TYPE;
+    type_ = JsonStream::ANY_TYPE;
   }
   else
   {
-    array_element_type_ = JsonStream::VALUE_TYPE;
+    array_element_type_ = JsonStream::ANY_TYPE;
   }
 }
 
@@ -163,7 +163,7 @@ bool Parameter::getValue<long>(long & value)
   if ((getType() == JsonStream::LONG_TYPE) ||
       (getType() == JsonStream::DOUBLE_TYPE) ||
       (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::VALUE_TYPE))
+      (getType() == JsonStream::ANY_TYPE))
   {
     long v = get_value_functor_(getName());
     value = v;
@@ -178,7 +178,7 @@ bool Parameter::getValue<double>(double & value)
   if ((getType() == JsonStream::LONG_TYPE) ||
       (getType() == JsonStream::DOUBLE_TYPE) ||
       (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::VALUE_TYPE))
+      (getType() == JsonStream::ANY_TYPE))
   {
     double v = get_value_functor_(getName());
     value = v;
@@ -193,7 +193,7 @@ bool Parameter::getValue<float>(float & value)
   if ((getType() == JsonStream::LONG_TYPE) ||
       (getType() == JsonStream::DOUBLE_TYPE) ||
       (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::VALUE_TYPE))
+      (getType() == JsonStream::ANY_TYPE))
   {
     double v = get_value_functor_(getName());
     value = v;
@@ -208,7 +208,7 @@ bool Parameter::getValue<bool>(bool & value)
   if ((getType() == JsonStream::LONG_TYPE) ||
       (getType() == JsonStream::DOUBLE_TYPE) ||
       (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::VALUE_TYPE))
+      (getType() == JsonStream::ANY_TYPE))
   {
     bool v = get_value_functor_(getName());
     value = v;
@@ -219,7 +219,7 @@ bool Parameter::getValue<bool>(bool & value)
 
 bool Parameter::getValue(const char * & value)
 {
-  if ((getType() != JsonStream::STRING_TYPE) && (getType() != JsonStream::VALUE_TYPE))
+  if ((getType() != JsonStream::STRING_TYPE) && (getType() != JsonStream::ANY_TYPE))
   {
     return false;
   }

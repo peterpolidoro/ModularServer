@@ -18,7 +18,7 @@ Server::Server() :
 
 void Server::setup()
 {
-  request_method_index_ = -1;
+  request_procedure_index_ = -1;
   parameter_count_ = 0;
   server_stream_index_ = 0;
 
@@ -58,98 +58,99 @@ void Server::setup()
                                firmware_name_array_.max_size(),
                                firmware_name_array_.size());
 
-  Parameter & property_name_parameter = createParameter(constants::property_name_parameter_name);
-  property_name_parameter.setTypeString();
-
-  Parameter & property_value_parameter = createParameter(constants::property_value_parameter_name);
-  property_value_parameter.setTypeValue();
+  Parameter & property_method_parameter = createParameter(constants::property_method_parameter_name);
+  property_method_parameter.setTypeString();
+  property_method_parameter.setSubset(constants::property_method_ptr_subset);
 
   Parameter & property_element_index_parameter = createParameter(constants::property_element_index_parameter_name);
   property_element_index_parameter.setTypeLong();
 
+  Parameter & property_value_parameter = createParameter(constants::property_value_parameter_name);
+  property_value_parameter.setTypeAny();
+
   // Methods
   Method & get_procedure_ids_method = createMethod(constants::get_procedure_ids_method_name);
-  get_procedure_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getProcedureIdsFunctor));
+  get_procedure_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getProcedureIdsHandler));
   get_procedure_ids_method.setReturnTypeObject();
   private_method_index_ = 0;
 
   Method & help_method = createMethod(constants::help_method_name);
-  help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpFunctor));
+  help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpHandler));
   help_method.setReturnTypeObject();
   private_method_index_++;
 
   Method & verbose_help_method = createMethod(constants::verbose_help_method_name);
-  verbose_help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpFunctor));
+  verbose_help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpHandler));
   verbose_help_method.setReturnTypeObject();
   private_method_index_++;
 
   Method & get_device_id_method = createMethod(constants::get_device_id_method_name);
-  get_device_id_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdFunctor));
+  get_device_id_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdHandler));
   get_device_id_method.setReturnTypeObject();
 
   Method & get_device_info_method = createMethod(constants::get_device_info_method_name);
-  get_device_info_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoFunctor));
+  get_device_info_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoHandler));
   get_device_info_method.setReturnTypeObject();
 
   Method & get_api_method = createMethod(constants::get_api_method_name);
-  get_api_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiFunctor));
+  get_api_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
   get_api_method.addParameter(firmware_parameter);
   get_api_method.setReturnTypeObject();
 
   Method & get_api_verbose_method = createMethod(constants::get_api_verbose_method_name);
-  get_api_verbose_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseFunctor));
+  get_api_verbose_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseHandler));
   get_api_verbose_method.addParameter(firmware_parameter);
   get_api_verbose_method.setReturnTypeObject();
 
   Method & get_property_default_values_method = createMethod(constants::get_property_default_values_method_name);
-  get_property_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesFunctor));
+  get_property_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
   get_property_default_values_method.setReturnTypeObject();
 
-  Method & set_properties_to_defaults_method = createMethod(constants::set_properties_to_defaults_method_name);
-  set_properties_to_defaults_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsFunctor));
-
-  Method & set_property_to_default_method = createMethod(constants::set_property_to_default_method_name);
-  set_property_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyToDefaultFunctor));
-  set_property_to_default_method.addParameter(property_name_parameter);
-
   Method & get_property_values_method = createMethod(constants::get_property_values_method_name);
-  get_property_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesFunctor));
+  get_property_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesHandler));
   get_property_values_method.setReturnTypeObject();
-
-  Method & get_property_value_method = createMethod(constants::get_property_value_method_name);
-  get_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValueFunctor));
-  get_property_value_method.addParameter(property_name_parameter);
-  get_property_value_method.setReturnTypeValue();
-
-  Method & get_property_element_value_method = createMethod(constants::get_property_element_value_method_name);
-  get_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyElementValueFunctor));
-  get_property_element_value_method.addParameter(property_name_parameter);
-  get_property_element_value_method.addParameter(property_element_index_parameter);
-  get_property_element_value_method.setReturnTypeValue();
-
-  Method & set_property_value_method = createMethod(constants::set_property_value_method_name);
-  set_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyValueFunctor));
-  set_property_value_method.addParameter(property_name_parameter);
-  set_property_value_method.addParameter(property_value_parameter);
-
-  Method & set_property_element_value_method = createMethod(constants::set_property_element_value_method_name);
-  set_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyElementValueFunctor));
-  set_property_element_value_method.addParameter(property_name_parameter);
-  set_property_element_value_method.addParameter(property_element_index_parameter);
-  set_property_element_value_method.addParameter(property_value_parameter);
-
-  Method & set_all_property_element_values_method = createMethod(constants::set_all_property_element_values_method_name);
-  set_all_property_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllPropertyElementValuesFunctor));
-  set_all_property_element_values_method.addParameter(property_name_parameter);
-  set_all_property_element_values_method.addParameter(property_value_parameter);
 
 #ifdef __AVR__
   Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
-  get_memory_free_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeFunctor));
+  get_memory_free_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeHandler));
   get_memory_free_method.setReturnTypeLong();
 #endif
 
+  // Method & set_property_to_default_method = createMethod(constants::set_property_to_default_method_name);
+  // set_property_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyToDefaultHandler));
+  // set_property_to_default_method.addParameter(property_name_parameter);
+
+  // Method & get_property_value_method = createMethod(constants::get_property_value_method_name);
+  // get_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValueHandler));
+  // get_property_value_method.addParameter(property_name_parameter);
+  // get_property_value_method.setReturnTypeAny();
+
+  // Method & get_property_element_value_method = createMethod(constants::get_property_element_value_method_name);
+  // get_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyElementValueHandler));
+  // get_property_element_value_method.addParameter(property_name_parameter);
+  // get_property_element_value_method.addParameter(property_element_index_parameter);
+  // get_property_element_value_method.setReturnTypeAny();
+
+  // Method & set_property_value_method = createMethod(constants::set_property_value_method_name);
+  // set_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyValueHandler));
+  // set_property_value_method.addParameter(property_name_parameter);
+  // set_property_value_method.addParameter(property_value_parameter);
+
+  // Method & set_property_element_value_method = createMethod(constants::set_property_element_value_method_name);
+  // set_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyElementValueHandler));
+  // set_property_element_value_method.addParameter(property_name_parameter);
+  // set_property_element_value_method.addParameter(property_element_index_parameter);
+  // set_property_element_value_method.addParameter(property_value_parameter);
+
+  // Method & set_all_property_element_values_method = createMethod(constants::set_all_property_element_values_method_name);
+  // set_all_property_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllPropertyElementValuesHandler));
+  // set_all_property_element_values_method.addParameter(property_name_parameter);
+  // set_all_property_element_values_method.addParameter(property_value_parameter);
+
   // Callbacks
+  Callback & set_properties_to_defaults_callback = createCallback(constants::set_properties_to_defaults_callback_name);
+  set_properties_to_defaults_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
+
 
   server_running_ = false;
 }
@@ -169,7 +170,6 @@ void Server::addServerStream(Stream & stream)
   {
     server_stream_ptrs_.push_back(&stream);
   }
-  json_stream_.setStream(stream);
 }
 
 // Device ID
@@ -365,16 +365,16 @@ void Server::handleRequest()
 // private
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
 {
-  int parameter_index = findMethodParameterIndex(request_method_index_,parameter_name);
+  int parameter_index = findMethodParameterIndex(request_procedure_index_,parameter_name);
   // index 0 is the method, index 1 is the first parameter
   return (*request_json_array_ptr_)[parameter_index+1];
 }
 
 void Server::processRequestArray()
 {
-  const char * method_string = (*request_json_array_ptr_)[0];
-  request_method_index_ = findRequestMethodIndex(method_string);
-  if ((request_method_index_ >= 0) && (request_method_index_ < methods_.size()))
+  const char * procedure_string = (*request_json_array_ptr_)[0];
+  request_procedure_index_ = findRequestProcedureIndex(procedure_string);
+  if (request_procedure_index_ >= 0)
   {
     int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
     int parameter_count = array_elements_count - 1;
@@ -382,76 +382,121 @@ void Server::processRequestArray()
     constants::question_constant_string.copy(question_str);
     char question_double_str[constants::question_double_constant_string.length()+1];
     constants::question_double_constant_string.copy(question_double_str);
-    // method ?
-    if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
+    if (request_procedure_index_ < methods_.size())
     {
-      response_.writeResultKey();
-      methodHelp(false,request_method_index_);
-    }
-    // method ??
-    else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
-    {
-      response_.writeResultKey();
-      methodHelp(true,request_method_index_);
-    }
-    // method parameter ?
-    // method parameter ??
-    else if ((parameter_count == 2) &&
-             ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
-              (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
-    {
-      int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
-      Parameter * parameter_ptr;
-      parameter_ptr = methods_[request_method_index_].parameter_ptrs_[parameter_index];
-      response_.writeResultKey();
-      parameterHelp(*parameter_ptr);
-    }
-    // execute private method without checking parameters
-    else if (request_method_index_ <= private_method_index_)
-    {
-      methods_[request_method_index_].functor();
-    }
-    else if (parameter_count != methods_[request_method_index_].getParameterCount())
-    {
-      response_.returnParameterCountError(parameter_count,methods_[request_method_index_].getParameterCount());
-    }
-    else
-    {
-      bool parameters_ok = checkParameters();
-      if (parameters_ok)
+      // method ?
+      if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
-        methods_[request_method_index_].functor();
+        response_.writeResultKey();
+        methodHelp(false,request_procedure_index_);
+      }
+      // method ??
+      else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
+      {
+        response_.writeResultKey();
+        methodHelp(true,request_procedure_index_);
+      }
+      // method parameter ?
+      // method parameter ??
+      else if ((parameter_count == 2) &&
+               ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
+                (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
+      {
+        int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
+        Parameter * parameter_ptr;
+        parameter_ptr = methods_[request_procedure_index_].parameter_ptrs_[parameter_index];
+        response_.writeResultKey();
+        parameterHelp(*parameter_ptr);
+      }
+      // execute private method without checking parameters
+      else if (request_procedure_index_ <= private_method_index_)
+      {
+        methods_[request_procedure_index_].functor();
+      }
+      else if (parameter_count != methods_[request_procedure_index_].getParameterCount())
+      {
+        response_.returnParameterCountError(parameter_count,methods_[request_procedure_index_].getParameterCount());
+      }
+      else
+      {
+        bool parameters_ok = checkParameters();
+        if (parameters_ok)
+        {
+          methods_[request_procedure_index_].functor();
+        }
+      }
+    }
+    else if (request_procedure_index_ < (methods_.size() + callbacks_.size()))
+    {
+      int callback_index = request_procedure_index_ - methods_.size();
+      // callback ?
+      if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
+      {
+        response_.writeResultKey();
+        callbackHelp(false,callback_index);
+      }
+      // callback ??
+      else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
+      {
+        response_.writeResultKey();
+        callbackHelp(true,callback_index);
+      }
+      else if (parameter_count != 0)
+      {
+        response_.returnParameterCountError(parameter_count,0);
+      }
+      else
+      {
+        callbacks_[callback_index].functor();
       }
     }
   }
   else
   {
-    response_.returnMethodNotFoundError();
+    response_.returnProcedureNotFoundError();
   }
 }
 
-int Server::findRequestMethodIndex(const char * method_string)
+int Server::findRequestProcedureIndex(const char * procedure_string)
 {
-  int method_index = -1;
-  int method_id = atoi(method_string);
+  int procedure_index = -1;
+  int procedure_id = atoi(procedure_string);
   char zero_str[constants::zero_constant_string.length()+1];
   constants::zero_constant_string.copy(zero_str);
-  if (strcmp(method_string,zero_str) == 0)
+  if (strcmp(procedure_string,zero_str) == 0)
   {
-    method_index = 0;
+    procedure_index = 0;
     response_.write(constants::id_constant_string,0);
   }
-  else if (method_id > 0)
+  else if (procedure_id > 0)
   {
-    method_index = method_id;
-    response_.write(constants::id_constant_string,method_id);
+    procedure_index = procedure_id;
+    response_.write(constants::id_constant_string,procedure_id);
   }
   else
   {
-    method_index = findMethodIndex(method_string);
-    response_.write(constants::id_constant_string,method_string);
+    procedure_index = findMethodIndex(procedure_string);
+    if (procedure_index >= 0)
+    {
+      response_.write(constants::id_constant_string,procedure_string);
+      return procedure_index;
+    }
+    procedure_index = findCallbackIndex(procedure_string);
+    if (procedure_index >= 0)
+    {
+      response_.write(constants::id_constant_string,procedure_string);
+      procedure_index += methods_.size();
+      return procedure_index;
+    }
+    procedure_index = findCallbackIndex(procedure_string);
+    if (procedure_index >= 0)
+    {
+      response_.write(constants::id_constant_string,procedure_string);
+      procedure_index += methods_.size() + callbacks_.size();
+      return procedure_index;
+    }
   }
-  return method_index;
+  return procedure_index;
 }
 
 int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
@@ -482,10 +527,10 @@ int Server::processParameterString(const char * parameter_string)
   }
   else
   {
-    parameter_index = findMethodParameterIndex(request_method_index_,parameter_string);
+    parameter_index = findMethodParameterIndex(request_procedure_index_,parameter_string);
   }
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &methods_[request_method_index_].parameter_ptrs_;
+  parameter_ptrs_ptr = &methods_[request_procedure_index_].parameter_ptrs_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs_ptr->size()))
   {
     response_.returnParameterNotFoundError();
@@ -505,7 +550,7 @@ bool Server::checkParameters()
     if (it!=request_json_array_ptr_->begin())
     {
       Parameter * parameter_ptr = NULL;
-      parameter_ptr = methods_[request_method_index_].parameter_ptrs_[parameter_index];
+      parameter_ptr = methods_[request_procedure_index_].parameter_ptrs_[parameter_index];
       if (checkParameter(*parameter_ptr,*it))
       {
         parameter_index++;
@@ -623,7 +668,11 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
       }
       break;
     }
-    case JsonStream::VALUE_TYPE:
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+    case JsonStream::VOID_TYPE:
     {
       break;
     }
@@ -760,14 +809,22 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
         {
           break;
         }
-        case JsonStream::VALUE_TYPE:
+        case JsonStream::ANY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::VOID_TYPE:
         {
           break;
         }
       }
       break;
     }
-    case JsonStream::VALUE_TYPE:
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+    case JsonStream::VOID_TYPE:
     {
       break;
     }
@@ -822,13 +879,34 @@ void Server::incrementServerStream()
   }
 }
 
-void Server::propertyHelp(Property & property)
+void Server::propertyHelp(bool verbose, Property & property)
 {
   parameterHelp(property.parameter(),false);
+
   response_.writeKey(constants::value_constant_string);
   writePropertyToResponse(property,false,false);
+
   response_.writeKey(constants::default_value_constant_string);
   writePropertyToResponse(property,false,true);
+
+  response_.writeKey(constants::parameters_constant_string);
+  response_.beginArray();
+  if (verbose)
+  {
+    parameterHelp(parameter(constants::property_method_parameter_name));
+    parameterHelp(parameter(constants::property_element_index_parameter_name));
+    parameterHelp(parameter(constants::property_value_parameter_name));
+  }
+  else
+  {
+    response_.write(constants::property_method_parameter_name);
+    response_.write(constants::property_element_index_parameter_name);
+    response_.write(constants::property_value_parameter_name);
+  }
+  response_.endArray();
+
+  response_.write(constants::result_type_constant_string,JsonStream::ANY_TYPE);
+
   response_.endObject();
 }
 
@@ -965,7 +1043,11 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
           response_.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
           break;
         }
-        case JsonStream::VALUE_TYPE:
+        case JsonStream::ANY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::VOID_TYPE:
         {
           break;
         }
@@ -979,9 +1061,13 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
       }
       break;
     }
-    case JsonStream::VALUE_TYPE:
+    case JsonStream::ANY_TYPE:
     {
-      response_.write(constants::type_constant_string,JsonStream::VALUE_TYPE);
+      response_.write(constants::type_constant_string,JsonStream::ANY_TYPE);
+      break;
+    }
+    case JsonStream::VOID_TYPE:
+    {
       break;
     }
   }
@@ -1006,7 +1092,7 @@ void Server::methodHelp(bool verbose, int method_index)
   response_.write(constants::firmware_constant_string,firmware_name);
 
   response_.writeKey(constants::parameters_constant_string);
-  json_stream_.beginArray();
+  response_.beginArray();
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
   parameter_ptrs_ptr = &methods_[method_index].parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
@@ -1021,7 +1107,7 @@ void Server::methodHelp(bool verbose, int method_index)
       response_.write(parameter_name);
     }
   }
-  json_stream_.endArray();
+  response_.endArray();
 
   response_.write(constants::result_type_constant_string,methods_[method_index].getReturnType());
 
@@ -1043,14 +1129,14 @@ void Server::callbackHelp(bool verbose, int callback_index)
   response_.write(constants::firmware_constant_string,firmware_name);
 
   response_.writeKey(constants::properties_constant_string);
-  json_stream_.beginArray();
+  response_.beginArray();
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
   property_ptrs_ptr = &callbacks_[callback_index].property_ptrs_;
   for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
   {
     if (verbose)
     {
-      propertyHelp(*((*property_ptrs_ptr)[i]));
+      propertyHelp(false,*((*property_ptrs_ptr)[i]));
     }
     else
     {
@@ -1058,7 +1144,13 @@ void Server::callbackHelp(bool verbose, int callback_index)
       response_.write(property_name);
     }
   }
-  json_stream_.endArray();
+  response_.endArray();
+
+  response_.writeKey(constants::parameters_constant_string);
+  response_.beginArray();
+  response_.endArray();
+
+  response_.write(constants::result_type_constant_string,JsonStream::VOID_TYPE);
 
   response_.endObject();
 }
@@ -1135,7 +1227,7 @@ void Server::help(bool verbose)
           // ?? property
           param_error = false;
           response_.writeResultKey();
-          propertyHelp(properties_[property_index]);
+          propertyHelp(verbose,properties_[property_index]);
         }
         else
         {
@@ -1365,7 +1457,7 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     response_.beginArray();
     for (size_t property_index=0; property_index<properties_.size(); ++property_index)
     {
-      propertyHelp(properties_[property_index]);
+      propertyHelp(false,properties_[property_index]);
     }
     response_.endArray();
 
@@ -1381,9 +1473,9 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
 }
 
 void Server::writePropertyToResponse(Property & property,
-                                  bool write_key,
-                                  bool write_default,
-                                  int element_index)
+                                     bool write_key,
+                                     bool write_default,
+                                     int element_index)
 {
   if (response_.error())
   {
@@ -1609,14 +1701,22 @@ void Server::writePropertyToResponse(Property & property,
         {
           break;
         }
-        case JsonStream::VALUE_TYPE:
+        case JsonStream::ANY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::VOID_TYPE:
         {
           break;
         }
       }
       break;
     }
-    case JsonStream::VALUE_TYPE:
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+    case JsonStream::VOID_TYPE:
     {
       break;
     }
@@ -1740,7 +1840,11 @@ void Server::subsetToString(char * destination,
       {
         break;
       }
-      case JsonStream::VALUE_TYPE:
+      case JsonStream::ANY_TYPE:
+      {
+        break;
+      }
+      case JsonStream::VOID_TYPE:
       {
         break;
       }
@@ -1764,45 +1868,59 @@ void Server::subsetToString(char * destination,
   strcat(destination,array_close_str);
 }
 
-// Functors
-void Server::getProcedureIdsFunctor()
+// Handlers
+void Server::getProcedureIdsHandler()
 {
   response_.writeResultKey();
   response_.beginObject();
+  size_t procedure_index;
   for (size_t method_index=0; method_index<methods_.size(); ++method_index)
   {
     if (method_index > private_method_index_)
     {
       const ConstantString & method_name = methods_[method_index].getName();
-      response_.write(method_name,method_index);
+      procedure_index = method_index;
+      response_.write(method_name,procedure_index);
     }
+  }
+  for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
+  {
+    const ConstantString & callback_name = callbacks_[callback_index].getName();
+    procedure_index = callback_index + methods_.size();
+    response_.write(callback_name,procedure_index);
+  }
+  for (size_t property_index=0; property_index<properties_.size(); ++property_index)
+  {
+    const ConstantString & property_name = properties_[property_index].getName();
+    procedure_index = property_index + methods_.size() + callbacks_.size();
+    response_.write(property_name,procedure_index);
   }
   response_.endObject();
 }
 
-void Server::helpFunctor()
+void Server::helpHandler()
 {
   help(false);
 }
 
-void Server::verboseHelpFunctor()
+void Server::verboseHelpHandler()
 {
   help(true);
 }
 
-void Server::getDeviceIdFunctor()
+void Server::getDeviceIdHandler()
 {
   response_.writeResultKey();
   writeDeviceIdToResponse();
 }
 
-void Server::getDeviceInfoFunctor()
+void Server::getDeviceInfoHandler()
 {
   response_.writeResultKey();
   writeDeviceInfoToResponse();
 }
 
-void Server::getApiFunctor()
+void Server::getApiHandler()
 {
   ArduinoJson::JsonArray * firmware_name_array_ptr;
   parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
@@ -1810,7 +1928,7 @@ void Server::getApiFunctor()
   writeApiToResponse(false,*firmware_name_array_ptr);
 }
 
-void Server::getApiVerboseFunctor()
+void Server::getApiVerboseHandler()
 {
   ArduinoJson::JsonArray * firmware_name_array_ptr;
   parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
@@ -1819,13 +1937,13 @@ void Server::getApiVerboseFunctor()
 }
 
 #ifdef __AVR__
-void Server::getMemoryFreeFunctor()
+void Server::getMemoryFreeHandler()
 {
   response_.returnResult(freeMemory());
 }
 #endif
 
-void Server::getPropertyDefaultValuesFunctor()
+void Server::getPropertyDefaultValuesHandler()
 {
   response_.writeResultKey();
   response_.beginObject();
@@ -1837,382 +1955,402 @@ void Server::getPropertyDefaultValuesFunctor()
   response_.endObject();
 }
 
-void Server::setPropertiesToDefaultsFunctor()
+void Server::setPropertiesToDefaultsHandler()
 {
   setPropertiesToDefaults();
 }
 
-void Server::setPropertyToDefaultFunctor()
+void Server::setPropertyToDefaultHandler()
 {
-  const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  int property_index = findPropertyIndex(property_name);
-  if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  {
-    Property & property = properties_[property_index];
-    property.setValueToDefault();
-  }
-  else
-  {
-    response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  }
+  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  // int property_index = findPropertyIndex(property_name);
+  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
+  // {
+  //   Property & property = properties_[property_index];
+  //   property.setValueToDefault();
+  // }
+  // else
+  // {
+  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
+  // }
 }
 
-void Server::getPropertyValuesFunctor()
+void Server::getPropertyValuesHandler()
 {
-  response_.writeResultKey();
-  response_.beginObject();
-  for (size_t i=0; i<properties_.size(); ++i)
-  {
-    Property & property = properties_[i];
-    writePropertyToResponse(property,true,false);
-  }
-  response_.endObject();
+  // response_.writeResultKey();
+  // response_.beginObject();
+  // for (size_t i=0; i<properties_.size(); ++i)
+  // {
+  //   Property & property = properties_[i];
+  //   writePropertyToResponse(property,true,false);
+  // }
+  // response_.endObject();
 }
 
-void Server::getPropertyValueFunctor()
+void Server::getPropertyValueHandler()
 {
-  response_.writeResultKey();
-  const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  int property_index = findPropertyIndex(property_name);
-  if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  {
-    Property & property = properties_[property_index];
-    writePropertyToResponse(property,false,false);
-  }
-  else
-  {
-    response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  }
+  // response_.writeResultKey();
+  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  // int property_index = findPropertyIndex(property_name);
+  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
+  // {
+  //   Property & property = properties_[property_index];
+  //   writePropertyToResponse(property,false,false);
+  // }
+  // else
+  // {
+  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
+  // }
 }
 
-void Server::getPropertyElementValueFunctor()
+void Server::getPropertyElementValueHandler()
 {
-  response_.writeResultKey();
-  const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
-  if (property_element_index < 0)
-  {
-    response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-    return;
-  }
-  int property_index = findPropertyIndex(property_name);
-  if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  {
-    Property & property = properties_[property_index];
-    writePropertyToResponse(property,false,false,property_element_index);
-  }
-  else
-  {
-    response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  }
+  // response_.writeResultKey();
+  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  // long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
+  // if (property_element_index < 0)
+  // {
+  //   response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+  //   return;
+  // }
+  // int property_index = findPropertyIndex(property_name);
+  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
+  // {
+  //   Property & property = properties_[property_index];
+  //   writePropertyToResponse(property,false,false,property_element_index);
+  // }
+  // else
+  // {
+  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
+  // }
 }
 
-void Server::setPropertyValueFunctor()
+void Server::setPropertyValueHandler()
 {
-  const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  int property_index = findPropertyIndex(property_name);
-  if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  {
-    Property & property = properties_[property_index];
-    ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-    bool parameter_ok = checkParameter(property.parameter(),json_value);
-    if (!parameter_ok)
-    {
-      return;
-    }
-    JsonStream::JsonTypes property_type = property.getType();
-    switch (property_type)
-    {
-      case JsonStream::LONG_TYPE:
-      {
-        long property_value = getParameterValue(constants::property_value_parameter_name);
-        property.setValue(property_value);
-        break;
-      }
-      case JsonStream::DOUBLE_TYPE:
-      {
-        double property_value = getParameterValue(constants::property_value_parameter_name);
-        property.setValue(property_value);
-        break;
-      }
-      case JsonStream::BOOL_TYPE:
-      {
-        bool property_value = getParameterValue(constants::property_value_parameter_name);
-        property.setValue(property_value);
-        break;
-      }
-      case JsonStream::NULL_TYPE:
-      {
-        break;
-      }
-      case JsonStream::STRING_TYPE:
-      {
-        const char * property_value = getParameterValue(constants::property_value_parameter_name);
-        size_t array_length = strlen(property_value) + 1;
-        property.setValue(property_value,array_length);
-        break;
-      }
-      case JsonStream::OBJECT_TYPE:
-      {
-        break;
-      }
-      case JsonStream::ARRAY_TYPE:
-      {
-        ArduinoJson::JsonArray & property_value = getParameterValue(constants::property_value_parameter_name);
-        property.setValue(property_value);
-        break;
-      }
-      case JsonStream::VALUE_TYPE:
-      {
-        break;
-      }
-    }
-  }
-  else
-  {
-    response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  }
+  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  // int property_index = findPropertyIndex(property_name);
+  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
+  // {
+  //   Property & property = properties_[property_index];
+  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
+  //   bool parameter_ok = checkParameter(property.parameter(),json_value);
+  //   if (!parameter_ok)
+  //   {
+  //     return;
+  //   }
+  //   JsonStream::JsonTypes property_type = property.getType();
+  //   switch (property_type)
+  //   {
+  //     case JsonStream::LONG_TYPE:
+  //     {
+  //       long property_value = getParameterValue(constants::property_value_parameter_name);
+  //       property.setValue(property_value);
+  //       break;
+  //     }
+  //     case JsonStream::DOUBLE_TYPE:
+  //     {
+  //       double property_value = getParameterValue(constants::property_value_parameter_name);
+  //       property.setValue(property_value);
+  //       break;
+  //     }
+  //     case JsonStream::BOOL_TYPE:
+  //     {
+  //       bool property_value = getParameterValue(constants::property_value_parameter_name);
+  //       property.setValue(property_value);
+  //       break;
+  //     }
+  //     case JsonStream::NULL_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::STRING_TYPE:
+  //     {
+  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
+  //       size_t array_length = strlen(property_value) + 1;
+  //       property.setValue(property_value,array_length);
+  //       break;
+  //     }
+  //     case JsonStream::OBJECT_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::ARRAY_TYPE:
+  //     {
+  //       ArduinoJson::JsonArray & property_value = getParameterValue(constants::property_value_parameter_name);
+  //       property.setValue(property_value);
+  //       break;
+  //     }
+  //     case JsonStream::ANY_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::VOID_TYPE:
+  //     {
+  //       break;
+  //     }
+  //   }
+  // }
+  // else
+  // {
+  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
+  // }
 }
 
-void Server::setPropertyElementValueFunctor()
+void Server::setPropertyElementValueHandler()
 {
-  const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
-  if (property_element_index < 0)
-  {
-    response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-    return;
-  }
-  int property_index = findPropertyIndex(property_name);
-  if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  {
-    Property & property = properties_[property_index];
-    ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-    bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
-    if (!parameter_ok)
-    {
-      return;
-    }
-    JsonStream::JsonTypes property_type = property.getType();
-    switch (property_type)
-    {
-      case JsonStream::LONG_TYPE:
-      {
-        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-        break;
-      }
-      case JsonStream::DOUBLE_TYPE:
-      {
-        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-        break;
-      }
-      case JsonStream::BOOL_TYPE:
-      {
-        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-        break;
-      }
-      case JsonStream::NULL_TYPE:
-      {
-        break;
-      }
-      case JsonStream::STRING_TYPE:
-      {
-        if (!property.stringIsSavedAsCharArray())
-        {
-          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
-          break;
-        }
-        size_t array_length = property.getArrayLength();
-        if ((size_t)property_element_index >= (array_length - 1))
-        {
-          response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-          return;
-        }
-        const char * property_value = getParameterValue(constants::property_value_parameter_name);
-        size_t string_length = strlen(property_value);
-        if (string_length >= 1)
-        {
-          char v = property_value[0];
-          property.setElementValue(property_element_index,v);
-        }
-        break;
-      }
-      case JsonStream::OBJECT_TYPE:
-      {
-        break;
-      }
-      case JsonStream::ARRAY_TYPE:
-      {
-        size_t array_length = property.getArrayLength();
-        if ((size_t)property_element_index >= array_length)
-        {
-          response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-          return;
-        }
-        JsonStream::JsonTypes array_element_type = property.getArrayElementType();
-        switch (array_element_type)
-        {
-          case JsonStream::LONG_TYPE:
-          {
-            long property_value = getParameterValue(constants::property_value_parameter_name);
-            property.setElementValue(property_element_index,property_value);
-            break;
-          }
-          case JsonStream::DOUBLE_TYPE:
-          {
-            double property_value = getParameterValue(constants::property_value_parameter_name);
-            property.setElementValue(property_element_index,property_value);
-            break;
-          }
-          case JsonStream::BOOL_TYPE:
-          {
-            bool property_value = getParameterValue(constants::property_value_parameter_name);
-            property.setElementValue(property_element_index,property_value);
-            break;
-          }
-          case JsonStream::NULL_TYPE:
-          {
-            break;
-          }
-          case JsonStream::STRING_TYPE:
-          {
-            break;
-          }
-          case JsonStream::OBJECT_TYPE:
-          {
-            break;
-          }
-          case JsonStream::ARRAY_TYPE:
-          {
-            break;
-          }
-          case JsonStream::VALUE_TYPE:
-          {
-            break;
-          }
-        }
-        break;
-      }
-      case JsonStream::VALUE_TYPE:
-      {
-        break;
-      }
-    }
-  }
-  else
-  {
-    response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  }
+  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  // long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
+  // if (property_element_index < 0)
+  // {
+  //   response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+  //   return;
+  // }
+  // int property_index = findPropertyIndex(property_name);
+  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
+  // {
+  //   Property & property = properties_[property_index];
+  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
+  //   bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
+  //   if (!parameter_ok)
+  //   {
+  //     return;
+  //   }
+  //   JsonStream::JsonTypes property_type = property.getType();
+  //   switch (property_type)
+  //   {
+  //     case JsonStream::LONG_TYPE:
+  //     {
+  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
+  //       break;
+  //     }
+  //     case JsonStream::DOUBLE_TYPE:
+  //     {
+  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
+  //       break;
+  //     }
+  //     case JsonStream::BOOL_TYPE:
+  //     {
+  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
+  //       break;
+  //     }
+  //     case JsonStream::NULL_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::STRING_TYPE:
+  //     {
+  //       if (!property.stringIsSavedAsCharArray())
+  //       {
+  //         response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
+  //         break;
+  //       }
+  //       size_t array_length = property.getArrayLength();
+  //       if ((size_t)property_element_index >= (array_length - 1))
+  //       {
+  //         response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+  //         return;
+  //       }
+  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
+  //       size_t string_length = strlen(property_value);
+  //       if (string_length >= 1)
+  //       {
+  //         char v = property_value[0];
+  //         property.setElementValue(property_element_index,v);
+  //       }
+  //       break;
+  //     }
+  //     case JsonStream::OBJECT_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::ARRAY_TYPE:
+  //     {
+  //       size_t array_length = property.getArrayLength();
+  //       if ((size_t)property_element_index >= array_length)
+  //       {
+  //         response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+  //         return;
+  //       }
+  //       JsonStream::JsonTypes array_element_type = property.getArrayElementType();
+  //       switch (array_element_type)
+  //       {
+  //         case JsonStream::LONG_TYPE:
+  //         {
+  //           long property_value = getParameterValue(constants::property_value_parameter_name);
+  //           property.setElementValue(property_element_index,property_value);
+  //           break;
+  //         }
+  //         case JsonStream::DOUBLE_TYPE:
+  //         {
+  //           double property_value = getParameterValue(constants::property_value_parameter_name);
+  //           property.setElementValue(property_element_index,property_value);
+  //           break;
+  //         }
+  //         case JsonStream::BOOL_TYPE:
+  //         {
+  //           bool property_value = getParameterValue(constants::property_value_parameter_name);
+  //           property.setElementValue(property_element_index,property_value);
+  //           break;
+  //         }
+  //         case JsonStream::NULL_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::STRING_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::OBJECT_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::ARRAY_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::ANY_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::VOID_TYPE:
+  //         {
+  //           break;
+  //         }
+  //       }
+  //       break;
+  //     }
+  //     case JsonStream::ANY_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::VOID_TYPE:
+  //     {
+  //       break;
+  //     }
+  //   }
+  // }
+  // else
+  // {
+  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
+  // }
 }
 
-void Server::setAllPropertyElementValuesFunctor()
+void Server::setAllPropertyElementValuesHandler()
 {
-  const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  int property_index = findPropertyIndex(property_name);
-  if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  {
-    Property & property = properties_[property_index];
-    ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-    bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
-    if (!parameter_ok)
-    {
-      return;
-    }
-    JsonStream::JsonTypes property_type = property.getType();
-    switch (property_type)
-    {
-      case JsonStream::LONG_TYPE:
-      {
-        break;
-      }
-      case JsonStream::DOUBLE_TYPE:
-      {
-        break;
-      }
-      case JsonStream::BOOL_TYPE:
-      {
-        break;
-      }
-      case JsonStream::NULL_TYPE:
-      {
-        break;
-      }
-      case JsonStream::STRING_TYPE:
-      {
-        if (!property.stringIsSavedAsCharArray())
-        {
-          response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
-          break;
-        }
-        const char * property_value = getParameterValue(constants::property_value_parameter_name);
-        size_t string_length = strlen(property_value);
-        if (string_length >= 1)
-        {
-          char v = property_value[0];
-          property.setAllElementValues(v);
-        }
-        break;
-      }
-      case JsonStream::OBJECT_TYPE:
-      {
-        break;
-      }
-      case JsonStream::ARRAY_TYPE:
-      {
-        JsonStream::JsonTypes array_element_type = property.getArrayElementType();
-        switch (array_element_type)
-        {
-          case JsonStream::LONG_TYPE:
-          {
-            long property_value = getParameterValue(constants::property_value_parameter_name);
-            property.setAllElementValues(property_value);
-            break;
-          }
-          case JsonStream::DOUBLE_TYPE:
-          {
-            double property_value = getParameterValue(constants::property_value_parameter_name);
-            property.setAllElementValues(property_value);
-            break;
-          }
-          case JsonStream::BOOL_TYPE:
-          {
-            bool property_value = getParameterValue(constants::property_value_parameter_name);
-            property.setAllElementValues(property_value);
-            break;
-          }
-          case JsonStream::NULL_TYPE:
-          {
-            break;
-          }
-          case JsonStream::STRING_TYPE:
-          {
-            break;
-          }
-          case JsonStream::OBJECT_TYPE:
-          {
-            break;
-          }
-          case JsonStream::ARRAY_TYPE:
-          {
-            break;
-          }
-          case JsonStream::VALUE_TYPE:
-          {
-            break;
-          }
-        }
-        break;
-      }
-      case JsonStream::VALUE_TYPE:
-      {
-        break;
-      }
-    }
-  }
-  else
-  {
-    response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  }
+  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
+  // int property_index = findPropertyIndex(property_name);
+  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
+  // {
+  //   Property & property = properties_[property_index];
+  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
+  //   bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
+  //   if (!parameter_ok)
+  //   {
+  //     return;
+  //   }
+  //   JsonStream::JsonTypes property_type = property.getType();
+  //   switch (property_type)
+  //   {
+  //     case JsonStream::LONG_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::DOUBLE_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::BOOL_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::NULL_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::STRING_TYPE:
+  //     {
+  //       if (!property.stringIsSavedAsCharArray())
+  //       {
+  //         response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
+  //         break;
+  //       }
+  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
+  //       size_t string_length = strlen(property_value);
+  //       if (string_length >= 1)
+  //       {
+  //         char v = property_value[0];
+  //         property.setAllElementValues(v);
+  //       }
+  //       break;
+  //     }
+  //     case JsonStream::OBJECT_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::ARRAY_TYPE:
+  //     {
+  //       JsonStream::JsonTypes array_element_type = property.getArrayElementType();
+  //       switch (array_element_type)
+  //       {
+  //         case JsonStream::LONG_TYPE:
+  //         {
+  //           long property_value = getParameterValue(constants::property_value_parameter_name);
+  //           property.setAllElementValues(property_value);
+  //           break;
+  //         }
+  //         case JsonStream::DOUBLE_TYPE:
+  //         {
+  //           double property_value = getParameterValue(constants::property_value_parameter_name);
+  //           property.setAllElementValues(property_value);
+  //           break;
+  //         }
+  //         case JsonStream::BOOL_TYPE:
+  //         {
+  //           bool property_value = getParameterValue(constants::property_value_parameter_name);
+  //           property.setAllElementValues(property_value);
+  //           break;
+  //         }
+  //         case JsonStream::NULL_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::STRING_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::OBJECT_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::ARRAY_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::ANY_TYPE:
+  //         {
+  //           break;
+  //         }
+  //         case JsonStream::VOID_TYPE:
+  //         {
+  //           break;
+  //         }
+  //       }
+  //       break;
+  //     }
+  //     case JsonStream::ANY_TYPE:
+  //     {
+  //       break;
+  //     }
+  //     case JsonStream::VOID_TYPE:
+  //     {
+  //       break;
+  //     }
+  //   }
+  // }
+  // else
+  // {
+  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
+  // }
 }
 
 }

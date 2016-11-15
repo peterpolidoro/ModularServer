@@ -46,9 +46,9 @@ void Method::setReturnTypeBool()
   return_type_ = JsonStream::BOOL_TYPE;
 }
 
-void Method::setReturnTypeNull()
+void Method::setReturnTypeVoid()
 {
-  return_type_ = JsonStream::NULL_TYPE;
+  return_type_ = JsonStream::VOID_TYPE;
 }
 
 void Method::setReturnTypeString()
@@ -66,9 +66,9 @@ void Method::setReturnTypeArray()
   return_type_ = JsonStream::ARRAY_TYPE;
 }
 
-void Method::setReturnTypeValue()
+void Method::setReturnTypeAny()
 {
-  return_type_ = JsonStream::VALUE_TYPE;
+  return_type_ = JsonStream::ANY_TYPE;
 }
 
 JsonStream::JsonTypes Method::getReturnType()

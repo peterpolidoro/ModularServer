@@ -36,7 +36,7 @@ public:
   void setTypeString();
   void setTypeObject();
   void setTypeArray();
-  void setTypeValue();
+  void setTypeAny();
   template <typename T>
   void setRange(const T min, const T max);
   void setRange(const double min, const double max);

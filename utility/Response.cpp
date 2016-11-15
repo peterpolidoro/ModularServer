@@ -65,7 +65,11 @@ void Response::write(Vector<constants::SubsetMemberType> & value, JsonStream::Js
     {
       break;
     }
-    case JsonStream::VALUE_TYPE:
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+    case JsonStream::VOID_TYPE:
     {
       break;
     }
@@ -196,7 +200,7 @@ void Response::returnParameterCountError(const size_t parameter_count, const siz
   }
 }
 
-void Response::returnMethodNotFoundError()
+void Response::returnProcedureNotFoundError()
 {
   // Prevent multiple errors in one response
   if (!error_)
@@ -204,8 +208,8 @@ void Response::returnMethodNotFoundError()
     error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
-    write(constants::message_constant_string,constants::method_not_found_error_message);
-    write(constants::code_constant_string,constants::method_not_found_error_code);
+    write(constants::message_constant_string,constants::procedure_not_found_error_message);
+    write(constants::code_constant_string,constants::procedure_not_found_error_code);
     endObject();
   }
 }

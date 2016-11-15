@@ -69,7 +69,7 @@ private:
   bool error();
   void returnRequestParseError(const char * const request);
   void returnParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
-  void returnMethodNotFoundError();
+  void returnProcedureNotFoundError();
   void returnParameterNotFoundError();
   void returnParameterArrayLengthError(const ConstantString & parameter_name,
                                        const char * const min_str,

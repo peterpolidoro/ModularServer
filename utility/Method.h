@@ -30,11 +30,11 @@ public:
   void setReturnTypeLong();
   void setReturnTypeDouble();
   void setReturnTypeBool();
-  void setReturnTypeNull();
+  void setReturnTypeVoid();
   void setReturnTypeString();
   void setReturnTypeObject();
   void setReturnTypeArray();
-  void setReturnTypeValue();
+  void setReturnTypeAny();
   JsonStream::JsonTypes getReturnType();
 
 private:

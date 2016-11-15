@@ -116,7 +116,7 @@ private:
   Array<constants::SubsetMemberType,constants::FIRMWARE_COUNT_MAX+1> firmware_name_array_;
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
-  int request_method_index_;
+  int request_procedure_index_;
   int parameter_count_;
   bool eeprom_initialized_;
   SavedVariable eeprom_initialized_sv_;
@@ -124,7 +124,7 @@ private:
 
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   void processRequestArray();
-  int findRequestMethodIndex(const char * method_string);
+  int findRequestProcedureIndex(const char * procedure_string);
   template <typename T>
   int findPropertyIndex(T const & property_name);
   template <typename T>
@@ -143,7 +143,7 @@ private:
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
-  void propertyHelp(Property & property);
+  void propertyHelp(bool verbose, Property & property);
   void parameterHelp(Parameter & parameter, bool end_object=true);
   void methodHelp(bool verbose, int method_index);
   void callbackHelp(bool verbose, int callback_index);
@@ -168,24 +168,24 @@ private:
                       const JsonStream::JsonTypes & parameter_array_element_type,
                       const size_t num);
 
-  // Functors
-  void getProcedureIdsFunctor();
-  void helpFunctor();
-  void verboseHelpFunctor();
-  void getDeviceIdFunctor();
-  void getDeviceInfoFunctor();
-  void getApiFunctor();
-  void getApiVerboseFunctor();
-  void getMemoryFreeFunctor();
-  void getPropertyDefaultValuesFunctor();
-  void setPropertiesToDefaultsFunctor();
-  void setPropertyToDefaultFunctor();
-  void getPropertyValuesFunctor();
-  void getPropertyValueFunctor();
-  void getPropertyElementValueFunctor();
-  void setPropertyValueFunctor();
-  void setPropertyElementValueFunctor();
-  void setAllPropertyElementValuesFunctor();
+  // Handlers
+  void getProcedureIdsHandler();
+  void helpHandler();
+  void verboseHelpHandler();
+  void getDeviceIdHandler();
+  void getDeviceInfoHandler();
+  void getApiHandler();
+  void getApiVerboseHandler();
+  void getMemoryFreeHandler();
+  void getPropertyDefaultValuesHandler();
+  void setPropertiesToDefaultsHandler();
+  void setPropertyToDefaultHandler();
+  void getPropertyValuesHandler();
+  void getPropertyValueHandler();
+  void getPropertyElementValueHandler();
+  void setPropertyValueHandler();
+  void setPropertyElementValueHandler();
+  void setAllPropertyElementValuesHandler();
 
 };
 }
