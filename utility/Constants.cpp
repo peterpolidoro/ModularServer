@@ -155,7 +155,7 @@ CONSTANT_STRING(array_close_constant_string,"]");
 CONSTANT_STRING(array_separator_constant_string,",");
 CONSTANT_STRING(version_property_separator_constant_string,".");
 CONSTANT_STRING(subset_constant_string,"subset");
-CONSTANT_STRING(all_constant_string,"All");
+CONSTANT_STRING(all_constant_string,"all");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(processor_constant_string,"processor");
 

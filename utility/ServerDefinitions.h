@@ -44,13 +44,13 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
 // Properties
 template <typename T>
 Property & Server::createProperty(const ConstantString & property_name,
-                           const T & default_value)
+                                  const T & default_value)
 {
   int property_index = findPropertyIndex(property_name);
   if (property_index < 0)
   {
     properties_.push_back(Property(property_name,
-                            default_value));
+                                   default_value));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
     properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return properties_.back();
@@ -59,13 +59,13 @@ Property & Server::createProperty(const ConstantString & property_name,
 
 template <typename T, size_t N>
 Property & Server::createProperty(const ConstantString & property_name,
-                           const T (&default_value)[N])
+                                  const T (&default_value)[N])
 {
   int property_index = findPropertyIndex(property_name);
   if (property_index < 0)
   {
     properties_.push_back(Property(property_name,
-                            default_value));
+                                   default_value));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
     properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return properties_.back();
@@ -112,20 +112,17 @@ int Server::findParameterIndex(T const & parameter_name)
 }
 
 template <typename T>
-int Server::findMethodParameterIndex(int method_index, T const & parameter_name)
+int Server::findMethodParameterIndex(Method & method, T const & parameter_name)
 {
   int parameter_index = -1;
-  if ((method_index >= 0) && (method_index < (int)methods_.size()))
+  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
+  parameter_ptrs_ptr = &method.parameter_ptrs_;
+  for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
-    Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-    parameter_ptrs_ptr = &methods_[method_index].parameter_ptrs_;
-    for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
+    if ((*parameter_ptrs_ptr)[i]->compareName(parameter_name))
     {
-      if ((*parameter_ptrs_ptr)[i]->compareName(parameter_name))
-      {
-        parameter_index = i;
-        break;
-      }
+      parameter_index = i;
+      break;
     }
   }
   return parameter_index;

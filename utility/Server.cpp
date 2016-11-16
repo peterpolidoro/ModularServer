@@ -365,7 +365,7 @@ void Server::handleRequest()
 // private
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
 {
-  int parameter_index = findMethodParameterIndex(request_procedure_index_,parameter_name);
+  int parameter_index = findMethodParameterIndex(methods_[request_procedure_index_],parameter_name);
   // index 0 is the method, index 1 is the first parameter
   return (*request_json_array_ptr_)[parameter_index+1];
 }
@@ -388,13 +388,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        methodHelp(false,request_procedure_index_);
+        methodHelp(methods_[request_procedure_index_],false);
       }
       // method ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        methodHelp(true,request_procedure_index_);
+        methodHelp(methods_[request_procedure_index_],true);
       }
       // method parameter ?
       // method parameter ??
@@ -433,13 +433,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        callbackHelp(false,callback_index);
+        callbackHelp(callbacks_[callback_index],false);
       }
       // callback ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        callbackHelp(true,callback_index);
+        callbackHelp(callbacks_[callback_index],true);
       }
       else if (parameter_count != 0)
       {
@@ -527,7 +527,7 @@ int Server::processParameterString(const char * parameter_string)
   }
   else
   {
-    parameter_index = findMethodParameterIndex(request_procedure_index_,parameter_string);
+    parameter_index = findMethodParameterIndex(methods_[request_procedure_index_],parameter_string);
   }
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
   parameter_ptrs_ptr = &methods_[request_procedure_index_].parameter_ptrs_;
@@ -867,7 +867,7 @@ void Server::incrementServerStream()
   }
 }
 
-void Server::propertyHelp(bool verbose, Property & property)
+void Server::propertyHelp(Property & property, bool verbose)
 {
   parameterHelp(property.parameter(),false);
 
@@ -1057,24 +1057,19 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
   }
 }
 
-void Server::methodHelp(bool verbose, int method_index)
+void Server::methodHelp(Method & method, bool verbose)
 {
-  if ((method_index < 0) || (method_index >= (int)methods_.max_size()))
-  {
-    return;
-  }
-
   response_.beginObject();
 
-  const ConstantString & method_name = methods_[method_index].getName();
+  const ConstantString & method_name = method.getName();
   response_.write(constants::name_constant_string,method_name);
-  const ConstantString & firmware_name = methods_[method_index].getFirmwareName();
+  const ConstantString & firmware_name = method.getFirmwareName();
   response_.write(constants::firmware_constant_string,firmware_name);
 
   response_.writeKey(constants::parameters_constant_string);
   response_.beginArray();
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &methods_[method_index].parameter_ptrs_;
+  parameter_ptrs_ptr = &method.parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
     if (verbose)
@@ -1089,34 +1084,29 @@ void Server::methodHelp(bool verbose, int method_index)
   }
   response_.endArray();
 
-  response_.write(constants::result_type_constant_string,methods_[method_index].getReturnType());
+  response_.write(constants::result_type_constant_string,method.getReturnType());
 
   response_.endObject();
 }
 
-void Server::callbackHelp(bool verbose, int callback_index)
+void Server::callbackHelp(Callback & callback, bool verbose)
 {
-  if ((callback_index < 0) || (callback_index >= (int)callbacks_.max_size()))
-  {
-    return;
-  }
-
   response_.beginObject();
 
-  const ConstantString & callback_name = callbacks_[callback_index].getName();
+  const ConstantString & callback_name = callback.getName();
   response_.write(constants::name_constant_string,callback_name);
-  const ConstantString & firmware_name = callbacks_[callback_index].getFirmwareName();
+  const ConstantString & firmware_name = callback.getFirmwareName();
   response_.write(constants::firmware_constant_string,firmware_name);
 
   response_.writeKey(constants::properties_constant_string);
   response_.beginArray();
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
-  property_ptrs_ptr = &callbacks_[callback_index].property_ptrs_;
+  property_ptrs_ptr = &callback.property_ptrs_;
   for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
   {
     if (verbose)
     {
-      propertyHelp(false,*((*property_ptrs_ptr)[i]));
+      propertyHelp(*((*property_ptrs_ptr)[i]),false);
     }
     else
     {
@@ -1185,7 +1175,7 @@ void Server::help(bool verbose)
       // ? method
       param_error = false;
       response_.writeResultKey();
-      methodHelp(verbose,method_index);
+      methodHelp(methods_[method_index],verbose);
     }
     else
     {
@@ -1207,7 +1197,7 @@ void Server::help(bool verbose)
           // ?? property
           param_error = false;
           response_.writeResultKey();
-          propertyHelp(verbose,properties_[property_index]);
+          propertyHelp(properties_[property_index],verbose);
         }
         else
         {
@@ -1218,7 +1208,7 @@ void Server::help(bool verbose)
             // ?? callback
             param_error = false;
             response_.writeResultKey();
-            callbackHelp(verbose,callback_index);
+            callbackHelp(callbacks_[callback_index],verbose);
           }
         }
       }
@@ -1232,7 +1222,7 @@ void Server::help(bool verbose)
     int method_index = findMethodIndex(method_string);
     if ((method_index >= 0) && (method_index < (int)methods_.size()))
     {
-      int parameter_index = findMethodParameterIndex(method_index,(const char *)(*request_json_array_ptr_)[2]);
+      int parameter_index = findMethodParameterIndex(methods_[method_index],(const char *)(*request_json_array_ptr_)[2]);
       if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
       {
         param_error = false;
@@ -1420,7 +1410,7 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     {
       if (method_index > private_method_index_)
       {
-        methodHelp(false,method_index);
+        methodHelp(methods_[method_index],false);
       }
     }
     response_.endArray();
@@ -1437,7 +1427,7 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     response_.beginArray();
     for (size_t property_index=0; property_index<properties_.size(); ++property_index)
     {
-      propertyHelp(false,properties_[property_index]);
+      propertyHelp(properties_[property_index],false);
     }
     response_.endArray();
 
@@ -1445,7 +1435,7 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
     response_.beginArray();
     for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
     {
-      callbackHelp(false,callback_index);
+      callbackHelp(callbacks_[callback_index],false);
     }
     response_.endArray();
   }

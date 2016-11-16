@@ -38,7 +38,7 @@ Example Response:
       "serial_number":0
     },
     "API":{
-      "firmware":["All"],
+      "firmware":["all"],
       "methods":[
         "getDeviceId",
         "getDeviceInfo",
@@ -128,7 +128,7 @@ Example Response:
       ]
     },
     "API":{
-      "firmware":["All"],
+      "firmware":["all"],
       "methods":[
         {
           "name":"getDeviceId",
@@ -243,7 +243,7 @@ Example Response:
           "type":"array",
           "array_element_type":"string",
           "array_element_subset":[
-            "All",
+            "all",
             "ModularServer",
             "MinimalDevice"
           ],
@@ -529,7 +529,7 @@ method.
 Example:
 
 ```shell
-getApi ["All"]
+getApi ["all"]
 ```
 
 Example Response:
@@ -538,7 +538,7 @@ Example Response:
 {
   "id":"getApi",
   "result":{
-    "firmware":["All"],
+    "firmware":["all"],
     "methods":[
       "getDeviceId",
       "getDeviceInfo",

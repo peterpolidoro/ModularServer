@@ -130,7 +130,7 @@ private:
   template <typename T>
   int findParameterIndex(T const & parameter_name);
   template <typename T>
-  int findMethodParameterIndex(int method_index, T const & parameter_name);
+  int findMethodParameterIndex(Method & method, T const & parameter_name);
   template <typename T>
   int findMethodIndex(T const & method_name);
   template <typename T>
@@ -143,10 +143,10 @@ private:
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
-  void propertyHelp(bool verbose, Property & property);
+  void propertyHelp(Property & property, bool verbose);
   void parameterHelp(Parameter & parameter, bool end_object=true);
-  void methodHelp(bool verbose, int method_index);
-  void callbackHelp(bool verbose, int callback_index);
+  void methodHelp(Method & method, bool verbose);
+  void callbackHelp(Callback & callback, bool verbose);
   void help(bool verbose);
   void writeDeviceIdToResponse();
   void writeFirmwareInfoToResponse();
