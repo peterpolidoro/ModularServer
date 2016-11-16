@@ -672,10 +672,6 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
     {
       break;
     }
-    case JsonStream::VOID_TYPE:
-    {
-      break;
-    }
   }
   if (!in_subset)
   {
@@ -813,18 +809,10 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
         {
           break;
         }
-        case JsonStream::VOID_TYPE:
-        {
-          break;
-        }
       }
       break;
     }
     case JsonStream::ANY_TYPE:
-    {
-      break;
-    }
-    case JsonStream::VOID_TYPE:
     {
       break;
     }
@@ -1047,10 +1035,6 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
         {
           break;
         }
-        case JsonStream::VOID_TYPE:
-        {
-          break;
-        }
       }
       if (parameter.arrayLengthRangeIsSet())
       {
@@ -1064,10 +1048,6 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
     case JsonStream::ANY_TYPE:
     {
       response_.write(constants::type_constant_string,JsonStream::ANY_TYPE);
-      break;
-    }
-    case JsonStream::VOID_TYPE:
-    {
       break;
     }
   }
@@ -1150,7 +1130,7 @@ void Server::callbackHelp(bool verbose, int callback_index)
   response_.beginArray();
   response_.endArray();
 
-  response_.write(constants::result_type_constant_string,JsonStream::VOID_TYPE);
+  response_.write(constants::result_type_constant_string,JsonStream::NULL_TYPE);
 
   response_.endObject();
 }
@@ -1705,18 +1685,10 @@ void Server::writePropertyToResponse(Property & property,
         {
           break;
         }
-        case JsonStream::VOID_TYPE:
-        {
-          break;
-        }
       }
       break;
     }
     case JsonStream::ANY_TYPE:
-    {
-      break;
-    }
-    case JsonStream::VOID_TYPE:
     {
       break;
     }
@@ -1841,10 +1813,6 @@ void Server::subsetToString(char * destination,
         break;
       }
       case JsonStream::ANY_TYPE:
-      {
-        break;
-      }
-      case JsonStream::VOID_TYPE:
       {
         break;
       }
@@ -2084,10 +2052,6 @@ void Server::setPropertyValueHandler()
   //     {
   //       break;
   //     }
-  //     case JsonStream::VOID_TYPE:
-  //     {
-  //       break;
-  //     }
   //   }
   // }
   // else
@@ -2212,18 +2176,10 @@ void Server::setPropertyElementValueHandler()
   //         {
   //           break;
   //         }
-  //         case JsonStream::VOID_TYPE:
-  //         {
-  //           break;
-  //         }
   //       }
   //       break;
   //     }
   //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::VOID_TYPE:
   //     {
   //       break;
   //     }
@@ -2330,18 +2286,10 @@ void Server::setAllPropertyElementValuesHandler()
   //         {
   //           break;
   //         }
-  //         case JsonStream::VOID_TYPE:
-  //         {
-  //           break;
-  //         }
   //       }
   //       break;
   //     }
   //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::VOID_TYPE:
   //     {
   //       break;
   //     }

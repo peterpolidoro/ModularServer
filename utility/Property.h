@@ -19,6 +19,7 @@
 #include "ArduinoJson.h"
 
 #include "Parameter.h"
+#include "Method.h"
 #include "Constants.h"
 
 
@@ -100,6 +101,7 @@ private:
   Functor0 post_set_value_functor_;
   Functor1<const size_t> post_set_element_value_functor_;
   bool string_saved_as_char_array_;
+  static Method property_methods_[constants::PROPERTY_METHOD_SUBSET_LENGTH];
 
   template <typename T>
   Property(const ConstantString & name,

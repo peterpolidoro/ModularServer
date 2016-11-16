@@ -30,7 +30,7 @@ public:
   void setReturnTypeLong();
   void setReturnTypeDouble();
   void setReturnTypeBool();
-  void setReturnTypeVoid();
+  void setReturnTypeNull();
   void setReturnTypeString();
   void setReturnTypeObject();
   void setReturnTypeArray();

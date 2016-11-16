@@ -69,10 +69,6 @@ void Response::write(Vector<constants::SubsetMemberType> & value, JsonStream::Js
     {
       break;
     }
-    case JsonStream::VOID_TYPE:
-    {
-      break;
-    }
   }
 }
 
