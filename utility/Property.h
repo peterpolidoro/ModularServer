@@ -14,6 +14,7 @@
 #endif
 #include "SavedVariable.h"
 #include "JsonStream.h"
+#include "Array.h"
 #include "Vector.h"
 #include "Functor.h"
 #include "ArduinoJson.h"
@@ -25,6 +26,29 @@
 
 namespace modular_server
 {
+
+namespace property
+{
+// Parameters
+extern ConstantString value_parameter_name;
+
+// Array Parameters
+extern ConstantString element_index_parameter_name;
+
+// Methods
+extern ConstantString get_value_method_name;
+extern ConstantString set_value_method_name;
+extern ConstantString get_default_value_method_name;
+extern ConstantString set_value_to_default_method_name;
+
+// Array Methods
+extern ConstantString get_element_value_method_name;
+extern ConstantString set_element_value_method_name;
+extern ConstantString get_default_element_value_method_name;
+extern ConstantString set_element_value_to_default_method_name;
+extern ConstantString set_all_element_values_method_name;
+}
+
 class Property
 {
 public:
@@ -102,23 +126,43 @@ private:
   Functor0 post_set_value_functor_;
   Functor1<const size_t> post_set_element_value_functor_;
   bool string_saved_as_char_array_;
-  // static Method property_methods_[constants::PROPERTY_METHOD_SUBSET_LENGTH];
+
+  enum{PARAMETER_COUNT_MAX=1};
+  enum{ARRAY_PARAMETER_COUNT_MAX=1};
+  enum{METHOD_COUNT_MAX=4};
+  enum{ARRAY_METHOD_COUNT_MAX=5};
+
+  static int findParameterIndex(const ConstantString & parameter_name);
+  static Parameter & parameter(const ConstantString & parameter_name);
+
+  static int findMethodIndex(const ConstantString & method_name);
+  static Method & method(const ConstantString & method_name);
+
+  static Array<Parameter,PARAMETER_COUNT_MAX> parameters_;
+  static Array<Parameter,ARRAY_PARAMETER_COUNT_MAX> array_parameters_;
+  static Array<Method,METHOD_COUNT_MAX> methods_;
+  static Array<Method,ARRAY_METHOD_COUNT_MAX> array_methods_;
+
+  static Parameter & createParameter(const ConstantString & parameter_name);
+  static Parameter & createArrayParameter(const ConstantString & parameter_name);
+  static Method & createMethod(const ConstantString & method_name);
+  static Method & createArrayMethod(const ConstantString & method_name);
 
   template <typename T>
   Property(const ConstantString & name,
-        const T & default_value);
+           const T & default_value);
   template <size_t N>
   Property(const ConstantString & name,
-        const long (&default_value)[N]);
+           const long (&default_value)[N]);
   template <size_t N>
   Property(const ConstantString & name,
-        const double (&default_value)[N]);
+           const double (&default_value)[N]);
   template <size_t N>
   Property(const ConstantString & name,
-        const bool (&default_value)[N]);
+           const bool (&default_value)[N]);
   template <size_t N>
   Property(const ConstantString & name,
-        const char (&default_value)[N]);
+           const char (&default_value)[N]);
 
   Parameter & parameter();
   bool compareName(const char * name_to_compare);
@@ -136,6 +180,7 @@ private:
   void preSetElementValueFunctor(const size_t element_index);
   void postSetValueFunctor();
   void postSetElementValueFunctor(const size_t element_index);
+
   friend class Callback;
   friend class Server;
 

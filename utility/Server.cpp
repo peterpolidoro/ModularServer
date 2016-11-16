@@ -58,16 +58,6 @@ void Server::setup()
                                firmware_name_array_.max_size(),
                                firmware_name_array_.size());
 
-  // Parameter & property_method_parameter = createParameter(constants::property_method_parameter_name);
-  // property_method_parameter.setTypeString();
-  // property_method_parameter.setSubset(constants::property_method_ptr_subset);
-
-  Parameter & property_element_index_parameter = createParameter(constants::property_element_index_parameter_name);
-  property_element_index_parameter.setTypeLong();
-
-  Parameter & property_value_parameter = createParameter(constants::property_value_parameter_name);
-  property_value_parameter.setTypeAny();
-
   // Methods
   Method & get_procedure_ids_method = createMethod(constants::get_procedure_ids_method_name);
   get_procedure_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getProcedureIdsHandler));
@@ -116,41 +106,42 @@ void Server::setup()
   get_memory_free_method.setReturnTypeLong();
 #endif
 
-  // Method & set_property_to_default_method = createMethod(constants::set_property_to_default_method_name);
-  // set_property_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyToDefaultHandler));
-  // set_property_to_default_method.addParameter(property_name_parameter);
-
-  // Method & get_property_value_method = createMethod(constants::get_property_value_method_name);
-  // get_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValueHandler));
-  // get_property_value_method.addParameter(property_name_parameter);
-  // get_property_value_method.setReturnTypeAny();
-
-  // Method & get_property_element_value_method = createMethod(constants::get_property_element_value_method_name);
-  // get_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyElementValueHandler));
-  // get_property_element_value_method.addParameter(property_name_parameter);
-  // get_property_element_value_method.addParameter(property_element_index_parameter);
-  // get_property_element_value_method.setReturnTypeAny();
-
-  // Method & set_property_value_method = createMethod(constants::set_property_value_method_name);
-  // set_property_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyValueHandler));
-  // set_property_value_method.addParameter(property_name_parameter);
-  // set_property_value_method.addParameter(property_value_parameter);
-
-  // Method & set_property_element_value_method = createMethod(constants::set_property_element_value_method_name);
-  // set_property_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertyElementValueHandler));
-  // set_property_element_value_method.addParameter(property_name_parameter);
-  // set_property_element_value_method.addParameter(property_element_index_parameter);
-  // set_property_element_value_method.addParameter(property_value_parameter);
-
-  // Method & set_all_property_element_values_method = createMethod(constants::set_all_property_element_values_method_name);
-  // set_all_property_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllPropertyElementValuesHandler));
-  // set_all_property_element_values_method.addParameter(property_name_parameter);
-  // set_all_property_element_values_method.addParameter(property_value_parameter);
-
   // Callbacks
   Callback & set_properties_to_defaults_callback = createCallback(constants::set_properties_to_defaults_callback_name);
   set_properties_to_defaults_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
 
+  // Property Parameters
+  Parameter & property_value_parameter = Property::createParameter(property::value_parameter_name);
+
+  // Property Array Parameters
+  Parameter & property_element_index_parameter = Property::createArrayParameter(property::element_index_parameter_name);
+
+  // Property Methods
+  Method & property_get_value_method = Property::createMethod(property::get_value_method_name);
+
+  Method & property_set_value_method = Property::createMethod(property::set_value_method_name);
+  property_set_value_method.addParameter(property_value_parameter);
+
+  Method & property_get_default_value_method = Property::createMethod(property::get_default_value_method_name);
+
+  Method & property_set_value_to_default_method = Property::createMethod(property::set_value_to_default_method_name);
+
+  // Property Array Methods
+  Method & property_get_element_value_method = Property::createArrayMethod(property::get_element_value_method_name);
+  property_get_element_value_method.addParameter(property_element_index_parameter);
+
+  Method & property_set_element_value_method = Property::createArrayMethod(property::set_element_value_method_name);
+  property_set_element_value_method.addParameter(property_element_index_parameter);
+  property_set_element_value_method.addParameter(property_value_parameter);
+
+  Method & property_get_default_element_value_method = Property::createArrayMethod(property::get_default_element_value_method_name);
+  property_get_default_element_value_method.addParameter(property_element_index_parameter);
+
+  Method & property_set_element_value_to_default_method = Property::createArrayMethod(property::set_element_value_to_default_method_name);
+  property_set_element_value_to_default_method.addParameter(property_element_index_parameter);
+
+  Method & property_set_all_element_values_method = Property::createArrayMethod(property::set_all_element_values_method_name);
+  property_set_all_element_values_method.addParameter(property_value_parameter);
 
   server_running_ = false;
 }
@@ -879,21 +870,70 @@ void Server::propertyHelp(Property & property, bool verbose)
 
   response_.writeKey(constants::parameters_constant_string);
   response_.beginArray();
-  if (verbose)
+
+  for (size_t i=0; i<Property::parameters_.size(); ++i)
   {
-    parameterHelp(parameter(constants::property_method_parameter_name));
-    parameterHelp(parameter(constants::property_element_index_parameter_name));
-    parameterHelp(parameter(constants::property_value_parameter_name));
+    if (verbose)
+    {
+      parameterHelp(Property::parameters_[i]);
+    }
+    else
+    {
+      response_.write(Property::parameters_[i].getName());
+    }
   }
-  else
+
+  JsonStream::JsonTypes type = property.parameter().getType();
+  if (type == JsonStream::ARRAY_TYPE)
   {
-    response_.write(constants::property_method_parameter_name);
-    response_.write(constants::property_element_index_parameter_name);
-    response_.write(constants::property_value_parameter_name);
+    for (size_t i=0; i<Property::array_parameters_.size(); ++i)
+    {
+      if (verbose)
+      {
+        parameterHelp(Property::array_parameters_[i]);
+      }
+      else
+      {
+        response_.write(Property::array_parameters_[i].getName());
+      }
+    }
   }
+
   response_.endArray();
 
-  response_.write(constants::result_type_constant_string,JsonStream::ANY_TYPE);
+  response_.writeKey(constants::methods_constant_string);
+  response_.beginArray();
+
+  for (size_t i=0; i<Property::methods_.size(); ++i)
+  {
+    if (verbose)
+    {
+      methodHelp(Property::methods_[i],false);
+    }
+    else
+    {
+      response_.write(Property::methods_[i].getName());
+    }
+  }
+
+  if (type == JsonStream::ARRAY_TYPE)
+  {
+    for (size_t i=0; i<Property::array_methods_.size(); ++i)
+    {
+      if (verbose)
+      {
+        methodHelp(Property::array_methods_[i],false);
+      }
+      else
+      {
+        response_.write(Property::array_methods_[i].getName());
+      }
+    }
+  }
+
+  response_.endArray();
+
+  response_.write(constants::result_type_constant_string,type);
 
   response_.endObject();
 }

@@ -19,14 +19,12 @@ enum {HARDWARE_INFO_ARRAY_COUNT_MAX=4};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
-enum{SERVER_PARAMETER_COUNT_MAX=3};
+enum{SERVER_PARAMETER_COUNT_MAX=1};
 enum{SERVER_METHOD_COUNT_MAX=10};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {METHOD_PARAMETER_COUNT_MAX=6};
 enum {CALLBACK_PROPERTY_COUNT_MAX=6};
-
-enum{PROPERTY_METHOD_COUNT_MAX=9};
 
 enum{SERVER_STREAM_COUNT_MAX=4};
 
@@ -80,22 +78,6 @@ extern const long serial_number_max;
 extern const long serial_number_default;
 
 // Parameters
-// extern ConstantString property_method_parameter_name;
-// enum{PROPERTY_METHOD_SUBSET_LENGTH=9};
-// extern ConstantString property_method_get_value;
-// extern ConstantString property_method_set_value;
-// extern ConstantString property_method_get_default_value;
-// extern ConstantString property_method_set_value_to_default;
-// extern ConstantString property_method_get_element_value;
-// extern ConstantString property_method_set_element_value;
-// extern ConstantString property_method_get_default_element_value;
-// extern ConstantString property_method_set_element_value_to_default;
-// extern ConstantString property_method_set_all_element_values;
-// extern SubsetMemberType property_method_ptr_subset[PROPERTY_METHOD_SUBSET_LENGTH];
-
-extern ConstantString property_element_index_parameter_name;
-
-extern ConstantString property_value_parameter_name;
 
 // Methods
 extern ConstantString get_procedure_ids_method_name;
@@ -108,24 +90,6 @@ extern ConstantString get_api_verbose_method_name;
 extern ConstantString get_property_default_values_method_name;
 extern ConstantString get_property_values_method_name;
 extern ConstantString get_memory_free_method_name;
-
-// Property Methods
-extern ConstantString get_value_property_method_name;
-extern ConstantString set_value_property_method_name;
-extern ConstantString get_default_value_property_method_name;
-extern ConstantString set_value_to_default_property_method_name;
-extern ConstantString get_element_value_property_method_name;
-extern ConstantString set_element_value_property_method_name;
-extern ConstantString get_default_element_value_property_method_name;
-extern ConstantString set_element_value_to_default_property_method_name;
-extern ConstantString set_all_element_values_property_method_name;
-
-// extern ConstantString set_property_to_default_method_name;
-// extern ConstantString get_property_value_method_name;
-// extern ConstantString get_property_element_value_method_name;
-// extern ConstantString set_property_value_method_name;
-// extern ConstantString set_property_element_value_method_name;
-// extern ConstantString set_all_property_element_values_method_name;
 
 // Callbacks
 extern ConstantString set_properties_to_defaults_callback_name;

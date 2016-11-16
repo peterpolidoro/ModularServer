@@ -47,6 +47,7 @@ private:
   size_t getParameterCount();
   void functor();
   friend class Server;
+  friend class Property;
 };
 }
 #endif

@@ -10,6 +10,156 @@
 
 namespace modular_server
 {
+
+namespace property
+{
+// Parameters
+CONSTANT_STRING(value_parameter_name,"value");
+
+// Array Parameters
+CONSTANT_STRING(element_index_parameter_name,"element_index");
+
+// Methods
+CONSTANT_STRING(get_value_method_name,"getValue");
+CONSTANT_STRING(set_value_method_name,"setValue");
+CONSTANT_STRING(get_default_value_method_name,"getDefaultValue");
+CONSTANT_STRING(set_value_to_default_method_name,"setValueToDefault");
+
+// Array Methods
+CONSTANT_STRING(get_element_value_method_name,"getElementValue");
+CONSTANT_STRING(set_element_value_method_name,"setElementValue");
+CONSTANT_STRING(get_default_element_value_method_name,"getDefaultElementValue");
+CONSTANT_STRING(set_element_value_to_default_method_name,"setElementValueToDefault");
+CONSTANT_STRING(set_all_element_values_method_name,"setAllElementValues");
+}
+
+Array<Parameter,Property::PARAMETER_COUNT_MAX> Property::parameters_;
+Array<Parameter,Property::ARRAY_PARAMETER_COUNT_MAX> Property::array_parameters_;
+Array<Method,Property::METHOD_COUNT_MAX> Property::methods_;
+Array<Method,Property::ARRAY_METHOD_COUNT_MAX> Property::array_methods_;
+
+int Property::findParameterIndex(const ConstantString & parameter_name)
+{
+  int parameter_index = -1;
+  for (size_t i=0; i<parameters_.size(); ++i)
+  {
+    if (parameters_[i].compareName(parameter_name))
+    {
+      parameter_index = i;
+      break;
+    }
+  }
+  if (parameter_index < 0)
+  {
+    for (size_t i=0; i<array_parameters_.size(); ++i)
+    {
+      if (array_parameters_[i].compareName(parameter_name))
+      {
+        parameter_index = i + parameters_.size();
+        break;
+      }
+    }
+  }
+  return parameter_index;
+}
+
+Parameter & Property::createParameter(const ConstantString & parameter_name)
+{
+  int parameter_index = findParameterIndex(parameter_name);
+  if (parameter_index < 0)
+  {
+    parameters_.push_back(Parameter(parameter_name));
+    parameters_.back().setFirmwareName(constants::firmware_name);
+    return parameters_.back();
+  }
+}
+
+Parameter & Property::createArrayParameter(const ConstantString & parameter_name)
+{
+  int parameter_index = findParameterIndex(parameter_name);
+  if (parameter_index < 0)
+  {
+    array_parameters_.push_back(Parameter(parameter_name));
+    array_parameters_.back().setFirmwareName(constants::firmware_name);
+    return array_parameters_.back();
+  }
+}
+
+Parameter & Property::parameter(const ConstantString & parameter_name)
+{
+  int parameter_index = findParameterIndex(parameter_name);
+  if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
+  {
+    return parameters_[parameter_index];
+  }
+  else if (parameter_index >= (int)parameters_.size())
+  {
+    parameter_index -= parameters_.size();
+    return array_parameters_[parameter_index];
+  }
+}
+
+int Property::findMethodIndex(const ConstantString & method_name)
+{
+  int method_index = -1;
+  for (size_t i=0; i<methods_.size(); ++i)
+  {
+    if (methods_[i].compareName(method_name))
+    {
+      method_index = i;
+      break;
+    }
+  }
+  if (method_index < 0)
+  {
+    for (size_t i=0; i<array_methods_.size(); ++i)
+    {
+      if (array_methods_[i].compareName(method_name))
+      {
+        method_index = i + methods_.size();
+        break;
+      }
+    }
+  }
+  return method_index;
+}
+
+Method & Property::createMethod(const ConstantString & method_name)
+{
+  int method_index = findMethodIndex(method_name);
+  if (method_index < 0)
+  {
+    methods_.push_back(Method(method_name));
+    methods_.back().setFirmwareName(constants::firmware_name);
+    return methods_.back();
+  }
+}
+
+Method & Property::createArrayMethod(const ConstantString & method_name)
+{
+  int method_index = findMethodIndex(method_name);
+  if (method_index < 0)
+  {
+    array_methods_.push_back(Method(method_name));
+    array_methods_.back().setFirmwareName(constants::firmware_name);
+    return array_methods_.back();
+  }
+}
+
+Method & Property::method(const ConstantString & method_name)
+{
+  int method_index = findMethodIndex(method_name);
+  if ((method_index >= 0) && (method_index < (int)methods_.size()))
+  {
+    return methods_[method_index];
+  }
+  else if (method_index >= (int)methods_.size())
+  {
+    method_index -= methods_.size();
+    return array_methods_[method_index];
+  }
+}
+
 // public
 Property::Property()
 {
@@ -568,7 +718,7 @@ size_t Property::getStringLength()
 // private
 template <>
 Property::Property<long>(const ConstantString & name,
-                   const long & default_value) :
+                         const long & default_value) :
 parameter_(name),
   saved_variable_(default_value)
 {
@@ -577,7 +727,7 @@ parameter_(name),
 
 template <>
 Property::Property<double>(const ConstantString & name,
-                     const double & default_value) :
+                           const double & default_value) :
 parameter_(name),
   saved_variable_(default_value)
 {
@@ -586,7 +736,7 @@ parameter_(name),
 
 template <>
 Property::Property<bool>(const ConstantString & name,
-                   const bool & default_value) :
+                         const bool & default_value) :
 parameter_(name),
   saved_variable_(default_value)
 {
@@ -595,8 +745,8 @@ parameter_(name),
 
 template <>
 Property::Property<const ConstantString *>(const ConstantString & name,
-                                     const ConstantString * const & default_value) :
-  parameter_(name),
+                                           const ConstantString * const & default_value) :
+parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeString();
