@@ -518,6 +518,13 @@ void Property::setValueToDefault()
   postSetValueFunctor();
 }
 
+void Property::setElementValueToDefault(const size_t element_index)
+{
+  preSetElementValueFunctor(element_index);
+  saved_variable_.setElementValueToDefault(element_index);
+  postSetElementValueFunctor(element_index);
+}
+
 bool Property::valueIsDefault()
 {
   return saved_variable_.valueIsDefault();

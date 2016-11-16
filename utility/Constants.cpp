@@ -28,28 +28,28 @@ const long serial_number_max = 65535;
 const long serial_number_default = serial_number_min;
 
 // Parameters
-CONSTANT_STRING(property_method_parameter_name,"property_method");
-CONSTANT_STRING(property_method_get_value,"getValue");
-CONSTANT_STRING(property_method_set_value,"setValue");
-CONSTANT_STRING(property_method_get_default_value,"getDefaultValue");
-CONSTANT_STRING(property_method_set_to_default,"setToDefault");
-CONSTANT_STRING(property_method_get_element_value,"getElementValue");
-CONSTANT_STRING(property_method_set_element_value,"setElementValue");
-CONSTANT_STRING(property_method_get_default_element_value,"getDefaultElementValue");
-CONSTANT_STRING(property_method_set_element_to_default,"setElementToDefault");
-CONSTANT_STRING(property_method_set_all_element_values,"setAllElementValues");
-SubsetMemberType property_method_ptr_subset[PROPERTY_METHOD_SUBSET_LENGTH] =
-  {
-    {.cs_ptr=&property_method_get_value},
-    {.cs_ptr=&property_method_set_value},
-    {.cs_ptr=&property_method_get_default_value},
-    {.cs_ptr=&property_method_set_to_default},
-    {.cs_ptr=&property_method_get_element_value},
-    {.cs_ptr=&property_method_set_element_value},
-    {.cs_ptr=&property_method_get_default_element_value},
-    {.cs_ptr=&property_method_set_element_to_default},
-    {.cs_ptr=&property_method_set_all_element_values},
-  };
+// CONSTANT_STRING(property_method_parameter_name,"property_method");
+// CONSTANT_STRING(property_method_get_value,"getValue");
+// CONSTANT_STRING(property_method_set_value,"setValue");
+// CONSTANT_STRING(property_method_get_default_value,"getDefaultValue");
+// CONSTANT_STRING(property_method_set_value_to_default,"setValueToDefault");
+// CONSTANT_STRING(property_method_get_element_value,"getElementValue");
+// CONSTANT_STRING(property_method_set_element_value,"setElementValue");
+// CONSTANT_STRING(property_method_get_default_element_value,"getDefaultElementValue");
+// CONSTANT_STRING(property_method_set_element_value_to_default,"setElementValueToDefault");
+// CONSTANT_STRING(property_method_set_all_element_values,"setAllElementValues");
+// SubsetMemberType property_method_ptr_subset[PROPERTY_METHOD_SUBSET_LENGTH] =
+//   {
+//     {.cs_ptr=&property_method_get_value},
+//     {.cs_ptr=&property_method_set_value},
+//     {.cs_ptr=&property_method_get_default_value},
+//     {.cs_ptr=&property_method_set_value_to_default},
+//     {.cs_ptr=&property_method_get_element_value},
+//     {.cs_ptr=&property_method_set_element_value},
+//     {.cs_ptr=&property_method_get_default_element_value},
+//     {.cs_ptr=&property_method_set_element_value_to_default},
+//     {.cs_ptr=&property_method_set_all_element_values},
+//   };
 
 CONSTANT_STRING(property_element_index_parameter_name,"property_element_index");
 
@@ -66,6 +66,18 @@ CONSTANT_STRING(get_api_verbose_method_name,"getApiVerbose");
 CONSTANT_STRING(get_property_default_values_method_name,"getPropertyDefaultValues");
 CONSTANT_STRING(get_property_values_method_name,"getPropertyValues");
 CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
+
+// Property Methods
+CONSTANT_STRING(get_value_property_method_name,"getValue");
+CONSTANT_STRING(set_value_property_method_name,"setValue");
+CONSTANT_STRING(get_default_value_property_method_name,"getDefaultValue");
+CONSTANT_STRING(set_value_to_default_property_method_name,"setValueToDefault");
+CONSTANT_STRING(get_element_value_property_method_name,"getElementValue");
+CONSTANT_STRING(set_element_value_property_method_name,"setElementValue");
+CONSTANT_STRING(get_default_element_value_property_method_name,"getDefaultElementValue");
+CONSTANT_STRING(set_element_value_to_default_property_method_name,"setElementValueToDefault");
+CONSTANT_STRING(set_all_element_values_property_method_name,"setAllElementValues");
+
 // CONSTANT_STRING(set_property_to_default_method_name,"setPropertyToDefault");
 // CONSTANT_STRING(get_property_value_method_name,"getPropertyValue");
 // CONSTANT_STRING(get_property_element_value_method_name,"getPropertyElementValue");

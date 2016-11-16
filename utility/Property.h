@@ -88,6 +88,7 @@ public:
   template <typename T>
   bool setDefaultValue(T & default_value);
   void setValueToDefault();
+  void setElementValueToDefault(const size_t element_index);
 
   bool valueIsDefault();
   size_t getArrayLength();

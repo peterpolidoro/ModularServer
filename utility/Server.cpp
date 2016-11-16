@@ -58,9 +58,9 @@ void Server::setup()
                                firmware_name_array_.max_size(),
                                firmware_name_array_.size());
 
-  Parameter & property_method_parameter = createParameter(constants::property_method_parameter_name);
-  property_method_parameter.setTypeString();
-  property_method_parameter.setSubset(constants::property_method_ptr_subset);
+  // Parameter & property_method_parameter = createParameter(constants::property_method_parameter_name);
+  // property_method_parameter.setTypeString();
+  // property_method_parameter.setSubset(constants::property_method_ptr_subset);
 
   Parameter & property_element_index_parameter = createParameter(constants::property_element_index_parameter_name);
   property_element_index_parameter.setTypeLong();
