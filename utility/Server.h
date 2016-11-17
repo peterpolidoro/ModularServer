@@ -117,14 +117,14 @@ private:
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
   int request_procedure_index_;
-  int parameter_count_;
+  int property_method_index_;
   bool eeprom_initialized_;
   SavedVariable eeprom_initialized_sv_;
   bool server_running_;
 
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   void processRequestArray();
-  int findRequestProcedureIndex(const char * procedure_string);
+  int findProcedureIndex(const char * procedure_string);
   template <typename T>
   int findPropertyIndex(T const & property_name);
   template <typename T>
@@ -136,8 +136,8 @@ private:
   template <typename T>
   int findCallbackIndex(T const & callback_name);
   int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
-  int processParameterString(const char * parameter_string);
-  bool checkParameters();
+  int processParameterString(Method & method, const char * parameter_string);
+  bool checkParameters(Method & method);
   bool checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   bool checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   long getSerialNumber();
@@ -178,14 +178,8 @@ private:
   void getApiVerboseHandler();
   void getMemoryFreeHandler();
   void getPropertyDefaultValuesHandler();
-  void setPropertiesToDefaultsHandler();
-  void setPropertyToDefaultHandler();
   void getPropertyValuesHandler();
-  void getPropertyValueHandler();
-  void getPropertyElementValueHandler();
-  void setPropertyValueHandler();
-  void setPropertyElementValueHandler();
-  void setAllPropertyElementValuesHandler();
+  void setPropertiesToDefaultsHandler();
 
 };
 }

@@ -410,4 +410,53 @@ void Response::returnParameterNotInRangeError(const ConstantString & parameter_n
   }
 }
 
+void Response::returnPropertyMethodNotFoundError()
+{
+  // Prevent multiple errors in one response
+  if (!error_)
+  {
+    error_ = true;
+    writeKey(constants::error_constant_string);
+    beginObject();
+    write(constants::message_constant_string,constants::property_method_not_found_error_data);
+    write(constants::code_constant_string,constants::invalid_params_error_code);
+    endObject();
+  }
+}
+
+void Response::returnPropertyParameterCountError(const size_t parameter_count, const size_t parameter_count_needed)
+{
+  // Prevent multiple errors in one response
+  if (!error_)
+  {
+    error_ = true;
+    writeKey(constants::error_constant_string);
+    beginObject();
+    write(constants::message_constant_string,constants::invalid_params_error_message);
+    char incorrect_parameter_number_str[constants::incorrect_parameter_number_error_data.length()+1];
+    incorrect_parameter_number_str[0] = '\0';
+    constants::incorrect_property_parameter_number_error_data.copy(incorrect_parameter_number_str);
+    char error_str[constants::STRING_LENGTH_ERROR];
+    error_str[0] = '\0';
+    strcat(error_str,incorrect_parameter_number_str);
+    char parameter_count_str[constants::STRING_LENGTH_PARAMETER_COUNT];
+    parameter_count_str[0] = '\0';
+    dtostrf(parameter_count,0,0,parameter_count_str);
+    strcat(error_str,parameter_count_str);
+    char given_str[constants::given_constant_string.length()+1];
+    given_str[0] = '\0';
+    constants::given_constant_string.copy(given_str);
+    strcat(error_str,given_str);
+    dtostrf(parameter_count_needed,0,0,parameter_count_str);
+    strcat(error_str,parameter_count_str);
+    char needed_str[constants::needed_constant_string.length()+1];
+    needed_str[0] = '\0';
+    constants::needed_constant_string.copy(needed_str);
+    strcat(error_str,needed_str);
+    write(constants::data_constant_string,error_str);
+    write(constants::code_constant_string,constants::invalid_params_error_code);
+    endObject();
+  }
+}
+
 }

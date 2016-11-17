@@ -16,6 +16,7 @@
 #include "JsonStream.h"
 #include "Array.h"
 #include "Vector.h"
+#include "ConcatenatedArray.h"
 #include "Functor.h"
 #include "ArduinoJson.h"
 
@@ -29,17 +30,25 @@ namespace modular_server
 
 namespace property
 {
-// Parameters
-extern ConstantString value_parameter_name;
+enum{METHOD_PARAMETER_TYPE_COUNT=2};
+enum{PARAMETER_COUNT_MAX=2};
+enum{METHOD_COUNT_MAX=4};
+enum{ARRAY_PARAMETER_COUNT_MAX=2};
+enum{ARRAY_METHOD_COUNT_MAX=5};
 
-// Array Parameters
-extern ConstantString element_index_parameter_name;
+// Parameters
+extern ConstantString method_parameter_name;
+extern ConstantString value_parameter_name;
 
 // Methods
 extern ConstantString get_value_method_name;
 extern ConstantString set_value_method_name;
 extern ConstantString get_default_value_method_name;
 extern ConstantString set_value_to_default_method_name;
+
+// Array Parameters
+extern ConstantString element_index_parameter_name;
+extern ConstantString element_value_parameter_name;
 
 // Array Methods
 extern ConstantString get_element_value_method_name;
@@ -127,26 +136,46 @@ private:
   Functor1<const size_t> post_set_element_value_functor_;
   bool string_saved_as_char_array_;
 
-  enum{PARAMETER_COUNT_MAX=1};
-  enum{ARRAY_PARAMETER_COUNT_MAX=1};
-  enum{METHOD_COUNT_MAX=4};
-  enum{ARRAY_METHOD_COUNT_MAX=5};
+  static Parameter property_parameters_[property::PARAMETER_COUNT_MAX];
+  static Method property_methods_[property::METHOD_COUNT_MAX];
+  static Parameter property_array_parameters_[property::ARRAY_PARAMETER_COUNT_MAX];
+  static Method property_array_methods_[property::ARRAY_METHOD_COUNT_MAX];
+  static ConcatenatedArray<Parameter,property::METHOD_PARAMETER_TYPE_COUNT> parameters_;
+  static ConcatenatedArray<Method,property::METHOD_PARAMETER_TYPE_COUNT> methods_;
 
-  static int findParameterIndex(const ConstantString & parameter_name);
+  template <typename T>
+  static int findParameterIndex(T const & parameter_name)
+  {
+    int parameter_index = -1;
+    for (size_t i=0; i<parameters_.size(); ++i)
+    {
+      if (parameters_[i].compareName(parameter_name))
+      {
+        parameter_index = i;
+        break;
+      }
+    }
+    return parameter_index;
+  };
+  static Parameter & createParameter(const ConstantString & parameter_name);
   static Parameter & parameter(const ConstantString & parameter_name);
 
-  static int findMethodIndex(const ConstantString & method_name);
-  static Method & method(const ConstantString & method_name);
-
-  static Array<Parameter,PARAMETER_COUNT_MAX> parameters_;
-  static Array<Parameter,ARRAY_PARAMETER_COUNT_MAX> array_parameters_;
-  static Array<Method,METHOD_COUNT_MAX> methods_;
-  static Array<Method,ARRAY_METHOD_COUNT_MAX> array_methods_;
-
-  static Parameter & createParameter(const ConstantString & parameter_name);
-  static Parameter & createArrayParameter(const ConstantString & parameter_name);
+  template <typename T>
+  static int findMethodIndex(T const & method_name)
+  {
+    int method_index = -1;
+    for (size_t i=0; i<methods_.size(); ++i)
+    {
+      if (methods_[i].compareName(method_name))
+      {
+        method_index = i;
+        break;
+      }
+    }
+    return method_index;
+  };
   static Method & createMethod(const ConstantString & method_name);
-  static Method & createArrayMethod(const ConstantString & method_name);
+  static Method & method(const ConstantString & method_name);
 
   template <typename T>
   Property(const ConstantString & name,
@@ -172,6 +201,8 @@ private:
   bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
+  constants::NumberType getMin();
+  constants::NumberType getMax();
   bool stringIsSavedAsCharArray();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
@@ -180,10 +211,18 @@ private:
   void preSetElementValueFunctor(const size_t element_index);
   void postSetValueFunctor();
   void postSetElementValueFunctor(const size_t element_index);
+  void updateMethodsAndParameters();
+
+  // Handlers
+  void getValueHandler();
+  void setToDefaultHandler();
+  void getElementValueHandler();
+  void setValueHandler();
+  void setElementValueHandler();
+  void setAllElementValuesHandler();
 
   friend class Callback;
   friend class Server;
-
 };
 }
 #include "PropertyDefinitions.h"

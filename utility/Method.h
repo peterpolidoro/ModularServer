@@ -35,6 +35,7 @@ public:
   void setReturnTypeObject();
   void setReturnTypeArray();
   void setReturnTypeAny();
+  void setReturnType(JsonStream::JsonTypes type);
   JsonStream::JsonTypes getReturnType();
 
 private:

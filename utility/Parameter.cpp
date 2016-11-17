@@ -103,6 +103,18 @@ void Parameter::setTypeAny()
   }
 }
 
+void Parameter::setType(JsonStream::JsonTypes type)
+{
+  if (type_ != JsonStream::ARRAY_TYPE)
+  {
+    type_ = type;
+  }
+  else
+  {
+    array_element_type_ = type;
+  }
+}
+
 void Parameter::setRange(const double min, const double max)
 {
   min_.d = min;
@@ -116,6 +128,13 @@ void Parameter::setRange(const float min, const float max)
   min_.d = (double)min;
   max_.d = (double)max;
   setTypeDouble();
+  range_is_set_ = true;
+}
+
+void Parameter::setRange(const constants::NumberType min, const constants::NumberType max)
+{
+  min_ = min;
+  max_ = max;
   range_is_set_ = true;
 }
 

@@ -19,7 +19,7 @@ Server::Server() :
 void Server::setup()
 {
   request_procedure_index_ = -1;
-  parameter_count_ = 0;
+  property_method_index_ = -1;
   server_stream_index_ = 0;
 
   eeprom_initialized_ = false;
@@ -110,39 +110,7 @@ void Server::setup()
   Callback & set_properties_to_defaults_callback = createCallback(constants::set_properties_to_defaults_callback_name);
   set_properties_to_defaults_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
 
-  // Property Parameters
-  Parameter & property_value_parameter = Property::createParameter(property::value_parameter_name);
-
-  // Property Array Parameters
-  Parameter & property_element_index_parameter = Property::createArrayParameter(property::element_index_parameter_name);
-
-  // Property Methods
-  Method & property_get_value_method = Property::createMethod(property::get_value_method_name);
-
-  Method & property_set_value_method = Property::createMethod(property::set_value_method_name);
-  property_set_value_method.addParameter(property_value_parameter);
-
-  Method & property_get_default_value_method = Property::createMethod(property::get_default_value_method_name);
-
-  Method & property_set_value_to_default_method = Property::createMethod(property::set_value_to_default_method_name);
-
-  // Property Array Methods
-  Method & property_get_element_value_method = Property::createArrayMethod(property::get_element_value_method_name);
-  property_get_element_value_method.addParameter(property_element_index_parameter);
-
-  Method & property_set_element_value_method = Property::createArrayMethod(property::set_element_value_method_name);
-  property_set_element_value_method.addParameter(property_element_index_parameter);
-  property_set_element_value_method.addParameter(property_value_parameter);
-
-  Method & property_get_default_element_value_method = Property::createArrayMethod(property::get_default_element_value_method_name);
-  property_get_default_element_value_method.addParameter(property_element_index_parameter);
-
-  Method & property_set_element_value_to_default_method = Property::createArrayMethod(property::set_element_value_to_default_method_name);
-  property_set_element_value_to_default_method.addParameter(property_element_index_parameter);
-
-  Method & property_set_all_element_values_method = Property::createArrayMethod(property::set_all_element_values_method_name);
-  property_set_all_element_values_method.addParameter(property_value_parameter);
-
+  // Server
   server_running_ = false;
 }
 
@@ -356,15 +324,33 @@ void Server::handleRequest()
 // private
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
 {
-  int parameter_index = findMethodParameterIndex(methods_[request_procedure_index_],parameter_name);
-  // index 0 is the method, index 1 is the first parameter
-  return (*request_json_array_ptr_)[parameter_index+1];
+  // index 0 is the request procedure, index 1 is the first parameter
+  int parameter_index = 1;
+  if (request_procedure_index_ < (int)methods_.size())
+  {
+    int method_index = request_procedure_index_;
+    Method & method = methods_[method_index];
+    parameter_index += findMethodParameterIndex(method,parameter_name);
+  }
+  else if (request_procedure_index_ < (int)(methods_.size() + callbacks_.size() + properties_.size()))
+  {
+    if (property_method_index_ >= 0)
+    {
+      int property_index = request_procedure_index_ - methods_.size() - callbacks_.size();
+
+      Method & method = properties_[property_index].methods_[property_method_index_];
+
+      // index 0 is the request procedure, index 1 is the property method
+      parameter_index += findMethodParameterIndex(method,parameter_name) + 1;
+    }
+  }
+  return (*request_json_array_ptr_)[parameter_index];
 }
 
 void Server::processRequestArray()
 {
   const char * procedure_string = (*request_json_array_ptr_)[0];
-  request_procedure_index_ = findRequestProcedureIndex(procedure_string);
+  request_procedure_index_ = findProcedureIndex(procedure_string);
   if (request_procedure_index_ >= 0)
   {
     int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
@@ -373,19 +359,21 @@ void Server::processRequestArray()
     constants::question_constant_string.copy(question_str);
     char question_double_str[constants::question_double_constant_string.length()+1];
     constants::question_double_constant_string.copy(question_double_str);
-    if (request_procedure_index_ < methods_.size())
+    if (request_procedure_index_ < (int)methods_.size())
     {
+      int method_index = request_procedure_index_;
+      Method & method = methods_[method_index];
       // method ?
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        methodHelp(methods_[request_procedure_index_],false);
+        methodHelp(method,false);
       }
       // method ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        methodHelp(methods_[request_procedure_index_],true);
+        methodHelp(method,true);
       }
       // method parameter ?
       // method parameter ??
@@ -393,44 +381,45 @@ void Server::processRequestArray()
                ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
                 (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
       {
-        int parameter_index = processParameterString((*request_json_array_ptr_)[1]);
+        int parameter_index = processParameterString(method,(*request_json_array_ptr_)[1]);
         Parameter * parameter_ptr;
-        parameter_ptr = methods_[request_procedure_index_].parameter_ptrs_[parameter_index];
+        parameter_ptr = method.parameter_ptrs_[parameter_index];
         response_.writeResultKey();
         parameterHelp(*parameter_ptr);
       }
       // execute private method without checking parameters
       else if (request_procedure_index_ <= private_method_index_)
       {
-        methods_[request_procedure_index_].functor();
+        method.functor();
       }
-      else if (parameter_count != methods_[request_procedure_index_].getParameterCount())
+      else if (parameter_count != method.getParameterCount())
       {
-        response_.returnParameterCountError(parameter_count,methods_[request_procedure_index_].getParameterCount());
+        response_.returnParameterCountError(parameter_count,method.getParameterCount());
       }
       else
       {
-        bool parameters_ok = checkParameters();
+        bool parameters_ok = checkParameters(method);
         if (parameters_ok)
         {
-          methods_[request_procedure_index_].functor();
+          method.functor();
         }
       }
     }
-    else if (request_procedure_index_ < (methods_.size() + callbacks_.size()))
+    else if (request_procedure_index_ < (int)(methods_.size() + callbacks_.size()))
     {
       int callback_index = request_procedure_index_ - methods_.size();
+      Callback & callback = callbacks_[callback_index];
       // callback ?
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        callbackHelp(callbacks_[callback_index],false);
+        callbackHelp(callback,false);
       }
       // callback ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        callbackHelp(callbacks_[callback_index],true);
+        callbackHelp(callback,true);
       }
       else if (parameter_count != 0)
       {
@@ -438,7 +427,81 @@ void Server::processRequestArray()
       }
       else
       {
-        callbacks_[callback_index].functor();
+        callback.functor();
+      }
+    }
+    else if (request_procedure_index_ < (int)(methods_.size() + callbacks_.size() + properties_.size()))
+    {
+      int property_index = request_procedure_index_ - methods_.size() - callbacks_.size();
+      Property & property = properties_[property_index];
+      // property ?
+      if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
+      {
+        response_.writeResultKey();
+        propertyHelp(property,false);
+      }
+      // property ??
+      else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
+      {
+        response_.writeResultKey();
+        propertyHelp(property,true);
+      }
+      else if (parameter_count == 0)
+      {
+        response_.returnParameterCountError(parameter_count,1);
+      }
+      else
+      {
+        property.updateMethodsAndParameters();
+
+        // index 0 is the request procedure, index 1 is the property method
+        const char * property_method_name = (*request_json_array_ptr_)[1];
+        property_method_index_ = property.findMethodIndex(property_method_name);
+        if (property_method_index_ < 0)
+        {
+          response_.returnPropertyMethodNotFoundError();
+        }
+
+        Method & method = property.methods_[property_method_index_];
+
+        int property_parameter_count = parameter_count - 1;
+
+        // property method ?
+        if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
+        {
+          response_.writeResultKey();
+          methodHelp(method,false);
+        }
+        // property method ??
+        else if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
+        {
+          response_.writeResultKey();
+          methodHelp(method,true);
+        }
+        // property method parameter ?
+        // property method parameter ??
+        else if ((property_parameter_count == 2) &&
+                 ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
+                  (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
+        {
+          int parameter_index = processParameterString(method,(*request_json_array_ptr_)[2]);
+          Parameter * parameter_ptr;
+          parameter_ptr = method.parameter_ptrs_[parameter_index];
+          response_.writeResultKey();
+          parameterHelp(*parameter_ptr);
+        }
+        else if (property_parameter_count != method.getParameterCount())
+        {
+          response_.returnPropertyParameterCountError(property_parameter_count,method.getParameterCount());
+        }
+        else
+        {
+          bool parameters_ok = checkParameters(method);
+          if (parameters_ok)
+          {
+            // method.functor();
+          }
+        }
       }
     }
   }
@@ -448,7 +511,7 @@ void Server::processRequestArray()
   }
 }
 
-int Server::findRequestProcedureIndex(const char * procedure_string)
+int Server::findProcedureIndex(const char * procedure_string)
 {
   int procedure_index = -1;
   int procedure_id = atoi(procedure_string);
@@ -479,7 +542,7 @@ int Server::findRequestProcedureIndex(const char * procedure_string)
       procedure_index += methods_.size();
       return procedure_index;
     }
-    procedure_index = findCallbackIndex(procedure_string);
+    procedure_index = findPropertyIndex(procedure_string);
     if (procedure_index >= 0)
     {
       response_.write(constants::id_constant_string,procedure_string);
@@ -502,7 +565,7 @@ int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
   return elements_count;
 }
 
-int Server::processParameterString(const char * parameter_string)
+int Server::processParameterString(Method & method, const char * parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = atoi(parameter_string);
@@ -518,10 +581,10 @@ int Server::processParameterString(const char * parameter_string)
   }
   else
   {
-    parameter_index = findMethodParameterIndex(methods_[request_procedure_index_],parameter_string);
+    parameter_index = findMethodParameterIndex(method,parameter_string);
   }
   Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &methods_[request_procedure_index_].parameter_ptrs_;
+  parameter_ptrs_ptr = &method.parameter_ptrs_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs_ptr->size()))
   {
     response_.returnParameterNotFoundError();
@@ -530,7 +593,7 @@ int Server::processParameterString(const char * parameter_string)
   return parameter_index;
 }
 
-bool Server::checkParameters()
+bool Server::checkParameters(Method & method)
 {
   int parameter_index = 0;
   for (ArduinoJson::JsonArray::iterator it=request_json_array_ptr_->begin();
@@ -541,7 +604,7 @@ bool Server::checkParameters()
     if (it!=request_json_array_ptr_->begin())
     {
       Parameter * parameter_ptr = NULL;
-      parameter_ptr = methods_[request_procedure_index_].parameter_ptrs_[parameter_index];
+      parameter_ptr = method.parameter_ptrs_[parameter_index];
       if (checkParameter(*parameter_ptr,*it))
       {
         parameter_index++;
@@ -552,7 +615,6 @@ bool Server::checkParameters()
       }
     }
   }
-  parameter_count_ = parameter_index;
   return true;
 }
 
@@ -860,6 +922,8 @@ void Server::incrementServerStream()
 
 void Server::propertyHelp(Property & property, bool verbose)
 {
+  property.updateMethodsAndParameters();
+
   parameterHelp(property.parameter(),false);
 
   response_.writeKey(constants::value_constant_string);
@@ -883,22 +947,6 @@ void Server::propertyHelp(Property & property, bool verbose)
     }
   }
 
-  JsonStream::JsonTypes type = property.parameter().getType();
-  if (type == JsonStream::ARRAY_TYPE)
-  {
-    for (size_t i=0; i<Property::array_parameters_.size(); ++i)
-    {
-      if (verbose)
-      {
-        parameterHelp(Property::array_parameters_[i]);
-      }
-      else
-      {
-        response_.write(Property::array_parameters_[i].getName());
-      }
-    }
-  }
-
   response_.endArray();
 
   response_.writeKey(constants::methods_constant_string);
@@ -916,24 +964,7 @@ void Server::propertyHelp(Property & property, bool verbose)
     }
   }
 
-  if (type == JsonStream::ARRAY_TYPE)
-  {
-    for (size_t i=0; i<Property::array_methods_.size(); ++i)
-    {
-      if (verbose)
-      {
-        methodHelp(Property::array_methods_[i],false);
-      }
-      else
-      {
-        response_.write(Property::array_methods_[i].getName());
-      }
-    }
-  }
-
   response_.endArray();
-
-  response_.write(constants::result_type_constant_string,type);
 
   response_.endObject();
 }
@@ -1256,25 +1287,95 @@ void Server::help(bool verbose)
   }
   // ? method parameter
   // ?? method parameter
+  // ? property method
+  // ?? property method
   else if (parameter_count == 2)
   {
-    const char * method_string = (*request_json_array_ptr_)[1];
-    int method_index = findMethodIndex(method_string);
-    if ((method_index >= 0) && (method_index < (int)methods_.size()))
+    const char * procedure_string = (*request_json_array_ptr_)[1];
+    int method_index = findMethodIndex(procedure_string);
+    if (method_index >= 0)
     {
-      int parameter_index = findMethodParameterIndex(methods_[method_index],(const char *)(*request_json_array_ptr_)[2]);
-      if ((parameter_index >= 0) && (parameter_index < (int)parameters_.size()))
+      Method & method = methods_[method_index];
+
+      int parameter_index = processParameterString(method,(*request_json_array_ptr_)[2]);
+      if (parameter_index >= 0)
       {
         param_error = false;
+        Parameter * parameter_ptr;
+        parameter_ptr = method.parameter_ptrs_[parameter_index];
         response_.writeResultKey();
-        parameterHelp(*methods_[method_index].parameter_ptrs_[parameter_index]);
+        parameterHelp(*parameter_ptr);
       }
+    }
+    else
+    {
+      int property_index = findPropertyIndex(procedure_string);
+      if (property_index >= 0)
+      {
+        Property & property = properties_[property_index];
+        property.updateMethodsAndParameters();
+        int property_method_index = property.findMethodIndex((const char *)(*request_json_array_ptr_)[2]);
+        if (property_method_index >= 0)
+        {
+          param_error = false;
+          Method & method = property.methods_[property_method_index];
+
+          response_.writeResultKey();
+          methodHelp(method,verbose);
+        }
+        else
+        {
+          response_.returnPropertyMethodNotFoundError();
+        }
+      }
+      else
+      {
+        response_.returnProcedureNotFoundError();
+      }
+    }
+  }
+  // ? property method parameter
+  // ?? property method parameter
+  else if (parameter_count == 3)
+  {
+    const char * procedure_string = (*request_json_array_ptr_)[1];
+    int property_index = findPropertyIndex(procedure_string);
+    if (property_index >= 0)
+    {
+      Property & property = properties_[property_index];
+      property.updateMethodsAndParameters();
+      int property_method_index = property.findMethodIndex((const char *)(*request_json_array_ptr_)[2]);
+      if (property_method_index >= 0)
+      {
+        Method & method = property.methods_[property_method_index];
+        int parameter_index = processParameterString(method,(*request_json_array_ptr_)[3]);
+        if (parameter_index >= 0)
+        {
+          param_error = false;
+          Parameter * parameter_ptr;
+          parameter_ptr = method.parameter_ptrs_[parameter_index];
+          response_.writeResultKey();
+          parameterHelp(*parameter_ptr);
+        }
+      }
+      else
+      {
+        response_.returnPropertyMethodNotFoundError();
+      }
+    }
+    else
+    {
+      response_.returnProcedureNotFoundError();
     }
   }
   // ? unknown
   // ?? unknown
   // ? method unknown
   // ?? method unknown
+  // ? property unknown
+  // ?? property unknown
+  // ? property method unknown
+  // ?? property method unknown
   if (param_error)
   {
     response_.returnParameterInvalidError(constants::empty_constant_string);
@@ -1953,382 +2054,21 @@ void Server::getPropertyDefaultValuesHandler()
   response_.endObject();
 }
 
+void Server::getPropertyValuesHandler()
+{
+  response_.writeResultKey();
+  response_.beginObject();
+  for (size_t i=0; i<properties_.size(); ++i)
+  {
+    Property & property = properties_[i];
+    writePropertyToResponse(property,true,false);
+  }
+  response_.endObject();
+}
+
 void Server::setPropertiesToDefaultsHandler()
 {
   setPropertiesToDefaults();
-}
-
-void Server::setPropertyToDefaultHandler()
-{
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   property.setValueToDefault();
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
-}
-
-void Server::getPropertyValuesHandler()
-{
-  // response_.writeResultKey();
-  // response_.beginObject();
-  // for (size_t i=0; i<properties_.size(); ++i)
-  // {
-  //   Property & property = properties_[i];
-  //   writePropertyToResponse(property,true,false);
-  // }
-  // response_.endObject();
-}
-
-void Server::getPropertyValueHandler()
-{
-  // response_.writeResultKey();
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   writePropertyToResponse(property,false,false);
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
-}
-
-void Server::getPropertyElementValueHandler()
-{
-  // response_.writeResultKey();
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
-  // if (property_element_index < 0)
-  // {
-  //   response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //   return;
-  // }
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   writePropertyToResponse(property,false,false,property_element_index);
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
-}
-
-void Server::setPropertyValueHandler()
-{
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-  //   bool parameter_ok = checkParameter(property.parameter(),json_value);
-  //   if (!parameter_ok)
-  //   {
-  //     return;
-  //   }
-  //   JsonStream::JsonTypes property_type = property.getType();
-  //   switch (property_type)
-  //   {
-  //     case JsonStream::LONG_TYPE:
-  //     {
-  //       long property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::DOUBLE_TYPE:
-  //     {
-  //       double property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::BOOL_TYPE:
-  //     {
-  //       bool property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::NULL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::STRING_TYPE:
-  //     {
-  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
-  //       size_t array_length = strlen(property_value) + 1;
-  //       property.setValue(property_value,array_length);
-  //       break;
-  //     }
-  //     case JsonStream::OBJECT_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::ARRAY_TYPE:
-  //     {
-  //       ArduinoJson::JsonArray & property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //   }
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
-}
-
-void Server::setPropertyElementValueHandler()
-{
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
-  // if (property_element_index < 0)
-  // {
-  //   response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //   return;
-  // }
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-  //   bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
-  //   if (!parameter_ok)
-  //   {
-  //     return;
-  //   }
-  //   JsonStream::JsonTypes property_type = property.getType();
-  //   switch (property_type)
-  //   {
-  //     case JsonStream::LONG_TYPE:
-  //     {
-  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-  //       break;
-  //     }
-  //     case JsonStream::DOUBLE_TYPE:
-  //     {
-  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-  //       break;
-  //     }
-  //     case JsonStream::BOOL_TYPE:
-  //     {
-  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-  //       break;
-  //     }
-  //     case JsonStream::NULL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::STRING_TYPE:
-  //     {
-  //       if (!property.stringIsSavedAsCharArray())
-  //       {
-  //         response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
-  //         break;
-  //       }
-  //       size_t array_length = property.getArrayLength();
-  //       if ((size_t)property_element_index >= (array_length - 1))
-  //       {
-  //         response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //         return;
-  //       }
-  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
-  //       size_t string_length = strlen(property_value);
-  //       if (string_length >= 1)
-  //       {
-  //         char v = property_value[0];
-  //         property.setElementValue(property_element_index,v);
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::OBJECT_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::ARRAY_TYPE:
-  //     {
-  //       size_t array_length = property.getArrayLength();
-  //       if ((size_t)property_element_index >= array_length)
-  //       {
-  //         response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //         return;
-  //       }
-  //       JsonStream::JsonTypes array_element_type = property.getArrayElementType();
-  //       switch (array_element_type)
-  //       {
-  //         case JsonStream::LONG_TYPE:
-  //         {
-  //           long property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setElementValue(property_element_index,property_value);
-  //           break;
-  //         }
-  //         case JsonStream::DOUBLE_TYPE:
-  //         {
-  //           double property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setElementValue(property_element_index,property_value);
-  //           break;
-  //         }
-  //         case JsonStream::BOOL_TYPE:
-  //         {
-  //           bool property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setElementValue(property_element_index,property_value);
-  //           break;
-  //         }
-  //         case JsonStream::NULL_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::STRING_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::OBJECT_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ARRAY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ANY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //   }
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
-}
-
-void Server::setAllPropertyElementValuesHandler()
-{
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-  //   bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
-  //   if (!parameter_ok)
-  //   {
-  //     return;
-  //   }
-  //   JsonStream::JsonTypes property_type = property.getType();
-  //   switch (property_type)
-  //   {
-  //     case JsonStream::LONG_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::DOUBLE_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::BOOL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::NULL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::STRING_TYPE:
-  //     {
-  //       if (!property.stringIsSavedAsCharArray())
-  //       {
-  //         response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
-  //         break;
-  //       }
-  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
-  //       size_t string_length = strlen(property_value);
-  //       if (string_length >= 1)
-  //       {
-  //         char v = property_value[0];
-  //         property.setAllElementValues(v);
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::OBJECT_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::ARRAY_TYPE:
-  //     {
-  //       JsonStream::JsonTypes array_element_type = property.getArrayElementType();
-  //       switch (array_element_type)
-  //       {
-  //         case JsonStream::LONG_TYPE:
-  //         {
-  //           long property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setAllElementValues(property_value);
-  //           break;
-  //         }
-  //         case JsonStream::DOUBLE_TYPE:
-  //         {
-  //           double property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setAllElementValues(property_value);
-  //           break;
-  //         }
-  //         case JsonStream::BOOL_TYPE:
-  //         {
-  //           bool property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setAllElementValues(property_value);
-  //           break;
-  //         }
-  //         case JsonStream::NULL_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::STRING_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::OBJECT_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ARRAY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ANY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //   }
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
 }
 
 }

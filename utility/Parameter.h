@@ -37,10 +37,12 @@ public:
   void setTypeObject();
   void setTypeArray();
   void setTypeAny();
+  void setType(JsonStream::JsonTypes type);
   template <typename T>
   void setRange(const T min, const T max);
   void setRange(const double min, const double max);
   void setRange(const float min, const float max);
+  void setRange(const constants::NumberType min, const constants::NumberType max);
   void removeRange();
   void setArrayLengthRange(const size_t array_length_min,
                            const size_t array_length_max);

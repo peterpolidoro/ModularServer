@@ -66,6 +66,8 @@ CONSTANT_STRING(array_parameter_error_error_data,"Array parameter element value 
 CONSTANT_STRING(array_parameter_length_error_error_data,"Array parameter length not valid. ");
 CONSTANT_STRING(value_not_in_subset_error_data,"Value not in subset: ");
 CONSTANT_STRING(value_not_in_range_error_data,"Value not in range: ");
+CONSTANT_STRING(property_method_not_found_error_data,"Property method not found");
+CONSTANT_STRING(incorrect_property_parameter_number_error_data,"Incorrect number of property parameters. ")
 
 const int parse_error_code = -32700;
 const int invalid_request_error_code = -32600;

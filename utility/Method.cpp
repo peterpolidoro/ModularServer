@@ -71,6 +71,11 @@ void Method::setReturnTypeAny()
   return_type_ = JsonStream::ANY_TYPE;
 }
 
+void Method::setReturnType(JsonStream::JsonTypes type)
+{
+  return_type_ = type;
+}
+
 JsonStream::JsonTypes Method::getReturnType()
 {
   return return_type_;

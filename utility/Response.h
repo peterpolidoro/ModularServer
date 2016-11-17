@@ -83,6 +83,8 @@ private:
                                       const JsonStream::JsonTypes & parameter_type,
                                       const char * const min_str,
                                       const char * const max_str);
+  void returnPropertyMethodNotFoundError();
+  void returnPropertyParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
   friend class Server;
 };
 }

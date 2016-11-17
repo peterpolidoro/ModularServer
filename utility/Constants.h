@@ -117,6 +117,8 @@ extern ConstantString array_parameter_error_error_data;
 extern ConstantString array_parameter_length_error_error_data;
 extern ConstantString value_not_in_subset_error_data;
 extern ConstantString value_not_in_range_error_data;
+extern ConstantString property_method_not_found_error_data;
+extern ConstantString incorrect_property_parameter_number_error_data;
 
 extern const int parse_error_code;
 extern const int invalid_request_error_code;
