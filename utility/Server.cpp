@@ -382,10 +382,13 @@ void Server::processRequestArray()
                 (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
       {
         int parameter_index = processParameterString(method,(*request_json_array_ptr_)[1]);
-        Parameter * parameter_ptr;
-        parameter_ptr = method.parameter_ptrs_[parameter_index];
-        response_.writeResultKey();
-        parameterHelp(*parameter_ptr);
+        if (parameter_index >= 0)
+        {
+          Parameter * parameter_ptr;
+          parameter_ptr = method.parameter_ptrs_[parameter_index];
+          response_.writeResultKey();
+          parameterHelp(*parameter_ptr);
+        }
       }
       // execute private method without checking parameters
       else if (request_procedure_index_ <= private_method_index_)
@@ -485,10 +488,13 @@ void Server::processRequestArray()
                   (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
         {
           int parameter_index = processParameterString(method,(*request_json_array_ptr_)[2]);
-          Parameter * parameter_ptr;
-          parameter_ptr = method.parameter_ptrs_[parameter_index];
-          response_.writeResultKey();
-          parameterHelp(*parameter_ptr);
+          if (parameter_index >= 0)
+          {
+            Parameter * parameter_ptr;
+            parameter_ptr = method.parameter_ptrs_[parameter_index];
+            response_.writeResultKey();
+            parameterHelp(*parameter_ptr);
+          }
         }
         else if (property_parameter_count != method.getParameterCount())
         {
@@ -932,26 +938,8 @@ void Server::propertyHelp(Property & property, bool verbose)
   response_.writeKey(constants::default_value_constant_string);
   writePropertyToResponse(property,false,true);
 
-  response_.writeKey(constants::parameters_constant_string);
-  response_.beginArray();
-
-  for (size_t i=0; i<Property::parameters_.size(); ++i)
-  {
-    if (verbose)
-    {
-      parameterHelp(Property::parameters_[i]);
-    }
-    else
-    {
-      response_.write(Property::parameters_[i].getName());
-    }
-  }
-
-  response_.endArray();
-
   response_.writeKey(constants::methods_constant_string);
   response_.beginArray();
-
   for (size_t i=0; i<Property::methods_.size(); ++i)
   {
     if (verbose)
@@ -963,7 +951,21 @@ void Server::propertyHelp(Property & property, bool verbose)
       response_.write(Property::methods_[i].getName());
     }
   }
+  response_.endArray();
 
+  response_.writeKey(constants::parameters_constant_string);
+  response_.beginArray();
+  for (size_t i=0; i<Property::parameters_.size(); ++i)
+  {
+    if (verbose)
+    {
+      parameterHelp(Property::parameters_[i]);
+    }
+    else
+    {
+      response_.write(Property::parameters_[i].getName());
+    }
+  }
   response_.endArray();
 
   response_.endObject();

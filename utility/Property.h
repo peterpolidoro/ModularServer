@@ -30,14 +30,13 @@ namespace modular_server
 
 namespace property
 {
-enum{METHOD_PARAMETER_TYPE_COUNT=2};
+enum{METHOD_PARAMETER_TYPE_COUNT=1};
 enum{PARAMETER_COUNT_MAX=2};
 enum{METHOD_COUNT_MAX=4};
 enum{ARRAY_PARAMETER_COUNT_MAX=2};
 enum{ARRAY_METHOD_COUNT_MAX=5};
 
 // Parameters
-extern ConstantString method_parameter_name;
 extern ConstantString value_parameter_name;
 
 // Methods

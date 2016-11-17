@@ -785,9 +785,6 @@ void Property::updateMethodsAndParameters()
   parameters_.clear();
   parameters_.addArray(property_parameters_);
 
-  Parameter & method_parameter = createParameter(property::method_parameter_name);
-  method_parameter.setTypeString();
-
   Parameter & value_parameter = createParameter(property::value_parameter_name);
   value_parameter.setType(type);
 
