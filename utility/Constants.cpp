@@ -22,7 +22,7 @@ const FirmwareInfo firmware_info =
   };
 
 // Properties
-CONSTANT_STRING(serial_number_property_name,"serialNumber");
+CONSTANT_STRING(serial_number_property_name,"serial_number");
 const long serial_number_min = 0;
 const long serial_number_max = 65535;
 const long serial_number_default = serial_number_min;

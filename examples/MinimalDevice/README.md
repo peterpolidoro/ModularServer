@@ -45,26 +45,18 @@ Example Response:
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "setPropertyToDefault",
         "getPropertyValues",
-        "getPropertyValue",
-        "getPropertyElementValue",
-        "setPropertyValue",
-        "setPropertyElementValue",
-        "setAllPropertyElementValues",
         "getMemoryFree"
       ],
       "parameters":[
-        "firmware",
-        "property_name",
-        "property_value",
-        "property_element_index"
+        "firmware"
       ],
       "properties":[
         "serial_number"
       ],
-      "callbacks":[]
+      "callbacks":[
+        "setPropertiesToDefaults"
+      ]
     }
   }
 }
@@ -85,7 +77,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":4944
+  "result":4800
 }
 ```
 
@@ -119,7 +111,7 @@ Example Response:
       "firmware":[
         {
           "name":"ModularServer",
-          "version":"1.0.0"
+          "version":"2.0.0"
         },
         {
           "name":"MinimalDevice",
@@ -165,69 +157,10 @@ Example Response:
           "result_type":"object"
         },
         {
-          "name":"setPropertiesToDefaults",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":null
-        },
-        {
-          "name":"setPropertyToDefault",
-          "firmware":"ModularServer",
-          "parameters":[
-            "property_name"
-          ],
-          "result_type":null
-        },
-        {
           "name":"getPropertyValues",
           "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
-        },
-        {
-          "name":"getPropertyValue",
-          "firmware":"ModularServer",
-          "parameters":[
-            "property_name"
-          ],
-          "result_type":"value"
-        },
-        {
-          "name":"getPropertyElementValue",
-          "firmware":"ModularServer",
-          "parameters":[
-            "property_name",
-            "property_element_index"
-          ],
-          "result_type":"value"
-        },
-        {
-          "name":"setPropertyValue",
-          "firmware":"ModularServer",
-          "parameters":[
-            "property_name",
-            "property_value"
-          ],
-          "result_type":null
-        },
-        {
-          "name":"setPropertyElementValue",
-          "firmware":"ModularServer",
-          "parameters":[
-            "property_name",
-            "property_element_index",
-            "property_value"
-          ],
-          "result_type":null
-        },
-        {
-          "name":"setAllPropertyElementValues",
-          "firmware":"ModularServer",
-          "parameters":[
-            "property_name",
-            "property_value"
-          ],
-          "result_type":null
         },
         {
           "name":"getMemoryFree",
@@ -249,21 +182,6 @@ Example Response:
           ],
           "array_length_min":1,
           "array_length_max":8
-        },
-        {
-          "name":"property_name",
-          "firmware":"ModularServer",
-          "type":"string"
-        },
-        {
-          "name":"property_value",
-          "firmware":"ModularServer",
-          "type":"value"
-        },
-        {
-          "name":"property_element_index",
-          "firmware":"ModularServer",
-          "type":"long"
         }
       ],
       "properties":[
@@ -274,10 +192,27 @@ Example Response:
           "min":0,
           "max":65535,
           "value":0,
-          "default_value":0
+          "default_value":0,
+          "methods":[
+            "getValue",
+            "setValue",
+            "getDefaultValue",
+            "setValueToDefault"
+          ],
+          "parameters":[
+            "value"
+          ]
         }
       ],
-    "callbacks":[]
+      "callbacks":[
+        {
+          "name":"setPropertiesToDefaults",
+          "firmware":"ModularServer",
+          "properties":[],
+          "parameters":[],
+          "result_type":null
+        }
+      ]
     }
   }
 }
@@ -286,14 +221,14 @@ Example Response:
 Example Method with Parameters:
 
 ```shell
-getPropertyValue
+getApi
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyValue",
+  "id":"getApi",
   "error":{
     "message":"Invalid params",
     "data":"Incorrect number of parameters. 0 given. 1 needed.",
@@ -313,21 +248,21 @@ a question mark.
 Example Method Help:
 
 ```shell
-getPropertyValue ?
+getApi ?
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyValue",
+  "id":"getApi",
   "result":{
-    "name":"getPropertyValue",
+    "name":"getApi",
     "firmware":"ModularServer",
     "parameters":[
-      "property_name"
+      "firmware"
     ],
-    "result_type":"value"
+    "result_type":"object"
   }
 }
 ```
@@ -337,7 +272,7 @@ Or you can enter a question mark followed by the method.
 Example Method Help:
 
 ```shell
-? getPropertyValue
+? getApi
 ```
 
 Example Response:
@@ -346,12 +281,12 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "name":"getPropertyValue",
+    "name":"getApi",
     "firmware":"ModularServer",
     "parameters":[
-      "property_name"
+      "firmware"
     ],
-    "result_type":"value"
+    "result_type":"object"
   }
 }
 ```
@@ -360,25 +295,33 @@ To get more verbose information about all of the parameters a method
 takes, enter the method followed by two questions marks.
 
 ```shell
-getPropertyValue ??
+getApi ??
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyValue",
+  "id":"getApi",
   "result":{
-    "name":"getPropertyValue",
+    "name":"getApi",
     "firmware":"ModularServer",
     "parameters":[
       {
-        "name":"property_name",
+        "name":"firmware",
         "firmware":"ModularServer",
-        "type":"string"
+        "type":"array",
+        "array_element_type":"string",
+        "array_element_subset":[
+          "all",
+          "ModularServer",
+          "MinimalDevice"
+        ],
+        "array_length_min":1,
+        "array_length_max":8
       }
     ],
-    "result_type":"value"
+    "result_type":"object"
   }
 }
 ```
@@ -386,15 +329,127 @@ Example Response:
 Example Method:
 
 ```shell
-getPropertyValue serial_number
+getApi ["MinimalDevice"]
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyValue",
-  "result":0
+  "id":"getApi",
+  "result":{
+    "firmware":["MinimalDevice"],
+    "methods":[],
+    "parameters":[],
+    "properties":[],
+    "callbacks":[]
+  }
+}
+```
+
+Properties are special methods that get and set field values that are
+stored on the device, even after the device is powered off.
+
+Properties have their own set of methods with their own set of
+property method parameters.
+
+Example Property:
+```shell
+? serial_number
+```
+
+Example Response:
+
+```json
+{
+  "id":"?",
+  "result":{
+    "name":"serial_number",
+    "firmware":"ModularServer",
+    "type":"long",
+    "min":0,
+    "max":65535,
+    "value":0,
+    "default_value":0,
+    "methods":[
+      "getValue",
+      "setValue",
+      "getDefaultValue",
+      "setValueToDefault"
+    ],
+    "parameters":[
+      "value"
+    ]
+  }
+}
+```
+
+To get information about a property method:
+
+```shell
+? serial_number setValue
+```
+
+```json
+{
+  "id":"?",
+  "result":{
+    "name":"setValue",
+    "firmware":"ModularServer",
+    "parameters":[
+      "value"
+    ],
+    "result_type":null
+  }
+}
+```
+
+To get information about a property method parameter:
+
+```shell
+? serial_number setValue value
+```
+
+```json
+{
+  "id":"?",
+  "result":{
+    "name":"value",
+    "firmware":"ModularServer",
+    "type":"long",
+    "min":0,
+    "max":65535
+  }
+}
+```
+
+Example property method call:
+
+```shell
+serial_number setValue -1
+```
+
+```json
+{
+  "id":"serial_number",
+  "error":{
+    "message":"Invalid params",
+    "data":"Parameter value not valid. Value not in range: 0 <= value <= 65535",
+    "code":-32602
+  }
+}
+```
+
+Example property method call:
+
+```shell
+serial_number setValue 32
+```
+
+```json
+{
+  "id":"serial_number",
+  "result":null
 }
 ```
 
@@ -405,35 +460,48 @@ devices connected to a single host machine at one time.
 Example Method:
 
 ```shell
-setPropertyValue serial_number 32
+getPropertyValues
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"setPropertyValue",
-  "result":null
+  "id":"getPropertyValues",
+  "result":{
+    "serial_number":32
+  }
 }
 ```
+
+To reset the serial number to the default value, use the
+setValueToDefault property method.
+
+Callbacks are methods that take no parameters and return null. They
+can be used like methods or called from interrupts.
+
+Example Callback:
 
 ```shell
-getPropertyValue serial_number
+? setPropertiesToDefaults
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyValue",
-  "result":32
+  "id":"?",
+  "result":{
+    "name":"setPropertiesToDefaults",
+    "firmware":"ModularServer",
+    "properties":[],
+    "parameters":[],
+    "result_type":null
+  }
 }
 ```
 
-To reset the serial number to the default value, use the setPropertiesToDefaults
-method.
-
-Example Method:
+Example Callback:
 
 ```shell
 setPropertiesToDefaults
@@ -448,16 +516,20 @@ Example Response:
 }
 ```
 
+Example Method:
+
 ```shell
-getPropertyValue serial_number
+getPropertyValues
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyValue",
-  "result":0
+  "id":"getPropertyValues",
+  "result":{
+    "serial_number":0
+  }
 }
 ```
 
@@ -510,7 +582,7 @@ Example Response:
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"1.0.0"
+        "version":"2.0.0"
       },
       {
         "name":"MinimalDevice",
@@ -545,26 +617,18 @@ Example Response:
       "getApi",
       "getApiVerbose",
       "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "setPropertyToDefault",
       "getPropertyValues",
-      "getPropertyValue",
-      "getPropertyElementValue",
-      "setPropertyValue",
-      "setPropertyElementValue",
-      "setAllPropertyElementValues",
       "getMemoryFree"
     ],
     "parameters":[
-      "firmware",
-      "property_name",
-      "property_value",
-      "property_element_index"
+      "firmware"
     ],
     "properties":[
       "serial_number"
     ],
-    "callbacks":[]
+    "callbacks":[
+      "setPropertiesToDefaults"
+    ]
   }
 }
 ```
@@ -599,45 +663,49 @@ from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'minimal_device', 'serial_number': 0}
-dev.get_methods()
+dev.get_procedures()
 ['get_memory_free',
- 'set_property_element_value',
- 'get_property_value',
- 'get_property_element_value',
  'get_api',
  'get_api_verbose',
- 'set_all_property_element_values',
- 'set_properties_to_defaults',
- 'get_device_id',
- 'get_property_default_values',
- 'set_property_value',
- 'set_property_to_default',
  'get_property_values',
+ 'get_device_id',
+ 'serial_number',
+ 'get_property_default_values',
+ 'set_properties_to_defaults',
  'get_device_info']
 dev.get_memory_free()
-4944
-dev.get_property_value()
+4800
+dev.get_api()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
-dev.get_property_value('?')
+dev.get_api('?')
 {'firmware': 'ModularServer',
- 'name': 'getPropertyValue',
- 'parameters': ['property_name'],
- 'result_type': 'value'}
-dev.get_property_value('serial_number')
-0
-dev.set_property_value('serial_number',-1)
-IOError: (from server) message: Invalid params, data: Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
-dev.set_property_value('serial_number',12)
-result = dev.call_server_method('?')
-result['device_id']['serial_number']
-12
+ 'name': 'getApi',
+ 'parameters': ['firmware'],
+ 'result_type': 'object'}
+dev.get_api(['MinimalDevice'])
+{'callbacks': [],
+ 'firmware': ['MinimalDevice'],
+ 'methods': [],
+ 'parameters': [],
+ 'properties': []}
+dev.serial_number('setValue',-1)
+IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <= value <= 65535, code: -32602
+dev.serial_number('setValue',32)
+dev.get_property_values()
+{'serial_number': 32}
+result = dev.call_server_procedure('?')
+32
 dev.convert_to_json(result['device_id'])
 '{"serial_number":12,"name":"minimal_device","form_factor":"5x3"}'
 dev.send_json_request('["set_properties_to_defaults"]')
-dev.get_property_value('serial_number')
+dev.serial_number('getValue')
 0
 dev.get_api(["MinimalDevice"])
-{'properties': [], 'firmware': ['MinimalDevice'], 'callbacks': [], 'methods': [], 'parameters': []}
+{'callbacks': [],
+ 'firmware': ['MinimalDevice'],
+ 'methods': [],
+ 'parameters': [],
+ 'properties': []}
 ```
 
 For more details on the Python interface:
@@ -684,7 +752,7 @@ dev.getMethods()                 % get device methods
   getMemoryFree
 dev.getMemoryFree()
 ans =
-  4944
+  4800
 dev.getPropertyValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
 method_info = dev.getPropertyValue('?')
