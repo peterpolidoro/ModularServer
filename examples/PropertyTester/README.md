@@ -315,7 +315,7 @@ Example Response:
 
 ```json
 {
-  "id":"getPropertyElementValue",
+  "id":"double_array",
   "result":2.200000
 }
 ```
@@ -323,15 +323,60 @@ Example Response:
 Example Function:
 
 ```shell
-double_array getElementValue 1
+double_array setAllElementValues 8.7654
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyElementValue",
-  "result":2.200000
+  "id":"double_array",
+  "result":null
+}
+```
+
+Example Function:
+
+```shell
+double_array setElementValue 1 5.678
+```
+
+Example Response:
+
+```json
+{
+  "id":"double_array",
+  "result":null
+}
+```
+
+Example Function:
+
+```shell
+double_array getDefaultElementValue 0
+```
+
+Example Response:
+
+```json
+```
+
+Example Function:
+
+```shell
+double_array getValue
+```
+
+Example Response:
+
+```json
+{
+  "id":"double_array",
+  "result":[
+    8.765400,
+    5.678000,
+    8.765400
+  ]
 }
 ```
 

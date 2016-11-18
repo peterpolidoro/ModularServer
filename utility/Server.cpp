@@ -528,7 +528,6 @@ void Server::processRequestArray()
           // do not check property method at begin + 1
           iterator++;
           long test = *iterator;
-          Serial << "value: " << test;
           bool parameters_ok = checkParameters(function,iterator);
           if (parameters_ok)
           {
@@ -630,7 +629,7 @@ int Server::processParameterString(Function & function, const char * parameter_s
 bool Server::checkParameters(Function & function, ArduinoJson::JsonArray::iterator iterator)
 {
   int parameter_index = 0;
-  for (ArduinoJson::JsonArray::iterator it=interator;
+  for (ArduinoJson::JsonArray::iterator it=iterator;
        it!=request_json_array_ptr_->end();
        ++it)
   {

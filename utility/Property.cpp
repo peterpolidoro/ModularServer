@@ -799,6 +799,7 @@ void Property::updateFunctionsAndParameters()
   Function & set_value_function = createFunction(property::set_value_function_name);
   set_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueHandler));
   set_value_function.addParameter(value_parameter);
+  set_value_function.setReturnType(type);
 
   Function & get_default_value_function = createFunction(property::get_default_value_function_name);
   get_default_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultValueHandler));
@@ -806,6 +807,7 @@ void Property::updateFunctionsAndParameters()
 
   Function & set_value_to_default_function = createFunction(property::set_value_to_default_function_name);
   set_value_to_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueToDefaultHandler));
+  set_value_to_default_function.setReturnType(type);
 
   if ((type == JsonStream::ARRAY_TYPE) || ((type == JsonStream::STRING_TYPE) && stringIsSavedAsCharArray()))
   {
@@ -816,7 +818,9 @@ void Property::updateFunctionsAndParameters()
 
     Parameter & element_index_parameter = createParameter(property::element_index_parameter_name);
     element_index_parameter.setTypeLong();
-    element_index_parameter.setRange(parameter().getArrayLengthMin(),parameter().getArrayLengthMax());
+    size_t element_index_min = 0;
+    size_t element_index_max = parameter().getArrayLengthMax() - 1;
+    element_index_parameter.setRange(element_index_min,element_index_max);
 
     Parameter & element_value_parameter = copyParameter(parameter().getElementParameter(),property::element_value_parameter_name);
 
@@ -832,6 +836,7 @@ void Property::updateFunctionsAndParameters()
     set_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueHandler));
     set_element_value_function.addParameter(element_index_parameter);
     set_element_value_function.addParameter(element_value_parameter);
+    set_element_value_function.setReturnType(type);
 
     Function & get_default_element_value_function = createFunction(property::get_default_element_value_function_name);
     get_default_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultElementValueHandler));
@@ -841,10 +846,12 @@ void Property::updateFunctionsAndParameters()
     Function & set_element_value_to_default_function = createFunction(property::set_element_value_to_default_function_name);
     set_element_value_to_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueToDefaultHandler));
     set_element_value_to_default_function.addParameter(element_index_parameter);
+    set_element_value_to_default_function.setReturnType(type);
 
     Function & set_all_element_values_function = createFunction(property::set_all_element_values_function_name);
     set_all_element_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setAllElementValuesHandler));
     set_all_element_values_function.addParameter(element_value_parameter);
+    set_all_element_values_function.setReturnType(type);
   }
 }
 
@@ -903,6 +910,8 @@ void Property::setValueHandler()
       break;
     }
   }
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,false,-1);
 }
 
 void Property::getDefaultValueHandler()
@@ -914,6 +923,8 @@ void Property::getDefaultValueHandler()
 void Property::setValueToDefaultHandler()
 {
   setValueToDefault();
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,false,-1);
 }
 
 void Property::getElementValueHandler()
@@ -1032,6 +1043,8 @@ void Property::setElementValueHandler()
       break;
     }
   }
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,false,-1);
 }
 
 void Property::getDefaultElementValueHandler()
@@ -1045,6 +1058,8 @@ void Property::setElementValueToDefaultHandler()
 {
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   setElementValueToDefault(element_index);
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,false,-1);
 }
 
 void Property::setAllElementValuesHandler()
@@ -1139,6 +1154,8 @@ void Property::setAllElementValuesHandler()
       break;
     }
   }
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,false,-1);
 }
 
 }

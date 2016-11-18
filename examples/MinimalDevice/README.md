@@ -399,7 +399,7 @@ To get information about a property function:
     "parameters":[
       "value"
     ],
-    "result_type":null
+    "result_type":"long"
   }
 }
 ```
@@ -449,7 +449,7 @@ serial_number setValue 32
 ```json
 {
   "id":"serial_number",
-  "result":null
+  "result":32
 }
 ```
 
@@ -691,6 +691,7 @@ dev.get_api(['MinimalDevice'])
 dev.serial_number('setValue',-1)
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <= value <= 65535, code: -32602
 dev.serial_number('setValue',32)
+32
 dev.get_property_values()
 {'serial_number': 32}
 result = dev.call_server_method('?')
@@ -773,6 +774,8 @@ dev.serial_number('setValue',-1)
 (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <=
 value <= 65535, code: -32602
 dev.serial_number('setValue',32);
+ans =
+  32
 dev.getPropertyValues()
 ans =
   serial_number: 32
