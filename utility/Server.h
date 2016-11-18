@@ -137,7 +137,7 @@ private:
   int findCallbackIndex(T const & callback_name);
   int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
   int processParameterString(Function & function, const char * parameter_string);
-  bool checkParameters(Function & function);
+  bool checkParameters(Function & function, ArduinoJson::JsonArray::iterator iterator);
   bool checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   bool checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   long getSerialNumber();

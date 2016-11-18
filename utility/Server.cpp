@@ -48,7 +48,6 @@ void Server::setup()
   Property::response_ptr_ = &response_;
   Property::write_property_to_response_functor_ = makeFunctor((Functor4<Property &, bool, bool, int> *)0,*this,&Server::writePropertyToResponse);
   Property::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
-  Property::check_parameter_functor_ = makeFunctor((Functor2wRet<Parameter &, ArduinoJson::JsonVariant &, bool> *)0,*this,&Server::checkParameter);
 
   Property & serial_number_property = createProperty(constants::serial_number_property_name,constants::serial_number_default);
   serial_number_property.setRange(constants::serial_number_min,constants::serial_number_max);
@@ -409,7 +408,10 @@ void Server::processRequestArray()
       // check parameters and call function functor
       else
       {
-        bool parameters_ok = checkParameters(function);
+        ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
+        // do not check function at begin
+        iterator++;
+        bool parameters_ok = checkParameters(function,iterator);
         if (parameters_ok)
         {
           function.functor();
@@ -520,7 +522,14 @@ void Server::processRequestArray()
         // check property parameters and call property function functor
         else
         {
-          bool parameters_ok = checkParameters(function);
+          ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
+          // do not check property at begin
+          iterator++;
+          // do not check property method at begin + 1
+          iterator++;
+          long test = *iterator;
+          Serial << "value: " << test;
+          bool parameters_ok = checkParameters(function,iterator);
           if (parameters_ok)
           {
             function.functor();
@@ -618,26 +627,22 @@ int Server::processParameterString(Function & function, const char * parameter_s
   return parameter_index;
 }
 
-bool Server::checkParameters(Function & function)
+bool Server::checkParameters(Function & function, ArduinoJson::JsonArray::iterator iterator)
 {
   int parameter_index = 0;
-  for (ArduinoJson::JsonArray::iterator it=request_json_array_ptr_->begin();
+  for (ArduinoJson::JsonArray::iterator it=interator;
        it!=request_json_array_ptr_->end();
        ++it)
   {
-    // do not check function
-    if (it!=request_json_array_ptr_->begin())
+    Parameter * parameter_ptr = NULL;
+    parameter_ptr = function.parameter_ptrs_[parameter_index];
+    if (checkParameter(*parameter_ptr,*it))
     {
-      Parameter * parameter_ptr = NULL;
-      parameter_ptr = function.parameter_ptrs_[parameter_index];
-      if (checkParameter(*parameter_ptr,*it))
-      {
-        parameter_index++;
-      }
-      else
-      {
-        return false;
-      }
+      parameter_index++;
+    }
+    else
+    {
+      return false;
     }
   }
   return true;

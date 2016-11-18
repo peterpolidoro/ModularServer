@@ -45,14 +45,7 @@ Example Response:
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "setPropertyToDefault",
         "getPropertyValues",
-        "getPropertyValue",
-        "getPropertyElementValue",
-        "setPropertyValue",
-        "setPropertyElementValue",
-        "setAllPropertyElementValues",
         "getMemoryFree",
         "setLedOn",
         "setLedOff",
@@ -61,9 +54,6 @@ Example Response:
       ],
       "parameters":[
         "firmware",
-        "property_name",
-        "property_value",
-        "property_element_index",
         "duration_on",
         "duration_off",
         "count"
@@ -71,7 +61,9 @@ Example Response:
       "properties":[
         "serial_number"
       ],
-      "callbacks":[]
+      "callbacks":[
+        "setPropertiesToDefaults"
+      ]
     }
   }
 }
@@ -349,7 +341,7 @@ Example Response:
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"1.0.0"
+        "version":"2.0.0"
       },
       {
         "name":"BoardLedController",
@@ -384,14 +376,7 @@ Example Response:
       "getApi",
       "getApiVerbose",
       "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "setPropertyToDefault",
       "getPropertyValues",
-      "getPropertyValue",
-      "getPropertyElementValue",
-      "setPropertyValue",
-      "setPropertyElementValue",
-      "setAllPropertyElementValues",
       "getMemoryFree",
       "setLedOn",
       "setLedOff",
@@ -400,9 +385,6 @@ Example Response:
     ],
     "parameters":[
       "firmware",
-      "property_name",
-      "property_value",
-      "property_element_index",
       "duration_on",
       "duration_off",
       "count"
@@ -410,7 +392,9 @@ Example Response:
     "properties":[
       "serial_number"
     ],
-    "callbacks":[]
+    "callbacks":[
+      "setPropertiesToDefaults"
+    ]
   }
 }
 ```
@@ -454,24 +438,19 @@ from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'board_led_controller', 'serial_number': 0}
-dev.get_functions()
+dev.get_methods()
 ['get_memory_free',
- 'set_property_element_value',
- 'get_property_value',
- 'get_property_element_value',
  'set_led_on',
  'get_led_pin',
  'get_api',
  'get_api_verbose',
- 'set_all_property_element_values',
- 'set_properties_to_defaults',
+ 'get_property_values',
  'get_device_id',
- 'get_property_default_values',
  'blink_led',
  'set_led_off',
- 'set_property_value',
- 'set_property_to_default',
- 'get_property_values',
+ 'serial_number',
+ 'get_property_default_values',
+ 'set_properties_to_defaults',
  'get_device_info']
 dev.set_led_on()
 dev.set_led_off()
@@ -518,18 +497,18 @@ dev.convert_to_json(result)
 '{"firmware":"BoardLedController","name":"getLedPin","parameters":[],"result_type":"long"}'
 dev.get_led_pin()
 13
-dev.call_server_function("get_led_pin")
+dev.call_server_method("get_led_pin")
 13
 dev.send_json_request('["get_led_pin"]')
 13
-dev.call_server_function("blink_led",0.5,0.2,20)
+dev.call_server_method("blink_led",0.5,0.2,20)
 dev.send_json_request('["blink_led",0.5,0.2,20]')
 dev.get_api(["BoardLedController"])
-{'properties': [],
+{'callbacks': [],
  'firmware': ['BoardLedController'],
- 'callbacks': [],
  'functions': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
- 'parameters': ['duration_on', 'duration_off', 'count']}
+ 'parameters': ['duration_on', 'duration_off', 'count'],
+ 'properties': []}
 ```
 
 For more details on the Python interface:
@@ -558,22 +537,15 @@ ans =
   name: 'board_led_controller'
   form_factor: '5x3'
   serial_number: 0
-dev.getFunctions()                 % get device functions
-  Modular Device Functions
+dev.getMethods()                 % get device methods
+  Modular Device Methods
   ---------------------
   getDeviceId
   getDeviceInfo
   getApi
   getApiVerbose
   getPropertyDefaultValues
-  setPropertiesToDefaults
-  setPropertyToDefault
   getPropertyValues
-  getPropertyValue
-  getPropertyElementValue
-  setPropertyValue
-  setPropertyElementValue
-  setAllPropertyElementValues
   getMemoryFree
   setLedOn
   setLedOff
@@ -582,8 +554,8 @@ dev.getFunctions()                 % get device functions
 dev.blinkLed()
 Error using ModularClient/sendRequest (line 301)
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
-function_info = dev.blinkLed('?')
-function_info =
+method_info = dev.blinkLed('?')
+method_info =
   name: 'blinkLed'
   firmware: 'BoardLedController'
   parameters: {'duration_on'  'duration_off'  'count'}
@@ -602,13 +574,13 @@ dev.blinkLed(0.5,0.2,20);
 led_pin = dev.getLedPin()
 led_pin =
   13
-led_pin = dev.callServerFunction('getLedPin')
+led_pin = dev.callServerMethod('getLedPin')
 led_pin =
   13
 led_pin = dev.sendJsonRequest('["getLedPin"]')
 led_pin =
   13
-dev.callServerFunction('blinkLed',0.5,0.2,20)
+dev.callServerMethod('blinkLed',0.5,0.2,20)
 dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')
 dev.getApi({'BoardLedController'})
 ans =

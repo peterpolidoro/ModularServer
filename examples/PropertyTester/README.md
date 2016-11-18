@@ -45,14 +45,7 @@ Example Response:
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "setPropertyToDefault",
         "getPropertyValues",
-        "getPropertyValue",
-        "getPropertyElementValue",
-        "setPropertyValue",
-        "setPropertyElementValue",
-        "setAllPropertyElementValues",
         "getMemoryFree",
         "getDoubled",
         "getBool",
@@ -72,9 +65,6 @@ Example Response:
       ],
       "parameters":[
         "firmware",
-        "property_name",
-        "property_value",
-        "property_element_index",
         "long_array_parameter",
         "length_parameter",
         "count",
@@ -94,7 +84,9 @@ Example Response:
         "mode",
         "odd_array"
       ],
-      "callbacks":[]
+      "callbacks":[
+        "setPropertiesToDefaults"
+      ]
     }
   }
 }
@@ -163,14 +155,97 @@ Example Response:
 Example Function:
 
 ```shell
-getPropertyValue long_array
+double ?
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"getPropertyValue",
+  "id":"double",
+  "result":{
+    "name":"double",
+    "firmware":"PropertyTester",
+    "type":"double",
+    "value":3.141590,
+    "default_value":3.141590,
+    "functions":[
+      "getValue",
+      "setValue",
+      "getDefaultValue",
+      "setValueToDefault"
+    ],
+    "parameters":[
+      "value"
+    ]
+  }
+}
+```
+
+Example Function:
+
+```shell
+long_array ?
+```
+
+Example Response:
+
+```json
+
+{
+  "id":"long_array",
+  "result":{
+    "name":"long_array",
+    "firmware":"PropertyTester",
+    "type":"array",
+    "array_element_type":"long",
+    "array_element_min":-3,
+    "array_element_max":10,
+    "array_length_min":1,
+    "array_length_max":4,
+    "value":[
+      5,
+      4,
+      3,
+      2
+    ],
+    "default_value":[
+      5,
+      4,
+      3,
+      2
+    ],
+    "functions":[
+      "getValue",
+      "setValue",
+      "getDefaultValue",
+      "setValueToDefault",
+      "getElementValue",
+      "setElementValue",
+      "getDefaultElementValue",
+      "setElementValueToDefault",
+      "setAllElementValues"
+    ],
+    "parameters":[
+      "value",
+      "element_index",
+      "element_value"
+    ]
+  }
+}
+```
+
+Example Function:
+
+```shell
+long_array getValue
+```
+
+Example Response:
+
+```json
+{
+  "id":"long_array",
   "result":[
     5,
     4,
@@ -183,7 +258,72 @@ Example Response:
 Example Function:
 
 ```shell
-getPropertyElementValue double_array 1
+double_array ?
+```
+
+Example Response:
+
+```json
+{
+  "id":"double_array",
+  "result":{
+    "name":"double_array",
+    "firmware":"PropertyTester",
+    "type":"array",
+    "array_element_type":"double",
+    "array_element_min":-33.333000,
+    "array_element_max":100.000000,
+    "array_length_min":1,
+    "array_length_max":3,
+    "value":[
+      -1.100000,
+      2.200000,
+      3.300000
+    ],
+    "default_value":[
+      -1.100000,
+      2.200000,
+      3.300000
+    ],
+    "functions":[
+      "getValue",
+      "setValue",
+      "getDefaultValue",
+      "setValueToDefault",
+      "getElementValue",
+      "setElementValue",
+      "getDefaultElementValue",
+      "setElementValueToDefault",
+      "setAllElementValues"
+    ],
+    "parameters":[
+      "value",
+      "element_index",
+      "element_value"
+    ]
+  }
+}
+```
+
+Example Function:
+
+```shell
+double_array getElementValue 1
+```
+
+Example Response:
+
+```json
+{
+  "id":"getPropertyElementValue",
+  "result":2.200000
+}
+```
+
+Example Function:
+
+```shell
+double_array getElementValue 1
 ```
 
 Example Response:

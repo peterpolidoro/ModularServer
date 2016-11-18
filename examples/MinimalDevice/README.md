@@ -593,7 +593,7 @@ Example Response:
 }
 ```
 
-Every function, parameter, and property belongs to one firmware set.
+Every function, parameter, property, and callback belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 function.
@@ -701,12 +701,6 @@ dev.convert_to_json(result['device_id'])
 dev.send_json_request('["set_properties_to_defaults"]')
 dev.serial_number('getValue')
 0
-dev.get_api(["MinimalDevice"])
-{'callbacks': [],
- 'firmware': ['MinimalDevice'],
- 'functions': [],
- 'parameters': [],
- 'properties': []}
 ```
 
 For more details on the Python interface:
@@ -754,13 +748,13 @@ dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,
 code: -32602
 dev.getApi('?')
-ans = 
+ans =
   name: 'getApi'
   firmware: 'ModularServer'
   parameters: {'firmware'}
   result_type: 'object'
 dev.getApi('firmware','?')
-ans = 
+ans =
   name: 'firmware'
   firmware: 'ModularServer'
   type: 'array'
@@ -769,7 +763,7 @@ ans =
   array_length_min: 1
   array_length_max: 8
 dev.getApi({'MinimalDevice'})
-ans = 
+ans =
   firmware: {'MinimalDevice'}
   functions: {0x1 cell}
   parameters: {0x1 cell}
@@ -780,7 +774,7 @@ dev.serial_number('setValue',-1)
 value <= 65535, code: -32602
 dev.serial_number('setValue',32);
 dev.getPropertyValues()
-ans = 
+ans =
   serial_number: 32
 result = dev.callServerMethod('?');
 result.device_id.serial_number
@@ -792,13 +786,6 @@ dev.sendJsonRequest('["setPropertiesToDefaults"]')
 dev.serial_number('getValue')
 ans =
   0
-dev.getApi({'ModularServer'})
-ans = 
-  firmware: {'ModularServer'}
-  functions: {1x7 cell}
-  parameters: {'firmware'}
-  properties: {'serial_number'}
-  callbacks: {'setPropertiesToDefaults'}
 dev.close()
 clear dev
 ```

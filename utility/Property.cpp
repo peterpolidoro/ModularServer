@@ -44,7 +44,6 @@ ConcatenatedArray<Function,property::FUNCTION_PARAMETER_TYPE_COUNT> Property::fu
 Response * Property::response_ptr_;
 Functor4<Property &, bool, bool, int> Property::write_property_to_response_functor_;
 Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Property::get_parameter_value_functor_;
-Functor2wRet<Parameter &, ArduinoJson::JsonVariant &, bool> Property::check_parameter_functor_;
 
 Parameter & Property::createParameter(const ConstantString & parameter_name)
 {
@@ -857,12 +856,6 @@ void Property::getValueHandler()
 
 void Property::setValueHandler()
 {
-  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::value_parameter_name);
-  bool parameter_ok = check_parameter_functor_(parameter(property::value_parameter_name),json_value);
-  if (!parameter_ok)
-  {
-    return;
-  }
   JsonStream::JsonTypes type = getType();
   switch (type)
   {
@@ -925,12 +918,6 @@ void Property::setValueToDefaultHandler()
 
 void Property::getElementValueHandler()
 {
-  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
-  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
-  if (!parameter_ok)
-  {
-    return;
-  }
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   response_ptr_->writeResultKey();
   write_property_to_response_functor_(*this,false,false,element_index);
@@ -938,20 +925,7 @@ void Property::getElementValueHandler()
 
 void Property::setElementValueHandler()
 {
-  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
-  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
-  if (!parameter_ok)
-  {
-    return;
-  }
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
-
-  json_value = get_parameter_value_functor_(property::element_value_parameter_name);
-  parameter_ok = check_parameter_functor_(parameter(property::element_value_parameter_name),json_value);
-  if (!parameter_ok)
-  {
-    return;
-  }
 
   JsonStream::JsonTypes type = getType();
   switch (type)
@@ -1062,12 +1036,6 @@ void Property::setElementValueHandler()
 
 void Property::getDefaultElementValueHandler()
 {
-  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
-  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
-  if (!parameter_ok)
-  {
-    return;
-  }
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   response_ptr_->writeResultKey();
   write_property_to_response_functor_(*this,false,true,element_index);
@@ -1075,25 +1043,12 @@ void Property::getDefaultElementValueHandler()
 
 void Property::setElementValueToDefaultHandler()
 {
-  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
-  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
-  if (!parameter_ok)
-  {
-    return;
-  }
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   setElementValueToDefault(element_index);
 }
 
 void Property::setAllElementValuesHandler()
 {
-  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_value_parameter_name);
-  bool parameter_ok = check_parameter_functor_(parameter(property::element_value_parameter_name),json_value);
-  if (!parameter_ok)
-  {
-    return;
-  }
-
   JsonStream::JsonTypes type = getType();
   switch (type)
   {

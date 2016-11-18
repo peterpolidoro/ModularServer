@@ -137,7 +137,6 @@ private:
   static Response * response_ptr_;
   static Functor4<Property &, bool, bool, int> write_property_to_response_functor_;
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
-  static Functor2wRet<Parameter &, ArduinoJson::JsonVariant &, bool> check_parameter_functor_;
 
   template <typename T>
   static int findParameterIndex(T const & parameter_name)
