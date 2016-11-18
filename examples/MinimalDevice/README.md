@@ -743,43 +743,62 @@ dev.getMethods()                 % get device methods
   getApi
   getApiVerbose
   getPropertyDefaultValues
-  setPropertiesToDefaults
   getPropertyValues
-  getPropertyValue
-  getPropertyElementValue
-  setPropertyValue
-  setPropertyElementValue
-  setAllPropertyElementValues
   getMemoryFree
+  setPropertiesToDefaults
+  serial_number
 dev.getMemoryFree()
 ans =
   4800
-dev.getPropertyValue()
-(from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
-method_info = dev.getPropertyValue('?')
-method_info
-ans =
-  name: 'getPropertyValue'
+dev.getApi()
+(from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,
+code: -32602
+dev.getApi('?')
+ans = 
+  name: 'getApi'
   firmware: 'ModularServer'
-  parameters: {'property_name'}
-  result_type: 'value'
-dev.getPropertyValue('serial_number')
-ans =
-  0
-dev.setPropertyValue('serial_number',-1)
-(from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
-dev.setPropertyValue('serial_number',13);
+  parameters: {'firmware'}
+  result_type: 'object'
+dev.getApi('firmware','?')
+ans = 
+  name: 'firmware'
+  firmware: 'ModularServer'
+  type: 'array'
+  array_element_type: 'string'
+  array_element_subset: {'all'  'ModularServer'  'MinimalDevice'}
+  array_length_min: 1
+  array_length_max: 8
+dev.getApi({'MinimalDevice'})
+ans = 
+  firmware: {'MinimalDevice'}
+  functions: {0x1 cell}
+  parameters: {0x1 cell}
+  properties: {0x1 cell}
+  callbacks: {0x1 cell}
+dev.serial_number('setValue',-1)
+(from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <=
+value <= 65535, code: -32602
+dev.serial_number('setValue',32);
+dev.getPropertyValues()
+ans = 
+  serial_number: 32
 result = dev.callServerMethod('?');
 result.device_id.serial_number
 ans =
-  13
-json = dev.convertToJson(result.device_info.firmware_version)
-json =
-  {"major": 0,"minor": 1,"patch": 0}
+  32
+json = dev.convertToJson(result.device_id)
+{"name": "minimal_device","form_factor": "5x3","serial_number": 32}
 dev.sendJsonRequest('["setPropertiesToDefaults"]')
-dev.getPropertyValue('serial_number')
+dev.serial_number('getValue')
 ans =
   0
+dev.getApi({'ModularServer'})
+ans = 
+  firmware: {'ModularServer'}
+  functions: {1x7 cell}
+  parameters: {'firmware'}
+  properties: {'serial_number'}
+  callbacks: {'setPropertiesToDefaults'}
 dev.close()
 clear dev
 ```
