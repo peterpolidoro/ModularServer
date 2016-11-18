@@ -86,6 +86,7 @@ private:
   void returnPropertyMethodNotFoundError();
   void returnPropertyParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
   friend class Server;
+  friend class Property;
 };
 }
 #include "ResponseDefinitions.h"

@@ -45,6 +45,11 @@ void Server::setup()
               server_callbacks_);
 
   // Properties
+  Property::response_ptr_ = &response_;
+  Property::write_property_to_response_functor_ = makeFunctor((Functor4<Property &, bool, bool, int> *)0,*this,&Server::writePropertyToResponse);
+  Property::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+  Property::check_parameter_functor_ = makeFunctor((Functor2wRet<Parameter &, ArduinoJson::JsonVariant &, bool> *)0,*this,&Server::checkParameter);
+
   Property & serial_number_property = createProperty(constants::serial_number_property_name,constants::serial_number_default);
   serial_number_property.setRange(constants::serial_number_min,constants::serial_number_max);
 
@@ -337,8 +342,8 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
     if (property_method_index_ >= 0)
     {
       int property_index = request_procedure_index_ - methods_.size() - callbacks_.size();
-
-      Method & method = properties_[property_index].methods_[property_method_index_];
+      Property & property = properties_[property_index];
+      Method & method = property.methods_[property_method_index_];
 
       // index 0 is the request procedure, index 1 is the property method
       parameter_index += findMethodParameterIndex(method,parameter_name) + 1;
@@ -395,10 +400,13 @@ void Server::processRequestArray()
       {
         method.functor();
       }
+      // check parameter count
       else if (parameter_count != method.getParameterCount())
       {
         response_.returnParameterCountError(parameter_count,method.getParameterCount());
+        return;
       }
+      // check parameters and call method functor
       else
       {
         bool parameters_ok = checkParameters(method);
@@ -424,10 +432,13 @@ void Server::processRequestArray()
         response_.writeResultKey();
         callbackHelp(callback,true);
       }
+      // check parameter count
       else if (parameter_count != 0)
       {
         response_.returnParameterCountError(parameter_count,0);
+        return;
       }
+      // call callback functor
       else
       {
         callback.functor();
@@ -449,10 +460,13 @@ void Server::processRequestArray()
         response_.writeResultKey();
         propertyHelp(property,true);
       }
+      // check parameter count
       else if (parameter_count == 0)
       {
         response_.returnParameterCountError(parameter_count,1);
+        return;
       }
+      // property method
       else
       {
         property.updateMethodsAndParameters();
@@ -463,6 +477,7 @@ void Server::processRequestArray()
         if (property_method_index_ < 0)
         {
           response_.returnPropertyMethodNotFoundError();
+          return;
         }
 
         Method & method = property.methods_[property_method_index_];
@@ -496,16 +511,19 @@ void Server::processRequestArray()
             parameterHelp(*parameter_ptr);
           }
         }
+        // check property parameter count
         else if (property_parameter_count != method.getParameterCount())
         {
           response_.returnPropertyParameterCountError(property_parameter_count,method.getParameterCount());
+          return;
         }
+        // check property parameters and call property method functor
         else
         {
           bool parameters_ok = checkParameters(method);
           if (parameters_ok)
           {
-            // method.functor();
+            method.functor();
           }
         }
       }
@@ -514,6 +532,7 @@ void Server::processRequestArray()
   else
   {
     response_.returnProcedureNotFoundError();
+    return;
   }
 }
 
@@ -1328,11 +1347,13 @@ void Server::help(bool verbose)
         else
         {
           response_.returnPropertyMethodNotFoundError();
+          return;
         }
       }
       else
       {
         response_.returnProcedureNotFoundError();
+        return;
       }
     }
   }
@@ -1363,11 +1384,13 @@ void Server::help(bool verbose)
       else
       {
         response_.returnPropertyMethodNotFoundError();
+        return;
       }
     }
     else
     {
       response_.returnProcedureNotFoundError();
+      return;
     }
   }
   // ? unknown
@@ -1381,6 +1404,7 @@ void Server::help(bool verbose)
   if (param_error)
   {
     response_.returnParameterInvalidError(constants::empty_constant_string);
+    return;
   }
 }
 

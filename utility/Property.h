@@ -22,6 +22,7 @@
 
 #include "Parameter.h"
 #include "Method.h"
+#include "Response.h"
 #include "Constants.h"
 
 
@@ -30,8 +31,8 @@ namespace modular_server
 
 namespace property
 {
-enum{METHOD_PARAMETER_TYPE_COUNT=1};
-enum{PARAMETER_COUNT_MAX=2};
+enum{METHOD_PARAMETER_TYPE_COUNT=2};
+enum{PARAMETER_COUNT_MAX=1};
 enum{METHOD_COUNT_MAX=4};
 enum{ARRAY_PARAMETER_COUNT_MAX=2};
 enum{ARRAY_METHOD_COUNT_MAX=5};
@@ -127,20 +128,16 @@ public:
   size_t getStringLength();
 
 private:
-  Parameter parameter_;
-  SavedVariable saved_variable_;
-  Functor0 pre_set_value_functor_;
-  Functor1<const size_t> pre_set_element_value_functor_;
-  Functor0 post_set_value_functor_;
-  Functor1<const size_t> post_set_element_value_functor_;
-  bool string_saved_as_char_array_;
-
   static Parameter property_parameters_[property::PARAMETER_COUNT_MAX];
   static Method property_methods_[property::METHOD_COUNT_MAX];
   static Parameter property_array_parameters_[property::ARRAY_PARAMETER_COUNT_MAX];
   static Method property_array_methods_[property::ARRAY_METHOD_COUNT_MAX];
   static ConcatenatedArray<Parameter,property::METHOD_PARAMETER_TYPE_COUNT> parameters_;
   static ConcatenatedArray<Method,property::METHOD_PARAMETER_TYPE_COUNT> methods_;
+  static Response * response_ptr_;
+  static Functor4<Property &, bool, bool, int> write_property_to_response_functor_;
+  static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
+  static Functor2wRet<Parameter &, ArduinoJson::JsonVariant &, bool> check_parameter_functor_;
 
   template <typename T>
   static int findParameterIndex(T const & parameter_name)
@@ -158,6 +155,7 @@ private:
   };
   static Parameter & createParameter(const ConstantString & parameter_name);
   static Parameter & parameter(const ConstantString & parameter_name);
+  static Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
 
   template <typename T>
   static int findMethodIndex(T const & method_name)
@@ -175,6 +173,14 @@ private:
   };
   static Method & createMethod(const ConstantString & method_name);
   static Method & method(const ConstantString & method_name);
+
+  Parameter parameter_;
+  SavedVariable saved_variable_;
+  Functor0 pre_set_value_functor_;
+  Functor1<const size_t> pre_set_element_value_functor_;
+  Functor0 post_set_value_functor_;
+  Functor1<const size_t> post_set_element_value_functor_;
+  bool string_saved_as_char_array_;
 
   template <typename T>
   Property(const ConstantString & name,
@@ -200,8 +206,6 @@ private:
   bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
-  constants::NumberType getMin();
-  constants::NumberType getMax();
   bool stringIsSavedAsCharArray();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
@@ -214,10 +218,14 @@ private:
 
   // Handlers
   void getValueHandler();
-  void setToDefaultHandler();
-  void getElementValueHandler();
   void setValueHandler();
+  void getDefaultValueHandler();
+  void setValueToDefaultHandler();
+
+  void getElementValueHandler();
   void setElementValueHandler();
+  void getDefaultElementValueHandler();
+  void setElementValueToDefaultHandler();
   void setAllElementValuesHandler();
 
   friend class Callback;

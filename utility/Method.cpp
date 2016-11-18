@@ -92,7 +92,7 @@ Method::Method(const ConstantString & name)
 void Method::setup(const ConstantString & name)
 {
   setName(name);
-  return_type_ = JsonStream::NULL_TYPE;
+  setReturnTypeNull();
 }
 
 int Method::findParameterIndex(const ConstantString & parameter_name)

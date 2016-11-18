@@ -50,6 +50,7 @@ public:
   template <size_t MAX_SIZE>
   void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
   void setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size);
+  void setSubset(Vector<constants::SubsetMemberType> & subset);
   void addValueToSubset(constants::SubsetMemberType & value);
   void removeSubset();
 
@@ -58,6 +59,8 @@ public:
   bool getValue(const char * & value);
   bool getValue(ArduinoJson::JsonArray * & value);
   bool getValue(ArduinoJson::JsonObject * & value);
+
+  Parameter getElementParameter();
 
 private:
   const ConstantString * units_ptr_;

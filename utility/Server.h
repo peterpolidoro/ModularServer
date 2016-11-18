@@ -60,10 +60,10 @@ public:
   // Properties
   template <typename T>
   Property & createProperty(const ConstantString & property_name,
-                     const T & default_value);
+                            const T & default_value);
   template <typename T, size_t N>
   Property & createProperty(const ConstantString & property_name,
-                     const T (&default_value)[N]);
+                            const T (&default_value)[N]);
   Property & property(const ConstantString & property_name);
   void setPropertiesToDefaults();
 
@@ -154,9 +154,9 @@ private:
   void writeDeviceInfoToResponse();
   void writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array);
   void writePropertyToResponse(Property & property,
-                            bool write_key=false,
-                            bool write_default=false,
-                            int element_index=-1);
+                               bool write_key=false,
+                               bool write_default=false,
+                               int element_index=-1);
   void versionToString(char * destination,
                        const long major,
                        const long minor,

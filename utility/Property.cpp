@@ -41,6 +41,10 @@ Parameter Property::property_array_parameters_[property::ARRAY_PARAMETER_COUNT_M
 Method Property::property_array_methods_[property::ARRAY_METHOD_COUNT_MAX];
 ConcatenatedArray<Parameter,property::METHOD_PARAMETER_TYPE_COUNT> Property::parameters_;
 ConcatenatedArray<Method,property::METHOD_PARAMETER_TYPE_COUNT> Property::methods_;
+Response * Property::response_ptr_;
+Functor4<Property &, bool, bool, int> Property::write_property_to_response_functor_;
+Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Property::get_parameter_value_functor_;
+Functor2wRet<Parameter &, ArduinoJson::JsonVariant &, bool> Property::check_parameter_functor_;
 
 Parameter & Property::createParameter(const ConstantString & parameter_name)
 {
@@ -60,6 +64,13 @@ Parameter & Property::parameter(const ConstantString & parameter_name)
   {
     return parameters_[parameter_index];
   }
+}
+
+Parameter & Property::copyParameter(Parameter parameter,const ConstantString & parameter_name)
+{
+  parameters_.push_back(parameter);
+  parameters_.back().setName(parameter_name);
+  return parameters_.back();
 }
 
 Method & Property::createMethod(const ConstantString & method_name)
@@ -85,6 +96,7 @@ Method & Property::method(const ConstantString & method_name)
 // public
 Property::Property()
 {
+  response_ptr_ = NULL;
 }
 
 void Property::setUnits(const ConstantString & name)
@@ -715,16 +727,6 @@ JsonStream::JsonTypes Property::getArrayElementType()
   return parameter_.getArrayElementType();
 }
 
-constants::NumberType Property::getMin()
-{
-  return parameter_.getMin();
-}
-
-constants::NumberType Property::getMax()
-{
-  return parameter_.getMax();
-}
-
 bool Property::stringIsSavedAsCharArray()
 {
   return string_saved_as_char_array_;
@@ -785,8 +787,7 @@ void Property::updateMethodsAndParameters()
   parameters_.clear();
   parameters_.addArray(property_parameters_);
 
-  Parameter & value_parameter = createParameter(property::value_parameter_name);
-  value_parameter.setType(type);
+  Parameter & value_parameter = copyParameter(parameter(),property::value_parameter_name);
 
   // Methods
   methods_.clear();
@@ -797,16 +798,17 @@ void Property::updateMethodsAndParameters()
   get_value_method.setReturnType(type);
 
   Method & set_value_method = createMethod(property::set_value_method_name);
+  set_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueHandler));
   set_value_method.addParameter(value_parameter);
-  set_value_method.setReturnType(type);
 
   Method & get_default_value_method = createMethod(property::get_default_value_method_name);
+  get_default_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultValueHandler));
   get_default_value_method.setReturnType(type);
 
   Method & set_value_to_default_method = createMethod(property::set_value_to_default_method_name);
-  set_value_to_default_method.setReturnType(type);
+  set_value_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueToDefaultHandler));
 
-  if (type == JsonStream::ARRAY_TYPE)
+  if ((type == JsonStream::ARRAY_TYPE) || ((type == JsonStream::STRING_TYPE) && stringIsSavedAsCharArray()))
   {
     JsonStream::JsonTypes array_element_type = getArrayElementType();
 
@@ -815,396 +817,373 @@ void Property::updateMethodsAndParameters()
 
     Parameter & element_index_parameter = createParameter(property::element_index_parameter_name);
     element_index_parameter.setTypeLong();
-    element_index_parameter.setRange(getMax(),getMin());
+    element_index_parameter.setRange(parameter().getArrayLengthMin(),parameter().getArrayLengthMax());
 
-    Parameter & element_value_parameter = createParameter(property::element_value_parameter_name);
-    element_value_parameter.setType(array_element_type);
+    Parameter & element_value_parameter = copyParameter(parameter().getElementParameter(),property::element_value_parameter_name);
 
     // Array Methods
     methods_.addArray(property_array_methods_);
 
     Method & get_element_value_method = createMethod(property::get_element_value_method_name);
+    get_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getElementValueHandler));
     get_element_value_method.addParameter(element_index_parameter);
     get_element_value_method.setReturnType(array_element_type);
 
     Method & set_element_value_method = createMethod(property::set_element_value_method_name);
+    set_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueHandler));
     set_element_value_method.addParameter(element_index_parameter);
     set_element_value_method.addParameter(element_value_parameter);
-    set_element_value_method.setReturnType(array_element_type);
 
     Method & get_default_element_value_method = createMethod(property::get_default_element_value_method_name);
+    get_default_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultElementValueHandler));
     get_default_element_value_method.addParameter(element_index_parameter);
     get_default_element_value_method.setReturnType(array_element_type);
 
     Method & set_element_value_to_default_method = createMethod(property::set_element_value_to_default_method_name);
+    set_element_value_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueToDefaultHandler));
     set_element_value_to_default_method.addParameter(element_index_parameter);
-    set_element_value_to_default_method.setReturnType(array_element_type);
 
     Method & set_all_element_values_method = createMethod(property::set_all_element_values_method_name);
+    set_all_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setAllElementValuesHandler));
     set_all_element_values_method.addParameter(element_value_parameter);
-    set_all_element_values_method.setReturnType(type);
   }
 }
 
 void Property::getValueHandler()
 {
-  // response_.writeResultKey();
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   writePropertyToResponse(property,false,false);
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
-}
-
-void Property::setToDefaultHandler()
-{
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   property.setValueToDefault();
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
-}
-
-void Property::getElementValueHandler()
-{
-  // response_.writeResultKey();
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
-  // if (property_element_index < 0)
-  // {
-  //   response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //   return;
-  // }
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   writePropertyToResponse(property,false,false,property_element_index);
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,false,-1);
 }
 
 void Property::setValueHandler()
 {
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-  //   bool parameter_ok = checkParameter(property.parameter(),json_value);
-  //   if (!parameter_ok)
-  //   {
-  //     return;
-  //   }
-  //   JsonStream::JsonTypes property_type = property.getType();
-  //   switch (property_type)
-  //   {
-  //     case JsonStream::LONG_TYPE:
-  //     {
-  //       long property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::DOUBLE_TYPE:
-  //     {
-  //       double property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::BOOL_TYPE:
-  //     {
-  //       bool property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::NULL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::STRING_TYPE:
-  //     {
-  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
-  //       size_t array_length = strlen(property_value) + 1;
-  //       property.setValue(property_value,array_length);
-  //       break;
-  //     }
-  //     case JsonStream::OBJECT_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::ARRAY_TYPE:
-  //     {
-  //       ArduinoJson::JsonArray & property_value = getParameterValue(constants::property_value_parameter_name);
-  //       property.setValue(property_value);
-  //       break;
-  //     }
-  //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //   }
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
+  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::value_parameter_name);
+  bool parameter_ok = check_parameter_functor_(parameter(property::value_parameter_name),json_value);
+  if (!parameter_ok)
+  {
+    return;
+  }
+  JsonStream::JsonTypes type = getType();
+  switch (type)
+  {
+    case JsonStream::LONG_TYPE:
+    {
+      long value = get_parameter_value_functor_(property::value_parameter_name);
+      setValue(value);
+      break;
+    }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      double value = get_parameter_value_functor_(property::value_parameter_name);
+      setValue(value);
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      bool value = get_parameter_value_functor_(property::value_parameter_name);
+      setValue(value);
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::STRING_TYPE:
+    {
+      const char * value = get_parameter_value_functor_(property::value_parameter_name);
+      size_t array_length = strlen(value) + 1;
+      setValue(value,array_length);
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      ArduinoJson::JsonArray & value = get_parameter_value_functor_(property::value_parameter_name);
+      setValue(value);
+      break;
+    }
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+  }
+}
+
+void Property::getDefaultValueHandler()
+{
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,true,-1);
+}
+
+void Property::setValueToDefaultHandler()
+{
+  setValueToDefault();
+}
+
+void Property::getElementValueHandler()
+{
+  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
+  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
+  if (!parameter_ok)
+  {
+    return;
+  }
+  long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,false,element_index);
 }
 
 void Property::setElementValueHandler()
 {
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // long property_element_index = getParameterValue(constants::property_element_index_parameter_name);
-  // if (property_element_index < 0)
-  // {
-  //   response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //   return;
-  // }
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-  //   bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
-  //   if (!parameter_ok)
-  //   {
-  //     return;
-  //   }
-  //   JsonStream::JsonTypes property_type = property.getType();
-  //   switch (property_type)
-  //   {
-  //     case JsonStream::LONG_TYPE:
-  //     {
-  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-  //       break;
-  //     }
-  //     case JsonStream::DOUBLE_TYPE:
-  //     {
-  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-  //       break;
-  //     }
-  //     case JsonStream::BOOL_TYPE:
-  //     {
-  //       response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-  //       break;
-  //     }
-  //     case JsonStream::NULL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::STRING_TYPE:
-  //     {
-  //       if (!property.stringIsSavedAsCharArray())
-  //       {
-  //         response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
-  //         break;
-  //       }
-  //       size_t array_length = property.getArrayLength();
-  //       if ((size_t)property_element_index >= (array_length - 1))
-  //       {
-  //         response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //         return;
-  //       }
-  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
-  //       size_t string_length = strlen(property_value);
-  //       if (string_length >= 1)
-  //       {
-  //         char v = property_value[0];
-  //         property.setElementValue(property_element_index,v);
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::OBJECT_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::ARRAY_TYPE:
-  //     {
-  //       size_t array_length = property.getArrayLength();
-  //       if ((size_t)property_element_index >= array_length)
-  //       {
-  //         response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-  //         return;
-  //       }
-  //       JsonStream::JsonTypes array_element_type = property.getArrayElementType();
-  //       switch (array_element_type)
-  //       {
-  //         case JsonStream::LONG_TYPE:
-  //         {
-  //           long property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setElementValue(property_element_index,property_value);
-  //           break;
-  //         }
-  //         case JsonStream::DOUBLE_TYPE:
-  //         {
-  //           double property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setElementValue(property_element_index,property_value);
-  //           break;
-  //         }
-  //         case JsonStream::BOOL_TYPE:
-  //         {
-  //           bool property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setElementValue(property_element_index,property_value);
-  //           break;
-  //         }
-  //         case JsonStream::NULL_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::STRING_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::OBJECT_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ARRAY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ANY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //   }
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
+  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
+  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
+  if (!parameter_ok)
+  {
+    return;
+  }
+  long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
+
+  json_value = get_parameter_value_functor_(property::element_value_parameter_name);
+  parameter_ok = check_parameter_functor_(parameter(property::element_value_parameter_name),json_value);
+  if (!parameter_ok)
+  {
+    return;
+  }
+
+  JsonStream::JsonTypes type = getType();
+  switch (type)
+  {
+    case JsonStream::LONG_TYPE:
+    {
+      response_ptr_->returnParameterInvalidError(constants::property_not_array_type_error_data);
+      break;
+    }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      response_ptr_->returnParameterInvalidError(constants::property_not_array_type_error_data);
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      response_ptr_->returnParameterInvalidError(constants::property_not_array_type_error_data);
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::STRING_TYPE:
+    {
+      if (!stringIsSavedAsCharArray())
+      {
+        response_ptr_->returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
+        break;
+      }
+      size_t array_length = getArrayLength();
+      if ((size_t)element_index >= (array_length - 1))
+      {
+        response_ptr_->returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+        return;
+      }
+      const char * value = get_parameter_value_functor_(property::element_value_parameter_name);
+      size_t string_length = strlen(value);
+      if (string_length >= 1)
+      {
+        char v = value[0];
+        setElementValue(element_index,v);
+      }
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      size_t array_length = getArrayLength();
+      if ((size_t)element_index >= array_length)
+      {
+        response_ptr_->returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+        return;
+      }
+      JsonStream::JsonTypes array_element_type = getArrayElementType();
+      switch (array_element_type)
+      {
+        case JsonStream::LONG_TYPE:
+        {
+          long value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setElementValue(element_index,value);
+          break;
+        }
+        case JsonStream::DOUBLE_TYPE:
+        {
+          double value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setElementValue(element_index,value);
+          break;
+        }
+        case JsonStream::BOOL_TYPE:
+        {
+          bool value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setElementValue(element_index,value);
+          break;
+        }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ANY_TYPE:
+        {
+          break;
+        }
+      }
+      break;
+    }
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+  }
+}
+
+void Property::getDefaultElementValueHandler()
+{
+  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
+  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
+  if (!parameter_ok)
+  {
+    return;
+  }
+  long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
+  response_ptr_->writeResultKey();
+  write_property_to_response_functor_(*this,false,true,element_index);
+}
+
+void Property::setElementValueToDefaultHandler()
+{
+  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_index_parameter_name);
+  bool parameter_ok = check_parameter_functor_(parameter(property::element_index_parameter_name),json_value);
+  if (!parameter_ok)
+  {
+    return;
+  }
+  long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
+  setElementValueToDefault(element_index);
 }
 
 void Property::setAllElementValuesHandler()
 {
-  // const char * property_name = getParameterValue(constants::property_name_parameter_name);
-  // int property_index = findPropertyIndex(property_name);
-  // if ((property_index >= 0) && (property_index < (int)properties_.size()))
-  // {
-  //   Property & property = properties_[property_index];
-  //   ArduinoJson::JsonVariant json_value = getParameterValue(constants::property_value_parameter_name);
-  //   bool parameter_ok = checkArrayParameterElement(property.parameter(),json_value);
-  //   if (!parameter_ok)
-  //   {
-  //     return;
-  //   }
-  //   JsonStream::JsonTypes property_type = property.getType();
-  //   switch (property_type)
-  //   {
-  //     case JsonStream::LONG_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::DOUBLE_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::BOOL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::NULL_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::STRING_TYPE:
-  //     {
-  //       if (!property.stringIsSavedAsCharArray())
-  //       {
-  //         response_.returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
-  //         break;
-  //       }
-  //       const char * property_value = getParameterValue(constants::property_value_parameter_name);
-  //       size_t string_length = strlen(property_value);
-  //       if (string_length >= 1)
-  //       {
-  //         char v = property_value[0];
-  //         property.setAllElementValues(v);
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::OBJECT_TYPE:
-  //     {
-  //       break;
-  //     }
-  //     case JsonStream::ARRAY_TYPE:
-  //     {
-  //       JsonStream::JsonTypes array_element_type = property.getArrayElementType();
-  //       switch (array_element_type)
-  //       {
-  //         case JsonStream::LONG_TYPE:
-  //         {
-  //           long property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setAllElementValues(property_value);
-  //           break;
-  //         }
-  //         case JsonStream::DOUBLE_TYPE:
-  //         {
-  //           double property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setAllElementValues(property_value);
-  //           break;
-  //         }
-  //         case JsonStream::BOOL_TYPE:
-  //         {
-  //           bool property_value = getParameterValue(constants::property_value_parameter_name);
-  //           property.setAllElementValues(property_value);
-  //           break;
-  //         }
-  //         case JsonStream::NULL_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::STRING_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::OBJECT_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ARRAY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //         case JsonStream::ANY_TYPE:
-  //         {
-  //           break;
-  //         }
-  //       }
-  //       break;
-  //     }
-  //     case JsonStream::ANY_TYPE:
-  //     {
-  //       break;
-  //     }
-  //   }
-  // }
-  // else
-  // {
-  //   response_.returnParameterInvalidError(constants::property_not_found_error_data);
-  // }
+  ArduinoJson::JsonVariant json_value = get_parameter_value_functor_(property::element_value_parameter_name);
+  bool parameter_ok = check_parameter_functor_(parameter(property::element_value_parameter_name),json_value);
+  if (!parameter_ok)
+  {
+    return;
+  }
+
+  JsonStream::JsonTypes type = getType();
+  switch (type)
+  {
+    case JsonStream::LONG_TYPE:
+    {
+      break;
+    }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      break;
+    }
+    case JsonStream::STRING_TYPE:
+    {
+      if (!stringIsSavedAsCharArray())
+      {
+        response_ptr_->returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
+        break;
+      }
+      const char * value = get_parameter_value_functor_(property::element_value_parameter_name);
+      size_t string_length = strlen(value);
+      if (string_length >= 1)
+      {
+        char v = value[0];
+        setAllElementValues(v);
+      }
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      JsonStream::JsonTypes array_element_type = getArrayElementType();
+      switch (array_element_type)
+      {
+        case JsonStream::LONG_TYPE:
+        {
+          long value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setAllElementValues(value);
+          break;
+        }
+        case JsonStream::DOUBLE_TYPE:
+        {
+          double value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setAllElementValues(value);
+          break;
+        }
+        case JsonStream::BOOL_TYPE:
+        {
+          bool value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setAllElementValues(value);
+          break;
+        }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ANY_TYPE:
+        {
+          break;
+        }
+      }
+      break;
+    }
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+  }
 }
 
 }

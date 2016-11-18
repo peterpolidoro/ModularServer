@@ -70,6 +70,7 @@ void Parameter::setTypeString()
   if (type_ != JsonStream::ARRAY_TYPE)
   {
     type_ = JsonStream::STRING_TYPE;
+    array_element_type_ = JsonStream::STRING_TYPE;
   }
   else
   {
@@ -160,6 +161,12 @@ void Parameter::removeArrayLengthRange()
 void Parameter::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
 {
   subset_.setStorage(subset,max_size,size);
+  subset_is_set_ = true;
+}
+
+void Parameter::setSubset(Vector<constants::SubsetMemberType> & subset)
+{
+  subset_ = subset;
   subset_is_set_ = true;
 }
 
@@ -266,6 +273,22 @@ bool Parameter::getValue(ArduinoJson::JsonObject * & value)
   ArduinoJson::JsonObject & object = get_value_functor_(getName());
   value = &object;
   return true;
+}
+
+Parameter Parameter::getElementParameter()
+{
+  Parameter element_parameter;
+  element_parameter.setType(getArrayElementType());
+  element_parameter.setUnits(getUnits());
+  if (rangeIsSet())
+  {
+    element_parameter.setRange(getMin(),getMax());
+  }
+  if (subsetIsSet())
+  {
+    element_parameter.setSubset(getSubset());
+  }
+  return element_parameter;
 }
 
 // private
