@@ -694,6 +694,7 @@ dev.serial_number('setValue',32)
 dev.get_property_values()
 {'serial_number': 32}
 result = dev.call_server_method('?')
+result['device_id']['serial_number']
 32
 dev.convert_to_json(result['device_id'])
 '{"serial_number":12,"name":"minimal_device","form_factor":"5x3"}'
@@ -734,8 +735,8 @@ ans =
   name: 'minimal_device'
   form_factor: '5x3'
   serial_number: 0
-dev.getFunctions()                 % get device functions
-  Modular Device Functions
+dev.getMethods()                 % get device methods
+  Modular Device Methods
   ---------------------
   getDeviceId
   getDeviceInfo
@@ -755,8 +756,8 @@ ans =
   4800
 dev.getPropertyValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
-function_info = dev.getPropertyValue('?')
-function_info
+method_info = dev.getPropertyValue('?')
+method_info
 ans =
   name: 'getPropertyValue'
   firmware: 'ModularServer'
@@ -768,7 +769,7 @@ ans =
 dev.setPropertyValue('serial_number',-1)
 (from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
 dev.setPropertyValue('serial_number',13);
-result = dev.callServerFunction('?');
+result = dev.callServerMethod('?');
 result.device_id.serial_number
 ans =
   13
