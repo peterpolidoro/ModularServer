@@ -14,33 +14,33 @@ namespace modular_server
 namespace property
 {
 // Parameters
-CONSTANT_STRING(method_parameter_name,"method");
+CONSTANT_STRING(function_parameter_name,"function");
 CONSTANT_STRING(value_parameter_name,"value");
 
-// Methods
-CONSTANT_STRING(get_value_method_name,"getValue");
-CONSTANT_STRING(set_value_method_name,"setValue");
-CONSTANT_STRING(get_default_value_method_name,"getDefaultValue");
-CONSTANT_STRING(set_value_to_default_method_name,"setValueToDefault");
+// Functions
+CONSTANT_STRING(get_value_function_name,"getValue");
+CONSTANT_STRING(set_value_function_name,"setValue");
+CONSTANT_STRING(get_default_value_function_name,"getDefaultValue");
+CONSTANT_STRING(set_value_to_default_function_name,"setValueToDefault");
 
 // Array Parameters
 CONSTANT_STRING(element_index_parameter_name,"element_index");
 CONSTANT_STRING(element_value_parameter_name,"element_value");
 
-// Array Methods
-CONSTANT_STRING(get_element_value_method_name,"getElementValue");
-CONSTANT_STRING(set_element_value_method_name,"setElementValue");
-CONSTANT_STRING(get_default_element_value_method_name,"getDefaultElementValue");
-CONSTANT_STRING(set_element_value_to_default_method_name,"setElementValueToDefault");
-CONSTANT_STRING(set_all_element_values_method_name,"setAllElementValues");
+// Array Functions
+CONSTANT_STRING(get_element_value_function_name,"getElementValue");
+CONSTANT_STRING(set_element_value_function_name,"setElementValue");
+CONSTANT_STRING(get_default_element_value_function_name,"getDefaultElementValue");
+CONSTANT_STRING(set_element_value_to_default_function_name,"setElementValueToDefault");
+CONSTANT_STRING(set_all_element_values_function_name,"setAllElementValues");
 }
 
 Parameter Property::property_parameters_[property::PARAMETER_COUNT_MAX];
-Method Property::property_methods_[property::METHOD_COUNT_MAX];
+Function Property::property_functions_[property::FUNCTION_COUNT_MAX];
 Parameter Property::property_array_parameters_[property::ARRAY_PARAMETER_COUNT_MAX];
-Method Property::property_array_methods_[property::ARRAY_METHOD_COUNT_MAX];
-ConcatenatedArray<Parameter,property::METHOD_PARAMETER_TYPE_COUNT> Property::parameters_;
-ConcatenatedArray<Method,property::METHOD_PARAMETER_TYPE_COUNT> Property::methods_;
+Function Property::property_array_functions_[property::ARRAY_FUNCTION_COUNT_MAX];
+ConcatenatedArray<Parameter,property::FUNCTION_PARAMETER_TYPE_COUNT> Property::parameters_;
+ConcatenatedArray<Function,property::FUNCTION_PARAMETER_TYPE_COUNT> Property::functions_;
 Response * Property::response_ptr_;
 Functor4<Property &, bool, bool, int> Property::write_property_to_response_functor_;
 Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Property::get_parameter_value_functor_;
@@ -73,23 +73,23 @@ Parameter & Property::copyParameter(Parameter parameter,const ConstantString & p
   return parameters_.back();
 }
 
-Method & Property::createMethod(const ConstantString & method_name)
+Function & Property::createFunction(const ConstantString & function_name)
 {
-  int method_index = findMethodIndex(method_name);
-  if (method_index < 0)
+  int function_index = findFunctionIndex(function_name);
+  if (function_index < 0)
   {
-    methods_.push_back(Method(method_name));
-    methods_.back().setFirmwareName(constants::firmware_name);
-    return methods_.back();
+    functions_.push_back(Function(function_name));
+    functions_.back().setFirmwareName(constants::firmware_name);
+    return functions_.back();
   }
 }
 
-Method & Property::method(const ConstantString & method_name)
+Function & Property::function(const ConstantString & function_name)
 {
-  int method_index = findMethodIndex(method_name);
-  if ((method_index >= 0) && (method_index < (int)methods_.size()))
+  int function_index = findFunctionIndex(function_name);
+  if ((function_index >= 0) && (function_index < (int)functions_.size()))
   {
-    return methods_[method_index];
+    return functions_[function_index];
   }
 }
 
@@ -779,7 +779,7 @@ void Property::postSetElementValueFunctor(const size_t element_index)
   }
 }
 
-void Property::updateMethodsAndParameters()
+void Property::updateFunctionsAndParameters()
 {
   JsonStream::JsonTypes type = getType();
 
@@ -789,24 +789,24 @@ void Property::updateMethodsAndParameters()
 
   Parameter & value_parameter = copyParameter(parameter(),property::value_parameter_name);
 
-  // Methods
-  methods_.clear();
-  methods_.addArray(property_methods_);
+  // Functions
+  functions_.clear();
+  functions_.addArray(property_functions_);
 
-  Method & get_value_method = createMethod(property::get_value_method_name);
-  get_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getValueHandler));
-  get_value_method.setReturnType(type);
+  Function & get_value_function = createFunction(property::get_value_function_name);
+  get_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getValueHandler));
+  get_value_function.setReturnType(type);
 
-  Method & set_value_method = createMethod(property::set_value_method_name);
-  set_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueHandler));
-  set_value_method.addParameter(value_parameter);
+  Function & set_value_function = createFunction(property::set_value_function_name);
+  set_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueHandler));
+  set_value_function.addParameter(value_parameter);
 
-  Method & get_default_value_method = createMethod(property::get_default_value_method_name);
-  get_default_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultValueHandler));
-  get_default_value_method.setReturnType(type);
+  Function & get_default_value_function = createFunction(property::get_default_value_function_name);
+  get_default_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultValueHandler));
+  get_default_value_function.setReturnType(type);
 
-  Method & set_value_to_default_method = createMethod(property::set_value_to_default_method_name);
-  set_value_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueToDefaultHandler));
+  Function & set_value_to_default_function = createFunction(property::set_value_to_default_function_name);
+  set_value_to_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueToDefaultHandler));
 
   if ((type == JsonStream::ARRAY_TYPE) || ((type == JsonStream::STRING_TYPE) && stringIsSavedAsCharArray()))
   {
@@ -821,31 +821,31 @@ void Property::updateMethodsAndParameters()
 
     Parameter & element_value_parameter = copyParameter(parameter().getElementParameter(),property::element_value_parameter_name);
 
-    // Array Methods
-    methods_.addArray(property_array_methods_);
+    // Array Functions
+    functions_.addArray(property_array_functions_);
 
-    Method & get_element_value_method = createMethod(property::get_element_value_method_name);
-    get_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getElementValueHandler));
-    get_element_value_method.addParameter(element_index_parameter);
-    get_element_value_method.setReturnType(array_element_type);
+    Function & get_element_value_function = createFunction(property::get_element_value_function_name);
+    get_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getElementValueHandler));
+    get_element_value_function.addParameter(element_index_parameter);
+    get_element_value_function.setReturnType(array_element_type);
 
-    Method & set_element_value_method = createMethod(property::set_element_value_method_name);
-    set_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueHandler));
-    set_element_value_method.addParameter(element_index_parameter);
-    set_element_value_method.addParameter(element_value_parameter);
+    Function & set_element_value_function = createFunction(property::set_element_value_function_name);
+    set_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueHandler));
+    set_element_value_function.addParameter(element_index_parameter);
+    set_element_value_function.addParameter(element_value_parameter);
 
-    Method & get_default_element_value_method = createMethod(property::get_default_element_value_method_name);
-    get_default_element_value_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultElementValueHandler));
-    get_default_element_value_method.addParameter(element_index_parameter);
-    get_default_element_value_method.setReturnType(array_element_type);
+    Function & get_default_element_value_function = createFunction(property::get_default_element_value_function_name);
+    get_default_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultElementValueHandler));
+    get_default_element_value_function.addParameter(element_index_parameter);
+    get_default_element_value_function.setReturnType(array_element_type);
 
-    Method & set_element_value_to_default_method = createMethod(property::set_element_value_to_default_method_name);
-    set_element_value_to_default_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueToDefaultHandler));
-    set_element_value_to_default_method.addParameter(element_index_parameter);
+    Function & set_element_value_to_default_function = createFunction(property::set_element_value_to_default_function_name);
+    set_element_value_to_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueToDefaultHandler));
+    set_element_value_to_default_function.addParameter(element_index_parameter);
 
-    Method & set_all_element_values_method = createMethod(property::set_all_element_values_method_name);
-    set_all_element_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setAllElementValuesHandler));
-    set_all_element_values_method.addParameter(element_value_parameter);
+    Function & set_all_element_values_function = createFunction(property::set_all_element_values_function_name);
+    set_all_element_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setAllElementValuesHandler));
+    set_all_element_values_function.addParameter(element_value_parameter);
   }
 }
 

@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// Method.h
+// Function.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_SERVER_METHOD_H_
-#define _MODULAR_SERVER_METHOD_H_
+#ifndef _MODULAR_SERVER_FUNCTION_H_
+#define _MODULAR_SERVER_FUNCTION_H_
 #include "Streaming.h"
 #include "Array.h"
 #include "ConstantVariable.h"
@@ -20,10 +20,10 @@
 
 namespace modular_server
 {
-class Method : private FirmwareElement
+class Function : private FirmwareElement
 {
 public:
-  Method();
+  Function();
 
   void attachFunctor(const Functor0 & functor);
   void addParameter(Parameter & parameter);
@@ -40,9 +40,9 @@ public:
 
 private:
   Functor0 functor_;
-  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> parameter_ptrs_;
+  Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> parameter_ptrs_;
   JsonStream::JsonTypes return_type_;
-  Method(const ConstantString & name);
+  Function(const ConstantString & name);
   void setup(const ConstantString & name);
   int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();

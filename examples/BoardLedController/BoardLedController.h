@@ -24,7 +24,7 @@ private:
 
   modular_server::Property properties_[constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
-  modular_server::Method methods_[constants::METHOD_COUNT_MAX];
+  modular_server::Function functions_[constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
   // Handlers

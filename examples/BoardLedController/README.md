@@ -39,7 +39,7 @@ Example Response:
     },
     "API":{
       "firmware":["all"],
-      "methods":[
+      "functions":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -77,11 +77,11 @@ Example Response:
 }
 ```
 
-"methods" is an array of user methods. To execute a method, simply
+"functions" is an array of user functions. To execute a function, simply
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
-Example Method:
+Example Function:
 
 ```shell
 setLedOn
@@ -98,7 +98,7 @@ Example Response:
 
 Notice that the LED on the Arduino board has turned ON.
 
-Example Method with Parameters:
+Example Function with Parameters:
 
 ```shell
 blinkLed
@@ -117,15 +117,15 @@ Example Response:
 }
 ```
 
-When a method executes successfully, the response will contain a
-"result" property. In some cases the result may be null, but the method
+When a function executes successfully, the response will contain a
+"result" property. In some cases the result may be null, but the function
 execution was still successful. When there is an error, there will not
 exist a "result" property, but there will exist an "error" property.
 
-To get more information about a method, enter the method followed by
+To get more information about a function, enter the function followed by
 a question mark ?
 
-Example Method Help:
+Example Function Help:
 
 ```shell
 blinkLed ?
@@ -149,10 +149,10 @@ Example Response:
 }
 ```
 
-The blinkLed method requires 3 parameters.
+The blinkLed function requires 3 parameters.
 
-To get more information about a single method parameter, enter the
-method followed by the parameter followed by a question mark ?
+To get more information about a single function parameter, enter the
+function followed by the parameter followed by a question mark ?
 
 Example Parameter Help:
 
@@ -176,8 +176,8 @@ Example Response:
 }
 ```
 
-To get more information about all of the parameters a method takes,
-enter the method followed by two questions marks ??:
+To get more information about all of the parameters a function takes,
+enter the function followed by two questions marks ??:
 
 ```shell
 blinkLed ??
@@ -222,13 +222,13 @@ Example Response:
 ```
 
 It works the same if the question marks are before or after the
-method.
+function.
 
 ```shell
 ?? blinkLed
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 blinkLed 3.0 0.2 20
@@ -247,7 +247,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 blinkLed 0.5 0.2 20
@@ -265,7 +265,7 @@ Example Response:
 Notice that the LED on the Arduino board has blinked 20 times, with an
 on duration of 500ms and an off duration of 200ms.
 
-Example Method:
+Example Function:
 
 ```shell
 getLedPin ?
@@ -285,7 +285,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getLedPin
@@ -300,7 +300,7 @@ Example Response:
 }
 ```
 
-Use the getDeviceId method to get a unique set of values to identify
+Use the getDeviceId function to get a unique set of values to identify
 the device.
 
 Example:
@@ -325,7 +325,7 @@ Example Response:
 The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
-Use the getDeviceInfo method to get information about the hardware and
+Use the getDeviceInfo function to get information about the hardware and
 firmware of the device.
 
 Example:
@@ -360,10 +360,10 @@ Example Response:
 }
 ```
 
-Every method, parameter, and property belongs to one firmware set.
+Every function, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
-method.
+function.
 
 Example:
 
@@ -378,7 +378,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["all"],
-    "methods":[
+    "functions":[
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
@@ -428,7 +428,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["BoardLedController"],
-    "methods":[
+    "functions":[
       "setLedOn",
       "setLedOff",
       "getLedPin",
@@ -454,7 +454,7 @@ from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'board_led_controller', 'serial_number': 0}
-dev.get_methods()
+dev.get_functions()
 ['get_memory_free',
  'set_property_element_value',
  'get_property_value',
@@ -518,17 +518,17 @@ dev.convert_to_json(result)
 '{"firmware":"BoardLedController","name":"getLedPin","parameters":[],"result_type":"long"}'
 dev.get_led_pin()
 13
-dev.call_server_method("get_led_pin")
+dev.call_server_function("get_led_pin")
 13
 dev.send_json_request('["get_led_pin"]')
 13
-dev.call_server_method("blink_led",0.5,0.2,20)
+dev.call_server_function("blink_led",0.5,0.2,20)
 dev.send_json_request('["blink_led",0.5,0.2,20]')
 dev.get_api(["BoardLedController"])
 {'properties': [],
  'firmware': ['BoardLedController'],
  'callbacks': [],
- 'methods': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
+ 'functions': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
  'parameters': ['duration_on', 'duration_off', 'count']}
 ```
 
@@ -558,8 +558,8 @@ ans =
   name: 'board_led_controller'
   form_factor: '5x3'
   serial_number: 0
-dev.getMethods()                 % get device methods
-  Modular Device Methods
+dev.getFunctions()                 % get device functions
+  Modular Device Functions
   ---------------------
   getDeviceId
   getDeviceInfo
@@ -582,8 +582,8 @@ dev.getMethods()                 % get device methods
 dev.blinkLed()
 Error using ModularClient/sendRequest (line 301)
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
-method_info = dev.blinkLed('?')
-method_info =
+function_info = dev.blinkLed('?')
+function_info =
   name: 'blinkLed'
   firmware: 'BoardLedController'
   parameters: {'duration_on'  'duration_off'  'count'}
@@ -602,18 +602,18 @@ dev.blinkLed(0.5,0.2,20);
 led_pin = dev.getLedPin()
 led_pin =
   13
-led_pin = dev.callServerMethod('getLedPin')
+led_pin = dev.callServerFunction('getLedPin')
 led_pin =
   13
 led_pin = dev.sendJsonRequest('["getLedPin"]')
 led_pin =
   13
-dev.callServerMethod('blinkLed',0.5,0.2,20)
+dev.callServerFunction('blinkLed',0.5,0.2,20)
 dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')
 dev.getApi({'BoardLedController'})
 ans =
   firmware: {'BoardLedController'}
-  methods: {'setLedOn'  'setLedOff'  'getLedPin'  'blinkLed'}
+  functions: {'setLedOn'  'setLedOff'  'getLedPin'  'blinkLed'}
   parameters: {'duration_on'  'duration_off'  'count'}
   properties: {0x1 cell}
   callbacks: {0x1 cell}

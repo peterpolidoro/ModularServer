@@ -29,17 +29,17 @@ const long serial_number_default = serial_number_min;
 
 // Parameters
 
-// Methods
-CONSTANT_STRING(get_procedure_ids_method_name,"getProcedureIds");
-CONSTANT_STRING(help_method_name,"?");
-CONSTANT_STRING(verbose_help_method_name,"??");
-CONSTANT_STRING(get_device_id_method_name,"getDeviceId");
-CONSTANT_STRING(get_device_info_method_name,"getDeviceInfo");
-CONSTANT_STRING(get_api_method_name,"getApi");
-CONSTANT_STRING(get_api_verbose_method_name,"getApiVerbose");
-CONSTANT_STRING(get_property_default_values_method_name,"getPropertyDefaultValues");
-CONSTANT_STRING(get_property_values_method_name,"getPropertyValues");
-CONSTANT_STRING(get_memory_free_method_name,"getMemoryFree");
+// Functions
+CONSTANT_STRING(get_method_ids_function_name,"getMethodIds");
+CONSTANT_STRING(help_function_name,"?");
+CONSTANT_STRING(verbose_help_function_name,"??");
+CONSTANT_STRING(get_device_id_function_name,"getDeviceId");
+CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
+CONSTANT_STRING(get_api_function_name,"getApi");
+CONSTANT_STRING(get_api_verbose_function_name,"getApiVerbose");
+CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
+CONSTANT_STRING(get_property_values_function_name,"getPropertyValues");
+CONSTANT_STRING(get_memory_free_function_name,"getMemoryFree");
 
 // Callbacks
 CONSTANT_STRING(set_properties_to_defaults_callback_name,"setPropertiesToDefaults");
@@ -47,7 +47,7 @@ CONSTANT_STRING(set_properties_to_defaults_callback_name,"setPropertiesToDefault
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");
 CONSTANT_STRING(invalid_request_error_message,"Invalid Request");
-CONSTANT_STRING(procedure_not_found_error_message,"Procedure not found");
+CONSTANT_STRING(method_not_found_error_message,"Method not found");
 CONSTANT_STRING(invalid_params_error_message,"Invalid params");
 CONSTANT_STRING(server_error_error_message,"Server error");
 
@@ -66,12 +66,12 @@ CONSTANT_STRING(array_parameter_error_error_data,"Array parameter element value 
 CONSTANT_STRING(array_parameter_length_error_error_data,"Array parameter length not valid. ");
 CONSTANT_STRING(value_not_in_subset_error_data,"Value not in subset: ");
 CONSTANT_STRING(value_not_in_range_error_data,"Value not in range: ");
-CONSTANT_STRING(property_method_not_found_error_data,"Property method not found");
+CONSTANT_STRING(property_function_not_found_error_data,"Property function not found");
 CONSTANT_STRING(incorrect_property_parameter_number_error_data,"Incorrect number of property parameters. ")
 
 const int parse_error_code = -32700;
 const int invalid_request_error_code = -32600;
-const int procedure_not_found_error_code = -32601;
+const int method_not_found_error_code = -32601;
 const int invalid_params_error_code = -32602;
 const int internal_error_error_code = -32603;
 const int server_error_error_code = -32000;
@@ -97,7 +97,7 @@ CONSTANT_STRING(result_type_constant_string,"result_type");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
 CONSTANT_STRING(properties_constant_string,"properties");
 CONSTANT_STRING(parameters_constant_string,"parameters");
-CONSTANT_STRING(methods_constant_string,"methods");
+CONSTANT_STRING(functions_constant_string,"functions");
 CONSTANT_STRING(callbacks_constant_string,"callbacks");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");

@@ -39,7 +39,7 @@ Example Response:
     },
     "API":{
       "firmware":["all"],
-      "methods":[
+      "functions":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -85,11 +85,11 @@ Example Response:
 }
 ```
 
-"methods" is an array of user methods. To execute a method, simply
+"functions" is an array of user functions. To execute a function, simply
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
-Example Method:
+Example Function:
 
 ```shell
 getStoredString
@@ -104,7 +104,7 @@ Example Response:
 }
 ```
 
-Example Method with Parameters:
+Example Function with Parameters:
 
 ```shell
 repeat
@@ -123,10 +123,10 @@ Example Response:
 }
 ```
 
-To get more information about a method, enter the method followed by
+To get more information about a function, enter the function followed by
 a question mark ?
 
-Example Method Help:
+Example Function Help:
 
 ```shell
 repeat ?
@@ -149,10 +149,10 @@ Example Response:
 }
 ```
 
-The repeat method requires 2 parameters.
+The repeat function requires 2 parameters.
 
-To get more information about all of the parameters a method takes,
-enter the method followed by two questions marks ??:
+To get more information about all of the parameters a function takes,
+enter the function followed by two questions marks ??:
 
 Example Parameter Help:
 
@@ -187,8 +187,8 @@ Example Response:
 }
 ```
 
-To get more information about just one of the parameters a method takes,
-enter the method followed by the parameter followed by one question mark ?:
+To get more information about just one of the parameters a function takes,
+enter the function followed by the parameter followed by one question mark ?:
 
 Example Parameter Help:
 
@@ -211,7 +211,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 repeat "I am a string to repeat." 4
@@ -231,7 +231,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 charsAt "I am an input string!" [0,6,8]
@@ -259,7 +259,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 startingChars "Fantastic!"
@@ -274,7 +274,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyValue starting_chars_count 5
@@ -289,7 +289,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 startingChars "Fantastic!"
@@ -304,7 +304,7 @@ Example Response:
 }
 ```
 
-Use the getDeviceId method to get a unique set of values to identify
+Use the getDeviceId function to get a unique set of values to identify
 the device.
 
 Example:
@@ -329,7 +329,7 @@ Example Response:
 The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
-Use the getDeviceInfo method to get information about the hardware and
+Use the getDeviceInfo function to get information about the hardware and
 firmware of the device.
 
 Example:
@@ -364,10 +364,10 @@ Example Response:
 }
 ```
 
-Every method, parameter, and property belongs to one firmware set.
+Every function, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
-method.
+function.
 
 Example:
 
@@ -382,7 +382,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["all"],
-    "methods":[
+    "functions":[
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
@@ -440,7 +440,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["StringController"],
-    "methods":[
+    "functions":[
       "echo",
       "length",
       "startsWith",
@@ -475,7 +475,7 @@ from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'string_controller', 'serial_number': 77}
-dev.get_methods()
+dev.get_functions()
 ['echo',
  'get_property_default_values',
  'set_property_value',
@@ -537,13 +537,13 @@ dev.chars_at('I am an input string!',[0,6,8])
 dev.get_property_value('starting_chars_count')
 5
 dev.set_property_value('starting_chars_count',3)
-dev.call_server_method('set_property_value','starting_chars_count',7)
+dev.call_server_function('set_property_value','starting_chars_count',7)
 dev.send_json_request('["set_property_value","starting_chars_count",5]')
 dev.get_property_value('starting_chars_count')
 3
 dev.starting_chars('Fantastic!')
 'Fan'
-dev.call_server_method('starting_chars','Fantastic!')
+dev.call_server_function('starting_chars','Fantastic!')
 'Fan'
 dev.send_json_request('["starting_chars","Fantastic!"]')
 'Fan'
@@ -551,7 +551,7 @@ dev.get_api(["StringController"])
 {'properties': ['starting_chars_count', 'stored_string'],
  'firmware': ['StringController'],
  'callbacks': [],
- 'methods': ['echo',
+ 'functions': ['echo',
   'length',
   'startsWith',
   'repeat',
@@ -588,8 +588,8 @@ ans =
   name: 'string_controller'
   form_factor: '5x3'
   serial_number: 0
-dev.getMethods()                 % get device methods
-  Modular Device Methods
+dev.getFunctions()                 % get device functions
+  Modular Device Functions
   ---------------------
   getDeviceId
   getDeviceInfo
@@ -645,7 +645,7 @@ ans =
 dev.startingChars('Fantastic!')
 ans =
   Fanta
-result = dev.callServerMethod('startingChars','Fantastic!')
+result = dev.callServerFunction('startingChars','Fantastic!')
 result =
   Fanta
 result = dev.sendJsonRequest('["startingChars","Fantastic!"]')

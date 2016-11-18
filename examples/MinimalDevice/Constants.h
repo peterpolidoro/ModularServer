@@ -16,7 +16,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=1};
-enum{METHOD_COUNT_MAX=1};
+enum{FUNCTION_COUNT_MAX=1};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern const long baudrate;
@@ -37,7 +37,7 @@ extern const modular_server::HardwareInfo hardware_info;
 
 // Parameters
 
-// Methods
+// Functions
 
 // Callbacks
 

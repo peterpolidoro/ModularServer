@@ -18,8 +18,8 @@ Server::Server() :
 
 void Server::setup()
 {
-  request_procedure_index_ = -1;
-  property_method_index_ = -1;
+  request_method_index_ = -1;
+  property_function_index_ = -1;
   server_stream_index_ = 0;
 
   eeprom_initialized_ = false;
@@ -41,7 +41,7 @@ void Server::setup()
   addFirmware(constants::firmware_info,
               server_properties_,
               server_parameters_,
-              server_methods_,
+              server_functions_,
               server_callbacks_);
 
   // Properties
@@ -63,52 +63,52 @@ void Server::setup()
                                firmware_name_array_.max_size(),
                                firmware_name_array_.size());
 
-  // Methods
-  Method & get_procedure_ids_method = createMethod(constants::get_procedure_ids_method_name);
-  get_procedure_ids_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getProcedureIdsHandler));
-  get_procedure_ids_method.setReturnTypeObject();
-  private_method_index_ = 0;
+  // Functions
+  Function & get_method_ids_function = createFunction(constants::get_method_ids_function_name);
+  get_method_ids_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsHandler));
+  get_method_ids_function.setReturnTypeObject();
+  private_function_index_ = 0;
 
-  Method & help_method = createMethod(constants::help_method_name);
-  help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpHandler));
-  help_method.setReturnTypeObject();
-  private_method_index_++;
+  Function & help_function = createFunction(constants::help_function_name);
+  help_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpHandler));
+  help_function.setReturnTypeObject();
+  private_function_index_++;
 
-  Method & verbose_help_method = createMethod(constants::verbose_help_method_name);
-  verbose_help_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpHandler));
-  verbose_help_method.setReturnTypeObject();
-  private_method_index_++;
+  Function & verbose_help_function = createFunction(constants::verbose_help_function_name);
+  verbose_help_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpHandler));
+  verbose_help_function.setReturnTypeObject();
+  private_function_index_++;
 
-  Method & get_device_id_method = createMethod(constants::get_device_id_method_name);
-  get_device_id_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdHandler));
-  get_device_id_method.setReturnTypeObject();
+  Function & get_device_id_function = createFunction(constants::get_device_id_function_name);
+  get_device_id_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdHandler));
+  get_device_id_function.setReturnTypeObject();
 
-  Method & get_device_info_method = createMethod(constants::get_device_info_method_name);
-  get_device_info_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoHandler));
-  get_device_info_method.setReturnTypeObject();
+  Function & get_device_info_function = createFunction(constants::get_device_info_function_name);
+  get_device_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoHandler));
+  get_device_info_function.setReturnTypeObject();
 
-  Method & get_api_method = createMethod(constants::get_api_method_name);
-  get_api_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
-  get_api_method.addParameter(firmware_parameter);
-  get_api_method.setReturnTypeObject();
+  Function & get_api_function = createFunction(constants::get_api_function_name);
+  get_api_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
+  get_api_function.addParameter(firmware_parameter);
+  get_api_function.setReturnTypeObject();
 
-  Method & get_api_verbose_method = createMethod(constants::get_api_verbose_method_name);
-  get_api_verbose_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseHandler));
-  get_api_verbose_method.addParameter(firmware_parameter);
-  get_api_verbose_method.setReturnTypeObject();
+  Function & get_api_verbose_function = createFunction(constants::get_api_verbose_function_name);
+  get_api_verbose_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseHandler));
+  get_api_verbose_function.addParameter(firmware_parameter);
+  get_api_verbose_function.setReturnTypeObject();
 
-  Method & get_property_default_values_method = createMethod(constants::get_property_default_values_method_name);
-  get_property_default_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
-  get_property_default_values_method.setReturnTypeObject();
+  Function & get_property_default_values_function = createFunction(constants::get_property_default_values_function_name);
+  get_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
+  get_property_default_values_function.setReturnTypeObject();
 
-  Method & get_property_values_method = createMethod(constants::get_property_values_method_name);
-  get_property_values_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesHandler));
-  get_property_values_method.setReturnTypeObject();
+  Function & get_property_values_function = createFunction(constants::get_property_values_function_name);
+  get_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesHandler));
+  get_property_values_function.setReturnTypeObject();
 
 #ifdef __AVR__
-  Method & get_memory_free_method = createMethod(constants::get_memory_free_method_name);
-  get_memory_free_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeHandler));
-  get_memory_free_method.setReturnTypeLong();
+  Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
+  get_memory_free_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeHandler));
+  get_memory_free_function.setReturnTypeLong();
 #endif
 
   // Callbacks
@@ -204,34 +204,34 @@ Parameter & Server::copyParameter(Parameter parameter,const ConstantString & par
   return parameters_.back();
 }
 
-// Methods
-Method & Server::createMethod(const ConstantString & method_name)
+// Functions
+Function & Server::createFunction(const ConstantString & function_name)
 {
-  int method_index = findMethodIndex(method_name);
-  if (method_index < 0)
+  int function_index = findFunctionIndex(function_name);
+  if (function_index < 0)
   {
-    methods_.push_back(Method(method_name));
+    functions_.push_back(Function(function_name));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
-    methods_.back().setFirmwareName(*firmware_name_ptr);
-    return methods_.back();
+    functions_.back().setFirmwareName(*firmware_name_ptr);
+    return functions_.back();
   }
 }
 
-Method & Server::method(const ConstantString & method_name)
+Function & Server::function(const ConstantString & function_name)
 {
-  int method_index = findMethodIndex(method_name);
-  if ((method_index >= 0) && (method_index < (int)methods_.size()))
+  int function_index = findFunctionIndex(function_name);
+  if ((function_index >= 0) && (function_index < (int)functions_.size()))
   {
-    return methods_[method_index];
+    return functions_[function_index];
   }
-  return dummy_method_;
+  return dummy_function_;
 }
 
-Method & Server::copyMethod(Method method,const ConstantString & method_name)
+Function & Server::copyFunction(Function function,const ConstantString & function_name)
 {
-  methods_.push_back(method);
-  methods_.back().setName(method_name);
-  return methods_.back();
+  functions_.push_back(function);
+  functions_.back().setName(function_name);
+  return functions_.back();
 }
 
 // Callbacks
@@ -329,24 +329,24 @@ void Server::handleRequest()
 // private
 ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parameter_name)
 {
-  // index 0 is the request procedure, index 1 is the first parameter
+  // index 0 is the request method, index 1 is the first parameter
   int parameter_index = 1;
-  if (request_procedure_index_ < (int)methods_.size())
+  if (request_method_index_ < (int)functions_.size())
   {
-    int method_index = request_procedure_index_;
-    Method & method = methods_[method_index];
-    parameter_index += findMethodParameterIndex(method,parameter_name);
+    int function_index = request_method_index_;
+    Function & function = functions_[function_index];
+    parameter_index += findFunctionParameterIndex(function,parameter_name);
   }
-  else if (request_procedure_index_ < (int)(methods_.size() + callbacks_.size() + properties_.size()))
+  else if (request_method_index_ < (int)(functions_.size() + callbacks_.size() + properties_.size()))
   {
-    if (property_method_index_ >= 0)
+    if (property_function_index_ >= 0)
     {
-      int property_index = request_procedure_index_ - methods_.size() - callbacks_.size();
+      int property_index = request_method_index_ - functions_.size() - callbacks_.size();
       Property & property = properties_[property_index];
-      Method & method = property.methods_[property_method_index_];
+      Function & function = property.functions_[property_function_index_];
 
-      // index 0 is the request procedure, index 1 is the property method
-      parameter_index += findMethodParameterIndex(method,parameter_name) + 1;
+      // index 0 is the request method, index 1 is the property function
+      parameter_index += findFunctionParameterIndex(function,parameter_name) + 1;
     }
   }
   return (*request_json_array_ptr_)[parameter_index];
@@ -354,9 +354,9 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
 
 void Server::processRequestArray()
 {
-  const char * procedure_string = (*request_json_array_ptr_)[0];
-  request_procedure_index_ = findProcedureIndex(procedure_string);
-  if (request_procedure_index_ >= 0)
+  const char * method_string = (*request_json_array_ptr_)[0];
+  request_method_index_ = findMethodIndex(method_string);
+  if (request_method_index_ >= 0)
   {
     int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
     int parameter_count = array_elements_count - 1;
@@ -364,61 +364,61 @@ void Server::processRequestArray()
     constants::question_constant_string.copy(question_str);
     char question_double_str[constants::question_double_constant_string.length()+1];
     constants::question_double_constant_string.copy(question_double_str);
-    if (request_procedure_index_ < (int)methods_.size())
+    if (request_method_index_ < (int)functions_.size())
     {
-      int method_index = request_procedure_index_;
-      Method & method = methods_[method_index];
-      // method ?
+      int function_index = request_method_index_;
+      Function & function = functions_[function_index];
+      // function ?
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        methodHelp(method,false);
+        functionHelp(function,false);
       }
-      // method ??
+      // function ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        methodHelp(method,true);
+        functionHelp(function,true);
       }
-      // method parameter ?
-      // method parameter ??
+      // function parameter ?
+      // function parameter ??
       else if ((parameter_count == 2) &&
                ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
                 (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
       {
-        int parameter_index = processParameterString(method,(*request_json_array_ptr_)[1]);
+        int parameter_index = processParameterString(function,(*request_json_array_ptr_)[1]);
         if (parameter_index >= 0)
         {
           Parameter * parameter_ptr;
-          parameter_ptr = method.parameter_ptrs_[parameter_index];
+          parameter_ptr = function.parameter_ptrs_[parameter_index];
           response_.writeResultKey();
           parameterHelp(*parameter_ptr);
         }
       }
-      // execute private method without checking parameters
-      else if (request_procedure_index_ <= private_method_index_)
+      // execute private function without checking parameters
+      else if (request_method_index_ <= private_function_index_)
       {
-        method.functor();
+        function.functor();
       }
       // check parameter count
-      else if (parameter_count != method.getParameterCount())
+      else if (parameter_count != function.getParameterCount())
       {
-        response_.returnParameterCountError(parameter_count,method.getParameterCount());
+        response_.returnParameterCountError(parameter_count,function.getParameterCount());
         return;
       }
-      // check parameters and call method functor
+      // check parameters and call function functor
       else
       {
-        bool parameters_ok = checkParameters(method);
+        bool parameters_ok = checkParameters(function);
         if (parameters_ok)
         {
-          method.functor();
+          function.functor();
         }
       }
     }
-    else if (request_procedure_index_ < (int)(methods_.size() + callbacks_.size()))
+    else if (request_method_index_ < (int)(functions_.size() + callbacks_.size()))
     {
-      int callback_index = request_procedure_index_ - methods_.size();
+      int callback_index = request_method_index_ - functions_.size();
       Callback & callback = callbacks_[callback_index];
       // callback ?
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
@@ -444,9 +444,9 @@ void Server::processRequestArray()
         callback.functor();
       }
     }
-    else if (request_procedure_index_ < (int)(methods_.size() + callbacks_.size() + properties_.size()))
+    else if (request_method_index_ < (int)(functions_.size() + callbacks_.size() + properties_.size()))
     {
-      int property_index = request_procedure_index_ - methods_.size() - callbacks_.size();
+      int property_index = request_method_index_ - functions_.size() - callbacks_.size();
       Property & property = properties_[property_index];
       // property ?
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
@@ -466,64 +466,64 @@ void Server::processRequestArray()
         response_.returnParameterCountError(parameter_count,1);
         return;
       }
-      // property method
+      // property function
       else
       {
-        property.updateMethodsAndParameters();
+        property.updateFunctionsAndParameters();
 
-        // index 0 is the request procedure, index 1 is the property method
-        const char * property_method_name = (*request_json_array_ptr_)[1];
-        property_method_index_ = property.findMethodIndex(property_method_name);
-        if (property_method_index_ < 0)
+        // index 0 is the request method, index 1 is the property function
+        const char * property_function_name = (*request_json_array_ptr_)[1];
+        property_function_index_ = property.findFunctionIndex(property_function_name);
+        if (property_function_index_ < 0)
         {
-          response_.returnPropertyMethodNotFoundError();
+          response_.returnPropertyFunctionNotFoundError();
           return;
         }
 
-        Method & method = property.methods_[property_method_index_];
+        Function & function = property.functions_[property_function_index_];
 
         int property_parameter_count = parameter_count - 1;
 
-        // property method ?
+        // property function ?
         if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
         {
           response_.writeResultKey();
-          methodHelp(method,false);
+          functionHelp(function,false);
         }
-        // property method ??
+        // property function ??
         else if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
         {
           response_.writeResultKey();
-          methodHelp(method,true);
+          functionHelp(function,true);
         }
-        // property method parameter ?
-        // property method parameter ??
+        // property function parameter ?
+        // property function parameter ??
         else if ((property_parameter_count == 2) &&
                  ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
                   (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
         {
-          int parameter_index = processParameterString(method,(*request_json_array_ptr_)[2]);
+          int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
           if (parameter_index >= 0)
           {
             Parameter * parameter_ptr;
-            parameter_ptr = method.parameter_ptrs_[parameter_index];
+            parameter_ptr = function.parameter_ptrs_[parameter_index];
             response_.writeResultKey();
             parameterHelp(*parameter_ptr);
           }
         }
         // check property parameter count
-        else if (property_parameter_count != method.getParameterCount())
+        else if (property_parameter_count != function.getParameterCount())
         {
-          response_.returnPropertyParameterCountError(property_parameter_count,method.getParameterCount());
+          response_.returnPropertyParameterCountError(property_parameter_count,function.getParameterCount());
           return;
         }
-        // check property parameters and call property method functor
+        // check property parameters and call property function functor
         else
         {
-          bool parameters_ok = checkParameters(method);
+          bool parameters_ok = checkParameters(function);
           if (parameters_ok)
           {
-            method.functor();
+            function.functor();
           }
         }
       }
@@ -531,51 +531,51 @@ void Server::processRequestArray()
   }
   else
   {
-    response_.returnProcedureNotFoundError();
+    response_.returnMethodNotFoundError();
     return;
   }
 }
 
-int Server::findProcedureIndex(const char * procedure_string)
+int Server::findMethodIndex(const char * method_string)
 {
-  int procedure_index = -1;
-  int procedure_id = atoi(procedure_string);
+  int method_index = -1;
+  int method_id = atoi(method_string);
   char zero_str[constants::zero_constant_string.length()+1];
   constants::zero_constant_string.copy(zero_str);
-  if (strcmp(procedure_string,zero_str) == 0)
+  if (strcmp(method_string,zero_str) == 0)
   {
-    procedure_index = 0;
+    method_index = 0;
     response_.write(constants::id_constant_string,0);
   }
-  else if (procedure_id > 0)
+  else if (method_id > 0)
   {
-    procedure_index = procedure_id;
-    response_.write(constants::id_constant_string,procedure_id);
+    method_index = method_id;
+    response_.write(constants::id_constant_string,method_id);
   }
   else
   {
-    procedure_index = findMethodIndex(procedure_string);
-    if (procedure_index >= 0)
+    method_index = findFunctionIndex(method_string);
+    if (method_index >= 0)
     {
-      response_.write(constants::id_constant_string,procedure_string);
-      return procedure_index;
+      response_.write(constants::id_constant_string,method_string);
+      return method_index;
     }
-    procedure_index = findCallbackIndex(procedure_string);
-    if (procedure_index >= 0)
+    method_index = findCallbackIndex(method_string);
+    if (method_index >= 0)
     {
-      response_.write(constants::id_constant_string,procedure_string);
-      procedure_index += methods_.size();
-      return procedure_index;
+      response_.write(constants::id_constant_string,method_string);
+      method_index += functions_.size();
+      return method_index;
     }
-    procedure_index = findPropertyIndex(procedure_string);
-    if (procedure_index >= 0)
+    method_index = findPropertyIndex(method_string);
+    if (method_index >= 0)
     {
-      response_.write(constants::id_constant_string,procedure_string);
-      procedure_index += methods_.size() + callbacks_.size();
-      return procedure_index;
+      response_.write(constants::id_constant_string,method_string);
+      method_index += functions_.size() + callbacks_.size();
+      return method_index;
     }
   }
-  return procedure_index;
+  return method_index;
 }
 
 int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
@@ -590,7 +590,7 @@ int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
   return elements_count;
 }
 
-int Server::processParameterString(Method & method, const char * parameter_string)
+int Server::processParameterString(Function & function, const char * parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = atoi(parameter_string);
@@ -606,10 +606,10 @@ int Server::processParameterString(Method & method, const char * parameter_strin
   }
   else
   {
-    parameter_index = findMethodParameterIndex(method,parameter_string);
+    parameter_index = findFunctionParameterIndex(function,parameter_string);
   }
-  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &method.parameter_ptrs_;
+  Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
+  parameter_ptrs_ptr = &function.parameter_ptrs_;
   if ((parameter_index < 0) || (parameter_index >= (int)parameter_ptrs_ptr->size()))
   {
     response_.returnParameterNotFoundError();
@@ -618,18 +618,18 @@ int Server::processParameterString(Method & method, const char * parameter_strin
   return parameter_index;
 }
 
-bool Server::checkParameters(Method & method)
+bool Server::checkParameters(Function & function)
 {
   int parameter_index = 0;
   for (ArduinoJson::JsonArray::iterator it=request_json_array_ptr_->begin();
        it!=request_json_array_ptr_->end();
        ++it)
   {
-    // do not check method
+    // do not check function
     if (it!=request_json_array_ptr_->begin())
     {
       Parameter * parameter_ptr = NULL;
-      parameter_ptr = method.parameter_ptrs_[parameter_index];
+      parameter_ptr = function.parameter_ptrs_[parameter_index];
       if (checkParameter(*parameter_ptr,*it))
       {
         parameter_index++;
@@ -947,7 +947,7 @@ void Server::incrementServerStream()
 
 void Server::propertyHelp(Property & property, bool verbose)
 {
-  property.updateMethodsAndParameters();
+  property.updateFunctionsAndParameters();
 
   parameterHelp(property.parameter(),false);
 
@@ -957,17 +957,17 @@ void Server::propertyHelp(Property & property, bool verbose)
   response_.writeKey(constants::default_value_constant_string);
   writePropertyToResponse(property,false,true);
 
-  response_.writeKey(constants::methods_constant_string);
+  response_.writeKey(constants::functions_constant_string);
   response_.beginArray();
-  for (size_t i=0; i<Property::methods_.size(); ++i)
+  for (size_t i=0; i<Property::functions_.size(); ++i)
   {
     if (verbose)
     {
-      methodHelp(Property::methods_[i],false);
+      functionHelp(Property::functions_[i],false);
     }
     else
     {
-      response_.write(Property::methods_[i].getName());
+      response_.write(Property::functions_[i].getName());
     }
   }
   response_.endArray();
@@ -1149,19 +1149,19 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
   }
 }
 
-void Server::methodHelp(Method & method, bool verbose)
+void Server::functionHelp(Function & function, bool verbose)
 {
   response_.beginObject();
 
-  const ConstantString & method_name = method.getName();
-  response_.write(constants::name_constant_string,method_name);
-  const ConstantString & firmware_name = method.getFirmwareName();
+  const ConstantString & function_name = function.getName();
+  response_.write(constants::name_constant_string,function_name);
+  const ConstantString & firmware_name = function.getFirmwareName();
   response_.write(constants::firmware_constant_string,firmware_name);
 
   response_.writeKey(constants::parameters_constant_string);
   response_.beginArray();
-  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &method.parameter_ptrs_;
+  Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
+  parameter_ptrs_ptr = &function.parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
     if (verbose)
@@ -1176,7 +1176,7 @@ void Server::methodHelp(Method & method, bool verbose)
   }
   response_.endArray();
 
-  response_.write(constants::result_type_constant_string,method.getReturnType());
+  response_.write(constants::result_type_constant_string,function.getReturnType());
 
   response_.endObject();
 }
@@ -1250,24 +1250,24 @@ void Server::help(bool verbose)
 
     response_.endObject();
   }
-  // ? method
+  // ? function
   // ? parameter
   // ? property
   // ? callback
-  // ?? method
+  // ?? function
   // ?? parameter
   // ?? property
   // ?? callback
   else if (parameter_count == 1)
   {
     const char * param_string = (*request_json_array_ptr_)[1];
-    int method_index = findMethodIndex(param_string);
-    if ((method_index >= 0) && (method_index < (int)methods_.size()))
+    int function_index = findFunctionIndex(param_string);
+    if ((function_index >= 0) && (function_index < (int)functions_.size()))
     {
-      // ? method
+      // ? function
       param_error = false;
       response_.writeResultKey();
-      methodHelp(methods_[method_index],verbose);
+      functionHelp(functions_[function_index],verbose);
     }
     else
     {
@@ -1306,101 +1306,101 @@ void Server::help(bool verbose)
       }
     }
   }
-  // ? method parameter
-  // ?? method parameter
-  // ? property method
-  // ?? property method
+  // ? function parameter
+  // ?? function parameter
+  // ? property function
+  // ?? property function
   else if (parameter_count == 2)
   {
-    const char * procedure_string = (*request_json_array_ptr_)[1];
-    int method_index = findMethodIndex(procedure_string);
-    if (method_index >= 0)
+    const char * method_string = (*request_json_array_ptr_)[1];
+    int function_index = findFunctionIndex(method_string);
+    if (function_index >= 0)
     {
-      Method & method = methods_[method_index];
+      Function & function = functions_[function_index];
 
-      int parameter_index = processParameterString(method,(*request_json_array_ptr_)[2]);
+      int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
       if (parameter_index >= 0)
       {
         param_error = false;
         Parameter * parameter_ptr;
-        parameter_ptr = method.parameter_ptrs_[parameter_index];
+        parameter_ptr = function.parameter_ptrs_[parameter_index];
         response_.writeResultKey();
         parameterHelp(*parameter_ptr);
       }
     }
     else
     {
-      int property_index = findPropertyIndex(procedure_string);
+      int property_index = findPropertyIndex(method_string);
       if (property_index >= 0)
       {
         Property & property = properties_[property_index];
-        property.updateMethodsAndParameters();
-        int property_method_index = property.findMethodIndex((const char *)(*request_json_array_ptr_)[2]);
-        if (property_method_index >= 0)
+        property.updateFunctionsAndParameters();
+        int property_function_index = property.findFunctionIndex((const char *)(*request_json_array_ptr_)[2]);
+        if (property_function_index >= 0)
         {
           param_error = false;
-          Method & method = property.methods_[property_method_index];
+          Function & function = property.functions_[property_function_index];
 
           response_.writeResultKey();
-          methodHelp(method,verbose);
+          functionHelp(function,verbose);
         }
         else
         {
-          response_.returnPropertyMethodNotFoundError();
+          response_.returnPropertyFunctionNotFoundError();
           return;
         }
       }
       else
       {
-        response_.returnProcedureNotFoundError();
+        response_.returnMethodNotFoundError();
         return;
       }
     }
   }
-  // ? property method parameter
-  // ?? property method parameter
+  // ? property function parameter
+  // ?? property function parameter
   else if (parameter_count == 3)
   {
-    const char * procedure_string = (*request_json_array_ptr_)[1];
-    int property_index = findPropertyIndex(procedure_string);
+    const char * method_string = (*request_json_array_ptr_)[1];
+    int property_index = findPropertyIndex(method_string);
     if (property_index >= 0)
     {
       Property & property = properties_[property_index];
-      property.updateMethodsAndParameters();
-      int property_method_index = property.findMethodIndex((const char *)(*request_json_array_ptr_)[2]);
-      if (property_method_index >= 0)
+      property.updateFunctionsAndParameters();
+      int property_function_index = property.findFunctionIndex((const char *)(*request_json_array_ptr_)[2]);
+      if (property_function_index >= 0)
       {
-        Method & method = property.methods_[property_method_index];
-        int parameter_index = processParameterString(method,(*request_json_array_ptr_)[3]);
+        Function & function = property.functions_[property_function_index];
+        int parameter_index = processParameterString(function,(*request_json_array_ptr_)[3]);
         if (parameter_index >= 0)
         {
           param_error = false;
           Parameter * parameter_ptr;
-          parameter_ptr = method.parameter_ptrs_[parameter_index];
+          parameter_ptr = function.parameter_ptrs_[parameter_index];
           response_.writeResultKey();
           parameterHelp(*parameter_ptr);
         }
       }
       else
       {
-        response_.returnPropertyMethodNotFoundError();
+        response_.returnPropertyFunctionNotFoundError();
         return;
       }
     }
     else
     {
-      response_.returnProcedureNotFoundError();
+      response_.returnMethodNotFoundError();
       return;
     }
   }
   // ? unknown
   // ?? unknown
-  // ? method unknown
-  // ?? method unknown
+  // ? function unknown
+  // ?? function unknown
   // ? property unknown
   // ?? property unknown
-  // ? property method unknown
-  // ?? property method unknown
+  // ? property function unknown
+  // ?? property function unknown
   if (param_error)
   {
     response_.returnParameterInvalidError(constants::empty_constant_string);
@@ -1514,17 +1514,17 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
 
   if (!verbose)
   {
-    response_.writeKey(constants::methods_constant_string);
+    response_.writeKey(constants::functions_constant_string);
     response_.beginArray();
-    for (size_t method_index=0; method_index<methods_.size(); ++method_index)
+    for (size_t function_index=0; function_index<functions_.size(); ++function_index)
     {
-      if (method_index > private_method_index_)
+      if (function_index > private_function_index_)
       {
-        Method & method = methods_[method_index];
-        if (method.firmwareNameInArray(firmware_name_array))
+        Function & function = functions_[function_index];
+        if (function.firmwareNameInArray(firmware_name_array))
         {
-          const ConstantString & method_name = method.getName();
-          response_.write(method_name);
+          const ConstantString & function_name = function.getName();
+          response_.write(function_name);
         }
       }
     }
@@ -1571,13 +1571,13 @@ void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_
   }
   else
   {
-    response_.writeKey(constants::methods_constant_string);
+    response_.writeKey(constants::functions_constant_string);
     response_.beginArray();
-    for (size_t method_index=0; method_index<methods_.size(); ++method_index)
+    for (size_t function_index=0; function_index<functions_.size(); ++function_index)
     {
-      if (method_index > private_method_index_)
+      if (function_index > private_function_index_)
       {
-        methodHelp(methods_[method_index],false);
+        functionHelp(functions_[function_index],false);
       }
     }
     response_.endArray();
@@ -1994,31 +1994,31 @@ void Server::subsetToString(char * destination,
 }
 
 // Handlers
-void Server::getProcedureIdsHandler()
+void Server::getMethodIdsHandler()
 {
   response_.writeResultKey();
   response_.beginObject();
-  size_t procedure_index;
-  for (size_t method_index=0; method_index<methods_.size(); ++method_index)
+  size_t method_index;
+  for (size_t function_index=0; function_index<functions_.size(); ++function_index)
   {
-    if (method_index > private_method_index_)
+    if (function_index > private_function_index_)
     {
-      const ConstantString & method_name = methods_[method_index].getName();
-      procedure_index = method_index;
-      response_.write(method_name,procedure_index);
+      const ConstantString & function_name = functions_[function_index].getName();
+      method_index = function_index;
+      response_.write(function_name,method_index);
     }
   }
   for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
   {
     const ConstantString & callback_name = callbacks_[callback_index].getName();
-    procedure_index = callback_index + methods_.size();
-    response_.write(callback_name,procedure_index);
+    method_index = callback_index + functions_.size();
+    response_.write(callback_name,method_index);
   }
   for (size_t property_index=0; property_index<properties_.size(); ++property_index)
   {
     const ConstantString & property_name = properties_[property_index].getName();
-    procedure_index = property_index + methods_.size() + callbacks_.size();
-    response_.write(property_name,procedure_index);
+    method_index = property_index + functions_.size() + callbacks_.size();
+    response_.write(property_name,method_index);
   }
   response_.endObject();
 }

@@ -21,7 +21,7 @@
 #include "ArduinoJson.h"
 
 #include "Parameter.h"
-#include "Method.h"
+#include "Function.h"
 #include "Response.h"
 #include "Constants.h"
 
@@ -31,31 +31,31 @@ namespace modular_server
 
 namespace property
 {
-enum{METHOD_PARAMETER_TYPE_COUNT=2};
+enum{FUNCTION_PARAMETER_TYPE_COUNT=2};
 enum{PARAMETER_COUNT_MAX=1};
-enum{METHOD_COUNT_MAX=4};
+enum{FUNCTION_COUNT_MAX=4};
 enum{ARRAY_PARAMETER_COUNT_MAX=2};
-enum{ARRAY_METHOD_COUNT_MAX=5};
+enum{ARRAY_FUNCTION_COUNT_MAX=5};
 
 // Parameters
 extern ConstantString value_parameter_name;
 
-// Methods
-extern ConstantString get_value_method_name;
-extern ConstantString set_value_method_name;
-extern ConstantString get_default_value_method_name;
-extern ConstantString set_value_to_default_method_name;
+// Functions
+extern ConstantString get_value_function_name;
+extern ConstantString set_value_function_name;
+extern ConstantString get_default_value_function_name;
+extern ConstantString set_value_to_default_function_name;
 
 // Array Parameters
 extern ConstantString element_index_parameter_name;
 extern ConstantString element_value_parameter_name;
 
-// Array Methods
-extern ConstantString get_element_value_method_name;
-extern ConstantString set_element_value_method_name;
-extern ConstantString get_default_element_value_method_name;
-extern ConstantString set_element_value_to_default_method_name;
-extern ConstantString set_all_element_values_method_name;
+// Array Functions
+extern ConstantString get_element_value_function_name;
+extern ConstantString set_element_value_function_name;
+extern ConstantString get_default_element_value_function_name;
+extern ConstantString set_element_value_to_default_function_name;
+extern ConstantString set_all_element_values_function_name;
 }
 
 class Property
@@ -129,11 +129,11 @@ public:
 
 private:
   static Parameter property_parameters_[property::PARAMETER_COUNT_MAX];
-  static Method property_methods_[property::METHOD_COUNT_MAX];
+  static Function property_functions_[property::FUNCTION_COUNT_MAX];
   static Parameter property_array_parameters_[property::ARRAY_PARAMETER_COUNT_MAX];
-  static Method property_array_methods_[property::ARRAY_METHOD_COUNT_MAX];
-  static ConcatenatedArray<Parameter,property::METHOD_PARAMETER_TYPE_COUNT> parameters_;
-  static ConcatenatedArray<Method,property::METHOD_PARAMETER_TYPE_COUNT> methods_;
+  static Function property_array_functions_[property::ARRAY_FUNCTION_COUNT_MAX];
+  static ConcatenatedArray<Parameter,property::FUNCTION_PARAMETER_TYPE_COUNT> parameters_;
+  static ConcatenatedArray<Function,property::FUNCTION_PARAMETER_TYPE_COUNT> functions_;
   static Response * response_ptr_;
   static Functor4<Property &, bool, bool, int> write_property_to_response_functor_;
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
@@ -158,21 +158,21 @@ private:
   static Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
 
   template <typename T>
-  static int findMethodIndex(T const & method_name)
+  static int findFunctionIndex(T const & function_name)
   {
-    int method_index = -1;
-    for (size_t i=0; i<methods_.size(); ++i)
+    int function_index = -1;
+    for (size_t i=0; i<functions_.size(); ++i)
     {
-      if (methods_[i].compareName(method_name))
+      if (functions_[i].compareName(function_name))
       {
-        method_index = i;
+        function_index = i;
         break;
       }
     }
-    return method_index;
+    return function_index;
   };
-  static Method & createMethod(const ConstantString & method_name);
-  static Method & method(const ConstantString & method_name);
+  static Function & createFunction(const ConstantString & function_name);
+  static Function & function(const ConstantString & function_name);
 
   Parameter parameter_;
   SavedVariable saved_variable_;
@@ -214,7 +214,7 @@ private:
   void preSetElementValueFunctor(const size_t element_index);
   void postSetValueFunctor();
   void postSetElementValueFunctor(const size_t element_index);
-  void updateMethodsAndParameters();
+  void updateFunctionsAndParameters();
 
   // Handlers
   void getValueHandler();

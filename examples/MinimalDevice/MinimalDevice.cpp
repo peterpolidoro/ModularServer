@@ -28,14 +28,14 @@ void MinimalDevice::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               properties_,
                               parameters_,
-                              methods_,
+                              functions_,
                               callbacks_);
 
   // Properties
 
   // Parameters
 
-  // Methods
+  // Functions
 
   // Callbacks
 

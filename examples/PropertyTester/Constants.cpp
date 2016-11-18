@@ -159,22 +159,22 @@ CONSTANT_STRING(direction_array_parameter_name,"direction_array");
 const size_t direction_array_length_min = 2;
 const size_t direction_array_length_max = 4;
 
-// Methods
-CONSTANT_STRING(get_doubled_method_name,"getDoubled");
-CONSTANT_STRING(get_bool_method_name,"getBool");
-CONSTANT_STRING(get_long_array_fixed_method_name,"getLongArrayFixed");
-CONSTANT_STRING(get_long_array_variable_method_name,"getLongArrayVariable");
-CONSTANT_STRING(set_long_array_fixed_method_name,"setLongArrayFixed");
-CONSTANT_STRING(set_long_array_variable_method_name,"setLongArrayVariable");
-CONSTANT_STRING(set_long_array_parameter_method_name,"setLongArrayParameter");
-CONSTANT_STRING(get_string_all_method_name,"getStringAll");
-CONSTANT_STRING(get_string_some_method_name,"getStringSome");
-CONSTANT_STRING(get_count_method_name,"getCount");
-CONSTANT_STRING(get_count_array_method_name,"getCountArray");
-CONSTANT_STRING(get_direction_method_name,"getDirection");
-CONSTANT_STRING(get_direction_array_method_name,"getDirectionArray");
-CONSTANT_STRING(check_mode_method_name,"checkMode");
-CONSTANT_STRING(increment_mode_method_name,"incrementMode");
+// Functions
+CONSTANT_STRING(get_doubled_function_name,"getDoubled");
+CONSTANT_STRING(get_bool_function_name,"getBool");
+CONSTANT_STRING(get_long_array_fixed_function_name,"getLongArrayFixed");
+CONSTANT_STRING(get_long_array_variable_function_name,"getLongArrayVariable");
+CONSTANT_STRING(set_long_array_fixed_function_name,"setLongArrayFixed");
+CONSTANT_STRING(set_long_array_variable_function_name,"setLongArrayVariable");
+CONSTANT_STRING(set_long_array_parameter_function_name,"setLongArrayParameter");
+CONSTANT_STRING(get_string_all_function_name,"getStringAll");
+CONSTANT_STRING(get_string_some_function_name,"getStringSome");
+CONSTANT_STRING(get_count_function_name,"getCount");
+CONSTANT_STRING(get_count_array_function_name,"getCountArray");
+CONSTANT_STRING(get_direction_function_name,"getDirection");
+CONSTANT_STRING(get_direction_array_function_name,"getDirectionArray");
+CONSTANT_STRING(check_mode_function_name,"checkMode");
+CONSTANT_STRING(increment_mode_function_name,"incrementMode");
 
 // Callbacks
 

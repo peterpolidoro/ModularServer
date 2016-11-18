@@ -21,7 +21,7 @@ work with the Arduino Mega 2560 and Teensy 3.2.
   "id":"getApi",
   "result":{
     "firmware":["ModularServer"],
-    "methods":[
+    "functions":[
       "getDeviceId",
       "getDeviceInfo",
       "getApi",

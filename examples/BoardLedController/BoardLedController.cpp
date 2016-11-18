@@ -29,7 +29,7 @@ void BoardLedController::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               properties_,
                               parameters_,
-                              methods_,
+                              functions_,
                               callbacks_);
 
   // Properties
@@ -44,24 +44,24 @@ void BoardLedController::setup()
   modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
   count_parameter.setRange(constants::count_min,constants::count_max);
 
-  // Methods
-  modular_server::Method & led_on_method = modular_server_.createMethod(constants::led_on_method_name);
-  led_on_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOnHandler));
+  // Functions
+  modular_server::Function & led_on_function = modular_server_.createFunction(constants::led_on_function_name);
+  led_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOnHandler));
 
-  modular_server::Method & led_off_method = modular_server_.createMethod(constants::led_off_method_name);
-  led_off_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOffHandler));
+  modular_server::Function & led_off_function = modular_server_.createFunction(constants::led_off_function_name);
+  led_off_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOffHandler));
 
-  modular_server::Method & get_led_pin_method = modular_server_.createMethod(constants::get_led_pin_method_name);
-  get_led_pin_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinHandler));
-  get_led_pin_method.setReturnTypeLong();
+  modular_server::Function & get_led_pin_function = modular_server_.createFunction(constants::get_led_pin_function_name);
+  get_led_pin_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinHandler));
+  get_led_pin_function.setReturnTypeLong();
 
-  modular_server::Method & blink_led_method = modular_server_.createMethod(constants::blink_led_method_name);
-  blink_led_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::blinkLedHandler));
-  blink_led_method.addParameter(duration_on_parameter);
-  blink_led_method.addParameter(duration_off_parameter);
-  blink_led_method.addParameter(count_parameter);
+  modular_server::Function & blink_led_function = modular_server_.createFunction(constants::blink_led_function_name);
+  blink_led_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::blinkLedHandler));
+  blink_led_function.addParameter(duration_on_parameter);
+  blink_led_function.addParameter(duration_off_parameter);
+  blink_led_function.addParameter(count_parameter);
 
-  // Methods
+  // Functions
 
   // Callbacks
 

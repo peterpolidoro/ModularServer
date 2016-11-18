@@ -92,15 +92,15 @@ const size_t index_array_length_max = 3;
 
 CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 
-// Methods
-CONSTANT_STRING(echo_method_name,"echo");
-CONSTANT_STRING(length_method_name,"length");
-CONSTANT_STRING(starts_with_method_name,"startsWith");
-CONSTANT_STRING(repeat_method_name,"repeat");
-CONSTANT_STRING(chars_at_method_name,"charsAt");
-CONSTANT_STRING(starting_chars_method_name,"startingChars");
-CONSTANT_STRING(set_stored_string_method_name,"setStoredString");
-CONSTANT_STRING(get_stored_string_method_name,"getStoredString");
+// Functions
+CONSTANT_STRING(echo_function_name,"echo");
+CONSTANT_STRING(length_function_name,"length");
+CONSTANT_STRING(starts_with_function_name,"startsWith");
+CONSTANT_STRING(repeat_function_name,"repeat");
+CONSTANT_STRING(chars_at_function_name,"charsAt");
+CONSTANT_STRING(starting_chars_function_name,"startingChars");
+CONSTANT_STRING(set_stored_string_function_name,"setStoredString");
+CONSTANT_STRING(get_stored_string_function_name,"getStoredString");
 
 // Callbacks
 

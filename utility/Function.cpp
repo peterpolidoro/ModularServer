@@ -1,27 +1,27 @@
 // ----------------------------------------------------------------------------
-// Method.cpp
+// Function.cpp
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "Method.h"
+#include "Function.h"
 
 
 namespace modular_server
 {
 // public
-Method::Method()
+Function::Function()
 {
   setup(constants::empty_constant_string);
 }
 
-void Method::attachFunctor(const Functor0 & functor)
+void Function::attachFunctor(const Functor0 & functor)
 {
   functor_ = functor;
 }
 
-void Method::addParameter(Parameter & parameter)
+void Function::addParameter(Parameter & parameter)
 {
   const ConstantString & parameter_name = parameter.getName();
   int parameter_index = findParameterIndex(parameter_name);
@@ -31,52 +31,52 @@ void Method::addParameter(Parameter & parameter)
   }
 }
 
-void Method::setReturnTypeLong()
+void Function::setReturnTypeLong()
 {
   return_type_ = JsonStream::LONG_TYPE;
 }
 
-void Method::setReturnTypeDouble()
+void Function::setReturnTypeDouble()
 {
   return_type_ = JsonStream::DOUBLE_TYPE;
 }
 
-void Method::setReturnTypeBool()
+void Function::setReturnTypeBool()
 {
   return_type_ = JsonStream::BOOL_TYPE;
 }
 
-void Method::setReturnTypeNull()
+void Function::setReturnTypeNull()
 {
   return_type_ = JsonStream::NULL_TYPE;
 }
 
-void Method::setReturnTypeString()
+void Function::setReturnTypeString()
 {
   return_type_ = JsonStream::STRING_TYPE;
 }
 
-void Method::setReturnTypeObject()
+void Function::setReturnTypeObject()
 {
   return_type_ = JsonStream::OBJECT_TYPE;
 }
 
-void Method::setReturnTypeArray()
+void Function::setReturnTypeArray()
 {
   return_type_ = JsonStream::ARRAY_TYPE;
 }
 
-void Method::setReturnTypeAny()
+void Function::setReturnTypeAny()
 {
   return_type_ = JsonStream::ANY_TYPE;
 }
 
-void Method::setReturnType(JsonStream::JsonTypes type)
+void Function::setReturnType(JsonStream::JsonTypes type)
 {
   return_type_ = type;
 }
 
-JsonStream::JsonTypes Method::getReturnType()
+JsonStream::JsonTypes Function::getReturnType()
 {
   return return_type_;
 }
@@ -84,18 +84,18 @@ JsonStream::JsonTypes Method::getReturnType()
 // protected
 
 // private
-Method::Method(const ConstantString & name)
+Function::Function(const ConstantString & name)
 {
   setup(name);
 }
 
-void Method::setup(const ConstantString & name)
+void Function::setup(const ConstantString & name)
 {
   setName(name);
   setReturnTypeNull();
 }
 
-int Method::findParameterIndex(const ConstantString & parameter_name)
+int Function::findParameterIndex(const ConstantString & parameter_name)
 {
   int parameter_index = -1;
   for (size_t i=0; i<parameter_ptrs_.size(); ++i)
@@ -109,12 +109,12 @@ int Method::findParameterIndex(const ConstantString & parameter_name)
   return parameter_index;
 }
 
-size_t Method::getParameterCount()
+size_t Function::getParameterCount()
 {
   return parameter_ptrs_.size();
 }
 
-void Method::functor()
+void Function::functor()
 {
   if (functor_)
   {

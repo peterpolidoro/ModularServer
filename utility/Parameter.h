@@ -97,7 +97,7 @@ private:
   Vector<constants::SubsetMemberType> & getSubset();
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
   friend class Property;
-  friend class Method;
+  friend class Function;
   friend class Server;
 
 };

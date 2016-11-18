@@ -5,20 +5,20 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-Method	KEYWORD1
+Function	KEYWORD1
 Parameter	KEYWORD1
 SavedVariable	KEYWORD1
 
 #######################################
-# Methods and Functions (KEYWORD2)
+# Functions and Functions (KEYWORD2)
 #######################################
 
 setServerSerial	KEYWORD2
 setName	KEYWORD2
 setModelNumber	KEYWORD2
 setFirmwareVersion	KEYWORD2
-createMethod	KEYWORD2
-copyMethod	KEYWORD2
+createFunction	KEYWORD2
+copyFunction	KEYWORD2
 createParameter	KEYWORD2
 copyParameter	KEYWORD2
 getParameterValue	KEYWORD2

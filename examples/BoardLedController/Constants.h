@@ -16,7 +16,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=3};
-enum{METHOD_COUNT_MAX=4};
+enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern const long baudrate;
@@ -49,11 +49,11 @@ extern ConstantString count_parameter_name;
 extern const long count_min;
 extern const long count_max;
 
-// Methods
-extern ConstantString led_on_method_name;
-extern ConstantString led_off_method_name;
-extern ConstantString get_led_pin_method_name;
-extern ConstantString blink_led_method_name;
+// Functions
+extern ConstantString led_on_function_name;
+extern ConstantString led_off_function_name;
+extern ConstantString get_led_pin_function_name;
+extern ConstantString blink_led_function_name;
 
 // Callbacks
 

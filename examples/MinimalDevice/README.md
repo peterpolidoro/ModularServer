@@ -39,7 +39,7 @@ Example Response:
     },
     "API":{
       "firmware":["all"],
-      "methods":[
+      "functions":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -62,11 +62,11 @@ Example Response:
 }
 ```
 
-"methods" is an array of user methods. To execute a method, simply
+"functions" is an array of user functions. To execute a function, simply
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
-Example Method (This method only exists on AVR processors):
+Example Function (This function only exists on AVR processors):
 
 ```shell
 getMemoryFree
@@ -82,7 +82,7 @@ Example Response:
 ```
 
 To get more verbose help about the modular device, including
-information about the parameters each method takes, type two question
+information about the parameters each function takes, type two question
 marks ?? into the input property and press the 'Send' button or press the
 'Enter' key.
 
@@ -121,7 +121,7 @@ Example Response:
     },
     "API":{
       "firmware":["all"],
-      "methods":[
+      "functions":[
         {
           "name":"getDeviceId",
           "firmware":"ModularServer",
@@ -193,7 +193,7 @@ Example Response:
           "max":65535,
           "value":0,
           "default_value":0,
-          "methods":[
+          "functions":[
             "getValue",
             "setValue",
             "getDefaultValue",
@@ -218,7 +218,7 @@ Example Response:
 }
 ```
 
-Example Method with Parameters:
+Example Function with Parameters:
 
 ```shell
 getApi
@@ -237,15 +237,15 @@ Example Response:
 }
 ```
 
-When a method executes successfully, the response will contain a
-"result" property. In some cases the result may be null, but the method
+When a function executes successfully, the response will contain a
+"result" property. In some cases the result may be null, but the function
 execution was still successful. When there is an error, there will not
 exist a "result" property, but there will exist an "error" property.
 
-To get more information about a method, enter the method followed by
+To get more information about a function, enter the function followed by
 a question mark.
 
-Example Method Help:
+Example Function Help:
 
 ```shell
 getApi ?
@@ -267,9 +267,9 @@ Example Response:
 }
 ```
 
-Or you can enter a question mark followed by the method.
+Or you can enter a question mark followed by the function.
 
-Example Method Help:
+Example Function Help:
 
 ```shell
 ? getApi
@@ -291,8 +291,8 @@ Example Response:
 }
 ```
 
-To get more verbose information about all of the parameters a method
-takes, enter the method followed by two questions marks.
+To get more verbose information about all of the parameters a function
+takes, enter the function followed by two questions marks.
 
 ```shell
 getApi ??
@@ -326,7 +326,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getApi ["MinimalDevice"]
@@ -339,7 +339,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["MinimalDevice"],
-    "methods":[],
+    "functions":[],
     "parameters":[],
     "properties":[],
     "callbacks":[]
@@ -347,11 +347,11 @@ Example Response:
 }
 ```
 
-Properties are special methods that get and set field values that are
+Properties are special functions that get and set field values that are
 stored on the device, even after the device is powered off.
 
-Properties have their own set of methods with their own set of
-property method parameters.
+Properties have their own set of functions with their own set of
+property function parameters.
 
 Example Property:
 ```shell
@@ -371,7 +371,7 @@ Example Response:
     "max":65535,
     "value":0,
     "default_value":0,
-    "methods":[
+    "functions":[
       "getValue",
       "setValue",
       "getDefaultValue",
@@ -384,7 +384,7 @@ Example Response:
 }
 ```
 
-To get information about a property method:
+To get information about a property function:
 
 ```shell
 ? serial_number setValue
@@ -404,7 +404,7 @@ To get information about a property method:
 }
 ```
 
-To get information about a property method parameter:
+To get information about a property function parameter:
 
 ```shell
 ? serial_number setValue value
@@ -423,7 +423,7 @@ To get information about a property method parameter:
 }
 ```
 
-Example property method call:
+Example property function call:
 
 ```shell
 serial_number setValue -1
@@ -440,7 +440,7 @@ serial_number setValue -1
 }
 ```
 
-Example property method call:
+Example property function call:
 
 ```shell
 serial_number setValue 32
@@ -457,7 +457,7 @@ The serial number setting persists even after the device is powered
 off. The serial number is used to differentiate several identical
 devices connected to a single host machine at one time.
 
-Example Method:
+Example Function:
 
 ```shell
 getPropertyValues
@@ -475,10 +475,10 @@ Example Response:
 ```
 
 To reset the serial number to the default value, use the
-setValueToDefault property method.
+setValueToDefault property function.
 
-Callbacks are methods that take no parameters and return null. They
-can be used like methods or called from interrupts.
+Callbacks are functions that take no parameters and return null. They
+can be used like functions or called from interrupts.
 
 Example Callback:
 
@@ -516,7 +516,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getPropertyValues
@@ -533,7 +533,7 @@ Example Response:
 }
 ```
 
-Use the getDeviceId method to get a unique set of values to identify
+Use the getDeviceId function to get a unique set of values to identify
 the device.
 
 Example:
@@ -558,7 +558,7 @@ Example Response:
 The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
-Use the getDeviceInfo method to get information about the hardware and
+Use the getDeviceInfo function to get information about the hardware and
 firmware of the device.
 
 Example:
@@ -593,10 +593,10 @@ Example Response:
 }
 ```
 
-Every method, parameter, and property belongs to one firmware set.
+Every function, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
-method.
+function.
 
 Example:
 
@@ -611,7 +611,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["all"],
-    "methods":[
+    "functions":[
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
@@ -646,7 +646,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["MinimalDevice"],
-    "methods":[],
+    "functions":[],
     "parameters":[],
     "properties":[],
     "callbacks":[]
@@ -663,7 +663,7 @@ from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'minimal_device', 'serial_number': 0}
-dev.get_procedures()
+dev.get_methods()
 ['get_memory_free',
  'get_api',
  'get_api_verbose',
@@ -685,7 +685,7 @@ dev.get_api('?')
 dev.get_api(['MinimalDevice'])
 {'callbacks': [],
  'firmware': ['MinimalDevice'],
- 'methods': [],
+ 'functions': [],
  'parameters': [],
  'properties': []}
 dev.serial_number('setValue',-1)
@@ -693,7 +693,7 @@ IOError: (from server) message: Invalid params, data: Parameter value not valid.
 dev.serial_number('setValue',32)
 dev.get_property_values()
 {'serial_number': 32}
-result = dev.call_server_procedure('?')
+result = dev.call_server_method('?')
 32
 dev.convert_to_json(result['device_id'])
 '{"serial_number":12,"name":"minimal_device","form_factor":"5x3"}'
@@ -703,7 +703,7 @@ dev.serial_number('getValue')
 dev.get_api(["MinimalDevice"])
 {'callbacks': [],
  'firmware': ['MinimalDevice'],
- 'methods': [],
+ 'functions': [],
  'parameters': [],
  'properties': []}
 ```
@@ -734,8 +734,8 @@ ans =
   name: 'minimal_device'
   form_factor: '5x3'
   serial_number: 0
-dev.getMethods()                 % get device methods
-  Modular Device Methods
+dev.getFunctions()                 % get device functions
+  Modular Device Functions
   ---------------------
   getDeviceId
   getDeviceInfo
@@ -755,8 +755,8 @@ ans =
   4800
 dev.getPropertyValue()
 (from server) message: Invalid params, Incorrect number of parameters. 0 given. 1 needed., code: -32602
-method_info = dev.getPropertyValue('?')
-method_info
+function_info = dev.getPropertyValue('?')
+function_info
 ans =
   name: 'getPropertyValue'
   firmware: 'ModularServer'
@@ -768,7 +768,7 @@ ans =
 dev.setPropertyValue('serial_number',-1)
 (from server) message: Invalid params, Parameter value out of range: 0 <= serial_number <= 65535, code: -32602
 dev.setPropertyValue('serial_number',13);
-result = dev.callServerMethod('?');
+result = dev.callServerFunction('?');
 result.device_id.serial_number
 ans =
   13

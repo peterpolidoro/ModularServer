@@ -28,7 +28,7 @@ void StringController::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               properties_,
                               parameters_,
-                              methods_,
+                              functions_,
                               callbacks_);
 
   // Properties
@@ -56,48 +56,48 @@ void StringController::setup()
   modular_server::Parameter & double_echo_parameter = modular_server_.createParameter(constants::double_echo_parameter_name);
   double_echo_parameter.setTypeBool();
 
-  // Methods
-  modular_server::Method & echo_method = modular_server_.createMethod(constants::echo_method_name);
-  echo_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::echoHandler));
-  echo_method.addParameter(string_parameter);
-  echo_method.addParameter(double_echo_parameter);
-  echo_method.setReturnTypeString();
+  // Functions
+  modular_server::Function & echo_function = modular_server_.createFunction(constants::echo_function_name);
+  echo_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::echoHandler));
+  echo_function.addParameter(string_parameter);
+  echo_function.addParameter(double_echo_parameter);
+  echo_function.setReturnTypeString();
 
-  modular_server::Method & length_method = modular_server_.createMethod(constants::length_method_name);
-  length_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::lengthHandler));
-  length_method.addParameter(string_parameter);
-  length_method.setReturnTypeLong();
+  modular_server::Function & length_function = modular_server_.createFunction(constants::length_function_name);
+  length_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::lengthHandler));
+  length_function.addParameter(string_parameter);
+  length_function.setReturnTypeLong();
 
-  modular_server::Method & starts_with_method = modular_server_.createMethod(constants::starts_with_method_name);
-  starts_with_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startsWithHandler));
-  starts_with_method.addParameter(string_parameter);
-  starts_with_method.addParameter(string2_parameter);
-  starts_with_method.setReturnTypeBool();
+  modular_server::Function & starts_with_function = modular_server_.createFunction(constants::starts_with_function_name);
+  starts_with_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startsWithHandler));
+  starts_with_function.addParameter(string_parameter);
+  starts_with_function.addParameter(string2_parameter);
+  starts_with_function.setReturnTypeBool();
 
-  modular_server::Method & repeat_method = modular_server_.createMethod(constants::repeat_method_name);
-  repeat_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::repeatHandler));
-  repeat_method.addParameter(string_parameter);
-  repeat_method.addParameter(count_parameter);
-  repeat_method.setReturnTypeArray();
+  modular_server::Function & repeat_function = modular_server_.createFunction(constants::repeat_function_name);
+  repeat_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::repeatHandler));
+  repeat_function.addParameter(string_parameter);
+  repeat_function.addParameter(count_parameter);
+  repeat_function.setReturnTypeArray();
 
-  modular_server::Method & chars_at_method = modular_server_.createMethod(constants::chars_at_method_name);
-  chars_at_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::charsAtHandler));
-  chars_at_method.addParameter(string_parameter);
-  chars_at_method.addParameter(index_array_parameter);
-  chars_at_method.setReturnTypeArray();
+  modular_server::Function & chars_at_function = modular_server_.createFunction(constants::chars_at_function_name);
+  chars_at_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::charsAtHandler));
+  chars_at_function.addParameter(string_parameter);
+  chars_at_function.addParameter(index_array_parameter);
+  chars_at_function.setReturnTypeArray();
 
-  modular_server::Method & starting_chars_method = modular_server_.createMethod(constants::starting_chars_method_name);
-  starting_chars_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startingCharsHandler));
-  starting_chars_method.addParameter(string_parameter);
-  starting_chars_method.setReturnTypeString();
+  modular_server::Function & starting_chars_function = modular_server_.createFunction(constants::starting_chars_function_name);
+  starting_chars_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startingCharsHandler));
+  starting_chars_function.addParameter(string_parameter);
+  starting_chars_function.setReturnTypeString();
 
-  modular_server::Method & set_stored_string_method = modular_server_.createMethod(constants::set_stored_string_method_name);
-  set_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::setStoredStringHandler));
-  set_stored_string_method.addParameter(string_parameter);
+  modular_server::Function & set_stored_string_function = modular_server_.createFunction(constants::set_stored_string_function_name);
+  set_stored_string_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::setStoredStringHandler));
+  set_stored_string_function.addParameter(string_parameter);
 
-  modular_server::Method & get_stored_string_method = modular_server_.createMethod(constants::get_stored_string_method_name);
-  get_stored_string_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringHandler));
-  get_stored_string_method.setReturnTypeString();
+  modular_server::Function & get_stored_string_function = modular_server_.createFunction(constants::get_stored_string_function_name);
+  get_stored_string_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringHandler));
+  get_stored_string_function.setReturnTypeString();
 
   // Callbacks
 

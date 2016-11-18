@@ -20,10 +20,10 @@ enum {HARDWARE_INFO_ARRAY_COUNT_MAX=4};
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
 enum{SERVER_PARAMETER_COUNT_MAX=1};
-enum{SERVER_METHOD_COUNT_MAX=10};
+enum{SERVER_FUNCTION_COUNT_MAX=10};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
-enum {METHOD_PARAMETER_COUNT_MAX=6};
+enum {FUNCTION_PARAMETER_COUNT_MAX=6};
 enum {CALLBACK_PROPERTY_COUNT_MAX=6};
 
 enum{SERVER_STREAM_COUNT_MAX=4};
@@ -79,17 +79,17 @@ extern const long serial_number_default;
 
 // Parameters
 
-// Methods
-extern ConstantString get_procedure_ids_method_name;
-extern ConstantString help_method_name;
-extern ConstantString verbose_help_method_name;
-extern ConstantString get_device_id_method_name;
-extern ConstantString get_device_info_method_name;
-extern ConstantString get_api_method_name;
-extern ConstantString get_api_verbose_method_name;
-extern ConstantString get_property_default_values_method_name;
-extern ConstantString get_property_values_method_name;
-extern ConstantString get_memory_free_method_name;
+// Functions
+extern ConstantString get_method_ids_function_name;
+extern ConstantString help_function_name;
+extern ConstantString verbose_help_function_name;
+extern ConstantString get_device_id_function_name;
+extern ConstantString get_device_info_function_name;
+extern ConstantString get_api_function_name;
+extern ConstantString get_api_verbose_function_name;
+extern ConstantString get_property_default_values_function_name;
+extern ConstantString get_property_values_function_name;
+extern ConstantString get_memory_free_function_name;
 
 // Callbacks
 extern ConstantString set_properties_to_defaults_callback_name;
@@ -97,7 +97,7 @@ extern ConstantString set_properties_to_defaults_callback_name;
 // Errors
 extern ConstantString parse_error_message;
 extern ConstantString invalid_request_error_message;
-extern ConstantString procedure_not_found_error_message;
+extern ConstantString method_not_found_error_message;
 extern ConstantString invalid_params_error_message;
 extern ConstantString internal_error_error_message;
 extern ConstantString server_error_error_message;
@@ -117,12 +117,12 @@ extern ConstantString array_parameter_error_error_data;
 extern ConstantString array_parameter_length_error_error_data;
 extern ConstantString value_not_in_subset_error_data;
 extern ConstantString value_not_in_range_error_data;
-extern ConstantString property_method_not_found_error_data;
+extern ConstantString property_function_not_found_error_data;
 extern ConstantString incorrect_property_parameter_number_error_data;
 
 extern const int parse_error_code;
 extern const int invalid_request_error_code;
-extern const int procedure_not_found_error_code;
+extern const int method_not_found_error_code;
 extern const int invalid_params_error_code;
 extern const int internal_error_error_code;
 extern const int server_error_error_code;
@@ -148,7 +148,7 @@ extern ConstantString result_type_constant_string;
 extern ConstantString array_element_type_constant_string;
 extern ConstantString properties_constant_string;
 extern ConstantString parameters_constant_string;
-extern ConstantString methods_constant_string;
+extern ConstantString functions_constant_string;
 extern ConstantString callbacks_constant_string;
 extern ConstantString min_constant_string;
 extern ConstantString max_constant_string;

@@ -16,7 +16,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=9};
 enum{PARAMETER_COUNT_MAX=6};
-enum{METHOD_COUNT_MAX=15};
+enum{FUNCTION_COUNT_MAX=15};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern const long baudrate;
@@ -106,22 +106,22 @@ extern ConstantString direction_array_parameter_name;
 extern const size_t direction_array_length_min;
 extern const size_t direction_array_length_max;
 
-// Methods
-extern ConstantString get_doubled_method_name;
-extern ConstantString get_bool_method_name;
-extern ConstantString get_long_array_fixed_method_name;
-extern ConstantString get_long_array_variable_method_name;
-extern ConstantString set_long_array_fixed_method_name;
-extern ConstantString set_long_array_variable_method_name;
-extern ConstantString set_long_array_parameter_method_name;
-extern ConstantString get_string_all_method_name;
-extern ConstantString get_string_some_method_name;
-extern ConstantString get_count_method_name;
-extern ConstantString get_count_array_method_name;
-extern ConstantString get_direction_method_name;
-extern ConstantString get_direction_array_method_name;
-extern ConstantString check_mode_method_name;
-extern ConstantString increment_mode_method_name;
+// Functions
+extern ConstantString get_doubled_function_name;
+extern ConstantString get_bool_function_name;
+extern ConstantString get_long_array_fixed_function_name;
+extern ConstantString get_long_array_variable_function_name;
+extern ConstantString set_long_array_fixed_function_name;
+extern ConstantString set_long_array_variable_function_name;
+extern ConstantString set_long_array_parameter_function_name;
+extern ConstantString get_string_all_function_name;
+extern ConstantString get_string_some_function_name;
+extern ConstantString get_count_function_name;
+extern ConstantString get_count_array_function_name;
+extern ConstantString get_direction_function_name;
+extern ConstantString get_direction_array_function_name;
+extern ConstantString check_mode_function_name;
+extern ConstantString increment_mode_function_name;
 
 // Callbacks
 

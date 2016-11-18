@@ -39,7 +39,7 @@ Example Response:
     },
     "API":{
       "firmware":["all"],
-      "methods":[
+      "functions":[
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -100,11 +100,11 @@ Example Response:
 }
 ```
 
-"methods" is an array of user methods. To execute a method, simply
+"functions" is an array of user functions. To execute a function, simply
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertiesToDefaults
@@ -119,7 +119,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getPropertyValues
@@ -160,7 +160,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getPropertyValue long_array
@@ -180,7 +180,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getPropertyElementValue double_array 1
@@ -195,7 +195,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyValue bool_array [false,false]
@@ -210,7 +210,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyValue string asdfghjkl
@@ -225,7 +225,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getPropertyElementValue string 3
@@ -240,7 +240,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyElementValue string 3 X
@@ -255,7 +255,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyValue odd 2
@@ -274,7 +274,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyValue odd 7
@@ -289,7 +289,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyValue mode test
@@ -308,7 +308,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyValue mode CHANGE
@@ -323,7 +323,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setPropertyElementValue mode 3 t
@@ -342,7 +342,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setAllPropertyElementValues odd_array 2
@@ -361,7 +361,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 setAllPropertyElementValues odd_array 9
@@ -376,7 +376,7 @@ Example Response:
 }
 ```
 
-Example Method:
+Example Function:
 
 ```shell
 getPropertyValues
@@ -417,7 +417,7 @@ Example Response:
 }
 ```
 
-Use the getDeviceId method to get a unique set of values to identify
+Use the getDeviceId function to get a unique set of values to identify
 the device.
 
 Example:
@@ -442,7 +442,7 @@ Example Response:
 The serial\_number property can be changed to uniquely identify devices
 with the same name and form\_factor.
 
-Use the getDeviceInfo method to get information about the hardware and
+Use the getDeviceInfo function to get information about the hardware and
 firmware of the device.
 
 Example:
@@ -477,10 +477,10 @@ Example Response:
 }
 ```
 
-Every method, parameter, and property belongs to one firmware set.
+Every function, parameter, and property belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
-method.
+function.
 
 Example:
 
@@ -495,7 +495,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["all"],
-    "methods":[
+    "functions":[
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
@@ -568,7 +568,7 @@ Example Response:
   "id":"getApi",
   "result":{
     "firmware":["PropertyTester"],
-    "methods":[
+    "functions":[
       "getDoubled",
       "getBool",
       "getLongArrayFixed",
@@ -618,7 +618,7 @@ from modular_device import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'property_tester', 'serial_number': 0}
-dev.get_methods()
+dev.get_functions()
 ['get_count_array',
  'get_long_array_fixed',
  'set_all_property_element_values',
@@ -703,7 +703,7 @@ dev.get_api(["PropertyTester"])
   'odd_array'],
  'firmware': ['PropertyTester'],
  'callbacks': [],
- 'methods': ['getDoubled',
+ 'functions': ['getDoubled',
   'getBool',
   'getLongArrayFixed',
   'getLongArrayVariable',
@@ -752,8 +752,8 @@ ans =
   name: 'property_tester'
   form_factor: '5x3'
   serial_number: 0
-dev.getMethods()                 % get device methods
-  Modular Device Methods
+dev.getFunctions()                 % get device functions
+  Modular Device Functions
   ---------------------
   getDeviceId
   getDeviceInfo

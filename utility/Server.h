@@ -22,7 +22,7 @@
 
 #include "Property.h"
 #include "Parameter.h"
-#include "Method.h"
+#include "Function.h"
 #include "Callback.h"
 #include "Response.h"
 #include "Constants.h"
@@ -49,12 +49,12 @@ public:
   // Firmware
   template <size_t PROPERTIES_MAX_SIZE,
             size_t PARAMETERS_MAX_SIZE,
-            size_t METHODS_MAX_SIZE,
+            size_t FUNCTIONS_MAX_SIZE,
             size_t CALLBACKS_MAX_SIZE>
   void addFirmware(const constants::FirmwareInfo & firmware_info,
                    Property (&properties)[PROPERTIES_MAX_SIZE],
                    Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                   Method (&methods)[METHODS_MAX_SIZE],
+                   Function (&functions)[FUNCTIONS_MAX_SIZE],
                    Callback (&callbacks)[CALLBACKS_MAX_SIZE]);
 
   // Properties
@@ -72,10 +72,10 @@ public:
   Parameter & parameter(const ConstantString & parameter_name);
   Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
 
-  // Methods
-  Method & createMethod(const ConstantString & method_name);
-  Method & method(const ConstantString & method_name);
-  Method & copyMethod(Method method,const ConstantString & method_name);
+  // Functions
+  Function & createFunction(const ConstantString & function_name);
+  Function & function(const ConstantString & function_name);
+  Function & copyFunction(Function function,const ConstantString & function_name);
 
   // Callbacks
   Callback & createCallback(const ConstantString & callback_name);
@@ -99,45 +99,45 @@ private:
 
   Property server_properties_[constants::SERVER_PROPERTY_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
-  Method server_methods_[constants::SERVER_METHOD_COUNT_MAX];
+  Function server_functions_[constants::SERVER_FUNCTION_COUNT_MAX];
   Callback server_callbacks_[constants::SERVER_CALLBACK_COUNT_MAX];
   ConcatenatedArray<Property,constants::FIRMWARE_COUNT_MAX> properties_;
   ConcatenatedArray<Parameter,constants::FIRMWARE_COUNT_MAX> parameters_;
-  ConcatenatedArray<Method,constants::FIRMWARE_COUNT_MAX> methods_;
+  ConcatenatedArray<Function,constants::FIRMWARE_COUNT_MAX> functions_;
   ConcatenatedArray<Callback,constants::FIRMWARE_COUNT_MAX> callbacks_;
   Property dummy_property_;
   Parameter dummy_parameter_;
-  Method dummy_method_;
+  Function dummy_function_;
   Callback dummy_callback_;
-  int private_method_index_;
+  int private_function_index_;
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
   Array<const constants::FirmwareInfo *,constants::FIRMWARE_COUNT_MAX> firmware_info_array_;
   Array<constants::SubsetMemberType,constants::FIRMWARE_COUNT_MAX+1> firmware_name_array_;
   Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
-  int request_procedure_index_;
-  int property_method_index_;
+  int request_method_index_;
+  int property_function_index_;
   bool eeprom_initialized_;
   SavedVariable eeprom_initialized_sv_;
   bool server_running_;
 
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   void processRequestArray();
-  int findProcedureIndex(const char * procedure_string);
+  int findMethodIndex(const char * method_string);
   template <typename T>
   int findPropertyIndex(T const & property_name);
   template <typename T>
   int findParameterIndex(T const & parameter_name);
   template <typename T>
-  int findMethodParameterIndex(Method & method, T const & parameter_name);
+  int findFunctionParameterIndex(Function & function, T const & parameter_name);
   template <typename T>
-  int findMethodIndex(T const & method_name);
+  int findFunctionIndex(T const & function_name);
   template <typename T>
   int findCallbackIndex(T const & callback_name);
   int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
-  int processParameterString(Method & method, const char * parameter_string);
-  bool checkParameters(Method & method);
+  int processParameterString(Function & function, const char * parameter_string);
+  bool checkParameters(Function & function);
   bool checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   bool checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
   long getSerialNumber();
@@ -145,7 +145,7 @@ private:
   void incrementServerStream();
   void propertyHelp(Property & property, bool verbose);
   void parameterHelp(Parameter & parameter, bool end_object=true);
-  void methodHelp(Method & method, bool verbose);
+  void functionHelp(Function & function, bool verbose);
   void callbackHelp(Callback & callback, bool verbose);
   void help(bool verbose);
   void writeDeviceIdToResponse();
@@ -169,7 +169,7 @@ private:
                       const size_t num);
 
   // Handlers
-  void getProcedureIdsHandler();
+  void getMethodIdsHandler();
   void helpHandler();
   void verboseHelpHandler();
   void getDeviceIdHandler();

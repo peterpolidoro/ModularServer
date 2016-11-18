@@ -22,12 +22,12 @@ namespace modular_server
 // Firmware
 template <size_t PROPERTIES_MAX_SIZE,
           size_t PARAMETERS_MAX_SIZE,
-          size_t METHODS_MAX_SIZE,
+          size_t FUNCTIONS_MAX_SIZE,
           size_t CALLBACKS_MAX_SIZE>
 void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
                          Property (&properties)[PROPERTIES_MAX_SIZE],
                          Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                         Method (&methods)[METHODS_MAX_SIZE],
+                         Function (&functions)[FUNCTIONS_MAX_SIZE],
                          Callback (&callbacks)[CALLBACKS_MAX_SIZE])
 {
   firmware_info_array_.push_back(&firmware_info);
@@ -37,7 +37,7 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
   parameter(constants::firmware_constant_string).addValueToSubset(firmware_name_array_.back());
   properties_.addArray(properties);
   parameters_.addArray(parameters);
-  methods_.addArray(methods);
+  functions_.addArray(functions);
   callbacks_.addArray(callbacks);
 }
 
@@ -74,7 +74,7 @@ Property & Server::createProperty(const ConstantString & property_name,
 
 // Parameters
 
-// Methods
+// Functions
 
 // Callbacks
 
@@ -112,11 +112,11 @@ int Server::findParameterIndex(T const & parameter_name)
 }
 
 template <typename T>
-int Server::findMethodParameterIndex(Method & method, T const & parameter_name)
+int Server::findFunctionParameterIndex(Function & function, T const & parameter_name)
 {
   int parameter_index = -1;
-  Array<Parameter *,constants::METHOD_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &method.parameter_ptrs_;
+  Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
+  parameter_ptrs_ptr = &function.parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
     if ((*parameter_ptrs_ptr)[i]->compareName(parameter_name))
@@ -129,18 +129,18 @@ int Server::findMethodParameterIndex(Method & method, T const & parameter_name)
 }
 
 template <typename T>
-int Server::findMethodIndex(T const & method_name)
+int Server::findFunctionIndex(T const & function_name)
 {
-  int method_index = -1;
-  for (size_t i=0; i<methods_.size(); ++i)
+  int function_index = -1;
+  for (size_t i=0; i<functions_.size(); ++i)
   {
-    if (methods_[i].compareName(method_name))
+    if (functions_[i].compareName(function_name))
     {
-      method_index = i;
+      function_index = i;
       break;
     }
   }
-  return method_index;
+  return function_index;
 }
 
 template <typename T>

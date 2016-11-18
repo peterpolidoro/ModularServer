@@ -35,12 +35,12 @@ public:
   // Firmware
   template <size_t PROPERTIES_MAX_SIZE,
             size_t PARAMETERS_MAX_SIZE,
-            size_t METHODS_MAX_SIZE,
+            size_t FUNCTIONS_MAX_SIZE,
             size_t CALLBACKS_MAX_SIZE>
   void addFirmware(const FirmwareInfo & firmware_info,
                    Property (&properties)[PROPERTIES_MAX_SIZE],
                    Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                   Method (&methods)[METHODS_MAX_SIZE],
+                   Function (&functions)[FUNCTIONS_MAX_SIZE],
                    Callback (&callbacks)[CALLBACKS_MAX_SIZE]);
 
   // Properties
@@ -58,10 +58,10 @@ public:
   Parameter & parameter(const ConstantString & parameter_name);
   Parameter & copyParameter(Parameter & parameter,const ConstantString & parameter_name);
 
-  // Methods
-  Method & createMethod(const ConstantString & method_name);
-  Method & method(const ConstantString & method_name);
-  Method & copyMethod(Method & method,const ConstantString & method_name);
+  // Functions
+  Function & createFunction(const ConstantString & function_name);
+  Function & function(const ConstantString & function_name);
+  Function & copyFunction(Function & function,const ConstantString & function_name);
 
   // Callbacks
   Callback & createCallback(const ConstantString & callback_name);

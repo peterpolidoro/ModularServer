@@ -71,20 +71,20 @@ Parameter & ModularServer::copyParameter(Parameter & parameter,const ConstantStr
   return server_.copyParameter(parameter,parameter_name);
 }
 
-// Methods
-Method & ModularServer::createMethod(const ConstantString & method_name)
+// Functions
+Function & ModularServer::createFunction(const ConstantString & function_name)
 {
-  return server_.createMethod(method_name);
+  return server_.createFunction(function_name);
 }
 
-Method & ModularServer::method(const ConstantString & method_name)
+Function & ModularServer::function(const ConstantString & function_name)
 {
-  return server_.method(method_name);
+  return server_.function(function_name);
 }
 
-Method & ModularServer::copyMethod(Method & method,const ConstantString & method_name)
+Function & ModularServer::copyFunction(Function & function,const ConstantString & function_name)
 {
-  return server_.copyMethod(method,method_name);
+  return server_.copyFunction(function,function_name);
 }
 
 // Callbacks

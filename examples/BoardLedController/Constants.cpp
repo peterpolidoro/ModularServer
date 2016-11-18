@@ -80,11 +80,11 @@ CONSTANT_STRING(count_parameter_name,"count");
 const long count_min = 1;
 const long count_max = 100;
 
-// Methods
-CONSTANT_STRING(led_on_method_name,"setLedOn");
-CONSTANT_STRING(led_off_method_name,"setLedOff");
-CONSTANT_STRING(get_led_pin_method_name,"getLedPin");
-CONSTANT_STRING(blink_led_method_name,"blinkLed");
+// Functions
+CONSTANT_STRING(led_on_function_name,"setLedOn");
+CONSTANT_STRING(led_off_function_name,"setLedOff");
+CONSTANT_STRING(get_led_pin_function_name,"getLedPin");
+CONSTANT_STRING(blink_led_function_name,"blinkLed");
 
 // Callbacks
 

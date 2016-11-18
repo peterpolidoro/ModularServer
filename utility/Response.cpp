@@ -196,7 +196,7 @@ void Response::returnParameterCountError(const size_t parameter_count, const siz
   }
 }
 
-void Response::returnProcedureNotFoundError()
+void Response::returnMethodNotFoundError()
 {
   // Prevent multiple errors in one response
   if (!error_)
@@ -204,8 +204,8 @@ void Response::returnProcedureNotFoundError()
     error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
-    write(constants::message_constant_string,constants::procedure_not_found_error_message);
-    write(constants::code_constant_string,constants::procedure_not_found_error_code);
+    write(constants::message_constant_string,constants::method_not_found_error_message);
+    write(constants::code_constant_string,constants::method_not_found_error_code);
     endObject();
   }
 }
@@ -410,7 +410,7 @@ void Response::returnParameterNotInRangeError(const ConstantString & parameter_n
   }
 }
 
-void Response::returnPropertyMethodNotFoundError()
+void Response::returnPropertyFunctionNotFoundError()
 {
   // Prevent multiple errors in one response
   if (!error_)
@@ -418,7 +418,7 @@ void Response::returnPropertyMethodNotFoundError()
     error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
-    write(constants::message_constant_string,constants::property_method_not_found_error_data);
+    write(constants::message_constant_string,constants::property_function_not_found_error_data);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
   }

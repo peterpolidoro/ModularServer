@@ -28,7 +28,7 @@ void PropertyTester::setup()
   modular_server_.addFirmware(constants::firmware_info,
                               properties_,
                               parameters_,
-                              methods_,
+                              functions_,
                               callbacks_);
 
   // Properties
@@ -92,72 +92,72 @@ void PropertyTester::setup()
   direction_array_parameter.setArrayLengthRange(constants::direction_array_length_min,constants::direction_array_length_max);
   direction_array_parameter.setSubset(constants::direction_ptr_subset);
 
-  // Methods
-  modular_server::Method & get_doubled_method = modular_server_.createMethod(constants::get_doubled_method_name);
-  get_doubled_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDoubledHandler));
-  get_doubled_method.setReturnTypeDouble();
+  // Functions
+  modular_server::Function & get_doubled_function = modular_server_.createFunction(constants::get_doubled_function_name);
+  get_doubled_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDoubledHandler));
+  get_doubled_function.setReturnTypeDouble();
 
-  modular_server::Method & get_bool_method = modular_server_.createMethod(constants::get_bool_method_name);
-  get_bool_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getBoolHandler));
-  get_bool_method.setReturnTypeBool();
+  modular_server::Function & get_bool_function = modular_server_.createFunction(constants::get_bool_function_name);
+  get_bool_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getBoolHandler));
+  get_bool_function.setReturnTypeBool();
 
-  modular_server::Method & get_long_array_fixed_method = modular_server_.createMethod(constants::get_long_array_fixed_method_name);
-  get_long_array_fixed_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getLongArrayFixedHandler));
-  get_long_array_fixed_method.setReturnTypeArray();
+  modular_server::Function & get_long_array_fixed_function = modular_server_.createFunction(constants::get_long_array_fixed_function_name);
+  get_long_array_fixed_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getLongArrayFixedHandler));
+  get_long_array_fixed_function.setReturnTypeArray();
 
-  modular_server::Method & get_long_array_variable_method = modular_server_.createMethod(constants::get_long_array_variable_method_name);
-  get_long_array_variable_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getLongArrayVariableHandler));
-  get_long_array_variable_method.setReturnTypeArray();
+  modular_server::Function & get_long_array_variable_function = modular_server_.createFunction(constants::get_long_array_variable_function_name);
+  get_long_array_variable_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getLongArrayVariableHandler));
+  get_long_array_variable_function.setReturnTypeArray();
 
-  modular_server::Method & set_long_array_fixed_method = modular_server_.createMethod(constants::set_long_array_fixed_method_name);
-  set_long_array_fixed_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setLongArrayFixedHandler));
-  set_long_array_fixed_method.setReturnTypeBool();
+  modular_server::Function & set_long_array_fixed_function = modular_server_.createFunction(constants::set_long_array_fixed_function_name);
+  set_long_array_fixed_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setLongArrayFixedHandler));
+  set_long_array_fixed_function.setReturnTypeBool();
 
-  modular_server::Method & set_long_array_variable_method = modular_server_.createMethod(constants::set_long_array_variable_method_name);
-  set_long_array_variable_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setLongArrayVariableHandler));
-  set_long_array_variable_method.setReturnTypeBool();
+  modular_server::Function & set_long_array_variable_function = modular_server_.createFunction(constants::set_long_array_variable_function_name);
+  set_long_array_variable_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setLongArrayVariableHandler));
+  set_long_array_variable_function.setReturnTypeBool();
 
-  modular_server::Method & set_long_array_parameter_method = modular_server_.createMethod(constants::set_long_array_parameter_method_name);
-  set_long_array_parameter_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setLongArrayParameterHandler));
-  set_long_array_parameter_method.addParameter(long_array_parameter);
-  set_long_array_parameter_method.setReturnTypeBool();
+  modular_server::Function & set_long_array_parameter_function = modular_server_.createFunction(constants::set_long_array_parameter_function_name);
+  set_long_array_parameter_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setLongArrayParameterHandler));
+  set_long_array_parameter_function.addParameter(long_array_parameter);
+  set_long_array_parameter_function.setReturnTypeBool();
 
-  modular_server::Method & get_string_all_method = modular_server_.createMethod(constants::get_string_all_method_name);
-  get_string_all_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getStringAllHandler));
-  get_string_all_method.setReturnTypeString();
+  modular_server::Function & get_string_all_function = modular_server_.createFunction(constants::get_string_all_function_name);
+  get_string_all_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getStringAllHandler));
+  get_string_all_function.setReturnTypeString();
 
-  modular_server::Method & get_string_some_method = modular_server_.createMethod(constants::get_string_some_method_name);
-  get_string_some_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getStringSomeHandler));
-  get_string_some_method.addParameter(length_parameter);
-  get_string_some_method.setReturnTypeString();
+  modular_server::Function & get_string_some_function = modular_server_.createFunction(constants::get_string_some_function_name);
+  get_string_some_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getStringSomeHandler));
+  get_string_some_function.addParameter(length_parameter);
+  get_string_some_function.setReturnTypeString();
 
-  modular_server::Method & get_count_method = modular_server_.createMethod(constants::get_count_method_name);
-  get_count_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getCountHandler));
-  get_count_method.addParameter(count_parameter);
-  get_count_method.setReturnTypeString();
+  modular_server::Function & get_count_function = modular_server_.createFunction(constants::get_count_function_name);
+  get_count_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getCountHandler));
+  get_count_function.addParameter(count_parameter);
+  get_count_function.setReturnTypeString();
 
-  modular_server::Method & get_count_array_method = modular_server_.createMethod(constants::get_count_array_method_name);
-  get_count_array_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getCountArrayHandler));
-  get_count_array_method.addParameter(count_array_parameter);
-  get_count_array_method.setReturnTypeArray();
+  modular_server::Function & get_count_array_function = modular_server_.createFunction(constants::get_count_array_function_name);
+  get_count_array_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getCountArrayHandler));
+  get_count_array_function.addParameter(count_array_parameter);
+  get_count_array_function.setReturnTypeArray();
 
-  modular_server::Method & get_direction_method = modular_server_.createMethod(constants::get_direction_method_name);
-  get_direction_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionHandler));
-  get_direction_method.addParameter(direction_parameter);
-  get_direction_method.setReturnTypeString();
+  modular_server::Function & get_direction_function = modular_server_.createFunction(constants::get_direction_function_name);
+  get_direction_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionHandler));
+  get_direction_function.addParameter(direction_parameter);
+  get_direction_function.setReturnTypeString();
 
-  modular_server::Method & get_direction_array_method = modular_server_.createMethod(constants::get_direction_array_method_name);
-  get_direction_array_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionArrayHandler));
-  get_direction_array_method.addParameter(direction_array_parameter);
-  get_direction_array_method.setReturnTypeArray();
+  modular_server::Function & get_direction_array_function = modular_server_.createFunction(constants::get_direction_array_function_name);
+  get_direction_array_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionArrayHandler));
+  get_direction_array_function.addParameter(direction_array_parameter);
+  get_direction_array_function.setReturnTypeArray();
 
-  modular_server::Method & check_mode_method = modular_server_.createMethod(constants::check_mode_method_name);
-  check_mode_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::checkModeHandler));
-  check_mode_method.setReturnTypeString();
+  modular_server::Function & check_mode_function = modular_server_.createFunction(constants::check_mode_function_name);
+  check_mode_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::checkModeHandler));
+  check_mode_function.setReturnTypeString();
 
-  modular_server::Method & increment_mode_method = modular_server_.createMethod(constants::increment_mode_method_name);
-  increment_mode_method.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::incrementModeHandler));
-  increment_mode_method.setReturnTypeString();
+  modular_server::Function & increment_mode_function = modular_server_.createFunction(constants::increment_mode_function_name);
+  increment_mode_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::incrementModeHandler));
+  increment_mode_function.setReturnTypeString();
 
   // Callbacks
 
