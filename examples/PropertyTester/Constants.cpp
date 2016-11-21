@@ -71,17 +71,17 @@ const double double_default = 3.14159;
 CONSTANT_STRING(bool_property_name,"bool");
 const bool bool_default = false;
 
-CONSTANT_STRING(long_array_property_name,"long_array");
+CONSTANT_STRING(long_array_property_name,"longArray");
 const long long_array_default[LONG_ARRAY_LENGTH] = {5,4,3,2};
 const long long_array_element_min = -3;
 const long long_array_element_max = 10;
 
-CONSTANT_STRING(double_array_property_name,"double_array");
+CONSTANT_STRING(double_array_property_name,"doubleArray");
 const double double_array_default[DOUBLE_ARRAY_LENGTH] = {-1.1,2.2,3.3};
 const double double_array_element_min = -33.333;
 const double double_array_element_max = 100.0;
 
-CONSTANT_STRING(bool_array_property_name,"bool_array");
+CONSTANT_STRING(bool_array_property_name,"boolArray");
 const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
 
 CONSTANT_STRING(string_property_name,"string");
@@ -110,7 +110,7 @@ modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   };
 const ConstantString * const mode_ptr_default = &mode_rising;
 
-CONSTANT_STRING(odd_array_property_name,"odd_array");
+CONSTANT_STRING(odd_array_property_name,"oddArray");
 const long odd_array_default[ODD_ARRAY_LENGTH] =
   {
     odd_subset[0].l,

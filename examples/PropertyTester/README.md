@@ -76,13 +76,13 @@ Example Response:
         "serialNumber",
         "double",
         "bool",
-        "long_array",
-        "double_array",
-        "bool_array",
+        "longArray",
+        "doubleArray",
+        "boolArray",
         "string",
         "odd",
         "mode",
-        "odd_array"
+        "oddArray"
       ],
       "callbacks":[
         "setPropertiesToDefaults"
@@ -126,25 +126,25 @@ Example Response:
     "serialNumber":0,
     "double":3.141590,
     "bool":false,
-    "long_array":[
+    "longArray":[
       5,
       4,
       3,
       2
     ],
-    "double_array":[
+    "doubleArray":[
       -1.100000,
       2.200000,
       3.300000
     ],
-    "bool_array":[
+    "boolArray":[
       false,
       true
     ],
     "string":"abcdef",
     "odd":5,
     "mode":"RISING",
-    "odd_array":[
+    "oddArray":[
       1,
       5
     ]
@@ -185,7 +185,7 @@ Example Response:
 Example Function:
 
 ```shell
-long_array ?
+longArray ?
 ```
 
 Example Response:
@@ -193,9 +193,9 @@ Example Response:
 ```json
 
 {
-  "id":"long_array",
+  "id":"longArray",
   "result":{
-    "name":"long_array",
+    "name":"longArray",
     "firmware":"PropertyTester",
     "type":"array",
     "array_element_type":"long",
@@ -238,14 +238,14 @@ Example Response:
 Example Function:
 
 ```shell
-long_array getValue
+longArray getValue
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"long_array",
+  "id":"longArray",
   "result":[
     5,
     4,
@@ -258,16 +258,16 @@ Example Response:
 Example Function:
 
 ```shell
-double_array ?
+doubleArray ?
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"double_array",
+  "id":"doubleArray",
   "result":{
-    "name":"double_array",
+    "name":"doubleArray",
     "firmware":"PropertyTester",
     "type":"array",
     "array_element_type":"double",
@@ -308,14 +308,14 @@ Example Response:
 Example Function:
 
 ```shell
-double_array getElementValue 1
+doubleArray getElementValue 1
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"double_array",
+  "id":"doubleArray",
   "result":2.200000
 }
 ```
@@ -323,14 +323,14 @@ Example Response:
 Example Function:
 
 ```shell
-double_array setAllElementValues 8.7654
+doubleArray setAllElementValues 8.7654
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"double_array",
+  "id":"doubleArray",
   "result":null
 }
 ```
@@ -338,14 +338,14 @@ Example Response:
 Example Function:
 
 ```shell
-double_array setElementValue 1 5.678
+doubleArray setElementValue 1 5.678
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"double_array",
+  "id":"doubleArray",
   "result":null
 }
 ```
@@ -353,7 +353,7 @@ Example Response:
 Example Function:
 
 ```shell
-double_array getDefaultElementValue 0
+doubleArray getDefaultElementValue 0
 ```
 
 Example Response:
@@ -364,14 +364,14 @@ Example Response:
 Example Function:
 
 ```shell
-double_array getValue
+doubleArray getValue
 ```
 
 Example Response:
 
 ```json
 {
-  "id":"double_array",
+  "id":"doubleArray",
   "result":[
     8.765400,
     5.678000,
@@ -383,7 +383,7 @@ Example Response:
 Example Function:
 
 ```shell
-setPropertyValue bool_array [false,false]
+setPropertyValue boolArray [false,false]
 ```
 
 Example Response:
@@ -530,7 +530,7 @@ Example Response:
 Example Function:
 
 ```shell
-setAllPropertyElementValues odd_array 2
+setAllPropertyElementValues oddArray 2
 ```
 
 Example Response:
@@ -549,7 +549,7 @@ Example Response:
 Example Function:
 
 ```shell
-setAllPropertyElementValues odd_array 9
+setAllPropertyElementValues oddArray 9
 ```
 
 Example Response:
@@ -576,25 +576,25 @@ Example Response:
     "serialNumber":0,
     "double":3.141590,
     "bool":false,
-    "long_array":[
+    "longArray":[
       5,
       4,
       3,
       2
     ],
-    "double_array":[
+    "doubleArray":[
       -1.100000,
       2.200000,
       3.300000
     ],
-    "bool_array":[
+    "boolArray":[
       false,
       false
     ],
     "string":"asdXghjkl",
     "odd":7,
     "mode":"CHANGE",
-    "odd_array":[
+    "oddArray":[
       9,
       9
     ]
@@ -727,13 +727,13 @@ Example Response:
       "serialNumber",
       "double",
       "bool",
-      "long_array",
-      "double_array",
-      "bool_array",
+      "longArray",
+      "doubleArray",
+      "boolArray",
       "string",
       "odd",
       "mode",
-      "odd_array"
+      "oddArray"
     ],
     "callbacks":[]
   }
@@ -781,13 +781,13 @@ Example Response:
     "properties":[
       "double",
       "bool",
-      "long_array",
-      "double_array",
-      "bool_array",
+      "longArray",
+      "doubleArray",
+      "boolArray",
       "string",
       "odd",
       "mode",
-      "odd_array"
+      "oddArray"
     ],
     "callbacks":[]
   }
@@ -836,20 +836,20 @@ dev.get_functions()
 dev.set_properties_to_defaults()
 dev.get_property_values()
 {'bool': False,
- 'bool_array': [False, True],
+ 'boolArray': [False, True],
  'double': 3.14159,
- 'double_array': [-1.1, 2.2, 3.3],
- 'long_array': [5, 4, 3, 2],
+ 'doubleArray': [-1.1, 2.2, 3.3],
+ 'longArray': [5, 4, 3, 2],
  'mode': 'RISING',
  'odd': 5,
- 'odd_array': [1, 5],
+ 'oddArray': [1, 5],
  'serialNumber': 0,
  'string': 'abcdef'}
-dev.get_property_value('long_array')
+dev.get_property_value('longArray')
 [5, 4, 3, 2]
-dev.get_property_element_value('double_array',1)
+dev.get_property_element_value('doubleArray',1)
 2.2
-dev.set_property_value('bool_array',[False,False])
+dev.set_property_value('boolArray',[False,False])
 dev.set_property_value('string','asdfghjkl')
 dev.get_property_element_value('string',3)
 'f'
@@ -862,30 +862,30 @@ IOError: (from server) message: Invalid params, data: Parameter value not valid.
 dev.set_property_value('mode','CHANGE')
 dev.set_property_element_value('mode',3,'t')
 IOError: (from server) message: Invalid params, data: Cannot set element in string property with subset., code: -32602
-dev.set_all_property_element_values('odd_array',2)
+dev.set_all_property_element_values('oddArray',2)
 IOError: (from server) message: Invalid params, data: Array parameter element value not valid. Value not in subset: [1,3,5,7,9], code: -32602
-dev.set_all_property_element_values('odd_array',9)
+dev.set_all_property_element_values('oddArray',9)
 dev.get_property_values()
 {'bool': False,
- 'bool_array': [False, False],
+ 'boolArray': [False, False],
  'double': 3.14159,
- 'double_array': [-1.1, 2.2, 3.3],
- 'long_array': [5, 4, 3, 2],
+ 'doubleArray': [-1.1, 2.2, 3.3],
+ 'longArray': [5, 4, 3, 2],
  'mode': 'CHANGE',
  'odd': 7,
- 'odd_array': [9, 9],
+ 'oddArray': [9, 9],
  'serialNumber': 0,
  'string': 'asdXghjkl'}
 dev.get_api(["PropertyTester"])
 {'properties': ['double',
   'bool',
-  'long_array',
-  'double_array',
-  'bool_array',
+  'longArray',
+  'doubleArray',
+  'boolArray',
   'string',
   'odd',
   'mode',
-  'odd_array'],
+  'oddArray'],
  'firmware': ['PropertyTester'],
  'callbacks': [],
  'functions': ['getDoubled',
@@ -973,20 +973,20 @@ dev.getPropertyValues()
   serialNumber: 0
   double: 3.1416
   bool: 0
-  long_array: [5 4 3 2]
-  double_array: [-1.1000 2.2000 3.3000]
-  bool_array: [0 1]
+  longArray: [5 4 3 2]
+  doubleArray: [-1.1000 2.2000 3.3000]
+  boolArray: [0 1]
   string: 'abcdef'
   odd: 5
   mode: 'RISING'
-  odd_array: [1 5]
-dev.getPropertyValue('long_array')
+  oddArray: [1 5]
+dev.getPropertyValue('longArray')
 ans =
   5   4   3   2
-dev.getPropertyElementValue('double_array',1)
+dev.getPropertyElementValue('doubleArray',1)
 ans =
   2.2000
-dev.setPropertyValue('bool_array',[0,0]);
+dev.setPropertyValue('boolArray',[0,0]);
 dev.setPropertyValue('string','asdfghjkl');
 dev.getPropertyElementValue('string',3)
 ans =
@@ -997,13 +997,13 @@ ans =
   serialNumber: 0
   double: 3.1416
   bool: 0
-  long_array: [5 4 3 2]
-  double_array: [-1.1000 2.2000 3.3000]
-  bool_array: [0 0]
+  longArray: [5 4 3 2]
+  doubleArray: [-1.1000 2.2000 3.3000]
+  boolArray: [0 0]
   string: 'asdXghjkl'
   odd: 5
   mode: 'RISING'
-  odd_array: [1 5]
+  oddArray: [1 5]
 dev.setPropertiesToDefaults();
 dev.close()
 clear dev
