@@ -50,7 +50,8 @@ public:
                    Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
 
   // Interrupts
-  Interrupt & createInterrupt(const ConstantString & interrupt_name);
+  Interrupt & createInterrupt(const ConstantString & interrupt_name,
+                              const size_t pin);
   Interrupt & interrupt(const ConstantString & interrupt_name);
 
   // Firmware
@@ -166,6 +167,8 @@ private:
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
+  void writeInterruptToResponse(Interrupt & interrupt, bool verbose);
+  void writeInterruptInfoToResponse();
   void writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array);
   void writePropertyToResponse(Property & property,
                                bool write_key=false,
@@ -188,6 +191,7 @@ private:
   void verboseHelpHandler();
   void getDeviceIdHandler();
   void getDeviceInfoHandler();
+  void getInterruptInfoHandler();
   void getApiHandler();
   void getApiVerboseHandler();
   void getMemoryFreeHandler();

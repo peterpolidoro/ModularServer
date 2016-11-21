@@ -88,6 +88,10 @@ void Server::setup()
   get_device_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoHandler));
   get_device_info_function.setReturnTypeObject();
 
+  Function & get_interrupt_info_function = createFunction(constants::get_interrupt_info_function_name);
+  get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
+  get_interrupt_info_function.setReturnTypeObject();
+
   Function & get_api_function = createFunction(constants::get_api_function_name);
   get_api_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
   get_api_function.addParameter(firmware_parameter);
@@ -152,12 +156,13 @@ void Server::setFormFactor(const ConstantString & form_factor)
 // Hardware
 
 // Interrupts
-Interrupt & Server::createInterrupt(const ConstantString & interrupt_name)
+Interrupt & Server::createInterrupt(const ConstantString & interrupt_name,
+                                    const size_t pin)
 {
   int interrupt_index = findInterruptIndex(interrupt_name);
   if (interrupt_index < 0)
   {
-    interrupts_.push_back(Interrupt(interrupt_name));
+    interrupts_.push_back(Interrupt(interrupt_name,pin));
     return interrupts_.back();
   }
   return dummy_interrupt_;
@@ -1512,7 +1517,7 @@ void Server::writeHardwareInfoToResponse()
     const Vector<Interrupt> & interrupts = interrupts_.subVector(i);
     for (size_t j=0; j<interrupts.size(); ++j)
     {
-      interrupts[j].getName();
+      writeInterruptToResponse(interrupts[j],false);
     }
     response_.endArray();
 
@@ -1538,6 +1543,50 @@ void Server::writeDeviceInfoToResponse()
   writeFirmwareInfoToResponse();
 
   response_.endObject();
+}
+
+void Server::writeInterruptToResponse(Interrupt & interrupt, bool verbose)
+{
+  if (response_.error())
+  {
+    return;
+  }
+  if (verbose)
+  {
+    response_.beginObject();
+    response_.write(constants::name_constant_string,interrupt.getName());
+    response_.write(constants::number_constant_string,interrupt.getNumber());
+    response_.write(constants::pin_constant_string,interrupt.getPin());
+    response_.write(constants::pullup_constant_string,interrupt.getPullup());
+    Callback * callback_ptr = interrupt.getCallbackPtr();
+    if (callback_ptr != NULL)
+    {
+      response_.write(constants::callback_constant_string,callback_ptr->getName());
+    }
+    else
+    {
+      response_.writeNull(constants::callback_constant_string);
+    }
+    response_.endObject();
+  }
+  else
+  {
+    response_.write(interrupt.getName());
+  }
+}
+
+void Server::writeInterruptInfoToResponse()
+{
+  if (response_.error())
+  {
+    return;
+  }
+  response_.beginArray();
+  for (size_t i=0; i<interrupts_.size(); ++i)
+  {
+    writeInterruptToResponse(interrupts_[i],true);
+  }
+  response_.endArray();
 }
 
 void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array)
@@ -2081,6 +2130,12 @@ void Server::getDeviceInfoHandler()
 {
   response_.writeResultKey();
   writeDeviceInfoToResponse();
+}
+
+void Server::getInterruptInfoHandler()
+{
+  response_.writeResultKey();
+  writeInterruptInfoToResponse();
 }
 
 void Server::getApiHandler()

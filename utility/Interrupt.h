@@ -23,29 +23,20 @@ class Interrupt : private NamedElement
 public:
   Interrupt();
 
-  // void addParameter(Parameter & parameter);
-  // void setReturnTypeLong();
-  // void setReturnTypeDouble();
-  // void setReturnTypeBool();
-  // void setReturnTypeNull();
-  // void setReturnTypeString();
-  // void setReturnTypeObject();
-  // void setReturnTypeArray();
-  // void setReturnTypeAny();
-  // void setReturnType(JsonStream::JsonTypes type);
-  // JsonStream::JsonTypes getReturnType();
+  void setPin(size_t pin);
+  void enablePullup();
 
 private:
-  // Callback * callback_ptr_;
-  // Functor0 functor_;
-  // Array<Parameter *,constants::INTERRUPT_PARAMETER_COUNT_MAX> parameter_ptrs_;
-  // JsonStream::JsonTypes return_type_;
-  Interrupt(const ConstantString & name);
+  size_t pin_;
+  size_t number_;
+  Callback * callback_ptr_;
+  bool pullup_;
+  Interrupt(const ConstantString & name, const size_t pin);
   void setup(const ConstantString & name);
-  // int findParameterIndex(const ConstantString & parameter_name);
-  // size_t getParameterCount();
-  // void functor();
-  // friend class Property;
+  size_t getPin();
+  size_t getNumber();
+  Callback * getCallbackPtr();
+  bool getPullup();
   friend class Server;
 };
 }

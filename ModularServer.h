@@ -35,7 +35,8 @@ public:
                    Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
 
   // Interrupts
-  Interrupt & createInterrupt(const ConstantString & interrupt_name);
+  Interrupt & createInterrupt(const ConstantString & interrupt_name,
+                              const size_t pin);
   Interrupt & interrupt(const ConstantString & interrupt_name);
 
   // Firmware

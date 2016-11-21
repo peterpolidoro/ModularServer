@@ -35,6 +35,7 @@ CONSTANT_STRING(help_function_name,"?");
 CONSTANT_STRING(verbose_help_function_name,"??");
 CONSTANT_STRING(get_device_id_function_name,"getDeviceId");
 CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
+CONSTANT_STRING(get_interrupt_info_function_name,"getInterruptInfo");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_api_verbose_function_name,"getApiVerbose");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
@@ -129,6 +130,10 @@ CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(all_constant_string,"all");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(interrupts_constant_string,"interrupts");
+CONSTANT_STRING(number_constant_string,"number");
+CONSTANT_STRING(pin_constant_string,"pin");
+CONSTANT_STRING(pullup_constant_string,"pullup");
+CONSTANT_STRING(callback_constant_string,"callback");
 CONSTANT_STRING(processor_constant_string,"processor");
 
 #if defined(__AVR_ATmega1280__)

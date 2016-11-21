@@ -39,9 +39,10 @@ void ModularServer::setFormFactor(const ConstantString & form_factor)
 // Hardware
 
 // Interrupts
-Interrupt & ModularServer::createInterrupt(const ConstantString & interrupt_name)
+Interrupt & ModularServer::createInterrupt(const ConstantString & interrupt_name,
+                                           const size_t pin)
 {
-  return server_.createInterrupt(interrupt_name);
+  return server_.createInterrupt(interrupt_name,pin);
 }
 
 Interrupt & ModularServer::interrupt(const ConstantString & interrupt_name)
