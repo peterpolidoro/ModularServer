@@ -138,6 +138,7 @@ extern ConstantString message_constant_string;
 extern ConstantString data_constant_string;
 extern ConstantString code_constant_string;
 extern ConstantString form_factor_constant_string;
+extern ConstantString serial_number_constant_string;
 extern ConstantString firmware_constant_string;
 extern ConstantString hardware_constant_string;
 extern ConstantString name_constant_string;

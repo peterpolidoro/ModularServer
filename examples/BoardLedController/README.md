@@ -59,7 +59,7 @@ Example Response:
         "count"
       ],
       "properties":[
-        "serial_number"
+        "serialNumber"
       ],
       "callbacks":[
         "setPropertiesToDefaults"
@@ -390,7 +390,7 @@ Example Response:
       "count"
     ],
     "properties":[
-      "serial_number"
+      "serialNumber"
     ],
     "callbacks":[
       "setPropertiesToDefaults"
@@ -448,7 +448,7 @@ dev.get_methods()
  'get_device_id',
  'blink_led',
  'set_led_off',
- 'serial_number',
+ 'serialNumber',
  'get_property_default_values',
  'set_properties_to_defaults',
  'get_device_info']

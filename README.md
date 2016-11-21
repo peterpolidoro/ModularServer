@@ -44,7 +44,7 @@ work with the Arduino Mega 2560 and Teensy 3.2.
       "property_element_index"
     ],
     "properties":[
-      "serial_number"
+      "serialNumber"
     ]
   }
 }

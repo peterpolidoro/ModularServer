@@ -75,7 +75,7 @@ Example Response:
         "double_echo"
       ],
       "properties":[
-        "serial_number",
+        "serialNumber",
         "starting_chars_count",
         "stored_string"
       ],
@@ -418,7 +418,7 @@ Example Response:
       "double_echo"
     ],
     "properties":[
-      "serial_number",
+      "serialNumber",
       "starting_chars_count",
       "stored_string"
     ],

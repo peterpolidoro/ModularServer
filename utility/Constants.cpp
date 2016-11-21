@@ -22,7 +22,7 @@ const FirmwareInfo firmware_info =
   };
 
 // Properties
-CONSTANT_STRING(serial_number_property_name,"serial_number");
+CONSTANT_STRING(serial_number_property_name,"serialNumber");
 const long serial_number_min = 0;
 const long serial_number_max = 65535;
 const long serial_number_default = serial_number_min;
@@ -87,6 +87,7 @@ CONSTANT_STRING(message_constant_string,"message");
 CONSTANT_STRING(data_constant_string,"data");
 CONSTANT_STRING(code_constant_string,"code");
 CONSTANT_STRING(form_factor_constant_string,"form_factor");
+CONSTANT_STRING(serial_number_constant_string,"serial_number");
 CONSTANT_STRING(firmware_constant_string,"firmware");
 CONSTANT_STRING(hardware_constant_string,"hardware");
 CONSTANT_STRING(name_constant_string,"name");

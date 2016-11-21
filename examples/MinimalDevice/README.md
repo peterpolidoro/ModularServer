@@ -52,7 +52,7 @@ Example Response:
         "firmware"
       ],
       "properties":[
-        "serial_number"
+        "serialNumber"
       ],
       "callbacks":[
         "setPropertiesToDefaults"
@@ -186,7 +186,7 @@ Example Response:
       ],
       "properties":[
         {
-          "name":"serial_number",
+          "name":"serialNumber",
           "firmware":"ModularServer",
           "type":"long",
           "min":0,
@@ -355,7 +355,7 @@ property function parameters.
 
 Example Property:
 ```shell
-? serial_number
+? serialNumber
 ```
 
 Example Response:
@@ -364,7 +364,7 @@ Example Response:
 {
   "id":"?",
   "result":{
-    "name":"serial_number",
+    "name":"serialNumber",
     "firmware":"ModularServer",
     "type":"long",
     "min":0,
@@ -387,7 +387,7 @@ Example Response:
 To get information about a property function:
 
 ```shell
-? serial_number setValue
+? serialNumber setValue
 ```
 
 ```json
@@ -407,7 +407,7 @@ To get information about a property function:
 To get information about a property function parameter:
 
 ```shell
-? serial_number setValue value
+? serialNumber setValue value
 ```
 
 ```json
@@ -426,12 +426,12 @@ To get information about a property function parameter:
 Example property function call:
 
 ```shell
-serial_number setValue -1
+serialNumber setValue -1
 ```
 
 ```json
 {
-  "id":"serial_number",
+  "id":"serialNumber",
   "error":{
     "message":"Invalid params",
     "data":"Parameter value not valid. Value not in range: 0 <= value <= 65535",
@@ -443,12 +443,12 @@ serial_number setValue -1
 Example property function call:
 
 ```shell
-serial_number setValue 32
+serialNumber setValue 32
 ```
 
 ```json
 {
-  "id":"serial_number",
+  "id":"serialNumber",
   "result":32
 }
 ```
@@ -469,7 +469,7 @@ Example Response:
 {
   "id":"getPropertyValues",
   "result":{
-    "serial_number":32
+    "serialNumber":32
   }
 }
 ```
@@ -528,7 +528,7 @@ Example Response:
 {
   "id":"getPropertyValues",
   "result":{
-    "serial_number":0
+    "serialNumber":0
   }
 }
 ```
@@ -624,7 +624,7 @@ Example Response:
       "firmware"
     ],
     "properties":[
-      "serial_number"
+      "serialNumber"
     ],
     "callbacks":[
       "setPropertiesToDefaults"
@@ -669,7 +669,7 @@ dev.get_methods()
  'get_api_verbose',
  'get_property_values',
  'get_device_id',
- 'serial_number',
+ 'serialNumber',
  'get_property_default_values',
  'set_properties_to_defaults',
  'get_device_info']
@@ -688,19 +688,19 @@ dev.get_api(['MinimalDevice'])
  'functions': [],
  'parameters': [],
  'properties': []}
-dev.serial_number('setValue',-1)
+dev.serialNumber('setValue',-1)
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <= value <= 65535, code: -32602
-dev.serial_number('setValue',32)
+dev.serialNumber('setValue',32)
 32
 dev.get_property_values()
-{'serial_number': 32}
+{'serialNumber': 32}
 result = dev.call_server_method('?')
 result['device_id']['serial_number']
 32
 dev.convert_to_json(result['device_id'])
 '{"serial_number":12,"name":"minimal_device","form_factor":"5x3"}'
 dev.send_json_request('["set_properties_to_defaults"]')
-dev.serial_number('getValue')
+dev.serialNumber('getValue')
 0
 ```
 
@@ -741,7 +741,7 @@ dev.getMethods()                 % get device methods
   getPropertyValues
   getMemoryFree
   setPropertiesToDefaults
-  serial_number
+  serialNumber
 dev.getMemoryFree()
 ans =
   4800
@@ -770,15 +770,15 @@ ans =
   parameters: {0x1 cell}
   properties: {0x1 cell}
   callbacks: {0x1 cell}
-dev.serial_number('setValue',-1)
+dev.serialNumber('setValue',-1)
 (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <=
 value <= 65535, code: -32602
-dev.serial_number('setValue',32);
+dev.serialNumber('setValue',32);
 ans =
   32
 dev.getPropertyValues()
 ans =
-  serial_number: 32
+  serialNumber: 32
 result = dev.callServerMethod('?');
 result.device_id.serial_number
 ans =
@@ -786,7 +786,7 @@ ans =
 json = dev.convertToJson(result.device_id)
 {"name": "minimal_device","form_factor": "5x3","serial_number": 32}
 dev.sendJsonRequest('["setPropertiesToDefaults"]')
-dev.serial_number('getValue')
+dev.serialNumber('getValue')
 ans =
   0
 dev.close()

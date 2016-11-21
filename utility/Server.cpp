@@ -1422,7 +1422,7 @@ void Server::writeDeviceIdToResponse()
 
   response_.write(constants::name_constant_string,device_name_ptr_);
   response_.write(constants::form_factor_constant_string,form_factor_ptr_);
-  response_.write(constants::serial_number_property_name,getSerialNumber());
+  response_.write(constants::serial_number_constant_string,getSerialNumber());
 
   response_.endObject();
 }

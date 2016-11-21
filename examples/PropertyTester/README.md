@@ -73,7 +73,7 @@ Example Response:
         "direction_array"
       ],
       "properties":[
-        "serial_number",
+        "serialNumber",
         "double",
         "bool",
         "long_array",
@@ -123,7 +123,7 @@ Example Response:
 {
   "id":"getPropertyValues",
   "result":{
-    "serial_number":0,
+    "serialNumber":0,
     "double":3.141590,
     "bool":false,
     "long_array":[
@@ -573,7 +573,7 @@ Example Response:
 {
   "id":"getPropertyValues",
   "result":{
-    "serial_number":0,
+    "serialNumber":0,
     "double":3.141590,
     "bool":false,
     "long_array":[
@@ -724,7 +724,7 @@ Example Response:
       "direction_array"
     ],
     "properties":[
-      "serial_number",
+      "serialNumber",
       "double",
       "bool",
       "long_array",
@@ -843,7 +843,7 @@ dev.get_property_values()
  'mode': 'RISING',
  'odd': 5,
  'odd_array': [1, 5],
- 'serial_number': 0,
+ 'serialNumber': 0,
  'string': 'abcdef'}
 dev.get_property_value('long_array')
 [5, 4, 3, 2]
@@ -874,7 +874,7 @@ dev.get_property_values()
  'mode': 'CHANGE',
  'odd': 7,
  'odd_array': [9, 9],
- 'serial_number': 0,
+ 'serialNumber': 0,
  'string': 'asdXghjkl'}
 dev.get_api(["PropertyTester"])
 {'properties': ['double',
@@ -970,7 +970,7 @@ dev.getFunctions()                 % get device functions
   incrementMode
 dev.getPropertyValues()
   ans =
-  serial_number: 0
+  serialNumber: 0
   double: 3.1416
   bool: 0
   long_array: [5 4 3 2]
@@ -994,7 +994,7 @@ ans =
 dev.setPropertyElementValue('string',3,'X');
 dev.getPropertyValues()
 ans =
-  serial_number: 0
+  serialNumber: 0
   double: 3.1416
   bool: 0
   long_array: [5 4 3 2]
