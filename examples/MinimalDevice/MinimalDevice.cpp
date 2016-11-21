@@ -21,8 +21,11 @@ void MinimalDevice::setup()
   modular_server_.setDeviceName(constants::device_name);
   modular_server_.setFormFactor(constants::form_factor);
 
-  // Add Hardware Info
-  modular_server_.addHardwareInfo(constants::hardware_info);
+  // Add Hardware
+  modular_server_.addHardware(constants::hardware_info,
+                              interrupts_);
+
+  // Interrupts
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,

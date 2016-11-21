@@ -36,10 +36,17 @@ void ModularServer::setFormFactor(const ConstantString & form_factor)
   server_.setFormFactor(form_factor);
 }
 
-// Hardware Info
-void ModularServer::addHardwareInfo(const HardwareInfo & hardware_info)
+// Hardware
+
+// Interrupts
+Interrupt & ModularServer::createInterrupt(const ConstantString & interrupt_name)
 {
-  server_.addHardwareInfo(hardware_info);
+  return server_.createInterrupt(interrupt_name);
+}
+
+Interrupt & ModularServer::interrupt(const ConstantString & interrupt_name)
+{
+  return server_.interrupt(interrupt_name);
 }
 
 // Firmware

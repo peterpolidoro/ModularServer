@@ -38,11 +38,11 @@ CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_api_verbose_function_name,"getApiVerbose");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
+CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefaults");
 CONSTANT_STRING(get_property_values_function_name,"getPropertyValues");
 CONSTANT_STRING(get_memory_free_function_name,"getMemoryFree");
 
 // Callbacks
-CONSTANT_STRING(set_properties_to_defaults_callback_name,"setPropertiesToDefaults");
 
 // Errors
 CONSTANT_STRING(parse_error_message,"Parse error");
@@ -128,6 +128,7 @@ CONSTANT_STRING(version_property_separator_constant_string,".");
 CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(all_constant_string,"all");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
+CONSTANT_STRING(interrupts_constant_string,"interrupts");
 CONSTANT_STRING(processor_constant_string,"processor");
 
 #if defined(__AVR_ATmega1280__)

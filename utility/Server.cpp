@@ -35,7 +35,9 @@ void Server::setup()
   setDeviceName(constants::empty_constant_string);
   setFormFactor(constants::empty_constant_string);
 
-  // Hardware Info
+  // Hardware
+
+  // Interrupts
 
   // Firmware
   addFirmware(constants::firmware_info,
@@ -100,6 +102,9 @@ void Server::setup()
   get_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
   get_property_default_values_function.setReturnTypeObject();
 
+  Function & set_properties_to_defaults_function = createFunction(constants::set_properties_to_defaults_function_name);
+  set_properties_to_defaults_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
+
   Function & get_property_values_function = createFunction(constants::get_property_values_function_name);
   get_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesHandler));
   get_property_values_function.setReturnTypeObject();
@@ -111,8 +116,6 @@ void Server::setup()
 #endif
 
   // Callbacks
-  Callback & set_properties_to_defaults_callback = createCallback(constants::set_properties_to_defaults_callback_name);
-  set_properties_to_defaults_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
 
   // Server
   server_running_ = false;
@@ -146,10 +149,28 @@ void Server::setFormFactor(const ConstantString & form_factor)
   form_factor_ptr_ = &form_factor;
 }
 
-// Hardware Info
-void Server::addHardwareInfo(const constants::HardwareInfo & hardware_info)
+// Hardware
+
+// Interrupts
+Interrupt & Server::createInterrupt(const ConstantString & interrupt_name)
 {
-  hardware_info_array_.push_back(&hardware_info);
+  int interrupt_index = findInterruptIndex(interrupt_name);
+  if (interrupt_index < 0)
+  {
+    interrupts_.push_back(Interrupt(interrupt_name));
+    return interrupts_.back();
+  }
+  return dummy_interrupt_;
+}
+
+Interrupt & Server::interrupt(const ConstantString & interrupt_name)
+{
+  int interrupt_index = findInterruptIndex(interrupt_name);
+  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  {
+    return interrupts_[interrupt_index];
+  }
+  return dummy_interrupt_;
 }
 
 // Firmware
@@ -184,6 +205,7 @@ Parameter & Server::createParameter(const ConstantString & parameter_name)
     parameters_.back().setFirmwareName(*firmware_name_ptr);
     return parameters_.back();
   }
+  return dummy_parameter_;
 }
 
 Parameter & Server::parameter(const ConstantString & parameter_name)
@@ -214,6 +236,7 @@ Function & Server::createFunction(const ConstantString & function_name)
     functions_.back().setFirmwareName(*firmware_name_ptr);
     return functions_.back();
   }
+  return dummy_function_;
 }
 
 Function & Server::function(const ConstantString & function_name)
@@ -244,6 +267,7 @@ Callback & Server::createCallback(const ConstantString & callback_name)
     callbacks_.back().setFirmwareName(*firmware_name_ptr);
     return callbacks_.back();
   }
+  return dummy_callback_;
 }
 
 Callback & Server::callback(const ConstantString & callback_name)
@@ -1482,6 +1506,16 @@ void Server::writeHardwareInfoToResponse()
     {
       response_.write(constants::version_constant_string,version_str);
     }
+
+    response_.writeKey(constants::interrupts_constant_string);
+    response_.beginArray();
+    const Vector<Interrupt> & interrupts = interrupts_.subVector(i);
+    for (size_t j=0; j<interrupts.size(); ++j)
+    {
+      interrupts[j].getName();
+    }
+    response_.endArray();
+
     response_.endObject();
   }
   response_.endArray();

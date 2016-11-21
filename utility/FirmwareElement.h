@@ -10,20 +10,16 @@
 #include "ConstantVariable.h"
 #include "ArduinoJson.h"
 
+#include "NamedElement.h"
 #include "Constants.h"
 
 
 namespace modular_server
 {
-class FirmwareElement
+class FirmwareElement : public NamedElement
 {
 public:
   FirmwareElement();
-
-  void setName(const ConstantString & name);
-  bool compareName(const char * name_to_compare);
-  bool compareName(const ConstantString & name_to_compare);
-  const ConstantString & getName();
 
   void setFirmwareName(const ConstantString & firmware_name);
   bool compareFirmwareName(const char * firmware_name_to_compare);
@@ -32,7 +28,6 @@ public:
   const ConstantString &  getFirmwareName();
 
 private:
-  const ConstantString * name_ptr_;
   const ConstantString * firmware_name_ptr_;
 
 };

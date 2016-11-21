@@ -15,7 +15,16 @@ namespace modular_server
 
 // Device ID
 
-// Hardware Info
+// Hardware
+template <size_t INTERRUPTS_MAX_SIZE>
+void ModularServer::addHardware(const HardwareInfo & hardware_info,
+                                Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE])
+{
+  server_.addHardware(hardware_info,
+                      interrupts);
+}
+
+// Interrupts
 
 // Firmware
 template <size_t PROPERTIES_MAX_SIZE,

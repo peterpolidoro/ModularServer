@@ -15,12 +15,12 @@ namespace modular_server
 namespace constants
 {
 enum {FIRMWARE_COUNT_MAX=8};
-enum {HARDWARE_INFO_ARRAY_COUNT_MAX=4};
+enum {HARDWARE_COUNT_MAX=4};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
 enum{SERVER_PARAMETER_COUNT_MAX=1};
-enum{SERVER_FUNCTION_COUNT_MAX=10};
+enum{SERVER_FUNCTION_COUNT_MAX=11};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {FUNCTION_PARAMETER_COUNT_MAX=6};
@@ -88,11 +88,11 @@ extern ConstantString get_device_info_function_name;
 extern ConstantString get_api_function_name;
 extern ConstantString get_api_verbose_function_name;
 extern ConstantString get_property_default_values_function_name;
+extern ConstantString set_properties_to_defaults_function_name;
 extern ConstantString get_property_values_function_name;
 extern ConstantString get_memory_free_function_name;
 
 // Callbacks
-extern ConstantString set_properties_to_defaults_callback_name;
 
 // Errors
 extern ConstantString parse_error_message;
@@ -179,6 +179,7 @@ extern ConstantString version_property_separator_constant_string;
 extern ConstantString subset_constant_string;
 extern ConstantString all_constant_string;
 extern ConstantString array_element_subset_constant_string;
+extern ConstantString interrupts_constant_string;
 extern ConstantString processor_constant_string;
 extern ConstantString processor_name_constant_string;
 }

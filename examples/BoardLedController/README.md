@@ -45,6 +45,7 @@ Example Response:
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
         "getPropertyValues",
         "getMemoryFree",
         "setLedOn",
@@ -61,9 +62,7 @@ Example Response:
       "properties":[
         "serialNumber"
       ],
-      "callbacks":[
-        "setPropertiesToDefaults"
-      ]
+      "callbacks":[]
     }
   }
 }

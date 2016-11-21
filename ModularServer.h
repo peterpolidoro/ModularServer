@@ -29,8 +29,14 @@ public:
   void setDeviceName(const ConstantString & device_name);
   void setFormFactor(const ConstantString & form_factor);
 
-  // Hardware Info
-  void addHardwareInfo(const HardwareInfo & hardware_info);
+  // Hardware
+  template <size_t INTERRUPTS_MAX_SIZE>
+  void addHardware(const HardwareInfo & hardware_info,
+                   Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
+
+  // Interrupts
+  Interrupt & createInterrupt(const ConstantString & interrupt_name);
+  Interrupt & interrupt(const ConstantString & interrupt_name);
 
   // Firmware
   template <size_t PROPERTIES_MAX_SIZE,

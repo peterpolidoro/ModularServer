@@ -62,6 +62,8 @@ const modular_server::HardwareInfo hardware_info =
 
 #endif
 
+// Interrupts
+
 // Units
 
 // Properties

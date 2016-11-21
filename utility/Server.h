@@ -25,6 +25,7 @@
 #include "Function.h"
 #include "Callback.h"
 #include "Response.h"
+#include "Interrupt.h"
 #include "Constants.h"
 
 
@@ -43,8 +44,14 @@ public:
   void setDeviceName(const ConstantString & device_name);
   void setFormFactor(const ConstantString & form_factor);
 
-  // Hardware Info
-  void addHardwareInfo(const constants::HardwareInfo & hardware_info);
+  // Hardware
+  template <size_t INTERRUPTS_MAX_SIZE>
+  void addHardware(const constants::HardwareInfo & hardware_info,
+                   Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
+
+  // Interrupts
+  Interrupt & createInterrupt(const ConstantString & interrupt_name);
+  Interrupt & interrupt(const ConstantString & interrupt_name);
 
   // Firmware
   template <size_t PROPERTIES_MAX_SIZE,
@@ -93,9 +100,15 @@ private:
   Array<Stream *,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
   size_t server_stream_index_;
   JsonStream json_stream_;
+
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray  * request_json_array_ptr_;
+
   Response response_;
+
+  Array<const constants::HardwareInfo *,constants::HARDWARE_COUNT_MAX> hardware_info_array_;
+  Interrupt dummy_interrupt_;
+  ConcatenatedArray<Interrupt,constants::HARDWARE_COUNT_MAX> interrupts_;
 
   Property server_properties_[constants::SERVER_PROPERTY_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
@@ -114,7 +127,6 @@ private:
   const ConstantString * form_factor_ptr_;
   Array<const constants::FirmwareInfo *,constants::FIRMWARE_COUNT_MAX> firmware_info_array_;
   Array<constants::SubsetMemberType,constants::FIRMWARE_COUNT_MAX+1> firmware_name_array_;
-  Array<const constants::HardwareInfo *,constants::HARDWARE_INFO_ARRAY_COUNT_MAX> hardware_info_array_;
 
   int request_method_index_;
   int property_function_index_;
@@ -122,6 +134,8 @@ private:
   SavedVariable eeprom_initialized_sv_;
   bool server_running_;
 
+  template <typename T>
+  int findInterruptIndex(T const & interrupt_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   void processRequestArray();
   int findMethodIndex(const char * method_string);

@@ -45,6 +45,7 @@ Example Response:
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
         "getPropertyValues",
         "getMemoryFree"
       ],
@@ -54,9 +55,7 @@ Example Response:
       "properties":[
         "serialNumber"
       ],
-      "callbacks":[
-        "setPropertiesToDefaults"
-      ]
+      "callbacks":[]
     }
   }
 }
@@ -77,7 +76,7 @@ Example Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":4800
+  "result":4715
 }
 ```
 
@@ -157,6 +156,12 @@ Example Response:
           "result_type":"object"
         },
         {
+          "name":"setPropertiesToDefaults",
+          "firmware":"ModularServer",
+          "parameters":[],
+          "result_type":null
+        },
+        {
           "name":"getPropertyValues",
           "firmware":"ModularServer",
           "parameters":[],
@@ -204,15 +209,7 @@ Example Response:
           ]
         }
       ],
-      "callbacks":[
-        {
-          "name":"setPropertiesToDefaults",
-          "firmware":"ModularServer",
-          "properties":[],
-          "parameters":[],
-          "result_type":null
-        }
-      ]
+      "callbacks":[]
     }
   }
 }
@@ -477,31 +474,10 @@ Example Response:
 To reset the serial number to the default value, use the
 setValueToDefault property function.
 
-Callbacks are functions that take no parameters and return null. They
-can be used like functions or called from interrupts.
+Or use the setPropertiesToDefault function to set all properties to
+their default values.
 
-Example Callback:
-
-```shell
-? setPropertiesToDefaults
-```
-
-Example Response:
-
-```json
-{
-  "id":"?",
-  "result":{
-    "name":"setPropertiesToDefaults",
-    "firmware":"ModularServer",
-    "properties":[],
-    "parameters":[],
-    "result_type":null
-  }
-}
-```
-
-Example Callback:
+Example Function:
 
 ```shell
 setPropertiesToDefaults
@@ -617,6 +593,7 @@ Example Response:
       "getApi",
       "getApiVerbose",
       "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
       "getPropertyValues",
       "getMemoryFree"
     ],
@@ -626,9 +603,7 @@ Example Response:
     "properties":[
       "serialNumber"
     ],
-    "callbacks":[
-      "setPropertiesToDefaults"
-    ]
+    "callbacks":[]
   }
 }
 ```
@@ -665,16 +640,16 @@ dev.get_device_id()
 {'form_factor': '5x3', 'name': 'minimal_device', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
+ 'serial_number',
  'get_api',
  'get_api_verbose',
  'get_property_values',
  'get_device_id',
- 'serialNumber',
  'get_property_default_values',
  'set_properties_to_defaults',
  'get_device_info']
 dev.get_memory_free()
-4800
+4715
 dev.get_api()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_api('?')
@@ -688,9 +663,9 @@ dev.get_api(['MinimalDevice'])
  'functions': [],
  'parameters': [],
  'properties': []}
-dev.serialNumber('setValue',-1)
+dev.serial_number('setValue',-1)
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <= value <= 65535, code: -32602
-dev.serialNumber('setValue',32)
+dev.serial_number('setValue',32)
 32
 dev.get_property_values()
 {'serialNumber': 32}
@@ -698,9 +673,9 @@ result = dev.call_server_method('?')
 result['device_id']['serial_number']
 32
 dev.convert_to_json(result['device_id'])
-'{"serial_number":12,"name":"minimal_device","form_factor":"5x3"}'
+'{"serial_number":32,"name":"minimal_device","form_factor":"5x3"}'
 dev.send_json_request('["set_properties_to_defaults"]')
-dev.serialNumber('getValue')
+dev.serial_number('getValue')
 0
 ```
 
@@ -738,13 +713,13 @@ dev.getMethods()                 % get device methods
   getApi
   getApiVerbose
   getPropertyDefaultValues
+  setPropertiesToDefaults
   getPropertyValues
   getMemoryFree
-  setPropertiesToDefaults
   serialNumber
 dev.getMemoryFree()
 ans =
-  4800
+  4715
 dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,
 code: -32602
