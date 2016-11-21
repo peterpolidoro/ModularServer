@@ -25,12 +25,15 @@ public:
 
   void setPin(size_t pin);
   void enablePullup();
+  void setMode(const ConstantString & mode);
+  const ConstantString & getMode();
 
 private:
-  size_t pin_;
   size_t number_;
-  Callback * callback_ptr_;
+  size_t pin_;
   bool pullup_;
+  int mode_;
+  Callback * callback_ptr_;
   Interrupt(const ConstantString & name, const size_t pin);
   void setup(const ConstantString & name);
   size_t getPin();

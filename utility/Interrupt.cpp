@@ -18,8 +18,8 @@ Interrupt::Interrupt()
 
 void Interrupt::setPin(size_t pin)
 {
-  pin_ = pin;
   number_ = digitalPinToInterrupt(pin);
+  pin_ = pin;
   if (!pullup_)
   {
     pinMode(pin_,INPUT);
@@ -36,6 +36,11 @@ void Interrupt::enablePullup()
   pinMode(pin_,INPUT_PULLUP);
 }
 
+void Interrupt::setMode()
+{
+  mode_ = mode;
+}
+
 // protected
 
 // private
@@ -48,10 +53,10 @@ Interrupt::Interrupt(const ConstantString & name, const size_t pin)
 void Interrupt::setup(const ConstantString & name)
 {
   setName(name);
-  pin_ = 0;
   number_ = 0;
-  callback_ptr_ = NULL;
+  pin_ = 0;
   pullup_ = false;
+  callback_ptr_ = NULL;
 }
 
 size_t Interrupt::getPin()
