@@ -12,9 +12,12 @@
 #include "ConstantVariable.h"
 #include "JsonStream.h"
 #include "Functor.h"
+#include "IndexedContainer.h"
+#include "FunctorCallbacks.h"
 
 #include "FirmwareElement.h"
 #include "Property.h"
+#include "Interrupt.h"
 #include "Constants.h"
 
 
@@ -27,9 +30,6 @@ enum{PARAMETER_COUNT_MAX=3};
 enum{FUNCTION_COUNT_MAX=3};
 
 // Parameters
-extern ConstantString interrupt_parameter_name;
-extern ConstantString mode_parameter_name;
-extern ConstantString pullup_parameter_name;
 
 // Functions
 extern ConstantString attach_function_name;
@@ -44,15 +44,21 @@ public:
 
   void attachFunctor(const Functor0 & functor);
   void addProperty(Property & property);
+  FunctorCallbacks::Callback getIsr();
+  void attachTo(const Interrupt & interrupt, const ConstantString & mode);
 
 private:
-  Functor0 functor_;
+  // static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
+  // static Array<Function,callback::FUNCTION_COUNT_MAX> functions_;
+
+  FunctorCallbacks::Callback isr_;
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> property_ptrs_;
+  IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> interrupts_;
+
   Callback(const ConstantString & name);
   void setup(const ConstantString & name);
   int findPropertyIndex(const ConstantString & property_name);
   size_t getPropertyCount();
-  void functor();
   friend class Server;
 };
 }

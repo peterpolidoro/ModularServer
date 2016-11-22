@@ -101,6 +101,7 @@ CONSTANT_STRING(properties_constant_string,"properties");
 CONSTANT_STRING(parameters_constant_string,"parameters");
 CONSTANT_STRING(functions_constant_string,"functions");
 CONSTANT_STRING(callbacks_constant_string,"callbacks");
+CONSTANT_STRING(callback_constant_string,"callback");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");
 CONSTANT_STRING(array_element_min_constant_string,"array_element_min");
@@ -130,10 +131,11 @@ CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(all_constant_string,"all");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(interrupts_constant_string,"interrupts");
+CONSTANT_STRING(interrupt_constant_string,"interrupt");
 CONSTANT_STRING(number_constant_string,"number");
 CONSTANT_STRING(pin_constant_string,"pin");
+CONSTANT_STRING(mode_constant_string,"mode");
 CONSTANT_STRING(pullup_constant_string,"pullup");
-CONSTANT_STRING(callback_constant_string,"callback");
 CONSTANT_STRING(processor_constant_string,"processor");
 
 #if defined(__AVR_ATmega1280__)

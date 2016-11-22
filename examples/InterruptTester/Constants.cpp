@@ -71,6 +71,8 @@ const size_t bnc_b_pin = 1;
 
 #endif
 
+const size_t led_pin = 13;
+
 // Interrupts
 CONSTANT_STRING(bnc_a_interrupt_name,"bnc_a");
 CONSTANT_STRING(bnc_b_interrupt_name,"bnc_b");
@@ -84,6 +86,8 @@ CONSTANT_STRING(bnc_b_interrupt_name,"bnc_b");
 // Functions
 
 // Callbacks
+CONSTANT_STRING(set_led_on_callback_name,"setLedOn");
+CONSTANT_STRING(set_led_off_callback_name,"setLedOff");
 
 // Errors
 }

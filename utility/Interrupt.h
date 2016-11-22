@@ -19,7 +19,7 @@
 namespace modular_server
 {
 
-namespace callback
+namespace interrupt
 {
 enum{MODE_SUBSET_LENGTH=5};
 extern ConstantString mode_detached;
@@ -27,13 +27,20 @@ extern ConstantString mode_low;
 extern ConstantString mode_change;
 extern ConstantString mode_rising;
 extern ConstantString mode_falling;
-extern modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
+extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 }
 
 class Interrupt : private NamedElement
 {
 public:
   Interrupt();
+  void enablePullup();
+  void disablePullup();
+  size_t getNumber();
+  size_t getPin();
+  Callback * getCallbackPtr();
+  const ConstantString & getMode();
+  bool getPullup();
 
 private:
   size_t number_;
@@ -43,16 +50,9 @@ private:
   bool pullup_;
   Interrupt(const ConstantString & name, const size_t pin);
   void setup(const ConstantString & name);
-  size_t getNumber();
-  size_t getPin();
   void setPin(size_t pin);
-  void attach(Callback * callback_ptr, const ConstantString & mode, bool pullup);
+  void attach(Callback * callback_ptr, const ConstantString & mode);
   void detach();
-  Callback * getCallbackPtr();
-  const ConstantString & getMode();
-  bool getPullup();
-  void enablePullup();
-  void disablePullup();
   friend class Server;
 };
 }

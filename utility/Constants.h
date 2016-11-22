@@ -25,6 +25,7 @@ enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {FUNCTION_PARAMETER_COUNT_MAX=6};
 enum {CALLBACK_PROPERTY_COUNT_MAX=6};
+enum {CALLBACK_INTERRUPT_COUNT_MAX=4};
 
 enum{SERVER_STREAM_COUNT_MAX=4};
 
@@ -152,6 +153,7 @@ extern ConstantString properties_constant_string;
 extern ConstantString parameters_constant_string;
 extern ConstantString functions_constant_string;
 extern ConstantString callbacks_constant_string;
+extern ConstantString callback_constant_string;
 extern ConstantString min_constant_string;
 extern ConstantString max_constant_string;
 extern ConstantString array_element_min_constant_string;
@@ -181,10 +183,11 @@ extern ConstantString subset_constant_string;
 extern ConstantString all_constant_string;
 extern ConstantString array_element_subset_constant_string;
 extern ConstantString interrupts_constant_string;
+extern ConstantString interrupt_constant_string;
 extern ConstantString number_constant_string;
 extern ConstantString pin_constant_string;
+extern ConstantString mode_constant_string;
 extern ConstantString pullup_constant_string;
-extern ConstantString callback_constant_string;
 extern ConstantString processor_constant_string;
 extern ConstantString processor_name_constant_string;
 }

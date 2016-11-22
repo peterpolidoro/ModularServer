@@ -10,6 +10,17 @@
 
 namespace modular_server
 {
+
+namespace callback
+{
+// Parameters
+
+// Functions
+CONSTANT_STRING(attach_function_name,"attach");
+CONSTANT_STRING(detach_function_name,"detach");
+CONSTANT_STRING(detach_all_function_name,"detachAll");
+}
+
 // public
 Callback::Callback()
 {
@@ -18,7 +29,8 @@ Callback::Callback()
 
 void Callback::attachFunctor(const Functor0 & functor)
 {
-  functor_ = functor;
+  FunctorCallbacks::remove(isr_);
+  isr_ = FunctorCallbacks::add(functor);
 }
 
 void Callback::addProperty(Property & property)
@@ -29,6 +41,15 @@ void Callback::addProperty(Property & property)
   {
     property_ptrs_.push_back(&property);
   }
+}
+
+FunctorCallbacks::Callback Callback::getIsr()
+{
+  return isr_;
+}
+
+void Callback::attachTo(const Interrupt & interrupt, const ConstantString & mode)
+{
 }
 
 // protected
@@ -42,6 +63,7 @@ Callback::Callback(const ConstantString & name)
 void Callback::setup(const ConstantString & name)
 {
   setName(name);
+  isr_ = NULL;
 }
 
 int Callback::findPropertyIndex(const ConstantString & property_name)
@@ -61,14 +83,6 @@ int Callback::findPropertyIndex(const ConstantString & property_name)
 size_t Callback::getPropertyCount()
 {
   return property_ptrs_.size();
-}
-
-void Callback::functor()
-{
-  if (functor_)
-  {
-    functor_();
-  }
 }
 
 }

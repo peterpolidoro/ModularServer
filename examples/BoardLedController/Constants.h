@@ -32,6 +32,8 @@ extern const modular_server::HardwareInfo hardware_info;
 
 extern const size_t led_pin;
 
+// Interrupts
+
 // Units
 extern ConstantString seconds_unit;
 

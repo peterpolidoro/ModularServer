@@ -470,10 +470,10 @@ void Server::processRequestArray()
         return;
       }
       // call callback functor
-      else
-      {
-        callback.functor();
-      }
+      // else
+      // {
+      //   callback.functor();
+      // }
     }
     else if (request_method_index_ < (int)(functions_.size() + callbacks_.size() + properties_.size()))
     {
@@ -1554,10 +1554,10 @@ void Server::writeInterruptToResponse(Interrupt & interrupt, bool verbose)
   if (verbose)
   {
     response_.beginObject();
+
     response_.write(constants::name_constant_string,interrupt.getName());
     response_.write(constants::number_constant_string,interrupt.getNumber());
     response_.write(constants::pin_constant_string,interrupt.getPin());
-    response_.write(constants::pullup_constant_string,interrupt.getPullup());
     Callback * callback_ptr = interrupt.getCallbackPtr();
     if (callback_ptr != NULL)
     {
@@ -1567,6 +1567,9 @@ void Server::writeInterruptToResponse(Interrupt & interrupt, bool verbose)
     {
       response_.writeNull(constants::callback_constant_string);
     }
+    response_.write(constants::mode_constant_string,interrupt.getMode());
+    response_.write(constants::pullup_constant_string,interrupt.getPullup());
+
     response_.endObject();
   }
   else
