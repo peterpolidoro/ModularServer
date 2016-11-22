@@ -29,8 +29,8 @@ private:
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
   // Handlers
-  setLedOnHandler();
-  setLedOffHandler();
+  void setLedOnHandler();
+  void setLedOffHandler();
 };
 
 #endif

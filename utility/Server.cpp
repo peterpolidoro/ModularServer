@@ -1245,6 +1245,24 @@ void Server::callbackHelp(Callback & callback, bool verbose)
   response_.beginArray();
   response_.endArray();
 
+  response_.writeKey(constants::interrupts_constant_string);
+  response_.beginArray();
+  IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> * interrupt_ptrs_ptr = NULL;
+  interrupt_ptrs_ptr = &callback.interrupt_ptrs_;
+  for (size_t i=0; i<interrupt_ptrs_ptr->size(); ++i)
+  {
+    if (verbose)
+    {
+      interruptHelp(*((*interrupt_ptrs_ptr)[i]),true);
+    }
+    else
+    {
+      const ConstantString & interrupt_name = (*interrupt_ptrs_ptr)[i]->getName();
+      response_.write(interrupt_name);
+    }
+  }
+  response_.endArray();
+
   response_.write(constants::result_type_constant_string,JsonStream::NULL_TYPE);
 
   response_.endObject();
@@ -1517,7 +1535,7 @@ void Server::writeHardwareInfoToResponse()
     const Vector<Interrupt> & interrupts = interrupts_.subVector(i);
     for (size_t j=0; j<interrupts.size(); ++j)
     {
-      writeInterruptToResponse(interrupts[j],false);
+      interruptHelp(interrupts[j],false);
     }
     response_.endArray();
 
@@ -1545,7 +1563,7 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::writeInterruptToResponse(Interrupt & interrupt, bool verbose)
+void Server::interruptHelp(Interrupt & interrupt, bool verbose)
 {
   if (response_.error())
   {
@@ -1587,7 +1605,7 @@ void Server::writeInterruptInfoToResponse()
   response_.beginArray();
   for (size_t i=0; i<interrupts_.size(); ++i)
   {
-    writeInterruptToResponse(interrupts_[i],true);
+    interruptHelp(interrupts_[i],true);
   }
   response_.endArray();
 }

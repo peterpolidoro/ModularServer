@@ -37,6 +37,8 @@ extern ConstantString detach_function_name;
 extern ConstantString detach_all_function_name;
 }
 
+class Interrupt;
+
 class Callback : private FirmwareElement
 {
 public:
@@ -53,7 +55,7 @@ private:
 
   FunctorCallbacks::Callback isr_;
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> property_ptrs_;
-  IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> interrupts_;
+  IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> interrupt_ptrs_;
 
   Callback(const ConstantString & name);
   void setup(const ConstantString & name);

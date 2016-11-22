@@ -50,6 +50,8 @@ FunctorCallbacks::Callback Callback::getIsr()
 
 void Callback::attachTo(const Interrupt & interrupt, const ConstantString & mode)
 {
+  interrupt.attach(*this,mode);
+  interrupt_ptrs_.add(&interrupt);
 }
 
 // protected

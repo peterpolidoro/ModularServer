@@ -30,6 +30,8 @@ extern ConstantString mode_falling;
 extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 }
 
+class Callback;
+
 class Interrupt : private NamedElement
 {
 public:
@@ -50,10 +52,11 @@ private:
   bool pullup_;
   Interrupt(const ConstantString & name, const size_t pin);
   void setup(const ConstantString & name);
-  void setPin(size_t pin);
-  void attach(Callback * callback_ptr, const ConstantString & mode);
+  void setPin(const size_t pin);
+  void attach(const Callback & callback, const ConstantString & mode);
   void detach();
   friend class Server;
+  friend class Callback;
 };
 }
 #endif

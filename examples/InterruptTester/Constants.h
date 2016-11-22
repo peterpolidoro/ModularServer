@@ -32,7 +32,7 @@ extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
-extern size_t led_pin;
+extern const size_t led_pin;
 
 // Interrupts
 extern ConstantString bnc_a_interrupt_name;

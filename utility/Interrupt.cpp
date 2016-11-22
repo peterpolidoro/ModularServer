@@ -90,15 +90,15 @@ void Interrupt::setup(const ConstantString & name)
   pullup_ = false;
 }
 
-void Interrupt::setPin(size_t pin)
+void Interrupt::setPin(const size_t pin)
 {
   number_ = digitalPinToInterrupt(pin);
   pin_ = pin;
 }
 
-void Interrupt::attach(Callback * callback_ptr, const ConstantString & mode)
+void Interrupt::attach(const Callback & callback, const ConstantString & mode)
 {
-  if (!callback_ptr->getIsr())
+  if (!callback.getIsr())
   {
     return;
   }
@@ -108,7 +108,7 @@ void Interrupt::attach(Callback * callback_ptr, const ConstantString & mode)
   }
   else if (&mode == &interrupt::mode_low)
   {
-    callback_ptr_ = callback_ptr;
+    callback_ptr_ = &callback;
     mode_ptr_ = &interrupt::mode_low;
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),
@@ -116,7 +116,7 @@ void Interrupt::attach(Callback * callback_ptr, const ConstantString & mode)
   }
   else if (&mode == &interrupt::mode_change)
   {
-    callback_ptr_ = callback_ptr;
+    callback_ptr_ = &callback;
     mode_ptr_ = &interrupt::mode_change;
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),
@@ -124,7 +124,7 @@ void Interrupt::attach(Callback * callback_ptr, const ConstantString & mode)
   }
   else if (&mode == &interrupt::mode_rising)
   {
-    callback_ptr_ = callback_ptr;
+    callback_ptr_ = &callback;
     mode_ptr_ = &interrupt::mode_rising;
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),
@@ -132,7 +132,7 @@ void Interrupt::attach(Callback * callback_ptr, const ConstantString & mode)
   }
   else if (&mode == &interrupt::mode_falling)
   {
-    callback_ptr_ = callback_ptr;
+    callback_ptr_ = &callback;
     mode_ptr_ = &interrupt::mode_falling;
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),

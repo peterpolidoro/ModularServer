@@ -167,7 +167,7 @@ private:
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
-  void writeInterruptToResponse(Interrupt & interrupt, bool verbose);
+  void interruptHelp(Interrupt & interrupt, bool verbose);
   void writeInterruptInfoToResponse();
   void writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array);
   void writePropertyToResponse(Property & property,
