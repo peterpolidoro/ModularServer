@@ -20,6 +20,23 @@
 
 namespace modular_server
 {
+
+namespace callback
+{
+enum{PARAMETER_COUNT_MAX=3};
+enum{FUNCTION_COUNT_MAX=3};
+
+// Parameters
+extern ConstantString interrupt_parameter_name;
+extern ConstantString mode_parameter_name;
+extern ConstantString pullup_parameter_name;
+
+// Functions
+extern ConstantString attach_function_name;
+extern ConstantString detach_function_name;
+extern ConstantString detach_all_function_name;
+}
+
 class Callback : private FirmwareElement
 {
 public:
