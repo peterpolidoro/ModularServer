@@ -26,15 +26,17 @@ namespace modular_server
 
 namespace callback
 {
-enum{PARAMETER_COUNT_MAX=3};
+enum{PARAMETER_COUNT_MAX=2};
 enum{FUNCTION_COUNT_MAX=3};
 
 // Parameters
+enum{MODE_SUBSET_LENGTH=4};
+extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 
 // Functions
-extern ConstantString attach_function_name;
-extern ConstantString detach_function_name;
-extern ConstantString detach_all_function_name;
+extern ConstantString attach_to_function_name;
+extern ConstantString detach_from_function_name;
+extern ConstantString detach_from_all_function_name;
 }
 
 class Interrupt;
@@ -48,6 +50,18 @@ public:
   void addProperty(Property & property);
   FunctorCallbacks::Callback getIsr();
   void attachTo(const Interrupt & interrupt, const ConstantString & mode);
+  void detachFrom(const Interrupt & interrupt);
+  template <typename T>
+  void detachFrom(T const & interrupt_name)
+  {
+    int interrupt_ptr_index = findInterruptPtrIndex(interrupt);
+    if (interrupt_ptr_index >= 0)
+    {
+      interrupt_ptrs_[interrupt_ptr_index]->removeCallback();
+      interrupt_ptrs_.remove(interrupt_ptr_index);
+    }
+  };
+  void detachFromAll();
 
 private:
   // static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
@@ -61,6 +75,24 @@ private:
   void setup(const ConstantString & name);
   int findPropertyIndex(const ConstantString & property_name);
   size_t getPropertyCount();
+  int findInterruptPtrIndex(const Interrupt & interrupt);
+  template <typename T>
+  int findInterruptPtrIndex(T const & interrupt_name)
+  {
+    int interrupt_ptr_index = -1;
+    for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+    {
+      if (interrupt_ptrs_.indexHasValue(i))
+      {
+        if (interrupts_ptrs_[i]->compareName(interrupt_name))
+        {
+          interrupt_ptr_index = i;
+          break;
+        }
+      }
+    }
+    return interrupt_ptr_index;
+  };
   friend class Server;
 };
 }

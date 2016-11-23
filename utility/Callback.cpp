@@ -14,11 +14,18 @@ namespace modular_server
 namespace callback
 {
 // Parameters
+constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
+  {
+    {.cs_ptr=&interrupt::mode_low},
+    {.cs_ptr=&interrupt::mode_change},
+    {.cs_ptr=&interrupt::mode_rising},
+    {.cs_ptr=&interrupt::mode_falling},
+  };
 
 // Functions
-CONSTANT_STRING(attach_function_name,"attach");
-CONSTANT_STRING(detach_function_name,"detach");
-CONSTANT_STRING(detach_all_function_name,"detachAll");
+CONSTANT_STRING(attach_to_function_name,"attachTo");
+CONSTANT_STRING(detach_from_function_name,"detachFrom");
+CONSTANT_STRING(detach_from_all_function_name,"detachFromAll");
 }
 
 // public
@@ -57,8 +64,27 @@ FunctorCallbacks::Callback Callback::getIsr()
 
 void Callback::attachTo(const Interrupt & interrupt, const ConstantString & mode)
 {
-  interrupt.attach(*this,mode);
-  interrupt_ptrs_.add(&interrupt);
+  if ((&mode == &interrupt::mode_low) ||
+      (&mode == &interrupt::mode_change) ||
+      (&mode == &interrupt::mode_rising) ||
+      (&mode == &interrupt::mode_falling))
+  {
+    int index = interrupt_ptrs_.add(&interrupt);
+    if (index >= 0)
+    {
+      interrupt.attach(*this,mode);
+    }
+  }
+}
+
+void Callback::detachFrom(const Interrupt & interrupt)
+{
+  int interrupt_ptr_index = findInterruptPtrIndex(interrupt);
+  if (interrupt_ptr_index >= 0)
+  {
+    interrupt.removeCallback();
+    interrupt_ptrs_.remove(interrupt_ptr_index);
+  }
 }
 
 // protected
@@ -92,6 +118,23 @@ int Callback::findPropertyIndex(const ConstantString & property_name)
 size_t Callback::getPropertyCount()
 {
   return property_ptrs_.size();
+}
+
+int Callback::findInterruptPtrIndex(const Interrupt & interrupt)
+{
+  int interrupt_ptr_index = -1;
+  for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+  {
+    if (interrupt_ptrs_.indexHasValue(i))
+    {
+      if (interrupts_ptrs_[i] == &interrupt)
+      {
+        interrupt_ptr_index = i;
+        break;
+      }
+    }
+  }
+  return interrupt_ptr_index;
 }
 
 }

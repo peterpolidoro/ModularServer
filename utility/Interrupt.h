@@ -21,13 +21,11 @@ namespace modular_server
 
 namespace interrupt
 {
-enum{MODE_SUBSET_LENGTH=5};
 extern ConstantString mode_detached;
 extern ConstantString mode_low;
 extern ConstantString mode_change;
 extern ConstantString mode_rising;
 extern ConstantString mode_falling;
-extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 }
 
 class Callback;

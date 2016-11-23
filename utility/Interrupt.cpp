@@ -18,14 +18,6 @@ CONSTANT_STRING(mode_low,"LOW");
 CONSTANT_STRING(mode_change,"CHANGE");
 CONSTANT_STRING(mode_rising,"RISING");
 CONSTANT_STRING(mode_falling,"FALLING");
-constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
-  {
-    {.cs_ptr=&mode_detached},
-    {.cs_ptr=&mode_low},
-    {.cs_ptr=&mode_change},
-    {.cs_ptr=&mode_rising},
-    {.cs_ptr=&mode_falling},
-  };
 }
 
 // public
