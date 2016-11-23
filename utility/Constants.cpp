@@ -135,7 +135,6 @@ CONSTANT_STRING(interrupt_constant_string,"interrupt");
 CONSTANT_STRING(number_constant_string,"number");
 CONSTANT_STRING(pin_constant_string,"pin");
 CONSTANT_STRING(mode_constant_string,"mode");
-CONSTANT_STRING(pullup_constant_string,"pullup");
 CONSTANT_STRING(processor_constant_string,"processor");
 
 #if defined(__AVR_ATmega1280__)

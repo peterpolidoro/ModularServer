@@ -34,18 +34,6 @@ Interrupt::Interrupt()
   setup(constants::empty_constant_string);
 }
 
-void Interrupt::enablePullup()
-{
-  pullup_ = true;
-  pinMode(pin_,INPUT_PULLUP);
-}
-
-void Interrupt::disablePullup()
-{
-  pullup_ = false;
-  pinMode(pin_,INPUT);
-}
-
 size_t Interrupt::getNumber()
 {
   return number_;
@@ -66,11 +54,6 @@ const ConstantString & Interrupt::getMode()
   return *mode_ptr_;
 }
 
-bool Interrupt::getPullup()
-{
-  return pullup_;
-}
-
 // protected
 
 // private
@@ -87,7 +70,6 @@ void Interrupt::setup(const ConstantString & name)
   pin_ = 0;
   callback_ptr_ = NULL;
   mode_ptr_ = &interrupt::mode_detached;
-  pullup_ = false;
 }
 
 void Interrupt::setPin(const size_t pin)
@@ -96,54 +78,110 @@ void Interrupt::setPin(const size_t pin)
   pin_ = pin;
 }
 
-void Interrupt::attach(const Callback & callback, const ConstantString & mode)
+void Interrupt::enablePullup()
 {
-  if (!callback.getIsr())
+  pinMode(pin_,INPUT_PULLUP);
+}
+
+void Interrupt::disablePullup()
+{
+  pinMode(pin_,INPUT);
+}
+
+void Interrupt::setCallback(const Callback & callback)
+{
+  callback_ptr_ = &callback;
+  reattach();
+}
+
+void Interrupt::removeCallback()
+{
+  detach();
+  callback_ptr_ = NULL;
+}
+
+void Interrupt::setMode(const ConstantString & mode)
+{
+  if (&mode == &interrupt::mode_low)
   {
-    return;
+    mode_ptr_ = &interrupt::mode_low;
+    reattach();
   }
-  if (&mode == &interrupt::mode_detached)
+  else if (&mode == &interrupt::mode_change)
+  {
+    mode_ptr_ = &interrupt::mode_change;
+    reattach();
+  }
+  else if (&mode == &interrupt::mode_rising)
+  {
+    mode_ptr_ = &interrupt::mode_rising;
+    reattach();
+  }
+  else if (&mode == &interrupt::mode_falling)
+  {
+    mode_ptr_ = &interrupt::mode_falling;
+    reattach();
+  }
+  else
   {
     detach();
   }
-  else if (&mode == &interrupt::mode_low)
+}
+
+void Interrupt::reattach()
+{
+  if (!callback_ptr_)
   {
-    callback_ptr_ = &callback;
-    mode_ptr_ = &interrupt::mode_low;
+    return;
+  }
+  if (!callback_ptr_->getIsr())
+  {
+    return;
+  }
+  if (mode_ptr_ == &interrupt::mode_low)
+  {
+    detachInterrupt(digitalPinToInterrupt(pin_));
+    enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),
                     LOW);
   }
-  else if (&mode == &interrupt::mode_change)
+  else if (mode_ptr_ == &interrupt::mode_change)
   {
-    callback_ptr_ = &callback;
-    mode_ptr_ = &interrupt::mode_change;
+    detachInterrupt(digitalPinToInterrupt(pin_));
+    enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),
                     CHANGE);
   }
-  else if (&mode == &interrupt::mode_rising)
+  else if (mode_ptr_ == &interrupt::mode_rising)
   {
-    callback_ptr_ = &callback;
-    mode_ptr_ = &interrupt::mode_rising;
+    detachInterrupt(digitalPinToInterrupt(pin_));
+    enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),
                     RISING);
   }
-  else if (&mode == &interrupt::mode_falling)
+  else if (mode_ptr_ == &interrupt::mode_falling)
   {
-    callback_ptr_ = &callback;
-    mode_ptr_ = &interrupt::mode_falling;
+    detachInterrupt(digitalPinToInterrupt(pin_));
+    enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
                     callback_ptr_->getIsr(),
                     FALLING);
   }
 }
 
+void Interrupt::attach(const Callback & callback, const ConstantString & mode)
+{
+  setCallback(callback);
+  setMode(mode);
+}
+
 void Interrupt::detach()
 {
   detachInterrupt(digitalPinToInterrupt(pin_));
-  callback_ptr_ = NULL;
+  disablePullup();
   mode_ptr_ = &interrupt::mode_detached;
 }
 

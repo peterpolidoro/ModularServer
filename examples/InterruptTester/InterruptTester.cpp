@@ -29,11 +29,21 @@ void InterruptTester::setup()
   // Interrupts
   modular_server::Interrupt & bnc_a_interrupt = modular_server_.createInterrupt(constants::bnc_a_interrupt_name,
                                                                                 constants::bnc_a_pin);
-  bnc_a_interrupt.enablePullup();
 
   modular_server::Interrupt & bnc_b_interrupt = modular_server_.createInterrupt(constants::bnc_b_interrupt_name,
                                                                                 constants::bnc_b_pin);
-  bnc_b_interrupt.enablePullup();
+
+  modular_server::Interrupt & bnc_c_interrupt = modular_server_.createInterrupt(constants::bnc_c_interrupt_name,
+                                                                                constants::bnc_c_pin);
+
+  modular_server::Interrupt & bnc_d_interrupt = modular_server_.createInterrupt(constants::bnc_d_interrupt_name,
+                                                                                constants::bnc_d_pin);
+
+  modular_server::Interrupt & bnc_e_interrupt = modular_server_.createInterrupt(constants::bnc_e_interrupt_name,
+                                                                                constants::bnc_e_pin);
+
+  modular_server::Interrupt & bnc_f_interrupt = modular_server_.createInterrupt(constants::bnc_f_interrupt_name,
+                                                                                constants::bnc_f_pin);
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
@@ -52,10 +62,12 @@ void InterruptTester::setup()
   modular_server::Callback & set_led_on_callback = modular_server_.createCallback(constants::set_led_on_callback_name);
   set_led_on_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&InterruptTester::setLedOnHandler));
   set_led_on_callback.attachTo(bnc_a_interrupt,modular_server::interrupt::mode_falling);
+  set_led_on_callback.attachTo(bnc_c_interrupt,modular_server::interrupt::mode_falling);
 
   modular_server::Callback & set_led_off_callback = modular_server_.createCallback(constants::set_led_off_callback_name);
   set_led_off_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&InterruptTester::setLedOffHandler));
   set_led_off_callback.attachTo(bnc_b_interrupt,modular_server::interrupt::mode_falling);
+  set_led_off_callback.attachTo(bnc_d_interrupt,modular_server::interrupt::mode_falling);
 
   // Begin Streams
   Serial.begin(constants::baudrate);

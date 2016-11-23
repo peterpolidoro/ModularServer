@@ -31,6 +31,13 @@ void Callback::attachFunctor(const Functor0 & functor)
 {
   FunctorCallbacks::remove(isr_);
   isr_ = FunctorCallbacks::add(functor);
+  for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+  {
+    if (interrupt_ptrs_.indexHasValue(i))
+    {
+      interrupt_ptrs_[i]->reattach();
+    }
+  }
 }
 
 void Callback::addProperty(Property & property)

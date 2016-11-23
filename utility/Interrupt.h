@@ -36,23 +36,25 @@ class Interrupt : private NamedElement
 {
 public:
   Interrupt();
-  void enablePullup();
-  void disablePullup();
   size_t getNumber();
   size_t getPin();
   Callback * getCallbackPtr();
   const ConstantString & getMode();
-  bool getPullup();
 
 private:
   size_t number_;
   size_t pin_;
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
-  bool pullup_;
   Interrupt(const ConstantString & name, const size_t pin);
   void setup(const ConstantString & name);
   void setPin(const size_t pin);
+  void enablePullup();
+  void disablePullup();
+  void setCallback(const Callback & callback);
+  void removeCallback();
+  void setMode(const ConstantString & mode);
+  void reattach();
   void attach(const Callback & callback, const ConstantString & mode);
   void detach();
   friend class Server;

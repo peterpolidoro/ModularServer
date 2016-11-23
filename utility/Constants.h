@@ -187,7 +187,6 @@ extern ConstantString interrupt_constant_string;
 extern ConstantString number_constant_string;
 extern ConstantString pin_constant_string;
 extern ConstantString mode_constant_string;
-extern ConstantString pullup_constant_string;
 extern ConstantString processor_constant_string;
 extern ConstantString processor_name_constant_string;
 }
