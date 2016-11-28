@@ -20,12 +20,13 @@ enum {HARDWARE_COUNT_MAX=4};
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
 enum{SERVER_PARAMETER_COUNT_MAX=1};
-enum{SERVER_FUNCTION_COUNT_MAX=12};
+enum{SERVER_FUNCTION_COUNT_MAX=13};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {FUNCTION_PARAMETER_COUNT_MAX=6};
 enum {CALLBACK_PROPERTY_COUNT_MAX=6};
 enum {CALLBACK_INTERRUPT_COUNT_MAX=4};
+enum {INTERRUPT_COUNT_MAX=8};
 
 enum{SERVER_STREAM_COUNT_MAX=4};
 
@@ -87,6 +88,7 @@ extern ConstantString verbose_help_function_name;
 extern ConstantString get_device_id_function_name;
 extern ConstantString get_device_info_function_name;
 extern ConstantString get_interrupt_info_function_name;
+extern ConstantString detach_all_interrupts_function_name;
 extern ConstantString get_api_function_name;
 extern ConstantString get_api_verbose_function_name;
 extern ConstantString get_property_default_values_function_name;
@@ -121,6 +123,8 @@ extern ConstantString value_not_in_subset_error_data;
 extern ConstantString value_not_in_range_error_data;
 extern ConstantString property_function_not_found_error_data;
 extern ConstantString incorrect_property_parameter_number_error_data;
+extern ConstantString callback_function_not_found_error_data;
+extern ConstantString incorrect_callback_parameter_number_error_data;
 
 extern const int parse_error_code;
 extern const int invalid_request_error_code;

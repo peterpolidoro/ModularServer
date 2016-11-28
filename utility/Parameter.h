@@ -98,6 +98,7 @@ private:
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
   friend class Property;
   friend class Function;
+  friend class Callback;
   friend class Server;
 
 };

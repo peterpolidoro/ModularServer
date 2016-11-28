@@ -154,7 +154,7 @@ private:
   };
   static Parameter & createParameter(const ConstantString & parameter_name);
   static Parameter & parameter(const ConstantString & parameter_name);
-  static Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
+  static Parameter & copyParameter(Parameter parameter, const ConstantString & parameter_name);
 
   template <typename T>
   static int findFunctionIndex(T const & function_name)

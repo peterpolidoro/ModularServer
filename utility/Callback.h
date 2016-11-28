@@ -27,13 +27,14 @@ namespace modular_server
 namespace callback
 {
 enum{PARAMETER_COUNT_MAX=2};
-enum{FUNCTION_COUNT_MAX=3};
+enum{FUNCTION_COUNT_MAX=4};
 
 // Parameters
 enum{MODE_SUBSET_LENGTH=4};
 extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 
 // Functions
+extern ConstantString call_function_name;
 extern ConstantString attach_to_function_name;
 extern ConstantString detach_from_function_name;
 extern ConstantString detach_from_all_function_name;
@@ -50,22 +51,53 @@ public:
   void addProperty(Property & property);
   FunctorCallbacks::Callback getIsr();
   void attachTo(const Interrupt & interrupt, const ConstantString & mode);
+  void attachTo(const char * interrupt_name, const char * mode_str);
   void detachFrom(const Interrupt & interrupt);
-  template <typename T>
-  void detachFrom(T const & interrupt_name)
-  {
-    int interrupt_ptr_index = findInterruptPtrIndex(interrupt);
-    if (interrupt_ptr_index >= 0)
-    {
-      interrupt_ptrs_[interrupt_ptr_index]->removeCallback();
-      interrupt_ptrs_.remove(interrupt_ptr_index);
-    }
-  };
+  void detachFrom(const ConstantString & interrupt_name);
+  void detachFrom(const char * interrupt_name);
   void detachFromAll();
 
 private:
-  // static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
-  // static Array<Function,callback::FUNCTION_COUNT_MAX> functions_;
+  static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
+  static Array<Function,callback::FUNCTION_COUNT_MAX> functions_;
+  static Array<constants::SubsetMemberType,constants::INTERRUPT_COUNT_MAX> * interrupt_name_array_ptr_;
+  static Functor1wRet<const char *, Interrupt *> find_interrupt_ptr_functor_;
+  static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
+
+  template <typename T>
+  static int findParameterIndex(T const & parameter_name)
+  {
+    int parameter_index = -1;
+    for (size_t i=0; i<parameters_.size(); ++i)
+    {
+      if (parameters_[i].compareName(parameter_name))
+      {
+        parameter_index = i;
+        break;
+      }
+    }
+    return parameter_index;
+  };
+  static Parameter & createParameter(const ConstantString & parameter_name);
+  static Parameter & parameter(const ConstantString & parameter_name);
+  static Parameter & copyParameter(Parameter parameter, const ConstantString & parameter_name);
+
+  template <typename T>
+  static int findFunctionIndex(T const & function_name)
+  {
+    int function_index = -1;
+    for (size_t i=0; i<functions_.size(); ++i)
+    {
+      if (functions_[i].compareName(function_name))
+      {
+        function_index = i;
+        break;
+      }
+    }
+    return function_index;
+  };
+  static Function & createFunction(const ConstantString & function_name);
+  static Function & function(const ConstantString & function_name);
 
   FunctorCallbacks::Callback isr_;
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> property_ptrs_;
@@ -76,23 +108,16 @@ private:
   int findPropertyIndex(const ConstantString & property_name);
   size_t getPropertyCount();
   int findInterruptPtrIndex(const Interrupt & interrupt);
-  template <typename T>
-  int findInterruptPtrIndex(T const & interrupt_name)
-  {
-    int interrupt_ptr_index = -1;
-    for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
-    {
-      if (interrupt_ptrs_.indexHasValue(i))
-      {
-        if (interrupts_ptrs_[i]->compareName(interrupt_name))
-        {
-          interrupt_ptr_index = i;
-          break;
-        }
-      }
-    }
-    return interrupt_ptr_index;
-  };
+  int findInterruptPtrIndex(const ConstantString & interrupt_name);
+  int findInterruptPtrIndex(const char * interrupt_name);
+  void updateFunctionsAndParameters();
+
+  // Handlers
+  void callHandler();
+  void attachToHandler();
+  void detachFromHandler();
+  void detachFromAllHandler();
+
   friend class Server;
 };
 }

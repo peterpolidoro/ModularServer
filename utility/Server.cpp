@@ -20,6 +20,7 @@ void Server::setup()
 {
   request_method_index_ = -1;
   property_function_index_ = -1;
+  callback_function_index_ = -1;
   server_stream_index_ = 0;
 
   eeprom_initialized_ = false;
@@ -92,6 +93,9 @@ void Server::setup()
   get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
   get_interrupt_info_function.setReturnTypeObject();
 
+  Function & detach_all_interrupts_function = createFunction(constants::detach_all_interrupts_function_name);
+  detach_all_interrupts_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllInterruptsHandler));
+
   Function & get_api_function = createFunction(constants::get_api_function_name);
   get_api_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
   get_api_function.addParameter(firmware_parameter);
@@ -120,6 +124,9 @@ void Server::setup()
 #endif
 
   // Callbacks
+  Callback::interrupt_name_array_ptr_ = &interrupt_name_array_;
+  Callback::find_interrupt_ptr_functor_ = makeFunctor((Functor1wRet<const char *, Interrupt *> *)0,*this,&Server::findInterruptPtr);
+  Callback::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   // Server
   server_running_ = false;
@@ -162,6 +169,9 @@ Interrupt & Server::createInterrupt(const ConstantString & interrupt_name,
   int interrupt_index = findInterruptIndex(interrupt_name);
   if (interrupt_index < 0)
   {
+    constants::SubsetMemberType int_name;
+    int_name.cs_ptr = &interrupt_name;
+    interrupt_name_array_.push_back(int_name);
     interrupts_.push_back(Interrupt(interrupt_name,pin));
     return interrupts_.back();
   }
@@ -176,6 +186,16 @@ Interrupt & Server::interrupt(const ConstantString & interrupt_name)
     return interrupts_[interrupt_index];
   }
   return dummy_interrupt_;
+}
+
+Interrupt * Server::findInterruptPtr(const char * interrupt_name)
+{
+  int interrupt_index = findInterruptIndex(interrupt_name);
+  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  {
+    return &interrupts_[interrupt_index];
+  }
+  return NULL;
 }
 
 // Firmware
@@ -365,6 +385,18 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
     Function & function = functions_[function_index];
     parameter_index += findFunctionParameterIndex(function,parameter_name);
   }
+  else if (request_method_index_ < (int)(functions_.size() + callbacks_.size()))
+  {
+    if (callback_function_index_ >= 0)
+    {
+      int callback_index = request_method_index_ - functions_.size();
+      Callback & callback = callbacks_[callback_index];
+      Function & function = callback.functions_[callback_function_index_];
+
+      // index 0 is the request method, index 1 is the callback function
+      parameter_index += findFunctionParameterIndex(function,parameter_name) + 1;
+    }
+  }
   else if (request_method_index_ < (int)(functions_.size() + callbacks_.size() + properties_.size()))
   {
     if (property_function_index_ >= 0)
@@ -464,16 +496,78 @@ void Server::processRequestArray()
         callbackHelp(callback,true);
       }
       // check parameter count
-      else if (parameter_count != 0)
+      else if (parameter_count == 0)
       {
-        response_.returnParameterCountError(parameter_count,0);
+        response_.returnParameterCountError(parameter_count,1);
         return;
       }
-      // call callback functor
-      // else
-      // {
-      //   callback.functor();
-      // }
+      // callback function
+      else
+      {
+        callback.updateFunctionsAndParameters();
+
+        // index 0 is the request method, index 1 is the callback function
+        const char * callback_function_name = (*request_json_array_ptr_)[1];
+        callback_function_index_ = callback.findFunctionIndex(callback_function_name);
+        if (callback_function_index_ < 0)
+        {
+          response_.returnCallbackFunctionNotFoundError();
+          return;
+        }
+
+        Function & function = callback.functions_[callback_function_index_];
+
+        int callback_parameter_count = parameter_count - 1;
+
+        // callback function ?
+        if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
+        {
+          response_.writeResultKey();
+          functionHelp(function,false);
+        }
+        // callback function ??
+        else if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
+        {
+          response_.writeResultKey();
+          functionHelp(function,true);
+        }
+        // callback function parameter ?
+        // callback function parameter ??
+        else if ((callback_parameter_count == 2) &&
+                 ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
+                  (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
+        {
+          int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
+          if (parameter_index >= 0)
+          {
+            Parameter * parameter_ptr;
+            parameter_ptr = function.parameter_ptrs_[parameter_index];
+            response_.writeResultKey();
+            parameterHelp(*parameter_ptr);
+          }
+        }
+        // check callback parameter count
+        else if (callback_parameter_count != function.getParameterCount())
+        {
+          response_.returnCallbackParameterCountError(callback_parameter_count,function.getParameterCount());
+          return;
+        }
+        // check callback parameters and call callback function functor
+        else
+        {
+          ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
+          // do not check callback at begin
+          iterator++;
+          // do not check callback method at begin + 1
+          iterator++;
+          long test = *iterator;
+          bool parameters_ok = checkParameters(function,iterator);
+          if (parameters_ok)
+          {
+            function.functor();
+          }
+        }
+      }
     }
     else if (request_method_index_ < (int)(functions_.size() + callbacks_.size() + properties_.size()))
     {
@@ -1216,6 +1310,8 @@ void Server::functionHelp(Function & function, bool verbose)
 
 void Server::callbackHelp(Callback & callback, bool verbose)
 {
+  callback.updateFunctionsAndParameters();
+
   response_.beginObject();
 
   const ConstantString & callback_name = callback.getName();
@@ -1241,10 +1337,6 @@ void Server::callbackHelp(Callback & callback, bool verbose)
   }
   response_.endArray();
 
-  response_.writeKey(constants::parameters_constant_string);
-  response_.beginArray();
-  response_.endArray();
-
   response_.writeKey(constants::interrupts_constant_string);
   response_.beginArray();
   IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> * interrupt_ptrs_ptr = NULL;
@@ -1266,7 +1358,35 @@ void Server::callbackHelp(Callback & callback, bool verbose)
   }
   response_.endArray();
 
-  response_.write(constants::result_type_constant_string,JsonStream::NULL_TYPE);
+  response_.writeKey(constants::functions_constant_string);
+  response_.beginArray();
+  for (size_t i=0; i<Callback::functions_.size(); ++i)
+  {
+    if (verbose)
+    {
+      functionHelp(Callback::functions_[i],false);
+    }
+    else
+    {
+      response_.write(Callback::functions_[i].getName());
+    }
+  }
+  response_.endArray();
+
+  response_.writeKey(constants::parameters_constant_string);
+  response_.beginArray();
+  for (size_t i=0; i<Callback::parameters_.size(); ++i)
+  {
+    if (verbose)
+    {
+      parameterHelp(Callback::parameters_[i]);
+    }
+    else
+    {
+      response_.write(Callback::parameters_[i].getName());
+    }
+  }
+  response_.endArray();
 
   response_.endObject();
 }
@@ -2159,6 +2279,14 @@ void Server::getInterruptInfoHandler()
 {
   response_.writeResultKey();
   writeInterruptInfoToResponse();
+}
+
+void Server::detachAllInterruptsHandler()
+{
+  for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
+  {
+    callbacks_[callback_index].detachFromAll();
+  }
 }
 
 void Server::getApiHandler()

@@ -65,7 +65,7 @@ Parameter & Property::parameter(const ConstantString & parameter_name)
   }
 }
 
-Parameter & Property::copyParameter(Parameter parameter,const ConstantString & parameter_name)
+Parameter & Property::copyParameter(Parameter parameter, const ConstantString & parameter_name)
 {
   parameters_.push_back(parameter);
   parameters_.back().setName(parameter_name);

@@ -110,6 +110,7 @@ private:
   Array<const constants::HardwareInfo *,constants::HARDWARE_COUNT_MAX> hardware_info_array_;
   Interrupt dummy_interrupt_;
   ConcatenatedArray<Interrupt,constants::HARDWARE_COUNT_MAX> interrupts_;
+  Array<constants::SubsetMemberType,constants::INTERRUPT_COUNT_MAX> interrupt_name_array_;
 
   Property server_properties_[constants::SERVER_PROPERTY_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
@@ -131,6 +132,7 @@ private:
 
   int request_method_index_;
   int property_function_index_;
+  int callback_function_index_;
   bool eeprom_initialized_;
   SavedVariable eeprom_initialized_sv_;
   bool server_running_;
@@ -184,6 +186,7 @@ private:
                       const JsonStream::JsonTypes & parameter_type,
                       const JsonStream::JsonTypes & parameter_array_element_type,
                       const size_t num);
+  Interrupt * findInterruptPtr(const char * interrupt_name);
 
   // Handlers
   void getMethodIdsHandler();
@@ -192,6 +195,7 @@ private:
   void getDeviceIdHandler();
   void getDeviceInfoHandler();
   void getInterruptInfoHandler();
+  void detachAllInterruptsHandler();
   void getApiHandler();
   void getApiVerboseHandler();
   void getMemoryFreeHandler();

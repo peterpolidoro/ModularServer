@@ -85,6 +85,8 @@ private:
                                       const char * const max_str);
   void returnPropertyFunctionNotFoundError();
   void returnPropertyParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
+  void returnCallbackFunctionNotFoundError();
+  void returnCallbackParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
   friend class Server;
   friend class Property;
 };

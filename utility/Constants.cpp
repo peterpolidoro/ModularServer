@@ -36,6 +36,7 @@ CONSTANT_STRING(verbose_help_function_name,"??");
 CONSTANT_STRING(get_device_id_function_name,"getDeviceId");
 CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
 CONSTANT_STRING(get_interrupt_info_function_name,"getInterruptInfo");
+CONSTANT_STRING(detach_all_interrupts_function_name,"detachAllInterrupts");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_api_verbose_function_name,"getApiVerbose");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
@@ -69,6 +70,8 @@ CONSTANT_STRING(value_not_in_subset_error_data,"Value not in subset: ");
 CONSTANT_STRING(value_not_in_range_error_data,"Value not in range: ");
 CONSTANT_STRING(property_function_not_found_error_data,"Property function not found");
 CONSTANT_STRING(incorrect_property_parameter_number_error_data,"Incorrect number of property parameters. ")
+CONSTANT_STRING(callback_function_not_found_error_data,"Callback function not found");
+CONSTANT_STRING(incorrect_callback_parameter_number_error_data,"Incorrect number of callback parameters. ")
 
 const int parse_error_code = -32700;
 const int invalid_request_error_code = -32600;
