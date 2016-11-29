@@ -905,10 +905,102 @@ ans =
   name: 'property_tester'
   form_factor: '5x3'
   serial_number: 0
-dev.getFunctions()                 % get device functions
-  Modular Device Functions
+dev.getMethods()                 % get device functions
+  Modular Device Methods
   ---------------------
+  getDeviceId
+  getDeviceInfo
+  getInterruptInfo
+  detachAllInterrupts
+  getApi
+  getApiVerbose
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getMemoryFree
+  getDoubled
+  getBool
+  getLongArrayFixed
+  getLongArrayVariable
+  setLongArrayFixed
+  setLongArrayVariable
+  setLongArrayParameter
+  getStringAll
+  getStringSome
+  getCount
+  getCountArray
+  getDirection
+  getDirectionArray
+  checkMode
+  incrementMode
+  serialNumber
+  double
+  bool
+  longArray
+  doubleArray
+  boolArray
+  string
+  odd
+  mode
+  oddArray
+dev.setPropertiesToDefaults()
 dev.getPropertyValues()
+ans = 
+  serialNumber: 0
+  double: 3.1416
+  bool: 0
+  longArray: [5 4 3 2]
+  doubleArray: [-1.1000 2.2000 3.3000]
+  boolArray: {[0]  [1]}
+  string: 'abcdef'
+  odd: 5
+  mode: 'RISING'
+  oddArray: [1 5]
+dev.longArray('getValue')
+ans =
+  5     4     3     2
+dev.longArray()
+ans =
+  5     4     3     2
+dev.doubleArray('getElementValue',1)
+ans =
+  2.2000
+dev.doubleArray('getElementValue',10)
+(from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <=
+element_index <= 2, code: -32602
+dev.doubleArray('setAllElementValues',8.7654)
+ans =
+  8.7654    8.7654    8.7654
+dev.doubleArray('setElementValue',1,5.678)
+ans =
+  8.7654    5.6780    8.7654
+dev.doubleArray('getDefaultElementValue',0)
+ans =
+  -1.1000
+dev.boolArray('setValue',[false,false])
+ans = 
+  [0]    [0]
+dev.string('setValue','asdfghjkl')
+ans =
+  asdfghjkl
+dev.string('getElementValue',3)
+ans =
+  f
+dev.string('setElementValue',3,'X')
+ans =
+  asdXghjkl
+dev.odd('setValue',2)
+(from server) message: Invalid params, data: Parameter value not valid. Value not in subset:
+[1,3,5,7,9], code: -32602
+dev.odd('setValue',7)
+ans =
+  7
+dev.mode('setValue','test')
+(from server) message: Invalid params, data: Parameter value not valid. Value not in subset:
+[RISING,FALLING,CHANGE], code: -32602
+dev.mode('setValue','CHANGE')
+ans =
+  CHANGE
 dev.close()
 clear dev
 ```
