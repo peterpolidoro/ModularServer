@@ -745,6 +745,8 @@ dev.getMethods()                 % get device methods
   ---------------------
   getDeviceId
   getDeviceInfo
+  getInterruptInfo
+  detachAllInterrupts
   getApi
   getApiVerbose
   getPropertyDefaultValues
@@ -783,7 +785,7 @@ ans =
 dev.serialNumber('setValue',-1)
 (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <=
 value <= 65535, code: -32602
-dev.serialNumber('setValue',32);
+dev.serialNumber('setValue',32)
 ans =
   32
 dev.getPropertyValues()
