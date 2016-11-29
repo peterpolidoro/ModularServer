@@ -571,10 +571,31 @@ dev.getDeviceId()
 ans =
   name: 'string_controller'
   form_factor: '5x3'
-  serial_number: 0
+  serial_number: 77
 dev.getMethods()                 % get device methods
   Modular Device Methods
   ---------------------
+  getDeviceId
+  getDeviceInfo
+  getInterruptInfo
+  detachAllInterrupts
+  getApi
+  getApiVerbose
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getMemoryFree
+  echo
+  length
+  startsWith
+  repeat
+  charsAt
+  startingChars
+  setStoredString
+  getStoredString
+  serialNumber
+  startingCharsCount
+  storedString
 dev.setPropertiesToDefaults()
 dev.repeat()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
@@ -591,18 +612,19 @@ ans =
   max: 100
 dev.repeat('I am a string to repeat.',-1)
 device responded with error, Parameter value out of range: 1 <= count <= 100
-dev.repeat('I am a string to repeat.',4)
-ans =
-  I am a string to repeat.
-  I am a string to repeat.
-  I am a string to repeat.
-  I am a string to repeat.
+repeated = dev.repeat('I am a string to repeat.',4);
+json = dev.convertToJson(repeated)
+["I am a string to repeat.","I am a string to repeat.","I am a string to repeat.","I am a string to repeat."]
 chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =
   [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
 dev.startingCharsCount('getValue')
+ans =
+  2
 dev.startingCharsCount('setValue',5)
+ans =
+  5
 dev.startingChars('Fantastic!')
 ans =
   Fanta
