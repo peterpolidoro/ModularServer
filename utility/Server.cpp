@@ -498,7 +498,10 @@ void Server::processRequestArray()
       // check parameter count
       else if (parameter_count == 0)
       {
-        response_.returnParameterCountError(parameter_count,1);
+        // shortcut for callback call function
+        callback.updateFunctionsAndParameters();
+        Function & function = callback.function(callback::call_function_name);
+        function.functor();
         return;
       }
       // callback function
@@ -588,7 +591,10 @@ void Server::processRequestArray()
       // check parameter count
       else if (parameter_count == 0)
       {
-        response_.returnParameterCountError(parameter_count,1);
+        // shortcut for property getValue function
+        property.updateFunctionsAndParameters();
+        Function & function = property.function(property::get_value_function_name);
+        function.functor();
         return;
       }
       // property function
