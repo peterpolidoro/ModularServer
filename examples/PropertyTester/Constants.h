@@ -19,6 +19,8 @@ enum{PARAMETER_COUNT_MAX=6};
 enum{FUNCTION_COUNT_MAX=15};
 enum{CALLBACK_COUNT_MAX=1};
 
+enum{INTERRUPT_COUNT_MAX=1};
+
 extern const long baudrate;
 
 extern ConstantString device_name;
@@ -29,6 +31,8 @@ extern const modular_server::FirmwareInfo firmware_info;
 extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
+
+// Interrupts
 
 // Units
 

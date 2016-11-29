@@ -44,9 +44,12 @@ Response:
       "functions":[
         "getDeviceId",
         "getDeviceInfo",
+        "getInterruptInfo",
+        "detachAllInterrupts",
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
         "getPropertyValues",
         "getMemoryFree",
         "getDoubled",
@@ -86,9 +89,7 @@ Response:
         "mode",
         "oddArray"
       ],
-      "callbacks":[
-        "setPropertiesToDefaults"
-      ]
+      "callbacks":[]
     }
   }
 }
@@ -260,6 +261,26 @@ Response:
 Request:
 
 ```shell
+longArray
+```
+
+Response:
+
+```json
+{
+  "id":"longArray",
+  "result":[
+    5,
+    4,
+    3,
+    2
+  ]
+}
+```
+
+Request:
+
+```shell
 doubleArray ?
 ```
 
@@ -325,6 +346,25 @@ Response:
 Request:
 
 ```shell
+doubleArray getElementValue 10
+```
+
+Response:
+
+```json
+{
+  "id":"doubleArray",
+  "error":{
+    "message":"Invalid params",
+    "data":"Parameter value not valid. Value not in range: 0 <= element_index <= 2",
+    "code":-32602
+  }
+}
+```
+
+Request:
+
+```shell
 doubleArray setAllElementValues 8.7654
 ```
 
@@ -333,7 +373,11 @@ Response:
 ```json
 {
   "id":"doubleArray",
-  "result":null
+  "result":[
+    8.765400,
+    8.765400,
+    8.765400
+  ]
 }
 ```
 
@@ -341,32 +385,6 @@ Request:
 
 ```shell
 doubleArray setElementValue 1 5.678
-```
-
-Response:
-
-```json
-{
-  "id":"doubleArray",
-  "result":null
-}
-```
-
-Request:
-
-```shell
-doubleArray getDefaultElementValue 0
-```
-
-Response:
-
-```json
-```
-
-Request:
-
-```shell
-doubleArray getValue
 ```
 
 Response:
@@ -385,44 +403,108 @@ Response:
 Request:
 
 ```shell
-setPropertyValue boolArray [false,false]
+doubleArray getDefaultElementValue 0
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyValue",
-  "result":null
+  "id":"doubleArray",
+  "result":-1.100000
 }
 ```
 
 Request:
 
 ```shell
-setPropertyValue string asdfghjkl
+boolArray ?
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyValue",
-  "result":null
+  "id":"boolArray",
+  "result":{
+    "name":"boolArray",
+    "firmware":"PropertyTester",
+    "type":"array",
+    "array_element_type":"bool",
+    "array_length_min":1,
+    "array_length_max":2,
+    "value":[
+      false,
+      true
+    ],
+    "default_value":[
+      false,
+      true
+    ],
+    "functions":[
+      "getValue",
+      "setValue",
+      "getDefaultValue",
+      "setValueToDefault",
+      "getElementValue",
+      "setElementValue",
+      "getDefaultElementValue",
+      "setElementValueToDefault",
+      "setAllElementValues"
+    ],
+    "parameters":[
+      "value",
+      "element_index",
+      "element_value"
+    ]
+  }
 }
 ```
 
 Request:
 
 ```shell
-getPropertyElementValue string 3
+boolArray setValue [false,false]
 ```
 
 Response:
 
 ```json
 {
-  "id":"getPropertyElementValue",
+  "id":"boolArray",
+  "result":[
+    false,
+    false
+  ]
+}
+```
+
+Request:
+
+```shell
+string setValue asdfghjkl
+```
+
+Response:
+
+```json
+{
+  "id":"string",
+  "result":"asdfghjkl"
+}
+```
+
+Request:
+
+```shell
+string getElementValue 3
+```
+
+Response:
+
+```json
+{
+  "id":"string",
   "result":"f"
 }
 ```
@@ -430,29 +512,29 @@ Response:
 Request:
 
 ```shell
-setPropertyElementValue string 3 X
+string setElementValue 3 X
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyElementValue",
-  "result":null
+  "id":"string",
+  "result":"asdXghjkl"
 }
 ```
 
 Request:
 
 ```shell
-setPropertyValue odd 2
+odd setValue 2
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyValue",
+  "id":"odd",
   "error":{
     "message":"Invalid params",
     "data":"Parameter value not valid. Value not in subset: [1,3,5,7,9]",
@@ -464,29 +546,29 @@ Response:
 Request:
 
 ```shell
-setPropertyValue odd 7
+odd setValue 7
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyValue",
-  "result":null
+  "id":"odd",
+  "result":7
 }
 ```
 
 Request:
 
 ```shell
-setPropertyValue mode test
+mode setValue test
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyValue",
+  "id":"mode",
   "error":{
     "message":"Invalid params",
     "data":"Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE]",
@@ -498,32 +580,32 @@ Response:
 Request:
 
 ```shell
-setPropertyValue mode CHANGE
+mode setValue CHANGE
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyValue",
-  "result":null
+  "id":"mode",
+  "result":"CHANGE"
 }
 ```
 
 Request:
 
 ```shell
-setPropertyElementValue mode 3 t
+oddArray setAllElementValues 2
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyElementValue",
+  "id":"oddArray",
   "error":{
     "message":"Invalid params",
-    "data":"Cannot set element in string property with subset.",
+    "data":"Parameter value not valid. Value not in subset: [1,3,5,7,9]",
     "code":-32602
   }
 }
@@ -532,34 +614,18 @@ Response:
 Request:
 
 ```shell
-setAllPropertyElementValues oddArray 2
+oddArray setAllElementValues 9
 ```
 
 Response:
 
 ```json
 {
-  "id":"setAllPropertyElementValues",
-  "error":{
-    "message":"Invalid params",
-    "data":"Array parameter element value not valid. Value not in subset: [1,3,5,7,9]",
-    "code":-32602
-  }
-}
-```
-
-Request:
-
-```shell
-setAllPropertyElementValues oddArray 9
-```
-
-Response:
-
-```json
-{
-  "id":"setAllPropertyElementValues",
-  "result":null
+  "id":"oddArray",
+  "result":[
+    9,
+    9
+  ]
 }
 ```
 
@@ -585,9 +651,9 @@ Response:
       2
     ],
     "doubleArray":[
-      -1.100000,
-      2.200000,
-      3.300000
+      8.765400,
+      5.678000,
+      8.765400
     ],
     "boolArray":[
       false,
@@ -647,13 +713,14 @@ Response:
     "processor":"ATmega2560",
     "hardware":[
       {
-        "name":"Mega2560"
+        "name":"Mega2560",
+        "interrupts":[]
       }
     ],
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"1.0.0"
+        "version":"2.0.0"
       },
       {
         "name":"PropertyTester",
@@ -664,83 +731,10 @@ Response:
 }
 ```
 
-Every function, parameter, and property belongs to one firmware set.
+Every function, parameter, property, and callback belongs to one firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 function.
-
-Request:
-
-```shell
-getApi ["all"]
-```
-
-Response:
-
-```json
-{
-  "id":"getApi",
-  "result":{
-    "firmware":["all"],
-    "functions":[
-      "getDeviceId",
-      "getDeviceInfo",
-      "getApi",
-      "getApiVerbose",
-      "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "setPropertyToDefault",
-      "getPropertyValues",
-      "getPropertyValue",
-      "getPropertyElementValue",
-      "setPropertyValue",
-      "setPropertyElementValue",
-      "setAllPropertyElementValues",
-      "getMemoryFree",
-      "getDoubled",
-      "getBool",
-      "getLongArrayFixed",
-      "getLongArrayVariable",
-      "setLongArrayFixed",
-      "setLongArrayVariable",
-      "setLongArrayParameter",
-      "getStringAll",
-      "getStringSome",
-      "getCount",
-      "getCountArray",
-      "getDirection",
-      "getDirectionArray",
-      "checkMode",
-      "incrementMode"
-    ],
-    "parameters":[
-      "firmware",
-      "property_name",
-      "property_value",
-      "property_element_index",
-      "long_array_parameter",
-      "length_parameter",
-      "count",
-      "count_array",
-      "direction",
-      "direction_array"
-    ],
-    "properties":[
-      "serialNumber",
-      "double",
-      "bool",
-      "longArray",
-      "doubleArray",
-      "boolArray",
-      "string",
-      "odd",
-      "mode",
-      "oddArray"
-    ],
-    "callbacks":[]
-  }
-}
-```
 
 Request:
 
@@ -805,36 +799,42 @@ from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'property_tester', 'serial_number': 0}
-dev.get_functions()
-['get_count_array',
+dev.get_methods()
+['serial_number',
+ 'long_array',
+ 'get_count_array',
  'get_long_array_fixed',
- 'set_all_property_element_values',
+ 'get_property_values',
  'get_direction',
- 'get_property_default_values',
  'get_count',
- 'set_property_value',
+ 'odd',
  'get_string_some',
  'get_device_info',
  'get_memory_free',
- 'set_property_element_value',
+ 'bool_array',
  'set_long_array_variable',
- 'set_properties_to_defaults',
  'get_device_id',
+ 'bool',
  'increment_mode',
+ 'string',
  'get_direction_array',
  'set_long_array_fixed',
+ 'odd_array',
+ 'detach_all_interrupts',
  'set_long_array_parameter',
  'get_string_all',
  'get_long_array_variable',
  'check_mode',
- 'get_property_value',
- 'get_property_element_value',
+ 'double_array',
+ 'get_interrupt_info',
  'get_api',
  'get_api_verbose',
  'get_doubled',
+ 'mode',
+ 'double',
  'get_bool',
- 'set_property_to_default',
- 'get_property_values']
+ 'get_property_default_values',
+ 'set_properties_to_defaults']
 dev.set_properties_to_defaults()
 dev.get_property_values()
 {'bool': False,
@@ -847,70 +847,36 @@ dev.get_property_values()
  'oddArray': [1, 5],
  'serialNumber': 0,
  'string': 'abcdef'}
-dev.get_property_value('longArray')
+dev.long_array('getValue')
 [5, 4, 3, 2]
-dev.get_property_element_value('doubleArray',1)
+dev.long_array()
+[5, 4, 3, 2]
+dev.double_array('getElementValue',1)
 2.2
-dev.set_property_value('boolArray',[False,False])
-dev.set_property_value('string','asdfghjkl')
-dev.get_property_element_value('string',3)
+dev.double_array('getElementValue',10)
+IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <= element_index <= 2, code: -32602
+dev.double_array('setAllElementValues',8.7654)
+[8.7654, 8.7654, 8.7654]
+dev.double_array('setElementValue',1,5.678)
+[8.7654, 5.678, 8.7654]
+dev.double_array('getDefaultElementValue',0)
+-1.1
+dev.bool_array('setValue',[False,False])
+[False, False]
+dev.string('setValue','asdfghjkl')
+'asdfghjkl'
+dev.string('getElementValue',3)
 'f'
-dev.set_property_element_value('string',3,'X')
-dev.set_property_value('odd',2)
+dev.string('setElementValue',3,'X')
+'asdXghjkl'
+dev.odd('setValue',2)
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in subset: [1,3,5,7,9], code: -32602
-dev.set_property_value('odd',7)
-dev.set_property_value('mode','test')
+dev.odd('setValue',7)
+7
+dev.mode('setValue','test')
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE], code: -32602
-dev.set_property_value('mode','CHANGE')
-dev.set_property_element_value('mode',3,'t')
-IOError: (from server) message: Invalid params, data: Cannot set element in string property with subset., code: -32602
-dev.set_all_property_element_values('oddArray',2)
-IOError: (from server) message: Invalid params, data: Array parameter element value not valid. Value not in subset: [1,3,5,7,9], code: -32602
-dev.set_all_property_element_values('oddArray',9)
-dev.get_property_values()
-{'bool': False,
- 'boolArray': [False, False],
- 'double': 3.14159,
- 'doubleArray': [-1.1, 2.2, 3.3],
- 'longArray': [5, 4, 3, 2],
- 'mode': 'CHANGE',
- 'odd': 7,
- 'oddArray': [9, 9],
- 'serialNumber': 0,
- 'string': 'asdXghjkl'}
-dev.get_api(["PropertyTester"])
-{'properties': ['double',
-  'bool',
-  'longArray',
-  'doubleArray',
-  'boolArray',
-  'string',
-  'odd',
-  'mode',
-  'oddArray'],
- 'firmware': ['PropertyTester'],
- 'callbacks': [],
- 'functions': ['getDoubled',
-  'getBool',
-  'getLongArrayFixed',
-  'getLongArrayVariable',
-  'setLongArrayFixed',
-  'setLongArrayVariable',
-  'setLongArrayParameter',
-  'getStringAll',
-  'getStringSome',
-  'getCount',
-  'getCountArray',
-  'getDirection',
-  'getDirectionArray',
-  'checkMode',
-  'incrementMode'],
- 'parameters': ['long_array_parameter',
-  'length_parameter',
-  'count',
-  'count_array',
-  'direction',
-  'direction_array']}
+dev.mode('setValue','CHANGE')
+'CHANGE'
 ```
 
 For more details on the Python interface:
@@ -942,71 +908,7 @@ ans =
 dev.getFunctions()                 % get device functions
   Modular Device Functions
   ---------------------
-  getDeviceId
-  getDeviceInfo
-  getApi
-  getApiVerbose
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getPropertyValue
-  getPropertyElementValue
-  setPropertyValue
-  setPropertyElementValue
-  setAllPropertyElementValues
-  getMemoryFree
-  getDoubled
-  getBool
-  getLongArrayFixed
-  getLongArrayVariable
-  setLongArrayFixed
-  setLongArrayVariable
-  setLongArrayParameter
-  getStringAll
-  getStringSome
-  getCount
-  getCountArray
-  getDirection
-  getDirectionArray
-  checkMode
-  incrementMode
 dev.getPropertyValues()
-  ans =
-  serialNumber: 0
-  double: 3.1416
-  bool: 0
-  longArray: [5 4 3 2]
-  doubleArray: [-1.1000 2.2000 3.3000]
-  boolArray: [0 1]
-  string: 'abcdef'
-  odd: 5
-  mode: 'RISING'
-  oddArray: [1 5]
-dev.getPropertyValue('longArray')
-ans =
-  5   4   3   2
-dev.getPropertyElementValue('doubleArray',1)
-ans =
-  2.2000
-dev.setPropertyValue('boolArray',[0,0]);
-dev.setPropertyValue('string','asdfghjkl');
-dev.getPropertyElementValue('string',3)
-ans =
-  f
-dev.setPropertyElementValue('string',3,'X');
-dev.getPropertyValues()
-ans =
-  serialNumber: 0
-  double: 3.1416
-  bool: 0
-  longArray: [5 4 3 2]
-  doubleArray: [-1.1000 2.2000 3.3000]
-  boolArray: [0 0]
-  string: 'asdXghjkl'
-  odd: 5
-  mode: 'RISING'
-  oddArray: [1 5]
-dev.setPropertiesToDefaults();
 dev.close()
 clear dev
 ```

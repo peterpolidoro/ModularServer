@@ -819,7 +819,15 @@ void Property::updateFunctionsAndParameters()
     Parameter & element_index_parameter = createParameter(property::element_index_parameter_name);
     element_index_parameter.setTypeLong();
     size_t element_index_min = 0;
-    size_t element_index_max = parameter().getArrayLengthMax() - 1;
+    size_t element_index_max;
+    if (type == JsonStream::ARRAY_TYPE)
+    {
+      element_index_max = getArrayLength() - 1;
+    }
+    else
+    {
+      element_index_max = getArrayLength() - 2;
+    }
     element_index_parameter.setRange(element_index_min,element_index_max);
 
     Parameter & element_value_parameter = copyParameter(parameter().getElementParameter(),property::element_value_parameter_name);
