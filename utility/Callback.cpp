@@ -23,7 +23,7 @@ constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   };
 
 // Functions
-CONSTANT_STRING(call_function_name,"call");
+CONSTANT_STRING(trigger_function_name,"trigger");
 CONSTANT_STRING(attach_to_function_name,"attachTo");
 CONSTANT_STRING(detach_from_function_name,"detachFrom");
 CONSTANT_STRING(detach_from_all_function_name,"detachFromAll");
@@ -309,8 +309,8 @@ void Callback::updateFunctionsAndParameters()
   // Functions
   functions_.clear();
 
-  Function & call_function = createFunction(callback::call_function_name);
-  call_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::callHandler));
+  Function & trigger_function = createFunction(callback::trigger_function_name);
+  trigger_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::callHandler));
 
   Function & attach_to_function = createFunction(callback::attach_to_function_name);
   attach_to_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::attachToHandler));

@@ -22,11 +22,13 @@ To get help information about the modular device, type a single
 question mark ? into the input property and press the 'Send' button or
 press the 'Enter' key.
 
+Request:
+
 ```shell
 ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -96,13 +98,13 @@ Example Response:
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
-Example Function:
+Request:
 
 ```shell
 setPropertiesToDefaults
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -111,13 +113,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 getPropertyValues
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -152,13 +154,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 double ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -182,13 +184,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 longArray ?
 ```
 
-Example Response:
+Response:
 
 ```json
 
@@ -235,13 +237,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 longArray getValue
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -255,13 +257,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 doubleArray ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -305,13 +307,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 doubleArray getElementValue 1
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -320,13 +322,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 doubleArray setAllElementValues 8.7654
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -335,13 +337,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 doubleArray setElementValue 1 5.678
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -350,24 +352,24 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 doubleArray getDefaultElementValue 0
 ```
 
-Example Response:
+Response:
 
 ```json
 ```
 
-Example Function:
+Request:
 
 ```shell
 doubleArray getValue
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -380,13 +382,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyValue boolArray [false,false]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -395,13 +397,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyValue string asdfghjkl
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -410,13 +412,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 getPropertyElementValue string 3
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -425,13 +427,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyElementValue string 3 X
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -440,13 +442,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyValue odd 2
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -459,13 +461,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyValue odd 7
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -474,13 +476,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyValue mode test
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -493,13 +495,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyValue mode CHANGE
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -508,13 +510,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyElementValue mode 3 t
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -527,13 +529,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setAllPropertyElementValues oddArray 2
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -546,13 +548,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setAllPropertyElementValues oddArray 9
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -561,13 +563,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 getPropertyValues
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -605,13 +607,13 @@ Example Response:
 Use the getDeviceId function to get a unique set of values to identify
 the device.
 
-Example:
+Request:
 
 ```shell
 getDeviceId
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -630,13 +632,13 @@ with the same name and form\_factor.
 Use the getDeviceInfo function to get information about the hardware and
 firmware of the device.
 
-Example:
+Request:
 
 ```shell
 getDeviceInfo
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -667,13 +669,13 @@ Every function, parameter, and property belongs to one firmware set.
 To get the API limited to one or more firmware sets, use the getApi
 function.
 
-Example:
+Request:
 
 ```shell
 getApi ["all"]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -740,13 +742,13 @@ Example Response:
 }
 ```
 
-Example:
+Request:
 
 ```shell
 getApi ["PropertyTester"]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -799,7 +801,7 @@ Example Response:
 Example Python session:
 
 ```python
-from modular_device import ModularClient
+from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'property_tester', 'serial_number': 0}

@@ -1,18 +1,19 @@
 // ----------------------------------------------------------------------------
-// InterruptTester.h
+// CallbackTester.h
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef MINIMAL_DEVICE_H
-#define MINIMAL_DEVICE_H
+#ifndef CALLBACK_TESTER_H
+#define CALLBACK_TESTER_H
 #include "Functor.h"
 #include "ModularServer.h"
 
 #include "Constants.h"
+#include "NonBlockBlink.h"
 
 
-class InterruptTester
+class CallbackTester
 {
 public:
   void setup();
@@ -31,6 +32,7 @@ private:
   // Handlers
   void setLedOnHandler();
   void setLedOffHandler();
+  void blinkLedHandler();
 };
 
 #endif

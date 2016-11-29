@@ -14,12 +14,13 @@
 #include "FunctorCallbacks.h"
 
 #include "Constants.h"
+#include "NonBlockBlink.h"
 
 #include "ModularServer.h"
-#include "InterruptTester.h"
+#include "CallbackTester.h"
 
 
-InterruptTester dev;
+CallbackTester dev;
 
 void setup()
 {

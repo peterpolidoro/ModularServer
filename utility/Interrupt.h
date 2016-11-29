@@ -11,7 +11,7 @@
 #include "Array.h"
 #include "ConstantVariable.h"
 
-#include "NamedElement.h"
+#include "HardwareElement.h"
 #include "Callback.h"
 #include "Constants.h"
 
@@ -30,7 +30,7 @@ extern ConstantString mode_falling;
 
 class Callback;
 
-class Interrupt : private NamedElement
+class Interrupt : private HardwareElement
 {
 public:
   Interrupt();

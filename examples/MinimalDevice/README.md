@@ -22,11 +22,13 @@ To get help information about the modular device, type a single
 question mark ? into the input property and press the 'Send' button or
 press the 'Enter' key.
 
+Request:
+
 ```shell
 ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -65,13 +67,13 @@ Example Response:
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
-Example Function (This function only exists on AVR processors):
+Request: (This function only exists on AVR processors)
 
 ```shell
 getMemoryFree
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -85,11 +87,13 @@ information about the parameters each function takes, type two question
 marks ?? into the input property and press the 'Send' button or press the
 'Enter' key.
 
+Request:
+
 ```shell
 ??
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -215,13 +219,13 @@ Example Response:
 }
 ```
 
-Example Function with Parameters:
+Request:
 
 ```shell
 getApi
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -242,13 +246,13 @@ exist a "result" property, but there will exist an "error" property.
 To get more information about a function, enter the function followed by
 a question mark.
 
-Example Function Help:
+Request:
 
 ```shell
 getApi ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -266,13 +270,13 @@ Example Response:
 
 Or you can enter a question mark followed by the function.
 
-Example Function Help:
+Request:
 
 ```shell
 ? getApi
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -291,11 +295,13 @@ Example Response:
 To get more verbose information about all of the parameters a function
 takes, enter the function followed by two questions marks.
 
+Request:
+
 ```shell
 getApi ??
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -323,13 +329,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 getApi ["MinimalDevice"]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -350,12 +356,13 @@ stored on the device, even after the device is powered off.
 Properties have their own set of functions with their own set of
 property function parameters.
 
-Example Property:
+Request:
+
 ```shell
 ? serialNumber
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -381,11 +388,13 @@ Example Response:
 }
 ```
 
-To get information about a property function:
+Request:
 
 ```shell
 ? serialNumber setValue
 ```
+
+Response:
 
 ```json
 {
@@ -401,11 +410,13 @@ To get information about a property function:
 }
 ```
 
-To get information about a property function parameter:
+Request:
 
 ```shell
 ? serialNumber setValue value
 ```
+
+Response:
 
 ```json
 {
@@ -420,11 +431,13 @@ To get information about a property function parameter:
 }
 ```
 
-Example property function call:
+Request:
 
 ```shell
 serialNumber setValue -1
 ```
+
+Response:
 
 ```json
 {
@@ -437,11 +450,13 @@ serialNumber setValue -1
 }
 ```
 
-Example property function call:
+Request:
 
 ```shell
 serialNumber setValue 32
 ```
+
+Response:
 
 ```json
 {
@@ -454,13 +469,13 @@ The serial number setting persists even after the device is powered
 off. The serial number is used to differentiate several identical
 devices connected to a single host machine at one time.
 
-Example Function:
+Request:
 
 ```shell
 getPropertyValues
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -477,13 +492,13 @@ setValueToDefault property function.
 Or use the setPropertiesToDefault function to set all properties to
 their default values.
 
-Example Function:
+Request:
 
 ```shell
 setPropertiesToDefaults
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -492,13 +507,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 getPropertyValues
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -512,13 +527,13 @@ Example Response:
 Use the getDeviceId function to get a unique set of values to identify
 the device.
 
-Example:
+Request:
 
 ```shell
 getDeviceId
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -537,13 +552,13 @@ with the same name and form\_factor.
 Use the getDeviceInfo function to get information about the hardware and
 firmware of the device.
 
-Example:
+Request:
 
 ```shell
 getDeviceInfo
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -574,13 +589,13 @@ Every function, parameter, property, and callback belongs to one firmware set.
 To get the API limited to one or more firmware sets, use the getApi
 function.
 
-Example:
+Request:
 
 ```shell
 getApi ["all"]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -608,13 +623,13 @@ Example Response:
 }
 ```
 
-Example:
+Request:
 
 ```shell
 getApi ["MinimalDevice"]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -634,7 +649,7 @@ Example Response:
 Example Python session:
 
 ```python
-from modular_device import ModularClient
+from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'minimal_device', 'serial_number': 0}

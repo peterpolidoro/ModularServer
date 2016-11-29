@@ -173,6 +173,8 @@ Interrupt & Server::createInterrupt(const ConstantString & interrupt_name,
     int_name.cs_ptr = &interrupt_name;
     interrupt_name_array_.push_back(int_name);
     interrupts_.push_back(Interrupt(interrupt_name,pin));
+    const ConstantString * hardware_name_ptr = hardware_info_array_.back()->name_ptr;
+    interrupts_.back().setHardwareName(*hardware_name_ptr);
     return interrupts_.back();
   }
   return dummy_interrupt_;
@@ -500,7 +502,7 @@ void Server::processRequestArray()
       {
         // shortcut for callback call function
         callback.updateFunctionsAndParameters();
-        Function & function = callback.function(callback::call_function_name);
+        Function & function = callback.function(callback::trigger_function_name);
         function.functor();
         return;
       }
@@ -1703,8 +1705,14 @@ void Server::interruptHelp(Interrupt & interrupt, bool verbose)
     response_.beginObject();
 
     response_.write(constants::name_constant_string,interrupt.getName());
+
+    const ConstantString & hardware_name = interrupt.getHardwareName();
+    response_.write(constants::hardware_constant_string,hardware_name);
+
     response_.write(constants::number_constant_string,interrupt.getNumber());
+
     response_.write(constants::pin_constant_string,interrupt.getPin());
+
     Callback * callback_ptr = interrupt.getCallbackPtr();
     if (callback_ptr != NULL)
     {
@@ -1714,6 +1722,7 @@ void Server::interruptHelp(Interrupt & interrupt, bool verbose)
     {
       response_.writeNull(constants::callback_constant_string);
     }
+
     response_.write(constants::mode_constant_string,interrupt.getMode());
 
     response_.endObject();

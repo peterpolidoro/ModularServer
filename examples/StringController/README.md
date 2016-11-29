@@ -22,11 +22,13 @@ To get help information about the modular device, type a single
 question mark ? into the input property and press the 'Send' button or
 press the 'Enter' key.
 
+Request:
+
 ```shell
 ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -89,13 +91,13 @@ Example Response:
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
 
-Example Function:
+Request:
 
 ```shell
 getStoredString
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -104,13 +106,13 @@ Example Response:
 }
 ```
 
-Example Function with Parameters:
+Request:
 
 ```shell
 repeat
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -126,13 +128,13 @@ Example Response:
 To get more information about a function, enter the function followed by
 a question mark ?
 
-Example Function Help:
+Request:
 
 ```shell
 repeat ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -154,13 +156,13 @@ The repeat function requires 2 parameters.
 To get more information about all of the parameters a function takes,
 enter the function followed by two questions marks ??:
 
-Example Parameter Help:
+Request:
 
 ```shell
 repeat ??
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -190,13 +192,13 @@ Example Response:
 To get more information about just one of the parameters a function takes,
 enter the function followed by the parameter followed by one question mark ?:
 
-Example Parameter Help:
+Request:
 
 ```shell
 repeat count ?
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -211,13 +213,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 repeat "I am a string to repeat." 4
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -231,13 +233,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 charsAt "I am an input string!" [0,6,8]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -259,13 +261,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 startingChars "Fantastic!"
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -274,13 +276,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 setPropertyValue starting_chars_count 5
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -289,13 +291,13 @@ Example Response:
 }
 ```
 
-Example Function:
+Request:
 
 ```shell
 startingChars "Fantastic!"
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -307,13 +309,13 @@ Example Response:
 Use the getDeviceId function to get a unique set of values to identify
 the device.
 
-Example:
+Request:
 
 ```shell
 getDeviceId
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -332,13 +334,13 @@ with the same name and form\_factor.
 Use the getDeviceInfo function to get information about the hardware and
 firmware of the device.
 
-Example:
+Request:
 
 ```shell
 getDeviceInfo
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -369,13 +371,13 @@ Every function, parameter, and property belongs to one firmware set.
 To get the API limited to one or more firmware sets, use the getApi
 function.
 
-Example:
+Request:
 
 ```shell
 getApi ["all"]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -427,13 +429,13 @@ Example Response:
 }
 ```
 
-Example:
+Request:
 
 ```shell
 getApi ["StringController"]
 ```
 
-Example Response:
+Response:
 
 ```json
 {
@@ -471,7 +473,7 @@ Example Response:
 Example Python session:
 
 ```python
-from modular_device import ModularClient
+from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'string_controller', 'serial_number': 77}

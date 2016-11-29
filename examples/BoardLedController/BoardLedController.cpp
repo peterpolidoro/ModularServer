@@ -120,6 +120,7 @@ void BoardLedController::blinkLedHandler()
   modular_server_.parameter(constants::duration_off_parameter_name).getValue(duration_off);
   int count;
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
+  non_block_blink.stop();
   non_block_blink.setDurationOn(duration_on);
   non_block_blink.setDurationOff(duration_off);
   non_block_blink.setCount(count);

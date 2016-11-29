@@ -12,9 +12,9 @@ namespace constants
 {
 const long baudrate = 115200;
 
-CONSTANT_STRING(device_name,"minimal_device");
+CONSTANT_STRING(device_name,"callback_tester");
 
-CONSTANT_STRING(firmware_name,"InterruptTester");
+CONSTANT_STRING(firmware_name,"CallbackTester");
 // Use semantic versioning http://semver.org/
 const modular_server::FirmwareInfo firmware_info =
   {
@@ -94,8 +94,21 @@ CONSTANT_STRING(bnc_e_interrupt_name,"bnc_e");
 CONSTANT_STRING(bnc_f_interrupt_name,"bnc_f");
 
 // Units
+CONSTANT_STRING(seconds_unit,"seconds");
 
 // Properties
+CONSTANT_STRING(duration_on_property_name,"durationOn");
+const double duration_min = 0.1;
+const double duration_max = 2.5;
+const double duration_on_default = duration_min;
+
+CONSTANT_STRING(duration_off_property_name,"durationOff");
+const double duration_off_default = duration_min;
+
+CONSTANT_STRING(count_property_name,"count");
+const long count_min = 1;
+const long count_max = 20;
+const long count_default = 10;
 
 // Parameters
 
@@ -104,6 +117,7 @@ CONSTANT_STRING(bnc_f_interrupt_name,"bnc_f");
 // Callbacks
 CONSTANT_STRING(set_led_on_callback_name,"setLedOn");
 CONSTANT_STRING(set_led_off_callback_name,"setLedOff");
+CONSTANT_STRING(blink_led_callback_name,"blinkLed");
 
 // Errors
 }

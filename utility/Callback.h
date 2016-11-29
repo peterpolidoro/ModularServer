@@ -34,7 +34,7 @@ enum{MODE_SUBSET_LENGTH=4};
 extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 
 // Functions
-extern ConstantString call_function_name;
+extern ConstantString trigger_function_name;
 extern ConstantString attach_to_function_name;
 extern ConstantString detach_from_function_name;
 extern ConstantString detach_from_all_function_name;
