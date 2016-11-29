@@ -44,6 +44,8 @@ Response:
       "functions":[
         "getDeviceId",
         "getDeviceInfo",
+        "getInterruptInfo",
+        "detachAllInterrupts",
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
@@ -340,7 +342,8 @@ Response:
     "processor":"ATmega2560",
     "hardware":[
       {
-        "name":"Mega2560"
+        "name":"Mega2560",
+        "interrupts":[]
       }
     ],
     "firmware":[
@@ -357,7 +360,8 @@ Response:
 }
 ```
 
-Every function, parameter, and property belongs to one firmware set.
+Every function, parameter, property, and callback belongs to one
+firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 function.
@@ -378,9 +382,12 @@ Response:
     "functions":[
       "getDeviceId",
       "getDeviceInfo",
+      "getInterruptInfo",
+      "detachAllInterrupts",
       "getApi",
       "getApiVerbose",
       "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
       "getPropertyValues",
       "getMemoryFree",
       "setLedOn",
@@ -397,9 +404,7 @@ Response:
     "properties":[
       "serialNumber"
     ],
-    "callbacks":[
-      "setPropertiesToDefaults"
-    ]
+    "callbacks":[]
   }
 }
 ```
@@ -445,17 +450,19 @@ dev.get_device_id()
 {'form_factor': '5x3', 'name': 'board_led_controller', 'serial_number': 0}
 dev.get_methods()
 ['get_memory_free',
+ 'serial_number',
  'set_led_on',
- 'get_led_pin',
+ 'get_interrupt_info',
  'get_api',
  'get_api_verbose',
  'get_property_values',
  'get_device_id',
  'blink_led',
  'set_led_off',
- 'serialNumber',
+ 'get_led_pin',
  'get_property_default_values',
  'set_properties_to_defaults',
+ 'detach_all_interrupts',
  'get_device_info']
 dev.set_led_on()
 dev.set_led_off()
