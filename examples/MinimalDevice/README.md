@@ -44,6 +44,8 @@ Response:
       "functions":[
         "getDeviceId",
         "getDeviceInfo",
+        "getInterruptInfo",
+        "detachAllInterrupts",
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
@@ -78,7 +80,7 @@ Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":4715
+  "result":4208
 }
 ```
 
@@ -108,7 +110,8 @@ Response:
       "processor":"ATmega2560",
       "hardware":[
         {
-          "name":"Mega2560"
+          "name":"Mega2560",
+          "interrupts":[]
         }
       ],
       "firmware":[
@@ -136,6 +139,18 @@ Response:
           "firmware":"ModularServer",
           "parameters":[],
           "result_type":"object"
+        },
+        {
+          "name":"getInterruptInfo",
+          "firmware":"ModularServer",
+          "parameters":[],
+          "result_type":"object"
+        },
+        {
+          "name":"detachAllInterrupts",
+          "firmware":"ModularServer",
+          "parameters":[],
+          "result_type":null
         },
         {
           "name":"getApi",
@@ -567,7 +582,8 @@ Response:
     "processor":"ATmega2560",
     "hardware":[
       {
-        "name":"Mega2560"
+        "name":"Mega2560",
+        "interrupts":[]
       }
     ],
     "firmware":[
@@ -605,6 +621,8 @@ Response:
     "functions":[
       "getDeviceId",
       "getDeviceInfo",
+      "getInterruptInfo",
+      "detachAllInterrupts",
       "getApi",
       "getApiVerbose",
       "getPropertyDefaultValues",
@@ -656,15 +674,17 @@ dev.get_device_id()
 dev.get_methods()
 ['get_memory_free',
  'serial_number',
+ 'get_interrupt_info',
  'get_api',
  'get_api_verbose',
  'get_property_values',
  'get_device_id',
+ 'detach_all_interrupts',
  'get_property_default_values',
  'set_properties_to_defaults',
  'get_device_info']
 dev.get_memory_free()
-4715
+4208
 dev.get_api()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_api('?')
@@ -734,7 +754,7 @@ dev.getMethods()                 % get device methods
   serialNumber
 dev.getMemoryFree()
 ans =
-  4715
+  4208
 dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,
 code: -32602

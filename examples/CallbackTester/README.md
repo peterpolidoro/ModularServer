@@ -598,6 +598,8 @@ ans =
   ---------------------
   getDeviceId
   getDeviceInfo
+  getInterruptInfo
+  detachAllInterrupts
   getApi
   getApiVerbose
   getPropertyDefaultValues
