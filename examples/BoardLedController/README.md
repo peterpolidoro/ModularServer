@@ -554,15 +554,19 @@ dev.getMethods()                 % get device methods
   ---------------------
   getDeviceId
   getDeviceInfo
+  getInterruptInfo
+  detachAllInterrupts
   getApi
   getApiVerbose
   getPropertyDefaultValues
+  setPropertiesToDefaults
   getPropertyValues
   getMemoryFree
   setLedOn
   setLedOff
   getLedPin
   blinkLed
+  serialNumber
 dev.blinkLed()
 Error using ModularClient/sendRequest (line 301)
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
