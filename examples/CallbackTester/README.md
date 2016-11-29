@@ -589,10 +589,11 @@ dev = ModularClient(serial_port) % creates a device object
 dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
-  name: 'minimal_device'
+  name: 'callback_tester'
   form_factor: '5x3'
   serial_number: 0
 dev.getMethods()                 % get device methods
+ans =
   Modular Device Methods
   ---------------------
   getDeviceId
@@ -603,7 +604,35 @@ dev.getMethods()                 % get device methods
   setPropertiesToDefaults
   getPropertyValues
   getMemoryFree
+  setLedOn
+  setLedOff
+  blinkLed
   serialNumber
+  durationOn
+  durationOff
+  count
+dev.blinkLed('?')
+ans =
+  name: 'blinkLed'
+  firmware: 'CallbackTester'
+  properties: {'durationOn'  'durationOff'  'count'}
+  interrupts: {'bnc_e'}
+  functions: {'trigger'  'attachTo'  'detachFrom'  'detachFromAll'}
+  parameters: {'interrupt'  'mode'}
+dev.setPropertiesToDefaults()
+dev.blinkLed('trigger')
+dev.blinkLed()
+dev.blinkLed('attachTo','??')
+ans =
+  name: 'attachTo'
+  firmware: 'ModularServer'
+  parameters: {[1x1 struct]  [1x1 struct]}
+  result_type: []
+dev.blinkLed('attachTo','bnc_f','FALLING')
+dev.count('setValue',2)
+ans =
+  2
+dev.blinkLed()
 dev.close()
 clear dev
 ```
