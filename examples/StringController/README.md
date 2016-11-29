@@ -44,17 +44,13 @@ Response:
       "functions":[
         "getDeviceId",
         "getDeviceInfo",
+        "getInterruptInfo",
+        "detachAllInterrupts",
         "getApi",
         "getApiVerbose",
         "getPropertyDefaultValues",
         "setPropertiesToDefaults",
-        "setPropertyToDefault",
         "getPropertyValues",
-        "getPropertyValue",
-        "getPropertyElementValue",
-        "setPropertyValue",
-        "setPropertyElementValue",
-        "setAllPropertyElementValues",
         "getMemoryFree",
         "echo",
         "length",
@@ -67,9 +63,6 @@ Response:
       ],
       "parameters":[
         "firmware",
-        "property_name",
-        "property_value",
-        "property_element_index",
         "string",
         "string2",
         "count",
@@ -78,8 +71,8 @@ Response:
       ],
       "properties":[
         "serialNumber",
-        "starting_chars_count",
-        "stored_string"
+        "startingCharsCount",
+        "storedString"
       ],
       "callbacks":[]
     }
@@ -279,15 +272,15 @@ Response:
 Request:
 
 ```shell
-setPropertyValue starting_chars_count 5
+startingCharsCount setValue 5
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertyValue",
-  "result":null
+  "id":"startingCharsCount",
+  "result":5
 }
 ```
 
@@ -303,6 +296,51 @@ Response:
 {
   "id":"startingChars",
   "result":"Fanta"
+}
+```
+
+Request:
+
+```shell
+storedString
+```
+
+Response:
+
+```json
+{
+  "id":"storedString",
+  "result":"I am a stored string."
+}
+```
+
+Request:
+
+```shell
+storedString setAllElementValues x
+```
+
+Response:
+
+```json
+{
+  "id":"storedString",
+  "result":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+Request:
+
+```shell
+storedString setValueToDefault
+```
+
+Response:
+
+```json
+{
+  "id":"storedString",
+  "result":"I am a stored string."
 }
 ```
 
@@ -349,13 +387,14 @@ Response:
     "processor":"ATmega2560",
     "hardware":[
       {
-        "name":"Mega2560"
+        "name":"Mega2560",
+        "interrupts":[]
       }
     ],
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"1.0.0"
+        "version":"2.0.0"
       },
       {
         "name":"StringController",
@@ -366,68 +405,11 @@ Response:
 }
 ```
 
-Every function, parameter, and property belongs to one firmware set.
+Every function, parameter, property, and callback belongs to one
+firmware set.
 
 To get the API limited to one or more firmware sets, use the getApi
 function.
-
-Request:
-
-```shell
-getApi ["all"]
-```
-
-Response:
-
-```json
-{
-  "id":"getApi",
-  "result":{
-    "firmware":["all"],
-    "functions":[
-      "getDeviceId",
-      "getDeviceInfo",
-      "getApi",
-      "getApiVerbose",
-      "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "setPropertyToDefault",
-      "getPropertyValues",
-      "getPropertyValue",
-      "getPropertyElementValue",
-      "setPropertyValue",
-      "setPropertyElementValue",
-      "setAllPropertyElementValues",
-      "getMemoryFree",
-      "echo",
-      "length",
-      "startsWith",
-      "repeat",
-      "charsAt",
-      "startingChars",
-      "setStoredString",
-      "getStoredString"
-    ],
-    "parameters":[
-      "firmware",
-      "property_name",
-      "property_value",
-      "property_element_index",
-      "string",
-      "string2",
-      "count",
-      "index_array",
-      "double_echo"
-    ],
-    "properties":[
-      "serialNumber",
-      "starting_chars_count",
-      "stored_string"
-    ],
-    "callbacks":[]
-  }
-}
-```
 
 Request:
 
@@ -477,29 +459,28 @@ from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '5x3', 'name': 'string_controller', 'serial_number': 77}
-dev.get_functions()
-['echo',
- 'get_property_default_values',
- 'set_property_value',
- 'get_device_info',
- 'starts_with',
+dev.get_methods()
+['starts_with',
  'get_memory_free',
- 'set_property_element_value',
- 'set_properties_to_defaults',
- 'get_device_id',
- 'chars_at',
- 'set_stored_string',
  'repeat',
  'get_stored_string',
- 'set_all_property_element_values',
- 'get_property_value',
  'starting_chars',
- 'get_property_element_value',
+ 'set_stored_string',
+ 'get_interrupt_info',
  'get_api',
- 'get_api_verbose',
+ 'serial_number',
  'length',
- 'set_property_to_default',
- 'get_property_values']
+ 'echo',
+ 'get_property_values',
+ 'get_device_id',
+ 'stored_string',
+ 'detach_all_interrupts',
+ 'chars_at',
+ 'starting_chars_count',
+ 'get_api_verbose',
+ 'get_property_default_values',
+ 'set_properties_to_defaults',
+ 'get_device_info']
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
@@ -536,18 +517,19 @@ dev.chars_at('I am an input string!',[0,6,8])
 [{'char': 'I', 'index': 0},
  {'char': 'n', 'index': 6},
  {'char': 'i', 'index': 8}]
-dev.get_property_value('starting_chars_count')
-5
-dev.set_property_value('starting_chars_count',3)
-dev.call_server_function('set_property_value','starting_chars_count',7)
-dev.send_json_request('["set_property_value","starting_chars_count",5]')
-dev.get_property_value('starting_chars_count')
+dev.starting_chars_count('getValue')
+2
+dev.starting_chars_count('setValue',3)
+3
+dev.call_server_method('starting_chars_count','setValue',7)
+7
+dev.send_json_request('["startingCharsCount","setValue",3]')
 3
 dev.starting_chars('Fantastic!')
 'Fan'
-dev.call_server_function('starting_chars','Fantastic!')
+dev.call_server_method('starting_chars','Fantastic!')
 'Fan'
-dev.send_json_request('["starting_chars","Fantastic!"]')
+dev.send_json_request('["startingChars","Fantastic!"]')
 'Fan'
 dev.get_api(["StringController"])
 {'properties': ['starting_chars_count', 'stored_string'],
@@ -590,32 +572,10 @@ ans =
   name: 'string_controller'
   form_factor: '5x3'
   serial_number: 0
-dev.getFunctions()                 % get device functions
-  Modular Device Functions
+dev.getMethods()                 % get device methods
+  Modular Device Methods
   ---------------------
-  getDeviceId
-  getDeviceInfo
-  getApi
-  getApiVerbose
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getPropertyValue
-  getPropertyElementValue
-  setPropertyValue
-  setPropertyElementValue
-  setAllPropertyElementValues
-  getMemoryFree
-  echo
-  length
-  startsWith
-  repeat
-  charsAt
-  startingChars
-  setStartingCharsCount
-  getStartingCharsCount
-  setStoredString
-  getStoredString
+dev.setPropertiesToDefaults()
 dev.repeat()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
@@ -641,13 +601,12 @@ chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =
   [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
-dev.getPropertyValue('starting_chars_count')
-ans =
-     5
+dev.startingCharsCount('getValue')
+dev.startingCharsCount('setValue',5)
 dev.startingChars('Fantastic!')
 ans =
   Fanta
-result = dev.callServerFunction('startingChars','Fantastic!')
+result = dev.callServerMethod('startingChars','Fantastic!')
 result =
   Fanta
 result = dev.sendJsonRequest('["startingChars","Fantastic!"]')

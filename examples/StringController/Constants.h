@@ -19,6 +19,8 @@ enum{PARAMETER_COUNT_MAX=5};
 enum{FUNCTION_COUNT_MAX=8};
 enum{CALLBACK_COUNT_MAX=1};
 
+enum{INTERRUPT_COUNT_MAX=1};
+
 extern const long baudrate;
 
 extern ConstantString device_name;

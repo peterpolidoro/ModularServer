@@ -62,17 +62,19 @@ const modular_server::HardwareInfo hardware_info =
 
 #endif
 
+// Interrupts
+
 // Units
 
 // Properties
 const long serial_number_default_new = 77;
 
-CONSTANT_STRING(starting_chars_count_property_name,"starting_chars_count");
+CONSTANT_STRING(starting_chars_count_property_name,"startingCharsCount");
 const long starting_chars_count_min = 1;
 const long starting_chars_count_max = 10;
 const long starting_chars_count_default = 2;
 
-CONSTANT_STRING(stored_string_property_name,"stored_string");
+CONSTANT_STRING(stored_string_property_name,"storedString");
 const char stored_string_default[STORED_STRING_LENGTH_MAX] = "I am a stored string.";
 
 // Parameters
