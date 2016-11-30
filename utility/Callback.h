@@ -50,9 +50,9 @@ public:
   void attachFunctor(const Functor0 & functor);
   void addProperty(Property & property);
   FunctorCallbacks::Callback getIsr();
-  void attachTo(const Interrupt & interrupt, const ConstantString & mode);
+  void attachTo(Interrupt & interrupt, const ConstantString & mode);
   void attachTo(const char * interrupt_name, const char * mode_str);
-  void detachFrom(const Interrupt & interrupt);
+  void detachFrom(Interrupt & interrupt);
   void detachFrom(const ConstantString & interrupt_name);
   void detachFrom(const char * interrupt_name);
   void detachFromAll();
@@ -107,7 +107,7 @@ private:
   void setup(const ConstantString & name);
   int findPropertyIndex(const ConstantString & property_name);
   size_t getPropertyCount();
-  int findInterruptPtrIndex(const Interrupt & interrupt);
+  int findInterruptPtrIndex(Interrupt & interrupt);
   int findInterruptPtrIndex(const ConstantString & interrupt_name);
   int findInterruptPtrIndex(const char * interrupt_name);
   void updateFunctionsAndParameters();

@@ -472,8 +472,7 @@ void Server::processRequestArray()
       else
       {
         ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
-        // do not check function at begin
-        iterator++;
+        ++iterator;
         bool parameters_ok = checkParameters(function,iterator);
         if (parameters_ok)
         {
@@ -562,9 +561,9 @@ void Server::processRequestArray()
         {
           ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
           // do not check callback at begin
-          iterator++;
+          ++iterator;
           // do not check callback method at begin + 1
-          iterator++;
+          ++iterator;
           long test = *iterator;
           bool parameters_ok = checkParameters(function,iterator);
           if (parameters_ok)
@@ -655,9 +654,9 @@ void Server::processRequestArray()
         {
           ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
           // do not check property at begin
-          iterator++;
+          ++iterator;
           // do not check property method at begin + 1
-          iterator++;
+          ++iterator;
           long test = *iterator;
           bool parameters_ok = checkParameters(function,iterator);
           if (parameters_ok)
@@ -1663,7 +1662,7 @@ void Server::writeHardwareInfoToResponse()
 
     response_.writeKey(constants::interrupts_constant_string);
     response_.beginArray();
-    const Vector<Interrupt> & interrupts = interrupts_.subVector(i);
+    Vector<Interrupt> & interrupts = interrupts_.subVector(i);
     for (size_t j=0; j<interrupts.size(); ++j)
     {
       interruptHelp(interrupts[j],false);

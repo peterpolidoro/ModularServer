@@ -80,7 +80,7 @@ void Interrupt::disablePullup()
   pinMode(pin_,INPUT);
 }
 
-void Interrupt::setCallback(const Callback & callback)
+void Interrupt::setCallback(Callback & callback)
 {
   callback_ptr_ = &callback;
   reattach();
@@ -164,7 +164,7 @@ void Interrupt::reattach()
   }
 }
 
-void Interrupt::attach(const Callback & callback, const ConstantString & mode)
+void Interrupt::attach(Callback & callback, const ConstantString & mode)
 {
   setCallback(callback);
   setMode(mode);

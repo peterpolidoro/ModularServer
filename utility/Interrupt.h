@@ -49,11 +49,11 @@ private:
   void setPin(const size_t pin);
   void enablePullup();
   void disablePullup();
-  void setCallback(const Callback & callback);
+  void setCallback(Callback & callback);
   void removeCallback();
   void setMode(const ConstantString & mode);
   void reattach();
-  void attach(const Callback & callback, const ConstantString & mode);
+  void attach(Callback & callback, const ConstantString & mode);
   void detach();
   friend class Server;
   friend class Callback;

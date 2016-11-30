@@ -116,7 +116,7 @@ FunctorCallbacks::Callback Callback::getIsr()
   return isr_;
 }
 
-void Callback::attachTo(const Interrupt & interrupt, const ConstantString & mode)
+void Callback::attachTo(Interrupt & interrupt, const ConstantString & mode)
 {
   if ((&mode == &interrupt::mode_low) ||
       (&mode == &interrupt::mode_change) ||
@@ -166,7 +166,7 @@ void Callback::attachTo(const char * interrupt_name, const char * mode_str)
   }
 }
 
-void Callback::detachFrom(const Interrupt & interrupt)
+void Callback::detachFrom(Interrupt & interrupt)
 {
   int interrupt_ptr_index = findInterruptPtrIndex(interrupt);
   if (interrupt_ptr_index >= 0)
@@ -240,7 +240,7 @@ size_t Callback::getPropertyCount()
   return property_ptrs_.size();
 }
 
-int Callback::findInterruptPtrIndex(const Interrupt & interrupt)
+int Callback::findInterruptPtrIndex(Interrupt & interrupt)
 {
   int interrupt_ptr_index = -1;
   for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
