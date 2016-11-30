@@ -78,12 +78,12 @@ public:
   // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);
   Parameter & parameter(const ConstantString & parameter_name);
-  Parameter & copyParameter(Parameter parameter,const ConstantString & parameter_name);
+  Parameter & copyParameter(Parameter parameter, const ConstantString & parameter_name);
 
   // Functions
   Function & createFunction(const ConstantString & function_name);
   Function & function(const ConstantString & function_name);
-  Function & copyFunction(Function function,const ConstantString & function_name);
+  Function & copyFunction(Function function, const ConstantString & function_name);
 
   // Callbacks
   Callback & createCallback(const ConstantString & callback_name);
@@ -186,7 +186,8 @@ private:
                       const JsonStream::JsonTypes & parameter_type,
                       const JsonStream::JsonTypes & parameter_array_element_type,
                       const size_t num);
-  Interrupt * findInterruptPtr(const char * interrupt_name);
+  Interrupt * findInterruptPtrByChars(const char * interrupt_name);
+  Interrupt * findInterruptPtrByConstantString(const ConstantString & interrupt_name);
 
   // Handlers
   void getMethodIdsHandler();

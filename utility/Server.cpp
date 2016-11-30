@@ -125,7 +125,8 @@ void Server::setup()
 
   // Callbacks
   Callback::interrupt_name_array_ptr_ = &interrupt_name_array_;
-  Callback::find_interrupt_ptr_functor_ = makeFunctor((Functor1wRet<const char *, Interrupt *> *)0,*this,&Server::findInterruptPtr);
+  Callback::find_interrupt_ptr_by_chars_functor_ = makeFunctor((Functor1wRet<const char *, Interrupt *> *)0,*this,&Server::findInterruptPtrByChars);
+  Callback::find_interrupt_ptr_by_constant_string_functor_ = makeFunctor((Functor1wRet<const ConstantString &, Interrupt *> *)0,*this,&Server::findInterruptPtrByConstantString);
   Callback::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   // Server
@@ -190,7 +191,17 @@ Interrupt & Server::interrupt(const ConstantString & interrupt_name)
   return dummy_interrupt_;
 }
 
-Interrupt * Server::findInterruptPtr(const char * interrupt_name)
+Interrupt * Server::findInterruptPtrByChars(const char * interrupt_name)
+{
+  int interrupt_index = findInterruptIndex(interrupt_name);
+  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  {
+    return &interrupts_[interrupt_index];
+  }
+  return NULL;
+}
+
+Interrupt * Server::findInterruptPtrByConstantString(const ConstantString & interrupt_name)
 {
   int interrupt_index = findInterruptIndex(interrupt_name);
   if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
@@ -245,7 +256,7 @@ Parameter & Server::parameter(const ConstantString & parameter_name)
   return dummy_parameter_;
 }
 
-Parameter & Server::copyParameter(Parameter parameter,const ConstantString & parameter_name)
+Parameter & Server::copyParameter(Parameter parameter, const ConstantString & parameter_name)
 {
   parameters_.push_back(parameter);
   parameters_.back().setName(parameter_name);
@@ -276,7 +287,7 @@ Function & Server::function(const ConstantString & function_name)
   return dummy_function_;
 }
 
-Function & Server::copyFunction(Function function,const ConstantString & function_name)
+Function & Server::copyFunction(Function function, const ConstantString & function_name)
 {
   functions_.push_back(function);
   functions_.back().setName(function_name);

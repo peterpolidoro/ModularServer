@@ -51,6 +51,7 @@ public:
   void addProperty(Property & property);
   FunctorCallbacks::Callback getIsr();
   void attachTo(Interrupt & interrupt, const ConstantString & mode);
+  void attachTo(const ConstantString & interrupt_name, const ConstantString & mode);
   void attachTo(const char * interrupt_name, const char * mode_str);
   void detachFrom(Interrupt & interrupt);
   void detachFrom(const ConstantString & interrupt_name);
@@ -61,6 +62,8 @@ private:
   static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
   static Array<Function,callback::FUNCTION_COUNT_MAX> functions_;
   static Array<constants::SubsetMemberType,constants::INTERRUPT_COUNT_MAX> * interrupt_name_array_ptr_;
+  static Functor1wRet<const char *, Interrupt *> find_interrupt_ptr_by_chars_functor_;
+  static Functor1wRet<const ConstantString &, Interrupt *> find_interrupt_ptr_by_constant_string_functor_;
   static Functor1wRet<const char *, Interrupt *> find_interrupt_ptr_functor_;
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
 

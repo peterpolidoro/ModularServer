@@ -32,7 +32,8 @@ CONSTANT_STRING(detach_from_all_function_name,"detachFromAll");
 Array<Parameter,callback::PARAMETER_COUNT_MAX> Callback::parameters_;
 Array<Function,callback::FUNCTION_COUNT_MAX> Callback::functions_;
 Array<constants::SubsetMemberType,constants::INTERRUPT_COUNT_MAX> * Callback::interrupt_name_array_ptr_;
-Functor1wRet<const char *, Interrupt *> Callback::find_interrupt_ptr_functor_;
+Functor1wRet<const char *, Interrupt *> Callback::find_interrupt_ptr_by_chars_functor_;
+Functor1wRet<const ConstantString &, Interrupt *> Callback::find_interrupt_ptr_by_constant_string_functor_;
 Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Callback::get_parameter_value_functor_;
 
 Parameter & Callback::createParameter(const ConstantString & parameter_name)
@@ -131,9 +132,29 @@ void Callback::attachTo(Interrupt & interrupt, const ConstantString & mode)
   }
 }
 
+void Callback::attachTo(const ConstantString & interrupt_name, const ConstantString & mode)
+{
+  if ((&mode == &interrupt::mode_low) ||
+      (&mode == &interrupt::mode_change) ||
+      (&mode == &interrupt::mode_rising) ||
+      (&mode == &interrupt::mode_falling))
+  {
+    Interrupt * interrupt_ptr = find_interrupt_ptr_by_constant_string_functor_(interrupt_name);
+    if (!interrupt_ptr)
+    {
+      return;
+    }
+    int index = interrupt_ptrs_.add(interrupt_ptr);
+    if (index >= 0)
+    {
+      interrupt_ptr->attach(*this,mode);
+    }
+  }
+}
+
 void Callback::attachTo(const char * interrupt_name, const char * mode_str)
 {
-  Interrupt * interrupt_ptr = find_interrupt_ptr_functor_(interrupt_name);
+  Interrupt * interrupt_ptr = find_interrupt_ptr_by_chars_functor_(interrupt_name);
   if (!interrupt_ptr)
   {
     return;
