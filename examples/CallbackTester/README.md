@@ -109,7 +109,7 @@ Response:
       },
       {
         "name":"CallbackTester",
-        "version":"1.0.0"
+        "version":"2.0.0"
       }
     ]
   }
@@ -529,7 +529,7 @@ dev.get_methods()
  'get_device_info']
 dev.get_device_info()
 {'firmware': [{'name': 'ModularServer', 'version': '2.0.0'},
-  {'name': 'CallbackTester', 'version': '1.0.0'}],
+  {'name': 'CallbackTester', 'version': '2.0.0'}],
  'hardware': [{'interrupts': ['bnc_a',
     'bnc_b',
     'bnc_c',
