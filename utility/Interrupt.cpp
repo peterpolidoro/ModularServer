@@ -62,6 +62,7 @@ void Interrupt::setup(const ConstantString & name)
   pin_ = 0;
   callback_ptr_ = NULL;
   mode_ptr_ = &interrupt::mode_detached;
+  isr_ = NULL;
 }
 
 void Interrupt::setPin(const size_t pin)
@@ -126,40 +127,44 @@ void Interrupt::reattach()
   {
     return;
   }
-  if (!callback_ptr_->getIsr())
+  if (!callback_ptr_->getFunctor())
   {
     return;
   }
   if (mode_ptr_ == &interrupt::mode_low)
   {
+    resetIsr();
     detachInterrupt(digitalPinToInterrupt(pin_));
     enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
-                    callback_ptr_->getIsr(),
+                    isr_,
                     LOW);
   }
   else if (mode_ptr_ == &interrupt::mode_change)
   {
+    resetIsr();
     detachInterrupt(digitalPinToInterrupt(pin_));
     enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
-                    callback_ptr_->getIsr(),
+                    isr_,
                     CHANGE);
   }
   else if (mode_ptr_ == &interrupt::mode_rising)
   {
+    resetIsr();
     detachInterrupt(digitalPinToInterrupt(pin_));
     enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
-                    callback_ptr_->getIsr(),
+                    isr_,
                     RISING);
   }
   else if (mode_ptr_ == &interrupt::mode_falling)
   {
+    resetIsr();
     detachInterrupt(digitalPinToInterrupt(pin_));
     enablePullup();
     attachInterrupt(digitalPinToInterrupt(pin_),
-                    callback_ptr_->getIsr(),
+                    isr_,
                     FALLING);
   }
 }
@@ -175,6 +180,25 @@ void Interrupt::detach()
   detachInterrupt(digitalPinToInterrupt(pin_));
   disablePullup();
   mode_ptr_ = &interrupt::mode_detached;
+}
+
+void Interrupt::resetIsr()
+{
+  FunctorCallbacks::remove(isr_);
+  isr_ = FunctorCallbacks::add(makeFunctor((Functor0 *)0,*this,&Interrupt::isrHandler));
+}
+
+void Interrupt::isrHandler()
+{
+  if (!callback_ptr_)
+  {
+    return;
+  }
+  if (!callback_ptr_->getFunctor())
+  {
+    return;
+  }
+  callback_ptr_->functor();
 }
 
 }

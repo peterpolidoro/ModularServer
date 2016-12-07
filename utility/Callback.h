@@ -13,7 +13,6 @@
 #include "JsonStream.h"
 #include "Functor.h"
 #include "IndexedContainer.h"
-#include "FunctorCallbacks.h"
 
 #include "FirmwareElement.h"
 #include "Property.h"
@@ -49,7 +48,7 @@ public:
 
   void attachFunctor(const Functor0 & functor);
   void addProperty(Property & property);
-  FunctorCallbacks::Callback getIsr();
+  Functor0 & getFunctor();
   void attachTo(Interrupt & interrupt, const ConstantString & mode);
   void attachTo(const ConstantString & interrupt_name, const ConstantString & mode);
   void attachTo(const char * interrupt_name, const char * mode_str);
@@ -102,7 +101,7 @@ private:
   static Function & createFunction(const ConstantString & function_name);
   static Function & function(const ConstantString & function_name);
 
-  FunctorCallbacks::Callback isr_;
+  Functor0 functor_;
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> property_ptrs_;
   IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> interrupt_ptrs_;
 
@@ -113,6 +112,7 @@ private:
   int findInterruptPtrIndex(Interrupt & interrupt);
   int findInterruptPtrIndex(const ConstantString & interrupt_name);
   int findInterruptPtrIndex(const char * interrupt_name);
+  void functor();
   void updateFunctionsAndParameters();
 
   // Handlers
@@ -122,6 +122,7 @@ private:
   void detachFromAllHandler();
 
   friend class Server;
+  friend class Interrupt;
 };
 }
 #endif

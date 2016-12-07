@@ -10,6 +10,8 @@
 #include "Streaming.h"
 #include "Array.h"
 #include "ConstantVariable.h"
+#include "Functor.h"
+#include "FunctorCallbacks.h"
 
 #include "HardwareElement.h"
 #include "Callback.h"
@@ -44,6 +46,7 @@ private:
   size_t pin_;
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
+  FunctorCallbacks::Callback isr_;
   Interrupt(const ConstantString & name, const size_t pin);
   void setup(const ConstantString & name);
   void setPin(const size_t pin);
@@ -55,6 +58,11 @@ private:
   void reattach();
   void attach(Callback & callback, const ConstantString & mode);
   void detach();
+  void resetIsr();
+
+  // Handlers
+  void isrHandler();
+
   friend class Server;
   friend class Callback;
 };

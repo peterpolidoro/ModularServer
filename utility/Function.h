@@ -47,6 +47,7 @@ private:
   int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();
   void functor();
+
   friend class Property;
   friend class Callback;
   friend class Server;

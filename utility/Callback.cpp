@@ -91,8 +91,7 @@ Callback::Callback()
 
 void Callback::attachFunctor(const Functor0 & functor)
 {
-  FunctorCallbacks::remove(isr_);
-  isr_ = FunctorCallbacks::add(functor);
+  functor_ = functor;
   for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
   {
     if (interrupt_ptrs_.indexHasValue(i))
@@ -112,9 +111,9 @@ void Callback::addProperty(Property & property)
   }
 }
 
-FunctorCallbacks::Callback Callback::getIsr()
+Functor0 & Callback::getFunctor()
 {
-  return isr_;
+  return functor_;
 }
 
 void Callback::attachTo(Interrupt & interrupt, const ConstantString & mode)
@@ -239,7 +238,6 @@ Callback::Callback(const ConstantString & name)
 void Callback::setup(const ConstantString & name)
 {
   setName(name);
-  isr_ = NULL;
 }
 
 int Callback::findPropertyIndex(const ConstantString & property_name)
@@ -312,6 +310,14 @@ int Callback::findInterruptPtrIndex(const char * interrupt_name)
   return interrupt_ptr_index;
 }
 
+void Callback::functor()
+{
+  if (functor_)
+  {
+    functor_();
+  }
+}
+
 void Callback::updateFunctionsAndParameters()
 {
   // Parameters
@@ -348,10 +354,7 @@ void Callback::updateFunctionsAndParameters()
 
 void Callback::callHandler()
 {
-  if (isr_)
-  {
-    isr_();
-  }
+  functor();
 }
 
 void Callback::attachToHandler()
