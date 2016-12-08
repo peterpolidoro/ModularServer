@@ -70,17 +70,17 @@ void CallbackTester::setup()
 
   // Callbacks
   modular_server::Callback & set_led_on_callback = modular_server_.createCallback(constants::set_led_on_callback_name);
-  set_led_on_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&CallbackTester::setLedOnHandler));
+  set_led_on_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&CallbackTester::setLedOnHandler));
   set_led_on_callback.attachTo(bnc_a_interrupt,modular_server::interrupt::mode_falling);
   set_led_on_callback.attachTo(bnc_c_interrupt,modular_server::interrupt::mode_falling);
 
   modular_server::Callback & set_led_off_callback = modular_server_.createCallback(constants::set_led_off_callback_name);
-  set_led_off_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&CallbackTester::setLedOffHandler));
+  set_led_off_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&CallbackTester::setLedOffHandler));
   set_led_off_callback.attachTo(bnc_b_interrupt,modular_server::interrupt::mode_falling);
   set_led_off_callback.attachTo(bnc_d_interrupt,modular_server::interrupt::mode_falling);
 
   modular_server::Callback & blink_led_callback = modular_server_.createCallback(constants::blink_led_callback_name);
-  blink_led_callback.attachFunctor(makeFunctor((Functor0 *)0,*this,&CallbackTester::blinkLedHandler));
+  blink_led_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&CallbackTester::blinkLedHandler));
   blink_led_callback.addProperty(duration_on_property);
   blink_led_callback.addProperty(duration_off_property);
   blink_led_callback.addProperty(count_property);
@@ -116,19 +116,19 @@ void CallbackTester::update()
 // modular_server_.property(property_name).getElementValue(value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(value) value type must match the property array element default type
 
-void CallbackTester::setLedOnHandler()
+void CallbackTester::setLedOnHandler(modular_server::Interrupt * interrupt_ptr)
 {
   non_block_blink.stop();
   digitalWrite(constants::led_pin, HIGH);
 }
 
-void CallbackTester::setLedOffHandler()
+void CallbackTester::setLedOffHandler(modular_server::Interrupt * interrupt_ptr)
 {
   non_block_blink.stop();
   digitalWrite(constants::led_pin, LOW);
 }
 
-void CallbackTester::blinkLedHandler()
+void CallbackTester::blinkLedHandler(modular_server::Interrupt * interrupt_ptr)
 {
   double duration_on;
   modular_server_.property(constants::duration_on_property_name).getValue(duration_on);

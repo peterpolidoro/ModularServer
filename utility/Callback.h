@@ -46,9 +46,9 @@ class Callback : private FirmwareElement
 public:
   Callback();
 
-  void attachFunctor(const Functor0 & functor);
+  void attachFunctor(const Functor1<Interrupt *> & functor);
   void addProperty(Property & property);
-  Functor0 & getFunctor();
+  Functor1<Interrupt *> & getFunctor();
   void attachTo(Interrupt & interrupt, const ConstantString & mode);
   void attachTo(const ConstantString & interrupt_name, const ConstantString & mode);
   void attachTo(const char * interrupt_name, const char * mode_str);
@@ -101,7 +101,7 @@ private:
   static Function & createFunction(const ConstantString & function_name);
   static Function & function(const ConstantString & function_name);
 
-  Functor0 functor_;
+  Functor1<Interrupt *> functor_;
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> property_ptrs_;
   IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> interrupt_ptrs_;
 
@@ -112,7 +112,7 @@ private:
   int findInterruptPtrIndex(Interrupt & interrupt);
   int findInterruptPtrIndex(const ConstantString & interrupt_name);
   int findInterruptPtrIndex(const char * interrupt_name);
-  void functor();
+  void functor(Interrupt * interrupt_ptr);
   void updateFunctionsAndParameters();
 
   // Handlers

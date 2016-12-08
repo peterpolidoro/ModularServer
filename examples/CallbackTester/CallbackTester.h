@@ -30,9 +30,9 @@ private:
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
 
   // Handlers
-  void setLedOnHandler();
-  void setLedOffHandler();
-  void blinkLedHandler();
+  void setLedOnHandler(modular_server::Interrupt * interrupt_ptr);
+  void setLedOffHandler(modular_server::Interrupt * interrupt_ptr);
+  void blinkLedHandler(modular_server::Interrupt * interrupt_ptr);
 };
 
 #endif

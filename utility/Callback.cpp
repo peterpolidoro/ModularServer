@@ -89,7 +89,7 @@ Callback::Callback()
   setup(constants::empty_constant_string);
 }
 
-void Callback::attachFunctor(const Functor0 & functor)
+void Callback::attachFunctor(const Functor1<Interrupt *> & functor)
 {
   functor_ = functor;
   for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
@@ -111,7 +111,7 @@ void Callback::addProperty(Property & property)
   }
 }
 
-Functor0 & Callback::getFunctor()
+Functor1<Interrupt *> & Callback::getFunctor()
 {
   return functor_;
 }
@@ -310,11 +310,11 @@ int Callback::findInterruptPtrIndex(const char * interrupt_name)
   return interrupt_ptr_index;
 }
 
-void Callback::functor()
+void Callback::functor(Interrupt * interrupt_ptr)
 {
   if (functor_)
   {
-    functor_();
+    functor_(interrupt_ptr);
   }
 }
 
@@ -354,7 +354,7 @@ void Callback::updateFunctionsAndParameters()
 
 void Callback::callHandler()
 {
-  functor();
+  functor(NULL);
 }
 
 void Callback::attachToHandler()

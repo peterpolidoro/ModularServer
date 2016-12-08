@@ -198,7 +198,7 @@ void Interrupt::isrHandler()
   {
     return;
   }
-  callback_ptr_->functor();
+  callback_ptr_->functor(this);
 }
 
 }

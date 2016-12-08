@@ -80,7 +80,7 @@ Response:
 ```json
 {
   "id":"getMemoryFree",
-  "result":4200
+  "result":4178
 }
 ```
 
@@ -684,7 +684,7 @@ dev.get_methods()
  'set_properties_to_defaults',
  'get_device_info']
 dev.get_memory_free()
-4200
+4178
 dev.get_api()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
 dev.get_api('?')
@@ -756,7 +756,7 @@ dev.getMethods()                 % get device methods
   serialNumber
 dev.getMemoryFree()
 ans =
-  4200
+  4178
 dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,
 code: -32602
