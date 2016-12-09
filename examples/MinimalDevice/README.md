@@ -40,7 +40,7 @@ Response:
       "serial_number":0
     },
     "API":{
-      "firmware":["all"],
+      "firmware":["ALL"],
       "functions":[
         "getDeviceId",
         "getDeviceInfo",
@@ -126,7 +126,7 @@ Response:
       ]
     },
     "API":{
-      "firmware":["all"],
+      "firmware":["ALL"],
       "functions":[
         {
           "name":"getDeviceId",
@@ -200,7 +200,7 @@ Response:
           "type":"array",
           "array_element_type":"string",
           "array_element_subset":[
-            "all",
+            "ALL",
             "ModularServer",
             "MinimalDevice"
           ],
@@ -331,7 +331,7 @@ Response:
         "type":"array",
         "array_element_type":"string",
         "array_element_subset":[
-          "all",
+          "ALL",
           "ModularServer",
           "MinimalDevice"
         ],
@@ -608,7 +608,7 @@ function.
 Request:
 
 ```shell
-getApi ["all"]
+getApi ["ALL"]
 ```
 
 Response:
@@ -617,7 +617,7 @@ Response:
 {
   "id":"getApi",
   "result":{
-    "firmware":["all"],
+    "firmware":["ALL"],
     "functions":[
       "getDeviceId",
       "getDeviceInfo",

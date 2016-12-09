@@ -40,7 +40,7 @@ Response:
       "serial_number":0
     },
     "API":{
-      "firmware":["all"],
+      "firmware":["ALL"],
       "functions":[
         "getDeviceId",
         "getDeviceInfo",

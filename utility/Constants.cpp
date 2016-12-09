@@ -131,7 +131,7 @@ CONSTANT_STRING(array_close_constant_string,"]");
 CONSTANT_STRING(array_separator_constant_string,",");
 CONSTANT_STRING(version_property_separator_constant_string,".");
 CONSTANT_STRING(subset_constant_string,"subset");
-CONSTANT_STRING(all_constant_string,"all");
+CONSTANT_STRING(all_constant_string,"ALL");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(interrupts_constant_string,"interrupts");
 CONSTANT_STRING(interrupt_constant_string,"interrupt");

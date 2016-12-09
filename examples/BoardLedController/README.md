@@ -40,7 +40,7 @@ Response:
       "serial_number":0
     },
     "API":{
-      "firmware":["all"],
+      "firmware":["ALL"],
       "functions":[
         "getDeviceId",
         "getDeviceInfo",
@@ -369,7 +369,7 @@ function.
 Request:
 
 ```shell
-getApi ["all"]
+getApi ["ALL"]
 ```
 
 Response:
@@ -378,7 +378,7 @@ Response:
 {
   "id":"getApi",
   "result":{
-    "firmware":["all"],
+    "firmware":["ALL"],
     "functions":[
       "getDeviceId",
       "getDeviceInfo",
