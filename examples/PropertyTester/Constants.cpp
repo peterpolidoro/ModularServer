@@ -112,6 +112,13 @@ modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   };
 const ConstantString * const mode_ptr_default = &mode_rising;
 
+CONSTANT_STRING(mode_array_property_name,"modeArray");
+const ConstantString * const mode_array_default[MODE_ARRAY_LENGTH] =
+  {
+    &mode_rising,
+    &mode_falling,
+  };
+
 CONSTANT_STRING(odd_array_property_name,"oddArray");
 const long odd_array_default[ODD_ARRAY_LENGTH] =
   {

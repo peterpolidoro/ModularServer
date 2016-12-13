@@ -65,6 +65,9 @@ void PropertyTester::setup()
   modular_server::Property & mode_property = modular_server_.createProperty(constants::mode_property_name,constants::mode_ptr_default);
   mode_property.setSubset(constants::mode_ptr_subset);
 
+  modular_server::Property & mode_array_property = modular_server_.createProperty(constants::mode_array_property_name,constants::mode_array_default);
+  mode_array_property.setSubset(constants::mode_ptr_subset);
+
   modular_server::Property & odd_array_property = modular_server_.createProperty(constants::odd_array_property_name,constants::odd_array_default);
   odd_array_property.setSubset(constants::odd_subset);
 

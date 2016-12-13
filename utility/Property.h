@@ -85,10 +85,13 @@ public:
   bool getValue(double (&value)[N]);
   template <size_t N>
   bool getValue(bool (&value)[N]);
+  template <size_t N>
+  bool getValue(const ConstantString * (&value)[N]);
   template <typename T>
   bool getValue(T * value, const size_t N);
   template <typename T>
   bool getElementValue(const size_t element_index, T & value);
+  bool getElementValue(const size_t element_index, const ConstantString * & value);
   template <typename T>
   bool getDefaultValue(T & value);
   bool getDefaultValue(const ConstantString * & value);
@@ -98,13 +101,17 @@ public:
   bool getDefaultValue(double (&value)[N]);
   template <size_t N>
   bool getDefaultValue(bool (&value)[N]);
+  template <size_t N>
+  bool getDefaultValue(const ConstantString * (&value)[N]);
   template <typename T>
   bool getDefaultValue(T * value, const size_t N);
   template <typename T>
   bool getDefaultElementValue(const size_t element_index, T & value);
+  bool getDefaultElementValue(const size_t element_index, const ConstantString * & value);
 
   template <typename T>
   bool setElementValue(const size_t element_index, const T & value);
+  bool setElementValue(const size_t element_index, const ConstantString * & value);
   template <typename T>
   bool setValue(const T & value);
   template <size_t N>
@@ -113,6 +120,8 @@ public:
   bool setValue(const double (&value)[N]);
   template <size_t N>
   bool setValue(const bool (&value)[N]);
+  template <size_t N>
+  bool setValue(const ConstantString * (&value)[N]);
   bool setValue(ArduinoJson::JsonArray & value);
   template <typename T>
   bool setValue(T * value, const size_t N);
@@ -196,6 +205,9 @@ private:
   template <size_t N>
   Property(const ConstantString & name,
            const char (&default_value)[N]);
+  template <size_t N>
+  Property(const ConstantString & name,
+           const ConstantString * const (&default_value)[N]);
 
   Parameter & parameter();
   bool compareName(const char * name_to_compare);
@@ -205,7 +217,7 @@ private:
   bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
-  bool stringIsSavedAsCharArray();
+  bool stringSavedAsCharArray();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
   Vector<constants::SubsetMemberType> & getSubset();

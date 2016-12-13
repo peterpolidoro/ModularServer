@@ -54,6 +54,19 @@ bool Property::getValue(bool (&value)[N])
   return saved_variable_.getValue(value);
 }
 
+template <size_t N>
+bool Property::getValue(const ConstantString * (&value)[N])
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::STRING_TYPE) ||
+      (stringSavedAsCharArray()) ||
+      (getArrayLength() != N))
+  {
+    return false;
+  }
+  return saved_variable_.getValue(value);
+}
+
 template <typename T>
 bool Property::getValue(T * value, const size_t N)
 {
@@ -114,6 +127,19 @@ bool Property::getDefaultValue(bool (&value)[N])
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE) ||
+      (getArrayLength() != N))
+  {
+    return false;
+  }
+  return saved_variable_.getDefaultValue(value);
+}
+
+template <size_t N>
+bool Property::getDefaultValue(const ConstantString * (&value)[N])
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::STRING_TYPE) ||
+      (stringSavedAsCharArray()) ||
       (getArrayLength() != N))
   {
     return false;
@@ -206,13 +232,36 @@ bool Property::setValue(const bool (&value)[N])
   return success;
 }
 
+template <size_t N>
+bool Property::setValue(const ConstantString * (&value)[N])
+{
+  bool success = false;
+  preSetValueFunctor();
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::STRING_TYPE) &&
+      (!stringSavedAsCharArray()) &&
+      (getArrayLength() == N))
+  {
+    for (size_t i=0;i<N;++i)
+    {
+      success = setElementValue(i,value[i]);
+      if (!success)
+      {
+        break;
+      }
+    }
+  }
+  postSetValueFunctor();
+  return success;
+}
+
 template <typename T>
 bool Property::setValue(T * value, const size_t N)
 {
   bool success = false;
   JsonStream::JsonTypes type = getType();
   if ((type == JsonStream::STRING_TYPE) &&
-      !stringIsSavedAsCharArray())
+      !stringSavedAsCharArray())
   {
     int subset_value_index = findSubsetValueIndex((const char *)value);
     if (subset_value_index >= 0)
@@ -254,7 +303,7 @@ bool Property::setAllElementValues(const T & value)
   bool success = false;
   JsonStream::JsonTypes type = getType();
   if ((type == JsonStream::STRING_TYPE) &&
-      !stringIsSavedAsCharArray())
+      !stringSavedAsCharArray())
   {
     return success;
   }
@@ -290,42 +339,53 @@ bool Property::setDefaultValue(T & default_value)
 // private
 template <size_t N>
 Property::Property(const ConstantString & name,
-             const long (&default_value)[N]):
+                   const long (&default_value)[N]):
   parameter_(name),
   saved_variable_(default_value,N)
 {
   parameter_.setTypeLong();
-  parameter_.setArrayLengthRange(1,N);
+  parameter_.setArrayLengthRange(N,N);
 }
 
 template <size_t N>
 Property::Property(const ConstantString & name,
-             const double (&default_value)[N]) :
+                   const double (&default_value)[N]) :
   parameter_(name),
   saved_variable_(default_value,N)
 {
   parameter_.setTypeDouble();
-  parameter_.setArrayLengthRange(1,N);
+  parameter_.setArrayLengthRange(N,N);
 }
 
 template <size_t N>
 Property::Property(const ConstantString & name,
-             const bool (&default_value)[N]) :
+                   const bool (&default_value)[N]) :
   parameter_(name),
   saved_variable_(default_value,N)
 {
   parameter_.setTypeBool();
-  parameter_.setArrayLengthRange(1,N);
+  parameter_.setArrayLengthRange(N,N);
 }
 
 template <size_t N>
 Property::Property(const ConstantString & name,
-             const char (&default_value)[N]) :
+                   const char (&default_value)[N]) :
   parameter_(name),
   saved_variable_(default_value,N)
 {
   parameter_.setTypeString();
   string_saved_as_char_array_ = true;
+}
+
+template <size_t N>
+Property::Property(const ConstantString & name,
+                   const ConstantString * const (&default_value)[N]) :
+  parameter_(name),
+  saved_variable_(default_value,N)
+{
+  parameter_.setTypeString();
+  parameter_.setArrayLengthRange(N,N);
+  string_saved_as_char_array_ = false;
 }
 
 }

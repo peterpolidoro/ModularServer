@@ -2083,6 +2083,32 @@ void Server::writePropertyToResponse(Property & property,
         }
         case JsonStream::STRING_TYPE:
         {
+          if (element_index < 0)
+          {
+            const ConstantString * property_value[array_length];
+            if (write_default)
+            {
+              property.getDefaultValue(property_value,array_length);
+            }
+            else
+            {
+              property.getValue(property_value,array_length);
+            }
+            response_.writeArray(property_value,array_length);
+          }
+          else
+          {
+            const ConstantString * property_value;
+            if (write_default)
+            {
+              property.getDefaultElementValue(element_index,property_value);
+            }
+            else
+            {
+              property.getElementValue(element_index,property_value);
+            }
+            response_.write(property_value);
+          }
           break;
         }
         case JsonStream::OBJECT_TYPE:

@@ -176,7 +176,7 @@ bool Property::getValue<bool>(bool & value)
 bool Property::getValue(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
-      stringIsSavedAsCharArray())
+      stringSavedAsCharArray())
   {
     value = NULL;
     return false;
@@ -224,7 +224,7 @@ bool Property::getElementValue<char>(const size_t element_index, char & value)
   {
     return false;
   }
-  if (!stringIsSavedAsCharArray())
+  if (!stringSavedAsCharArray())
   {
     const ConstantString * cs_ptr;
     getValue(cs_ptr);
@@ -240,6 +240,17 @@ bool Property::getElementValue<char>(const size_t element_index, char & value)
     {
       return false;
     }
+  }
+  return saved_variable_.getElementValue(element_index,value);
+}
+
+bool Property::getElementValue(const size_t element_index, const ConstantString * & value)
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::STRING_TYPE) ||
+      (stringSavedAsCharArray()))
+  {
+    return false;
   }
   return saved_variable_.getElementValue(element_index,value);
 }
@@ -277,7 +288,7 @@ bool Property::getDefaultValue<bool>(bool & value)
 bool Property::getDefaultValue(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
-      stringIsSavedAsCharArray())
+      stringSavedAsCharArray())
   {
     value = NULL;
     return false;
@@ -319,13 +330,24 @@ bool Property::getDefaultElementValue<bool>(const size_t element_index, bool & v
 }
 
 template <>
+bool Property::getDefaultElementValue<const ConstantString *>(const size_t element_index, const ConstantString * & value)
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::STRING_TYPE))
+  {
+    return false;
+  }
+  return saved_variable_.getDefaultElementValue(element_index,value);
+}
+
+template <>
 bool Property::getDefaultElementValue<char>(const size_t element_index, char & value)
 {
   if (getType() != JsonStream::STRING_TYPE)
   {
     return false;
   }
-  if (!stringIsSavedAsCharArray())
+  if (!stringSavedAsCharArray())
   {
     const ConstantString * cs_ptr;
     getDefaultValue(cs_ptr);
@@ -341,6 +363,17 @@ bool Property::getDefaultElementValue<char>(const size_t element_index, char & v
     {
       return false;
     }
+  }
+  return saved_variable_.getDefaultElementValue(element_index,value);
+}
+
+bool Property::getDefaultElementValue(const size_t element_index, const ConstantString * & value)
+{
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::STRING_TYPE) ||
+      (stringSavedAsCharArray()))
+  {
+    return false;
   }
   return saved_variable_.getDefaultElementValue(element_index,value);
 }
@@ -411,13 +444,27 @@ bool Property::setElementValue<bool>(const size_t element_index, const bool & va
   return success;
 }
 
+bool Property::setElementValue(const size_t element_index, const ConstantString * & value)
+{
+  bool success = false;
+  preSetElementValueFunctor(element_index);
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::STRING_TYPE) &&
+      (!stringSavedAsCharArray()))
+  {
+    success = saved_variable_.setElementValue(element_index,value);
+  }
+  postSetElementValueFunctor(element_index);
+  return success;
+}
+
 template <>
 bool Property::setElementValue<char>(const size_t element_index, const char & value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::STRING_TYPE) &&
-      (stringIsSavedAsCharArray()))
+      (stringSavedAsCharArray()))
   {
     success = saved_variable_.setElementValue(element_index,value);
   }
@@ -494,7 +541,7 @@ bool Property::setValue<const ConstantString *>(const ConstantString * const & v
   bool success = false;
   preSetValueFunctor();
   if ((getType() == JsonStream::STRING_TYPE) &&
-      !stringIsSavedAsCharArray())
+      !stringSavedAsCharArray())
   {
     success = saved_variable_.setValue(value);
   }
@@ -508,7 +555,7 @@ bool Property::setValue<ConstantString *>(ConstantString * const & value)
   bool success = false;
   preSetValueFunctor();
   if ((getType() == JsonStream::STRING_TYPE) &&
-      !stringIsSavedAsCharArray())
+      !stringSavedAsCharArray())
   {
     success = saved_variable_.setValue(value);
   }
@@ -519,10 +566,10 @@ bool Property::setValue<ConstantString *>(ConstantString * const & value)
 bool Property::setValue(ArduinoJson::JsonArray & value)
 {
   bool success = false;
-  size_t array_length = getArrayLength();
   JsonStream::JsonTypes property_type = getType();
   if (property_type == JsonStream::ARRAY_TYPE)
   {
+    size_t array_length = getArrayLength();
     size_t N = value.size();
     size_t array_length_min = min(array_length,N);
     JsonStream::JsonTypes array_element_type = getArrayElementType();
@@ -574,6 +621,30 @@ bool Property::setValue(ArduinoJson::JsonArray & value)
       }
       case JsonStream::STRING_TYPE:
       {
+        if (!stringSavedAsCharArray())
+        {
+          for (size_t i=0; i<array_length_min; ++i)
+          {
+            const char * v = value[i];
+            Serial << "v = " << v;
+            int subset_value_index = findSubsetValueIndex((const char *)v);
+            if (subset_value_index >= 0)
+            {
+              Vector<constants::SubsetMemberType> & subset = getSubset();
+              const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
+              success = setValue(subset_value);
+              if (!success)
+              {
+                break;
+              }
+            }
+            else
+            {
+              success = false;
+              break;
+            }
+          }
+        }
         break;
       }
       case JsonStream::OBJECT_TYPE:
@@ -616,7 +687,7 @@ bool Property::valueIsDefault()
 size_t Property::getArrayLength()
 {
   if ((getType() == JsonStream::STRING_TYPE) &&
-      (!stringIsSavedAsCharArray()))
+      (!stringSavedAsCharArray()))
   {
     const ConstantString * cs_ptr;
     getValue(cs_ptr);
@@ -726,7 +797,7 @@ JsonStream::JsonTypes Property::getArrayElementType()
   return parameter_.getArrayElementType();
 }
 
-bool Property::stringIsSavedAsCharArray()
+bool Property::stringSavedAsCharArray()
 {
   return string_saved_as_char_array_;
 }
@@ -809,7 +880,7 @@ void Property::updateFunctionsAndParameters()
   set_value_to_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueToDefaultHandler));
   set_value_to_default_function.setReturnType(type);
 
-  if ((type == JsonStream::ARRAY_TYPE) || ((type == JsonStream::STRING_TYPE) && stringIsSavedAsCharArray()))
+  if ((type == JsonStream::ARRAY_TYPE) || ((type == JsonStream::STRING_TYPE) && stringSavedAsCharArray()))
   {
     JsonStream::JsonTypes array_element_type = getArrayElementType();
 
@@ -970,7 +1041,7 @@ void Property::setElementValueHandler()
     }
     case JsonStream::STRING_TYPE:
     {
-      if (!stringIsSavedAsCharArray())
+      if (!stringSavedAsCharArray())
       {
         response_ptr_->returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
         break;
@@ -1093,7 +1164,7 @@ void Property::setAllElementValuesHandler()
     }
     case JsonStream::STRING_TYPE:
     {
-      if (!stringIsSavedAsCharArray())
+      if (!stringSavedAsCharArray())
       {
         response_ptr_->returnParameterInvalidError(constants::cannot_set_element_in_string_property_with_subset_error_data);
         break;

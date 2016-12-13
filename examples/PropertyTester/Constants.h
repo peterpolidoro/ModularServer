@@ -14,7 +14,7 @@
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=9};
+enum{PROPERTY_COUNT_MAX=10};
 enum{PARAMETER_COUNT_MAX=6};
 enum{FUNCTION_COUNT_MAX=15};
 enum{CALLBACK_COUNT_MAX=1};
@@ -76,6 +76,10 @@ extern ConstantString mode_falling;
 extern ConstantString mode_change;
 extern modular_server::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 extern const ConstantString * const mode_ptr_default;
+
+extern ConstantString mode_array_property_name;
+enum{MODE_ARRAY_LENGTH=2};
+extern const ConstantString * const mode_array_default[MODE_ARRAY_LENGTH];
 
 extern ConstantString odd_array_property_name;
 enum{ODD_ARRAY_LENGTH=2};
