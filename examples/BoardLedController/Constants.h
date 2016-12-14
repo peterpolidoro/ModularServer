@@ -40,7 +40,7 @@ extern const size_t led_pin;
 extern ConstantString seconds_unit;
 
 // Properties
-// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
+// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
 
 // Parameters
 extern ConstantString duration_on_parameter_name;

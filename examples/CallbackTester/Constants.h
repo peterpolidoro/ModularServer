@@ -57,7 +57,7 @@ extern const size_t bnc_f_pin;
 extern ConstantString seconds_unit;
 
 // Properties
-// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
+// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
 extern ConstantString duration_on_property_name;
 extern const double duration_min;
 extern const double duration_max;

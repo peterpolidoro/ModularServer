@@ -87,6 +87,7 @@ Response:
         "string",
         "odd",
         "mode",
+        "modeArray",
         "oddArray"
       ],
       "callbacks":[]
@@ -147,6 +148,10 @@ Response:
     "string":"abcdef",
     "odd":5,
     "mode":"RISING",
+    "modeArray":[
+      "RISING",
+      "FALLING"
+    ],
     "oddArray":[
       1,
       5
@@ -662,6 +667,10 @@ Response:
     "string":"asdXghjkl",
     "odd":7,
     "mode":"CHANGE",
+    "modeArray":[
+      "RISING",
+      "FALLING"
+    ],
     "oddArray":[
       9,
       9
@@ -783,6 +792,7 @@ Response:
       "string",
       "odd",
       "mode",
+      "modeArray",
       "oddArray"
     ],
     "callbacks":[]
@@ -817,6 +827,7 @@ dev.get_methods()
  'bool',
  'increment_mode',
  'string',
+ 'mode_array',
  'get_direction_array',
  'set_long_array_fixed',
  'odd_array',
@@ -843,6 +854,7 @@ dev.get_property_values()
  'doubleArray': [-1.1, 2.2, 3.3],
  'longArray': [5, 4, 3, 2],
  'mode': 'RISING',
+ 'modeArray': ['RISING', 'FALLING'],
  'odd': 5,
  'oddArray': [1, 5],
  'serialNumber': 0,
@@ -942,10 +954,11 @@ dev.getMethods()                 % get device functions
   string
   odd
   mode
+  modeArray
   oddArray
 dev.setPropertiesToDefaults()
 dev.getPropertyValues()
-ans = 
+ans =
   serialNumber: 0
   double: 3.1416
   bool: 0
@@ -955,6 +968,7 @@ ans =
   string: 'abcdef'
   odd: 5
   mode: 'RISING'
+  modeArray: ['RISING' 'FALLING']
   oddArray: [1 5]
 dev.longArray('getValue')
 ans =
@@ -978,7 +992,7 @@ dev.doubleArray('getDefaultElementValue',0)
 ans =
   -1.1000
 dev.boolArray('setValue',[false,false])
-ans = 
+ans =
   [0]    [0]
 dev.string('setValue','asdfghjkl')
 ans =

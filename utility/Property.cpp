@@ -173,10 +173,11 @@ bool Property::getValue<bool>(bool & value)
   return saved_variable_.getValue(value);
 }
 
-bool Property::getValue(const ConstantString * & value)
+template <>
+bool Property::getValue<const ConstantString *>(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
-      stringSavedAsCharArray())
+      (stringSavedAsCharArray()))
   {
     value = NULL;
     return false;
@@ -244,7 +245,8 @@ bool Property::getElementValue<char>(const size_t element_index, char & value)
   return saved_variable_.getElementValue(element_index,value);
 }
 
-bool Property::getElementValue(const size_t element_index, const ConstantString * & value)
+template <>
+bool Property::getElementValue<const ConstantString *>(const size_t element_index, const ConstantString * & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::STRING_TYPE) ||
@@ -285,7 +287,8 @@ bool Property::getDefaultValue<bool>(bool & value)
   return saved_variable_.getDefaultValue(value);
 }
 
-bool Property::getDefaultValue(const ConstantString * & value)
+template <>
+bool Property::getDefaultValue<const ConstantString *>(const ConstantString * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       stringSavedAsCharArray())
@@ -330,17 +333,6 @@ bool Property::getDefaultElementValue<bool>(const size_t element_index, bool & v
 }
 
 template <>
-bool Property::getDefaultElementValue<const ConstantString *>(const size_t element_index, const ConstantString * & value)
-{
-  if ((getType() != JsonStream::ARRAY_TYPE) ||
-      (getArrayElementType() != JsonStream::STRING_TYPE))
-  {
-    return false;
-  }
-  return saved_variable_.getDefaultElementValue(element_index,value);
-}
-
-template <>
 bool Property::getDefaultElementValue<char>(const size_t element_index, char & value)
 {
   if (getType() != JsonStream::STRING_TYPE)
@@ -367,7 +359,8 @@ bool Property::getDefaultElementValue<char>(const size_t element_index, char & v
   return saved_variable_.getDefaultElementValue(element_index,value);
 }
 
-bool Property::getDefaultElementValue(const size_t element_index, const ConstantString * & value)
+template <>
+bool Property::getDefaultElementValue<const ConstantString *>(const size_t element_index, const ConstantString * & value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::STRING_TYPE) ||
@@ -444,7 +437,22 @@ bool Property::setElementValue<bool>(const size_t element_index, const bool & va
   return success;
 }
 
-bool Property::setElementValue(const size_t element_index, const ConstantString * & value)
+template <>
+bool Property::setElementValue<char>(const size_t element_index, const char & value)
+{
+  bool success = false;
+  preSetElementValueFunctor(element_index);
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      (stringSavedAsCharArray()))
+  {
+    success = saved_variable_.setElementValue(element_index,value);
+  }
+  postSetElementValueFunctor(element_index);
+  return success;
+}
+
+template <>
+bool Property::setElementValue<const ConstantString * const>(const size_t element_index, const ConstantString * const & value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
@@ -459,14 +467,21 @@ bool Property::setElementValue(const size_t element_index, const ConstantString 
 }
 
 template <>
-bool Property::setElementValue<char>(const size_t element_index, const char & value)
+bool Property::setElementValue<const char *>(const size_t element_index, const char * const & value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
-  if ((getType() == JsonStream::STRING_TYPE) &&
-      (stringSavedAsCharArray()))
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::STRING_TYPE) &&
+      (!stringSavedAsCharArray()))
   {
-    success = saved_variable_.setElementValue(element_index,value);
+    int subset_value_index = findSubsetValueIndex(value);
+    if (subset_value_index >= 0)
+    {
+      Vector<constants::SubsetMemberType> & subset = getSubset();
+      const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
+      success = saved_variable_.setElementValue(element_index,subset_value);
+    }
   }
   postSetElementValueFunctor(element_index);
   return success;
@@ -626,21 +641,9 @@ bool Property::setValue(ArduinoJson::JsonArray & value)
           for (size_t i=0; i<array_length_min; ++i)
           {
             const char * v = value[i];
-            Serial << "v = " << v;
-            int subset_value_index = findSubsetValueIndex((const char *)v);
-            if (subset_value_index >= 0)
+            success = setElementValue(i,v);
+            if (!success)
             {
-              Vector<constants::SubsetMemberType> & subset = getSubset();
-              const ConstantString * const subset_value = subset[subset_value_index].cs_ptr;
-              success = setValue(subset_value);
-              if (!success)
-              {
-                break;
-              }
-            }
-            else
-            {
-              success = false;
               break;
             }
           }
@@ -662,6 +665,30 @@ bool Property::setValue(ArduinoJson::JsonArray & value)
     }
     postSetValueFunctor();
   }
+  return success;
+}
+
+template <>
+bool Property::setAllElementValues<const char *>(const char * const & value)
+{
+  bool success = false;
+  if ((getType() != JsonStream::ARRAY_TYPE) ||
+      (getArrayElementType() != JsonStream::STRING_TYPE) ||
+      (stringSavedAsCharArray()))
+  {
+    return success;
+  }
+  size_t array_length = getArrayLength();
+  preSetValueFunctor();
+  for (size_t i=0; i<array_length; ++i)
+  {
+    success = setElementValue(i,value);
+    if (!success)
+    {
+      break;
+    }
+  }
+  postSetValueFunctor();
   return success;
 }
 
@@ -1100,6 +1127,8 @@ void Property::setElementValueHandler()
         }
         case JsonStream::STRING_TYPE:
         {
+          const char * value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setElementValue(element_index,value);
           break;
         }
         case JsonStream::OBJECT_TYPE:
@@ -1211,6 +1240,8 @@ void Property::setAllElementValuesHandler()
         }
         case JsonStream::STRING_TYPE:
         {
+          const char * value = get_parameter_value_functor_(property::element_value_parameter_name);
+          setAllElementValues(value);
           break;
         }
         case JsonStream::OBJECT_TYPE:

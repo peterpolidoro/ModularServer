@@ -35,7 +35,7 @@ extern const modular_server::HardwareInfo hardware_info;
 // Units
 
 // Properties
-// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *
+// Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
 extern const long serial_number_default_new;
 
 extern ConstantString starting_chars_count_property_name;
