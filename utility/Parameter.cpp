@@ -432,13 +432,30 @@ int Parameter::findSubsetValueIndex(const char * value)
   return value_index;
 }
 
+int Parameter::findSubsetValueIndex(const ConstantString * value)
+{
+  int value_index = -1;
+  if (subsetIsSet())
+  {
+    for(size_t i=0; i<subset_.size(); ++i)
+    {
+      if (value == subset_[i].cs_ptr)
+      {
+        value_index = i;
+        break;
+      }
+    }
+  }
+  return value_index;
+}
+
 bool Parameter::valueInSubset(const long value)
 {
   bool in_subset = true;
   if (subsetIsSet())
   {
     int subset_value_index = findSubsetValueIndex(value);
-    in_subset = ((subset_value_index >= 0) ? true : false);
+    in_subset = (subset_value_index >= 0);
   }
   return in_subset;
 }
@@ -449,7 +466,18 @@ bool Parameter::valueInSubset(const char * value)
   if (subsetIsSet())
   {
     int subset_value_index = findSubsetValueIndex(value);
-    in_subset = ((subset_value_index >= 0) ? true : false);
+    in_subset = (subset_value_index >= 0);
+  }
+  return in_subset;
+}
+
+bool Parameter::valueInSubset(const ConstantString * value)
+{
+  bool in_subset = true;
+  if (subsetIsSet())
+  {
+    int subset_value_index = findSubsetValueIndex(value);
+    in_subset = (subset_value_index >= 0);
   }
   return in_subset;
 }

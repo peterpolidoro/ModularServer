@@ -63,19 +63,6 @@ class Property
 public:
   Property();
 
-  void setUnits(const ConstantString & name);
-  void setRange(const long min, const long max);
-  void setRange(const double min, const double max);
-  template <size_t MAX_SIZE>
-  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
-  void setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size);
-  void addValueToSubset(constants::SubsetMemberType & value);
-
-  void attachPreSetValueFunctor(const Functor0 & functor);
-  void attachPreSetElementValueFunctor(const Functor1<const size_t> & functor);
-  void attachPostSetValueFunctor(const Functor0 & functor);
-  void attachPostSetElementValueFunctor(const Functor1<const size_t> & functor);
-
   template <typename T>
   bool getValue(T & value);
   template <size_t N>
@@ -130,6 +117,19 @@ public:
   bool valueIsDefault();
   size_t getArrayLength();
   size_t getStringLength();
+
+  void setUnits(const ConstantString & name);
+  void setRange(const long min, const long max);
+  void setRange(const double min, const double max);
+  template <size_t MAX_SIZE>
+  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
+  void setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size);
+  void addValueToSubset(constants::SubsetMemberType & value);
+
+  void attachPreSetValueFunctor(const Functor0 & functor);
+  void attachPreSetElementValueFunctor(const Functor1<const size_t> & functor);
+  void attachPostSetValueFunctor(const Functor0 & functor);
+  void attachPostSetElementValueFunctor(const Functor1<const size_t> & functor);
 
 private:
   static Parameter property_parameters_[property::PARAMETER_COUNT_MAX];
@@ -212,9 +212,15 @@ private:
   bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
+  bool rangeIsSet();
+  bool subsetIsSet();
   bool stringSavedAsCharArray();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
+  int findSubsetValueIndex(const ConstantString * value);
+  bool valueInSubset(const long value);
+  bool valueInSubset(const char * value);
+  bool valueInSubset(const ConstantString * value);
   Vector<constants::SubsetMemberType> & getSubset();
   void preSetValueFunctor();
   void preSetElementValueFunctor(const size_t element_index);

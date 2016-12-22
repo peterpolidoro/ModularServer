@@ -98,51 +98,6 @@ Property::Property()
   response_ptr_ = NULL;
 }
 
-void Property::setUnits(const ConstantString & name)
-{
-  parameter_.setUnits(name);
-}
-
-void Property::setRange(const long min, const long max)
-{
-  parameter_.setRange(min,max);
-}
-
-void Property::setRange(const double min, const double max)
-{
-  parameter_.setRange(min,max);
-}
-
-void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
-{
-  parameter_.setSubset(subset,max_size,size);
-}
-
-void Property::addValueToSubset(constants::SubsetMemberType & value)
-{
-  parameter_.addValueToSubset(value);
-}
-
-void Property::attachPreSetValueFunctor(const Functor0 & functor)
-{
-  pre_set_value_functor_ = functor;
-}
-
-void Property::attachPreSetElementValueFunctor(const Functor1<const size_t> & functor)
-{
-  pre_set_element_value_functor_ = functor;
-}
-
-void Property::attachPostSetValueFunctor(const Functor0 & functor)
-{
-  post_set_value_functor_ = functor;
-}
-
-void Property::attachPostSetElementValueFunctor(const Functor1<const size_t> & functor)
-{
-  post_set_element_value_functor_ = functor;
-}
-
 template <>
 bool Property::getValue<long>(long & value)
 {
@@ -379,16 +334,7 @@ bool Property::setElementValue<long>(const size_t element_index, const long & va
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::LONG_TYPE))
   {
-    if (parameter_.rangeIsSet())
-    {
-      long min = parameter_.getMin().l;
-      long max = parameter_.getMax().l;
-      if ((value >= min) && (value <= max))
-      {
-        success = saved_variable_.setElementValue(element_index,value);
-      }
-    }
-    else
+    if (parameter_.valueInRange(value) && parameter_.valueInSubset(value))
     {
       success = saved_variable_.setElementValue(element_index,value);
     }
@@ -405,16 +351,7 @@ bool Property::setElementValue<double>(const size_t element_index, const double 
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::DOUBLE_TYPE))
   {
-    if (parameter_.rangeIsSet())
-    {
-      double min = parameter_.getMin().d;
-      double max = parameter_.getMax().d;
-      if ((value >= min) && (value <= max))
-      {
-        success = saved_variable_.setElementValue(element_index,value);
-      }
-    }
-    else
+    if (parameter_.valueInRange(value))
     {
       success = saved_variable_.setElementValue(element_index,value);
     }
@@ -460,7 +397,10 @@ bool Property::setElementValue<const ConstantString * const>(const size_t elemen
       (getArrayElementType() == JsonStream::STRING_TYPE) &&
       (!stringSavedAsCharArray()))
   {
-    success = saved_variable_.setElementValue(element_index,value);
+    if (parameter_.valueInSubset(value))
+    {
+      success = saved_variable_.setElementValue(element_index,value);
+    }
   }
   postSetElementValueFunctor(element_index);
   return success;
@@ -494,16 +434,7 @@ bool Property::setValue<long>(const long & value)
   preSetValueFunctor();
   if (getType() == JsonStream::LONG_TYPE)
   {
-    if (parameter_.rangeIsSet())
-    {
-      long min = parameter_.getMin().l;
-      long max = parameter_.getMax().l;
-      if ((value >= min) && (value <= max))
-      {
-        success = saved_variable_.setValue(value);
-      }
-    }
-    else
+    if (parameter_.valueInRange(value) && parameter_.valueInSubset(value))
     {
       success = saved_variable_.setValue(value);
     }
@@ -519,16 +450,7 @@ bool Property::setValue<double>(const double & value)
   preSetValueFunctor();
   if (getType() == JsonStream::DOUBLE_TYPE)
   {
-    if (parameter_.rangeIsSet())
-    {
-      double min = parameter_.getMin().d;
-      double max = parameter_.getMax().d;
-      if ((value >= min) && (value <= max))
-      {
-        success = saved_variable_.setValue(value);
-      }
-    }
-    else
+    if (parameter_.valueInRange(value))
     {
       success = saved_variable_.setValue(value);
     }
@@ -558,7 +480,10 @@ bool Property::setValue<const ConstantString *>(const ConstantString * const & v
   if ((getType() == JsonStream::STRING_TYPE) &&
       !stringSavedAsCharArray())
   {
-    success = saved_variable_.setValue(value);
+    if (parameter_.valueInSubset(value))
+    {
+      success = saved_variable_.setValue(value);
+    }
   }
   postSetValueFunctor();
   return success;
@@ -572,7 +497,10 @@ bool Property::setValue<ConstantString *>(ConstantString * const & value)
   if ((getType() == JsonStream::STRING_TYPE) &&
       !stringSavedAsCharArray())
   {
-    success = saved_variable_.setValue(value);
+    if (parameter_.valueInSubset(value))
+    {
+      success = saved_variable_.setValue(value);
+    }
   }
   postSetValueFunctor();
   return success;
@@ -746,6 +674,82 @@ size_t Property::getStringLength()
   return length;
 }
 
+void Property::setUnits(const ConstantString & name)
+{
+  parameter_.setUnits(name);
+}
+
+void Property::setRange(const long min, const long max)
+{
+  parameter_.setRange(min,max);
+  long value;
+  getValue(value);
+  if (!parameter_.valueInRange(value))
+  {
+    setValueToDefault();
+  }
+}
+
+void Property::setRange(const double min, const double max)
+{
+  parameter_.setRange(min,max);
+  double value;
+  getValue(value);
+  if (!parameter_.valueInRange(value))
+  {
+    setValueToDefault();
+  }
+}
+
+void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
+{
+  parameter_.setSubset(subset,max_size,size);
+  if (getType() == JsonStream::LONG_TYPE)
+  {
+    long value;
+    getValue(value);
+    if (!parameter_.valueInSubset(value))
+    {
+      setValueToDefault();
+    }
+  }
+  else if ((getType() == JsonStream::STRING_TYPE) &&
+           !stringSavedAsCharArray())
+  {
+    const ConstantString * value;
+    getValue(value);
+    if (!parameter_.valueInSubset(value))
+    {
+      setValueToDefault();
+    }
+  }
+}
+
+void Property::addValueToSubset(constants::SubsetMemberType & value)
+{
+  parameter_.addValueToSubset(value);
+}
+
+void Property::attachPreSetValueFunctor(const Functor0 & functor)
+{
+  pre_set_value_functor_ = functor;
+}
+
+void Property::attachPreSetElementValueFunctor(const Functor1<const size_t> & functor)
+{
+  pre_set_element_value_functor_ = functor;
+}
+
+void Property::attachPostSetValueFunctor(const Functor0 & functor)
+{
+  post_set_value_functor_ = functor;
+}
+
+void Property::attachPostSetElementValueFunctor(const Functor1<const size_t> & functor)
+{
+  post_set_element_value_functor_ = functor;
+}
+
 // private
 template <>
 Property::Property<long>(const ConstantString & name,
@@ -824,6 +828,16 @@ JsonStream::JsonTypes Property::getArrayElementType()
   return parameter_.getArrayElementType();
 }
 
+bool Property::rangeIsSet()
+{
+  return parameter_.rangeIsSet();
+}
+
+bool Property::subsetIsSet()
+{
+  return parameter_.subsetIsSet();
+}
+
 bool Property::stringSavedAsCharArray()
 {
   return string_saved_as_char_array_;
@@ -837,6 +851,26 @@ int Property::findSubsetValueIndex(const long value)
 int Property::findSubsetValueIndex(const char * value)
 {
   return parameter_.findSubsetValueIndex(value);
+}
+
+int Property::findSubsetValueIndex(const ConstantString * value)
+{
+  return parameter_.findSubsetValueIndex(value);
+}
+
+bool Property::valueInSubset(const long value)
+{
+  return parameter_.valueInSubset(value);
+}
+
+bool Property::valueInSubset(const char * value)
+{
+  return parameter_.valueInSubset(value);
+}
+
+bool Property::valueInSubset(const ConstantString * value)
+{
+  return parameter_.valueInSubset(value);
 }
 
 Vector<constants::SubsetMemberType> & Property::getSubset()

@@ -16,6 +16,25 @@ template <size_t MAX_SIZE>
 void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
 {
   parameter_.setSubset(subset);
+  if (getType() == JsonStream::LONG_TYPE)
+  {
+    long value;
+    getValue(value);
+    if (!valueInSubset(value))
+    {
+      setValueToDefault();
+    }
+  }
+  else if ((getType() == JsonStream::STRING_TYPE) &&
+           !stringSavedAsCharArray())
+  {
+    const ConstantString * value;
+    getValue(value);
+    if (!valueInSubset(value))
+    {
+      setValueToDefault();
+    }
+  }
 }
 
 template <size_t N>

@@ -92,8 +92,10 @@ private:
   bool subsetIsSet();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
+  int findSubsetValueIndex(const ConstantString * value);
   bool valueInSubset(const long value);
   bool valueInSubset(const char * value);
+  bool valueInSubset(const ConstantString * value);
   Vector<constants::SubsetMemberType> & getSubset();
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
   friend class Property;
