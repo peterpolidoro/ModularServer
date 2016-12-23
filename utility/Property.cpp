@@ -682,22 +682,58 @@ void Property::setUnits(const ConstantString & name)
 void Property::setRange(const long min, const long max)
 {
   parameter_.setRange(min,max);
-  long value;
-  getValue(value);
-  if (!parameter_.valueInRange(value))
+  if (getType() == JsonStream::LONG_TYPE)
   {
-    setValueToDefault();
+    long value;
+    getValue(value);
+    if (!parameter_.valueInRange(value))
+    {
+      setValueToDefault();
+    }
+  }
+  else if ((getType() == JsonStream::ARRAY_TYPE) &&
+           (getArrayElementType() == JsonStream::LONG_TYPE))
+  {
+    size_t array_length = getArrayLength();
+    for (size_t i=0; i<array_length; ++i)
+    {
+      long value;
+      getElementValue(i,value);
+      if (!parameter_.valueInRange(value))
+      {
+        setValueToDefault();
+        break;
+      }
+    }
   }
 }
 
 void Property::setRange(const double min, const double max)
 {
   parameter_.setRange(min,max);
-  double value;
-  getValue(value);
-  if (!parameter_.valueInRange(value))
+  if (getType() == JsonStream::DOUBLE_TYPE)
   {
-    setValueToDefault();
+    double value;
+    getValue(value);
+    if (!parameter_.valueInRange(value))
+    {
+      setValueToDefault();
+    }
+  }
+  else if ((getType() == JsonStream::ARRAY_TYPE) &&
+           (getArrayElementType() == JsonStream::DOUBLE_TYPE))
+  {
+    size_t array_length = getArrayLength();
+    for (size_t i=0; i<array_length; ++i)
+    {
+      double value;
+      getElementValue(i,value);
+      if (!parameter_.valueInRange(value))
+      {
+        setValueToDefault();
+        break;
+      }
+    }
   }
 }
 
@@ -721,6 +757,37 @@ void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, 
     if (!parameter_.valueInSubset(value))
     {
       setValueToDefault();
+    }
+  }
+  else if ((getType() == JsonStream::ARRAY_TYPE) &&
+           (getArrayElementType() == JsonStream::LONG_TYPE))
+  {
+    size_t array_length = getArrayLength();
+    for (size_t i=0; i<array_length; ++i)
+    {
+      long value;
+      getElementValue(i,value);
+      if (!parameter_.valueInSubset(value))
+      {
+        setValueToDefault();
+        break;
+      }
+    }
+  }
+  else if ((getType() == JsonStream::ARRAY_TYPE) &&
+           (getArrayElementType() == JsonStream::STRING_TYPE) &&
+           !stringSavedAsCharArray())
+  {
+    size_t array_length = getArrayLength();
+    for (size_t i=0; i<array_length; ++i)
+    {
+      const ConstantString * value;
+      getElementValue(i,value);
+      if (!parameter_.valueInSubset(value))
+      {
+        setValueToDefault();
+        break;
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
   {
     long value;
     getValue(value);
-    if (!valueInSubset(value))
+    if (!parameter_.valueInSubset(value))
     {
       setValueToDefault();
     }
@@ -30,9 +30,40 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
   {
     const ConstantString * value;
     getValue(value);
-    if (!valueInSubset(value))
+    if (!parameter_.valueInSubset(value))
     {
       setValueToDefault();
+    }
+  }
+  else if ((getType() == JsonStream::ARRAY_TYPE) &&
+           (getArrayElementType() == JsonStream::LONG_TYPE))
+  {
+    size_t array_length = getArrayLength();
+    for (size_t i=0; i<array_length; ++i)
+    {
+      long value;
+      getElementValue(i,value);
+      if (!parameter_.valueInSubset(value))
+      {
+        setValueToDefault();
+        break;
+      }
+    }
+  }
+  else if ((getType() == JsonStream::ARRAY_TYPE) &&
+           (getArrayElementType() == JsonStream::STRING_TYPE) &&
+           !stringSavedAsCharArray())
+  {
+    size_t array_length = getArrayLength();
+    for (size_t i=0; i<array_length; ++i)
+    {
+      const ConstantString * value;
+      getElementValue(i,value);
+      if (!parameter_.valueInSubset(value))
+      {
+        setValueToDefault();
+        break;
+      }
     }
   }
 }
@@ -394,6 +425,27 @@ Property::Property(const ConstantString & name,
 {
   parameter_.setTypeString();
   string_saved_as_char_array_ = true;
+  size_t array_length = getArrayLength();
+  char string[array_length];
+  getValue(string,array_length);
+  size_t string_length = strlen(string);
+  if (string_length >= array_length)
+  {
+    setValueToDefault();
+  }
+  else
+  {
+    for (size_t i=0; i<string_length; ++i)
+    {
+      char c = string[i];
+      // check if all characters are printable ascii
+      if ((c < 32) || (c > 126))
+      {
+        setValueToDefault();
+        break;
+      }
+    }
+  }
 }
 
 template <size_t N>

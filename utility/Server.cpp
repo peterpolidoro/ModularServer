@@ -1102,6 +1102,14 @@ void Server::propertyHelp(Property & property, bool verbose)
   response_.writeKey(constants::default_value_constant_string);
   writePropertyToResponse(property,false,true);
 
+  if ((property.getType() == JsonStream::STRING_TYPE) &&
+      (property.stringSavedAsCharArray()))
+  {
+    response_.write(constants::string_length_constant_string,property.getStringLength());
+    size_t string_length_max = property.getArrayLength() - 1;
+    response_.write(constants::string_length_max_constant_string,string_length_max);
+  }
+
   response_.writeKey(constants::functions_constant_string);
   response_.beginArray();
   for (size_t i=0; i<Property::functions_.size(); ++i)
