@@ -18,6 +18,13 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
   parameter_.setSubset(subset);
   if (getType() == JsonStream::LONG_TYPE)
   {
+    long default_value;
+    getDefaultValue(default_value);
+    if (!parameter_.valueInSubset(default_value))
+    {
+      const long & first_subset_value = parameter_.getSubset()[0].l;
+      setDefaultValue(first_subset_value);
+    }
     long value;
     getValue(value);
     if (!parameter_.valueInSubset(value))

@@ -104,9 +104,6 @@ void PropertyTester::setup()
   get_doubled_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDoubledHandler));
   get_doubled_function.setReturnTypeDouble();
 
-  modular_server::Function & set_new_double_range_function = modular_server_.createFunction(constants::set_new_double_range_function_name);
-  set_new_double_range_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setNewDoubleRangeHandler));
-
   modular_server::Function & get_bool_function = modular_server_.createFunction(constants::get_bool_function_name);
   get_bool_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getBoolHandler));
   get_bool_function.setReturnTypeBool();
@@ -169,6 +166,12 @@ void PropertyTester::setup()
   increment_mode_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::incrementModeHandler));
   increment_mode_function.setReturnTypeString();
 
+  modular_server::Function & set_new_double_range_function = modular_server_.createFunction(constants::set_new_double_range_function_name);
+  set_new_double_range_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setNewDoubleRangeHandler));
+
+  modular_server::Function & set_new_odd_subset_function = modular_server_.createFunction(constants::set_new_odd_subset_function_name);
+  set_new_odd_subset_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setNewOddSubsetHandler));
+
   // Callbacks
 
   // Begin Streams
@@ -206,11 +209,6 @@ void PropertyTester::getDoubledHandler()
   modular_server_.property(constants::double_property_name).getValue(value);
   value *= 2;
   modular_server_.response().returnResult(value);
-}
-
-void PropertyTester::setNewDoubleRangeHandler()
-{
-  modular_server_.property(constants::double_property_name).setRange(constants::double_min_new,constants::double_max_new);
 }
 
 void PropertyTester::getBoolHandler()
@@ -402,6 +400,16 @@ void PropertyTester::incrementModeHandler()
   {
     modular_server_.response().returnResult("???");
   }
+}
+
+void PropertyTester::setNewDoubleRangeHandler()
+{
+  modular_server_.property(constants::double_property_name).setRange(constants::double_min_new,constants::double_max_new);
+}
+
+void PropertyTester::setNewOddSubsetHandler()
+{
+  modular_server_.property(constants::odd_property_name).setSubset(constants::odd_subset_new);
 }
 
 void PropertyTester::preSetPropertyValueHandler()

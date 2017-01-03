@@ -103,6 +103,13 @@ modular_server::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH] =
     {.l=9},
   };
 const long & odd_default = odd_subset[2].l;
+modular_server::SubsetMemberType odd_subset_new[ODD_SUBSET_LENGTH_NEW] =
+  {
+    {.l=11},
+    {.l=13},
+    {.l=15},
+    {.l=17},
+  };
 
 CONSTANT_STRING(mode_property_name,"mode");
 CONSTANT_STRING(mode_rising,"RISING");
@@ -174,7 +181,6 @@ const size_t direction_array_length_max = 4;
 
 // Functions
 CONSTANT_STRING(get_doubled_function_name,"getDoubled");
-CONSTANT_STRING(set_new_double_range_function_name,"setNewDoubleRange");
 CONSTANT_STRING(get_bool_function_name,"getBool");
 CONSTANT_STRING(get_long_array_fixed_function_name,"getLongArrayFixed");
 CONSTANT_STRING(get_long_array_variable_function_name,"getLongArrayVariable");
@@ -189,6 +195,8 @@ CONSTANT_STRING(get_direction_function_name,"getDirection");
 CONSTANT_STRING(get_direction_array_function_name,"getDirectionArray");
 CONSTANT_STRING(check_mode_function_name,"checkMode");
 CONSTANT_STRING(increment_mode_function_name,"incrementMode");
+CONSTANT_STRING(set_new_double_range_function_name,"setNewDoubleRange");
+CONSTANT_STRING(set_new_odd_subset_function_name,"setNewOddSubset");
 
 // Callbacks
 

@@ -30,7 +30,6 @@ private:
 
   // Handlers
   void getDoubledHandler();
-  void setNewDoubleRangeHandler();
   void getBoolHandler();
   void getLongArrayFixedHandler();
   void getLongArrayVariableHandler();
@@ -45,6 +44,8 @@ private:
   void getDirectionArrayHandler();
   void checkModeHandler();
   void incrementModeHandler();
+  void setNewDoubleRangeHandler();
+  void setNewOddSubsetHandler();
   void preSetPropertyValueHandler();
   void postSetPropertyValueHandler();
   void preSetPropertyElementValueHandler(const size_t element_index);

@@ -16,7 +16,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=10};
 enum{PARAMETER_COUNT_MAX=6};
-enum{FUNCTION_COUNT_MAX=16};
+enum{FUNCTION_COUNT_MAX=17};
 enum{CALLBACK_COUNT_MAX=1};
 
 enum{INTERRUPT_COUNT_MAX=1};
@@ -72,6 +72,8 @@ extern ConstantString odd_property_name;
 enum{ODD_SUBSET_LENGTH=5};
 extern modular_server::SubsetMemberType odd_subset[ODD_SUBSET_LENGTH];
 extern const long & odd_default;
+enum{ODD_SUBSET_LENGTH_NEW=4};
+extern modular_server::SubsetMemberType odd_subset_new[ODD_SUBSET_LENGTH_NEW];
 
 extern ConstantString mode_property_name;
 enum{MODE_SUBSET_LENGTH=3};
@@ -120,7 +122,6 @@ extern const size_t direction_array_length_max;
 
 // Functions
 extern ConstantString get_doubled_function_name;
-extern ConstantString set_new_double_range_function_name;
 extern ConstantString get_bool_function_name;
 extern ConstantString get_long_array_fixed_function_name;
 extern ConstantString get_long_array_variable_function_name;
@@ -135,6 +136,8 @@ extern ConstantString get_direction_function_name;
 extern ConstantString get_direction_array_function_name;
 extern ConstantString check_mode_function_name;
 extern ConstantString increment_mode_function_name;
+extern ConstantString set_new_double_range_function_name;
+extern ConstantString set_new_odd_subset_function_name;
 
 // Callbacks
 

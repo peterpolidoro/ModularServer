@@ -53,7 +53,6 @@ Response:
         "getPropertyValues",
         "getMemoryFree",
         "getDoubled",
-        "setNewDoubleRange",
         "getBool",
         "getLongArrayFixed",
         "getLongArrayVariable",
@@ -68,6 +67,8 @@ Response:
         "getDirectionArray",
         "checkMode",
         "incrementMode"
+        "setNewDoubleRange",
+        "setNewOddSubset",
       ],
       "parameters":[
         "firmware",
@@ -763,7 +764,6 @@ Response:
     "firmware":["PropertyTester"],
     "functions":[
       "getDoubled",
-      "setNewDoubleRange",
       "getBool",
       "getLongArrayFixed",
       "getLongArrayVariable",
@@ -778,6 +778,8 @@ Response:
       "getDirectionArray",
       "checkMode",
       "incrementMode"
+      "setNewDoubleRange",
+      "setNewOddSubset",
     ],
     "parameters":[
       "long_array_parameter",
@@ -846,6 +848,7 @@ dev.get_methods()
  'get_api_verbose',
  'get_doubled',
  'set_new_double_range',
+ 'set_new_odd_subset,
  'mode',
  'double',
  'get_bool',
@@ -936,7 +939,6 @@ dev.getMethods()                 % get device functions
   getPropertyValues
   getMemoryFree
   getDoubled
-  setNewDoubleRange
   getBool
   getLongArrayFixed
   getLongArrayVariable
@@ -951,6 +953,8 @@ dev.getMethods()                 % get device functions
   getDirectionArray
   checkMode
   incrementMode
+  setNewDoubleRange
+  setNewOddSubset
   serialNumber
   double
   bool
