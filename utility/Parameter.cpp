@@ -353,12 +353,12 @@ bool Parameter::valueInRange(const float value)
   return in_range;
 }
 
-constants::NumberType & Parameter::getRangeMin()
+const constants::NumberType & Parameter::getRangeMin()
 {
   return min_;
 }
 
-constants::NumberType & Parameter::getRangeMax()
+const constants::NumberType & Parameter::getRangeMax()
 {
   return max_;
 }

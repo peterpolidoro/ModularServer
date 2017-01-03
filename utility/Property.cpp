@@ -684,6 +684,22 @@ void Property::setRange(const long min, const long max)
   parameter_.setRange(min,max);
   if (getType() == JsonStream::LONG_TYPE)
   {
+    long default_value;
+    getDefaultValue(default_value);
+    if (!parameter_.valueInRange(default_value))
+    {
+      // must use reference so default value will have valid pointer
+      const long & range_min = parameter_.getRangeMin().l;
+      if (default_value < range_min)
+      {
+        setDefaultValue(range_min);
+      }
+      else
+      {
+        const long & range_max = parameter_.getRangeMax().l;
+        setDefaultValue(range_max);
+      }
+    }
     long value;
     getValue(value);
     if (!parameter_.valueInRange(value))
@@ -713,6 +729,22 @@ void Property::setRange(const double min, const double max)
   parameter_.setRange(min,max);
   if (getType() == JsonStream::DOUBLE_TYPE)
   {
+    double default_value;
+    getDefaultValue(default_value);
+    if (!parameter_.valueInRange(default_value))
+    {
+      // must use reference so default value will have valid pointer
+      const double & range_min = parameter_.getRangeMin().d;
+      if (default_value < range_min)
+      {
+        setDefaultValue(range_min);
+      }
+      else
+      {
+        const double & range_max = parameter_.getRangeMax().d;
+        setDefaultValue(range_max);
+      }
+    }
     double value;
     getValue(value);
     if (!parameter_.valueInRange(value))

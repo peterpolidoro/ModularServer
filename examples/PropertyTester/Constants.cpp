@@ -68,7 +68,11 @@ const modular_server::HardwareInfo hardware_info =
 
 // Properties
 CONSTANT_STRING(double_property_name,"double");
+const double double_min = 1.0;
+const double double_max = 5.0;
 const double double_default = 3.14159;
+const double double_min_new = 5.0;
+const double double_max_new = 10.0;
 
 CONSTANT_STRING(bool_property_name,"bool");
 const bool bool_default = false;
@@ -170,6 +174,7 @@ const size_t direction_array_length_max = 4;
 
 // Functions
 CONSTANT_STRING(get_doubled_function_name,"getDoubled");
+CONSTANT_STRING(set_new_double_range_function_name,"setNewDoubleRange");
 CONSTANT_STRING(get_bool_function_name,"getBool");
 CONSTANT_STRING(get_long_array_fixed_function_name,"getLongArrayFixed");
 CONSTANT_STRING(get_long_array_variable_function_name,"getLongArrayVariable");

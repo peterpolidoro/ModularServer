@@ -53,6 +53,7 @@ Response:
         "getPropertyValues",
         "getMemoryFree",
         "getDoubled",
+        "setNewDoubleRange",
         "getBool",
         "getLongArrayFixed",
         "getLongArrayVariable",
@@ -175,6 +176,8 @@ Response:
     "name":"double",
     "firmware":"PropertyTester",
     "type":"double",
+    "min":1.000000,
+    "max":5.000000,
     "value":3.141590,
     "default_value":3.141590,
     "functions":[
@@ -760,6 +763,7 @@ Response:
     "firmware":["PropertyTester"],
     "functions":[
       "getDoubled",
+      "setNewDoubleRange",
       "getBool",
       "getLongArrayFixed",
       "getLongArrayVariable",
@@ -841,6 +845,7 @@ dev.get_methods()
  'get_api',
  'get_api_verbose',
  'get_doubled',
+ 'set_new_double_range',
  'mode',
  'double',
  'get_bool',
@@ -931,6 +936,7 @@ dev.getMethods()                 % get device functions
   getPropertyValues
   getMemoryFree
   getDoubled
+  setNewDoubleRange
   getBool
   getLongArrayFixed
   getLongArrayVariable

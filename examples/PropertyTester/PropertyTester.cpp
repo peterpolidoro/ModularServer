@@ -36,6 +36,7 @@ void PropertyTester::setup()
 
   // Properties
   modular_server::Property & double_property = modular_server_.createProperty(constants::double_property_name,constants::double_default);
+  double_property.setRange(constants::double_min,constants::double_max);
 
   modular_server::Property & bool_property = modular_server_.createProperty(constants::bool_property_name,constants::bool_default);
   bool_property.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::preSetPropertyValueHandler));
@@ -102,6 +103,9 @@ void PropertyTester::setup()
   modular_server::Function & get_doubled_function = modular_server_.createFunction(constants::get_doubled_function_name);
   get_doubled_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDoubledHandler));
   get_doubled_function.setReturnTypeDouble();
+
+  modular_server::Function & set_new_double_range_function = modular_server_.createFunction(constants::set_new_double_range_function_name);
+  set_new_double_range_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setNewDoubleRangeHandler));
 
   modular_server::Function & get_bool_function = modular_server_.createFunction(constants::get_bool_function_name);
   get_bool_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getBoolHandler));
@@ -202,6 +206,11 @@ void PropertyTester::getDoubledHandler()
   modular_server_.property(constants::double_property_name).getValue(value);
   value *= 2;
   modular_server_.response().returnResult(value);
+}
+
+void PropertyTester::setNewDoubleRangeHandler()
+{
+  modular_server_.property(constants::double_property_name).setRange(constants::double_min_new,constants::double_max_new);
 }
 
 void PropertyTester::getBoolHandler()

@@ -16,7 +16,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=10};
 enum{PARAMETER_COUNT_MAX=6};
-enum{FUNCTION_COUNT_MAX=15};
+enum{FUNCTION_COUNT_MAX=16};
 enum{CALLBACK_COUNT_MAX=1};
 
 enum{INTERRUPT_COUNT_MAX=1};
@@ -39,7 +39,11 @@ extern const modular_server::HardwareInfo hardware_info;
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
 extern ConstantString double_property_name;
+extern const double double_min;
+extern const double double_max;
 extern const double double_default;
+extern const double double_min_new;
+extern const double double_max_new;
 
 extern ConstantString bool_property_name;
 extern const bool bool_default;
@@ -116,6 +120,7 @@ extern const size_t direction_array_length_max;
 
 // Functions
 extern ConstantString get_doubled_function_name;
+extern ConstantString set_new_double_range_function_name;
 extern ConstantString get_bool_function_name;
 extern ConstantString get_long_array_fixed_function_name;
 extern ConstantString get_long_array_variable_function_name;

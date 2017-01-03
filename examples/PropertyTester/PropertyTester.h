@@ -30,6 +30,7 @@ private:
 
   // Handlers
   void getDoubledHandler();
+  void setNewDoubleRangeHandler();
   void getBoolHandler();
   void getLongArrayFixedHandler();
   void getLongArrayVariableHandler();

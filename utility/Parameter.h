@@ -83,8 +83,8 @@ private:
   bool valueInRange(const T value);
   bool valueInRange(const double value);
   bool valueInRange(const float value);
-  constants::NumberType & getRangeMin();
-  constants::NumberType & getRangeMax();
+  const constants::NumberType & getRangeMin();
+  const constants::NumberType & getRangeMax();
   size_t getArrayLengthMin();
   size_t getArrayLengthMax();
   bool arrayLengthRangeIsSet();
