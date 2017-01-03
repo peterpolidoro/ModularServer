@@ -282,7 +282,7 @@ Parameter Parameter::getElementParameter()
   element_parameter.setUnits(getUnits());
   if (rangeIsSet())
   {
-    element_parameter.setRange(getMin(),getMax());
+    element_parameter.setRange(getRangeMin(),getRangeMax());
   }
   if (subsetIsSet())
   {
@@ -328,8 +328,8 @@ bool Parameter::valueInRange(const double value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    double min = getMin().d;
-    double max = getMax().d;
+    double min = getRangeMin().d;
+    double max = getRangeMax().d;
     if ((value < min) || (value > max))
     {
       in_range = false;
@@ -343,8 +343,8 @@ bool Parameter::valueInRange(const float value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    double min = getMin().d;
-    double max = getMax().d;
+    double min = getRangeMin().d;
+    double max = getRangeMax().d;
     if (((double)value < min) || ((double)value > max))
     {
       in_range = false;
@@ -353,12 +353,12 @@ bool Parameter::valueInRange(const float value)
   return in_range;
 }
 
-constants::NumberType Parameter::getMin()
+constants::NumberType & Parameter::getRangeMin()
 {
   return min_;
 }
 
-constants::NumberType Parameter::getMax()
+constants::NumberType & Parameter::getRangeMax()
 {
   return max_;
 }

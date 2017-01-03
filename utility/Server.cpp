@@ -813,8 +813,8 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
       if (!parameter.valueInRange(value))
       {
         in_range = false;
-        long min = parameter.getMin().l;
-        long max = parameter.getMax().l;
+        long min = parameter.getRangeMin().l;
+        long max = parameter.getRangeMax().l;
         dtostrf(min,0,0,min_str);
         dtostrf(max,0,0,max_str);
       }
@@ -826,8 +826,8 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
       if (!parameter.valueInRange(value))
       {
         in_range = false;
-        double min = parameter.getMin().d;
-        double max = parameter.getMax().d;
+        double min = parameter.getRangeMin().d;
+        double max = parameter.getRangeMax().d;
         dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
         dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
       }
@@ -983,8 +983,8 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
           if (!parameter.valueInRange(value))
           {
             in_range = false;
-            long min = parameter.getMin().l;
-            long max = parameter.getMax().l;
+            long min = parameter.getRangeMin().l;
+            long max = parameter.getRangeMax().l;
             dtostrf(min,0,0,min_str);
             dtostrf(max,0,0,max_str);
           }
@@ -996,8 +996,8 @@ bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::Json
           if (!parameter.valueInRange(value))
           {
             in_range = false;
-            double min = parameter.getMin().d;
-            double max = parameter.getMax().d;
+            double min = parameter.getRangeMin().d;
+            double max = parameter.getRangeMax().d;
             dtostrf(min,0,JsonStream::DOUBLE_DIGITS_DEFAULT,min_str);
             dtostrf(max,0,JsonStream::DOUBLE_DIGITS_DEFAULT,max_str);
           }
@@ -1169,8 +1169,8 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
       }
       if (parameter.rangeIsSet())
       {
-        long min = parameter.getMin().l;
-        long max = parameter.getMax().l;
+        long min = parameter.getRangeMin().l;
+        long max = parameter.getRangeMax().l;
         response_.write(constants::min_constant_string,min);
         response_.write(constants::max_constant_string,max);
       }
@@ -1181,8 +1181,8 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
       response_.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
       if (parameter.rangeIsSet())
       {
-        double min = parameter.getMin().d;
-        double max = parameter.getMax().d;
+        double min = parameter.getRangeMin().d;
+        double max = parameter.getRangeMax().d;
         response_.write(constants::min_constant_string,min);
         response_.write(constants::max_constant_string,max);
       }
@@ -1228,8 +1228,8 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
           }
           if (parameter.rangeIsSet())
           {
-            long min = parameter.getMin().l;
-            long max = parameter.getMax().l;
+            long min = parameter.getRangeMin().l;
+            long max = parameter.getRangeMax().l;
             response_.write(constants::array_element_min_constant_string,min);
             response_.write(constants::array_element_max_constant_string,max);
           }
@@ -1240,8 +1240,8 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
           response_.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
           if (parameter.rangeIsSet())
           {
-            double min = parameter.getMin().d;
-            double max = parameter.getMax().d;
+            double min = parameter.getRangeMin().d;
+            double max = parameter.getRangeMax().d;
             response_.write(constants::array_element_min_constant_string,min);
             response_.write(constants::array_element_max_constant_string,max);
           }

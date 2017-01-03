@@ -59,8 +59,8 @@ bool Parameter::valueInRange(const T value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    long min = getMin().l;
-    long max = getMax().l;
+    long min = getRangeMin().l;
+    long max = getRangeMax().l;
     if (((long)value < min) || ((long)value > max))
     {
       in_range = false;
