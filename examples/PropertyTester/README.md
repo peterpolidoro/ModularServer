@@ -69,6 +69,7 @@ Response:
         "incrementMode"
         "setNewDoubleRange",
         "setNewOddSubset",
+        "setNewOddDefault",
       ],
       "parameters":[
         "firmware",
@@ -780,6 +781,7 @@ Response:
       "incrementMode"
       "setNewDoubleRange",
       "setNewOddSubset",
+      "setNewOddDefault",
     ],
     "parameters":[
       "long_array_parameter",
@@ -955,6 +957,7 @@ dev.getMethods()                 % get device functions
   incrementMode
   setNewDoubleRange
   setNewOddSubset
+  setNewOddDefault
   serialNumber
   double
   bool

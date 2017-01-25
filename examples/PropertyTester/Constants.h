@@ -15,8 +15,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=10};
-enum{PARAMETER_COUNT_MAX=6};
-enum{FUNCTION_COUNT_MAX=17};
+enum{PARAMETER_COUNT_MAX=7};
+enum{FUNCTION_COUNT_MAX=18};
 enum{CALLBACK_COUNT_MAX=1};
 
 enum{INTERRUPT_COUNT_MAX=1};
@@ -120,6 +120,8 @@ extern ConstantString direction_array_parameter_name;
 extern const size_t direction_array_length_min;
 extern const size_t direction_array_length_max;
 
+extern ConstantString subset_index_parameter_name;
+
 // Functions
 extern ConstantString get_doubled_function_name;
 extern ConstantString get_bool_function_name;
@@ -138,6 +140,7 @@ extern ConstantString check_mode_function_name;
 extern ConstantString increment_mode_function_name;
 extern ConstantString set_new_double_range_function_name;
 extern ConstantString set_new_odd_subset_function_name;
+extern ConstantString set_new_odd_default_function_name;
 
 // Callbacks
 

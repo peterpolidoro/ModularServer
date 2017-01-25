@@ -22,8 +22,7 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
     getDefaultValue(default_value);
     if (!parameter_.valueInSubset(default_value))
     {
-      const long & first_subset_value = parameter_.getSubset()[0].l;
-      setDefaultValue(first_subset_value);
+      setDefaultToSubsetElement(0);
     }
     long value;
     getValue(value);
@@ -35,6 +34,12 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
   else if ((getType() == JsonStream::STRING_TYPE) &&
            !stringSavedAsCharArray())
   {
+    const ConstantString * default_value;
+    getDefaultValue(default_value);
+    if (!parameter_.valueInSubset(default_value))
+    {
+      setDefaultToSubsetElement(0);
+    }
     const ConstantString * value;
     getValue(value);
     if (!parameter_.valueInSubset(value))

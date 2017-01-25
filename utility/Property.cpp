@@ -620,6 +620,63 @@ bool Property::setAllElementValues<const char *>(const char * const & value)
   return success;
 }
 
+bool Property::setDefaultToRangeMin()
+{
+  if (rangeIsSet())
+  {
+    if (getType() == JsonStream::LONG_TYPE)
+    {
+      const long & range_min = parameter_.getRangeMin().l;
+      return setDefaultValue(range_min);
+    }
+    else if (getType() == JsonStream::DOUBLE_TYPE)
+    {
+      const double & range_min = parameter_.getRangeMin().d;
+      return setDefaultValue(range_min);
+    }
+  }
+  return false;
+}
+
+bool Property::setDefaultToRangeMax()
+{
+  if (rangeIsSet())
+  {
+    if (getType() == JsonStream::LONG_TYPE)
+    {
+      const long & range_max = parameter_.getRangeMax().l;
+      return setDefaultValue(range_max);
+    }
+    else if (getType() == JsonStream::DOUBLE_TYPE)
+    {
+      const double & range_max = parameter_.getRangeMax().d;
+      return setDefaultValue(range_max);
+    }
+  }
+  return false;
+}
+
+bool Property::setDefaultToSubsetElement(const size_t element_index)
+{
+  if (subsetIsSet() &&
+      (parameter_.getSubset().size() > 0) &&
+      (element_index < parameter_.getSubset().size()))
+  {
+    if (getType() == JsonStream::LONG_TYPE)
+    {
+      const long & first_subset_value = parameter_.getSubset()[element_index].l;
+      setDefaultValue(first_subset_value);
+    }
+    else if ((getType() == JsonStream::STRING_TYPE) &&
+           !stringSavedAsCharArray())
+    {
+      const ConstantString * & first_subset_value = parameter_.getSubset()[element_index].cs_ptr;
+      setDefaultValue(first_subset_value);
+    }
+  }
+  return false;
+}
+
 void Property::setValueToDefault()
 {
   preSetValueFunctor();
@@ -692,12 +749,11 @@ void Property::setRange(const long min, const long max)
       const long & range_min = parameter_.getRangeMin().l;
       if (default_value < range_min)
       {
-        setDefaultValue(range_min);
+        setDefaultToRangeMin();
       }
       else
       {
-        const long & range_max = parameter_.getRangeMax().l;
-        setDefaultValue(range_max);
+        setDefaultToRangeMax();
       }
     }
     long value;
@@ -737,12 +793,11 @@ void Property::setRange(const double min, const double max)
       const double & range_min = parameter_.getRangeMin().d;
       if (default_value < range_min)
       {
-        setDefaultValue(range_min);
+        setDefaultToRangeMin();
       }
       else
       {
-        const double & range_max = parameter_.getRangeMax().d;
-        setDefaultValue(range_max);
+        setDefaultToRangeMax();
       }
     }
     double value;

@@ -111,6 +111,9 @@ public:
   bool setAllElementValues(const T & value);
   template <typename T>
   bool setDefaultValue(T & default_value);
+  bool setDefaultToRangeMin();
+  bool setDefaultToRangeMax();
+  bool setDefaultToSubsetElement(const size_t element_index);
   void setValueToDefault();
   void setElementValueToDefault(const size_t element_index);
 

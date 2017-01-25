@@ -46,6 +46,7 @@ private:
   void incrementModeHandler();
   void setNewDoubleRangeHandler();
   void setNewOddSubsetHandler();
+  void setNewOddDefaultHandler();
   void preSetPropertyValueHandler();
   void postSetPropertyValueHandler();
   void preSetPropertyElementValueHandler(const size_t element_index);

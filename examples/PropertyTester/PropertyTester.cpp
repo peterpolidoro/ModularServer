@@ -99,6 +99,9 @@ void PropertyTester::setup()
   direction_array_parameter.setArrayLengthRange(constants::direction_array_length_min,constants::direction_array_length_max);
   direction_array_parameter.setSubset(constants::direction_ptr_subset);
 
+  modular_server::Parameter & subset_index_parameter = modular_server_.createParameter(constants::subset_index_parameter_name);
+  subset_index_parameter.setTypeLong();
+
   // Functions
   modular_server::Function & get_doubled_function = modular_server_.createFunction(constants::get_doubled_function_name);
   get_doubled_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDoubledHandler));
@@ -171,6 +174,10 @@ void PropertyTester::setup()
 
   modular_server::Function & set_new_odd_subset_function = modular_server_.createFunction(constants::set_new_odd_subset_function_name);
   set_new_odd_subset_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setNewOddSubsetHandler));
+
+  modular_server::Function & set_new_odd_default_function = modular_server_.createFunction(constants::set_new_odd_default_function_name);
+  set_new_odd_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setNewOddDefaultHandler));
+  set_new_odd_default_function.addParameter(subset_index_parameter);
 
   // Callbacks
 
@@ -410,6 +417,13 @@ void PropertyTester::setNewDoubleRangeHandler()
 void PropertyTester::setNewOddSubsetHandler()
 {
   modular_server_.property(constants::odd_property_name).setSubset(constants::odd_subset_new);
+}
+
+void PropertyTester::setNewOddDefaultHandler()
+{
+  long subset_index;
+  modular_server_.parameter(constants::subset_index_parameter_name).getValue(subset_index);
+  modular_server_.property(constants::odd_property_name).setDefaultToSubsetElement(subset_index);
 }
 
 void PropertyTester::preSetPropertyValueHandler()

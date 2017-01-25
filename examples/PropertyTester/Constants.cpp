@@ -179,6 +179,8 @@ CONSTANT_STRING(direction_array_parameter_name,"direction_array");
 const size_t direction_array_length_min = 2;
 const size_t direction_array_length_max = 4;
 
+CONSTANT_STRING(subset_index_parameter_name,"subset_index");
+
 // Functions
 CONSTANT_STRING(get_doubled_function_name,"getDoubled");
 CONSTANT_STRING(get_bool_function_name,"getBool");
@@ -197,6 +199,7 @@ CONSTANT_STRING(check_mode_function_name,"checkMode");
 CONSTANT_STRING(increment_mode_function_name,"incrementMode");
 CONSTANT_STRING(set_new_double_range_function_name,"setNewDoubleRange");
 CONSTANT_STRING(set_new_odd_subset_function_name,"setNewOddSubset");
+CONSTANT_STRING(set_new_odd_default_function_name,"setNewOddDefault");
 
 // Callbacks
 
