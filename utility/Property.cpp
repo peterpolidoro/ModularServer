@@ -96,6 +96,7 @@ Function & Property::function(const ConstantString & function_name)
 Property::Property()
 {
   response_ptr_ = NULL;
+  functors_enabled_ = true;
 }
 
 template <>
@@ -915,6 +916,16 @@ void Property::attachPostSetElementValueFunctor(const Functor1<const size_t> & f
   post_set_element_value_functor_ = functor;
 }
 
+void Property::disableFunctors()
+{
+  functors_enabled_ = false;
+}
+
+void Property::reenableFunctors()
+{
+  functors_enabled_ = true;
+}
+
 // private
 template <>
 Property::Property<long>(const ConstantString & name,
@@ -1045,7 +1056,7 @@ Vector<constants::SubsetMemberType> & Property::getSubset()
 
 void Property::preSetValueFunctor()
 {
-  if (pre_set_value_functor_)
+  if (pre_set_value_functor_ && functors_enabled_)
   {
     pre_set_value_functor_();
   }
@@ -1053,7 +1064,7 @@ void Property::preSetValueFunctor()
 
 void Property::preSetElementValueFunctor(const size_t element_index)
 {
-  if (pre_set_element_value_functor_)
+  if (pre_set_element_value_functor_ && functors_enabled_)
   {
     pre_set_element_value_functor_(element_index);
   }
@@ -1061,7 +1072,7 @@ void Property::preSetElementValueFunctor(const size_t element_index)
 
 void Property::postSetValueFunctor()
 {
-  if (post_set_value_functor_)
+  if (post_set_value_functor_ && functors_enabled_)
   {
     post_set_value_functor_();
   }
@@ -1069,7 +1080,7 @@ void Property::postSetValueFunctor()
 
 void Property::postSetElementValueFunctor(const size_t element_index)
 {
-  if (post_set_element_value_functor_)
+  if (post_set_element_value_functor_ && functors_enabled_)
   {
     post_set_element_value_functor_(element_index);
   }

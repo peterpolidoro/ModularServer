@@ -133,6 +133,8 @@ public:
   void attachPreSetElementValueFunctor(const Functor1<const size_t> & functor);
   void attachPostSetValueFunctor(const Functor0 & functor);
   void attachPostSetElementValueFunctor(const Functor1<const size_t> & functor);
+  void disableFunctors();
+  void reenableFunctors();
 
 private:
   static Parameter property_parameters_[property::PARAMETER_COUNT_MAX];
@@ -182,10 +184,13 @@ private:
 
   Parameter parameter_;
   SavedVariable saved_variable_;
+
   Functor0 pre_set_value_functor_;
   Functor1<const size_t> pre_set_element_value_functor_;
   Functor0 post_set_value_functor_;
   Functor1<const size_t> post_set_element_value_functor_;
+  bool functors_enabled_;
+
   bool string_saved_as_char_array_;
 
   template <typename T>
