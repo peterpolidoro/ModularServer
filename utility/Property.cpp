@@ -680,7 +680,18 @@ bool Property::setDefaultToSubsetElement(const size_t element_index)
 void Property::setValueToDefault()
 {
   preSetValueFunctor();
-  saved_variable_.setValueToDefault();
+  if (getType() != JsonStream::ARRAY_TYPE)
+  {
+    saved_variable_.setValueToDefault();
+  }
+  else
+  {
+    size_t array_length = getArrayLength();
+    for (size_t i=0; i<array_length; ++i)
+    {
+      setElementValueToDefault(i);
+    }
+  }
   postSetValueFunctor();
 }
 
@@ -773,7 +784,7 @@ void Property::setRange(const long min, const long max)
       getElementValue(i,value);
       if (!parameter_.valueInRange(value))
       {
-        setValueToDefault();
+        setElementValueToDefault(i);
         break;
       }
     }
@@ -817,7 +828,7 @@ void Property::setRange(const double min, const double max)
       getElementValue(i,value);
       if (!parameter_.valueInRange(value))
       {
-        setValueToDefault();
+        setElementValueToDefault(i);
         break;
       }
     }
@@ -856,7 +867,7 @@ void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, 
       getElementValue(i,value);
       if (!parameter_.valueInSubset(value))
       {
-        setValueToDefault();
+        setElementValueToDefault(i);
         break;
       }
     }
@@ -872,7 +883,7 @@ void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, 
       getElementValue(i,value);
       if (!parameter_.valueInSubset(value))
       {
-        setValueToDefault();
+        setElementValueToDefault(i);
         break;
       }
     }
