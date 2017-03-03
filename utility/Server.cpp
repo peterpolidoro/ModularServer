@@ -793,6 +793,7 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
   bool in_subset = true;
   bool in_range = true;
   bool array_length_in_range = true;
+  bool array_elements_ok = true;
   bool object_parse_unsuccessful = false;
   bool array_parse_unsuccessful = false;
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
@@ -885,6 +886,7 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
           bool parameter_ok = checkArrayParameterElement(parameter,*it);
           if (!parameter_ok)
           {
+            array_elements_ok = false;
             break;
           }
         }
@@ -928,7 +930,7 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
   {
     response_.returnParameterArrayParseError(parameter.getName());
   }
-  bool parameter_ok = in_subset && in_range && array_length_in_range && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
+  bool parameter_ok = in_subset && in_range && array_length_in_range && array_elements_ok && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
   return parameter_ok;
 }
 

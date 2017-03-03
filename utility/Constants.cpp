@@ -18,7 +18,7 @@ const FirmwareInfo firmware_info =
     .name_ptr=&firmware_name,
     .version_major=2,
     .version_minor=2,
-    .version_patch=0,
+    .version_patch=1,
   };
 
 // Properties
