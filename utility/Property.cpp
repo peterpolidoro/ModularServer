@@ -786,7 +786,6 @@ void Property::setRange(const long min, const long max)
       if (!parameter_.valueInRange(value))
       {
         setElementValueToDefault(i);
-        break;
       }
     }
   }
@@ -830,7 +829,6 @@ void Property::setRange(const double min, const double max)
       if (!parameter_.valueInRange(value))
       {
         setElementValueToDefault(i);
-        break;
       }
     }
   }
@@ -869,7 +867,6 @@ void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, 
       if (!parameter_.valueInSubset(value))
       {
         setElementValueToDefault(i);
-        break;
       }
     }
   }
@@ -885,7 +882,6 @@ void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, 
       if (!parameter_.valueInSubset(value))
       {
         setElementValueToDefault(i);
-        break;
       }
     }
   }

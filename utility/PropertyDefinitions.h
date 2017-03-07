@@ -58,7 +58,6 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
       if (!parameter_.valueInSubset(value))
       {
         setElementValueToDefault(i);
-        break;
       }
     }
   }
@@ -74,7 +73,6 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
       if (!parameter_.valueInSubset(value))
       {
         setElementValueToDefault(i);
-        break;
       }
     }
   }
