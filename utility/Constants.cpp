@@ -17,8 +17,8 @@ const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=2,
-    .version_minor=2,
-    .version_patch=2,
+    .version_minor=3,
+    .version_patch=0,
   };
 
 // Properties
@@ -150,6 +150,10 @@ CONSTANT_STRING(processor_name_constant_string,"ATmega2560");
 CONSTANT_STRING(processor_name_constant_string,"MK20DX128");
 #elif defined(__MK20DX256__)
 CONSTANT_STRING(processor_name_constant_string,"MK20DX256");
+#elif defined(__MK64FX512__)
+CONSTANT_STRING(processor_name_constant_string,"MK64FX512");
+#elif defined(__MK66FX1M0__)
+CONSTANT_STRING(processor_name_constant_string,"MK66FX1M0");
 #else
 CONSTANT_STRING(processor_name_constant_string,"");
 #endif
