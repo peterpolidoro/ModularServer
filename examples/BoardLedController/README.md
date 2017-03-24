@@ -36,36 +36,23 @@ Response:
   "result":{
     "device_id":{
       "name":"board_led_controller",
-      "form_factor":"5x3",
+      "form_factor":"3x2",
       "serial_number":0
     },
     "API":{
-      "firmware":["ALL"],
+      "firmware":["BoardLedController"],
       "functions":[
-        "getDeviceId",
-        "getDeviceInfo",
-        "getInterruptInfo",
-        "detachAllInterrupts",
-        "getApi",
-        "getApiVerbose",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getMemoryFree",
         "setLedOn",
         "setLedOff",
         "getLedPin",
         "blinkLed"
       ],
       "parameters":[
-        "firmware",
         "duration_on",
         "duration_off",
         "count"
       ],
-      "properties":[
-        "serialNumber"
-      ],
+      "properties":[],
       "callbacks":[]
     }
   }

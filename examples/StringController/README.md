@@ -36,22 +36,12 @@ Response:
   "result":{
     "device_id":{
       "name":"string_controller",
-      "form_factor":"5x3",
-      "serial_number":77
+      "form_factor":"3x2",
+      "serial_number":0
     },
     "API":{
-      "firmware":["ALL"],
+      "firmware":["StringController"],
       "functions":[
-        "getDeviceId",
-        "getDeviceInfo",
-        "getInterruptInfo",
-        "detachAllInterrupts",
-        "getApi",
-        "getApiVerbose",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getMemoryFree",
         "echo",
         "length",
         "startsWith",
@@ -62,7 +52,6 @@ Response:
         "getStoredString"
       ],
       "parameters":[
-        "firmware",
         "string",
         "string2",
         "count",
@@ -70,7 +59,6 @@ Response:
         "double_echo"
       ],
       "properties":[
-        "serialNumber",
         "startingCharsCount",
         "storedString"
       ],

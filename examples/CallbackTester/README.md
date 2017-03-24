@@ -36,28 +36,14 @@ Response:
   "result":{
     "device_id":{
       "name":"callback_tester",
-      "form_factor":"5x3",
+      "form_factor":"3x2",
       "serial_number":0
     },
     "API":{
-      "firmware":["ALL"],
-      "functions":[
-        "getDeviceId",
-        "getDeviceInfo",
-        "getInterruptInfo",
-        "detachAllInterrupts",
-        "getApi",
-        "getApiVerbose",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getMemoryFree"
-      ],
-      "parameters":[
-        "firmware"
-      ],
+      "firmware":["CallbackTester"],
+      "functions":[],
+      "parameters":[],
       "properties":[
-        "serialNumber",
         "durationOn",
         "durationOff",
         "count"

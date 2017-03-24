@@ -17,7 +17,7 @@ const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=2,
-    .version_minor=3,
+    .version_minor=4,
     .version_patch=0,
   };
 

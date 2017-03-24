@@ -1435,20 +1435,30 @@ void Server::help(bool verbose)
     response_.writeKey(constants::device_id_constant_string);
     writeDeviceIdToResponse();
 
-    if (verbose)
-    {
-      response_.writeKey(constants::device_info_constant_string);
-      writeDeviceInfoToResponse();
-    }
-
     response_.writeKey(constants::api_constant_string);
-    char all_str[constants::all_constant_string.length() + 1];
-    all_str[0] = '\0';
-    constants::all_constant_string.copy(all_str);
+
     ArduinoJson::StaticJsonBuffer<constants::JSON_BUFFER_SIZE> json_buffer;
     ArduinoJson::JsonArray& firmware_name_array = json_buffer.createArray();
-    firmware_name_array.add<char *>(all_str);
-    writeApiToResponse(verbose,firmware_name_array);
+
+    if (verbose)
+    {
+      // Write ALL firmware API to response
+      char all_str[constants::all_constant_string.length() + 1];
+      all_str[0] = '\0';
+      constants::all_constant_string.copy(all_str);
+      firmware_name_array.add<char *>(all_str);
+      writeApiToResponse(false,firmware_name_array);
+    }
+    else
+    {
+      // Write only the highest level firmware API to response
+      constants::SubsetMemberType firmware_name = firmware_name_array_.back();
+      char firmware_name_str[firmware_name.cs_ptr->length() + 1];
+      firmware_name_str[0] = '\0';
+      firmware_name.cs_ptr->copy(firmware_name_str);
+      firmware_name_array.add<char *>(firmware_name_str);
+      writeApiToResponse(false,firmware_name_array);
+    }
 
     response_.endObject();
   }

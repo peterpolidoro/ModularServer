@@ -36,29 +36,14 @@ Response:
   "result":{
     "device_id":{
       "name":"minimal_device",
-      "form_factor":"5x3",
+      "form_factor":"3x2",
       "serial_number":0
     },
     "API":{
-      "firmware":["ALL"],
-      "functions":[
-        "getDeviceId",
-        "getDeviceInfo",
-        "getInterruptInfo",
-        "detachAllInterrupts",
-        "getApi",
-        "getApiVerbose",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getMemoryFree"
-      ],
-      "parameters":[
-        "firmware"
-      ],
-      "properties":[
-        "serialNumber"
-      ],
+      "firmware":["MinimalDevice"],
+      "functions":[],
+      "parameters":[],
+      "properties":[],
       "callbacks":[]
     }
   }
@@ -84,10 +69,9 @@ Response:
 }
 ```
 
-To get more verbose help about the modular device, including
-information about the parameters each function takes, type two question
-marks ?? into the input property and press the 'Send' button or press the
-'Enter' key.
+To get more verbose help about the modular device, including all API
+firmware, type two question marks ?? into the input property and press
+the 'Send' button or press the 'Enter' key.
 
 Request:
 
@@ -103,130 +87,27 @@ Response:
   "result":{
     "device_id":{
       "name":"minimal_device",
-      "form_factor":"5x3",
+      "form_factor":"3x2",
       "serial_number":0
-    },
-    "device_info":{
-      "processor":"ATmega2560",
-      "hardware":[
-        {
-          "name":"Mega2560",
-          "interrupts":[]
-        }
-      ],
-      "firmware":[
-        {
-          "name":"ModularServer",
-          "version":"2.0.0"
-        },
-        {
-          "name":"MinimalDevice",
-          "version":"2.0.0"
-        }
-      ]
     },
     "API":{
       "firmware":["ALL"],
       "functions":[
-        {
-          "name":"getDeviceId",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":"object"
-        },
-        {
-          "name":"getDeviceInfo",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":"object"
-        },
-        {
-          "name":"getInterruptInfo",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":"object"
-        },
-        {
-          "name":"detachAllInterrupts",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":null
-        },
-        {
-          "name":"getApi",
-          "firmware":"ModularServer",
-          "parameters":[
-            "firmware"
-          ],
-          "result_type":"object"
-        },
-        {
-          "name":"getApiVerbose",
-          "firmware":"ModularServer",
-          "parameters":[
-            "firmware"
-          ],
-          "result_type":"object"
-        },
-        {
-          "name":"getPropertyDefaultValues",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":"object"
-        },
-        {
-          "name":"setPropertiesToDefaults",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":null
-        },
-        {
-          "name":"getPropertyValues",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":"object"
-        },
-        {
-          "name":"getMemoryFree",
-          "firmware":"ModularServer",
-          "parameters":[],
-          "result_type":"long"
-        }
+        "getDeviceId",
+        "getDeviceInfo",
+        "getInterruptInfo",
+        "detachAllInterrupts",
+        "getApi",
+        "getApiVerbose",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "getPropertyValues"
       ],
       "parameters":[
-        {
-          "name":"firmware",
-          "firmware":"ModularServer",
-          "type":"array",
-          "array_element_type":"string",
-          "array_element_subset":[
-            "ALL",
-            "ModularServer",
-            "MinimalDevice"
-          ],
-          "array_length_min":1,
-          "array_length_max":8
-        }
+        "firmware"
       ],
       "properties":[
-        {
-          "name":"serialNumber",
-          "firmware":"ModularServer",
-          "type":"long",
-          "min":0,
-          "max":65535,
-          "value":0,
-          "default_value":0,
-          "functions":[
-            "getValue",
-            "setValue",
-            "getDefaultValue",
-            "setValueToDefault"
-          ],
-          "parameters":[
-            "value"
-          ]
-        }
+        "serialNumber"
       ],
       "callbacks":[]
     }

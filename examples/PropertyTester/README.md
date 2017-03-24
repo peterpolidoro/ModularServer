@@ -36,22 +36,12 @@ Response:
   "result":{
     "device_id":{
       "name":"property_tester",
-      "form_factor":"5x3",
+      "form_factor":"3x2",
       "serial_number":0
     },
     "API":{
-      "firmware":["ALL"],
+      "firmware":["PropertyTester"],
       "functions":[
-        "getDeviceId",
-        "getDeviceInfo",
-        "getInterruptInfo",
-        "detachAllInterrupts",
-        "getApi",
-        "getApiVerbose",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getMemoryFree",
         "getDoubled",
         "getBool",
         "getLongArrayFixed",
@@ -66,22 +56,21 @@ Response:
         "getDirection",
         "getDirectionArray",
         "checkMode",
-        "incrementMode"
+        "incrementMode",
         "setNewDoubleRange",
         "setNewOddSubset",
-        "setNewOddDefault",
+        "setNewOddDefault"
       ],
       "parameters":[
-        "firmware",
         "long_array_parameter",
         "length_parameter",
         "count",
         "count_array",
         "direction",
-        "direction_array"
+        "direction_array",
+        "subset_index"
       ],
       "properties":[
-        "serialNumber",
         "double",
         "bool",
         "longArray",
