@@ -1,4 +1,4 @@
-#ModularServer
+# ModularServer
 
 Authors:
 
@@ -10,11 +10,11 @@ License:
 
 This firmware requires about 4KB of SRAM and 75KB of flash memory, so
 it needs at least Arduino Mega level resources. Known to work with the
-Arduino Mega 2560 and Teensy 3.2.
+Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy 3.6.
 
 [Examples](./examples)
 
-##API
+## API
 
 ```json
 {
@@ -50,10 +50,10 @@ Arduino Mega 2560 and Teensy 3.2.
 }
 ```
 
-##More Detailed Modular Device Information
+## More Detailed Modular Device Information
 
 [modular-devices](https://github.com/janelia-modular-devices/modular-devices)
 
-##Install Library Dependencies
+## Install Library Dependencies
 
 [arduino-libraries](https://github.com/janelia-arduino/arduino-libraries)
