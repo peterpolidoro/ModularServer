@@ -100,7 +100,7 @@ public:
 private:
   Array<Stream *,constants::SERVER_STREAM_COUNT_MAX> server_stream_ptrs_;
   size_t server_stream_index_;
-  JsonStream json_stream_;
+  JsonStream server_json_stream_;
 
   char request_[constants::STRING_LENGTH_REQUEST];
   ArduinoJson::JsonArray  * request_json_array_ptr_;

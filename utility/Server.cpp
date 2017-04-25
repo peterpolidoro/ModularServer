@@ -30,7 +30,7 @@ void Server::setup()
   firmware_name_array_.push_back(firmware_name);
 
   // Streams
-  response_.setJsonStream(json_stream_);
+  response_.setJsonStream(server_json_stream_);
 
   // Device ID
   setDeviceName(constants::empty_constant_string);
@@ -341,9 +341,9 @@ void Server::stopServer()
 
 void Server::handleRequest()
 {
-  if (server_running_ && (server_stream_ptrs_.size() > 0) && (json_stream_.available() > 0))
+  if (server_running_ && (server_stream_ptrs_.size() > 0) && (server_json_stream_.available() > 0))
   {
-    int bytes_read = json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
+    int bytes_read = server_json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
     if (bytes_read > 0)
     {
       JsonSanitizer<constants::JSON_TOKEN_MAX> sanitizer;
@@ -1088,7 +1088,7 @@ void Server::incrementServerStream()
   if (server_stream_ptrs_.size() > 0)
   {
     server_stream_index_ = (server_stream_index_ + 1) % server_stream_ptrs_.size();
-    json_stream_.setStream(*server_stream_ptrs_[server_stream_index_]);
+    server_json_stream_.setStream(*server_stream_ptrs_[server_stream_index_]);
   }
 }
 
