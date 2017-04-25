@@ -54,6 +54,9 @@ public:
   void beginArray();
   void endArray();
 
+  long pipeFrom(Stream & stream);
+  long pipeFrom(JsonStream & json_stream);
+
 private:
   JsonStream * json_stream_ptr_;
   bool error_;

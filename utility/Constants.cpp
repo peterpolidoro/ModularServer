@@ -21,6 +21,8 @@ const FirmwareInfo firmware_info =
     .version_patch=0,
   };
 
+const long response_pipe_read_max = 100000;
+
 // Properties
 CONSTANT_STRING(serial_number_property_name,"serialNumber");
 const long serial_number_min = 0;

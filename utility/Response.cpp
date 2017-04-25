@@ -97,6 +97,52 @@ void Response::endArray()
   json_stream_ptr_->endArray();
 }
 
+long Response::pipeFrom(Stream & stream)
+{
+  JsonStream json_stream(stream);
+  return pipeFrom(json_stream);
+}
+
+long Response::pipeFrom(JsonStream & json_stream)
+{
+  bool found_eol = false;
+  char c;
+  long chars_piped = 0;
+  long read_tries = 0;
+  while (!found_eol && (read_tries < constants::response_pipe_read_max))
+  {
+    if (json_stream.available())
+    {
+      read_tries = 0;
+      c = json_stream.readChar();
+      if (c >= 0)
+      {
+        if (c != JsonStream::EOL)
+        {
+          json_stream_ptr_->writeChar(c);
+          chars_piped++;
+        }
+        else
+        {
+          found_eol = true;
+        }
+      }
+    }
+    else
+    {
+      ++read_tries;
+    }
+  }
+  if (found_eol)
+  {
+    return chars_piped;
+  }
+  else
+  {
+    return -1;
+  }
+}
+
 // private
 Response::Response()
 {
