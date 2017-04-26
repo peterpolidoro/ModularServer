@@ -105,6 +105,10 @@ long Response::pipeFrom(Stream & stream)
 
 long Response::pipeFrom(JsonStream & json_stream)
 {
+  if (&(json_stream.getStream()) == &(json_stream_ptr_->getStream()))
+  {
+    return -1;
+  }
   bool found_eol = false;
   char c;
   long chars_piped = 0;
