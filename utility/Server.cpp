@@ -343,7 +343,7 @@ void Server::handleRequest()
 {
   if (server_running_ && (server_stream_ptrs_.size() > 0) && (server_json_stream_.available() > 0))
   {
-    int bytes_read = server_json_stream_.readJsonIntoBuffer(request_,constants::STRING_LENGTH_REQUEST);
+    long bytes_read = server_json_stream_.readJsonIntoBuffer(request_);
     if (bytes_read > 0)
     {
       JsonSanitizer<constants::JSON_TOKEN_MAX> sanitizer;
