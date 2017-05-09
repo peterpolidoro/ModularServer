@@ -161,7 +161,7 @@ private:
   void initializeEeprom();
   void incrementServerStream();
   void propertyHelp(Property & property, bool verbose);
-  void parameterHelp(Parameter & parameter, bool end_object=true);
+  void parameterHelp(Parameter & parameter, bool property=false);
   void functionHelp(Function & function, bool verbose);
   void callbackHelp(Callback & callback, bool verbose);
   void help(bool verbose);

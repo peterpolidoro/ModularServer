@@ -44,6 +44,7 @@ void PropertyTester::setup()
 
   modular_server::Property & long_array_property = modular_server_.createProperty(constants::long_array_property_name,constants::long_array_default);
   long_array_property.setRange(constants::long_array_element_min,constants::long_array_element_max);
+  long_array_property.setArrayLengthRange(1,constants::LONG_ARRAY_LENGTH);
 
   modular_server::Property & double_array_property = modular_server_.createProperty(constants::double_array_property_name,constants::double_array_default);
   double_array_property.setRange(constants::double_array_element_min,constants::double_array_element_max);

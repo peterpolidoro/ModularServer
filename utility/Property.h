@@ -34,8 +34,8 @@ namespace property
 enum{FUNCTION_PARAMETER_TYPE_COUNT=2};
 enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=4};
-enum{ARRAY_PARAMETER_COUNT_MAX=2};
-enum{ARRAY_FUNCTION_COUNT_MAX=5};
+enum{ARRAY_PARAMETER_COUNT_MAX=3};
+enum{ARRAY_FUNCTION_COUNT_MAX=7};
 
 // Parameters
 extern ConstantString value_parameter_name;
@@ -49,6 +49,7 @@ extern ConstantString set_value_to_default_function_name;
 // Array Parameters
 extern ConstantString element_index_parameter_name;
 extern ConstantString element_value_parameter_name;
+extern ConstantString array_length_parameter_name;
 
 // Array Functions
 extern ConstantString get_element_value_function_name;
@@ -56,6 +57,8 @@ extern ConstantString set_element_value_function_name;
 extern ConstantString get_default_element_value_function_name;
 extern ConstantString set_element_value_to_default_function_name;
 extern ConstantString set_all_element_values_function_name;
+extern ConstantString get_array_length_function_name;
+extern ConstantString set_array_length_function_name;
 }
 
 class Property
@@ -119,6 +122,10 @@ public:
 
   bool valueIsDefault();
   size_t getArrayLength();
+  void setArrayLength(const size_t array_length);
+  void setArrayLengthRange(const size_t array_length_min,
+                           const size_t array_length_max);
+
   size_t getStringLength();
 
   void setUnits(const ConstantString & name);
@@ -193,6 +200,9 @@ private:
 
   bool string_saved_as_char_array_;
 
+  size_t array_length_min_;
+  size_t array_length_max_;
+
   template <typename T>
   Property(const ConstantString & name,
            const T & default_value);
@@ -222,6 +232,8 @@ private:
   JsonStream::JsonTypes getArrayElementType();
   bool rangeIsSet();
   bool subsetIsSet();
+  size_t getArrayLengthMin();
+  size_t getArrayLengthMax();
   bool stringSavedAsCharArray();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);
@@ -247,6 +259,8 @@ private:
   void getDefaultElementValueHandler();
   void setElementValueToDefaultHandler();
   void setAllElementValuesHandler();
+  void getArrayLengthHandler();
+  void setArrayLengthHandler();
 
   friend class Callback;
   friend class Server;

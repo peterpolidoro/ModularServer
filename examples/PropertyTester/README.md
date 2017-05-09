@@ -193,7 +193,6 @@ longArray ?
 Response:
 
 ```json
-
 {
   "id":"longArray",
   "result":{
@@ -226,12 +225,15 @@ Response:
       "setElementValue",
       "getDefaultElementValue",
       "setElementValueToDefault",
-      "setAllElementValues"
+      "setAllElementValues",
+      "getArrayLength",
+      "setArrayLength"
     ],
     "parameters":[
       "value",
       "element_index",
-      "element_value"
+      "element_value",
+      "array_length"
     ]
   }
 }
@@ -280,6 +282,50 @@ Response:
 Request:
 
 ```shell
+longArray setArrayLength 2
+```
+
+Response:
+
+```json
+{
+  "id":"longArray",
+  "result":2
+}
+```
+
+```shell
+longArray
+```
+
+Response:
+
+```json
+{
+  "id":"longArray",
+  "result":[
+    5,
+    4
+  ]
+}
+```
+
+```shell
+longArray setArrayLength 4
+```
+
+Response:
+
+```json
+{
+  "id":"longArray",
+  "result":4
+}
+```
+
+Request:
+
+```shell
 doubleArray ?
 ```
 
@@ -295,7 +341,7 @@ Response:
     "array_element_type":"double",
     "array_element_min":-33.333000,
     "array_element_max":100.000000,
-    "array_length_min":1,
+    "array_length_min":3,
     "array_length_max":3,
     "value":[
       -1.100000,
@@ -316,12 +362,15 @@ Response:
       "setElementValue",
       "getDefaultElementValue",
       "setElementValueToDefault",
-      "setAllElementValues"
+      "setAllElementValues",
+      "getArrayLength",
+      "setArrayLength"
     ],
     "parameters":[
       "value",
       "element_index",
-      "element_value"
+      "element_value",
+      "array_length"
     ]
   }
 }
@@ -430,7 +479,7 @@ Response:
     "firmware":"PropertyTester",
     "type":"array",
     "array_element_type":"bool",
-    "array_length_min":1,
+    "array_length_min":2,
     "array_length_max":2,
     "value":[
       false,
@@ -449,12 +498,15 @@ Response:
       "setElementValue",
       "getDefaultElementValue",
       "setElementValueToDefault",
-      "setAllElementValues"
+      "setAllElementValues",
+      "getArrayLength",
+      "setArrayLength"
     ],
     "parameters":[
       "value",
       "element_index",
-      "element_value"
+      "element_value",
+      "array_length"
     ]
   }
 }

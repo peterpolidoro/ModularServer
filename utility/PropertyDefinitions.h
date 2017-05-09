@@ -401,10 +401,11 @@ template <size_t N>
 Property::Property(const ConstantString & name,
                    const long (&default_value)[N]):
   parameter_(name),
-  saved_variable_(default_value,N)
+  saved_variable_(default_value)
 {
   parameter_.setTypeLong();
   parameter_.setArrayLengthRange(N,N);
+  setArrayLengthRange(N,N);
   functors_enabled_ = true;
 }
 
@@ -412,10 +413,11 @@ template <size_t N>
 Property::Property(const ConstantString & name,
                    const double (&default_value)[N]) :
   parameter_(name),
-  saved_variable_(default_value,N)
+  saved_variable_(default_value)
 {
   parameter_.setTypeDouble();
   parameter_.setArrayLengthRange(N,N);
+  setArrayLengthRange(N,N);
   functors_enabled_ = true;
 }
 
@@ -423,10 +425,11 @@ template <size_t N>
 Property::Property(const ConstantString & name,
                    const bool (&default_value)[N]) :
   parameter_(name),
-  saved_variable_(default_value,N)
+  saved_variable_(default_value)
 {
   parameter_.setTypeBool();
   parameter_.setArrayLengthRange(N,N);
+  setArrayLengthRange(N,N);
   functors_enabled_ = true;
 }
 
@@ -434,7 +437,7 @@ template <size_t N>
 Property::Property(const ConstantString & name,
                    const char (&default_value)[N]) :
   parameter_(name),
-  saved_variable_(default_value,N)
+  saved_variable_(default_value)
 {
   parameter_.setTypeString();
   string_saved_as_char_array_ = true;
@@ -466,7 +469,7 @@ template <size_t N>
 Property::Property(const ConstantString & name,
                    const ConstantString * const (&default_value)[N]) :
   parameter_(name),
-  saved_variable_(default_value,N)
+  saved_variable_(default_value)
 {
   parameter_.setTypeString();
   parameter_.setArrayLengthRange(N,N);

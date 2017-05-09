@@ -1096,7 +1096,13 @@ void Server::propertyHelp(Property & property, bool verbose)
 {
   property.updateFunctionsAndParameters();
 
-  parameterHelp(property.parameter(),false);
+  parameterHelp(property.parameter(),true);
+
+  if (property.getType() == JsonStream::ARRAY_TYPE)
+  {
+    response_.write(constants::array_length_min_constant_string,property.getArrayLengthMin());
+    response_.write(constants::array_length_max_constant_string,property.getArrayLengthMax());
+  }
 
   response_.writeKey(constants::value_constant_string);
   writePropertyToResponse(property,false,false);
@@ -1145,7 +1151,7 @@ void Server::propertyHelp(Property & property, bool verbose)
   response_.endObject();
 }
 
-void Server::parameterHelp(Parameter & parameter, bool end_object)
+void Server::parameterHelp(Parameter & parameter, bool property)
 {
   response_.beginObject();
   const ConstantString & parameter_name = parameter.getName();
@@ -1283,7 +1289,7 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
           break;
         }
       }
-      if (parameter.arrayLengthRangeIsSet())
+      if (parameter.arrayLengthRangeIsSet() && !property)
       {
         size_t array_length_min = parameter.getArrayLengthMin();
         size_t array_length_max = parameter.getArrayLengthMax();
@@ -1298,7 +1304,7 @@ void Server::parameterHelp(Parameter & parameter, bool end_object)
       break;
     }
   }
-  if (end_object)
+  if (!property)
   {
     response_.endObject();
   }

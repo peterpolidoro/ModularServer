@@ -26,6 +26,7 @@ CONSTANT_STRING(set_value_to_default_function_name,"setValueToDefault");
 // Array Parameters
 CONSTANT_STRING(element_index_parameter_name,"element_index");
 CONSTANT_STRING(element_value_parameter_name,"element_value");
+CONSTANT_STRING(array_length_parameter_name,"array_length");
 
 // Array Functions
 CONSTANT_STRING(get_element_value_function_name,"getElementValue");
@@ -33,6 +34,8 @@ CONSTANT_STRING(set_element_value_function_name,"setElementValue");
 CONSTANT_STRING(get_default_element_value_function_name,"getDefaultElementValue");
 CONSTANT_STRING(set_element_value_to_default_function_name,"setElementValueToDefault");
 CONSTANT_STRING(set_all_element_values_function_name,"setAllElementValues");
+CONSTANT_STRING(get_array_length_function_name,"getArrayLength");
+CONSTANT_STRING(set_array_length_function_name,"setArrayLength");
 }
 
 Parameter Property::property_parameters_[property::PARAMETER_COUNT_MAX];
@@ -669,7 +672,7 @@ bool Property::setDefaultToSubsetElement(const size_t element_index)
       setDefaultValue(first_subset_value);
     }
     else if ((getType() == JsonStream::STRING_TYPE) &&
-           !stringSavedAsCharArray())
+             !stringSavedAsCharArray())
     {
       const ConstantString * & first_subset_value = parameter_.getSubset()[element_index].cs_ptr;
       setDefaultValue(first_subset_value);
@@ -718,6 +721,65 @@ size_t Property::getArrayLength()
     return cs_ptr->length() + 1;
   }
   return saved_variable_.getArrayLength();
+}
+
+void Property::setArrayLength(const size_t array_length)
+{
+  if (getType() == JsonStream::ARRAY_TYPE)
+  {
+    size_t new_array_length = array_length;
+    if (new_array_length < array_length_min_)
+    {
+      new_array_length = array_length_min_;
+    }
+    else if (new_array_length > array_length_max_)
+    {
+      new_array_length = array_length_max_;
+    }
+    saved_variable_.setArrayLength(new_array_length);
+    new_array_length = saved_variable_.getArrayLength();
+    parameter_.setArrayLengthRange(new_array_length,new_array_length);
+  }
+}
+
+void Property::setArrayLengthRange(const size_t array_length_min,
+                                   const size_t array_length_max)
+{
+  if (getType() == JsonStream::ARRAY_TYPE)
+  {
+    size_t max = array_length_max;
+    if (max < 1)
+    {
+      max = 1;
+    }
+    else if (max > saved_variable_.getArrayLengthMax())
+    {
+      max = saved_variable_.getArrayLengthMax();
+    }
+
+    size_t min = array_length_min;
+    if (min < 1)
+    {
+      min = 1;
+    }
+    else if (min > max)
+    {
+      min = max;
+    }
+
+    array_length_min_ = min;
+    array_length_max_ = max;
+
+    size_t array_length = getArrayLength();
+    if (array_length < min)
+    {
+      setArrayLength(min);
+    }
+    else if (array_length > max)
+    {
+      setArrayLength(max);
+    }
+  }
 }
 
 size_t Property::getStringLength()
@@ -1010,6 +1072,16 @@ bool Property::subsetIsSet()
   return parameter_.subsetIsSet();
 }
 
+size_t Property::getArrayLengthMin()
+{
+  return array_length_min_;
+}
+
+size_t Property::getArrayLengthMax()
+{
+  return array_length_max_;
+}
+
 bool Property::stringSavedAsCharArray()
 {
   return string_saved_as_char_array_;
@@ -1130,11 +1202,20 @@ void Property::updateFunctionsAndParameters()
     }
     else
     {
+      // leave room for string termination character
       element_index_max = getArrayLength() - 2;
     }
     element_index_parameter.setRange(element_index_min,element_index_max);
 
     Parameter & element_value_parameter = copyParameter(parameter().getElementParameter(),property::element_value_parameter_name);
+
+    Parameter * array_length_parameter_ptr = NULL;
+    if (type == JsonStream::ARRAY_TYPE)
+    {
+      array_length_parameter_ptr = &(createParameter(property::array_length_parameter_name));
+      array_length_parameter_ptr->setTypeLong();
+      array_length_parameter_ptr->setRange(array_length_min_,array_length_max_);
+    }
 
     // Array Functions
     functions_.addArray(property_array_functions_);
@@ -1164,6 +1245,18 @@ void Property::updateFunctionsAndParameters()
     set_all_element_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setAllElementValuesHandler));
     set_all_element_values_function.addParameter(element_value_parameter);
     set_all_element_values_function.setReturnType(type);
+
+    if (type == JsonStream::ARRAY_TYPE)
+    {
+      Function & get_array_length_function = createFunction(property::get_array_length_function_name);
+      get_array_length_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getArrayLengthHandler));
+      get_array_length_function.setReturnTypeLong();
+
+      Function & set_array_length_function = createFunction(property::set_array_length_function_name);
+      set_array_length_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setArrayLengthHandler));
+      set_array_length_function.addParameter(*array_length_parameter_ptr);
+      set_array_length_function.setReturnTypeLong();
+    }
   }
 }
 
@@ -1472,6 +1565,21 @@ void Property::setAllElementValuesHandler()
   }
   response_ptr_->writeResultKey();
   write_property_to_response_functor_(*this,false,false,-1);
+}
+
+void Property::getArrayLengthHandler()
+{
+  size_t array_length = getArrayLength();
+  response_ptr_->returnResult(array_length);
+}
+
+void Property::setArrayLengthHandler()
+{
+  long array_length = get_parameter_value_functor_(property::array_length_parameter_name);
+  setArrayLength(array_length);
+
+  array_length = getArrayLength();
+  response_ptr_->returnResult(array_length);
 }
 
 }
