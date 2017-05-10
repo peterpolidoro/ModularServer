@@ -1,4 +1,4 @@
-#MinimalDevice
+# MinimalDevice
 
 Authors:
 
@@ -8,9 +8,9 @@ License:
 
     BSD
 
-##Host Computer Interface
+## Host Computer Interface
 
-###Arduino Serial Monitor
+### Arduino Serial Monitor
 
 Open the Serial Monitor in the Arduino IDE.
 
@@ -543,7 +543,7 @@ Response:
 }
 ```
 
-###Python
+### Python
 
 Example Python session:
 
@@ -599,7 +599,7 @@ For more details on the Python interface:
 
 <https://github.com/janelia-pypi/modular_client_python>
 
-###Matlab
+### Matlab
 
 Example Matlab session:
 
@@ -690,6 +690,6 @@ For more details on the Matlab interface:
 
 <https://github.com/janelia-matlab/modular_client_matlab>
 
-##Installation
+## Installation
 
 <https://github.com/janelia-arduino/arduino-libraries>
