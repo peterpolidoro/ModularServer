@@ -74,16 +74,19 @@ public:
                             const T (&default_value)[N]);
   Property & property(const ConstantString & property_name);
   void setPropertiesToDefaults();
+  void setAllPropertiesToDefaults();
 
   // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);
   Parameter & parameter(const ConstantString & parameter_name);
-  Parameter & copyParameter(Parameter parameter, const ConstantString & parameter_name);
+  Parameter & copyParameter(Parameter parameter,
+                            const ConstantString & parameter_name);
 
   // Functions
   Function & createFunction(const ConstantString & function_name);
   Function & function(const ConstantString & function_name);
-  Function & copyFunction(Function function, const ConstantString & function_name);
+  Function & copyFunction(Function function,
+                          const ConstantString & function_name);
 
   // Callbacks
   Callback & createCallback(const ConstantString & callback_name);
@@ -147,31 +150,42 @@ private:
   template <typename T>
   int findParameterIndex(T const & parameter_name);
   template <typename T>
-  int findFunctionParameterIndex(Function & function, T const & parameter_name);
+  int findFunctionParameterIndex(Function & function,
+                                 T const & parameter_name);
   template <typename T>
   int findFunctionIndex(T const & function_name);
   template <typename T>
   int findCallbackIndex(T const & callback_name);
   int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
-  int processParameterString(Function & function, const char * parameter_string);
-  bool checkParameters(Function & function, ArduinoJson::JsonArray::iterator iterator);
-  bool checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
-  bool checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value);
+  int processParameterString(Function & function,
+                             const char * parameter_string);
+  bool checkParameters(Function & function,
+                       ArduinoJson::JsonArray::iterator iterator);
+  bool checkParameter(Parameter & parameter,
+                      ArduinoJson::JsonVariant & json_value);
+  bool checkArrayParameterElement(Parameter & parameter,
+                                  ArduinoJson::JsonVariant & json_value);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
-  void propertyHelp(Property & property, bool verbose);
-  void parameterHelp(Parameter & parameter, bool property=false);
-  void functionHelp(Function & function, bool verbose);
-  void callbackHelp(Callback & callback, bool verbose);
+  void propertyHelp(Property & property,
+                    bool verbose);
+  void parameterHelp(Parameter & parameter,
+                     bool property=false);
+  void functionHelp(Function & function,
+                    bool verbose);
+  void callbackHelp(Callback & callback,
+                    bool verbose);
   void help(bool verbose);
   void writeDeviceIdToResponse();
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
-  void interruptHelp(Interrupt & interrupt, bool verbose);
+  void interruptHelp(Interrupt & interrupt,
+                     bool verbose);
   void writeInterruptInfoToResponse();
-  void writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array);
+  void writeApiToResponse(bool verbose,
+                          ArduinoJson::JsonArray & firmware_name_array);
   void writePropertyToResponse(Property & property,
                                bool write_key=false,
                                bool write_default=false,
@@ -201,8 +215,11 @@ private:
   void getApiVerboseHandler();
   void getMemoryFreeHandler();
   void getPropertyDefaultValuesHandler();
+  void getAllPropertyDefaultValuesHandler();
   void getPropertyValuesHandler();
+  void getAllPropertyValuesHandler();
   void setPropertiesToDefaultsHandler();
+  void setAllPropertiesToDefaultsHandler();
 
 };
 }

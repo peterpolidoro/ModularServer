@@ -42,6 +42,20 @@ bool FirmwareElement::compareFirmwareName(const ConstantString & firmware_name_t
   return (&firmware_name_to_compare == firmware_name_ptr_);
 }
 
+bool FirmwareElement::compareFirmwareName(constants::SubsetMemberType firmware_name_to_compare)
+{
+  char firmware_name_to_compare_str[firmware_name_to_compare.cs_ptr->length() + 1];
+  firmware_name_to_compare_str[0] = '\0';
+  firmware_name_to_compare.cs_ptr->copy(firmware_name_to_compare_str);
+
+  char firmware_name_str[firmware_name_ptr_->length()+1];
+  firmware_name_str[0] = '\0';
+  firmware_name_ptr_->copy(firmware_name_str);
+
+
+  return (strcmp(firmware_name_str,firmware_name_to_compare_str) == 0);
+}
+
 bool FirmwareElement::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array)
 {
   for (ArduinoJson::JsonArray::iterator it=firmware_name_array.begin();

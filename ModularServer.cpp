@@ -74,7 +74,8 @@ Parameter & ModularServer::parameter(const ConstantString & parameter_name)
   return server_.parameter(parameter_name);
 }
 
-Parameter & ModularServer::copyParameter(Parameter & parameter,const ConstantString & parameter_name)
+Parameter & ModularServer::copyParameter(Parameter & parameter,
+                                         const ConstantString & parameter_name)
 {
   return server_.copyParameter(parameter,parameter_name);
 }
@@ -90,7 +91,8 @@ Function & ModularServer::function(const ConstantString & function_name)
   return server_.function(function_name);
 }
 
-Function & ModularServer::copyFunction(Function & function,const ConstantString & function_name)
+Function & ModularServer::copyFunction(Function & function,
+                                       const ConstantString & function_name)
 {
   return server_.copyFunction(function,function_name);
 }

@@ -24,6 +24,7 @@ public:
   void setFirmwareName(const ConstantString & firmware_name);
   bool compareFirmwareName(const char * firmware_name_to_compare);
   bool compareFirmwareName(const ConstantString & firmware_name_to_compare);
+  bool compareFirmwareName(constants::SubsetMemberType firmware_name_to_compare);
   bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
   const ConstantString &  getFirmwareName();
 

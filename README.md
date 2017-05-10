@@ -24,28 +24,24 @@ Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy 3.6.
     "functions":[
       "getDeviceId",
       "getDeviceInfo",
+      "getInterruptInfo",
+      "detachAllInterrupts",
       "getApi",
       "getApiVerbose",
       "getPropertyDefaultValues",
+      "getAllPropertyDefaultValues",
       "setPropertiesToDefaults",
-      "setPropertyToDefault",
+      "setAllPropertiesToDefaults",
       "getPropertyValues",
-      "getPropertyValue",
-      "getPropertyElementValue",
-      "setPropertyValue",
-      "setPropertyElementValue",
-      "setAllPropertyElementValues",
-      "getMemoryFree"
+      "getAllPropertyValues"
     ],
     "parameters":[
-      "firmware",
-      "property_name",
-      "property_value",
-      "property_element_index"
+      "firmware"
     ],
     "properties":[
       "serialNumber"
-    ]
+    ],
+    "callbacks":[]
   }
 }
 ```

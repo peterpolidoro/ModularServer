@@ -47,14 +47,14 @@ void ModularServer::addFirmware(const FirmwareInfo & firmware_info,
 // Properties
 template <typename T>
 Property & ModularServer::createProperty(const ConstantString & property_name,
-                                   const T & default_value)
+                                         const T & default_value)
 {
   return server_.createProperty(property_name,default_value);
 }
 
 template <typename T, size_t N>
 Property & ModularServer::createProperty(const ConstantString & property_name,
-                                   const T (&default_value)[N])
+                                         const T (&default_value)[N])
 {
   return server_.createProperty(property_name,default_value);
 }

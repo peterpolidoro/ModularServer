@@ -136,7 +136,8 @@ int Server::findParameterIndex(T const & parameter_name)
 }
 
 template <typename T>
-int Server::findFunctionParameterIndex(Function & function, T const & parameter_name)
+int Server::findFunctionParameterIndex(Function & function,
+                                       T const & parameter_name)
 {
   int parameter_index = -1;
   Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;

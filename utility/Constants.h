@@ -20,7 +20,7 @@ enum {HARDWARE_COUNT_MAX=4};
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
 enum{SERVER_PARAMETER_COUNT_MAX=1};
-enum{SERVER_FUNCTION_COUNT_MAX=13};
+enum{SERVER_FUNCTION_COUNT_MAX=16};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {FUNCTION_PARAMETER_COUNT_MAX=8};
@@ -95,8 +95,11 @@ extern ConstantString detach_all_interrupts_function_name;
 extern ConstantString get_api_function_name;
 extern ConstantString get_api_verbose_function_name;
 extern ConstantString get_property_default_values_function_name;
+extern ConstantString get_all_property_default_values_function_name;
 extern ConstantString set_properties_to_defaults_function_name;
+extern ConstantString set_all_properties_to_defaults_function_name;
 extern ConstantString get_property_values_function_name;
+extern ConstantString get_all_property_values_function_name;
 extern ConstantString get_memory_free_function_name;
 
 // Callbacks

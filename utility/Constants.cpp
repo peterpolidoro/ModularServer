@@ -17,7 +17,7 @@ const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=2,
-    .version_minor=6,
+    .version_minor=7,
     .version_patch=0,
   };
 
@@ -42,8 +42,11 @@ CONSTANT_STRING(detach_all_interrupts_function_name,"detachAllInterrupts");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_api_verbose_function_name,"getApiVerbose");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
+CONSTANT_STRING(get_all_property_default_values_function_name,"getAllPropertyDefaultValues");
 CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefaults");
+CONSTANT_STRING(set_all_properties_to_defaults_function_name,"setAllPropertiesToDefaults");
 CONSTANT_STRING(get_property_values_function_name,"getPropertyValues");
+CONSTANT_STRING(get_all_property_values_function_name,"getAllPropertyValues");
 CONSTANT_STRING(get_memory_free_function_name,"getMemoryFree");
 
 // Callbacks

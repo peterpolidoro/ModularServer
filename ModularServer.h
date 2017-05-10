@@ -53,22 +53,24 @@ public:
   // Properties
   template <typename T>
   Property & createProperty(const ConstantString & property_name,
-                     const T & default_value);
+                            const T & default_value);
   template <typename T, size_t N>
   Property & createProperty(const ConstantString & property_name,
-                     const T (&default_value)[N]);
+                            const T (&default_value)[N]);
   Property & property(const ConstantString & property_name);
   void setPropertiesToDefaults();
 
   // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);
   Parameter & parameter(const ConstantString & parameter_name);
-  Parameter & copyParameter(Parameter & parameter,const ConstantString & parameter_name);
+  Parameter & copyParameter(Parameter & parameter,
+                            const ConstantString & parameter_name);
 
   // Functions
   Function & createFunction(const ConstantString & function_name);
   Function & function(const ConstantString & function_name);
-  Function & copyFunction(Function & function,const ConstantString & function_name);
+  Function & copyFunction(Function & function,
+                          const ConstantString & function_name);
 
   // Callbacks
   Callback & createCallback(const ConstantString & callback_name);

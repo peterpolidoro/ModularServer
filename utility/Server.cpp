@@ -110,12 +110,23 @@ void Server::setup()
   get_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
   get_property_default_values_function.setReturnTypeObject();
 
+  Function & get_all_property_default_values_function = createFunction(constants::get_all_property_default_values_function_name);
+  get_all_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getAllPropertyDefaultValuesHandler));
+  get_all_property_default_values_function.setReturnTypeObject();
+
   Function & set_properties_to_defaults_function = createFunction(constants::set_properties_to_defaults_function_name);
   set_properties_to_defaults_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
+
+  Function & set_all_properties_to_defaults_function = createFunction(constants::set_all_properties_to_defaults_function_name);
+  set_all_properties_to_defaults_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllPropertiesToDefaultsHandler));
 
   Function & get_property_values_function = createFunction(constants::get_property_values_function_name);
   get_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesHandler));
   get_property_values_function.setReturnTypeObject();
+
+  Function & get_all_property_values_function = createFunction(constants::get_all_property_values_function_name);
+  get_all_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getAllPropertyValuesHandler));
+  get_all_property_values_function.setReturnTypeObject();
 
 #ifdef __AVR__
   Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
@@ -226,6 +237,20 @@ Property & Server::property(const ConstantString & property_name)
 
 void Server::setPropertiesToDefaults()
 {
+  constants::SubsetMemberType firmware_name = firmware_name_array_.back();
+
+  for (size_t i=0; i<properties_.size(); ++i)
+  {
+    Property & property = properties_[i];
+    if (property.parameter().compareFirmwareName(firmware_name))
+    {
+      property.setValueToDefault();
+    }
+  }
+}
+
+void Server::setAllPropertiesToDefaults()
+{
   for (size_t i=0; i<properties_.size(); ++i)
   {
     properties_[i].setValueToDefault();
@@ -256,7 +281,8 @@ Parameter & Server::parameter(const ConstantString & parameter_name)
   return dummy_parameter_;
 }
 
-Parameter & Server::copyParameter(Parameter parameter, const ConstantString & parameter_name)
+Parameter & Server::copyParameter(Parameter parameter,
+                                  const ConstantString & parameter_name)
 {
   parameters_.push_back(parameter);
   parameters_.back().setName(parameter_name);
@@ -287,7 +313,8 @@ Function & Server::function(const ConstantString & function_name)
   return dummy_function_;
 }
 
-Function & Server::copyFunction(Function function, const ConstantString & function_name)
+Function & Server::copyFunction(Function function,
+                                const ConstantString & function_name)
 {
   functions_.push_back(function);
   functions_.back().setName(function_name);
@@ -739,7 +766,8 @@ int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
   return elements_count;
 }
 
-int Server::processParameterString(Function & function, const char * parameter_string)
+int Server::processParameterString(Function & function,
+                                   const char * parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = atoi(parameter_string);
@@ -767,7 +795,8 @@ int Server::processParameterString(Function & function, const char * parameter_s
   return parameter_index;
 }
 
-bool Server::checkParameters(Function & function, ArduinoJson::JsonArray::iterator iterator)
+bool Server::checkParameters(Function & function,
+                             ArduinoJson::JsonArray::iterator iterator)
 {
   int parameter_index = 0;
   for (ArduinoJson::JsonArray::iterator it=iterator;
@@ -788,7 +817,8 @@ bool Server::checkParameters(Function & function, ArduinoJson::JsonArray::iterat
   return true;
 }
 
-bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & json_value)
+bool Server::checkParameter(Parameter & parameter,
+                            ArduinoJson::JsonVariant & json_value)
 {
   bool in_subset = true;
   bool in_range = true;
@@ -934,7 +964,8 @@ bool Server::checkParameter(Parameter & parameter, ArduinoJson::JsonVariant & js
   return parameter_ok;
 }
 
-bool Server::checkArrayParameterElement(Parameter & parameter, ArduinoJson::JsonVariant & json_value)
+bool Server::checkArrayParameterElement(Parameter & parameter,
+                                        ArduinoJson::JsonVariant & json_value)
 {
   bool in_subset = true;
   bool in_range = true;
@@ -1078,7 +1109,7 @@ void Server::initializeEeprom()
   if (!eeprom_initialized_sv_.valueIsDefault())
   {
     eeprom_initialized_sv_.setValueToDefault();
-    setPropertiesToDefaults();
+    setAllPropertiesToDefaults();
   }
   eeprom_initialized_ = true;
 }
@@ -1092,7 +1123,8 @@ void Server::incrementServerStream()
   }
 }
 
-void Server::propertyHelp(Property & property, bool verbose)
+void Server::propertyHelp(Property & property,
+                          bool verbose)
 {
   property.updateFunctionsAndParameters();
 
@@ -1151,7 +1183,8 @@ void Server::propertyHelp(Property & property, bool verbose)
   response_.endObject();
 }
 
-void Server::parameterHelp(Parameter & parameter, bool property)
+void Server::parameterHelp(Parameter & parameter,
+                           bool property)
 {
   response_.beginObject();
   const ConstantString & parameter_name = parameter.getName();
@@ -1310,7 +1343,8 @@ void Server::parameterHelp(Parameter & parameter, bool property)
   }
 }
 
-void Server::functionHelp(Function & function, bool verbose)
+void Server::functionHelp(Function & function,
+                          bool verbose)
 {
   response_.beginObject();
 
@@ -1342,7 +1376,8 @@ void Server::functionHelp(Function & function, bool verbose)
   response_.endObject();
 }
 
-void Server::callbackHelp(Callback & callback, bool verbose)
+void Server::callbackHelp(Callback & callback,
+                          bool verbose)
 {
   callback.updateFunctionsAndParameters();
 
@@ -1730,7 +1765,8 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::interruptHelp(Interrupt & interrupt, bool verbose)
+void Server::interruptHelp(Interrupt & interrupt,
+                           bool verbose)
 {
   if (response_.error())
   {
@@ -1783,7 +1819,8 @@ void Server::writeInterruptInfoToResponse()
   response_.endArray();
 }
 
-void Server::writeApiToResponse(bool verbose, ArduinoJson::JsonArray & firmware_name_array)
+void Server::writeApiToResponse(bool verbose,
+                                ArduinoJson::JsonArray & firmware_name_array)
 {
   if (response_.error())
   {
@@ -2391,6 +2428,23 @@ void Server::getMemoryFreeHandler()
 
 void Server::getPropertyDefaultValuesHandler()
 {
+  constants::SubsetMemberType firmware_name = firmware_name_array_.back();
+
+  response_.writeResultKey();
+  response_.beginObject();
+  for (size_t i=0; i<properties_.size(); ++i)
+  {
+    Property & property = properties_[i];
+    if (property.parameter().compareFirmwareName(firmware_name))
+    {
+      writePropertyToResponse(property,true,true);
+    }
+  }
+  response_.endObject();
+}
+
+void Server::getAllPropertyDefaultValuesHandler()
+{
   response_.writeResultKey();
   response_.beginObject();
   for (size_t i=0; i<properties_.size(); ++i)
@@ -2402,6 +2456,23 @@ void Server::getPropertyDefaultValuesHandler()
 }
 
 void Server::getPropertyValuesHandler()
+{
+  constants::SubsetMemberType firmware_name = firmware_name_array_.back();
+
+  response_.writeResultKey();
+  response_.beginObject();
+  for (size_t i=0; i<properties_.size(); ++i)
+  {
+    Property & property = properties_[i];
+    if (property.parameter().compareFirmwareName(firmware_name))
+    {
+      writePropertyToResponse(property,true,false);
+    }
+  }
+  response_.endObject();
+}
+
+void Server::getAllPropertyValuesHandler()
 {
   response_.writeResultKey();
   response_.beginObject();
@@ -2416,6 +2487,11 @@ void Server::getPropertyValuesHandler()
 void Server::setPropertiesToDefaultsHandler()
 {
   setPropertiesToDefaults();
+}
+
+void Server::setAllPropertiesToDefaultsHandler()
+{
+  setAllPropertiesToDefaults();
 }
 
 }
