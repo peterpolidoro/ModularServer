@@ -727,6 +727,7 @@ void Property::setArrayLength(const size_t array_length)
 {
   if (getType() == JsonStream::ARRAY_TYPE)
   {
+    preSetValueFunctor();
     size_t new_array_length = array_length;
     if (new_array_length < array_length_min_)
     {
@@ -739,6 +740,12 @@ void Property::setArrayLength(const size_t array_length)
     saved_variable_.setArrayLength(new_array_length);
     new_array_length = saved_variable_.getArrayLength();
     parameter_.setArrayLengthRange(new_array_length,new_array_length);
+    for (size_t index=0; index<new_array_length; ++index)
+    {
+      preSetElementValueFunctor(index);
+      postSetElementValueFunctor(index);
+    }
+    postSetValueFunctor();
   }
 }
 
