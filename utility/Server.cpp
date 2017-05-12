@@ -1895,7 +1895,11 @@ void Server::writeApiToResponse(bool verbose,
     {
       if (function_index > private_function_index_)
       {
-        functionHelp(functions_[function_index],false);
+        Function & function = functions_[function_index];
+        if (function.firmwareNameInArray(firmware_name_array))
+        {
+          functionHelp(function,false);
+        }
       }
     }
     response_.endArray();
@@ -1904,7 +1908,11 @@ void Server::writeApiToResponse(bool verbose,
     response_.beginArray();
     for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
     {
-      parameterHelp(parameters_[parameter_index]);
+      Parameter & parameter = parameters_[parameter_index];
+      if (parameter.firmwareNameInArray(firmware_name_array))
+      {
+        parameterHelp(parameter);
+      }
     }
     response_.endArray();
 
@@ -1912,7 +1920,11 @@ void Server::writeApiToResponse(bool verbose,
     response_.beginArray();
     for (size_t property_index=0; property_index<properties_.size(); ++property_index)
     {
-      propertyHelp(properties_[property_index],false);
+      Property & property = properties_[property_index];
+      if (property.firmwareNameInArray(firmware_name_array))
+      {
+        propertyHelp(property,false);
+      }
     }
     response_.endArray();
 
@@ -1920,7 +1932,11 @@ void Server::writeApiToResponse(bool verbose,
     response_.beginArray();
     for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
     {
-      callbackHelp(callbacks_[callback_index],false);
+      Callback & callback = callbacks_[callback_index];
+      if (callback.firmwareNameInArray(firmware_name_array))
+      {
+        callbackHelp(callback,false);
+      }
     }
     response_.endArray();
   }
