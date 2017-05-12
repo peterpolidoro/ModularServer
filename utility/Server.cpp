@@ -1898,7 +1898,26 @@ void Server::writeApiToResponse(bool verbose,
         Function & function = functions_[function_index];
         if (function.firmwareNameInArray(firmware_name_array))
         {
-          functionHelp(function,false);
+          // functionHelp(function,false);
+          response_.beginObject();
+
+          const ConstantString & function_name = function.getName();
+          response_.write(constants::name_constant_string,function_name);
+
+          response_.writeKey(constants::parameters_constant_string);
+          response_.beginArray();
+          Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
+          parameter_ptrs_ptr = &function.parameter_ptrs_;
+          for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
+          {
+            const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
+            response_.write(parameter_name);
+          }
+          response_.endArray();
+
+          response_.write(constants::result_type_constant_string,function.getReturnType());
+
+          response_.endObject();
         }
       }
     }
@@ -1911,7 +1930,19 @@ void Server::writeApiToResponse(bool verbose,
       Parameter & parameter = parameters_[parameter_index];
       if (parameter.firmwareNameInArray(firmware_name_array))
       {
-        parameterHelp(parameter);
+        // parameterHelp(parameter);
+        response_.beginObject();
+        const ConstantString & parameter_name = parameter.getName();
+        response_.write(constants::name_constant_string,parameter_name);
+
+        const ConstantString & units = parameter.getUnits();
+        if (units.length() != 0)
+        {
+          response_.write(constants::units_constant_string,units);
+        }
+        JsonStream::JsonTypes type = parameter.getType();
+        response_.write(constants::type_constant_string,type);
+        response_.endObject();
       }
     }
     response_.endArray();
@@ -1923,7 +1954,21 @@ void Server::writeApiToResponse(bool verbose,
       Property & property = properties_[property_index];
       if (property.firmwareNameInArray(firmware_name_array))
       {
-        propertyHelp(property,false);
+        // propertyHelp(property,false);
+        property.updateFunctionsAndParameters();
+        Parameter & parameter = property.parameter();
+        response_.beginObject();
+        const ConstantString & parameter_name = parameter.getName();
+        response_.write(constants::name_constant_string,parameter_name);
+
+        const ConstantString & units = parameter.getUnits();
+        if (units.length() != 0)
+        {
+          response_.write(constants::units_constant_string,units);
+        }
+        JsonStream::JsonTypes type = parameter.getType();
+        response_.write(constants::type_constant_string,type);
+        response_.endObject();
       }
     }
     response_.endArray();
@@ -1935,7 +1980,26 @@ void Server::writeApiToResponse(bool verbose,
       Callback & callback = callbacks_[callback_index];
       if (callback.firmwareNameInArray(firmware_name_array))
       {
-        callbackHelp(callback,false);
+        // callbackHelp(callback,false);
+        callback.updateFunctionsAndParameters();
+
+        response_.beginObject();
+
+        const ConstantString & callback_name = callback.getName();
+        response_.write(constants::name_constant_string,callback_name);
+
+        response_.writeKey(constants::properties_constant_string);
+        response_.beginArray();
+        Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
+        property_ptrs_ptr = &callback.property_ptrs_;
+        for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
+        {
+          const ConstantString & property_name = (*property_ptrs_ptr)[i]->getName();
+          response_.write(property_name);
+        }
+        response_.endArray();
+
+        response_.endObject();
       }
     }
     response_.endArray();
