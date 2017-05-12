@@ -12,10 +12,6 @@ This firmware requires about 4KB of SRAM and 75KB of flash memory, so
 it needs at least Arduino Mega level resources. Known to work with the
 Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy 3.6.
 
-## Ancestors
-
-## Clients
-
 ## API
 
 ```json
