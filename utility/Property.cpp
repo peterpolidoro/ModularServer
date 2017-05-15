@@ -1177,20 +1177,20 @@ void Property::updateFunctionsAndParameters()
 
   Function & get_value_function = createFunction(property::get_value_function_name);
   get_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getValueHandler));
-  get_value_function.setReturnType(type);
+  get_value_function.setResultType(type);
 
   Function & set_value_function = createFunction(property::set_value_function_name);
   set_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueHandler));
   set_value_function.addParameter(value_parameter);
-  set_value_function.setReturnType(type);
+  set_value_function.setResultType(type);
 
   Function & get_default_value_function = createFunction(property::get_default_value_function_name);
   get_default_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultValueHandler));
-  get_default_value_function.setReturnType(type);
+  get_default_value_function.setResultType(type);
 
   Function & set_value_to_default_function = createFunction(property::set_value_to_default_function_name);
   set_value_to_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setValueToDefaultHandler));
-  set_value_to_default_function.setReturnType(type);
+  set_value_to_default_function.setResultType(type);
 
   if ((type == JsonStream::ARRAY_TYPE) || ((type == JsonStream::STRING_TYPE) && stringSavedAsCharArray()))
   {
@@ -1230,39 +1230,39 @@ void Property::updateFunctionsAndParameters()
     Function & get_element_value_function = createFunction(property::get_element_value_function_name);
     get_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getElementValueHandler));
     get_element_value_function.addParameter(element_index_parameter);
-    get_element_value_function.setReturnType(array_element_type);
+    get_element_value_function.setResultType(array_element_type);
 
     Function & set_element_value_function = createFunction(property::set_element_value_function_name);
     set_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueHandler));
     set_element_value_function.addParameter(element_index_parameter);
     set_element_value_function.addParameter(element_value_parameter);
-    set_element_value_function.setReturnType(type);
+    set_element_value_function.setResultType(type);
 
     Function & get_default_element_value_function = createFunction(property::get_default_element_value_function_name);
     get_default_element_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getDefaultElementValueHandler));
     get_default_element_value_function.addParameter(element_index_parameter);
-    get_default_element_value_function.setReturnType(array_element_type);
+    get_default_element_value_function.setResultType(array_element_type);
 
     Function & set_element_value_to_default_function = createFunction(property::set_element_value_to_default_function_name);
     set_element_value_to_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setElementValueToDefaultHandler));
     set_element_value_to_default_function.addParameter(element_index_parameter);
-    set_element_value_to_default_function.setReturnType(type);
+    set_element_value_to_default_function.setResultType(type);
 
     Function & set_all_element_values_function = createFunction(property::set_all_element_values_function_name);
     set_all_element_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setAllElementValuesHandler));
     set_all_element_values_function.addParameter(element_value_parameter);
-    set_all_element_values_function.setReturnType(type);
+    set_all_element_values_function.setResultType(type);
 
     if (type == JsonStream::ARRAY_TYPE)
     {
       Function & get_array_length_function = createFunction(property::get_array_length_function_name);
       get_array_length_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getArrayLengthHandler));
-      get_array_length_function.setReturnTypeLong();
+      get_array_length_function.setResultTypeLong();
 
       Function & set_array_length_function = createFunction(property::set_array_length_function_name);
       set_array_length_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::setArrayLengthHandler));
       set_array_length_function.addParameter(*array_length_parameter_ptr);
-      set_array_length_function.setReturnTypeLong();
+      set_array_length_function.setResultTypeLong();
     }
   }
 }

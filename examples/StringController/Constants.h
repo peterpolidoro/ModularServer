@@ -33,6 +33,7 @@ extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
 // Units
+extern ConstantString characters_units;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]

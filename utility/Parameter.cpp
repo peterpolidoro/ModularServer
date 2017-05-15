@@ -24,11 +24,6 @@ Parameter::Parameter()
   subset_is_set_ = false;
 }
 
-void Parameter::setUnits(const ConstantString & units)
-{
-  units_ptr_ = &units;
-}
-
 void Parameter::setTypeLong()
 {
   if (type_ != JsonStream::ARRAY_TYPE)
@@ -114,6 +109,11 @@ void Parameter::setType(JsonStream::JsonTypes type)
   {
     array_element_type_ = type;
   }
+}
+
+void Parameter::setUnits(const ConstantString & units)
+{
+  units_ptr_ = &units;
 }
 
 void Parameter::setRange(const double min, const double max)

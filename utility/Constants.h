@@ -158,6 +158,7 @@ extern ConstantString type_constant_string;
 extern ConstantString units_constant_string;
 extern ConstantString result_constant_string;
 extern ConstantString result_type_constant_string;
+extern ConstantString result_units_constant_string;
 extern ConstantString array_element_type_constant_string;
 extern ConstantString properties_constant_string;
 extern ConstantString parameters_constant_string;

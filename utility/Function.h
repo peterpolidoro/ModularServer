@@ -27,26 +27,32 @@ public:
 
   void attachFunctor(const Functor0 & functor);
   void addParameter(Parameter & parameter);
-  void setReturnTypeLong();
-  void setReturnTypeDouble();
-  void setReturnTypeBool();
-  void setReturnTypeNull();
-  void setReturnTypeString();
-  void setReturnTypeObject();
-  void setReturnTypeArray();
-  void setReturnTypeAny();
-  void setReturnType(JsonStream::JsonTypes type);
-  JsonStream::JsonTypes getReturnType();
+
+  void setResultTypeLong();
+  void setResultTypeDouble();
+  void setResultTypeBool();
+  void setResultTypeNull();
+  void setResultTypeString();
+  void setResultTypeObject();
+  void setResultTypeArray();
+  void setResultTypeAny();
+  void setResultType(JsonStream::JsonTypes type);
+  JsonStream::JsonTypes getResultType();
+
+  void setResultUnits(const ConstantString & units);
 
 private:
   Functor0 functor_;
   Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> parameter_ptrs_;
-  JsonStream::JsonTypes return_type_;
+  JsonStream::JsonTypes result_type_;
+  const ConstantString * result_units_ptr_;
+
   Function(const ConstantString & name);
   void setup(const ConstantString & name);
   int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();
   void functor();
+  const ConstantString & getResultUnits();
 
   friend class Property;
   friend class Callback;

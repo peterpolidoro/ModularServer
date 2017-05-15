@@ -68,30 +68,30 @@ void Server::setup()
   // Functions
   Function & get_method_ids_function = createFunction(constants::get_method_ids_function_name);
   get_method_ids_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsHandler));
-  get_method_ids_function.setReturnTypeObject();
+  get_method_ids_function.setResultTypeObject();
   private_function_index_ = 0;
 
   Function & help_function = createFunction(constants::help_function_name);
   help_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::helpHandler));
-  help_function.setReturnTypeObject();
+  help_function.setResultTypeObject();
   private_function_index_++;
 
   Function & verbose_help_function = createFunction(constants::verbose_help_function_name);
   verbose_help_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::verboseHelpHandler));
-  verbose_help_function.setReturnTypeObject();
+  verbose_help_function.setResultTypeObject();
   private_function_index_++;
 
   Function & get_device_id_function = createFunction(constants::get_device_id_function_name);
   get_device_id_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceIdHandler));
-  get_device_id_function.setReturnTypeObject();
+  get_device_id_function.setResultTypeObject();
 
   Function & get_device_info_function = createFunction(constants::get_device_info_function_name);
   get_device_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoHandler));
-  get_device_info_function.setReturnTypeObject();
+  get_device_info_function.setResultTypeObject();
 
   Function & get_interrupt_info_function = createFunction(constants::get_interrupt_info_function_name);
   get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
-  get_interrupt_info_function.setReturnTypeObject();
+  get_interrupt_info_function.setResultTypeObject();
 
   Function & detach_all_interrupts_function = createFunction(constants::detach_all_interrupts_function_name);
   detach_all_interrupts_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllInterruptsHandler));
@@ -99,20 +99,20 @@ void Server::setup()
   Function & get_api_function = createFunction(constants::get_api_function_name);
   get_api_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
   get_api_function.addParameter(firmware_parameter);
-  get_api_function.setReturnTypeObject();
+  get_api_function.setResultTypeObject();
 
   Function & get_api_verbose_function = createFunction(constants::get_api_verbose_function_name);
   get_api_verbose_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseHandler));
   get_api_verbose_function.addParameter(firmware_parameter);
-  get_api_verbose_function.setReturnTypeObject();
+  get_api_verbose_function.setResultTypeObject();
 
   Function & get_property_default_values_function = createFunction(constants::get_property_default_values_function_name);
   get_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
-  get_property_default_values_function.setReturnTypeObject();
+  get_property_default_values_function.setResultTypeObject();
 
   Function & get_all_property_default_values_function = createFunction(constants::get_all_property_default_values_function_name);
   get_all_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getAllPropertyDefaultValuesHandler));
-  get_all_property_default_values_function.setReturnTypeObject();
+  get_all_property_default_values_function.setResultTypeObject();
 
   Function & set_properties_to_defaults_function = createFunction(constants::set_properties_to_defaults_function_name);
   set_properties_to_defaults_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
@@ -122,16 +122,16 @@ void Server::setup()
 
   Function & get_property_values_function = createFunction(constants::get_property_values_function_name);
   get_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesHandler));
-  get_property_values_function.setReturnTypeObject();
+  get_property_values_function.setResultTypeObject();
 
   Function & get_all_property_values_function = createFunction(constants::get_all_property_values_function_name);
   get_all_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getAllPropertyValuesHandler));
-  get_all_property_values_function.setReturnTypeObject();
+  get_all_property_values_function.setResultTypeObject();
 
 #ifdef __AVR__
   Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
   get_memory_free_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMemoryFreeHandler));
-  get_memory_free_function.setReturnTypeLong();
+  get_memory_free_function.setResultTypeLong();
 #endif
 
   // Callbacks
@@ -1371,7 +1371,13 @@ void Server::functionHelp(Function & function,
   }
   response_.endArray();
 
-  response_.write(constants::result_type_constant_string,function.getReturnType());
+  response_.write(constants::result_type_constant_string,function.getResultType());
+
+  const ConstantString & units = function.getResultUnits();
+  if (units.length() != 0)
+  {
+    response_.write(constants::result_units_constant_string,units);
+  }
 
   response_.endObject();
 }
@@ -1915,7 +1921,13 @@ void Server::writeApiToResponse(bool verbose,
           }
           response_.endArray();
 
-          response_.write(constants::result_type_constant_string,function.getReturnType());
+          response_.write(constants::result_type_constant_string,function.getResultType());
+
+          const ConstantString & units = function.getResultUnits();
+          if (units.length() != 0)
+          {
+            response_.write(constants::result_units_constant_string,units);
+          }
 
           response_.endObject();
         }

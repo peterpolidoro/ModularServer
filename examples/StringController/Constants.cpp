@@ -65,6 +65,7 @@ const modular_server::HardwareInfo hardware_info =
 // Interrupts
 
 // Units
+CONSTANT_STRING(characters_units,"characters");
 
 // Properties
 const long serial_number_default_new = 77;

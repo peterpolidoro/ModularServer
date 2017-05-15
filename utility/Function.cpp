@@ -31,54 +31,59 @@ void Function::addParameter(Parameter & parameter)
   }
 }
 
-void Function::setReturnTypeLong()
+void Function::setResultTypeLong()
 {
-  return_type_ = JsonStream::LONG_TYPE;
+  result_type_ = JsonStream::LONG_TYPE;
 }
 
-void Function::setReturnTypeDouble()
+void Function::setResultTypeDouble()
 {
-  return_type_ = JsonStream::DOUBLE_TYPE;
+  result_type_ = JsonStream::DOUBLE_TYPE;
 }
 
-void Function::setReturnTypeBool()
+void Function::setResultTypeBool()
 {
-  return_type_ = JsonStream::BOOL_TYPE;
+  result_type_ = JsonStream::BOOL_TYPE;
 }
 
-void Function::setReturnTypeNull()
+void Function::setResultTypeNull()
 {
-  return_type_ = JsonStream::NULL_TYPE;
+  result_type_ = JsonStream::NULL_TYPE;
 }
 
-void Function::setReturnTypeString()
+void Function::setResultTypeString()
 {
-  return_type_ = JsonStream::STRING_TYPE;
+  result_type_ = JsonStream::STRING_TYPE;
 }
 
-void Function::setReturnTypeObject()
+void Function::setResultTypeObject()
 {
-  return_type_ = JsonStream::OBJECT_TYPE;
+  result_type_ = JsonStream::OBJECT_TYPE;
 }
 
-void Function::setReturnTypeArray()
+void Function::setResultTypeArray()
 {
-  return_type_ = JsonStream::ARRAY_TYPE;
+  result_type_ = JsonStream::ARRAY_TYPE;
 }
 
-void Function::setReturnTypeAny()
+void Function::setResultTypeAny()
 {
-  return_type_ = JsonStream::ANY_TYPE;
+  result_type_ = JsonStream::ANY_TYPE;
 }
 
-void Function::setReturnType(JsonStream::JsonTypes type)
+void Function::setResultType(JsonStream::JsonTypes type)
 {
-  return_type_ = type;
+  result_type_ = type;
 }
 
-JsonStream::JsonTypes Function::getReturnType()
+JsonStream::JsonTypes Function::getResultType()
 {
-  return return_type_;
+  return result_type_;
+}
+
+void Function::setResultUnits(const ConstantString & units)
+{
+  result_units_ptr_ = &units;
 }
 
 // protected
@@ -92,7 +97,8 @@ Function::Function(const ConstantString & name)
 void Function::setup(const ConstantString & name)
 {
   setName(name);
-  setReturnTypeNull();
+  setResultTypeNull();
+  setResultUnits(constants::empty_constant_string);
 }
 
 int Function::findParameterIndex(const ConstantString & parameter_name)
@@ -120,6 +126,11 @@ void Function::functor()
   {
     functor_();
   }
+}
+
+const ConstantString & Function::getResultUnits()
+{
+  return *result_units_ptr_;
 }
 
 }

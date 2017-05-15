@@ -56,7 +56,7 @@ void BoardLedController::setup()
 
   modular_server::Function & get_led_pin_function = modular_server_.createFunction(constants::get_led_pin_function_name);
   get_led_pin_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinHandler));
-  get_led_pin_function.setReturnTypeLong();
+  get_led_pin_function.setResultTypeLong();
 
   modular_server::Function & blink_led_function = modular_server_.createFunction(constants::blink_led_function_name);
   blink_led_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::blinkLedHandler));

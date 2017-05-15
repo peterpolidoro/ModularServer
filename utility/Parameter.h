@@ -29,7 +29,6 @@ class Parameter : private FirmwareElement
 public:
   Parameter();
 
-  void setUnits(const ConstantString & name);
   void setTypeLong();
   void setTypeDouble();
   void setTypeBool();
@@ -38,6 +37,9 @@ public:
   void setTypeArray();
   void setTypeAny();
   void setType(JsonStream::JsonTypes type);
+
+  void setUnits(const ConstantString & units);
+
   template <typename T>
   void setRange(const T min, const T max);
   void setRange(const double min, const double max);
