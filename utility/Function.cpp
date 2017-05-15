@@ -33,27 +33,57 @@ void Function::addParameter(Parameter & parameter)
 
 void Function::setResultTypeLong()
 {
-  result_type_ = JsonStream::LONG_TYPE;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_type_ = JsonStream::LONG_TYPE;
+  }
+  else
+  {
+    result_array_element_type_ = JsonStream::LONG_TYPE;
+  }
 }
 
 void Function::setResultTypeDouble()
 {
-  result_type_ = JsonStream::DOUBLE_TYPE;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_type_ = JsonStream::DOUBLE_TYPE;
+  }
+  else
+  {
+    result_array_element_type_ = JsonStream::DOUBLE_TYPE;
+  }
 }
 
 void Function::setResultTypeBool()
 {
-  result_type_ = JsonStream::BOOL_TYPE;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_type_ = JsonStream::BOOL_TYPE;
+  }
+  else
+  {
+    result_array_element_type_ = JsonStream::BOOL_TYPE;
+  }
 }
 
 void Function::setResultTypeNull()
 {
   result_type_ = JsonStream::NULL_TYPE;
+  result_array_element_type_ = JsonStream::NULL_TYPE;
 }
 
 void Function::setResultTypeString()
 {
-  result_type_ = JsonStream::STRING_TYPE;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_type_ = JsonStream::STRING_TYPE;
+    result_array_element_type_ = JsonStream::STRING_TYPE;
+  }
+  else
+  {
+    result_array_element_type_ = JsonStream::STRING_TYPE;
+  }
 }
 
 void Function::setResultTypeObject()
@@ -63,17 +93,35 @@ void Function::setResultTypeObject()
 
 void Function::setResultTypeArray()
 {
-  result_type_ = JsonStream::ARRAY_TYPE;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_array_element_type_ = result_type_;
+    result_type_ = JsonStream::ARRAY_TYPE;
+  }
 }
 
 void Function::setResultTypeAny()
 {
-  result_type_ = JsonStream::ANY_TYPE;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_type_ = JsonStream::ANY_TYPE;
+  }
+  else
+  {
+    result_array_element_type_ = JsonStream::ANY_TYPE;
+  }
 }
 
 void Function::setResultType(JsonStream::JsonTypes type)
 {
-  result_type_ = type;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_type_ = type;
+  }
+  else
+  {
+    result_array_element_type_ = type;
+  }
 }
 
 JsonStream::JsonTypes Function::getResultType()
@@ -81,9 +129,19 @@ JsonStream::JsonTypes Function::getResultType()
   return result_type_;
 }
 
+JsonStream::JsonTypes Function::getResultArrayElementType()
+{
+  return result_array_element_type_;
+}
+
 void Function::setResultUnits(const ConstantString & units)
 {
   result_units_ptr_ = &units;
+}
+
+const ConstantString & Function::getResultUnits()
+{
+  return *result_units_ptr_;
 }
 
 // protected
@@ -97,7 +155,8 @@ Function::Function(const ConstantString & name)
 void Function::setup(const ConstantString & name)
 {
   setName(name);
-  setResultTypeNull();
+  result_type_ = JsonStream::NULL_TYPE;
+  result_array_element_type_ = JsonStream::NULL_TYPE;
   setResultUnits(constants::empty_constant_string);
 }
 
@@ -126,11 +185,6 @@ void Function::functor()
   {
     functor_();
   }
-}
-
-const ConstantString & Function::getResultUnits()
-{
-  return *result_units_ptr_;
 }
 
 }

@@ -169,13 +169,17 @@ private:
   void initializeEeprom();
   void incrementServerStream();
   void propertyHelp(Property & property,
-                    bool verbose);
+                    bool verbose,
+                    bool api=false);
   void parameterHelp(Parameter & parameter,
-                     bool property=false);
+                     bool property=false,
+                     bool api=false);
   void functionHelp(Function & function,
-                    bool verbose);
+                    bool verbose,
+                    bool api=false);
   void callbackHelp(Callback & callback,
-                    bool verbose);
+                    bool verbose,
+                    bool api=false);
   void help(bool verbose);
   void writeDeviceIdToResponse();
   void writeFirmwareInfoToResponse();

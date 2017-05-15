@@ -38,13 +38,16 @@ public:
   void setResultTypeAny();
   void setResultType(JsonStream::JsonTypes type);
   JsonStream::JsonTypes getResultType();
+  JsonStream::JsonTypes getResultArrayElementType();
 
   void setResultUnits(const ConstantString & units);
+  const ConstantString & getResultUnits();
 
 private:
   Functor0 functor_;
   Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> parameter_ptrs_;
   JsonStream::JsonTypes result_type_;
+  JsonStream::JsonTypes result_array_element_type_;
   const ConstantString * result_units_ptr_;
 
   Function(const ConstantString & name);
@@ -52,7 +55,6 @@ private:
   int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();
   void functor();
-  const ConstantString & getResultUnits();
 
   friend class Property;
   friend class Callback;

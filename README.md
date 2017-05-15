@@ -55,78 +55,103 @@ Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy 3.6.
       {
         "name":"getDeviceId",
         "parameters":[],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"getDeviceInfo",
         "parameters":[],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"getInterruptInfo",
         "parameters":[],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"detachAllInterrupts",
-        "parameters":[],
-        "result_type":null
+        "parameters":[]
       },
       {
         "name":"getApi",
         "parameters":[
           "firmware"
         ],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"getApiVerbose",
         "parameters":[
           "firmware"
         ],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"getPropertyDefaultValues",
         "parameters":[],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"getAllPropertyDefaultValues",
         "parameters":[],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"setPropertiesToDefaults",
-        "parameters":[],
-        "result_type":null
+        "parameters":[]
       },
       {
         "name":"setAllPropertiesToDefaults",
-        "parameters":[],
-        "result_type":null
+        "parameters":[]
       },
       {
         "name":"getPropertyValues",
         "parameters":[],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       },
       {
         "name":"getAllPropertyValues",
         "parameters":[],
-        "result_type":"object"
+        "result_info":{
+          "type":"object"
+        }
       }
     ],
     "parameters":[
       {
         "name":"firmware",
-        "type":"array"
+        "type":"array",
+        "array_element_type":"string"
       }
     ],
     "properties":[
       {
         "name":"serialNumber",
-        "type":"long"
+        "type":"long",
+        "functions":[
+          "getValue",
+          "setValue",
+          "getDefaultValue",
+          "setValueToDefault"
+        ],
+        "parameters":[
+          "value"
+        ]
       }
     ],
     "callbacks":[]

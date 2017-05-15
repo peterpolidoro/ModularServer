@@ -1124,37 +1124,41 @@ void Server::incrementServerStream()
 }
 
 void Server::propertyHelp(Property & property,
-                          bool verbose)
+                          bool verbose,
+                          bool api)
 {
   property.updateFunctionsAndParameters();
 
-  parameterHelp(property.parameter(),true);
+  parameterHelp(property.parameter(),true,api);
 
-  if (property.getType() == JsonStream::ARRAY_TYPE)
+  if (!api)
   {
-    response_.write(constants::array_length_min_constant_string,property.getArrayLengthMin());
-    response_.write(constants::array_length_max_constant_string,property.getArrayLengthMax());
-  }
+    if (property.getType() == JsonStream::ARRAY_TYPE)
+    {
+      response_.write(constants::array_length_min_constant_string,property.getArrayLengthMin());
+      response_.write(constants::array_length_max_constant_string,property.getArrayLengthMax());
+    }
 
-  response_.writeKey(constants::value_constant_string);
-  writePropertyToResponse(property,false,false);
+    response_.writeKey(constants::value_constant_string);
+    writePropertyToResponse(property,false,false);
 
-  response_.writeKey(constants::default_value_constant_string);
-  writePropertyToResponse(property,false,true);
+    response_.writeKey(constants::default_value_constant_string);
+    writePropertyToResponse(property,false,true);
 
-  if ((property.getType() == JsonStream::STRING_TYPE) &&
-      (property.stringSavedAsCharArray()))
-  {
-    response_.write(constants::string_length_constant_string,property.getStringLength());
-    size_t string_length_max = property.getArrayLength() - 1;
-    response_.write(constants::string_length_max_constant_string,string_length_max);
+    if ((property.getType() == JsonStream::STRING_TYPE) &&
+        (property.stringSavedAsCharArray()))
+    {
+      response_.write(constants::string_length_constant_string,property.getStringLength());
+      size_t string_length_max = property.getArrayLength() - 1;
+      response_.write(constants::string_length_max_constant_string,string_length_max);
+    }
   }
 
   response_.writeKey(constants::functions_constant_string);
   response_.beginArray();
   for (size_t i=0; i<Property::functions_.size(); ++i)
   {
-    if (verbose)
+    if (verbose && !api)
     {
       functionHelp(Property::functions_[i],false);
     }
@@ -1169,7 +1173,7 @@ void Server::propertyHelp(Property & property,
   response_.beginArray();
   for (size_t i=0; i<Property::parameters_.size(); ++i)
   {
-    if (verbose)
+    if (verbose && !api)
     {
       parameterHelp(Property::parameters_[i]);
     }
@@ -1184,158 +1188,174 @@ void Server::propertyHelp(Property & property,
 }
 
 void Server::parameterHelp(Parameter & parameter,
-                           bool property)
+                           bool property,
+                           bool api)
 {
   response_.beginObject();
   const ConstantString & parameter_name = parameter.getName();
   response_.write(constants::name_constant_string,parameter_name);
-  const ConstantString & firmware_name = parameter.getFirmwareName();
-  response_.write(constants::firmware_constant_string,firmware_name);
+  if (!api)
+  {
+    const ConstantString & firmware_name = parameter.getFirmwareName();
+    response_.write(constants::firmware_constant_string,firmware_name);
+  }
 
+  JsonStream::JsonTypes type = parameter.getType();
+  if (!api)
+  {
+    switch (type)
+    {
+      case JsonStream::LONG_TYPE:
+      {
+        response_.write(constants::type_constant_string,JsonStream::LONG_TYPE);
+        if (parameter.subsetIsSet())
+        {
+          response_.writeKey(constants::subset_constant_string);
+          response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
+        }
+        if (parameter.rangeIsSet())
+        {
+          long min = parameter.getRangeMin().l;
+          long max = parameter.getRangeMax().l;
+          response_.write(constants::min_constant_string,min);
+          response_.write(constants::max_constant_string,max);
+        }
+        break;
+      }
+      case JsonStream::DOUBLE_TYPE:
+      {
+        response_.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
+        if (parameter.rangeIsSet())
+        {
+          double min = parameter.getRangeMin().d;
+          double max = parameter.getRangeMax().d;
+          response_.write(constants::min_constant_string,min);
+          response_.write(constants::max_constant_string,max);
+        }
+        break;
+      }
+      case JsonStream::BOOL_TYPE:
+      {
+        response_.write(constants::type_constant_string,JsonStream::BOOL_TYPE);
+        break;
+      }
+      case JsonStream::NULL_TYPE:
+      {
+        break;
+      }
+      case JsonStream::STRING_TYPE:
+      {
+        response_.write(constants::type_constant_string,JsonStream::STRING_TYPE);
+        if (parameter.subsetIsSet())
+        {
+          response_.writeKey(constants::subset_constant_string);
+          response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
+        }
+        break;
+      }
+      case JsonStream::OBJECT_TYPE:
+      {
+        response_.write(constants::type_constant_string,JsonStream::OBJECT_TYPE);
+        break;
+      }
+      case JsonStream::ARRAY_TYPE:
+      {
+        response_.write(constants::type_constant_string,JsonStream::ARRAY_TYPE);
+        JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+        switch (array_element_type)
+        {
+          case JsonStream::LONG_TYPE:
+          {
+            response_.write(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
+            if (parameter.subsetIsSet())
+            {
+              response_.writeKey(constants::array_element_subset_constant_string);
+              response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
+            }
+            if (parameter.rangeIsSet())
+            {
+              long min = parameter.getRangeMin().l;
+              long max = parameter.getRangeMax().l;
+              response_.write(constants::array_element_min_constant_string,min);
+              response_.write(constants::array_element_max_constant_string,max);
+            }
+            break;
+          }
+          case JsonStream::DOUBLE_TYPE:
+          {
+            response_.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
+            if (parameter.rangeIsSet())
+            {
+              double min = parameter.getRangeMin().d;
+              double max = parameter.getRangeMax().d;
+              response_.write(constants::array_element_min_constant_string,min);
+              response_.write(constants::array_element_max_constant_string,max);
+            }
+            break;
+          }
+          case JsonStream::BOOL_TYPE:
+          {
+            response_.write(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
+            break;
+          }
+          case JsonStream::NULL_TYPE:
+          {
+            break;
+          }
+          case JsonStream::STRING_TYPE:
+          {
+            response_.write(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
+            if (parameter.subsetIsSet())
+            {
+              response_.writeKey(constants::array_element_subset_constant_string);
+              response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
+            }
+            break;
+          }
+          case JsonStream::OBJECT_TYPE:
+          {
+            response_.write(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
+            break;
+          }
+          case JsonStream::ARRAY_TYPE:
+          {
+            response_.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
+            break;
+          }
+          case JsonStream::ANY_TYPE:
+          {
+            break;
+          }
+        }
+        if (parameter.arrayLengthRangeIsSet() && !property)
+        {
+          size_t array_length_min = parameter.getArrayLengthMin();
+          size_t array_length_max = parameter.getArrayLengthMax();
+          response_.write(constants::array_length_min_constant_string,array_length_min);
+          response_.write(constants::array_length_max_constant_string,array_length_max);
+        }
+        break;
+      }
+      case JsonStream::ANY_TYPE:
+      {
+        response_.write(constants::type_constant_string,JsonStream::ANY_TYPE);
+        break;
+      }
+    }
+  }
+  else
+  {
+    response_.write(constants::type_constant_string,type);
+    if (type == JsonStream::ARRAY_TYPE)
+    {
+      JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
+      response_.write(constants::array_element_type_constant_string,array_element_type);
+    }
+  }
   const ConstantString & units = parameter.getUnits();
   if (units.length() != 0)
   {
     response_.write(constants::units_constant_string,units);
-  }
-  JsonStream::JsonTypes type = parameter.getType();
-  switch (type)
-  {
-    case JsonStream::LONG_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::LONG_TYPE);
-      if (parameter.subsetIsSet())
-      {
-        response_.writeKey(constants::subset_constant_string);
-        response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
-      }
-      if (parameter.rangeIsSet())
-      {
-        long min = parameter.getRangeMin().l;
-        long max = parameter.getRangeMax().l;
-        response_.write(constants::min_constant_string,min);
-        response_.write(constants::max_constant_string,max);
-      }
-      break;
-    }
-    case JsonStream::DOUBLE_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
-      if (parameter.rangeIsSet())
-      {
-        double min = parameter.getRangeMin().d;
-        double max = parameter.getRangeMax().d;
-        response_.write(constants::min_constant_string,min);
-        response_.write(constants::max_constant_string,max);
-      }
-      break;
-    }
-    case JsonStream::BOOL_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::BOOL_TYPE);
-      break;
-    }
-    case JsonStream::NULL_TYPE:
-    {
-      break;
-    }
-    case JsonStream::STRING_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::STRING_TYPE);
-      if (parameter.subsetIsSet())
-      {
-        response_.writeKey(constants::subset_constant_string);
-        response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
-      }
-      break;
-    }
-    case JsonStream::OBJECT_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::OBJECT_TYPE);
-      break;
-    }
-    case JsonStream::ARRAY_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::ARRAY_TYPE);
-      JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
-      switch (array_element_type)
-      {
-        case JsonStream::LONG_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
-          if (parameter.subsetIsSet())
-          {
-            response_.writeKey(constants::array_element_subset_constant_string);
-            response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
-          }
-          if (parameter.rangeIsSet())
-          {
-            long min = parameter.getRangeMin().l;
-            long max = parameter.getRangeMax().l;
-            response_.write(constants::array_element_min_constant_string,min);
-            response_.write(constants::array_element_max_constant_string,max);
-          }
-          break;
-        }
-        case JsonStream::DOUBLE_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
-          if (parameter.rangeIsSet())
-          {
-            double min = parameter.getRangeMin().d;
-            double max = parameter.getRangeMax().d;
-            response_.write(constants::array_element_min_constant_string,min);
-            response_.write(constants::array_element_max_constant_string,max);
-          }
-          break;
-        }
-        case JsonStream::BOOL_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
-          break;
-        }
-        case JsonStream::NULL_TYPE:
-        {
-          break;
-        }
-        case JsonStream::STRING_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
-          if (parameter.subsetIsSet())
-          {
-            response_.writeKey(constants::array_element_subset_constant_string);
-            response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
-          }
-          break;
-        }
-        case JsonStream::OBJECT_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
-          break;
-        }
-        case JsonStream::ARRAY_TYPE:
-        {
-          response_.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
-          break;
-        }
-        case JsonStream::ANY_TYPE:
-        {
-          break;
-        }
-      }
-      if (parameter.arrayLengthRangeIsSet() && !property)
-      {
-        size_t array_length_min = parameter.getArrayLengthMin();
-        size_t array_length_max = parameter.getArrayLengthMax();
-        response_.write(constants::array_length_min_constant_string,array_length_min);
-        response_.write(constants::array_length_max_constant_string,array_length_max);
-      }
-      break;
-    }
-    case JsonStream::ANY_TYPE:
-    {
-      response_.write(constants::type_constant_string,JsonStream::ANY_TYPE);
-      break;
-    }
   }
   if (!property)
   {
@@ -1344,14 +1364,18 @@ void Server::parameterHelp(Parameter & parameter,
 }
 
 void Server::functionHelp(Function & function,
-                          bool verbose)
+                          bool verbose,
+                          bool api)
 {
   response_.beginObject();
 
   const ConstantString & function_name = function.getName();
   response_.write(constants::name_constant_string,function_name);
-  const ConstantString & firmware_name = function.getFirmwareName();
-  response_.write(constants::firmware_constant_string,firmware_name);
+  if (!api)
+  {
+    const ConstantString & firmware_name = function.getFirmwareName();
+    response_.write(constants::firmware_constant_string,firmware_name);
+  }
 
   response_.writeKey(constants::parameters_constant_string);
   response_.beginArray();
@@ -1359,7 +1383,7 @@ void Server::functionHelp(Function & function,
   parameter_ptrs_ptr = &function.parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
-    if (verbose)
+    if (verbose && !api)
     {
       parameterHelp(*((*parameter_ptrs_ptr)[i]));
     }
@@ -1371,19 +1395,35 @@ void Server::functionHelp(Function & function,
   }
   response_.endArray();
 
-  response_.write(constants::result_type_constant_string,function.getResultType());
-
-  const ConstantString & units = function.getResultUnits();
-  if (units.length() != 0)
+  JsonStream::JsonTypes type = function.getResultType();
+  if (type != JsonStream::NULL_TYPE)
   {
-    response_.write(constants::result_units_constant_string,units);
+    response_.writeKey(constants::result_info_constant_string);
+    response_.beginObject();
+
+    response_.write(constants::type_constant_string,type);
+
+    if (type == JsonStream::ARRAY_TYPE)
+    {
+      JsonStream::JsonTypes array_element_type = function.getResultArrayElementType();
+      response_.write(constants::array_element_type_constant_string,array_element_type);
+    }
+
+    const ConstantString & units = function.getResultUnits();
+    if (units.length() != 0)
+    {
+      response_.write(constants::units_constant_string,units);
+    }
+
+    response_.endObject();
   }
 
   response_.endObject();
 }
 
 void Server::callbackHelp(Callback & callback,
-                          bool verbose)
+                          bool verbose,
+                          bool api)
 {
   callback.updateFunctionsAndParameters();
 
@@ -1391,8 +1431,11 @@ void Server::callbackHelp(Callback & callback,
 
   const ConstantString & callback_name = callback.getName();
   response_.write(constants::name_constant_string,callback_name);
-  const ConstantString & firmware_name = callback.getFirmwareName();
-  response_.write(constants::firmware_constant_string,firmware_name);
+  if (!api)
+  {
+    const ConstantString & firmware_name = callback.getFirmwareName();
+    response_.write(constants::firmware_constant_string,firmware_name);
+  }
 
   response_.writeKey(constants::properties_constant_string);
   response_.beginArray();
@@ -1400,7 +1443,7 @@ void Server::callbackHelp(Callback & callback,
   property_ptrs_ptr = &callback.property_ptrs_;
   for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
   {
-    if (verbose)
+    if (verbose && !api)
     {
       propertyHelp(*((*property_ptrs_ptr)[i]),false);
     }
@@ -1412,32 +1455,35 @@ void Server::callbackHelp(Callback & callback,
   }
   response_.endArray();
 
-  response_.writeKey(constants::interrupts_constant_string);
-  response_.beginArray();
-  IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> * interrupt_ptrs_ptr = NULL;
-  interrupt_ptrs_ptr = &callback.interrupt_ptrs_;
-  for (size_t i=0; i<interrupt_ptrs_ptr->max_size(); ++i)
+  if (!api)
   {
-    if (interrupt_ptrs_ptr->indexHasValue(i))
+    response_.writeKey(constants::interrupts_constant_string);
+    response_.beginArray();
+    IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> * interrupt_ptrs_ptr = NULL;
+    interrupt_ptrs_ptr = &callback.interrupt_ptrs_;
+    for (size_t i=0; i<interrupt_ptrs_ptr->max_size(); ++i)
     {
-      if (verbose)
+      if (interrupt_ptrs_ptr->indexHasValue(i))
       {
-        interruptHelp(*((*interrupt_ptrs_ptr)[i]),true);
-      }
-      else
-      {
-        const ConstantString & interrupt_name = (*interrupt_ptrs_ptr)[i]->getName();
-        response_.write(interrupt_name);
+        if (verbose)
+        {
+          interruptHelp(*((*interrupt_ptrs_ptr)[i]),true);
+        }
+        else
+        {
+          const ConstantString & interrupt_name = (*interrupt_ptrs_ptr)[i]->getName();
+          response_.write(interrupt_name);
+        }
       }
     }
+    response_.endArray();
   }
-  response_.endArray();
 
   response_.writeKey(constants::functions_constant_string);
   response_.beginArray();
   for (size_t i=0; i<Callback::functions_.size(); ++i)
   {
-    if (verbose)
+    if (verbose && !api)
     {
       functionHelp(Callback::functions_[i],false);
     }
@@ -1452,7 +1498,7 @@ void Server::callbackHelp(Callback & callback,
   response_.beginArray();
   for (size_t i=0; i<Callback::parameters_.size(); ++i)
   {
-    if (verbose)
+    if (verbose && !api)
     {
       parameterHelp(Callback::parameters_[i]);
     }
@@ -1904,32 +1950,7 @@ void Server::writeApiToResponse(bool verbose,
         Function & function = functions_[function_index];
         if (function.firmwareNameInArray(firmware_name_array))
         {
-          // functionHelp(function,false);
-          response_.beginObject();
-
-          const ConstantString & function_name = function.getName();
-          response_.write(constants::name_constant_string,function_name);
-
-          response_.writeKey(constants::parameters_constant_string);
-          response_.beginArray();
-          Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-          parameter_ptrs_ptr = &function.parameter_ptrs_;
-          for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
-          {
-            const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
-            response_.write(parameter_name);
-          }
-          response_.endArray();
-
-          response_.write(constants::result_type_constant_string,function.getResultType());
-
-          const ConstantString & units = function.getResultUnits();
-          if (units.length() != 0)
-          {
-            response_.write(constants::result_units_constant_string,units);
-          }
-
-          response_.endObject();
+          functionHelp(function,false,true);
         }
       }
     }
@@ -1942,19 +1963,7 @@ void Server::writeApiToResponse(bool verbose,
       Parameter & parameter = parameters_[parameter_index];
       if (parameter.firmwareNameInArray(firmware_name_array))
       {
-        // parameterHelp(parameter);
-        response_.beginObject();
-        const ConstantString & parameter_name = parameter.getName();
-        response_.write(constants::name_constant_string,parameter_name);
-
-        const ConstantString & units = parameter.getUnits();
-        if (units.length() != 0)
-        {
-          response_.write(constants::units_constant_string,units);
-        }
-        JsonStream::JsonTypes type = parameter.getType();
-        response_.write(constants::type_constant_string,type);
-        response_.endObject();
+        parameterHelp(parameter,false,true);
       }
     }
     response_.endArray();
@@ -1966,21 +1975,7 @@ void Server::writeApiToResponse(bool verbose,
       Property & property = properties_[property_index];
       if (property.firmwareNameInArray(firmware_name_array))
       {
-        // propertyHelp(property,false);
-        property.updateFunctionsAndParameters();
-        Parameter & parameter = property.parameter();
-        response_.beginObject();
-        const ConstantString & parameter_name = parameter.getName();
-        response_.write(constants::name_constant_string,parameter_name);
-
-        const ConstantString & units = parameter.getUnits();
-        if (units.length() != 0)
-        {
-          response_.write(constants::units_constant_string,units);
-        }
-        JsonStream::JsonTypes type = parameter.getType();
-        response_.write(constants::type_constant_string,type);
-        response_.endObject();
+        propertyHelp(property,false,true);
       }
     }
     response_.endArray();
@@ -1992,26 +1987,7 @@ void Server::writeApiToResponse(bool verbose,
       Callback & callback = callbacks_[callback_index];
       if (callback.firmwareNameInArray(firmware_name_array))
       {
-        // callbackHelp(callback,false);
-        callback.updateFunctionsAndParameters();
-
-        response_.beginObject();
-
-        const ConstantString & callback_name = callback.getName();
-        response_.write(constants::name_constant_string,callback_name);
-
-        response_.writeKey(constants::properties_constant_string);
-        response_.beginArray();
-        Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
-        property_ptrs_ptr = &callback.property_ptrs_;
-        for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
-        {
-          const ConstantString & property_name = (*property_ptrs_ptr)[i]->getName();
-          response_.write(property_name);
-        }
-        response_.endArray();
-
-        response_.endObject();
+        callbackHelp(callback,false,true);
       }
     }
     response_.endArray();
