@@ -88,7 +88,14 @@ void Function::setResultTypeString()
 
 void Function::setResultTypeObject()
 {
-  result_type_ = JsonStream::OBJECT_TYPE;
+  if (result_type_ != JsonStream::ARRAY_TYPE)
+  {
+    result_type_ = JsonStream::OBJECT_TYPE;
+  }
+  else
+  {
+    result_array_element_type_ = JsonStream::OBJECT_TYPE;
+  }
 }
 
 void Function::setResultTypeArray()

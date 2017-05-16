@@ -75,7 +75,14 @@ void Parameter::setTypeString()
 
 void Parameter::setTypeObject()
 {
-  type_ = JsonStream::OBJECT_TYPE;
+  if (type_ != JsonStream::ARRAY_TYPE)
+  {
+    type_ = JsonStream::OBJECT_TYPE;
+  }
+  else
+  {
+    array_element_type_ = JsonStream::OBJECT_TYPE;
+  }
 }
 
 void Parameter::setTypeArray()
