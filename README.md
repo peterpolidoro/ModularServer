@@ -46,7 +46,7 @@ work with the Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy
 
 ## API Verbose
 
-[API Verbose](./api.json)
+[API Verbose](./api/)
 
 ## More Detailed Modular Device Information
 
