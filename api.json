@@ -18,17 +18,6 @@
         }
       },
       {
-        "name":"getInterruptInfo",
-        "parameters":[],
-        "result_info":{
-          "type":"object"
-        }
-      },
-      {
-        "name":"detachAllInterrupts",
-        "parameters":[]
-      },
-      {
         "name":"getApi",
         "parameters":[
           "firmware"
@@ -81,6 +70,18 @@
         "result_info":{
           "type":"object"
         }
+      },
+      {
+        "name":"getInterruptInfo",
+        "parameters":[],
+        "result_info":{
+          "type":"array",
+          "array_element_type":null
+        }
+      },
+      {
+        "name":"detachAllInterrupts",
+        "parameters":[]
       }
     ],
     "parameters":[

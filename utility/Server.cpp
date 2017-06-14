@@ -89,13 +89,6 @@ void Server::setup()
   get_device_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getDeviceInfoHandler));
   get_device_info_function.setResultTypeObject();
 
-  Function & get_interrupt_info_function = createFunction(constants::get_interrupt_info_function_name);
-  get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
-  get_interrupt_info_function.setResultTypeObject();
-
-  Function & detach_all_interrupts_function = createFunction(constants::detach_all_interrupts_function_name);
-  detach_all_interrupts_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllInterruptsHandler));
-
   Function & get_api_function = createFunction(constants::get_api_function_name);
   get_api_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
   get_api_function.addParameter(firmware_parameter);
@@ -127,6 +120,13 @@ void Server::setup()
   Function & get_all_property_values_function = createFunction(constants::get_all_property_values_function_name);
   get_all_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getAllPropertyValuesHandler));
   get_all_property_values_function.setResultTypeObject();
+
+  Function & get_interrupt_info_function = createFunction(constants::get_interrupt_info_function_name);
+  get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
+  get_interrupt_info_function.setResultTypeArray();
+
+  Function & detach_all_interrupts_function = createFunction(constants::detach_all_interrupts_function_name);
+  detach_all_interrupts_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllInterruptsHandler));
 
 #ifdef __AVR__
   Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
