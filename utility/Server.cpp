@@ -124,6 +124,7 @@ void Server::setup()
   Function & get_interrupt_info_function = createFunction(constants::get_interrupt_info_function_name);
   get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
   get_interrupt_info_function.setResultTypeArray();
+  get_interrupt_info_function.setResultTypeObject();
 
   Function & detach_all_interrupts_function = createFunction(constants::detach_all_interrupts_function_name);
   detach_all_interrupts_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllInterruptsHandler));
