@@ -390,16 +390,118 @@ bool Property::setAllElementValues(const T & value)
   return success;
 }
 
-template <typename T>
-bool Property::setDefaultValue(T & default_value)
+template <size_t N>
+bool Property::setDefaultValue(const long (&default_value)[N])
 {
-  return saved_variable_.setDefaultValue(default_value);
-};
+  bool success = false;
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::LONG_TYPE))
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+    if (success)
+    {
+      parameter_.setArrayLengthRange(N,N);
+      setArrayLengthRange(N,N);
+    }
+  }
+  return success;
+}
+
+template <size_t N>
+bool Property::setDefaultValue(const double (&default_value)[N])
+{
+  bool success = false;
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::DOUBLE_TYPE))
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+    if (success)
+    {
+      parameter_.setArrayLengthRange(N,N);
+      setArrayLengthRange(N,N);
+    }
+  }
+  return success;
+}
+
+template <size_t N>
+bool Property::setDefaultValue(const bool (&default_value)[N])
+{
+  bool success = false;
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::BOOL_TYPE))
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+    if (success)
+    {
+      parameter_.setArrayLengthRange(N,N);
+      setArrayLengthRange(N,N);
+    }
+  }
+  return success;
+}
+
+template <size_t N>
+bool Property::setDefaultValue(const char (&default_value)[N])
+{
+  bool success = false;
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::STRING_TYPE) &&
+      string_saved_as_char_array_)
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+    if (success)
+    {
+      parameter_.setArrayLengthRange(N,N);
+      setArrayLengthRange(N,N);
+    }
+  }
+  size_t array_length = getArrayLength();
+  char string[array_length];
+  getValue(string,array_length);
+  size_t string_length = strlen(string);
+  if (string_length >= array_length)
+  {
+    setValueToDefault();
+  }
+  else
+  {
+    for (size_t i=0; i<string_length; ++i)
+    {
+      char c = string[i];
+      // check if all characters are printable ascii
+      if ((c < 32) || (c > 126))
+      {
+        setValueToDefault();
+        break;
+      }
+    }
+  }
+  return success;
+}
+
+template <size_t N>
+bool Property::setDefaultValue(const ConstantString * const (&default_value)[N])
+{
+  bool success = false;
+  if ((getType() == JsonStream::ARRAY_TYPE) &&
+      (getArrayElementType() == JsonStream::STRING_TYPE) &&
+      !string_saved_as_char_array_)
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+    if (success)
+    {
+      parameter_.setArrayLengthRange(N,N);
+      setArrayLengthRange(N,N);
+    }
+  }
+  return success;
+}
 
 // private
 template <size_t N>
 Property::Property(const ConstantString & name,
-                   const long (&default_value)[N]):
+                   const long (&default_value)[N]) :
   parameter_(name),
   saved_variable_(default_value)
 {

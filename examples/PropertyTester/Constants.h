@@ -47,6 +47,7 @@ extern const double double_max_new;
 
 extern ConstantString bool_property_name;
 extern const bool bool_default;
+extern const bool bool_default_new;
 
 extern ConstantString long_array_property_name;
 enum{LONG_ARRAY_LENGTH=4};
@@ -61,8 +62,10 @@ extern const double double_array_element_min;
 extern const double double_array_element_max;
 
 extern ConstantString bool_array_property_name;
-enum{BOOL_ARRAY_LENGTH=2};
+enum{BOOL_ARRAY_LENGTH=4};
 extern const bool bool_array_default[BOOL_ARRAY_LENGTH];
+enum{BOOL_ARRAY_LENGTH_NEW=2};
+extern const bool bool_array_default_new[BOOL_ARRAY_LENGTH_NEW];
 
 extern ConstantString string_property_name;
 enum{STRING_LENGTH_MAX=10};

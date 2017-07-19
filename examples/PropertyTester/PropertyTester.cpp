@@ -39,6 +39,7 @@ void PropertyTester::setup()
   double_property.setRange(constants::double_min,constants::double_max);
 
   modular_server::Property & bool_property = modular_server_.createProperty(constants::bool_property_name,constants::bool_default);
+  bool_property.setDefaultValue(constants::bool_default_new);
   bool_property.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::preSetPropertyValueHandler));
   bool_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::postSetPropertyValueHandler));
 
@@ -50,6 +51,7 @@ void PropertyTester::setup()
   double_array_property.setRange(constants::double_array_element_min,constants::double_array_element_max);
 
   modular_server::Property & bool_array_property = modular_server_.createProperty(constants::bool_array_property_name,constants::bool_array_default);
+  bool_array_property.setDefaultValue(constants::bool_array_default_new);
   bool_array_property.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::preSetPropertyValueHandler));
   bool_array_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::postSetPropertyValueHandler));
   bool_array_property.attachPreSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&PropertyTester::preSetPropertyElementValueHandler));

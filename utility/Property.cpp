@@ -624,6 +624,63 @@ bool Property::setAllElementValues<const char *>(const char * const & value)
   return success;
 }
 
+template <>
+bool Property::setDefaultValue<long>(const long & default_value)
+{
+  bool success = false;
+  if (getType() == JsonStream::LONG_TYPE)
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+  }
+  return success;
+}
+
+template <>
+bool Property::setDefaultValue<double>(const double & default_value)
+{
+  bool success = false;
+  if (getType() == JsonStream::DOUBLE_TYPE)
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+  }
+  return success;
+}
+
+template <>
+bool Property::setDefaultValue<bool>(const bool & default_value)
+{
+  bool success = false;
+  if (getType() == JsonStream::BOOL_TYPE)
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+  }
+  return success;
+}
+
+template <>
+bool Property::setDefaultValue<const ConstantString *>(const ConstantString * const & default_value)
+{
+  bool success = false;
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      !stringSavedAsCharArray())
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+  }
+  return success;
+}
+
+template <>
+bool Property::setDefaultValue<ConstantString *>(ConstantString * const & default_value)
+{
+  bool success = false;
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      !stringSavedAsCharArray())
+  {
+    success = saved_variable_.setDefaultValue(default_value);
+  }
+  return success;
+}
+
 bool Property::setDefaultToRangeMin()
 {
   if (rangeIsSet())

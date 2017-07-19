@@ -75,7 +75,8 @@ const double double_min_new = 5.0;
 const double double_max_new = 10.0;
 
 CONSTANT_STRING(bool_property_name,"bool");
-const bool bool_default = false;
+const bool bool_default = true;
+const bool bool_default_new = false;
 
 CONSTANT_STRING(long_array_property_name,"longArray");
 const long long_array_default[LONG_ARRAY_LENGTH] = {5,4,3,2};
@@ -88,7 +89,8 @@ const double double_array_element_min = -33.333;
 const double double_array_element_max = 100.0;
 
 CONSTANT_STRING(bool_array_property_name,"boolArray");
-const bool bool_array_default[BOOL_ARRAY_LENGTH] = {false,true};
+const bool bool_array_default[BOOL_ARRAY_LENGTH] = {true,false,false,true};
+const bool bool_array_default_new[BOOL_ARRAY_LENGTH_NEW] = {false,true};
 
 CONSTANT_STRING(string_property_name,"string");
 const char string_default[STRING_LENGTH_MAX] = "abcdef";

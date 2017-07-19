@@ -113,7 +113,17 @@ public:
   template <typename T>
   bool setAllElementValues(const T & value);
   template <typename T>
-  bool setDefaultValue(T & default_value);
+  bool setDefaultValue(const T & default_value);
+  template <size_t N>
+  bool setDefaultValue(const long (&default_value)[N]);
+  template <size_t N>
+  bool setDefaultValue(const double (&default_value)[N]);
+  template <size_t N>
+  bool setDefaultValue(const bool (&default_value)[N]);
+  template <size_t N>
+  bool setDefaultValue(const char (&default_value)[N]);
+  template <size_t N>
+  bool setDefaultValue(const ConstantString * const (&default_value)[N]);
   bool setDefaultToRangeMin();
   bool setDefaultToRangeMax();
   bool setDefaultToSubsetElement(const size_t element_index);
