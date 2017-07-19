@@ -17,8 +17,8 @@ const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=2,
-    .version_minor=8,
-    .version_patch=3,
+    .version_minor=9,
+    .version_patch=0,
   };
 
 const long response_pipe_read_max = 100000;
