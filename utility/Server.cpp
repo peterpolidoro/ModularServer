@@ -459,8 +459,8 @@ void Server::processRequestArray()
   request_method_index_ = findMethodIndex(method_string);
   if (request_method_index_ >= 0)
   {
-    int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
-    int parameter_count = array_elements_count - 1;
+    size_t array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
+    size_t parameter_count = (array_elements_count > 0) ? (array_elements_count - 1) : 0;
     char question_str[constants::question_constant_string.length()+1];
     constants::question_constant_string.copy(question_str);
     char question_double_str[constants::question_double_constant_string.length()+1];
@@ -497,7 +497,7 @@ void Server::processRequestArray()
         }
       }
       // execute private function without checking parameters
-      else if (request_method_index_ <= private_function_index_)
+      else if (request_method_index_ <= (int)private_function_index_)
       {
         function.functor();
       }
@@ -560,7 +560,7 @@ void Server::processRequestArray()
 
         Function & function = callback.functions_[callback_function_index_];
 
-        int callback_parameter_count = parameter_count - 1;
+        size_t callback_parameter_count = (parameter_count > 0) ? (parameter_count - 1) : 0;
 
         // callback function ?
         if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
@@ -603,7 +603,6 @@ void Server::processRequestArray()
           ++iterator;
           // do not check callback method at begin + 1
           ++iterator;
-          long test = *iterator;
           bool parameters_ok = checkParameters(function,iterator);
           if (parameters_ok)
           {
@@ -653,7 +652,7 @@ void Server::processRequestArray()
 
         Function & function = property.functions_[property_function_index_];
 
-        int property_parameter_count = parameter_count - 1;
+        size_t property_parameter_count = (parameter_count > 0) ? (parameter_count - 1) : 0;
 
         // property function ?
         if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
@@ -696,7 +695,6 @@ void Server::processRequestArray()
           ++iterator;
           // do not check property method at begin + 1
           ++iterator;
-          long test = *iterator;
           bool parameters_ok = checkParameters(function,iterator);
           if (parameters_ok)
           {
@@ -755,14 +753,14 @@ int Server::findMethodIndex(const char * method_string)
   return method_index;
 }
 
-int Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
+size_t Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
 {
-  int elements_count = 0;
+  size_t elements_count = 0;
   for (ArduinoJson::JsonArray::iterator it=json_array.begin();
        it!=json_array.end();
        ++it)
   {
-    elements_count++;
+    ++elements_count;
   }
   return elements_count;
 }
@@ -2070,6 +2068,15 @@ void Server::writePropertyToResponse(Property & property,
       response_.write(property_value);
       break;
     }
+    case JsonStream::NULL_TYPE:
+    {
+      if (element_index >= 0)
+      {
+        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
+        return;
+      }
+      break;
+    }
     case JsonStream::STRING_TYPE:
     {
       size_t array_length = property.getArrayLength();
@@ -2256,6 +2263,10 @@ void Server::writePropertyToResponse(Property & property,
           break;
         }
       }
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
       break;
     }
     case JsonStream::ANY_TYPE:

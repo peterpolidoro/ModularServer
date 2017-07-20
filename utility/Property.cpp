@@ -57,6 +57,7 @@ Parameter & Property::createParameter(const ConstantString & parameter_name)
     parameters_.back().setFirmwareName(constants::firmware_name);
     return parameters_.back();
   }
+  return parameters_[0]; // bad reference
 }
 
 Parameter & Property::parameter(const ConstantString & parameter_name)
@@ -66,6 +67,7 @@ Parameter & Property::parameter(const ConstantString & parameter_name)
   {
     return parameters_[parameter_index];
   }
+  return parameters_[0]; // bad reference
 }
 
 Parameter & Property::copyParameter(Parameter parameter, const ConstantString & parameter_name)
@@ -84,6 +86,7 @@ Function & Property::createFunction(const ConstantString & function_name)
     functions_.back().setFirmwareName(constants::firmware_name);
     return functions_.back();
   }
+  return functions_[0]; // bad reference
 }
 
 Function & Property::function(const ConstantString & function_name)
@@ -93,6 +96,7 @@ Function & Property::function(const ConstantString & function_name)
   {
     return functions_[function_index];
   }
+  return functions_[0]; // bad reference
 }
 
 // public

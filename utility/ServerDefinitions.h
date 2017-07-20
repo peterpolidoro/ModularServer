@@ -64,6 +64,7 @@ Property & Server::createProperty(const ConstantString & property_name,
     properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return properties_.back();
   }
+  return properties_[0]; // bad reference
 }
 
 template <typename T, size_t N>
@@ -79,6 +80,7 @@ Property & Server::createProperty(const ConstantString & property_name,
     properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return properties_.back();
   }
+  return properties_[0]; // bad reference
 }
 
 // Parameters

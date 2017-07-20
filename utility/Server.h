@@ -127,7 +127,7 @@ private:
   Parameter dummy_parameter_;
   Function dummy_function_;
   Callback dummy_callback_;
-  int private_function_index_;
+  size_t private_function_index_;
   const ConstantString * device_name_ptr_;
   const ConstantString * form_factor_ptr_;
   Array<const constants::FirmwareInfo *,constants::FIRMWARE_COUNT_MAX> firmware_info_array_;
@@ -156,7 +156,7 @@ private:
   int findFunctionIndex(T const & function_name);
   template <typename T>
   int findCallbackIndex(T const & callback_name);
-  int countJsonArrayElements(ArduinoJson::JsonArray & json_array);
+  size_t countJsonArrayElements(ArduinoJson::JsonArray & json_array);
   int processParameterString(Function & function,
                              const char * parameter_string);
   bool checkParameters(Function & function,

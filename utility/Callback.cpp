@@ -45,6 +45,7 @@ Parameter & Callback::createParameter(const ConstantString & parameter_name)
     parameters_.back().setFirmwareName(constants::firmware_name);
     return parameters_.back();
   }
+  return parameters_[0]; // bad reference
 }
 
 Parameter & Callback::parameter(const ConstantString & parameter_name)
@@ -54,6 +55,7 @@ Parameter & Callback::parameter(const ConstantString & parameter_name)
   {
     return parameters_[parameter_index];
   }
+  return parameters_[0]; // bad reference
 }
 
 Parameter & Callback::copyParameter(Parameter parameter, const ConstantString & parameter_name)
@@ -72,6 +74,7 @@ Function & Callback::createFunction(const ConstantString & function_name)
     functions_.back().setFirmwareName(constants::firmware_name);
     return functions_.back();
   }
+  return functions_[0]; // bad reference
 }
 
 Function & Callback::function(const ConstantString & function_name)
@@ -81,6 +84,7 @@ Function & Callback::function(const ConstantString & function_name)
   {
     return functions_[function_index];
   }
+  return functions_[0]; // bad reference
 }
 
 // public
