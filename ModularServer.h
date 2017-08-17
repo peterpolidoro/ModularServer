@@ -58,7 +58,8 @@ public:
   Property & createProperty(const ConstantString & property_name,
                             const T (&default_value)[N]);
   Property & property(const ConstantString & property_name);
-  void setPropertiesToDefaults();
+  void setPropertiesToDefaults(ArduinoJson::JsonArray & firmware_name_array);
+  void setAllPropertiesToDefaults();
 
   // Parameters
   Parameter & createParameter(const ConstantString & parameter_name);

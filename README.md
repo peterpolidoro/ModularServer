@@ -25,11 +25,8 @@ work with the Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy
       "getApi",
       "getApiVerbose",
       "getPropertyDefaultValues",
-      "getAllPropertyDefaultValues",
       "setPropertiesToDefaults",
-      "setAllPropertiesToDefaults",
       "getPropertyValues",
-      "getAllPropertyValues",
       "getInterruptInfo",
       "detachAllInterrupts"
     ],

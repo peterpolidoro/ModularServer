@@ -78,6 +78,7 @@ void CallbackTester::setup()
   set_led_off_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&CallbackTester::setLedOffHandler));
   set_led_off_callback.attachTo(bnc_b_interrupt,modular_server::interrupt::mode_falling);
   set_led_off_callback.attachTo(bnc_d_interrupt,modular_server::interrupt::mode_falling);
+  set_led_off_callback.attachTo(bnc_f_interrupt,modular_server::interrupt::mode_falling);
 
   modular_server::Callback & blink_led_callback = modular_server_.createCallback(constants::blink_led_callback_name);
   blink_led_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&CallbackTester::blinkLedHandler));

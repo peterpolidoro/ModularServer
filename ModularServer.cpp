@@ -58,9 +58,14 @@ Property & ModularServer::property(const ConstantString & property_name)
   return server_.property(property_name);
 }
 
-void ModularServer::setPropertiesToDefaults()
+void ModularServer::setPropertiesToDefaults(ArduinoJson::JsonArray & firmware_name_array)
 {
-  server_.setPropertiesToDefaults();
+  server_.setPropertiesToDefaults(firmware_name_array);
+}
+
+void ModularServer::setAllPropertiesToDefaults()
+{
+  server_.setAllPropertiesToDefaults();
 }
 
 // Parameters

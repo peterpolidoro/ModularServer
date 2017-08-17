@@ -16,9 +16,9 @@ CONSTANT_STRING(firmware_name,"ModularServer");
 const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
-    .version_major=2,
-    .version_minor=9,
-    .version_patch=1,
+    .version_major=3,
+    .version_minor=0,
+    .version_patch=0,
   };
 
 const long response_pipe_read_max = 100000;
@@ -42,11 +42,8 @@ CONSTANT_STRING(detach_all_interrupts_function_name,"detachAllInterrupts");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_api_verbose_function_name,"getApiVerbose");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
-CONSTANT_STRING(get_all_property_default_values_function_name,"getAllPropertyDefaultValues");
 CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefaults");
-CONSTANT_STRING(set_all_properties_to_defaults_function_name,"setAllPropertiesToDefaults");
 CONSTANT_STRING(get_property_values_function_name,"getPropertyValues");
-CONSTANT_STRING(get_all_property_values_function_name,"getAllPropertyValues");
 CONSTANT_STRING(get_memory_free_function_name,"getMemoryFree");
 
 // Callbacks

@@ -41,7 +41,7 @@ void StringController::setup()
   modular_server::Property & starting_chars_count_property = modular_server_.createProperty(constants::starting_chars_count_property_name,constants::starting_chars_count_default);
   starting_chars_count_property.setRange(constants::starting_chars_count_min,constants::starting_chars_count_max);
 
-  modular_server::Property & stored_string_property = modular_server_.createProperty(constants::stored_string_property_name,constants::stored_string_default);
+  modular_server_.createProperty(constants::stored_string_property_name,constants::stored_string_default);
 
   // Parameters
   modular_server::Parameter & string_parameter = modular_server_.createParameter(constants::string_parameter_name);
@@ -195,7 +195,7 @@ void StringController::charsAtHandler()
        it != index_array_ptr->end();
        ++it)
   {
-    long index = *it;
+    size_t index = *it;
     if (index >= String(string).length())
     {
       response.returnError(constants::index_error);

@@ -346,7 +346,7 @@ void PropertyTester::getCountHandler()
 void PropertyTester::getCountArrayHandler()
 {
   ArduinoJson::JsonArray * count_array_ptr;
-  bool success = modular_server_.parameter(constants::count_array_parameter_name).getValue(count_array_ptr);
+  modular_server_.parameter(constants::count_array_parameter_name).getValue(count_array_ptr);
   modular_server_.response().returnResult(count_array_ptr);
 }
 

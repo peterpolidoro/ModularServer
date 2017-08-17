@@ -101,25 +101,17 @@ void Server::setup()
 
   Function & get_property_default_values_function = createFunction(constants::get_property_default_values_function_name);
   get_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
+  get_property_default_values_function.addParameter(firmware_parameter);
   get_property_default_values_function.setResultTypeObject();
-
-  Function & get_all_property_default_values_function = createFunction(constants::get_all_property_default_values_function_name);
-  get_all_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getAllPropertyDefaultValuesHandler));
-  get_all_property_default_values_function.setResultTypeObject();
 
   Function & set_properties_to_defaults_function = createFunction(constants::set_properties_to_defaults_function_name);
   set_properties_to_defaults_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPropertiesToDefaultsHandler));
-
-  Function & set_all_properties_to_defaults_function = createFunction(constants::set_all_properties_to_defaults_function_name);
-  set_all_properties_to_defaults_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setAllPropertiesToDefaultsHandler));
+  set_properties_to_defaults_function.addParameter(firmware_parameter);
 
   Function & get_property_values_function = createFunction(constants::get_property_values_function_name);
   get_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyValuesHandler));
+  get_property_values_function.addParameter(firmware_parameter);
   get_property_values_function.setResultTypeObject();
-
-  Function & get_all_property_values_function = createFunction(constants::get_all_property_values_function_name);
-  get_all_property_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getAllPropertyValuesHandler));
-  get_all_property_values_function.setResultTypeObject();
 
   Function & get_interrupt_info_function = createFunction(constants::get_interrupt_info_function_name);
   get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
@@ -236,14 +228,12 @@ Property & Server::property(const ConstantString & property_name)
   return dummy_property_;
 }
 
-void Server::setPropertiesToDefaults()
+void Server::setPropertiesToDefaults(ArduinoJson::JsonArray & firmware_name_array)
 {
-  constants::SubsetMemberType firmware_name = firmware_name_array_.back();
-
   for (size_t i=0; i<properties_.size(); ++i)
   {
     Property & property = properties_[i];
-    if (property.parameter().compareFirmwareName(firmware_name))
+    if (property.parameter().firmwareNameInArray(firmware_name_array))
     {
       property.setValueToDefault();
     }
@@ -2508,14 +2498,15 @@ void Server::getMemoryFreeHandler()
 
 void Server::getPropertyDefaultValuesHandler()
 {
-  constants::SubsetMemberType firmware_name = firmware_name_array_.back();
+  ArduinoJson::JsonArray * firmware_name_array_ptr;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
 
   response_.writeResultKey();
   response_.beginObject();
   for (size_t i=0; i<properties_.size(); ++i)
   {
     Property & property = properties_[i];
-    if (property.parameter().compareFirmwareName(firmware_name))
+    if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
     {
       writePropertyToResponse(property,true,true);
     }
@@ -2523,28 +2514,17 @@ void Server::getPropertyDefaultValuesHandler()
   response_.endObject();
 }
 
-void Server::getAllPropertyDefaultValuesHandler()
-{
-  response_.writeResultKey();
-  response_.beginObject();
-  for (size_t i=0; i<properties_.size(); ++i)
-  {
-    Property & property = properties_[i];
-    writePropertyToResponse(property,true,true);
-  }
-  response_.endObject();
-}
-
 void Server::getPropertyValuesHandler()
 {
-  constants::SubsetMemberType firmware_name = firmware_name_array_.back();
+  ArduinoJson::JsonArray * firmware_name_array_ptr;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
 
   response_.writeResultKey();
   response_.beginObject();
   for (size_t i=0; i<properties_.size(); ++i)
   {
     Property & property = properties_[i];
-    if (property.parameter().compareFirmwareName(firmware_name))
+    if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
     {
       writePropertyToResponse(property,true,false);
     }
@@ -2552,26 +2532,12 @@ void Server::getPropertyValuesHandler()
   response_.endObject();
 }
 
-void Server::getAllPropertyValuesHandler()
-{
-  response_.writeResultKey();
-  response_.beginObject();
-  for (size_t i=0; i<properties_.size(); ++i)
-  {
-    Property & property = properties_[i];
-    writePropertyToResponse(property,true,false);
-  }
-  response_.endObject();
-}
-
 void Server::setPropertiesToDefaultsHandler()
 {
-  setPropertiesToDefaults();
-}
+  ArduinoJson::JsonArray * firmware_name_array_ptr;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
 
-void Server::setAllPropertiesToDefaultsHandler()
-{
-  setAllPropertiesToDefaults();
+  setPropertiesToDefaults(*firmware_name_array_ptr);
 }
 
 }

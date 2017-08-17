@@ -37,36 +37,24 @@
       },
       {
         "name":"getPropertyDefaultValues",
-        "parameters":[],
-        "result_info":{
-          "type":"object"
-        }
-      },
-      {
-        "name":"getAllPropertyDefaultValues",
-        "parameters":[],
+        "parameters":[
+          "firmware"
+        ],
         "result_info":{
           "type":"object"
         }
       },
       {
         "name":"setPropertiesToDefaults",
-        "parameters":[]
-      },
-      {
-        "name":"setAllPropertiesToDefaults",
-        "parameters":[]
+        "parameters":[
+          "firmware"
+        ]
       },
       {
         "name":"getPropertyValues",
-        "parameters":[],
-        "result_info":{
-          "type":"object"
-        }
-      },
-      {
-        "name":"getAllPropertyValues",
-        "parameters":[],
+        "parameters":[
+          "firmware"
+        ],
         "result_info":{
           "type":"object"
         }
@@ -76,7 +64,7 @@
         "parameters":[],
         "result_info":{
           "type":"array",
-          "array_element_type":null
+          "array_element_type":"object"
         }
       },
       {
