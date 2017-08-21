@@ -188,7 +188,7 @@ private:
   void interruptHelp(Interrupt & interrupt,
                      bool verbose);
   void writeInterruptInfoToResponse();
-  void writeApiToResponse(bool verbose,
+  void writeApiToResponse(const ConstantString & verbosity,
                           ArduinoJson::JsonArray & firmware_name_array);
   void writePropertyToResponse(Property & property,
                                bool write_key=false,
@@ -216,7 +216,6 @@ private:
   void getInterruptInfoHandler();
   void detachAllInterruptsHandler();
   void getApiHandler();
-  void getApiVerboseHandler();
   void getMemoryFreeHandler();
   void getPropertyDefaultValuesHandler();
   void getPropertyValuesHandler();

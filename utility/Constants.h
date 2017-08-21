@@ -19,8 +19,8 @@ enum {HARDWARE_COUNT_MAX=4};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
-enum{SERVER_PARAMETER_COUNT_MAX=1};
-enum{SERVER_FUNCTION_COUNT_MAX=13};
+enum{SERVER_PARAMETER_COUNT_MAX=2};
+enum{SERVER_FUNCTION_COUNT_MAX=12};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {FUNCTION_PARAMETER_COUNT_MAX=8};
@@ -83,6 +83,11 @@ extern const long serial_number_max;
 extern const long serial_number_default;
 
 // Parameters
+enum{VERBOSITY_SUBSET_LENGTH=3};
+extern ConstantString verbosity_names;
+extern ConstantString verbosity_class;
+extern ConstantString verbosity_instance;
+extern SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH];
 
 // Functions
 extern ConstantString get_method_ids_function_name;
@@ -93,7 +98,6 @@ extern ConstantString get_device_info_function_name;
 extern ConstantString get_interrupt_info_function_name;
 extern ConstantString detach_all_interrupts_function_name;
 extern ConstantString get_api_function_name;
-extern ConstantString get_api_verbose_function_name;
 extern ConstantString get_property_default_values_function_name;
 extern ConstantString set_properties_to_defaults_function_name;
 extern ConstantString get_property_values_function_name;
@@ -173,6 +177,7 @@ extern ConstantString part_number_constant_string;
 extern ConstantString device_id_constant_string;
 extern ConstantString device_info_constant_string;
 extern ConstantString api_constant_string;
+extern ConstantString verbosity_constant_string;
 extern ConstantString value_constant_string;
 extern ConstantString default_value_constant_string;
 extern ConstantString question_constant_string;

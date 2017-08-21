@@ -65,6 +65,10 @@ void Server::setup()
                                firmware_name_array_.max_size(),
                                firmware_name_array_.size());
 
+  Parameter & verbosity_parameter = createParameter(constants::verbosity_constant_string);
+  verbosity_parameter.setTypeString();
+  verbosity_parameter.setSubset(constants::verbosity_ptr_subset);
+
   // Functions
   Function & get_method_ids_function = createFunction(constants::get_method_ids_function_name);
   get_method_ids_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsHandler));
@@ -91,13 +95,9 @@ void Server::setup()
 
   Function & get_api_function = createFunction(constants::get_api_function_name);
   get_api_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiHandler));
+  get_api_function.addParameter(verbosity_parameter);
   get_api_function.addParameter(firmware_parameter);
   get_api_function.setResultTypeObject();
-
-  Function & get_api_verbose_function = createFunction(constants::get_api_verbose_function_name);
-  get_api_verbose_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getApiVerboseHandler));
-  get_api_verbose_function.addParameter(firmware_parameter);
-  get_api_verbose_function.setResultTypeObject();
 
   Function & get_property_default_values_function = createFunction(constants::get_property_default_values_function_name);
   get_property_default_values_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPropertyDefaultValuesHandler));
@@ -1164,7 +1164,7 @@ void Server::propertyHelp(Property & property,
   {
     if (verbose && !api)
     {
-      parameterHelp(Property::parameters_[i]);
+      parameterHelp(Property::parameters_[i],false);
     }
     else
     {
@@ -1374,7 +1374,7 @@ void Server::functionHelp(Function & function,
   {
     if (verbose && !api)
     {
-      parameterHelp(*((*parameter_ptrs_ptr)[i]));
+      parameterHelp(*((*parameter_ptrs_ptr)[i]),false);
     }
     else
     {
@@ -1489,7 +1489,7 @@ void Server::callbackHelp(Callback & callback,
   {
     if (verbose && !api)
     {
-      parameterHelp(Callback::parameters_[i]);
+      parameterHelp(Callback::parameters_[i],false);
     }
     else
     {
@@ -1529,7 +1529,7 @@ void Server::help(bool verbose)
       all_str[0] = '\0';
       constants::all_constant_string.copy(all_str);
       firmware_name_array.add<char *>(all_str);
-      writeApiToResponse(false,firmware_name_array);
+      writeApiToResponse(constants::verbosity_names,firmware_name_array);
     }
     else
     {
@@ -1539,7 +1539,7 @@ void Server::help(bool verbose)
       firmware_name_str[0] = '\0';
       firmware_name.cs_ptr->copy(firmware_name_str);
       firmware_name_array.add<char *>(firmware_name_str);
-      writeApiToResponse(false,firmware_name_array);
+      writeApiToResponse(constants::verbosity_names,firmware_name_array);
     }
 
     response_.endObject();
@@ -1860,7 +1860,7 @@ void Server::writeInterruptInfoToResponse()
   response_.endArray();
 }
 
-void Server::writeApiToResponse(bool verbose,
+void Server::writeApiToResponse(const ConstantString & verbosity,
                                 ArduinoJson::JsonArray & firmware_name_array)
 {
   if (response_.error())
@@ -1871,7 +1871,9 @@ void Server::writeApiToResponse(bool verbose,
 
   response_.write(constants::firmware_constant_string,&firmware_name_array);
 
-  if (!verbose)
+  response_.write(constants::verbosity_constant_string,verbosity);
+
+  if (&verbosity == &constants::verbosity_names)
   {
     response_.writeKey(constants::functions_constant_string);
     response_.beginArray();
@@ -2475,18 +2477,25 @@ void Server::detachAllInterruptsHandler()
 
 void Server::getApiHandler()
 {
-  ArduinoJson::JsonArray * firmware_name_array_ptr;
-  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
-  response_.writeResultKey();
-  writeApiToResponse(false,*firmware_name_array_ptr);
-}
+  const char * verbosity;
+  parameter(constants::verbosity_constant_string).getValue(verbosity);
 
-void Server::getApiVerboseHandler()
-{
   ArduinoJson::JsonArray * firmware_name_array_ptr;
   parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
   response_.writeResultKey();
-  writeApiToResponse(true,*firmware_name_array_ptr);
+
+  if (verbosity == constants::verbosity_names)
+  {
+    writeApiToResponse(constants::verbosity_names,*firmware_name_array_ptr);
+  }
+  else if (verbosity == constants::verbosity_class)
+  {
+    writeApiToResponse(constants::verbosity_class,*firmware_name_array_ptr);
+  }
+  else if (verbosity == constants::verbosity_instance)
+  {
+    writeApiToResponse(constants::verbosity_instance,*firmware_name_array_ptr);
+  }
 }
 
 #ifdef __AVR__

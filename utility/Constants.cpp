@@ -30,6 +30,15 @@ const long serial_number_max = 65535;
 const long serial_number_default = serial_number_min;
 
 // Parameters
+CONSTANT_STRING(verbosity_names,"NAMES");
+CONSTANT_STRING(verbosity_class,"CLASS");
+CONSTANT_STRING(verbosity_instance,"INSTANCE");
+SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH] =
+  {
+    {.cs_ptr=&verbosity_names},
+    {.cs_ptr=&verbosity_class},
+    {.cs_ptr=&verbosity_instance},
+  };
 
 // Functions
 CONSTANT_STRING(get_method_ids_function_name,"getMethodIds");
@@ -40,7 +49,6 @@ CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
 CONSTANT_STRING(get_interrupt_info_function_name,"getInterruptInfo");
 CONSTANT_STRING(detach_all_interrupts_function_name,"detachAllInterrupts");
 CONSTANT_STRING(get_api_function_name,"getApi");
-CONSTANT_STRING(get_api_verbose_function_name,"getApiVerbose");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
 CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefaults");
 CONSTANT_STRING(get_property_values_function_name,"getPropertyValues");
@@ -118,7 +126,8 @@ CONSTANT_STRING(version_constant_string,"version");
 CONSTANT_STRING(part_number_constant_string,"part_number");
 CONSTANT_STRING(device_id_constant_string,"device_id");
 CONSTANT_STRING(device_info_constant_string,"device_info");
-CONSTANT_STRING(api_constant_string,"API");
+CONSTANT_STRING(api_constant_string,"api");
+CONSTANT_STRING(verbosity_constant_string,"verbosity");
 CONSTANT_STRING(value_constant_string,"value");
 CONSTANT_STRING(default_value_constant_string,"default_value");
 CONSTANT_STRING(question_constant_string,"?");
