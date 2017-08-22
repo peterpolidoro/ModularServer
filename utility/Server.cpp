@@ -1147,9 +1147,9 @@ void Server::propertyHelp(Property & property,
   response_.beginArray();
   for (size_t i=0; i<Property::functions_.size(); ++i)
   {
-    if (verbose && !api)
+    if (verbose)
     {
-      functionHelp(Property::functions_[i],false);
+      functionHelp(Property::functions_[i],false,true);
     }
     else
     {
@@ -1162,9 +1162,9 @@ void Server::propertyHelp(Property & property,
   response_.beginArray();
   for (size_t i=0; i<Property::parameters_.size(); ++i)
   {
-    if (verbose && !api)
+    if (verbose)
     {
-      parameterHelp(Property::parameters_[i],false);
+      parameterHelp(Property::parameters_[i],false,api);
     }
     else
     {
@@ -1472,9 +1472,9 @@ void Server::callbackHelp(Callback & callback,
   response_.beginArray();
   for (size_t i=0; i<Callback::functions_.size(); ++i)
   {
-    if (verbose && !api)
+    if (verbose)
     {
-      functionHelp(Callback::functions_[i],false);
+      functionHelp(Callback::functions_[i],false,true);
     }
     else
     {
@@ -1487,9 +1487,9 @@ void Server::callbackHelp(Callback & callback,
   response_.beginArray();
   for (size_t i=0; i<Callback::parameters_.size(); ++i)
   {
-    if (verbose && !api)
+    if (verbose)
     {
-      parameterHelp(Callback::parameters_[i],false);
+      parameterHelp(Callback::parameters_[i],false,api);
     }
     else
     {
@@ -1966,7 +1966,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Property & property = properties_[property_index];
       if (property.firmwareNameInArray(firmware_name_array))
       {
-        propertyHelp(property,false,true);
+        propertyHelp(property,true,true);
       }
     }
     response_.endArray();
@@ -1978,7 +1978,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Callback & callback = callbacks_[callback_index];
       if (callback.firmwareNameInArray(firmware_name_array))
       {
-        callbackHelp(callback,false,true);
+        callbackHelp(callback,true,true);
       }
     }
     response_.endArray();

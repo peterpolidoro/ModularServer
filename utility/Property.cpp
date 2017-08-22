@@ -1257,6 +1257,12 @@ void Property::updateFunctionsAndParameters()
   {
     JsonStream::JsonTypes array_element_type = getArrayElementType();
 
+    // Update Function Result Type
+    get_value_function.setResultType(array_element_type);
+    set_value_function.setResultType(array_element_type);
+    get_default_value_function.setResultType(array_element_type);
+    set_value_to_default_function.setResultType(array_element_type);
+
     // Array Parameters
     parameters_.addArray(property_array_parameters_);
 
@@ -1316,6 +1322,10 @@ void Property::updateFunctionsAndParameters()
 
     if (type == JsonStream::ARRAY_TYPE)
     {
+      set_element_value_function.setResultType(array_element_type);
+      set_element_value_to_default_function.setResultType(array_element_type);
+      set_all_element_values_function.setResultType(array_element_type);
+
       Function & get_array_length_function = createFunction(property::get_array_length_function_name);
       get_array_length_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Property::getArrayLengthHandler));
       get_array_length_function.setResultTypeLong();

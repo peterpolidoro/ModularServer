@@ -77,8 +77,8 @@ void PropertyTester::setup()
 
   // Parameters
   modular_server::Parameter & long_array_parameter = modular_server_.createParameter(constants::long_array_parameter_name);
-  long_array_parameter.setTypeLong();
   long_array_parameter.setTypeArray();
+  long_array_parameter.setTypeLong();
 
   modular_server::Parameter & length_parameter = modular_server_.createParameter(constants::length_parameter_name);
   length_parameter.setRange(constants::length_min,constants::length_max);
@@ -117,10 +117,12 @@ void PropertyTester::setup()
   modular_server::Function & get_long_array_fixed_function = modular_server_.createFunction(constants::get_long_array_fixed_function_name);
   get_long_array_fixed_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getLongArrayFixedHandler));
   get_long_array_fixed_function.setResultTypeArray();
+  get_long_array_fixed_function.setResultTypeLong();
 
   modular_server::Function & get_long_array_variable_function = modular_server_.createFunction(constants::get_long_array_variable_function_name);
   get_long_array_variable_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getLongArrayVariableHandler));
   get_long_array_variable_function.setResultTypeArray();
+  get_long_array_variable_function.setResultTypeLong();
 
   modular_server::Function & set_long_array_fixed_function = modular_server_.createFunction(constants::set_long_array_fixed_function_name);
   set_long_array_fixed_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::setLongArrayFixedHandler));
@@ -153,6 +155,7 @@ void PropertyTester::setup()
   get_count_array_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getCountArrayHandler));
   get_count_array_function.addParameter(count_array_parameter);
   get_count_array_function.setResultTypeArray();
+  get_count_array_function.setResultTypeLong();
 
   modular_server::Function & get_direction_function = modular_server_.createFunction(constants::get_direction_function_name);
   get_direction_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionHandler));
@@ -163,6 +166,7 @@ void PropertyTester::setup()
   get_direction_array_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionArrayHandler));
   get_direction_array_function.addParameter(direction_array_parameter);
   get_direction_array_function.setResultTypeArray();
+  get_direction_array_function.setResultTypeString();
 
   modular_server::Function & check_mode_function = modular_server_.createFunction(constants::check_mode_function_name);
   check_mode_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::checkModeHandler));
