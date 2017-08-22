@@ -463,13 +463,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        functionHelp(function,false);
+        functionHelp(function,true,false);
       }
       // function ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        functionHelp(function,true);
+        functionHelp(function,true,true);
       }
       // function parameter ?
       // function parameter ??
@@ -483,7 +483,7 @@ void Server::processRequestArray()
           Parameter * parameter_ptr;
           parameter_ptr = function.parameter_ptrs_[parameter_index];
           response_.writeResultKey();
-          parameterHelp(*parameter_ptr);
+          parameterHelp(*parameter_ptr,false,true,true);
         }
       }
       // execute private function without checking parameters
@@ -556,13 +556,13 @@ void Server::processRequestArray()
         if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,false);
+          functionHelp(function,true,false);
         }
         // callback function ??
         else if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,true);
+          functionHelp(function,true,true);
         }
         // callback function parameter ?
         // callback function parameter ??
@@ -576,7 +576,7 @@ void Server::processRequestArray()
             Parameter * parameter_ptr;
             parameter_ptr = function.parameter_ptrs_[parameter_index];
             response_.writeResultKey();
-            parameterHelp(*parameter_ptr);
+            parameterHelp(*parameter_ptr,false,true,true);
           }
         }
         // check callback parameter count
@@ -609,13 +609,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        propertyHelp(property,false);
+        propertyHelp(property,true,false,true);
       }
       // property ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        propertyHelp(property,true);
+        propertyHelp(property,true,true,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -648,13 +648,13 @@ void Server::processRequestArray()
         if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,false);
+          functionHelp(function,true,false);
         }
         // property function ??
         else if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,true);
+          functionHelp(function,true,true);
         }
         // property function parameter ?
         // property function parameter ??
@@ -668,7 +668,7 @@ void Server::processRequestArray()
             Parameter * parameter_ptr;
             parameter_ptr = function.parameter_ptrs_[parameter_index];
             response_.writeResultKey();
-            parameterHelp(*parameter_ptr);
+            parameterHelp(*parameter_ptr,false,true,true);
           }
         }
         // check property parameter count
@@ -1113,14 +1113,15 @@ void Server::incrementServerStream()
 }
 
 void Server::propertyHelp(Property & property,
-                          bool verbose,
-                          bool api)
+                          bool firmware,
+                          bool function_parameter_details,
+                          bool instance_details)
 {
   property.updateFunctionsAndParameters();
 
-  parameterHelp(property.parameter(),true,api);
+  parameterHelp(property.parameter(),true,firmware,instance_details);
 
-  if (!api)
+  if (instance_details)
   {
     if (property.getType() == JsonStream::ARRAY_TYPE)
     {
@@ -1147,9 +1148,9 @@ void Server::propertyHelp(Property & property,
   response_.beginArray();
   for (size_t i=0; i<Property::functions_.size(); ++i)
   {
-    if (verbose)
+    if (function_parameter_details)
     {
-      functionHelp(Property::functions_[i],false,true);
+      functionHelp(Property::functions_[i],false,false);
     }
     else
     {
@@ -1162,9 +1163,9 @@ void Server::propertyHelp(Property & property,
   response_.beginArray();
   for (size_t i=0; i<Property::parameters_.size(); ++i)
   {
-    if (verbose)
+    if (function_parameter_details)
     {
-      parameterHelp(Property::parameters_[i],false,api);
+      parameterHelp(Property::parameters_[i],false,firmware,instance_details);
     }
     else
     {
@@ -1178,19 +1179,20 @@ void Server::propertyHelp(Property & property,
 
 void Server::parameterHelp(Parameter & parameter,
                            bool property,
-                           bool api)
+                           bool firmware,
+                           bool instance_details)
 {
   response_.beginObject();
   const ConstantString & parameter_name = parameter.getName();
   response_.write(constants::name_constant_string,parameter_name);
-  if (!api)
+  if (firmware)
   {
     const ConstantString & firmware_name = parameter.getFirmwareName();
     response_.write(constants::firmware_constant_string,firmware_name);
   }
 
   JsonStream::JsonTypes type = parameter.getType();
-  if (!api)
+  if (instance_details)
   {
     switch (type)
     {
@@ -1353,14 +1355,14 @@ void Server::parameterHelp(Parameter & parameter,
 }
 
 void Server::functionHelp(Function & function,
-                          bool verbose,
-                          bool api)
+                          bool firmware,
+                          bool parameter_details)
 {
   response_.beginObject();
 
   const ConstantString & function_name = function.getName();
   response_.write(constants::name_constant_string,function_name);
-  if (!api)
+  if (firmware)
   {
     const ConstantString & firmware_name = function.getFirmwareName();
     response_.write(constants::firmware_constant_string,firmware_name);
@@ -1372,9 +1374,9 @@ void Server::functionHelp(Function & function,
   parameter_ptrs_ptr = &function.parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
-    if (verbose && !api)
+    if (parameter_details)
     {
-      parameterHelp(*((*parameter_ptrs_ptr)[i]),false);
+      parameterHelp(*((*parameter_ptrs_ptr)[i]),false,true,true);
     }
     else
     {
@@ -1434,7 +1436,7 @@ void Server::callbackHelp(Callback & callback,
   {
     if (verbose && !api)
     {
-      propertyHelp(*((*property_ptrs_ptr)[i]),false);
+      propertyHelp(*((*property_ptrs_ptr)[i]),true,false,true);
     }
     else
     {
@@ -1474,7 +1476,7 @@ void Server::callbackHelp(Callback & callback,
   {
     if (verbose)
     {
-      functionHelp(Callback::functions_[i],false,true);
+      functionHelp(Callback::functions_[i],false,false);
     }
     else
     {
@@ -1489,7 +1491,7 @@ void Server::callbackHelp(Callback & callback,
   {
     if (verbose)
     {
-      parameterHelp(Callback::parameters_[i],false,api);
+      parameterHelp(Callback::parameters_[i],false,!api,!api);
     }
     else
     {
@@ -1561,7 +1563,7 @@ void Server::help(bool verbose)
       // ? function
       param_error = false;
       response_.writeResultKey();
-      functionHelp(functions_[function_index],verbose);
+      functionHelp(functions_[function_index],true,verbose);
     }
     else
     {
@@ -1572,7 +1574,7 @@ void Server::help(bool verbose)
         // ?? parameter
         param_error = false;
         response_.writeResultKey();
-        parameterHelp(parameters_[parameter_index]);
+        parameterHelp(parameters_[parameter_index],false,true,true);
       }
       else
       {
@@ -1583,7 +1585,7 @@ void Server::help(bool verbose)
           // ?? property
           param_error = false;
           response_.writeResultKey();
-          propertyHelp(properties_[property_index],verbose);
+          propertyHelp(properties_[property_index],true,verbose,true);
         }
         else
         {
@@ -1619,7 +1621,7 @@ void Server::help(bool verbose)
         Parameter * parameter_ptr;
         parameter_ptr = function.parameter_ptrs_[parameter_index];
         response_.writeResultKey();
-        parameterHelp(*parameter_ptr);
+        parameterHelp(*parameter_ptr,false,true,true);
       }
     }
     else
@@ -1636,7 +1638,7 @@ void Server::help(bool verbose)
           Function & function = property.functions_[property_function_index];
 
           response_.writeResultKey();
-          functionHelp(function,verbose);
+          functionHelp(function,true,verbose);
         }
         else
         {
@@ -1672,7 +1674,7 @@ void Server::help(bool verbose)
           Parameter * parameter_ptr;
           parameter_ptr = function.parameter_ptrs_[parameter_index];
           response_.writeResultKey();
-          parameterHelp(*parameter_ptr);
+          parameterHelp(*parameter_ptr,false,true,true);
         }
       }
       else
@@ -1941,7 +1943,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
         Function & function = functions_[function_index];
         if (function.firmwareNameInArray(firmware_name_array))
         {
-          functionHelp(function,false,true);
+          functionHelp(function,false,false);
         }
       }
     }
@@ -1954,7 +1956,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Parameter & parameter = parameters_[parameter_index];
       if (parameter.firmwareNameInArray(firmware_name_array))
       {
-        parameterHelp(parameter,false,true);
+        parameterHelp(parameter,false,false,false);
       }
     }
     response_.endArray();
@@ -1966,7 +1968,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Property & property = properties_[property_index];
       if (property.firmwareNameInArray(firmware_name_array))
       {
-        propertyHelp(property,true,true);
+        propertyHelp(property,false,true,false);
       }
     }
     response_.endArray();

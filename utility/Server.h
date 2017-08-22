@@ -169,14 +169,16 @@ private:
   void initializeEeprom();
   void incrementServerStream();
   void propertyHelp(Property & property,
-                    bool verbose,
-                    bool api=false);
+                    bool firmware,
+                    bool function_parameter_details,
+                    bool instance_details);
   void parameterHelp(Parameter & parameter,
-                     bool property=false,
-                     bool api=false);
+                     bool property,
+                     bool firmware,
+                     bool instance_details);
   void functionHelp(Function & function,
-                    bool verbose,
-                    bool api=false);
+                    bool firmware,
+                    bool parameter_details);
   void callbackHelp(Callback & callback,
                     bool verbose,
                     bool api=false);
