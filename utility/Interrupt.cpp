@@ -46,6 +46,42 @@ const ConstantString & Interrupt::getMode()
   return *mode_ptr_;
 }
 
+void Interrupt::help(Response & response,
+                     bool verbose)
+{
+  if (verbose)
+  {
+    response.beginObject();
+
+    response.write(constants::name_constant_string,getName());
+
+    const ConstantString & hardware_name = getHardwareName();
+    response.write(constants::hardware_constant_string,hardware_name);
+
+    response.write(constants::number_constant_string,getNumber());
+
+    response.write(constants::pin_constant_string,getPin());
+
+    Callback * callback_ptr = getCallbackPtr();
+    if (callback_ptr != NULL)
+    {
+      response.write(constants::callback_constant_string,callback_ptr->getName());
+    }
+    else
+    {
+      response.writeNull(constants::callback_constant_string);
+    }
+
+    response.write(constants::mode_constant_string,getMode());
+
+    response.endObject();
+  }
+  else
+  {
+    response.write(getName());
+  }
+}
+
 // protected
 
 // private

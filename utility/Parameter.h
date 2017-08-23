@@ -19,6 +19,7 @@
 #include "ArduinoJson.h"
 
 #include "FirmwareElement.h"
+#include "Response.h"
 #include "Constants.h"
 
 
@@ -63,6 +64,11 @@ public:
   bool getValue(ArduinoJson::JsonObject * & value);
 
   Parameter getElementParameter();
+
+  void help(Response & response,
+            bool is_property,
+            bool write_firmware,
+            bool write_instance_details);
 
 private:
   const ConstantString * units_ptr_;

@@ -298,6 +298,183 @@ Parameter Parameter::getElementParameter()
   return element_parameter;
 }
 
+void Parameter::help(Response & response,
+                     bool is_property,
+                     bool write_firmware,
+                     bool write_instance_details)
+{
+  response.beginObject();
+  const ConstantString & parameter_name = getName();
+  response.write(constants::name_constant_string,parameter_name);
+  if (write_firmware)
+  {
+    const ConstantString & firmware_name = getFirmwareName();
+    response.write(constants::firmware_constant_string,firmware_name);
+  }
+
+  JsonStream::JsonTypes type = getType();
+  if (write_instance_details)
+  {
+    switch (type)
+    {
+      case JsonStream::LONG_TYPE:
+      {
+        response.write(constants::type_constant_string,JsonStream::LONG_TYPE);
+        if (subsetIsSet())
+        {
+          response.writeKey(constants::subset_constant_string);
+          response.write(getSubset(),JsonStream::LONG_TYPE);
+        }
+        if (rangeIsSet())
+        {
+          long min = getRangeMin().l;
+          long max = getRangeMax().l;
+          response.write(constants::min_constant_string,min);
+          response.write(constants::max_constant_string,max);
+        }
+        break;
+      }
+      case JsonStream::DOUBLE_TYPE:
+      {
+        response.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
+        if (rangeIsSet())
+        {
+          double min = getRangeMin().d;
+          double max = getRangeMax().d;
+          response.write(constants::min_constant_string,min);
+          response.write(constants::max_constant_string,max);
+        }
+        break;
+      }
+      case JsonStream::BOOL_TYPE:
+      {
+        response.write(constants::type_constant_string,JsonStream::BOOL_TYPE);
+        break;
+      }
+      case JsonStream::NULL_TYPE:
+      {
+        break;
+      }
+      case JsonStream::STRING_TYPE:
+      {
+        response.write(constants::type_constant_string,JsonStream::STRING_TYPE);
+        if (subsetIsSet())
+        {
+          response.writeKey(constants::subset_constant_string);
+          response.write(getSubset(),JsonStream::STRING_TYPE);
+        }
+        break;
+      }
+      case JsonStream::OBJECT_TYPE:
+      {
+        response.write(constants::type_constant_string,JsonStream::OBJECT_TYPE);
+        break;
+      }
+      case JsonStream::ARRAY_TYPE:
+      {
+        response.write(constants::type_constant_string,JsonStream::ARRAY_TYPE);
+        JsonStream::JsonTypes array_element_type = getArrayElementType();
+        switch (array_element_type)
+        {
+          case JsonStream::LONG_TYPE:
+          {
+            response.write(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
+            if (subsetIsSet())
+            {
+              response.writeKey(constants::array_element_subset_constant_string);
+              response.write(getSubset(),JsonStream::LONG_TYPE);
+            }
+            if (rangeIsSet())
+            {
+              long min = getRangeMin().l;
+              long max = getRangeMax().l;
+              response.write(constants::array_element_min_constant_string,min);
+              response.write(constants::array_element_max_constant_string,max);
+            }
+            break;
+          }
+          case JsonStream::DOUBLE_TYPE:
+          {
+            response.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
+            if (rangeIsSet())
+            {
+              double min = getRangeMin().d;
+              double max = getRangeMax().d;
+              response.write(constants::array_element_min_constant_string,min);
+              response.write(constants::array_element_max_constant_string,max);
+            }
+            break;
+          }
+          case JsonStream::BOOL_TYPE:
+          {
+            response.write(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
+            break;
+          }
+          case JsonStream::NULL_TYPE:
+          {
+            break;
+          }
+          case JsonStream::STRING_TYPE:
+          {
+            response.write(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
+            if (subsetIsSet())
+            {
+              response.writeKey(constants::array_element_subset_constant_string);
+              response.write(getSubset(),JsonStream::STRING_TYPE);
+            }
+            break;
+          }
+          case JsonStream::OBJECT_TYPE:
+          {
+            response.write(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
+            break;
+          }
+          case JsonStream::ARRAY_TYPE:
+          {
+            response.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
+            break;
+          }
+          case JsonStream::ANY_TYPE:
+          {
+            break;
+          }
+        }
+        if (arrayLengthRangeIsSet() && !is_property)
+        {
+          size_t array_length_min = getArrayLengthMin();
+          size_t array_length_max = getArrayLengthMax();
+          response.write(constants::array_length_min_constant_string,array_length_min);
+          response.write(constants::array_length_max_constant_string,array_length_max);
+        }
+        break;
+      }
+      case JsonStream::ANY_TYPE:
+      {
+        response.write(constants::type_constant_string,JsonStream::ANY_TYPE);
+        break;
+      }
+    }
+  }
+  else
+  {
+    response.write(constants::type_constant_string,type);
+    if (type == JsonStream::ARRAY_TYPE)
+    {
+      JsonStream::JsonTypes array_element_type = getArrayElementType();
+      response.write(constants::array_element_type_constant_string,array_element_type);
+    }
+  }
+  const ConstantString & units = getUnits();
+  if (units.length() != 0)
+  {
+    response.write(constants::units_constant_string,units);
+  }
+  if (!is_property)
+  {
+    response.endObject();
+  }
+}
+
 // private
 Parameter::Parameter(const ConstantString & name)
 {

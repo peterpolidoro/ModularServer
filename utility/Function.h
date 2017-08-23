@@ -15,6 +15,7 @@
 
 #include "FirmwareElement.h"
 #include "Parameter.h"
+#include "Response.h"
 #include "Constants.h"
 
 
@@ -42,6 +43,10 @@ public:
 
   void setResultUnits(const ConstantString & units);
   const ConstantString & getResultUnits();
+
+  void help(Response & response,
+            bool write_firmware,
+            bool write_parameter_details);
 
 private:
   Functor0 functor_;

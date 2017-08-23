@@ -17,6 +17,7 @@
 #include "FirmwareElement.h"
 #include "Property.h"
 #include "Interrupt.h"
+#include "Response.h"
 #include "Constants.h"
 
 
@@ -56,6 +57,10 @@ public:
   void detachFrom(const ConstantString & interrupt_name);
   void detachFrom(const char * interrupt_name);
   void detachFromAll();
+
+  void help(Response & response,
+            bool verbose,
+            bool api=false);
 
 private:
   static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;

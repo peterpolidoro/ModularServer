@@ -153,6 +153,15 @@ public:
   void disableFunctors();
   void reenableFunctors();
 
+  void writeToResponse(Response & response,
+                       bool write_key=false,
+                       bool write_default=false,
+                       int element_index=-1);
+  void help(Response & response,
+            bool write_firmware,
+            bool write_function_parameter_details,
+            bool write_instance_details);
+
 private:
   static Parameter property_parameters_[property::PARAMETER_COUNT_MAX];
   static Function property_functions_[property::FUNCTION_COUNT_MAX];
@@ -161,7 +170,6 @@ private:
   static ConcatenatedArray<Parameter,property::FUNCTION_PARAMETER_TYPE_COUNT> parameters_;
   static ConcatenatedArray<Function,property::FUNCTION_PARAMETER_TYPE_COUNT> functions_;
   static Response * response_ptr_;
-  static Functor4<Property &, bool, bool, int> write_property_to_response_functor_;
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
 
   template <typename T>

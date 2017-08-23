@@ -151,6 +151,64 @@ const ConstantString & Function::getResultUnits()
   return *result_units_ptr_;
 }
 
+void Function::help(Response & response,
+                    bool write_firmware,
+                    bool write_parameter_details)
+{
+  response.beginObject();
+
+  const ConstantString & function_name = getName();
+  response.write(constants::name_constant_string,function_name);
+  if (write_firmware)
+  {
+    const ConstantString & firmware_name = getFirmwareName();
+    response.write(constants::firmware_constant_string,firmware_name);
+  }
+
+  response.writeKey(constants::parameters_constant_string);
+  response.beginArray();
+  Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
+  parameter_ptrs_ptr = &parameter_ptrs_;
+  for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
+  {
+    if (write_parameter_details)
+    {
+      (*parameter_ptrs_ptr)[i]->help(response,false,true,true);
+    }
+    else
+    {
+      const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
+      response.write(parameter_name);
+    }
+  }
+  response.endArray();
+
+  JsonStream::JsonTypes type = getResultType();
+  if (type != JsonStream::NULL_TYPE)
+  {
+    response.writeKey(constants::result_info_constant_string);
+    response.beginObject();
+
+    response.write(constants::type_constant_string,type);
+
+    if (type == JsonStream::ARRAY_TYPE)
+    {
+      JsonStream::JsonTypes array_element_type = getResultArrayElementType();
+      response.write(constants::array_element_type_constant_string,array_element_type);
+    }
+
+    const ConstantString & units = getResultUnits();
+    if (units.length() != 0)
+    {
+      response.write(constants::units_constant_string,units);
+    }
+
+    response.endObject();
+  }
+
+  response.endObject();
+}
+
 // protected
 
 // private

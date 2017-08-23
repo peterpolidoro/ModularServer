@@ -45,7 +45,6 @@ Function Property::property_array_functions_[property::ARRAY_FUNCTION_COUNT_MAX]
 ConcatenatedArray<Parameter,property::FUNCTION_PARAMETER_TYPE_COUNT> Property::parameters_;
 ConcatenatedArray<Function,property::FUNCTION_PARAMETER_TYPE_COUNT> Property::functions_;
 Response * Property::response_ptr_;
-Functor4<Property &, bool, bool, int> Property::write_property_to_response_functor_;
 Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Property::get_parameter_value_functor_;
 
 Parameter & Property::createParameter(const ConstantString & parameter_name)
@@ -1052,6 +1051,353 @@ void Property::reenableFunctors()
   functors_enabled_ = true;
 }
 
+void Property::writeToResponse(Response & response,
+                               bool write_key,
+                               bool write_default,
+                               int element_index)
+{
+  if (response.error())
+  {
+    return;
+  }
+  const ConstantString & property_name = getName();
+  if (write_key)
+  {
+    response.writeKey(property_name);
+  }
+  JsonStream::JsonTypes property_type = getType();
+  switch (property_type)
+  {
+    case JsonStream::LONG_TYPE:
+    {
+      if (element_index >= 0)
+      {
+        response.returnParameterInvalidError(constants::property_not_array_type_error_data);
+        return;
+      }
+      long property_value;
+      if (write_default)
+      {
+        getDefaultValue(property_value);
+      }
+      else
+      {
+        getValue(property_value);
+      }
+      response.write(property_value);
+      break;
+    }
+    case JsonStream::DOUBLE_TYPE:
+    {
+      if (element_index >= 0)
+      {
+        response.returnParameterInvalidError(constants::property_not_array_type_error_data);
+        return;
+      }
+      double property_value;
+      if (write_default)
+      {
+        getDefaultValue(property_value);
+      }
+      else
+      {
+        getValue(property_value);
+      }
+      response.write(property_value);
+      break;
+    }
+    case JsonStream::BOOL_TYPE:
+    {
+      if (element_index >= 0)
+      {
+        response.returnParameterInvalidError(constants::property_not_array_type_error_data);
+        return;
+      }
+      bool property_value;
+      if (write_default)
+      {
+        getDefaultValue(property_value);
+      }
+      else
+      {
+        getValue(property_value);
+      }
+      response.write(property_value);
+      break;
+    }
+    case JsonStream::NULL_TYPE:
+    {
+      if (element_index >= 0)
+      {
+        response.returnParameterInvalidError(constants::property_not_array_type_error_data);
+        return;
+      }
+      break;
+    }
+    case JsonStream::STRING_TYPE:
+    {
+      size_t array_length = getArrayLength();
+      if (element_index >= 0)
+      {
+        if (element_index >= ((int)array_length-1))
+        {
+          response.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+          return;
+        }
+        size_t array_length = 2;
+        char char_array[array_length];
+        char property_element_value;
+        bool success = getElementValue(element_index,property_element_value);
+        if (success)
+        {
+          char_array[0] = property_element_value;
+          char_array[1] = '\0';
+        }
+        else
+        {
+          char_array[0] = '\0';
+        }
+        response.write(char_array);
+        return;
+      }
+      char char_array[array_length];
+      if (write_default)
+      {
+        getDefaultValue(char_array,array_length);
+      }
+      else
+      {
+        getValue(char_array,array_length);
+      }
+      response.write(char_array);
+      break;
+    }
+    case JsonStream::ARRAY_TYPE:
+    {
+      const JsonStream::JsonTypes array_element_type = getArrayElementType();
+      size_t array_length = getArrayLength();
+      if (element_index >= (int)array_length)
+      {
+        response.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
+        return;
+      }
+      switch (array_element_type)
+      {
+        case JsonStream::LONG_TYPE:
+        {
+          if (element_index < 0)
+          {
+            long property_value[array_length];
+            if (write_default)
+            {
+              getDefaultValue(property_value,array_length);
+            }
+            else
+            {
+              getValue(property_value,array_length);
+            }
+            response.writeArray(property_value,array_length);
+          }
+          else
+          {
+            long property_value;
+            if (write_default)
+            {
+              getDefaultElementValue(element_index,property_value);
+            }
+            else
+            {
+              getElementValue(element_index,property_value);
+            }
+            response.write(property_value);
+          }
+          break;
+        }
+        case JsonStream::DOUBLE_TYPE:
+        {
+          if (element_index < 0)
+          {
+            double property_value[array_length];
+            if (write_default)
+            {
+              getDefaultValue(property_value,array_length);
+            }
+            else
+            {
+              getValue(property_value,array_length);
+            }
+            response.writeArray(property_value,array_length);
+          }
+          else
+          {
+            double property_value;
+            if (write_default)
+            {
+              getDefaultElementValue(element_index,property_value);
+            }
+            else
+            {
+              getElementValue(element_index,property_value);
+            }
+            response.write(property_value);
+          }
+          break;
+        }
+        case JsonStream::BOOL_TYPE:
+        {
+          if (element_index < 0)
+          {
+            bool property_value[array_length];
+            if (write_default)
+            {
+              getDefaultValue(property_value,array_length);
+            }
+            else
+            {
+              getValue(property_value,array_length);
+            }
+            response.writeArray(property_value,array_length);
+          }
+          else
+          {
+            bool property_value;
+            if (write_default)
+            {
+              getDefaultElementValue(element_index,property_value);
+            }
+            else
+            {
+              getElementValue(element_index,property_value);
+            }
+            response.write(property_value);
+          }
+          break;
+        }
+        case JsonStream::NULL_TYPE:
+        {
+          break;
+        }
+        case JsonStream::STRING_TYPE:
+        {
+          if (element_index < 0)
+          {
+            const ConstantString * property_value[array_length];
+            if (write_default)
+            {
+              getDefaultValue(property_value,array_length);
+            }
+            else
+            {
+              getValue(property_value,array_length);
+            }
+            response.writeArray(property_value,array_length);
+          }
+          else
+          {
+            const ConstantString * property_value;
+            if (write_default)
+            {
+              getDefaultElementValue(element_index,property_value);
+            }
+            else
+            {
+              getElementValue(element_index,property_value);
+            }
+            response.write(property_value);
+          }
+          break;
+        }
+        case JsonStream::OBJECT_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ARRAY_TYPE:
+        {
+          break;
+        }
+        case JsonStream::ANY_TYPE:
+        {
+          break;
+        }
+      }
+      break;
+    }
+    case JsonStream::OBJECT_TYPE:
+    {
+      break;
+    }
+    case JsonStream::ANY_TYPE:
+    {
+      break;
+    }
+  }
+}
+
+void Property::help(Response & response,
+                    bool write_firmware,
+                    bool write_function_parameter_details,
+                    bool write_instance_details)
+{
+  updateFunctionsAndParameters();
+
+  parameter().help(response,true,write_firmware,write_instance_details);
+
+  if (write_instance_details)
+  {
+    if (getType() == JsonStream::ARRAY_TYPE)
+    {
+      response.write(constants::array_length_min_constant_string,getArrayLengthMin());
+      response.write(constants::array_length_max_constant_string,getArrayLengthMax());
+    }
+
+    response.writeKey(constants::value_constant_string);
+    writeToResponse(response,false,false);
+
+    response.writeKey(constants::default_value_constant_string);
+    writeToResponse(response,false,true);
+
+    if ((getType() == JsonStream::STRING_TYPE) &&
+        (stringSavedAsCharArray()))
+    {
+      response.write(constants::string_length_constant_string,getStringLength());
+      size_t string_length_max = getArrayLength() - 1;
+      response.write(constants::string_length_max_constant_string,string_length_max);
+    }
+  }
+
+  response.writeKey(constants::functions_constant_string);
+  response.beginArray();
+  for (size_t i=0; i<Property::functions_.size(); ++i)
+  {
+    if (write_function_parameter_details)
+    {
+      Property::functions_[i].help(response,false,false);
+    }
+    else
+    {
+      response.write(Property::functions_[i].getName());
+    }
+  }
+  response.endArray();
+
+  response.writeKey(constants::parameters_constant_string);
+  response.beginArray();
+  for (size_t i=0; i<Property::parameters_.size(); ++i)
+  {
+    if (write_function_parameter_details)
+    {
+      Property::parameters_[i].help(response,false,write_firmware,write_instance_details);
+    }
+    else
+    {
+      response.write(Property::parameters_[i].getName());
+    }
+  }
+  response.endArray();
+
+  response.endObject();
+}
+
 // private
 template <>
 Property::Property<long>(const ConstantString & name,
@@ -1341,7 +1687,7 @@ void Property::updateFunctionsAndParameters()
 void Property::getValueHandler()
 {
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,false,-1);
+  writeToResponse(*response_ptr_,false,false,-1);
 }
 
 void Property::setValueHandler()
@@ -1394,27 +1740,27 @@ void Property::setValueHandler()
     }
   }
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,false,-1);
+  writeToResponse(*response_ptr_,false,false,-1);
 }
 
 void Property::getDefaultValueHandler()
 {
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,true,-1);
+  writeToResponse(*response_ptr_,false,true,-1);
 }
 
 void Property::setValueToDefaultHandler()
 {
   setValueToDefault();
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,false,-1);
+  writeToResponse(*response_ptr_,false,false,-1);
 }
 
 void Property::getElementValueHandler()
 {
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,false,element_index);
+  writeToResponse(*response_ptr_,false,false,element_index);
 }
 
 void Property::setElementValueHandler()
@@ -1529,14 +1875,14 @@ void Property::setElementValueHandler()
     }
   }
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,false,-1);
+  writeToResponse(*response_ptr_,false,false,-1);
 }
 
 void Property::getDefaultElementValueHandler()
 {
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,true,element_index);
+  writeToResponse(*response_ptr_,false,true,element_index);
 }
 
 void Property::setElementValueToDefaultHandler()
@@ -1544,7 +1890,7 @@ void Property::setElementValueToDefaultHandler()
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   setElementValueToDefault(element_index);
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,false,-1);
+  writeToResponse(*response_ptr_,false,false,-1);
 }
 
 void Property::setAllElementValuesHandler()
@@ -1642,7 +1988,7 @@ void Property::setAllElementValuesHandler()
     }
   }
   response_ptr_->writeResultKey();
-  write_property_to_response_functor_(*this,false,false,-1);
+  writeToResponse(*response_ptr_,false,false,-1);
 }
 
 void Property::getArrayLengthHandler()

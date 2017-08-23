@@ -168,34 +168,14 @@ private:
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
-  void propertyHelp(Property & property,
-                    bool firmware,
-                    bool function_parameter_details,
-                    bool instance_details);
-  void parameterHelp(Parameter & parameter,
-                     bool property,
-                     bool firmware,
-                     bool instance_details);
-  void functionHelp(Function & function,
-                    bool firmware,
-                    bool parameter_details);
-  void callbackHelp(Callback & callback,
-                    bool verbose,
-                    bool api=false);
   void help(bool verbose);
   void writeDeviceIdToResponse();
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
-  void interruptHelp(Interrupt & interrupt,
-                     bool verbose);
   void writeInterruptInfoToResponse();
   void writeApiToResponse(const ConstantString & verbosity,
                           ArduinoJson::JsonArray & firmware_name_array);
-  void writePropertyToResponse(Property & property,
-                               bool write_key=false,
-                               bool write_default=false,
-                               int element_index=-1);
   void versionToString(char * destination,
                        const long major,
                        const long minor,

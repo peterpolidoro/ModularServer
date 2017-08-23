@@ -49,7 +49,6 @@ void Server::setup()
 
   // Properties
   Property::response_ptr_ = &response_;
-  Property::write_property_to_response_functor_ = makeFunctor((Functor4<Property &, bool, bool, int> *)0,*this,&Server::writePropertyToResponse);
   Property::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   Property & serial_number_property = createProperty(constants::serial_number_property_name,constants::serial_number_default);
@@ -463,13 +462,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        functionHelp(function,true,false);
+        function.help(response_,true,false);
       }
       // function ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        functionHelp(function,true,true);
+        function.help(response_,true,true);
       }
       // function parameter ?
       // function parameter ??
@@ -483,7 +482,7 @@ void Server::processRequestArray()
           Parameter * parameter_ptr;
           parameter_ptr = function.parameter_ptrs_[parameter_index];
           response_.writeResultKey();
-          parameterHelp(*parameter_ptr,false,true,true);
+          parameter_ptr->help(response_,false,true,true);
         }
       }
       // execute private function without checking parameters
@@ -517,13 +516,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        callbackHelp(callback,false);
+        callback.help(response_,false);
       }
       // callback ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        callbackHelp(callback,true);
+        callback.help(response_,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -556,13 +555,13 @@ void Server::processRequestArray()
         if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,true,false);
+          function.help(response_,true,false);
         }
         // callback function ??
         else if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,true,true);
+          function.help(response_,true,true);
         }
         // callback function parameter ?
         // callback function parameter ??
@@ -576,7 +575,7 @@ void Server::processRequestArray()
             Parameter * parameter_ptr;
             parameter_ptr = function.parameter_ptrs_[parameter_index];
             response_.writeResultKey();
-            parameterHelp(*parameter_ptr,false,true,true);
+            parameter_ptr->help(response_,false,true,true);
           }
         }
         // check callback parameter count
@@ -609,13 +608,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        propertyHelp(property,true,false,true);
+        property.help(response_,true,false,true);
       }
       // property ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        propertyHelp(property,true,true,true);
+        property.help(response_,true,true,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -648,13 +647,13 @@ void Server::processRequestArray()
         if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,true,false);
+          function.help(response_,true,false);
         }
         // property function ??
         else if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
         {
           response_.writeResultKey();
-          functionHelp(function,true,true);
+          function.help(response_,true,true);
         }
         // property function parameter ?
         // property function parameter ??
@@ -668,7 +667,7 @@ void Server::processRequestArray()
             Parameter * parameter_ptr;
             parameter_ptr = function.parameter_ptrs_[parameter_index];
             response_.writeResultKey();
-            parameterHelp(*parameter_ptr,false,true,true);
+            parameter_ptr->help(response_,false,true,true);
           }
         }
         // check property parameter count
@@ -1112,397 +1111,6 @@ void Server::incrementServerStream()
   }
 }
 
-void Server::propertyHelp(Property & property,
-                          bool firmware,
-                          bool function_parameter_details,
-                          bool instance_details)
-{
-  property.updateFunctionsAndParameters();
-
-  parameterHelp(property.parameter(),true,firmware,instance_details);
-
-  if (instance_details)
-  {
-    if (property.getType() == JsonStream::ARRAY_TYPE)
-    {
-      response_.write(constants::array_length_min_constant_string,property.getArrayLengthMin());
-      response_.write(constants::array_length_max_constant_string,property.getArrayLengthMax());
-    }
-
-    response_.writeKey(constants::value_constant_string);
-    writePropertyToResponse(property,false,false);
-
-    response_.writeKey(constants::default_value_constant_string);
-    writePropertyToResponse(property,false,true);
-
-    if ((property.getType() == JsonStream::STRING_TYPE) &&
-        (property.stringSavedAsCharArray()))
-    {
-      response_.write(constants::string_length_constant_string,property.getStringLength());
-      size_t string_length_max = property.getArrayLength() - 1;
-      response_.write(constants::string_length_max_constant_string,string_length_max);
-    }
-  }
-
-  response_.writeKey(constants::functions_constant_string);
-  response_.beginArray();
-  for (size_t i=0; i<Property::functions_.size(); ++i)
-  {
-    if (function_parameter_details)
-    {
-      functionHelp(Property::functions_[i],false,false);
-    }
-    else
-    {
-      response_.write(Property::functions_[i].getName());
-    }
-  }
-  response_.endArray();
-
-  response_.writeKey(constants::parameters_constant_string);
-  response_.beginArray();
-  for (size_t i=0; i<Property::parameters_.size(); ++i)
-  {
-    if (function_parameter_details)
-    {
-      parameterHelp(Property::parameters_[i],false,firmware,instance_details);
-    }
-    else
-    {
-      response_.write(Property::parameters_[i].getName());
-    }
-  }
-  response_.endArray();
-
-  response_.endObject();
-}
-
-void Server::parameterHelp(Parameter & parameter,
-                           bool property,
-                           bool firmware,
-                           bool instance_details)
-{
-  response_.beginObject();
-  const ConstantString & parameter_name = parameter.getName();
-  response_.write(constants::name_constant_string,parameter_name);
-  if (firmware)
-  {
-    const ConstantString & firmware_name = parameter.getFirmwareName();
-    response_.write(constants::firmware_constant_string,firmware_name);
-  }
-
-  JsonStream::JsonTypes type = parameter.getType();
-  if (instance_details)
-  {
-    switch (type)
-    {
-      case JsonStream::LONG_TYPE:
-      {
-        response_.write(constants::type_constant_string,JsonStream::LONG_TYPE);
-        if (parameter.subsetIsSet())
-        {
-          response_.writeKey(constants::subset_constant_string);
-          response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
-        }
-        if (parameter.rangeIsSet())
-        {
-          long min = parameter.getRangeMin().l;
-          long max = parameter.getRangeMax().l;
-          response_.write(constants::min_constant_string,min);
-          response_.write(constants::max_constant_string,max);
-        }
-        break;
-      }
-      case JsonStream::DOUBLE_TYPE:
-      {
-        response_.write(constants::type_constant_string,JsonStream::DOUBLE_TYPE);
-        if (parameter.rangeIsSet())
-        {
-          double min = parameter.getRangeMin().d;
-          double max = parameter.getRangeMax().d;
-          response_.write(constants::min_constant_string,min);
-          response_.write(constants::max_constant_string,max);
-        }
-        break;
-      }
-      case JsonStream::BOOL_TYPE:
-      {
-        response_.write(constants::type_constant_string,JsonStream::BOOL_TYPE);
-        break;
-      }
-      case JsonStream::NULL_TYPE:
-      {
-        break;
-      }
-      case JsonStream::STRING_TYPE:
-      {
-        response_.write(constants::type_constant_string,JsonStream::STRING_TYPE);
-        if (parameter.subsetIsSet())
-        {
-          response_.writeKey(constants::subset_constant_string);
-          response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
-        }
-        break;
-      }
-      case JsonStream::OBJECT_TYPE:
-      {
-        response_.write(constants::type_constant_string,JsonStream::OBJECT_TYPE);
-        break;
-      }
-      case JsonStream::ARRAY_TYPE:
-      {
-        response_.write(constants::type_constant_string,JsonStream::ARRAY_TYPE);
-        JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
-        switch (array_element_type)
-        {
-          case JsonStream::LONG_TYPE:
-          {
-            response_.write(constants::array_element_type_constant_string,JsonStream::LONG_TYPE);
-            if (parameter.subsetIsSet())
-            {
-              response_.writeKey(constants::array_element_subset_constant_string);
-              response_.write(parameter.getSubset(),JsonStream::LONG_TYPE);
-            }
-            if (parameter.rangeIsSet())
-            {
-              long min = parameter.getRangeMin().l;
-              long max = parameter.getRangeMax().l;
-              response_.write(constants::array_element_min_constant_string,min);
-              response_.write(constants::array_element_max_constant_string,max);
-            }
-            break;
-          }
-          case JsonStream::DOUBLE_TYPE:
-          {
-            response_.write(constants::array_element_type_constant_string,JsonStream::DOUBLE_TYPE);
-            if (parameter.rangeIsSet())
-            {
-              double min = parameter.getRangeMin().d;
-              double max = parameter.getRangeMax().d;
-              response_.write(constants::array_element_min_constant_string,min);
-              response_.write(constants::array_element_max_constant_string,max);
-            }
-            break;
-          }
-          case JsonStream::BOOL_TYPE:
-          {
-            response_.write(constants::array_element_type_constant_string,JsonStream::BOOL_TYPE);
-            break;
-          }
-          case JsonStream::NULL_TYPE:
-          {
-            break;
-          }
-          case JsonStream::STRING_TYPE:
-          {
-            response_.write(constants::array_element_type_constant_string,JsonStream::STRING_TYPE);
-            if (parameter.subsetIsSet())
-            {
-              response_.writeKey(constants::array_element_subset_constant_string);
-              response_.write(parameter.getSubset(),JsonStream::STRING_TYPE);
-            }
-            break;
-          }
-          case JsonStream::OBJECT_TYPE:
-          {
-            response_.write(constants::array_element_type_constant_string,JsonStream::OBJECT_TYPE);
-            break;
-          }
-          case JsonStream::ARRAY_TYPE:
-          {
-            response_.write(constants::array_element_type_constant_string,JsonStream::ARRAY_TYPE);
-            break;
-          }
-          case JsonStream::ANY_TYPE:
-          {
-            break;
-          }
-        }
-        if (parameter.arrayLengthRangeIsSet() && !property)
-        {
-          size_t array_length_min = parameter.getArrayLengthMin();
-          size_t array_length_max = parameter.getArrayLengthMax();
-          response_.write(constants::array_length_min_constant_string,array_length_min);
-          response_.write(constants::array_length_max_constant_string,array_length_max);
-        }
-        break;
-      }
-      case JsonStream::ANY_TYPE:
-      {
-        response_.write(constants::type_constant_string,JsonStream::ANY_TYPE);
-        break;
-      }
-    }
-  }
-  else
-  {
-    response_.write(constants::type_constant_string,type);
-    if (type == JsonStream::ARRAY_TYPE)
-    {
-      JsonStream::JsonTypes array_element_type = parameter.getArrayElementType();
-      response_.write(constants::array_element_type_constant_string,array_element_type);
-    }
-  }
-  const ConstantString & units = parameter.getUnits();
-  if (units.length() != 0)
-  {
-    response_.write(constants::units_constant_string,units);
-  }
-  if (!property)
-  {
-    response_.endObject();
-  }
-}
-
-void Server::functionHelp(Function & function,
-                          bool firmware,
-                          bool parameter_details)
-{
-  response_.beginObject();
-
-  const ConstantString & function_name = function.getName();
-  response_.write(constants::name_constant_string,function_name);
-  if (firmware)
-  {
-    const ConstantString & firmware_name = function.getFirmwareName();
-    response_.write(constants::firmware_constant_string,firmware_name);
-  }
-
-  response_.writeKey(constants::parameters_constant_string);
-  response_.beginArray();
-  Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
-  parameter_ptrs_ptr = &function.parameter_ptrs_;
-  for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
-  {
-    if (parameter_details)
-    {
-      parameterHelp(*((*parameter_ptrs_ptr)[i]),false,true,true);
-    }
-    else
-    {
-      const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
-      response_.write(parameter_name);
-    }
-  }
-  response_.endArray();
-
-  JsonStream::JsonTypes type = function.getResultType();
-  if (type != JsonStream::NULL_TYPE)
-  {
-    response_.writeKey(constants::result_info_constant_string);
-    response_.beginObject();
-
-    response_.write(constants::type_constant_string,type);
-
-    if (type == JsonStream::ARRAY_TYPE)
-    {
-      JsonStream::JsonTypes array_element_type = function.getResultArrayElementType();
-      response_.write(constants::array_element_type_constant_string,array_element_type);
-    }
-
-    const ConstantString & units = function.getResultUnits();
-    if (units.length() != 0)
-    {
-      response_.write(constants::units_constant_string,units);
-    }
-
-    response_.endObject();
-  }
-
-  response_.endObject();
-}
-
-void Server::callbackHelp(Callback & callback,
-                          bool verbose,
-                          bool api)
-{
-  callback.updateFunctionsAndParameters();
-
-  response_.beginObject();
-
-  const ConstantString & callback_name = callback.getName();
-  response_.write(constants::name_constant_string,callback_name);
-  if (!api)
-  {
-    const ConstantString & firmware_name = callback.getFirmwareName();
-    response_.write(constants::firmware_constant_string,firmware_name);
-  }
-
-  response_.writeKey(constants::properties_constant_string);
-  response_.beginArray();
-  Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
-  property_ptrs_ptr = &callback.property_ptrs_;
-  for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
-  {
-    if (verbose && !api)
-    {
-      propertyHelp(*((*property_ptrs_ptr)[i]),true,false,true);
-    }
-    else
-    {
-      const ConstantString & property_name = (*property_ptrs_ptr)[i]->getName();
-      response_.write(property_name);
-    }
-  }
-  response_.endArray();
-
-  if (!api)
-  {
-    response_.writeKey(constants::interrupts_constant_string);
-    response_.beginArray();
-    IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> * interrupt_ptrs_ptr = NULL;
-    interrupt_ptrs_ptr = &callback.interrupt_ptrs_;
-    for (size_t i=0; i<interrupt_ptrs_ptr->max_size(); ++i)
-    {
-      if (interrupt_ptrs_ptr->indexHasValue(i))
-      {
-        if (verbose)
-        {
-          interruptHelp(*((*interrupt_ptrs_ptr)[i]),true);
-        }
-        else
-        {
-          const ConstantString & interrupt_name = (*interrupt_ptrs_ptr)[i]->getName();
-          response_.write(interrupt_name);
-        }
-      }
-    }
-    response_.endArray();
-  }
-
-  response_.writeKey(constants::functions_constant_string);
-  response_.beginArray();
-  for (size_t i=0; i<Callback::functions_.size(); ++i)
-  {
-    if (verbose)
-    {
-      functionHelp(Callback::functions_[i],false,false);
-    }
-    else
-    {
-      response_.write(Callback::functions_[i].getName());
-    }
-  }
-  response_.endArray();
-
-  response_.writeKey(constants::parameters_constant_string);
-  response_.beginArray();
-  for (size_t i=0; i<Callback::parameters_.size(); ++i)
-  {
-    if (verbose)
-    {
-      parameterHelp(Callback::parameters_[i],false,!api,!api);
-    }
-    else
-    {
-      response_.write(Callback::parameters_[i].getName());
-    }
-  }
-  response_.endArray();
-
-  response_.endObject();
-}
-
 void Server::help(bool verbose)
 {
   int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
@@ -1563,7 +1171,7 @@ void Server::help(bool verbose)
       // ? function
       param_error = false;
       response_.writeResultKey();
-      functionHelp(functions_[function_index],true,verbose);
+      functions_[function_index].help(response_,true,verbose);
     }
     else
     {
@@ -1574,7 +1182,7 @@ void Server::help(bool verbose)
         // ?? parameter
         param_error = false;
         response_.writeResultKey();
-        parameterHelp(parameters_[parameter_index],false,true,true);
+        parameters_[parameter_index].help(response_,false,true,true);
       }
       else
       {
@@ -1585,7 +1193,7 @@ void Server::help(bool verbose)
           // ?? property
           param_error = false;
           response_.writeResultKey();
-          propertyHelp(properties_[property_index],true,verbose,true);
+          properties_[property_index].help(response_,true,verbose,true);
         }
         else
         {
@@ -1596,7 +1204,7 @@ void Server::help(bool verbose)
             // ?? callback
             param_error = false;
             response_.writeResultKey();
-            callbackHelp(callbacks_[callback_index],verbose);
+            callbacks_[callback_index].help(response_,verbose);
           }
         }
       }
@@ -1621,7 +1229,7 @@ void Server::help(bool verbose)
         Parameter * parameter_ptr;
         parameter_ptr = function.parameter_ptrs_[parameter_index];
         response_.writeResultKey();
-        parameterHelp(*parameter_ptr,false,true,true);
+        parameter_ptr->help(response_,false,true,true);
       }
     }
     else
@@ -1638,7 +1246,7 @@ void Server::help(bool verbose)
           Function & function = property.functions_[property_function_index];
 
           response_.writeResultKey();
-          functionHelp(function,true,verbose);
+          function.help(response_,true,verbose);
         }
         else
         {
@@ -1674,7 +1282,7 @@ void Server::help(bool verbose)
           Parameter * parameter_ptr;
           parameter_ptr = function.parameter_ptrs_[parameter_index];
           response_.writeResultKey();
-          parameterHelp(*parameter_ptr,false,true,true);
+          parameter_ptr->help(response_,false,true,true);
         }
       }
       else
@@ -1780,7 +1388,7 @@ void Server::writeHardwareInfoToResponse()
     Vector<Interrupt> & interrupts = interrupts_.subVector(i);
     for (size_t j=0; j<interrupts.size(); ++j)
     {
-      interruptHelp(interrupts[j],false);
+      interrupts[j].help(response_,false);
     }
     response_.endArray();
 
@@ -1808,46 +1416,6 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::interruptHelp(Interrupt & interrupt,
-                           bool verbose)
-{
-  if (response_.error())
-  {
-    return;
-  }
-  if (verbose)
-  {
-    response_.beginObject();
-
-    response_.write(constants::name_constant_string,interrupt.getName());
-
-    const ConstantString & hardware_name = interrupt.getHardwareName();
-    response_.write(constants::hardware_constant_string,hardware_name);
-
-    response_.write(constants::number_constant_string,interrupt.getNumber());
-
-    response_.write(constants::pin_constant_string,interrupt.getPin());
-
-    Callback * callback_ptr = interrupt.getCallbackPtr();
-    if (callback_ptr != NULL)
-    {
-      response_.write(constants::callback_constant_string,callback_ptr->getName());
-    }
-    else
-    {
-      response_.writeNull(constants::callback_constant_string);
-    }
-
-    response_.write(constants::mode_constant_string,interrupt.getMode());
-
-    response_.endObject();
-  }
-  else
-  {
-    response_.write(interrupt.getName());
-  }
-}
-
 void Server::writeInterruptInfoToResponse()
 {
   if (response_.error())
@@ -1857,7 +1425,7 @@ void Server::writeInterruptInfoToResponse()
   response_.beginArray();
   for (size_t i=0; i<interrupts_.size(); ++i)
   {
-    interruptHelp(interrupts_[i],true);
+    interrupts_[i].help(response_,true);
   }
   response_.endArray();
 }
@@ -1943,7 +1511,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
         Function & function = functions_[function_index];
         if (function.firmwareNameInArray(firmware_name_array))
         {
-          functionHelp(function,false,false);
+          function.help(response_,false,false);
         }
       }
     }
@@ -1956,7 +1524,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Parameter & parameter = parameters_[parameter_index];
       if (parameter.firmwareNameInArray(firmware_name_array))
       {
-        parameterHelp(parameter,false,false,false);
+        parameter.help(response_,false,false,false);
       }
     }
     response_.endArray();
@@ -1968,7 +1536,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Property & property = properties_[property_index];
       if (property.firmwareNameInArray(firmware_name_array))
       {
-        propertyHelp(property,false,true,false);
+        property.help(response_,false,true,false);
       }
     }
     response_.endArray();
@@ -1980,294 +1548,12 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Callback & callback = callbacks_[callback_index];
       if (callback.firmwareNameInArray(firmware_name_array))
       {
-        callbackHelp(callback,true,true);
+        callback.help(response_,true,true);
       }
     }
     response_.endArray();
   }
   response_.endObject();
-}
-
-void Server::writePropertyToResponse(Property & property,
-                                     bool write_key,
-                                     bool write_default,
-                                     int element_index)
-{
-  if (response_.error())
-  {
-    return;
-  }
-  const ConstantString & property_name = property.getName();
-  if (write_key)
-  {
-    response_.writeKey(property_name);
-  }
-  JsonStream::JsonTypes property_type = property.getType();
-  switch (property_type)
-  {
-    case JsonStream::LONG_TYPE:
-    {
-      if (element_index >= 0)
-      {
-        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-        return;
-      }
-      long property_value;
-      if (write_default)
-      {
-        property.getDefaultValue(property_value);
-      }
-      else
-      {
-        property.getValue(property_value);
-      }
-      response_.write(property_value);
-      break;
-    }
-    case JsonStream::DOUBLE_TYPE:
-    {
-      if (element_index >= 0)
-      {
-        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-        return;
-      }
-      double property_value;
-      if (write_default)
-      {
-        property.getDefaultValue(property_value);
-      }
-      else
-      {
-        property.getValue(property_value);
-      }
-      response_.write(property_value);
-      break;
-    }
-    case JsonStream::BOOL_TYPE:
-    {
-      if (element_index >= 0)
-      {
-        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-        return;
-      }
-      bool property_value;
-      if (write_default)
-      {
-        property.getDefaultValue(property_value);
-      }
-      else
-      {
-        property.getValue(property_value);
-      }
-      response_.write(property_value);
-      break;
-    }
-    case JsonStream::NULL_TYPE:
-    {
-      if (element_index >= 0)
-      {
-        response_.returnParameterInvalidError(constants::property_not_array_type_error_data);
-        return;
-      }
-      break;
-    }
-    case JsonStream::STRING_TYPE:
-    {
-      size_t array_length = property.getArrayLength();
-      if (element_index >= 0)
-      {
-        if (element_index >= ((int)array_length-1))
-        {
-          response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-          return;
-        }
-        size_t array_length = 2;
-        char char_array[array_length];
-        char property_element_value;
-        bool success = property.getElementValue(element_index,property_element_value);
-        if (success)
-        {
-          char_array[0] = property_element_value;
-          char_array[1] = '\0';
-        }
-        else
-        {
-          char_array[0] = '\0';
-        }
-        response_.write(char_array);
-        return;
-      }
-      char char_array[array_length];
-      if (write_default)
-      {
-        property.getDefaultValue(char_array,array_length);
-      }
-      else
-      {
-        property.getValue(char_array,array_length);
-      }
-      response_.write(char_array);
-      break;
-    }
-    case JsonStream::ARRAY_TYPE:
-    {
-      const JsonStream::JsonTypes array_element_type = property.getArrayElementType();
-      size_t array_length = property.getArrayLength();
-      if (element_index >= (int)array_length)
-      {
-        response_.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
-        return;
-      }
-      switch (array_element_type)
-      {
-        case JsonStream::LONG_TYPE:
-        {
-          if (element_index < 0)
-          {
-            long property_value[array_length];
-            if (write_default)
-            {
-              property.getDefaultValue(property_value,array_length);
-            }
-            else
-            {
-              property.getValue(property_value,array_length);
-            }
-            response_.writeArray(property_value,array_length);
-          }
-          else
-          {
-            long property_value;
-            if (write_default)
-            {
-              property.getDefaultElementValue(element_index,property_value);
-            }
-            else
-            {
-              property.getElementValue(element_index,property_value);
-            }
-            response_.write(property_value);
-          }
-          break;
-        }
-        case JsonStream::DOUBLE_TYPE:
-        {
-          if (element_index < 0)
-          {
-            double property_value[array_length];
-            if (write_default)
-            {
-              property.getDefaultValue(property_value,array_length);
-            }
-            else
-            {
-              property.getValue(property_value,array_length);
-            }
-            response_.writeArray(property_value,array_length);
-          }
-          else
-          {
-            double property_value;
-            if (write_default)
-            {
-              property.getDefaultElementValue(element_index,property_value);
-            }
-            else
-            {
-              property.getElementValue(element_index,property_value);
-            }
-            response_.write(property_value);
-          }
-          break;
-        }
-        case JsonStream::BOOL_TYPE:
-        {
-          if (element_index < 0)
-          {
-            bool property_value[array_length];
-            if (write_default)
-            {
-              property.getDefaultValue(property_value,array_length);
-            }
-            else
-            {
-              property.getValue(property_value,array_length);
-            }
-            response_.writeArray(property_value,array_length);
-          }
-          else
-          {
-            bool property_value;
-            if (write_default)
-            {
-              property.getDefaultElementValue(element_index,property_value);
-            }
-            else
-            {
-              property.getElementValue(element_index,property_value);
-            }
-            response_.write(property_value);
-          }
-          break;
-        }
-        case JsonStream::NULL_TYPE:
-        {
-          break;
-        }
-        case JsonStream::STRING_TYPE:
-        {
-          if (element_index < 0)
-          {
-            const ConstantString * property_value[array_length];
-            if (write_default)
-            {
-              property.getDefaultValue(property_value,array_length);
-            }
-            else
-            {
-              property.getValue(property_value,array_length);
-            }
-            response_.writeArray(property_value,array_length);
-          }
-          else
-          {
-            const ConstantString * property_value;
-            if (write_default)
-            {
-              property.getDefaultElementValue(element_index,property_value);
-            }
-            else
-            {
-              property.getElementValue(element_index,property_value);
-            }
-            response_.write(property_value);
-          }
-          break;
-        }
-        case JsonStream::OBJECT_TYPE:
-        {
-          break;
-        }
-        case JsonStream::ARRAY_TYPE:
-        {
-          break;
-        }
-        case JsonStream::ANY_TYPE:
-        {
-          break;
-        }
-      }
-      break;
-    }
-    case JsonStream::OBJECT_TYPE:
-    {
-      break;
-    }
-    case JsonStream::ANY_TYPE:
-    {
-      break;
-    }
-  }
 }
 
 void Server::versionToString(char* destination,
@@ -2519,7 +1805,7 @@ void Server::getPropertyDefaultValuesHandler()
     Property & property = properties_[i];
     if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
     {
-      writePropertyToResponse(property,true,true);
+      property.writeToResponse(response_,true,true);
     }
   }
   response_.endObject();
@@ -2537,7 +1823,7 @@ void Server::getPropertyValuesHandler()
     Property & property = properties_[i];
     if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
     {
-      writePropertyToResponse(property,true,false);
+      property.writeToResponse(response_,true,false);
     }
   }
   response_.endObject();

@@ -231,6 +231,89 @@ void Callback::detachFromAll()
   }
 }
 
+void Callback::help(Response & response,
+                    bool verbose,
+                    bool api)
+{
+  updateFunctionsAndParameters();
+
+  response.beginObject();
+
+  const ConstantString & callback_name = getName();
+  response.write(constants::name_constant_string,callback_name);
+  if (!api)
+  {
+    const ConstantString & firmware_name = getFirmwareName();
+    response.write(constants::firmware_constant_string,firmware_name);
+  }
+
+  response.writeKey(constants::properties_constant_string);
+  response.beginArray();
+  Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
+  property_ptrs_ptr = &property_ptrs_;
+  for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
+  {
+    if (verbose && !api)
+    {
+      (*property_ptrs_ptr)[i]->help(response,true,false,true);
+    }
+    else
+    {
+      const ConstantString & property_name = (*property_ptrs_ptr)[i]->getName();
+      response.write(property_name);
+    }
+  }
+  response.endArray();
+
+  if (!api)
+  {
+    response.writeKey(constants::interrupts_constant_string);
+    response.beginArray();
+    IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> * interrupt_ptrs_ptr = NULL;
+    interrupt_ptrs_ptr = &interrupt_ptrs_;
+    for (size_t i=0; i<interrupt_ptrs_ptr->max_size(); ++i)
+    {
+      if (interrupt_ptrs_ptr->indexHasValue(i))
+      {
+        (*interrupt_ptrs_ptr)[i]->help(response,verbose);
+      }
+    }
+    response.endArray();
+  }
+
+  response.writeKey(constants::functions_constant_string);
+  response.beginArray();
+  for (size_t i=0; i<Callback::functions_.size(); ++i)
+  {
+    if (verbose)
+    {
+      Callback::functions_[i].help(response,false,false);
+    }
+    else
+    {
+      response.write(Callback::functions_[i].getName());
+    }
+  }
+  response.endArray();
+
+  response.writeKey(constants::parameters_constant_string);
+  response.beginArray();
+  for (size_t i=0; i<Callback::parameters_.size(); ++i)
+  {
+    if (verbose)
+    {
+      Callback::parameters_[i].help(response,false,!api,!api);
+    }
+    else
+    {
+      response.write(Callback::parameters_[i].getName());
+    }
+  }
+  response.endArray();
+
+  response.endObject();
+}
+
 // protected
 
 // private

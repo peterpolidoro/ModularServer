@@ -15,6 +15,7 @@
 
 #include "HardwareElement.h"
 #include "Callback.h"
+#include "Response.h"
 #include "Constants.h"
 
 
@@ -40,6 +41,9 @@ public:
   size_t getPin();
   Callback * getCallbackPtr();
   const ConstantString & getMode();
+
+  void help(Response & response,
+            bool verbose);
 
 private:
   size_t number_;
