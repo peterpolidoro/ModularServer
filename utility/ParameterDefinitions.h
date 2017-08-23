@@ -19,6 +19,19 @@ void Parameter::setRange(const T min, const T max)
   max_.l = (long)max;
   setTypeLong();
   range_is_set_ = true;
+
+  if (array_length_range_is_set_)
+  {
+    size_t max_value_count = abs((long)max - (long)min) + 1;
+    if (array_length_min_ > max_value_count)
+    {
+      array_length_min_ = max_value_count;
+    }
+    if (array_length_max_ > max_value_count)
+    {
+      array_length_max_ = max_value_count;
+    }
+  }
 }
 
 template <size_t MAX_SIZE>
@@ -26,6 +39,19 @@ void Parameter::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_
 {
   subset_.setStorage(subset,size);
   subset_is_set_ = true;
+
+  if (array_length_range_is_set_)
+  {
+    size_t max_value_count = MAX_SIZE;
+    if (array_length_min_ > max_value_count)
+    {
+      array_length_min_ = max_value_count;
+    }
+    if (array_length_max_ > max_value_count)
+    {
+      array_length_max_ = max_value_count;
+    }
+  }
 }
 
 template <typename T>

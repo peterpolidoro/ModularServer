@@ -19,11 +19,11 @@ work with the Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy
   "id":"getApi",
   "result":{
     "firmware":["ModularServer"],
+    "verbosity":"NAMES",
     "functions":[
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
-      "getApiVerbose",
       "getPropertyDefaultValues",
       "setPropertiesToDefaults",
       "getPropertyValues",
@@ -31,12 +31,12 @@ work with the Arduino Mega 2560, Teensy 3.2, Teensy 3.5, and Teensy
       "detachAllInterrupts"
     ],
     "parameters":[
-      "firmware"
+      "firmware",
+      "verbosity"
     ],
     "properties":[
       "serialNumber"
-    ],
-    "callbacks":[]
+    ]
   }
 }
 ```

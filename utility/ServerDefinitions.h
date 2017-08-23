@@ -43,7 +43,10 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
   constants::SubsetMemberType firmware_name;
   firmware_name.cs_ptr = firmware_info.name_ptr;
   firmware_name_array_.push_back(firmware_name);
-  parameter(constants::firmware_constant_string).addValueToSubset(firmware_name_array_.back());
+  Parameter & firmware_parameter = parameter(constants::firmware_constant_string);
+  firmware_parameter.addValueToSubset(firmware_name_array_.back());
+  // array length ranges is 1 less than subset size because one value is ALL
+  firmware_parameter.setArrayLengthRange(1,(firmware_parameter.getSubsetSize() - 1));
   properties_.addArray(properties);
   parameters_.addArray(parameters);
   functions_.addArray(functions);

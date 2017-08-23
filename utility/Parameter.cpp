@@ -144,6 +144,19 @@ void Parameter::setRange(const constants::NumberType min, const constants::Numbe
   min_ = min;
   max_ = max;
   range_is_set_ = true;
+
+  if ((array_length_range_is_set_) && (type_ == JsonStream::LONG_TYPE))
+  {
+    size_t max_value_count = abs(max.l - min.l) + 1;
+    if (array_length_min_ > max_value_count)
+    {
+      array_length_min_ = max_value_count;
+    }
+    if (array_length_max_ > max_value_count)
+    {
+      array_length_max_ = max_value_count;
+    }
+  }
 }
 
 void Parameter::removeRange()
@@ -158,6 +171,32 @@ void Parameter::setArrayLengthRange(const size_t array_length_min,
   array_length_min_ = array_length_min;
   array_length_max_ = array_length_max;
   array_length_range_is_set_ = true;
+
+  if (range_is_set_ && (type_ == JsonStream::LONG_TYPE))
+  {
+    size_t max_value_count = abs(max_.l - min_.l) + 1;
+    if (array_length_min_ > max_value_count)
+    {
+      array_length_min_ = max_value_count;
+    }
+    if (array_length_max_ > max_value_count)
+    {
+      array_length_max_ = max_value_count;
+    }
+  }
+
+  if (subset_is_set_)
+  {
+    size_t max_value_count = subset_.max_size();
+    if (array_length_min_ > max_value_count)
+    {
+      array_length_min_ = max_value_count;
+    }
+    if (array_length_max_ > max_value_count)
+    {
+      array_length_max_ = max_value_count;
+    }
+  }
 }
 
 void Parameter::removeArrayLengthRange()
@@ -169,12 +208,38 @@ void Parameter::setSubset(constants::SubsetMemberType * subset, size_t max_size,
 {
   subset_.setStorage(subset,max_size,size);
   subset_is_set_ = true;
+
+  if (array_length_range_is_set_)
+  {
+    size_t max_value_count = max_size;
+    if (array_length_min_ > max_value_count)
+    {
+      array_length_min_ = max_value_count;
+    }
+    if (array_length_max_ > max_value_count)
+    {
+      array_length_max_ = max_value_count;
+    }
+  }
 }
 
 void Parameter::setSubset(Vector<constants::SubsetMemberType> & subset)
 {
   subset_ = subset;
   subset_is_set_ = true;
+
+  if (array_length_range_is_set_)
+  {
+    size_t max_value_count = subset.max_size();
+    if (array_length_min_ > max_value_count)
+    {
+      array_length_min_ = max_value_count;
+    }
+    if (array_length_max_ > max_value_count)
+    {
+      array_length_max_ = max_value_count;
+    }
+  }
 }
 
 void Parameter::addValueToSubset(constants::SubsetMemberType & value)
@@ -188,6 +253,16 @@ void Parameter::addValueToSubset(constants::SubsetMemberType & value)
 void Parameter::removeSubset()
 {
   subset_is_set_ = false;
+}
+
+size_t Parameter::getSubsetSize()
+{
+  return subset_.size();
+}
+
+size_t Parameter::getSubsetMaxSize()
+{
+  return subset_.max_size();
 }
 
 template <>
@@ -304,6 +379,11 @@ void Parameter::writeApi(Response & response,
                          bool write_firmware,
                          bool write_instance_details)
 {
+  if (response.error())
+  {
+    return;
+  }
+
   const ConstantString & name = getName();
   if (write_name_only)
   {
@@ -473,11 +553,16 @@ void Parameter::writeApi(Response & response,
       response.write(constants::array_element_type_constant_string,array_element_type);
     }
   }
-  const ConstantString & units = getUnits();
-  if (units.length() != 0)
+
+  if (write_instance_details)
   {
-    response.write(constants::units_constant_string,units);
+    const ConstantString & units = getUnits();
+    if (units.length() != 0)
+    {
+      response.write(constants::units_constant_string,units);
+    }
   }
+
   if (!is_property)
   {
     response.endObject();

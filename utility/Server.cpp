@@ -1110,6 +1110,11 @@ void Server::incrementServerStream()
 
 void Server::help(bool verbose)
 {
+  if (response_.error())
+  {
+    return;
+  }
+
   int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
   int parameter_count = array_elements_count - 1;
   bool param_error = true;
@@ -1317,6 +1322,7 @@ void Server::writeDeviceIdToResponse()
   {
     return;
   }
+
   response_.beginObject();
 
   response_.write(constants::name_constant_string,device_name_ptr_);
@@ -1332,6 +1338,7 @@ void Server::writeFirmwareInfoToResponse()
   {
     return;
   }
+
   char version_str[constants::STRING_LENGTH_VERSION];
 
   response_.beginArray();
@@ -1360,6 +1367,7 @@ void Server::writeHardwareInfoToResponse()
   {
     return;
   }
+
   char version_str[constants::STRING_LENGTH_VERSION];
 
   response_.beginArray();
@@ -1403,6 +1411,7 @@ void Server::writeDeviceInfoToResponse()
   {
     return;
   }
+
   response_.beginObject();
 
   response_.write(constants::processor_constant_string,constants::processor_name_constant_string);
@@ -1422,6 +1431,7 @@ void Server::writeInterruptInfoToResponse()
   {
     return;
   }
+
   response_.beginArray();
   for (size_t i=0; i<interrupts_.size(); ++i)
   {
@@ -1438,6 +1448,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
   {
     return;
   }
+
   response_.beginObject();
 
   response_.write(constants::firmware_constant_string,&firmware_name_array);
@@ -1455,58 +1466,126 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
     write_instance_details = true;
   }
 
-  response_.writeKey(constants::functions_constant_string);
-  response_.beginArray();
-  for (size_t function_index=0; function_index<functions_.size(); ++function_index)
+  size_t functions_count = getFunctionsCount(firmware_name_array);
+  if (functions_count > 0)
   {
-    if (function_index > private_function_index_)
+    response_.writeKey(constants::functions_constant_string);
+    response_.beginArray();
+    for (size_t function_index=0; function_index<functions_.size(); ++function_index)
     {
-      Function & function = functions_[function_index];
-      if (function.firmwareNameInArray(firmware_name_array))
+      if (function_index > private_function_index_)
       {
-        function.writeApi(response_,write_names_only,false,false);
+        Function & function = functions_[function_index];
+        if (function.firmwareNameInArray(firmware_name_array))
+        {
+          function.writeApi(response_,write_names_only,false,false);
+        }
       }
     }
+    response_.endArray();
   }
-  response_.endArray();
 
-  response_.writeKey(constants::parameters_constant_string);
-  response_.beginArray();
-  for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
+  size_t parameters_count = getParametersCount(firmware_name_array);
+  if (parameters_count > 0)
   {
-    Parameter & parameter = parameters_[parameter_index];
-    if (parameter.firmwareNameInArray(firmware_name_array))
+    response_.writeKey(constants::parameters_constant_string);
+    response_.beginArray();
+    for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
     {
-      parameter.writeApi(response_,write_names_only,false,false,write_instance_details);
+      Parameter & parameter = parameters_[parameter_index];
+      if (parameter.firmwareNameInArray(firmware_name_array))
+      {
+        parameter.writeApi(response_,write_names_only,false,false,write_instance_details);
+      }
     }
+    response_.endArray();
   }
-  response_.endArray();
 
-  response_.writeKey(constants::properties_constant_string);
-  response_.beginArray();
-  for (size_t property_index=0; property_index<properties_.size(); ++property_index)
+  size_t properties_count = getPropertiesCount(firmware_name_array);
+  if (properties_count > 0)
   {
-    Property & property = properties_[property_index];
-    if (property.firmwareNameInArray(firmware_name_array))
+    response_.writeKey(constants::properties_constant_string);
+    response_.beginArray();
+    for (size_t property_index=0; property_index<properties_.size(); ++property_index)
     {
-      property.writeApi(response_,write_names_only,false,true,write_instance_details);
+      Property & property = properties_[property_index];
+      if (property.firmwareNameInArray(firmware_name_array))
+      {
+        property.writeApi(response_,write_names_only,false,true,write_instance_details);
+      }
     }
+    response_.endArray();
   }
-  response_.endArray();
 
-  response_.writeKey(constants::callbacks_constant_string);
-  response_.beginArray();
-  for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
+  size_t callbacks_count = getCallbacksCount(firmware_name_array);
+  if (callbacks_count > 0)
   {
-    Callback & callback = callbacks_[callback_index];
-    if (callback.firmwareNameInArray(firmware_name_array))
+    response_.writeKey(constants::callbacks_constant_string);
+    response_.beginArray();
+    for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
     {
-      callback.writeApi(response_,write_names_only,false,true,write_instance_details);
+      Callback & callback = callbacks_[callback_index];
+      if (callback.firmwareNameInArray(firmware_name_array))
+      {
+        callback.writeApi(response_,write_names_only,false,true,write_instance_details);
+      }
     }
+    response_.endArray();
   }
-  response_.endArray();
 
   response_.endObject();
+}
+
+size_t Server::getPropertiesCount(ArduinoJson::JsonArray & firmware_name_array)
+{
+  size_t count = 0;
+  for (size_t property_index=0; property_index<properties_.size(); ++property_index)
+  {
+    if (properties_[property_index].firmwareNameInArray(firmware_name_array))
+    {
+      ++count;
+    }
+  }
+  return count;
+}
+
+size_t Server::getParametersCount(ArduinoJson::JsonArray & firmware_name_array)
+{
+  size_t count = 0;
+  for (size_t property_index=0; property_index<parameters_.size(); ++property_index)
+  {
+    if (parameters_[property_index].firmwareNameInArray(firmware_name_array))
+    {
+      ++count;
+    }
+  }
+  return count;
+}
+
+size_t Server::getFunctionsCount(ArduinoJson::JsonArray & firmware_name_array)
+{
+  size_t count = 0;
+  for (size_t property_index=0; property_index<functions_.size(); ++property_index)
+  {
+    if (functions_[property_index].firmwareNameInArray(firmware_name_array))
+    {
+      ++count;
+    }
+  }
+  return count;
+}
+
+size_t Server::getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array)
+{
+  size_t count = 0;
+  for (size_t property_index=0; property_index<callbacks_.size(); ++property_index)
+  {
+    if (callbacks_[property_index].firmwareNameInArray(firmware_name_array))
+    {
+      ++count;
+    }
+  }
+  return count;
 }
 
 void Server::versionToString(char* destination,

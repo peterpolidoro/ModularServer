@@ -56,6 +56,8 @@ public:
   void setSubset(Vector<constants::SubsetMemberType> & subset);
   void addValueToSubset(constants::SubsetMemberType & value);
   void removeSubset();
+  size_t getSubsetSize();
+  size_t getSubsetMaxSize();
 
   template <typename T>
   bool getValue(T & value);

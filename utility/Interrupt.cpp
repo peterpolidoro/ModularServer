@@ -49,6 +49,11 @@ const ConstantString & Interrupt::getMode()
 void Interrupt::writeApi(Response & response,
                          bool write_name_only)
 {
+  if (response.error())
+  {
+    return;
+  }
+
   const ConstantString & name = getName();
   if (write_name_only)
   {

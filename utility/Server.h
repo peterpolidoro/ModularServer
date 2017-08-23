@@ -176,6 +176,10 @@ private:
   void writeInterruptInfoToResponse();
   void writeApiToResponse(const ConstantString & verbosity,
                           ArduinoJson::JsonArray & firmware_name_array);
+  size_t getPropertiesCount(ArduinoJson::JsonArray & firmware_name_array);
+  size_t getParametersCount(ArduinoJson::JsonArray & firmware_name_array);
+  size_t getFunctionsCount(ArduinoJson::JsonArray & firmware_name_array);
+  size_t getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array);
   void versionToString(char * destination,
                        const long major,
                        const long minor,

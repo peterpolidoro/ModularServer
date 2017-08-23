@@ -156,6 +156,11 @@ void Function::writeApi(Response & response,
                         bool write_firmware,
                         bool verbose)
 {
+  if (response.error())
+  {
+    return;
+  }
+
   const ConstantString & name = getName();
   if (write_name_only)
   {
@@ -173,16 +178,19 @@ void Function::writeApi(Response & response,
     response.write(constants::firmware_constant_string,firmware_name);
   }
 
-  response.writeKey(constants::parameters_constant_string);
-  response.beginArray();
   Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;
   parameter_ptrs_ptr = &parameter_ptrs_;
-  for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
+  if (parameter_ptrs_ptr->size() > 0)
   {
-    Parameter & parameter = *((*parameter_ptrs_ptr)[i]);
-    parameter.writeApi(response,!verbose,false,false,true);
+    response.writeKey(constants::parameters_constant_string);
+    response.beginArray();
+    for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
+    {
+      Parameter & parameter = *((*parameter_ptrs_ptr)[i]);
+      parameter.writeApi(response,!verbose,false,false,true);
+    }
+    response.endArray();
   }
-  response.endArray();
 
   JsonStream::JsonTypes type = getResultType();
   if (type != JsonStream::NULL_TYPE)

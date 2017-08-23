@@ -23,6 +23,10 @@ void Response::writeResultKey()
 
 void Response::write(Vector<constants::SubsetMemberType> & value, JsonStream::JsonTypes type)
 {
+  if (error_)
+  {
+    return;
+  }
   switch (type)
   {
     case JsonStream::LONG_TYPE:
@@ -74,37 +78,65 @@ void Response::write(Vector<constants::SubsetMemberType> & value, JsonStream::Js
 
 void Response::writeNull()
 {
+  if (error_)
+  {
+    return;
+  }
   json_stream_ptr_->writeNull();
 }
 
 void Response::beginObject()
 {
+  if (error_)
+  {
+    return;
+  }
   json_stream_ptr_->beginObject();
 }
 
 void Response::endObject()
 {
+  if (error_)
+  {
+    return;
+  }
   json_stream_ptr_->endObject();
 }
 
 void Response::beginArray()
 {
+  if (error_)
+  {
+    return;
+  }
   json_stream_ptr_->beginArray();
 }
 
 void Response::endArray()
 {
+  if (error_)
+  {
+    return;
+  }
   json_stream_ptr_->endArray();
 }
 
 long Response::pipeFrom(Stream & stream)
 {
+  if (error_)
+  {
+    return 0;
+  }
   JsonStream json_stream(stream);
   return pipeFrom(json_stream);
 }
 
 long Response::pipeFrom(JsonStream & json_stream)
 {
+  if (error_)
+  {
+    return 0;
+  }
   if (&(json_stream.getStream()) == &(json_stream_ptr_->getStream()))
   {
     return -1;
@@ -145,6 +177,11 @@ long Response::pipeFrom(JsonStream & json_stream)
   {
     return -1;
   }
+}
+
+bool Response::error()
+{
+  return error_;
 }
 
 // private
@@ -191,23 +228,18 @@ void Response::setPrettyPrint()
   json_stream_ptr_->setPrettyPrint();
 }
 
-bool Response::error()
-{
-  return error_;
-}
-
 void Response::returnRequestParseError(const char * const request)
 {
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::parse_error_message);
     write(constants::data_constant_string,request);
     write(constants::code_constant_string,constants::parse_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -216,7 +248,6 @@ void Response::returnParameterCountError(const size_t parameter_count, const siz
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -243,6 +274,7 @@ void Response::returnParameterCountError(const size_t parameter_count, const siz
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -251,12 +283,12 @@ void Response::returnMethodNotFoundError()
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::method_not_found_error_message);
     write(constants::code_constant_string,constants::method_not_found_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -265,13 +297,13 @@ void Response::returnParameterNotFoundError()
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
     write(constants::data_constant_string,constants::parameter_not_found_error_data);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -282,7 +314,6 @@ void Response::returnParameterArrayLengthError(const ConstantString & parameter_
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -310,6 +341,7 @@ void Response::returnParameterArrayLengthError(const ConstantString & parameter_
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -318,7 +350,6 @@ void Response::returnParameterObjectParseError(const ConstantString & parameter_
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -335,6 +366,7 @@ void Response::returnParameterObjectParseError(const ConstantString & parameter_
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -343,7 +375,6 @@ void Response::returnParameterArrayParseError(const ConstantString & parameter_n
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -360,6 +391,7 @@ void Response::returnParameterArrayParseError(const ConstantString & parameter_n
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -368,13 +400,13 @@ void Response::returnParameterInvalidError(const ConstantString & error)
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
     write(constants::data_constant_string,error);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -384,7 +416,6 @@ void Response::returnParameterNotInSubsetError(const char * const subset_str,
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -407,6 +438,7 @@ void Response::returnParameterNotInSubsetError(const char * const subset_str,
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -418,7 +450,6 @@ void Response::returnParameterNotInRangeError(const ConstantString & parameter_n
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -457,6 +488,7 @@ void Response::returnParameterNotInRangeError(const ConstantString & parameter_n
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -465,12 +497,12 @@ void Response::returnPropertyFunctionNotFoundError()
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::property_function_not_found_error_data);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -479,7 +511,6 @@ void Response::returnPropertyParameterCountError(const size_t parameter_count, c
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -506,6 +537,7 @@ void Response::returnPropertyParameterCountError(const size_t parameter_count, c
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -514,12 +546,12 @@ void Response::returnCallbackFunctionNotFoundError()
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::callback_function_not_found_error_data);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 
@@ -528,7 +560,6 @@ void Response::returnCallbackParameterCountError(const size_t parameter_count, c
   // Prevent multiple errors in one response
   if (!error_)
   {
-    error_ = true;
     writeKey(constants::error_constant_string);
     beginObject();
     write(constants::message_constant_string,constants::invalid_params_error_message);
@@ -555,6 +586,7 @@ void Response::returnCallbackParameterCountError(const size_t parameter_count, c
     write(constants::data_constant_string,error_str);
     write(constants::code_constant_string,constants::invalid_params_error_code);
     endObject();
+    error_ = true;
   }
 }
 

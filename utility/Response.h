@@ -57,6 +57,8 @@ public:
   long pipeFrom(Stream & stream);
   long pipeFrom(JsonStream & json_stream);
 
+  bool error();
+
 private:
   JsonStream * json_stream_ptr_;
   bool error_;
@@ -69,7 +71,6 @@ private:
   void end();
   void setCompactPrint();
   void setPrettyPrint();
-  bool error();
   void returnRequestParseError(const char * const request);
   void returnParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
   void returnMethodNotFoundError();

@@ -834,6 +834,35 @@ void Property::setArrayLengthRange(const size_t array_length_min,
       min = max;
     }
 
+    if (parameter_.rangeIsSet() && (getArrayElementType() == JsonStream::LONG_TYPE))
+    {
+      const long & range_min = parameter_.getRangeMin().l;
+      const long & range_max = parameter_.getRangeMin().l;
+
+      size_t max_value_count = abs(range_max - range_min) + 1;
+      if (array_length_min_ > max_value_count)
+      {
+        array_length_min_ = max_value_count;
+      }
+      if (array_length_max_ > max_value_count)
+      {
+        array_length_max_ = max_value_count;
+      }
+    }
+
+    if (parameter_.subsetIsSet())
+    {
+      size_t max_value_count = parameter_.getSubsetMaxSize();
+      if (array_length_min_ > max_value_count)
+      {
+        array_length_min_ = max_value_count;
+      }
+      if (array_length_max_ > max_value_count)
+      {
+        array_length_max_ = max_value_count;
+      }
+    }
+
     array_length_min_ = min;
     array_length_max_ = max;
 
@@ -907,6 +936,7 @@ void Property::setRange(const long min, const long max)
   else if ((getType() == JsonStream::ARRAY_TYPE) &&
            (getArrayElementType() == JsonStream::LONG_TYPE))
   {
+    setArrayLengthRange(array_length_min_,array_length_max_);
     size_t array_length = getArrayLength();
     for (size_t i=0; i<array_length; ++i)
     {
@@ -988,6 +1018,7 @@ void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, 
   else if ((getType() == JsonStream::ARRAY_TYPE) &&
            (getArrayElementType() == JsonStream::LONG_TYPE))
   {
+    setArrayLengthRange(array_length_min_,array_length_max_);
     size_t array_length = getArrayLength();
     for (size_t i=0; i<array_length; ++i)
     {
@@ -1003,6 +1034,7 @@ void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, 
            (getArrayElementType() == JsonStream::STRING_TYPE) &&
            !stringSavedAsCharArray())
   {
+    setArrayLengthRange(array_length_min_,array_length_max_);
     size_t array_length = getArrayLength();
     for (size_t i=0; i<array_length; ++i)
     {
@@ -1056,6 +1088,11 @@ void Property::writeValue(Response & response,
                           bool write_default,
                           int element_index)
 {
+  if (response.error())
+  {
+    return;
+  }
+
   const ConstantString & property_name = getName();
   if (write_key)
   {
@@ -1335,6 +1372,11 @@ void Property::writeApi(Response & response,
                         bool verbose,
                         bool write_instance_details)
 {
+  if (response.error())
+  {
+    return;
+  }
+
   const ConstantString & name = getName();
   if (write_name_only)
   {

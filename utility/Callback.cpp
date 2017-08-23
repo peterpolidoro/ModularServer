@@ -237,6 +237,11 @@ void Callback::writeApi(Response & response,
                         bool verbose,
                         bool write_instance_details)
 {
+  if (response.error())
+  {
+    return;
+  }
+
   const ConstantString & name = getName();
   if (write_name_only)
   {
@@ -255,16 +260,19 @@ void Callback::writeApi(Response & response,
     response.write(constants::firmware_constant_string,firmware_name);
   }
 
-  response.writeKey(constants::properties_constant_string);
-  response.beginArray();
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> * property_ptrs_ptr = NULL;
   property_ptrs_ptr = &property_ptrs_;
-  for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
+  if (property_ptrs_ptr->size() > 0)
   {
-    Property & property = *((*property_ptrs_ptr)[i]);
-    property.writeApi(response,!verbose,false,false,write_instance_details);
+    response.writeKey(constants::properties_constant_string);
+    response.beginArray();
+    for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
+    {
+      Property & property = *((*property_ptrs_ptr)[i]);
+      property.writeApi(response,true,false,false,write_instance_details);
+    }
+    response.endArray();
   }
-  response.endArray();
 
   if (write_instance_details)
   {

@@ -50,6 +50,7 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
   else if ((getType() == JsonStream::ARRAY_TYPE) &&
            (getArrayElementType() == JsonStream::LONG_TYPE))
   {
+    setArrayLengthRange(array_length_min_,array_length_max_);
     size_t array_length = getArrayLength();
     for (size_t i=0; i<array_length; ++i)
     {
@@ -65,6 +66,7 @@ void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t
            (getArrayElementType() == JsonStream::STRING_TYPE) &&
            !stringSavedAsCharArray())
   {
+    setArrayLengthRange(array_length_min_,array_length_max_);
     size_t array_length = getArrayLength();
     for (size_t i=0; i<array_length; ++i)
     {
