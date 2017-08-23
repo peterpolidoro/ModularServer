@@ -298,14 +298,23 @@ Parameter Parameter::getElementParameter()
   return element_parameter;
 }
 
-void Parameter::help(Response & response,
-                     bool is_property,
-                     bool write_firmware,
-                     bool write_instance_details)
+void Parameter::writeApi(Response & response,
+                         bool write_name_only,
+                         bool is_property,
+                         bool write_firmware,
+                         bool write_instance_details)
 {
+  const ConstantString & name = getName();
+  if (write_name_only)
+  {
+    response.write(name);
+    return;
+  }
+
   response.beginObject();
-  const ConstantString & parameter_name = getName();
-  response.write(constants::name_constant_string,parameter_name);
+
+  response.write(constants::name_constant_string,name);
+
   if (write_firmware)
   {
     const ConstantString & firmware_name = getFirmwareName();

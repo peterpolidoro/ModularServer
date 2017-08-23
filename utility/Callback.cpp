@@ -16,10 +16,10 @@ namespace callback
 // Parameters
 constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
   {
-    {.cs_ptr=&interrupt::mode_low},
-    {.cs_ptr=&interrupt::mode_change},
-    {.cs_ptr=&interrupt::mode_rising},
-    {.cs_ptr=&interrupt::mode_falling},
+   {.cs_ptr=&interrupt::mode_low},
+   {.cs_ptr=&interrupt::mode_change},
+   {.cs_ptr=&interrupt::mode_rising},
+   {.cs_ptr=&interrupt::mode_falling},
   };
 
 // Functions
@@ -231,17 +231,25 @@ void Callback::detachFromAll()
   }
 }
 
-void Callback::help(Response & response,
-                    bool verbose,
-                    bool api)
+void Callback::writeApi(Response & response,
+                        bool write_name_only,
+                        bool write_firmware,
+                        bool verbose,
+                        bool write_instance_details)
 {
+  const ConstantString & name = getName();
+  if (write_name_only)
+  {
+    response.write(name);
+    return;
+  }
+
   updateFunctionsAndParameters();
 
   response.beginObject();
 
-  const ConstantString & callback_name = getName();
-  response.write(constants::name_constant_string,callback_name);
-  if (!api)
+  response.write(constants::name_constant_string,name);
+  if (write_firmware)
   {
     const ConstantString & firmware_name = getFirmwareName();
     response.write(constants::firmware_constant_string,firmware_name);
@@ -253,19 +261,12 @@ void Callback::help(Response & response,
   property_ptrs_ptr = &property_ptrs_;
   for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
   {
-    if (verbose && !api)
-    {
-      (*property_ptrs_ptr)[i]->help(response,true,false,true);
-    }
-    else
-    {
-      const ConstantString & property_name = (*property_ptrs_ptr)[i]->getName();
-      response.write(property_name);
-    }
+    Property & property = *((*property_ptrs_ptr)[i]);
+    property.writeApi(response,!verbose,false,false,write_instance_details);
   }
   response.endArray();
 
-  if (!api)
+  if (write_instance_details)
   {
     response.writeKey(constants::interrupts_constant_string);
     response.beginArray();
@@ -275,7 +276,8 @@ void Callback::help(Response & response,
     {
       if (interrupt_ptrs_ptr->indexHasValue(i))
       {
-        (*interrupt_ptrs_ptr)[i]->help(response,verbose);
+        Interrupt & interrupt = *((*interrupt_ptrs_ptr)[i]);
+        interrupt.writeApi(response,!verbose);
       }
     }
     response.endArray();
@@ -285,14 +287,8 @@ void Callback::help(Response & response,
   response.beginArray();
   for (size_t i=0; i<Callback::functions_.size(); ++i)
   {
-    if (verbose)
-    {
-      Callback::functions_[i].help(response,false,false);
-    }
-    else
-    {
-      response.write(Callback::functions_[i].getName());
-    }
+    Function & function = Callback::functions_[i];
+    function.writeApi(response,!verbose,false,false);
   }
   response.endArray();
 
@@ -300,14 +296,8 @@ void Callback::help(Response & response,
   response.beginArray();
   for (size_t i=0; i<Callback::parameters_.size(); ++i)
   {
-    if (verbose)
-    {
-      Callback::parameters_[i].help(response,false,!api,!api);
-    }
-    else
-    {
-      response.write(Callback::parameters_[i].getName());
-    }
+    Parameter & parameter = Callback::parameters_[i];
+    parameter.writeApi(response,!verbose,false,false,write_instance_details);
   }
   response.endArray();
 

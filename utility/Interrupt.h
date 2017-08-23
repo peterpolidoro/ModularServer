@@ -42,8 +42,8 @@ public:
   Callback * getCallbackPtr();
   const ConstantString & getMode();
 
-  void help(Response & response,
-            bool verbose);
+  void writeApi(Response & response,
+                bool write_name_only);
 
 private:
   size_t number_;

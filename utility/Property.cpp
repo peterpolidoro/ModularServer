@@ -1051,15 +1051,11 @@ void Property::reenableFunctors()
   functors_enabled_ = true;
 }
 
-void Property::writeToResponse(Response & response,
-                               bool write_key,
-                               bool write_default,
-                               int element_index)
+void Property::writeValue(Response & response,
+                          bool write_key,
+                          bool write_default,
+                          int element_index)
 {
-  if (response.error())
-  {
-    return;
-  }
   const ConstantString & property_name = getName();
   if (write_key)
   {
@@ -1333,14 +1329,22 @@ void Property::writeToResponse(Response & response,
   }
 }
 
-void Property::help(Response & response,
-                    bool write_firmware,
-                    bool write_function_parameter_details,
-                    bool write_instance_details)
+void Property::writeApi(Response & response,
+                        bool write_name_only,
+                        bool write_firmware,
+                        bool verbose,
+                        bool write_instance_details)
 {
+  const ConstantString & name = getName();
+  if (write_name_only)
+  {
+    response.write(name);
+    return;
+  }
+
   updateFunctionsAndParameters();
 
-  parameter().help(response,true,write_firmware,write_instance_details);
+  parameter().writeApi(response,false,true,write_firmware,write_instance_details);
 
   if (write_instance_details)
   {
@@ -1351,10 +1355,10 @@ void Property::help(Response & response,
     }
 
     response.writeKey(constants::value_constant_string);
-    writeToResponse(response,false,false);
+    writeValue(response,false,false);
 
     response.writeKey(constants::default_value_constant_string);
-    writeToResponse(response,false,true);
+    writeValue(response,false,true);
 
     if ((getType() == JsonStream::STRING_TYPE) &&
         (stringSavedAsCharArray()))
@@ -1369,14 +1373,8 @@ void Property::help(Response & response,
   response.beginArray();
   for (size_t i=0; i<Property::functions_.size(); ++i)
   {
-    if (write_function_parameter_details)
-    {
-      Property::functions_[i].help(response,false,false);
-    }
-    else
-    {
-      response.write(Property::functions_[i].getName());
-    }
+    Function & function = Property::functions_[i];
+    function.writeApi(response,!verbose,false,false);
   }
   response.endArray();
 
@@ -1384,14 +1382,8 @@ void Property::help(Response & response,
   response.beginArray();
   for (size_t i=0; i<Property::parameters_.size(); ++i)
   {
-    if (write_function_parameter_details)
-    {
-      Property::parameters_[i].help(response,false,write_firmware,write_instance_details);
-    }
-    else
-    {
-      response.write(Property::parameters_[i].getName());
-    }
+    Parameter & parameter = Property::parameters_[i];
+    parameter.writeApi(response,!verbose,false,false,write_instance_details);
   }
   response.endArray();
 
@@ -1402,7 +1394,7 @@ void Property::help(Response & response,
 template <>
 Property::Property<long>(const ConstantString & name,
                          const long & default_value) :
-parameter_(name),
+  parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeLong();
@@ -1411,7 +1403,7 @@ parameter_(name),
 template <>
 Property::Property<double>(const ConstantString & name,
                            const double & default_value) :
-parameter_(name),
+  parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeDouble();
@@ -1420,7 +1412,7 @@ parameter_(name),
 template <>
 Property::Property<bool>(const ConstantString & name,
                          const bool & default_value) :
-parameter_(name),
+  parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeBool();
@@ -1429,7 +1421,7 @@ parameter_(name),
 template <>
 Property::Property<const ConstantString *>(const ConstantString & name,
                                            const ConstantString * const & default_value) :
-parameter_(name),
+  parameter_(name),
   saved_variable_(default_value)
 {
   parameter_.setTypeString();
@@ -1687,7 +1679,7 @@ void Property::updateFunctionsAndParameters()
 void Property::getValueHandler()
 {
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,false,-1);
+  writeValue(*response_ptr_,false,false,-1);
 }
 
 void Property::setValueHandler()
@@ -1740,27 +1732,27 @@ void Property::setValueHandler()
     }
   }
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,false,-1);
+  writeValue(*response_ptr_,false,false,-1);
 }
 
 void Property::getDefaultValueHandler()
 {
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,true,-1);
+  writeValue(*response_ptr_,false,true,-1);
 }
 
 void Property::setValueToDefaultHandler()
 {
   setValueToDefault();
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,false,-1);
+  writeValue(*response_ptr_,false,false,-1);
 }
 
 void Property::getElementValueHandler()
 {
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,false,element_index);
+  writeValue(*response_ptr_,false,false,element_index);
 }
 
 void Property::setElementValueHandler()
@@ -1875,14 +1867,14 @@ void Property::setElementValueHandler()
     }
   }
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,false,-1);
+  writeValue(*response_ptr_,false,false,-1);
 }
 
 void Property::getDefaultElementValueHandler()
 {
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,true,element_index);
+  writeValue(*response_ptr_,false,true,element_index);
 }
 
 void Property::setElementValueToDefaultHandler()
@@ -1890,7 +1882,7 @@ void Property::setElementValueToDefaultHandler()
   long element_index = get_parameter_value_functor_(property::element_index_parameter_name);
   setElementValueToDefault(element_index);
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,false,-1);
+  writeValue(*response_ptr_,false,false,-1);
 }
 
 void Property::setAllElementValuesHandler()
@@ -1988,7 +1980,7 @@ void Property::setAllElementValuesHandler()
     }
   }
   response_ptr_->writeResultKey();
-  writeToResponse(*response_ptr_,false,false,-1);
+  writeValue(*response_ptr_,false,false,-1);
 }
 
 void Property::getArrayLengthHandler()

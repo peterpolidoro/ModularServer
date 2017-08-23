@@ -462,13 +462,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        function.help(response_,true,false);
+        function.writeApi(response_,false,true,false);
       }
       // function ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        function.help(response_,true,true);
+        function.writeApi(response_,false,true,true);
       }
       // function parameter ?
       // function parameter ??
@@ -479,10 +479,9 @@ void Server::processRequestArray()
         int parameter_index = processParameterString(function,(*request_json_array_ptr_)[1]);
         if (parameter_index >= 0)
         {
-          Parameter * parameter_ptr;
-          parameter_ptr = function.parameter_ptrs_[parameter_index];
+          Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
           response_.writeResultKey();
-          parameter_ptr->help(response_,false,true,true);
+          parameter.writeApi(response_,false,false,true,true);
         }
       }
       // execute private function without checking parameters
@@ -516,13 +515,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        callback.help(response_,false);
+        callback.writeApi(response_,false,true,false,true);
       }
       // callback ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        callback.help(response_,true);
+        callback.writeApi(response_,false,true,true,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -555,13 +554,13 @@ void Server::processRequestArray()
         if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
         {
           response_.writeResultKey();
-          function.help(response_,true,false);
+          function.writeApi(response_,false,true,false);
         }
         // callback function ??
         else if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
         {
           response_.writeResultKey();
-          function.help(response_,true,true);
+          function.writeApi(response_,false,true,true);
         }
         // callback function parameter ?
         // callback function parameter ??
@@ -572,10 +571,9 @@ void Server::processRequestArray()
           int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
           if (parameter_index >= 0)
           {
-            Parameter * parameter_ptr;
-            parameter_ptr = function.parameter_ptrs_[parameter_index];
+            Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
             response_.writeResultKey();
-            parameter_ptr->help(response_,false,true,true);
+            parameter.writeApi(response_,false,false,true,true);
           }
         }
         // check callback parameter count
@@ -608,13 +606,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        property.help(response_,true,false,true);
+        property.writeApi(response_,false,true,false,true);
       }
       // property ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        property.help(response_,true,true,true);
+        property.writeApi(response_,false,true,true,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -647,13 +645,13 @@ void Server::processRequestArray()
         if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
         {
           response_.writeResultKey();
-          function.help(response_,true,false);
+          function.writeApi(response_,false,true,false);
         }
         // property function ??
         else if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
         {
           response_.writeResultKey();
-          function.help(response_,true,true);
+          function.writeApi(response_,false,true,true);
         }
         // property function parameter ?
         // property function parameter ??
@@ -664,10 +662,9 @@ void Server::processRequestArray()
           int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
           if (parameter_index >= 0)
           {
-            Parameter * parameter_ptr;
-            parameter_ptr = function.parameter_ptrs_[parameter_index];
+            Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
             response_.writeResultKey();
-            parameter_ptr->help(response_,false,true,true);
+            parameter.writeApi(response_,false,false,true,true);
           }
         }
         // check property parameter count
@@ -1171,7 +1168,8 @@ void Server::help(bool verbose)
       // ? function
       param_error = false;
       response_.writeResultKey();
-      functions_[function_index].help(response_,true,verbose);
+      Function & function = functions_[function_index];
+      function.writeApi(response_,false,true,verbose);
     }
     else
     {
@@ -1182,7 +1180,8 @@ void Server::help(bool verbose)
         // ?? parameter
         param_error = false;
         response_.writeResultKey();
-        parameters_[parameter_index].help(response_,false,true,true);
+        Parameter & parameter = parameters_[parameter_index];
+        parameter.writeApi(response_,false,false,true,true);
       }
       else
       {
@@ -1193,7 +1192,8 @@ void Server::help(bool verbose)
           // ?? property
           param_error = false;
           response_.writeResultKey();
-          properties_[property_index].help(response_,true,verbose,true);
+          Property & property = properties_[property_index];
+          property.writeApi(response_,false,true,verbose,true);
         }
         else
         {
@@ -1204,7 +1204,8 @@ void Server::help(bool verbose)
             // ?? callback
             param_error = false;
             response_.writeResultKey();
-            callbacks_[callback_index].help(response_,verbose);
+            Callback & callback = callbacks_[callback_index];
+            callback.writeApi(response_,false,true,verbose,true);
           }
         }
       }
@@ -1226,10 +1227,9 @@ void Server::help(bool verbose)
       if (parameter_index >= 0)
       {
         param_error = false;
-        Parameter * parameter_ptr;
-        parameter_ptr = function.parameter_ptrs_[parameter_index];
+        Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
         response_.writeResultKey();
-        parameter_ptr->help(response_,false,true,true);
+        parameter.writeApi(response_,false,false,true,true);
       }
     }
     else
@@ -1246,7 +1246,7 @@ void Server::help(bool verbose)
           Function & function = property.functions_[property_function_index];
 
           response_.writeResultKey();
-          function.help(response_,true,verbose);
+          function.writeApi(response_,false,true,verbose);
         }
         else
         {
@@ -1279,10 +1279,9 @@ void Server::help(bool verbose)
         if (parameter_index >= 0)
         {
           param_error = false;
-          Parameter * parameter_ptr;
-          parameter_ptr = function.parameter_ptrs_[parameter_index];
+          Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
           response_.writeResultKey();
-          parameter_ptr->help(response_,false,true,true);
+          parameter.writeApi(response_,false,false,true,true);
         }
       }
       else
@@ -1388,7 +1387,8 @@ void Server::writeHardwareInfoToResponse()
     Vector<Interrupt> & interrupts = interrupts_.subVector(i);
     for (size_t j=0; j<interrupts.size(); ++j)
     {
-      interrupts[j].help(response_,false);
+      Interrupt & interrupt = interrupts[j];
+      interrupt.writeApi(response_,true);
     }
     response_.endArray();
 
@@ -1425,7 +1425,8 @@ void Server::writeInterruptInfoToResponse()
   response_.beginArray();
   for (size_t i=0; i<interrupts_.size(); ++i)
   {
-    interrupts_[i].help(response_,true);
+    Interrupt & interrupt = interrupts_[i];
+    interrupt.writeApi(response_,false);
   }
   response_.endArray();
 }
@@ -1443,116 +1444,68 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
 
   response_.write(constants::verbosity_constant_string,verbosity);
 
+  bool write_names_only = false;
+  bool write_instance_details = false;
   if (&verbosity == &constants::verbosity_names)
   {
-    response_.writeKey(constants::functions_constant_string);
-    response_.beginArray();
-    for (size_t function_index=0; function_index<functions_.size(); ++function_index)
-    {
-      if (function_index > private_function_index_)
-      {
-        Function & function = functions_[function_index];
-        if (function.firmwareNameInArray(firmware_name_array))
-        {
-          const ConstantString & function_name = function.getName();
-          response_.write(function_name);
-        }
-      }
-    }
-    response_.endArray();
-
-    response_.writeKey(constants::parameters_constant_string);
-    response_.beginArray();
-    for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
-    {
-      Parameter & parameter = parameters_[parameter_index];
-      if (parameter.firmwareNameInArray(firmware_name_array))
-      {
-        const ConstantString & parameter_name = parameter.getName();
-        response_.write(parameter_name);
-      }
-    }
-    response_.endArray();
-
-    response_.writeKey(constants::properties_constant_string);
-    response_.beginArray();
-    for (size_t property_index=0; property_index<properties_.size(); ++property_index)
-    {
-      Property & property = properties_[property_index];
-      if (property.firmwareNameInArray(firmware_name_array))
-      {
-        const ConstantString & property_name = properties_[property_index].getName();
-        response_.write(property_name);
-      }
-    }
-    response_.endArray();
-
-    response_.writeKey(constants::callbacks_constant_string);
-    response_.beginArray();
-    for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
-    {
-      Callback & callback = callbacks_[callback_index];
-      if (callback.firmwareNameInArray(firmware_name_array))
-      {
-        const ConstantString & callback_name = callback.getName();
-        response_.write(callback_name);
-      }
-    }
-    response_.endArray();
+    write_names_only = true;
   }
-  else
+  else if (&verbosity == &constants::verbosity_instance)
   {
-    response_.writeKey(constants::functions_constant_string);
-    response_.beginArray();
-    for (size_t function_index=0; function_index<functions_.size(); ++function_index)
-    {
-      if (function_index > private_function_index_)
-      {
-        Function & function = functions_[function_index];
-        if (function.firmwareNameInArray(firmware_name_array))
-        {
-          function.help(response_,false,false);
-        }
-      }
-    }
-    response_.endArray();
-
-    response_.writeKey(constants::parameters_constant_string);
-    response_.beginArray();
-    for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
-    {
-      Parameter & parameter = parameters_[parameter_index];
-      if (parameter.firmwareNameInArray(firmware_name_array))
-      {
-        parameter.help(response_,false,false,false);
-      }
-    }
-    response_.endArray();
-
-    response_.writeKey(constants::properties_constant_string);
-    response_.beginArray();
-    for (size_t property_index=0; property_index<properties_.size(); ++property_index)
-    {
-      Property & property = properties_[property_index];
-      if (property.firmwareNameInArray(firmware_name_array))
-      {
-        property.help(response_,false,true,false);
-      }
-    }
-    response_.endArray();
-
-    response_.writeKey(constants::callbacks_constant_string);
-    response_.beginArray();
-    for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
-    {
-      Callback & callback = callbacks_[callback_index];
-      if (callback.firmwareNameInArray(firmware_name_array))
-      {
-        callback.help(response_,true,true);
-      }
-    }
-    response_.endArray();
+    write_instance_details = true;
   }
+
+  response_.writeKey(constants::functions_constant_string);
+  response_.beginArray();
+  for (size_t function_index=0; function_index<functions_.size(); ++function_index)
+  {
+    if (function_index > private_function_index_)
+    {
+      Function & function = functions_[function_index];
+      if (function.firmwareNameInArray(firmware_name_array))
+      {
+        function.writeApi(response_,write_names_only,false,false);
+      }
+    }
+  }
+  response_.endArray();
+
+  response_.writeKey(constants::parameters_constant_string);
+  response_.beginArray();
+  for (size_t parameter_index=0; parameter_index<parameters_.size(); ++parameter_index)
+  {
+    Parameter & parameter = parameters_[parameter_index];
+    if (parameter.firmwareNameInArray(firmware_name_array))
+    {
+      parameter.writeApi(response_,write_names_only,false,false,write_instance_details);
+    }
+  }
+  response_.endArray();
+
+  response_.writeKey(constants::properties_constant_string);
+  response_.beginArray();
+  for (size_t property_index=0; property_index<properties_.size(); ++property_index)
+  {
+    Property & property = properties_[property_index];
+    if (property.firmwareNameInArray(firmware_name_array))
+    {
+      property.writeApi(response_,write_names_only,false,true,write_instance_details);
+    }
+  }
+  response_.endArray();
+
+  response_.writeKey(constants::callbacks_constant_string);
+  response_.beginArray();
+  for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
+  {
+    Callback & callback = callbacks_[callback_index];
+    if (callback.firmwareNameInArray(firmware_name_array))
+    {
+      callback.writeApi(response_,write_names_only,false,true,write_instance_details);
+    }
+  }
+  response_.endArray();
+
   response_.endObject();
 }
 
@@ -1805,7 +1758,7 @@ void Server::getPropertyDefaultValuesHandler()
     Property & property = properties_[i];
     if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
     {
-      property.writeToResponse(response_,true,true);
+      property.writeValue(response_,true,true);
     }
   }
   response_.endObject();
@@ -1823,7 +1776,7 @@ void Server::getPropertyValuesHandler()
     Property & property = properties_[i];
     if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
     {
-      property.writeToResponse(response_,true,false);
+      property.writeValue(response_,true,false);
     }
   }
   response_.endObject();

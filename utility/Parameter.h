@@ -65,10 +65,11 @@ public:
 
   Parameter getElementParameter();
 
-  void help(Response & response,
-            bool is_property,
-            bool write_firmware,
-            bool write_instance_details);
+  void writeApi(Response & response,
+                bool write_name_only,
+                bool is_property,
+                bool write_firmware,
+                bool write_instance_details);
 
 private:
   const ConstantString * units_ptr_;

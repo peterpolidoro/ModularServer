@@ -151,14 +151,22 @@ const ConstantString & Function::getResultUnits()
   return *result_units_ptr_;
 }
 
-void Function::help(Response & response,
-                    bool write_firmware,
-                    bool write_parameter_details)
+void Function::writeApi(Response & response,
+                        bool write_name_only,
+                        bool write_firmware,
+                        bool verbose)
 {
+  const ConstantString & name = getName();
+  if (write_name_only)
+  {
+    response.write(name);
+    return;
+  }
+
   response.beginObject();
 
-  const ConstantString & function_name = getName();
-  response.write(constants::name_constant_string,function_name);
+  response.write(constants::name_constant_string,name);
+
   if (write_firmware)
   {
     const ConstantString & firmware_name = getFirmwareName();
@@ -171,15 +179,8 @@ void Function::help(Response & response,
   parameter_ptrs_ptr = &parameter_ptrs_;
   for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
   {
-    if (write_parameter_details)
-    {
-      (*parameter_ptrs_ptr)[i]->help(response,false,true,true);
-    }
-    else
-    {
-      const ConstantString & parameter_name = (*parameter_ptrs_ptr)[i]->getName();
-      response.write(parameter_name);
-    }
+    Parameter & parameter = *((*parameter_ptrs_ptr)[i]);
+    parameter.writeApi(response,!verbose,false,false,true);
   }
   response.endArray();
 

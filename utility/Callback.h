@@ -58,9 +58,11 @@ public:
   void detachFrom(const char * interrupt_name);
   void detachFromAll();
 
-  void help(Response & response,
-            bool verbose,
-            bool api=false);
+  void writeApi(Response & response,
+                bool write_name_only,
+                bool write_firmware,
+                bool verbose,
+                bool write_instance_details);
 
 private:
   static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;

@@ -46,40 +46,40 @@ const ConstantString & Interrupt::getMode()
   return *mode_ptr_;
 }
 
-void Interrupt::help(Response & response,
-                     bool verbose)
+void Interrupt::writeApi(Response & response,
+                         bool write_name_only)
 {
-  if (verbose)
+  const ConstantString & name = getName();
+  if (write_name_only)
   {
-    response.beginObject();
+    response.write(name);
+    return;
+  }
 
-    response.write(constants::name_constant_string,getName());
+  response.beginObject();
 
-    const ConstantString & hardware_name = getHardwareName();
-    response.write(constants::hardware_constant_string,hardware_name);
+  response.write(constants::name_constant_string,name);
 
-    response.write(constants::number_constant_string,getNumber());
+  const ConstantString & hardware_name = getHardwareName();
+  response.write(constants::hardware_constant_string,hardware_name);
 
-    response.write(constants::pin_constant_string,getPin());
+  response.write(constants::number_constant_string,getNumber());
 
-    Callback * callback_ptr = getCallbackPtr();
-    if (callback_ptr != NULL)
-    {
-      response.write(constants::callback_constant_string,callback_ptr->getName());
-    }
-    else
-    {
-      response.writeNull(constants::callback_constant_string);
-    }
+  response.write(constants::pin_constant_string,getPin());
 
-    response.write(constants::mode_constant_string,getMode());
-
-    response.endObject();
+  Callback * callback_ptr = getCallbackPtr();
+  if (callback_ptr != NULL)
+  {
+    response.write(constants::callback_constant_string,callback_ptr->getName());
   }
   else
   {
-    response.write(getName());
+    response.writeNull(constants::callback_constant_string);
   }
+
+  response.write(constants::mode_constant_string,getMode());
+
+  response.endObject();
 }
 
 // protected

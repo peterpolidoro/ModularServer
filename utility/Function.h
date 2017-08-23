@@ -44,9 +44,10 @@ public:
   void setResultUnits(const ConstantString & units);
   const ConstantString & getResultUnits();
 
-  void help(Response & response,
-            bool write_firmware,
-            bool write_parameter_details);
+  void writeApi(Response & response,
+                bool write_name_only,
+                bool write_firmware,
+                bool verbose);
 
 private:
   Functor0 functor_;
