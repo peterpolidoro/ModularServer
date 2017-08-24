@@ -83,12 +83,14 @@ void StringController::setup()
   repeat_function.addParameter(string_parameter);
   repeat_function.addParameter(count_parameter);
   repeat_function.setResultTypeArray();
+  repeat_function.setResultTypeString();
 
   modular_server::Function & chars_at_function = modular_server_.createFunction(constants::chars_at_function_name);
   chars_at_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::charsAtHandler));
   chars_at_function.addParameter(string_parameter);
   chars_at_function.addParameter(index_array_parameter);
   chars_at_function.setResultTypeArray();
+  chars_at_function.setResultTypeString();
 
   modular_server::Function & starting_chars_function = modular_server_.createFunction(constants::starting_chars_function_name);
   starting_chars_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::startingCharsHandler));

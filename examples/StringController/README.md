@@ -39,8 +39,9 @@ Response:
       "form_factor":"3x2",
       "serial_number":0
     },
-    "API":{
+    "api":{
       "firmware":["StringController"],
+      "verbosity":"NAMES",
       "functions":[
         "echo",
         "length",
@@ -61,8 +62,71 @@ Response:
       "properties":[
         "startingCharsCount",
         "storedString"
+      ]
+    }
+  }
+}
+```
+
+The form\_factor and serial\_number may be different on your board than the ones
+shown above.
+
+To get more verbose help about the modular device, including all API firmware,
+type two question marks ?? into the input property and press the 'Send' button
+or press the 'Enter' key.
+
+Request:
+
+```shell
+??
+```
+
+Response:
+
+```json
+{
+  "id":"??",
+  "result":{
+    "device_id":{
+      "name":"string_controller",
+      "form_factor":"3x2",
+      "serial_number":0
+    },
+    "api":{
+      "firmware":["ALL"],
+      "verbosity":"NAMES",
+      "functions":[
+        "getDeviceId",
+        "getDeviceInfo",
+        "getApi",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "getPropertyValues",
+        "getInterruptInfo",
+        "detachAllInterrupts",
+        "echo",
+        "length",
+        "startsWith",
+        "repeat",
+        "charsAt",
+        "startingChars",
+        "setStoredString",
+        "getStoredString"
       ],
-      "callbacks":[]
+      "parameters":[
+        "firmware",
+        "verbosity",
+        "string",
+        "string2",
+        "count",
+        "index_array",
+        "double_echo"
+      ],
+      "properties":[
+        "serialNumber",
+        "startingCharsCount",
+        "storedString"
+      ]
     }
   }
 }
@@ -71,6 +135,25 @@ Response:
 "functions" is an array of user functions. To execute a function, simply
 type it into the input property and press the 'Send' button or press the
 'Enter' key.
+
+After uploading new firmware to the device for the first time, usually you want
+to set all properties to their default values, so the values will be known and
+valid.
+
+Request:
+
+```shell
+setPropertiesToDefaults ["ALL"]
+```
+
+Response:
+
+```json
+{
+  "id":"setPropertiesToDefaults",
+  "result":null
+}
+```
 
 Request:
 
@@ -127,7 +210,10 @@ Response:
       "string",
       "count"
     ],
-    "result_type":"array"
+    "result_info":{
+      "type":"array",
+      "array_element_type":"string"
+    }
   }
 }
 ```
@@ -154,18 +240,19 @@ Response:
     "parameters":[
       {
         "name":"string",
-        "firmware":"StringController",
         "type":"string"
       },
       {
         "name":"count",
-        "firmware":"StringController",
         "type":"long",
         "min":1,
         "max":100
       }
     ],
-    "result_type":"array"
+    "result_info":{
+      "type":"array",
+      "array_element_type":"string"
+    }
   }
 }
 ```
@@ -348,7 +435,7 @@ Response:
   "id":"getDeviceId",
   "result":{
     "name":"string_controller",
-    "form_factor":"5x3",
+    "form_factor":"3x2",
     "serial_number":77
   }
 }
@@ -372,17 +459,17 @@ Response:
 {
   "id":"getDeviceInfo",
   "result":{
-    "processor":"ATmega2560",
+    "processor":"MK20DX256",
     "hardware":[
       {
-        "name":"Mega2560",
-        "interrupts":[]
+        "name":"Teensy",
+        "version":"3.2"
       }
     ],
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"2.0.0"
+        "version":"3.0.0"
       },
       {
         "name":"StringController",
@@ -402,7 +489,7 @@ function.
 Request:
 
 ```shell
-getApi ["StringController"]
+getApi NAMES ["StringController"]
 ```
 
 Response:
@@ -412,6 +499,7 @@ Response:
   "id":"getApi",
   "result":{
     "firmware":["StringController"],
+    "verbosity":"NAMES",
     "functions":[
       "echo",
       "length",
@@ -430,10 +518,9 @@ Response:
       "double_echo"
     ],
     "properties":[
-      "starting_chars_count",
-      "stored_string"
-    ],
-    "callbacks":[]
+      "startingCharsCount",
+      "storedString"
+    ]
   }
 }
 ```
@@ -446,10 +533,10 @@ Example Python session:
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '5x3', 'name': 'string_controller', 'serial_number': 77}
+{'form_factor': '3x2', 'name': 'string_controller', 'serial_number': 77}
 dev.get_methods()
 ['starts_with',
- 'get_memory_free',
+ 'stored_string',
  'repeat',
  'get_stored_string',
  'starting_chars',
@@ -461,33 +548,26 @@ dev.get_methods()
  'echo',
  'get_property_values',
  'get_device_id',
- 'stored_string',
  'detach_all_interrupts',
  'chars_at',
  'starting_chars_count',
- 'get_api_verbose',
  'get_property_default_values',
  'set_properties_to_defaults',
  'get_device_info']
+dev.set_properties_to_defaults(['ALL'])
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
 {'firmware': 'StringController',
  'name': 'repeat',
  'parameters': ['string', 'count'],
- 'result_type': 'array'}
+ 'result_info': {'array_element_type': 'string', 'type': 'array'}}
 dev.repeat('??')
 {'firmware': 'StringController',
  'name': 'repeat',
- 'parameters': [{'firmware': 'StringController',
-   'name': 'string',
-   'type': 'string'},
-  {'firmware': 'StringController',
-   'max': 100,
-   'min': 1,
-   'name': 'count',
-   'type': 'long'}],
- 'result_type': 'array'}
+ 'parameters': [{'name': 'string', 'type': 'string'},
+  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+ 'result_info': {'array_element_type': 'string', 'type': 'array'}}
 dev.repeat('count','?')
 {'firmware': 'StringController',
  'max': 100,
@@ -509,20 +589,18 @@ dev.starting_chars_count('getValue')
 2
 dev.starting_chars_count('setValue',3)
 3
-dev.call_server_method('starting_chars_count','setValue',7)
+dev.call_get_result('starting_chars_count','setValue',7)
 7
 dev.send_json_request('["startingCharsCount","setValue",3]')
 3
 dev.starting_chars('Fantastic!')
 'Fan'
-dev.call_server_method('starting_chars','Fantastic!')
+dev.call_get_result('starting_chars','Fantastic!')
 'Fan'
 dev.send_json_request('["startingChars","Fantastic!"]')
 'Fan'
-dev.get_api(["StringController"])
-{'properties': ['starting_chars_count', 'stored_string'],
- 'firmware': ['StringController'],
- 'callbacks': [],
+dev.get_api('NAMES',["StringController"])
+{'firmware': ['StringController'],
  'functions': ['echo',
   'length',
   'startsWith',
@@ -531,7 +609,9 @@ dev.get_api(["StringController"])
   'startingChars',
   'setStoredString',
   'getStoredString'],
- 'parameters': ['string', 'string2', 'count', 'index_array', 'double_echo']}
+ 'parameters': ['string', 'string2', 'count', 'index_array', 'double_echo'],
+ 'properties': ['startingCharsCount', 'storedString'],
+ 'verbosity': 'NAMES'}
 ```
 
 For more details on the Python interface:
@@ -558,55 +638,25 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'string_controller'
-  form_factor: '5x3'
+  form_factor: '3x2'
   serial_number: 77
 dev.getMethods()                 % get device methods
   Modular Device Methods
   ---------------------
-  getDeviceId
-  getDeviceInfo
-  getInterruptInfo
-  detachAllInterrupts
-  getApi
-  getApiVerbose
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getMemoryFree
-  echo
-  length
-  startsWith
-  repeat
-  charsAt
-  startingChars
-  setStoredString
-  getStoredString
-  serialNumber
-  startingCharsCount
-  storedString
-dev.setPropertiesToDefaults()
+dev.setPropertiesToDefaults({'ALL'});
 dev.repeat()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
 ans =
-  name: 'repeat'
-  parameters: {'string'    'count'}
-  result_type: 'array'
 dev.repeat('count','?')
 ans =
-  name: 'count'
-  type: 'long'
-  min: 1
-  max: 100
 dev.repeat('I am a string to repeat.',-1)
 device responded with error, Parameter value out of range: 1 <= count <= 100
 repeated = dev.repeat('I am a string to repeat.',4);
 json = dev.convertToJson(repeated)
-["I am a string to repeat.","I am a string to repeat.","I am a string to repeat.","I am a string to repeat."]
 chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =
-  [{"index":0,"char":"I"},{"index":6,"char":"n"},{"index":8,"char":"i"}]
 dev.startingCharsCount('getValue')
 ans =
   2
@@ -616,7 +666,7 @@ ans =
 dev.startingChars('Fantastic!')
 ans =
   Fanta
-result = dev.callServerMethod('startingChars','Fantastic!')
+result = dev.callGetResult('startingChars','Fantastic!')
 result =
   Fanta
 result = dev.sendJsonRequest('["startingChars","Fantastic!"]')
