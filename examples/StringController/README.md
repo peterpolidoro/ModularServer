@@ -640,23 +640,53 @@ ans =
   name: 'string_controller'
   form_factor: '3x2'
   serial_number: 77
-dev.getMethods()                 % get device methods
+dev.getMethods()
   Modular Device Methods
   ---------------------
+  getDeviceId
+  getDeviceInfo
+  getApi
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getInterruptInfo
+  detachAllInterrupts
+  echo
+  length
+  startsWith
+  repeat
+  charsAt
+  startingChars
+  setStoredString
+  getStoredString
+  serialNumber
+  startingCharsCount
+  storedString
 dev.setPropertiesToDefaults({'ALL'});
 dev.repeat()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.repeat('?')
 ans =
+  name: 'repeat'
+  firmware: 'StringController'
+  parameters: {'string'  'count'}
+  result_info: [1x1 struct]
 dev.repeat('count','?')
 ans =
+  name: 'count'
+  firmware: 'StringController'
+  type: 'long'
+  min: 1
+  max: 100
 dev.repeat('I am a string to repeat.',-1)
 device responded with error, Parameter value out of range: 1 <= count <= 100
 repeated = dev.repeat('I am a string to repeat.',4);
 json = dev.convertToJson(repeated)
+  ["I am a string to repeat.","I am a string to repeat.","I am a string to repeat.","I am a string to repeat."]
 chars_at = dev.charsAt('I am an input string!',[0,6,8]);
 json = dev.convertToJson(chars_at)
 json =
+  [{"index": 0,"char": "I"},{"index": 6,"char": "n"},{"index": 8,"char": "i"}]
 dev.startingCharsCount('getValue')
 ans =
   2
