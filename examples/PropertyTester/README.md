@@ -1052,13 +1052,62 @@ ans =
 dev.getMethods()                 % get device functions
   Modular Device Methods
   ---------------------
-dev.setPropertiesToDefaults()
-dev.getPropertyValues()
+  getDeviceId
+  getDeviceInfo
+  getApi
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getInterruptInfo
+  detachAllInterrupts
+  getDoubled
+  getBool
+  getLongArrayFixed
+  getLongArrayVariable
+  setLongArrayFixed
+  setLongArrayVariable
+  setLongArrayParameter
+  getStringAll
+  getStringSome
+  getCount
+  getCountArray
+  getDirection
+  getDirectionArray
+  checkMode
+  incrementMode
+  setNewDoubleRange
+  setNewOddSubset
+  setNewOddDefault
+  serialNumber
+  double
+  bool
+  longArray
+  doubleArray
+  boolArray
+  string
+  odd
+  mode
+  modeArray
+  oddArray
+dev.setPropertiesToDefaults({'ALL'});
+dev.getPropertyValues({'PropertyTester'})
 ans =
+  double: 3.1416
+  bool: 0
+  longArray: [5 4 3 2]
+  doubleArray: [-1.1000 2.2000 3.3000]
+  boolArray: {[0]  [1]}
+  string: 'abcdef'
+  odd: 5
+  mode: 'RISING'
+  modeArray: {'RISING'  'FALLING'}
+  oddArray: [1 5]
 dev.longArray('getValue')
 ans =
+  5     4     3     2
 dev.longArray()
 ans =
+  5     4     3     2
 dev.doubleArray('getElementValue',1)
 ans =
   2.2000
