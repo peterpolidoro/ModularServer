@@ -61,9 +61,27 @@ Response:
 The form\_factor and serial\_number may be different on your board than the ones
 shown above.
 
-"functions" is an array of user functions. To execute a function, simply
-type it into the input property and press the 'Send' button or press the
-'Enter' key.
+"functions" is an array of user functions. To execute a function, simply type it
+into the input property and press the 'Send' button or press the 'Enter' key.
+
+After uploading new firmware to the device for the first time, usually you want
+to set all properties to their default values, so the values will be known and
+valid.
+
+Request:
+
+```shell
+setPropertiesToDefaults ["ALL"]
+```
+
+Response:
+
+```json
+{
+  "id":"setPropertiesToDefaults",
+  "result":null
+}
+```
 
 Request:
 
@@ -567,6 +585,7 @@ dev.get_methods()
  'set_properties_to_defaults',
  'detach_all_interrupts',
  'get_device_info']
+dev.set_properties_to_defaults(['ALL'])
 dev.set_led_on()
 dev.set_led_off()
 dev.blink_led()

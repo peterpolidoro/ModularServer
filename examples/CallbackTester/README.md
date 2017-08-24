@@ -39,10 +39,9 @@ Response:
       "form_factor":"3x2",
       "serial_number":0
     },
-    "API":{
+    "api":{
       "firmware":["CallbackTester"],
-      "functions":[],
-      "parameters":[],
+      "verbosity":"NAMES",
       "properties":[
         "durationOn",
         "durationOff",
@@ -58,9 +57,30 @@ Response:
 }
 ```
 
-"functions" is an array of user functions. To execute a function, simply
-type it into the input property and press the 'Send' button or press the
-'Enter' key.
+The form\_factor and serial\_number may be different on your board than the ones
+shown above.
+
+"functions" is an array of user functions. To execute a function, simply type it
+into the input property and press the 'Send' button or press the 'Enter' key.
+
+After uploading new firmware to the device for the first time, usually you want
+to set all properties to their default values, so the values will be known and
+valid.
+
+Request:
+
+```shell
+setPropertiesToDefaults ["ALL"]
+```
+
+Response:
+
+```json
+{
+  "id":"setPropertiesToDefaults",
+  "result":null
+}
+```
 
 Request:
 
@@ -74,10 +94,11 @@ Response:
 {
   "id":"getDeviceInfo",
   "result":{
-    "processor":"ATmega2560",
+    "processor":"MK20DX256",
     "hardware":[
       {
-        "name":"Mega2560",
+        "name":"Teensy",
+        "version":"3.2",
         "interrupts":[
           "bnc_a",
           "bnc_b",
@@ -91,7 +112,7 @@ Response:
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"2.0.0"
+        "version":"3.0.0"
       },
       {
         "name":"CallbackTester",
@@ -118,64 +139,50 @@ Response:
   "result":[
     {
       "name":"bnc_a",
-      "hardware":"Mega2560",
-      "number":0,
-      "pin":2,
+      "hardware":"Teensy",
       "callback":"setLedOn",
       "mode":"FALLING"
     },
     {
       "name":"bnc_b",
-      "hardware":"Mega2560",
-      "number":1,
-      "pin":3,
+      "hardware":"Teensy",
       "callback":"setLedOff",
       "mode":"FALLING"
     },
     {
       "name":"bnc_c",
-      "hardware":"Mega2560",
-      "number":5,
-      "pin":18,
+      "hardware":"Teensy",
       "callback":"setLedOn",
       "mode":"FALLING"
     },
     {
       "name":"bnc_d",
-      "hardware":"Mega2560",
-      "number":4,
-      "pin":19,
+      "hardware":"Teensy",
       "callback":"setLedOff",
       "mode":"FALLING"
     },
     {
       "name":"bnc_e",
-      "hardware":"Mega2560",
-      "number":3,
-      "pin":20,
+      "hardware":"Teensy",
       "callback":"blinkLed",
       "mode":"FALLING"
     },
     {
       "name":"bnc_f",
-      "hardware":"Mega2560",
-      "number":2,
-      "pin":21,
-      "callback":null,
-      "mode":"DETACHED"
+      "hardware":"Teensy",
+      "callback":"setLedOff",
+      "mode":"FALLING"
     }
   ]
 }
 ```
 
-Each interrupt is permanently assigned a name, an interrupt number,
-and a hardware digital input pin. Each interrupt may be dynamically
-assigned to a callback with a trigger mode or is detached and
-inactive.
+Each interrupt may be dynamically assigned to a callback with a trigger mode or
+the interrupt can be detached and inactive.
 
-Use callbacks to attach or detach callbacks to interrupts. Callbacks
-may be attached to one or more interrupts, but each interrupt can only
-have a single callback attached.
+Use callbacks to attach or detach callbacks to interrupts. Callbacks may be
+attached to one or more interrupts, but each interrupt can only have a single
+callback attached.
 
 Request:
 
@@ -260,7 +267,6 @@ Response:
     "parameters":[
       {
         "name":"interrupt",
-        "firmware":"ModularServer",
         "type":"string",
         "subset":[
           "bnc_a",
@@ -273,7 +279,6 @@ Response:
       },
       {
         "name":"mode",
-        "firmware":"ModularServer",
         "type":"string",
         "subset":[
           "LOW",
@@ -282,8 +287,7 @@ Response:
           "FALLING"
         ]
       }
-    ],
-    "result_type":null
+    ]
   }
 }
 ```
@@ -356,8 +360,7 @@ Response:
     "firmware":"ModularServer",
     "parameters":[
       "interrupt"
-    ],
-    "result_type":null
+    ]
   }
 }
 ```
@@ -421,50 +424,32 @@ Response:
   "result":[
     {
       "name":"bnc_a",
-      "hardware":"Mega2560",
-      "number":0,
-      "pin":2,
-      "callback":null,
+      "hardware":"Teensy",
       "mode":"DETACHED"
     },
     {
       "name":"bnc_b",
-      "hardware":"Mega2560",
-      "number":1,
-      "pin":3,
-      "callback":null,
+      "hardware":"Teensy",
       "mode":"DETACHED"
     },
     {
       "name":"bnc_c",
-      "hardware":"Mega2560",
-      "number":5,
-      "pin":18,
-      "callback":null,
+      "hardware":"Teensy",
       "mode":"DETACHED"
     },
     {
       "name":"bnc_d",
-      "hardware":"Mega2560",
-      "number":4,
-      "pin":19,
-      "callback":null,
+      "hardware":"Teensy",
       "mode":"DETACHED"
     },
     {
       "name":"bnc_e",
-      "hardware":"Mega2560",
-      "number":3,
-      "pin":20,
-      "callback":null,
+      "hardware":"Teensy",
       "mode":"DETACHED"
     },
     {
       "name":"bnc_f",
-      "hardware":"Mega2560",
-      "number":2,
-      "pin":21,
-      "callback":null,
+      "hardware":"Teensy",
       "mode":"DETACHED"
     }
   ]
@@ -494,15 +479,13 @@ Example Python session:
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '5x3', 'name': 'callback_tester', 'serial_number': 0}
+{'form_factor': '3x2', 'name': 'callback_tester', 'serial_number': 0}
 dev.get_methods()
 ['count',
- 'get_memory_free',
- 'serial_number',
  'set_led_on',
  'get_interrupt_info',
  'get_api',
- 'get_api_verbose',
+ 'serial_number',
  'duration_off',
  'get_property_values',
  'get_device_id',
@@ -513,8 +496,9 @@ dev.get_methods()
  'set_properties_to_defaults',
  'detach_all_interrupts',
  'get_device_info']
+dev.set_properties_to_defaults(['ALL'])
 dev.get_device_info()
-{'firmware': [{'name': 'ModularServer', 'version': '2.0.0'},
+{'firmware': [{'name': 'ModularServer', 'version': '3.0.0'},
   {'name': 'CallbackTester', 'version': '2.0.0'}],
  'hardware': [{'interrupts': ['bnc_a',
     'bnc_b',
@@ -522,30 +506,27 @@ dev.get_device_info()
     'bnc_d',
     'bnc_e',
     'bnc_f'],
-   'name': 'Mega2560'}],
- 'processor': 'ATmega2560'}
+   'name': 'Teensy',
+   'version': '3.2'}],
+ 'processor': 'MK20DX256'}
 dev.blink_led('?')
 {'firmware': 'CallbackTester',
  'functions': ['trigger', 'attachTo', 'detachFrom', 'detachFromAll'],
- 'interrupts': ['bnc_e'],
+ 'interrupts': [],
  'name': 'blinkLed',
  'parameters': ['interrupt', 'mode'],
  'properties': ['durationOn', 'durationOff', 'count']}
-dev.set_properties_to_defaults()
 dev.blink_led('trigger')
 dev.blink_led()
 dev.blink_led('attachTo','??')
 {'firmware': 'ModularServer',
  'name': 'attachTo',
- 'parameters': [{'firmware': 'ModularServer',
-   'name': 'interrupt',
+ 'parameters': [{'name': 'interrupt',
    'subset': ['bnc_a', 'bnc_b', 'bnc_c', 'bnc_d', 'bnc_e', 'bnc_f'],
    'type': 'string'},
-  {'firmware': 'ModularServer',
-   'name': 'mode',
+  {'name': 'mode',
    'subset': ['LOW', 'CHANGE', 'RISING', 'FALLING'],
-   'type': 'string'}],
- 'result_type': None}
+   'type': 'string'}]}
 dev.blink_led('attachTo','bnc_f','FALLING')
 dev.count('setValue',2)
 2
