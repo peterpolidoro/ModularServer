@@ -2,7 +2,7 @@
   "id":"getApi",
   "result":{
     "firmware":["ModularServer"],
-    "verbosity":"CLASS",
+    "verbosity":"GENERAL",
     "functions":[
       {
         "name":"getDeviceId",

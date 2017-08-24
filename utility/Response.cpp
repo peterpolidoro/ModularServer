@@ -214,6 +214,7 @@ void Response::end()
   {
     writeNull(constants::result_constant_string);
   }
+  error_ = false;
   endObject();
   json_stream_ptr_->writeNewline();
 }

@@ -234,7 +234,8 @@ void Callback::detachFromAll()
 void Callback::writeApi(Response & response,
                         bool write_name_only,
                         bool write_firmware,
-                        bool verbose,
+                        bool write_function_parameter_interrupt_details,
+                        bool write_property_details,
                         bool write_instance_details)
 {
   if (response.error())
@@ -269,7 +270,7 @@ void Callback::writeApi(Response & response,
     for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
     {
       Property & property = *((*property_ptrs_ptr)[i]);
-      property.writeApi(response,true,false,false,write_instance_details);
+      property.writeApi(response,!write_property_details,false,true,write_instance_details);
     }
     response.endArray();
   }
@@ -285,7 +286,7 @@ void Callback::writeApi(Response & response,
       if (interrupt_ptrs_ptr->indexHasValue(i))
       {
         Interrupt & interrupt = *((*interrupt_ptrs_ptr)[i]);
-        interrupt.writeApi(response,!verbose);
+        interrupt.writeApi(response,!write_function_parameter_interrupt_details);
       }
     }
     response.endArray();
@@ -296,7 +297,7 @@ void Callback::writeApi(Response & response,
   for (size_t i=0; i<Callback::functions_.size(); ++i)
   {
     Function & function = Callback::functions_[i];
-    function.writeApi(response,!verbose,false,false);
+    function.writeApi(response,!write_function_parameter_interrupt_details,false,false);
   }
   response.endArray();
 
@@ -305,7 +306,7 @@ void Callback::writeApi(Response & response,
   for (size_t i=0; i<Callback::parameters_.size(); ++i)
   {
     Parameter & parameter = Callback::parameters_[i];
-    parameter.writeApi(response,!verbose,false,false,write_instance_details);
+    parameter.writeApi(response,!write_function_parameter_interrupt_details,false,false,write_instance_details);
   }
   response.endArray();
 

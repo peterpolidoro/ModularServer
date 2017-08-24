@@ -85,8 +85,8 @@ extern const long serial_number_default;
 // Parameters
 enum{VERBOSITY_SUBSET_LENGTH=3};
 extern ConstantString verbosity_names;
-extern ConstantString verbosity_class;
-extern ConstantString verbosity_instance;
+extern ConstantString verbosity_general;
+extern ConstantString verbosity_detailed;
 extern SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH];
 
 // Functions

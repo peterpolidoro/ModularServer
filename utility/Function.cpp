@@ -154,7 +154,7 @@ const ConstantString & Function::getResultUnits()
 void Function::writeApi(Response & response,
                         bool write_name_only,
                         bool write_firmware,
-                        bool verbose)
+                        bool write_parameter_details)
 {
   if (response.error())
   {
@@ -187,7 +187,7 @@ void Function::writeApi(Response & response,
     for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
     {
       Parameter & parameter = *((*parameter_ptrs_ptr)[i]);
-      parameter.writeApi(response,!verbose,false,false,true);
+      parameter.writeApi(response,!write_parameter_details,false,false,true);
     }
     response.endArray();
   }

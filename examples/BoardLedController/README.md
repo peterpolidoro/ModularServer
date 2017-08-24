@@ -39,8 +39,9 @@ Response:
       "form_factor":"3x2",
       "serial_number":0
     },
-    "API":{
+    "api":{
       "firmware":["BoardLedController"],
+      "verbosity":"NAMES",
       "functions":[
         "setLedOn",
         "setLedOff",
@@ -51,13 +52,14 @@ Response:
         "duration_on",
         "duration_off",
         "count"
-      ],
-      "properties":[],
-      "callbacks":[]
+      ]
     }
   }
 }
 ```
+
+The form\_factor and serial\_number may be different on your board than the ones
+shown above.
 
 "functions" is an array of user functions. To execute a function, simply
 type it into the input property and press the 'Send' button or press the
@@ -125,8 +127,7 @@ Response:
       "duration_on",
       "duration_off",
       "count"
-    ],
-    "result_type":null
+    ]
   }
 }
 ```
@@ -150,10 +151,10 @@ Response:
   "result":{
     "name":"duration_on",
     "firmware":"BoardLedController",
-    "units":"seconds",
     "type":"double",
     "min":0.100000,
-    "max":2.500000
+    "max":2.500000,
+    "units":"seconds"
   }
 }
 ```
@@ -178,29 +179,25 @@ Response:
     "parameters":[
       {
         "name":"duration_on",
-        "firmware":"BoardLedController",
-        "units":"seconds",
         "type":"double",
         "min":0.100000,
-        "max":2.500000
+        "max":2.500000,
+        "units":"seconds"
       },
       {
         "name":"duration_off",
-        "firmware":"BoardLedController",
-        "units":"seconds",
         "type":"double",
         "min":0.100000,
-        "max":2.500000
+        "max":2.500000,
+        "units":"seconds"
       },
       {
         "name":"count",
-        "firmware":"BoardLedController",
         "type":"long",
         "min":1,
         "max":100
       }
-    ],
-    "result_type":null
+    ]
   }
 }
 ```
@@ -265,8 +262,9 @@ Response:
   "result":{
     "name":"getLedPin",
     "firmware":"BoardLedController",
-    "parameters":[],
-    "result_type":"long"
+    "result_info":{
+      "type":"long"
+    }
   }
 }
 ```
@@ -302,7 +300,7 @@ Response:
   "id":"getDeviceId",
   "result":{
     "name":"board_led_controller",
-    "form_factor":"5x3",
+    "form_factor":"3x2",
     "serial_number":0
   }
 }
@@ -326,17 +324,17 @@ Response:
 {
   "id":"getDeviceInfo",
   "result":{
-    "processor":"ATmega2560",
+    "processor":"MK20DX256",
     "hardware":[
       {
-        "name":"Mega2560",
-        "interrupts":[]
+        "name":"Teensy",
+        "version":"3.2"
       }
     ],
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"2.0.0"
+        "version":"3.0.0"
       },
       {
         "name":"BoardLedController",
@@ -350,13 +348,19 @@ Response:
 Every function, parameter, property, and callback belongs to one
 firmware set.
 
-To get the API limited to one or more firmware sets, use the getApi
-function.
+To get the API limited to one or more firmware sets, use the getApi function.
+List the firmware sets you want API information on in an array or use the
+special name "ALL" to see the API info from all firmware sets.
+
+There are three API verbosity levels, NAMES, GENERAL, and DETAILED. NAMES only
+shows the names of available functions, parameters, properties. GENERAL gives
+info that is true for all devices with the same name, but different form factors.
+DETAILED shows information specific to that particular device.
 
 Request:
 
 ```shell
-getApi ["ALL"]
+getApi NAMES ["ALL"]
 ```
 
 Response:
@@ -366,17 +370,16 @@ Response:
   "id":"getApi",
   "result":{
     "firmware":["ALL"],
+    "verbosity":"NAMES",
     "functions":[
       "getDeviceId",
       "getDeviceInfo",
-      "getInterruptInfo",
-      "detachAllInterrupts",
       "getApi",
-      "getApiVerbose",
       "getPropertyDefaultValues",
       "setPropertiesToDefaults",
       "getPropertyValues",
-      "getMemoryFree",
+      "getInterruptInfo",
+      "detachAllInterrupts",
       "setLedOn",
       "setLedOff",
       "getLedPin",
@@ -384,14 +387,14 @@ Response:
     ],
     "parameters":[
       "firmware",
+      "verbosity",
       "duration_on",
       "duration_off",
       "count"
     ],
     "properties":[
       "serialNumber"
-    ],
-    "callbacks":[]
+    ]
   }
 }
 ```
@@ -399,7 +402,7 @@ Response:
 Request:
 
 ```shell
-getApi ["BoardLedController"]
+getApi NAMES ["BoardLedController"]
 ```
 
 Response:
@@ -409,6 +412,7 @@ Response:
   "id":"getApi",
   "result":{
     "firmware":["BoardLedController"],
+    "verbosity":"NAMES",
     "functions":[
       "setLedOn",
       "setLedOff",
@@ -419,9 +423,123 @@ Response:
       "duration_on",
       "duration_off",
       "count"
+    ]
+  }
+}
+```
+
+Request:
+
+```shell
+getApi GENERAL ["BoardLedController"]
+```
+
+Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["BoardLedController"],
+    "verbosity":"GENERAL",
+    "functions":[
+      {
+        "name":"setLedOn"
+      },
+      {
+        "name":"setLedOff"
+      },
+      {
+        "name":"getLedPin",
+        "result_info":{
+          "type":"long"
+        }
+      },
+      {
+        "name":"blinkLed",
+        "parameters":[
+          "duration_on",
+          "duration_off",
+          "count"
+        ]
+      }
     ],
-    "properties":[],
-    "callbacks":[]
+    "parameters":[
+      {
+        "name":"duration_on",
+        "type":"double"
+      },
+      {
+        "name":"duration_off",
+        "type":"double"
+      },
+      {
+        "name":"count",
+        "type":"long"
+      }
+    ]
+  }
+}
+```
+
+Request:
+
+```shell
+getApi DETAILED ["BoardLedController"]
+```
+
+Response:
+
+```json
+{
+  "id":"getApi",
+  "result":{
+    "firmware":["BoardLedController"],
+    "verbosity":"DETAILED",
+    "functions":[
+      {
+        "name":"setLedOn"
+      },
+      {
+        "name":"setLedOff"
+      },
+      {
+        "name":"getLedPin",
+        "result_info":{
+          "type":"long"
+        }
+      },
+      {
+        "name":"blinkLed",
+        "parameters":[
+          "duration_on",
+          "duration_off",
+          "count"
+        ]
+      }
+    ],
+    "parameters":[
+      {
+        "name":"duration_on",
+        "type":"double",
+        "min":0.100000,
+        "max":2.500000,
+        "units":"seconds"
+      },
+      {
+        "name":"duration_off",
+        "type":"double",
+        "min":0.100000,
+        "max":2.500000,
+        "units":"seconds"
+      },
+      {
+        "name":"count",
+        "type":"long",
+        "min":1,
+        "max":100
+      }
+    ]
   }
 }
 ```
@@ -434,14 +552,12 @@ Example Python session:
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '5x3', 'name': 'board_led_controller', 'serial_number': 0}
+{'form_factor': '3x2', 'name': 'board_led_controller', 'serial_number': 0}
 dev.get_methods()
-['get_memory_free',
- 'serial_number',
- 'set_led_on',
+['set_led_on',
  'get_interrupt_info',
  'get_api',
- 'get_api_verbose',
+ 'serial_number',
  'get_property_values',
  'get_device_id',
  'blink_led',
@@ -458,8 +574,7 @@ IOError: (from server) message: Invalid params, data: Incorrect number of parame
 dev.blink_led('?')
 {'firmware': 'BoardLedController',
  'name': 'blinkLed',
- 'parameters': ['duration_on', 'duration_off', 'count'],
- 'result_type': None}
+ 'parameters': ['duration_on', 'duration_off', 'count']}
 dev.blink_led('duration_on','?')
 {'firmware': 'BoardLedController',
  'max': 2.5,
@@ -470,44 +585,36 @@ dev.blink_led('duration_on','?')
 dev.blink_led('??')
 {'firmware': 'BoardLedController',
  'name': 'blinkLed',
- 'parameters': [{'firmware': 'BoardLedController',
-   'max': 2.5,
+ 'parameters': [{'max': 2.5,
    'min': 0.1,
    'name': 'duration_on',
    'type': 'double',
    'units': 'seconds'},
-  {'firmware': 'BoardLedController',
-   'max': 2.5,
+  {'max': 2.5,
    'min': 0.1,
    'name': 'duration_off',
    'type': 'double',
    'units': 'seconds'},
-  {'firmware': 'BoardLedController',
-   'max': 100,
-   'min': 1,
-   'name': 'count',
-   'type': 'long'}],
- 'result_type': None}
+  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}]}
 dev.blink_led(3.0,0.2,20)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.blink_led(0.5,0.2,20)
 result = dev.get_led_pin('?')
 dev.convert_to_json(result)
-'{"firmware":"BoardLedController","name":"getLedPin","parameters":[],"result_type":"long"}'
+'{"firmware":"BoardLedController","name":"getLedPin","result_info":{"type":"long"}}'
 dev.get_led_pin()
 13
-dev.call_server_method("get_led_pin")
+dev.call_get_result("get_led_pin")
 13
 dev.send_json_request('["get_led_pin"]')
 13
-dev.call_server_method("blink_led",0.5,0.2,20)
+dev.call("blink_led",0.5,0.2,20)
 dev.send_json_request('["blink_led",0.5,0.2,20]')
-dev.get_api(["BoardLedController"])
-{'callbacks': [],
- 'firmware': ['BoardLedController'],
+dev.get_api('NAMES',["BoardLedController"])
+{'firmware': ['BoardLedController'],
  'functions': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
  'parameters': ['duration_on', 'duration_off', 'count'],
- 'properties': []}
+ 'verbosity': 'NAMES'}
 ```
 
 For more details on the Python interface:

@@ -1369,7 +1369,7 @@ void Property::writeValue(Response & response,
 void Property::writeApi(Response & response,
                         bool write_name_only,
                         bool write_firmware,
-                        bool verbose,
+                        bool write_function_parameter_details,
                         bool write_instance_details)
 {
   if (response.error())
@@ -1416,7 +1416,7 @@ void Property::writeApi(Response & response,
   for (size_t i=0; i<Property::functions_.size(); ++i)
   {
     Function & function = Property::functions_[i];
-    function.writeApi(response,!verbose,false,false);
+    function.writeApi(response,!write_function_parameter_details,false,false);
   }
   response.endArray();
 
@@ -1425,7 +1425,7 @@ void Property::writeApi(Response & response,
   for (size_t i=0; i<Property::parameters_.size(); ++i)
   {
     Parameter & parameter = Property::parameters_[i];
-    parameter.writeApi(response,!verbose,false,false,write_instance_details);
+    parameter.writeApi(response,!write_function_parameter_details,false,false,write_instance_details);
   }
   response.endArray();
 

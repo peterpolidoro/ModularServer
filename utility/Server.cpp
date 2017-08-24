@@ -515,13 +515,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
       {
         response_.writeResultKey();
-        callback.writeApi(response_,false,true,false,true);
+        callback.writeApi(response_,false,true,false,false,true);
       }
       // callback ??
       else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
       {
         response_.writeResultKey();
-        callback.writeApi(response_,false,true,true,true);
+        callback.writeApi(response_,false,true,true,true,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -1210,7 +1210,7 @@ void Server::help(bool verbose)
             param_error = false;
             response_.writeResultKey();
             Callback & callback = callbacks_[callback_index];
-            callback.writeApi(response_,false,true,verbose,true);
+            callback.writeApi(response_,false,true,verbose,verbose,true);
           }
         }
       }
@@ -1390,15 +1390,18 @@ void Server::writeHardwareInfoToResponse()
       response_.write(constants::version_constant_string,version_str);
     }
 
-    response_.writeKey(constants::interrupts_constant_string);
-    response_.beginArray();
     Vector<Interrupt> & interrupts = interrupts_.subVector(i);
-    for (size_t j=0; j<interrupts.size(); ++j)
+    if (interrupts.size() > 0)
     {
-      Interrupt & interrupt = interrupts[j];
-      interrupt.writeApi(response_,true);
+      response_.writeKey(constants::interrupts_constant_string);
+      response_.beginArray();
+      for (size_t j=0; j<interrupts.size(); ++j)
+      {
+        Interrupt & interrupt = interrupts[j];
+        interrupt.writeApi(response_,true);
+      }
+      response_.endArray();
     }
-    response_.endArray();
 
     response_.endObject();
   }
@@ -1461,7 +1464,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
   {
     write_names_only = true;
   }
-  else if (&verbosity == &constants::verbosity_instance)
+  else if (&verbosity == &constants::verbosity_detailed)
   {
     write_instance_details = true;
   }
@@ -1527,7 +1530,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Callback & callback = callbacks_[callback_index];
       if (callback.firmwareNameInArray(firmware_name_array))
       {
-        callback.writeApi(response_,write_names_only,false,true,write_instance_details);
+        callback.writeApi(response_,write_names_only,false,true,false,write_instance_details);
       }
     }
     response_.endArray();
@@ -1808,13 +1811,13 @@ void Server::getApiHandler()
   {
     writeApiToResponse(constants::verbosity_names,*firmware_name_array_ptr);
   }
-  else if (verbosity == constants::verbosity_class)
+  else if (verbosity == constants::verbosity_general)
   {
-    writeApiToResponse(constants::verbosity_class,*firmware_name_array_ptr);
+    writeApiToResponse(constants::verbosity_general,*firmware_name_array_ptr);
   }
-  else if (verbosity == constants::verbosity_instance)
+  else if (verbosity == constants::verbosity_detailed)
   {
-    writeApiToResponse(constants::verbosity_instance,*firmware_name_array_ptr);
+    writeApiToResponse(constants::verbosity_detailed,*firmware_name_array_ptr);
   }
 }
 

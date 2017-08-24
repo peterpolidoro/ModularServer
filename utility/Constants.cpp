@@ -31,13 +31,13 @@ const long serial_number_default = serial_number_min;
 
 // Parameters
 CONSTANT_STRING(verbosity_names,"NAMES");
-CONSTANT_STRING(verbosity_class,"CLASS");
-CONSTANT_STRING(verbosity_instance,"INSTANCE");
+CONSTANT_STRING(verbosity_general,"GENERAL");
+CONSTANT_STRING(verbosity_detailed,"DETAILED");
 SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH] =
   {
     {.cs_ptr=&verbosity_names},
-    {.cs_ptr=&verbosity_class},
-    {.cs_ptr=&verbosity_instance},
+    {.cs_ptr=&verbosity_general},
+    {.cs_ptr=&verbosity_detailed},
   };
 
 // Functions

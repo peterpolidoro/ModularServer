@@ -160,7 +160,7 @@ public:
   void writeApi(Response & response,
                 bool write_name_only,
                 bool write_firmware,
-                bool verbose,
+                bool write_function_parameter_details,
                 bool write_instance_details);
 
 private:
