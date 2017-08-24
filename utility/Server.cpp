@@ -1398,7 +1398,7 @@ void Server::writeHardwareInfoToResponse()
       for (size_t j=0; j<interrupts.size(); ++j)
       {
         Interrupt & interrupt = interrupts[j];
-        interrupt.writeApi(response_,true);
+        interrupt.writeApi(response_,true,false);
       }
       response_.endArray();
     }
@@ -1439,7 +1439,7 @@ void Server::writeInterruptInfoToResponse()
   for (size_t i=0; i<interrupts_.size(); ++i)
   {
     Interrupt & interrupt = interrupts_[i];
-    interrupt.writeApi(response_,false);
+    interrupt.writeApi(response_,false,false);
   }
   response_.endArray();
 }

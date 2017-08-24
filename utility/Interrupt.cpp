@@ -47,7 +47,8 @@ const ConstantString & Interrupt::getMode()
 }
 
 void Interrupt::writeApi(Response & response,
-                         bool write_name_only)
+                         bool write_name_only,
+                         bool write_number_pin_details)
 {
   if (response.error())
   {
@@ -68,18 +69,17 @@ void Interrupt::writeApi(Response & response,
   const ConstantString & hardware_name = getHardwareName();
   response.write(constants::hardware_constant_string,hardware_name);
 
-  response.write(constants::number_constant_string,getNumber());
+  if (write_number_pin_details)
+  {
+    response.write(constants::number_constant_string,getNumber());
 
-  response.write(constants::pin_constant_string,getPin());
+    response.write(constants::pin_constant_string,getPin());
+  }
 
   Callback * callback_ptr = getCallbackPtr();
   if (callback_ptr != NULL)
   {
     response.write(constants::callback_constant_string,callback_ptr->getName());
-  }
-  else
-  {
-    response.writeNull(constants::callback_constant_string);
   }
 
   response.write(constants::mode_constant_string,getMode());

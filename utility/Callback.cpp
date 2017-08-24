@@ -286,7 +286,7 @@ void Callback::writeApi(Response & response,
       if (interrupt_ptrs_ptr->indexHasValue(i))
       {
         Interrupt & interrupt = *((*interrupt_ptrs_ptr)[i]);
-        interrupt.writeApi(response,!write_function_parameter_interrupt_details);
+        interrupt.writeApi(response,!write_function_parameter_interrupt_details,false);
       }
     }
     response.endArray();

@@ -43,7 +43,8 @@ public:
   const ConstantString & getMode();
 
   void writeApi(Response & response,
-                bool write_name_only);
+                bool write_name_only,
+                bool write_number_pin_details);
 
 private:
   size_t number_;
