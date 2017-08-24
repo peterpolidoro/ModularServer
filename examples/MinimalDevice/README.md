@@ -736,36 +736,61 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'minimal_device'
-  form_factor: '5x3'
+  form_factor: '3x2'
   serial_number: 0
 dev.getMethods()                 % get device methods
   Modular Device Methods
   ---------------------
+  getDeviceId
+  getDeviceInfo
+  getApi
+  getPropertyDefaultValues
+  setPropertiesToDefaults
+  getPropertyValues
+  getInterruptInfo
+  detachAllInterrupts
+  serialNumber
 dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,
 code: -32602
 dev.getApi('?')
 ans =
+  name: 'getApi'
+  firmware: 'ModularServer'
+  parameters: {'verbosity'  'firmware'}
+  result_info: [1x1 struct]
 dev.getApi('firmware','?')
 ans =
-dev.getApi({'MinimalDevice'})
+  name: 'firmware'
+  firmware: 'ModularServer'
+  type: 'array'
+  array_element_type: 'string'
+  array_element_subset: {'ALL'  'ModularServer'  'MinimalDevice'}
+  array_length_min: 1
+  array_length_max: 2
+dev.getApi('NAMES',{'ALL'})
 ans =
+  firmware: {'ALL'}
+  verbosity: 'NAMES'
+  functions: {1x8 cell}
+  parameters: {'firmware'  'verbosity'}
+  properties: {'serialNumber'}
 dev.serialNumber('setValue',-1)
 (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <=
 value <= 65535, code: -32602
 dev.serialNumber('setValue',32)
 ans =
   32
-dev.getPropertyValues()
+dev.getPropertyValues({'ALL'})
 ans =
   serialNumber: 32
-result = dev.callServerMethod('?');
+result = dev.callGetResult('?');
 result.device_id.serial_number
 ans =
   32
 json = dev.convertToJson(result.device_id)
-{"name": "minimal_device","form_factor": "5x3","serial_number": 32}
-dev.sendJsonRequest('["setPropertiesToDefaults"]')
+{"name": "minimal_device","form_factor": "3x2","serial_number": 32}
+dev.sendJsonRequest('["setPropertiesToDefaults",["ALL"]]')
 dev.serialNumber('getValue')
 ans =
   0
