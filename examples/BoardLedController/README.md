@@ -641,21 +641,19 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'board_led_controller'
-  form_factor: '5x3'
+  form_factor: '3x2'
   serial_number: 0
 dev.getMethods()                 % get device methods
   Modular Device Methods
   ---------------------
   getDeviceId
   getDeviceInfo
-  getInterruptInfo
-  detachAllInterrupts
   getApi
-  getApiVerbose
   getPropertyDefaultValues
   setPropertiesToDefaults
   getPropertyValues
-  getMemoryFree
+  getInterruptInfo
+  detachAllInterrupts
   setLedOn
   setLedOff
   getLedPin
@@ -669,36 +667,34 @@ method_info =
   name: 'blinkLed'
   firmware: 'BoardLedController'
   parameters: {'duration_on'  'duration_off'  'count'}
-  result_type: []
 parameter_info = dev.blinkLed('duration_on','?')
 parameter_info =
   name: 'duration_on'
   firmware: 'BoardLedController'
-  units: 'seconds'
   type: 'double'
   min: 0.1000
   max: 2.5000
+  units: 'seconds'
 dev.blinkLed(3.0,0.2,20)
 (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.blinkLed(0.5,0.2,20);
 led_pin = dev.getLedPin()
 led_pin =
   13
-led_pin = dev.callServerMethod('getLedPin')
+led_pin = dev.callGetResult('getLedPin')
 led_pin =
   13
 led_pin = dev.sendJsonRequest('["getLedPin"]')
 led_pin =
   13
-dev.callServerMethod('blinkLed',0.5,0.2,20)
+dev.call('blinkLed',0.5,0.2,20)
 dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')
-dev.getApi({'BoardLedController'})
+dev.getApi('NAMES',{'BoardLedController'})
 ans =
   firmware: {'BoardLedController'}
+  verbosity: 'NAMES'
   functions: {'setLedOn'  'setLedOff'  'getLedPin'  'blinkLed'}
   parameters: {'duration_on'  'duration_off'  'count'}
-  properties: {0x1 cell}
-  callbacks: {0x1 cell}
 dev.close()
 clear dev
 ```
