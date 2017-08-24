@@ -557,7 +557,7 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'callback_tester'
-  form_factor: '5x3'
+  form_factor: '3x2'
   serial_number: 0
 dev.getMethods()                 % get device methods
 ans =
@@ -565,14 +565,12 @@ ans =
   ---------------------
   getDeviceId
   getDeviceInfo
-  getInterruptInfo
-  detachAllInterrupts
   getApi
-  getApiVerbose
   getPropertyDefaultValues
   setPropertiesToDefaults
   getPropertyValues
-  getMemoryFree
+  getInterruptInfo
+  detachAllInterrupts
   setLedOn
   setLedOff
   blinkLed
@@ -580,6 +578,7 @@ ans =
   durationOn
   durationOff
   count
+dev.setPropertiesToDefaults({'ALL'});
 dev.blinkLed('?')
 ans =
   name: 'blinkLed'
@@ -588,20 +587,18 @@ ans =
   interrupts: {'bnc_e'}
   functions: {'trigger'  'attachTo'  'detachFrom'  'detachFromAll'}
   parameters: {'interrupt'  'mode'}
-dev.setPropertiesToDefaults()
-dev.blinkLed('trigger')
-dev.blinkLed()
+dev.blinkLed('trigger');
+dev.blinkLed();
 dev.blinkLed('attachTo','??')
 ans =
   name: 'attachTo'
   firmware: 'ModularServer'
   parameters: {[1x1 struct]  [1x1 struct]}
-  result_type: []
-dev.blinkLed('attachTo','bnc_f','FALLING')
+dev.blinkLed('attachTo','bnc_f','FALLING');
 dev.count('setValue',2)
 ans =
   2
-dev.blinkLed()
+dev.blinkLed();
 dev.close()
 clear dev
 ```

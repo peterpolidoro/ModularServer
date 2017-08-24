@@ -678,6 +678,7 @@ dev.getMethods()                 % get device methods
   getLedPin
   blinkLed
   serialNumber
+dev.setPropertiesToDefaults({'ALL'});
 dev.blinkLed()
 Error using ModularClient/sendRequest (line 301)
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
