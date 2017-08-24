@@ -61,6 +61,59 @@ Response:
 The form\_factor and serial\_number may be different on your board than the ones
 shown above.
 
+To get more verbose help about the modular device, including all API firmware,
+type two question marks ?? into the input property and press the 'Send' button
+or press the 'Enter' key.
+
+Request:
+
+```shell
+??
+```
+
+Response:
+
+```json
+{
+  "id":"??",
+  "result":{
+    "device_id":{
+      "name":"board_led_controller",
+      "form_factor":"3x2",
+      "serial_number":0
+    },
+    "api":{
+      "firmware":["ALL"],
+      "verbosity":"NAMES",
+      "functions":[
+        "getDeviceId",
+        "getDeviceInfo",
+        "getApi",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "getPropertyValues",
+        "getInterruptInfo",
+        "detachAllInterrupts",
+        "setLedOn",
+        "setLedOff",
+        "getLedPin",
+        "blinkLed"
+      ],
+      "parameters":[
+        "firmware",
+        "verbosity",
+        "duration_on",
+        "duration_off",
+        "count"
+      ],
+      "properties":[
+        "serialNumber"
+      ]
+    }
+  }
+}
+```
+
 "functions" is an array of user functions. To execute a function, simply type it
 into the input property and press the 'Send' button or press the 'Enter' key.
 

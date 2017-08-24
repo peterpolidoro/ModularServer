@@ -39,39 +39,23 @@ Response:
       "form_factor":"3x2",
       "serial_number":0
     },
-    "API":{
+    "api":{
       "firmware":["MinimalDevice"],
-      "functions":[],
-      "parameters":[],
-      "properties":[],
-      "callbacks":[]
+      "verbosity":"NAMES"
     }
   }
 }
 ```
 
-"functions" is an array of user functions. To execute a function, simply
-type it into the input property and press the 'Send' button or press the
-'Enter' key.
+The form\_factor and serial\_number may be different on your board than the ones
+shown above.
 
-Request: (This function only exists on AVR processors)
+The minimal device adds no functions, parameters, properties, or callbacks to
+the ones provided by the parent class ModularServer.
 
-```shell
-getMemoryFree
-```
-
-Response:
-
-```json
-{
-  "id":"getMemoryFree",
-  "result":4030
-}
-```
-
-To get more verbose help about the modular device, including all API
-firmware, type two question marks ?? into the input property and press
-the 'Send' button or press the 'Enter' key.
+To get more verbose help about the modular device, including all API firmware,
+type two question marks ?? into the input property and press the 'Send' button
+or press the 'Enter' key.
 
 Request:
 
@@ -90,28 +74,51 @@ Response:
       "form_factor":"3x2",
       "serial_number":0
     },
-    "API":{
+    "api":{
       "firmware":["ALL"],
+      "verbosity":"NAMES",
       "functions":[
         "getDeviceId",
         "getDeviceInfo",
-        "getInterruptInfo",
-        "detachAllInterrupts",
         "getApi",
-        "getApiVerbose",
         "getPropertyDefaultValues",
         "setPropertiesToDefaults",
-        "getPropertyValues"
+        "getPropertyValues",
+        "getInterruptInfo",
+        "detachAllInterrupts"
       ],
       "parameters":[
-        "firmware"
+        "firmware",
+        "verbosity"
       ],
       "properties":[
         "serialNumber"
-      ],
-      "callbacks":[]
+      ]
     }
   }
+}
+```
+
+"functions" is an array of user functions. To execute a function, simply
+type it into the input property and press the 'Send' button or press the
+'Enter' key.
+
+After uploading new firmware to the device for the first time, usually you want
+to set all properties to their default values, so the values will be known and
+valid.
+
+Request:
+
+```shell
+setPropertiesToDefaults ["ALL"]
+```
+
+Response:
+
+```json
+{
+  "id":"setPropertiesToDefaults",
+  "result":null
 }
 ```
 
@@ -128,7 +135,7 @@ Response:
   "id":"getApi",
   "error":{
     "message":"Invalid params",
-    "data":"Incorrect number of parameters. 0 given. 1 needed.",
+    "data":"Incorrect number of parameters. 0 given. 2 needed.",
     "code":-32602
   }
 }
@@ -157,9 +164,12 @@ Response:
     "name":"getApi",
     "firmware":"ModularServer",
     "parameters":[
+      "verbosity",
       "firmware"
     ],
-    "result_type":"object"
+    "result_info":{
+      "type":"object"
+    }
   }
 }
 ```
@@ -181,11 +191,15 @@ Response:
     "name":"getApi",
     "firmware":"ModularServer",
     "parameters":[
+      "verbosity",
       "firmware"
     ],
-    "result_type":"object"
+    "result_info":{
+      "type":"object"
+    }
   }
 }
+
 ```
 
 To get more verbose information about all of the parameters a function
@@ -207,8 +221,16 @@ Response:
     "firmware":"ModularServer",
     "parameters":[
       {
+        "name":"verbosity",
+        "type":"string",
+        "subset":[
+          "NAMES",
+          "GENERAL",
+          "DETAILED"
+        ]
+      },
+      {
         "name":"firmware",
-        "firmware":"ModularServer",
         "type":"array",
         "array_element_type":"string",
         "array_element_subset":[
@@ -217,10 +239,12 @@ Response:
           "MinimalDevice"
         ],
         "array_length_min":1,
-        "array_length_max":8
+        "array_length_max":2
       }
     ],
-    "result_type":"object"
+    "result_info":{
+      "type":"object"
+    }
   }
 }
 ```
@@ -228,7 +252,7 @@ Response:
 Request:
 
 ```shell
-getApi ["MinimalDevice"]
+getApi GENERAL ["ALL"]
 ```
 
 Response:
@@ -237,11 +261,118 @@ Response:
 {
   "id":"getApi",
   "result":{
-    "firmware":["MinimalDevice"],
-    "functions":[],
-    "parameters":[],
-    "properties":[],
-    "callbacks":[]
+    "firmware":["ALL"],
+    "verbosity":"GENERAL",
+    "functions":[
+      {
+        "name":"getDeviceId",
+        "result_info":{
+          "type":"object"
+        }
+      },
+      {
+        "name":"getDeviceInfo",
+        "result_info":{
+          "type":"object"
+        }
+      },
+      {
+        "name":"getApi",
+        "parameters":[
+          "verbosity",
+          "firmware"
+        ],
+        "result_info":{
+          "type":"object"
+        }
+      },
+      {
+        "name":"getPropertyDefaultValues",
+        "parameters":[
+          "firmware"
+        ],
+        "result_info":{
+          "type":"object"
+        }
+      },
+      {
+        "name":"setPropertiesToDefaults",
+        "parameters":[
+          "firmware"
+        ]
+      },
+      {
+        "name":"getPropertyValues",
+        "parameters":[
+          "firmware"
+        ],
+        "result_info":{
+          "type":"object"
+        }
+      },
+      {
+        "name":"getInterruptInfo",
+        "result_info":{
+          "type":"array",
+          "array_element_type":"object"
+        }
+      },
+      {
+        "name":"detachAllInterrupts"
+      }
+    ],
+    "parameters":[
+      {
+        "name":"firmware",
+        "type":"array",
+        "array_element_type":"string"
+      },
+      {
+        "name":"verbosity",
+        "type":"string"
+      }
+    ],
+    "properties":[
+      {
+        "name":"serialNumber",
+        "type":"long",
+        "functions":[
+          {
+            "name":"getValue",
+            "result_info":{
+              "type":"long"
+            }
+          },
+          {
+            "name":"setValue",
+            "parameters":[
+              "value"
+            ],
+            "result_info":{
+              "type":"long"
+            }
+          },
+          {
+            "name":"getDefaultValue",
+            "result_info":{
+              "type":"long"
+            }
+          },
+          {
+            "name":"setValueToDefault",
+            "result_info":{
+              "type":"long"
+            }
+          }
+        ],
+        "parameters":[
+          {
+            "name":"value",
+            "type":"long"
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -255,14 +386,14 @@ property function parameters.
 Request:
 
 ```shell
-? serialNumber
+serialNumber ?
 ```
 
 Response:
 
 ```json
 {
-  "id":"?",
+  "id":"serialNumber",
   "result":{
     "name":"serialNumber",
     "firmware":"ModularServer",
@@ -287,21 +418,23 @@ Response:
 Request:
 
 ```shell
-? serialNumber setValue
+serialNumber setValue ?
 ```
 
 Response:
 
 ```json
 {
-  "id":"?",
+  "id":"serialNumber",
   "result":{
     "name":"setValue",
     "firmware":"ModularServer",
     "parameters":[
       "value"
     ],
-    "result_type":"long"
+    "result_info":{
+      "type":"long"
+    }
   }
 }
 ```
@@ -309,14 +442,14 @@ Response:
 Request:
 
 ```shell
-? serialNumber setValue value
+serialNumber setValue value ?
 ```
 
 Response:
 
 ```json
 {
-  "id":"?",
+  "id":"serialNumber",
   "result":{
     "name":"value",
     "firmware":"ModularServer",
@@ -368,7 +501,7 @@ devices connected to a single host machine at one time.
 Request:
 
 ```shell
-getPropertyValues
+getPropertyValues ["ALL"]
 ```
 
 Response:
@@ -382,41 +515,24 @@ Response:
 }
 ```
 
-To reset the serial number to the default value, use the
+Use the setPropertiesToDefault function to set all properties to their default
+values.
+
+Or to reset the just one property to the default value, use the
 setValueToDefault property function.
 
-Or use the setPropertiesToDefault function to set all properties to
-their default values.
-
 Request:
 
 ```shell
-setPropertiesToDefaults
+serialNumber setValueToDefault
 ```
 
 Response:
 
 ```json
 {
-  "id":"setPropertiesToDefaults",
-  "result":null
-}
-```
-
-Request:
-
-```shell
-getPropertyValues
-```
-
-Response:
-
-```json
-{
-  "id":"getPropertyValues",
-  "result":{
-    "serialNumber":0
-  }
+  "id":"serialNumber",
+  "result":0
 }
 ```
 
@@ -436,7 +552,7 @@ Response:
   "id":"getDeviceId",
   "result":{
     "name":"minimal_device",
-    "form_factor":"5x3",
+    "form_factor":"3x2",
     "serial_number":0
   }
 }
@@ -460,17 +576,17 @@ Response:
 {
   "id":"getDeviceInfo",
   "result":{
-    "processor":"ATmega2560",
+    "processor":"MK20DX256",
     "hardware":[
       {
-        "name":"Mega2560",
-        "interrupts":[]
+        "name":"Teensy",
+        "version":"3.2"
       }
     ],
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"2.0.0"
+        "version":"3.0.0"
       },
       {
         "name":"MinimalDevice",
@@ -489,35 +605,35 @@ function.
 Request:
 
 ```shell
-getApi ["ALL"]
+getApi NAMES ["ALL"]
 ```
 
 Response:
 
 ```json
+
 {
   "id":"getApi",
   "result":{
     "firmware":["ALL"],
+    "verbosity":"NAMES",
     "functions":[
       "getDeviceId",
       "getDeviceInfo",
-      "getInterruptInfo",
-      "detachAllInterrupts",
       "getApi",
-      "getApiVerbose",
       "getPropertyDefaultValues",
       "setPropertiesToDefaults",
       "getPropertyValues",
-      "getMemoryFree"
+      "getInterruptInfo",
+      "detachAllInterrupts"
     ],
     "parameters":[
-      "firmware"
+      "firmware",
+      "verbosity"
     ],
     "properties":[
       "serialNumber"
-    ],
-    "callbacks":[]
+    ]
   }
 }
 ```
@@ -525,7 +641,7 @@ Response:
 Request:
 
 ```shell
-getApi ["MinimalDevice"]
+getApi NAMES ["MinimalDevice"]
 ```
 
 Response:
@@ -535,10 +651,7 @@ Response:
   "id":"getApi",
   "result":{
     "firmware":["MinimalDevice"],
-    "functions":[],
-    "parameters":[],
-    "properties":[],
-    "callbacks":[]
+    "verbosity":"NAMES"
   }
 }
 ```
@@ -551,46 +664,50 @@ Example Python session:
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '5x3', 'name': 'minimal_device', 'serial_number': 0}
+{'form_factor': '3x2', 'name': 'minimal_device', 'serial_number': 0}
 dev.get_methods()
-['get_memory_free',
- 'serial_number',
- 'get_interrupt_info',
+['get_interrupt_info',
  'get_api',
- 'get_api_verbose',
+ 'serial_number',
  'get_property_values',
  'get_device_id',
  'detach_all_interrupts',
  'get_property_default_values',
  'set_properties_to_defaults',
  'get_device_info']
-dev.get_memory_free()
-4030
+dev.set_properties_to_defaults(['ALL'])
 dev.get_api()
-IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed., code: -32602
+IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
 dev.get_api('?')
 {'firmware': 'ModularServer',
  'name': 'getApi',
- 'parameters': ['firmware'],
- 'result_type': 'object'}
-dev.get_api(['MinimalDevice'])
-{'callbacks': [],
- 'firmware': ['MinimalDevice'],
- 'functions': [],
- 'parameters': [],
- 'properties': []}
+ 'parameters': ['verbosity', 'firmware'],
+ 'result_info': {'type': 'object'}}
+dev.get_api('NAMES',['ALL'])
+{'firmware': ['ALL'],
+ 'functions': ['getDeviceId',
+  'getDeviceInfo',
+  'getApi',
+  'getPropertyDefaultValues',
+  'setPropertiesToDefaults',
+  'getPropertyValues',
+  'getInterruptInfo',
+  'detachAllInterrupts'],
+ 'parameters': ['firmware', 'verbosity'],
+ 'properties': ['serialNumber'],
+ 'verbosity': 'NAMES'}
 dev.serial_number('setValue',-1)
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <= value <= 65535, code: -32602
 dev.serial_number('setValue',32)
 32
-dev.get_property_values()
+dev.get_property_values(['ALL'])
 {'serialNumber': 32}
-result = dev.call_server_method('?')
+result = dev.call_get_result('?')
 result['device_id']['serial_number']
 32
 dev.convert_to_json(result['device_id'])
-'{"serial_number":32,"name":"minimal_device","form_factor":"5x3"}'
-dev.send_json_request('["set_properties_to_defaults"]')
+'{"serial_number":32,"name":"minimal_device","form_factor":"3x2"}'
+dev.send_json_request('["set_properties_to_defaults",["ALL"]]')
 dev.serial_number('getValue')
 0
 ```
@@ -624,45 +741,15 @@ ans =
 dev.getMethods()                 % get device methods
   Modular Device Methods
   ---------------------
-  getDeviceId
-  getDeviceInfo
-  getInterruptInfo
-  detachAllInterrupts
-  getApi
-  getApiVerbose
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getMemoryFree
-  serialNumber
-dev.getMemoryFree()
-ans =
-  4030
 dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,
 code: -32602
 dev.getApi('?')
 ans =
-  name: 'getApi'
-  firmware: 'ModularServer'
-  parameters: {'firmware'}
-  result_type: 'object'
 dev.getApi('firmware','?')
 ans =
-  name: 'firmware'
-  firmware: 'ModularServer'
-  type: 'array'
-  array_element_type: 'string'
-  array_element_subset: {'all'  'ModularServer'  'MinimalDevice'}
-  array_length_min: 1
-  array_length_max: 8
 dev.getApi({'MinimalDevice'})
 ans =
-  firmware: {'MinimalDevice'}
-  functions: {0x1 cell}
-  parameters: {0x1 cell}
-  properties: {0x1 cell}
-  callbacks: {0x1 cell}
 dev.serialNumber('setValue',-1)
 (from server) message: Invalid params, data: Parameter value not valid. Value not in range: 0 <=
 value <= 65535, code: -32602
