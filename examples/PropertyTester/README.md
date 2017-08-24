@@ -39,8 +39,9 @@ Response:
       "form_factor":"3x2",
       "serial_number":0
     },
-    "API":{
+    "api":{
       "firmware":["PropertyTester"],
+      "verbosity":"NAMES",
       "functions":[
         "getDoubled",
         "getBool",
@@ -81,21 +82,103 @@ Response:
         "mode",
         "modeArray",
         "oddArray"
-      ],
-      "callbacks":[]
+      ]
     }
   }
 }
 ```
 
-"functions" is an array of user functions. To execute a function, simply
-type it into the input property and press the 'Send' button or press the
-'Enter' key.
+The form\_factor and serial\_number may be different on your board than the ones
+shown above.
+
+To get more verbose help about the modular device, including all API firmware,
+type two question marks ?? into the input property and press the 'Send' button
+or press the 'Enter' key.
 
 Request:
 
 ```shell
-setPropertiesToDefaults
+??
+```
+
+Response:
+
+```json
+{
+  "id":"??",
+  "result":{
+    "device_id":{
+      "name":"property_tester",
+      "form_factor":"3x2",
+      "serial_number":0
+    },
+    "api":{
+      "firmware":["ALL"],
+      "verbosity":"NAMES",
+      "functions":[
+        "getDeviceId",
+        "getDeviceInfo",
+        "getApi",
+        "getPropertyDefaultValues",
+        "setPropertiesToDefaults",
+        "getPropertyValues",
+        "getInterruptInfo",
+        "detachAllInterrupts",
+        "getDoubled",
+        "getBool",
+        "getLongArrayFixed",
+        "getLongArrayVariable",
+        "setLongArrayFixed",
+        "setLongArrayVariable",
+        "setLongArrayParameter",
+        "getStringAll",
+        "getStringSome",
+        "getCount",
+        "getCountArray",
+        "getDirection",
+        "getDirectionArray",
+        "checkMode",
+        "incrementMode",
+        "setNewDoubleRange",
+        "setNewOddSubset",
+        "setNewOddDefault"
+      ],
+      "parameters":[
+        "firmware",
+        "verbosity",
+        "long_array_parameter",
+        "length_parameter",
+        "count",
+        "count_array",
+        "direction",
+        "direction_array",
+        "subset_index"
+      ],
+      "properties":[
+        "serialNumber",
+        "double",
+        "bool",
+        "longArray",
+        "doubleArray",
+        "boolArray",
+        "string",
+        "odd",
+        "mode",
+        "modeArray",
+        "oddArray"
+      ]
+    }
+  }
+}
+```
+
+"functions" is an array of user functions. To execute a function, simply type it
+into the input property and press the 'Send' button or press the 'Enter' key.
+
+Request:
+
+```shell
+setPropertiesToDefaults ["ALL"]
 ```
 
 Response:
@@ -110,7 +193,7 @@ Response:
 Request:
 
 ```shell
-getPropertyValues
+getPropertyValues ["PropertyTester"]
 ```
 
 Response:
@@ -119,7 +202,6 @@ Response:
 {
   "id":"getPropertyValues",
   "result":{
-    "serialNumber":0,
     "double":3.141590,
     "bool":false,
     "longArray":[
@@ -683,7 +765,7 @@ Response:
 Request:
 
 ```shell
-getPropertyValues
+getPropertyValues ["PropertyTester"]
 ```
 
 Response:
@@ -692,7 +774,6 @@ Response:
 {
   "id":"getPropertyValues",
   "result":{
-    "serialNumber":0,
     "double":3.141590,
     "bool":false,
     "longArray":[
@@ -741,7 +822,7 @@ Response:
   "id":"getDeviceId",
   "result":{
     "name":"property_tester",
-    "form_factor":"5x3",
+    "form_factor":"3x2",
     "serial_number":0
   }
 }
@@ -765,17 +846,17 @@ Response:
 {
   "id":"getDeviceInfo",
   "result":{
-    "processor":"ATmega2560",
+    "processor":"MK20DX256",
     "hardware":[
       {
-        "name":"Mega2560",
-        "interrupts":[]
+        "name":"Teensy",
+        "version":"3.2"
       }
     ],
     "firmware":[
       {
         "name":"ModularServer",
-        "version":"2.0.0"
+        "version":"3.0.0"
       },
       {
         "name":"PropertyTester",
@@ -794,16 +875,18 @@ function.
 Request:
 
 ```shell
-getApi ["PropertyTester"]
+getApi NAMES ["PropertyTester"]
 ```
 
 Response:
 
 ```json
+
 {
   "id":"getApi",
   "result":{
     "firmware":["PropertyTester"],
+    "verbosity":"NAMES",
     "functions":[
       "getDoubled",
       "getBool",
@@ -819,10 +902,10 @@ Response:
       "getDirection",
       "getDirectionArray",
       "checkMode",
-      "incrementMode"
+      "incrementMode",
       "setNewDoubleRange",
       "setNewOddSubset",
-      "setNewOddDefault",
+      "setNewOddDefault"
     ],
     "parameters":[
       "long_array_parameter",
@@ -830,7 +913,8 @@ Response:
       "count",
       "count_array",
       "direction",
-      "direction_array"
+      "direction_array",
+      "subset_index"
     ],
     "properties":[
       "double",
@@ -843,8 +927,7 @@ Response:
       "mode",
       "modeArray",
       "oddArray"
-    ],
-    "callbacks":[]
+    ]
   }
 }
 ```
@@ -857,48 +940,47 @@ Example Python session:
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
-{'form_factor': '5x3', 'name': 'property_tester', 'serial_number': 0}
+{'form_factor': '3x2', 'name': 'property_tester', 'serial_number': 0}
 dev.get_methods()
-['serial_number',
- 'long_array',
+['long_array',
  'get_count_array',
  'get_long_array_fixed',
  'get_property_values',
  'get_direction',
- 'get_count',
+ 'get_long_array_variable',
  'odd',
  'get_string_some',
  'get_device_info',
- 'get_memory_free',
+ 'set_new_odd_subset',
  'bool_array',
  'set_long_array_variable',
  'get_device_id',
  'bool',
+ 'set_new_odd_default',
  'increment_mode',
  'string',
  'mode_array',
- 'get_direction_array',
+ 'set_new_double_range',
+ 'get_bool',
  'set_long_array_fixed',
- 'odd_array',
+ 'get_direction_array',
  'detach_all_interrupts',
  'set_long_array_parameter',
  'get_string_all',
- 'get_long_array_variable',
+ 'get_count',
  'check_mode',
  'double_array',
  'get_interrupt_info',
  'get_api',
- 'get_api_verbose',
+ 'serial_number',
+ 'odd_array',
  'get_doubled',
- 'set_new_double_range',
- 'set_new_odd_subset,
  'mode',
  'double',
- 'get_bool',
  'get_property_default_values',
  'set_properties_to_defaults']
-dev.set_properties_to_defaults()
-dev.get_property_values()
+dev.set_properties_to_defaults(['ALL'])
+dev.get_property_values(['PropertyTester'])
 {'bool': False,
  'boolArray': [False, True],
  'double': 3.14159,
@@ -908,7 +990,6 @@ dev.get_property_values()
  'modeArray': ['RISING', 'FALLING'],
  'odd': 5,
  'oddArray': [1, 5],
- 'serialNumber': 0,
  'string': 'abcdef'}
 dev.long_array('getValue')
 [5, 4, 3, 2]
@@ -966,70 +1047,18 @@ dev.open()                       % opens a serial connection to the device
 dev.getDeviceId()
 ans =
   name: 'property_tester'
-  form_factor: '5x3'
+  form_factor: '3x2'
   serial_number: 0
 dev.getMethods()                 % get device functions
   Modular Device Methods
   ---------------------
-  getDeviceId
-  getDeviceInfo
-  getInterruptInfo
-  detachAllInterrupts
-  getApi
-  getApiVerbose
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getMemoryFree
-  getDoubled
-  getBool
-  getLongArrayFixed
-  getLongArrayVariable
-  setLongArrayFixed
-  setLongArrayVariable
-  setLongArrayParameter
-  getStringAll
-  getStringSome
-  getCount
-  getCountArray
-  getDirection
-  getDirectionArray
-  checkMode
-  incrementMode
-  setNewDoubleRange
-  setNewOddSubset
-  setNewOddDefault
-  serialNumber
-  double
-  bool
-  longArray
-  doubleArray
-  boolArray
-  string
-  odd
-  mode
-  modeArray
-  oddArray
 dev.setPropertiesToDefaults()
 dev.getPropertyValues()
 ans =
-  serialNumber: 0
-  double: 3.1416
-  bool: 0
-  longArray: [5 4 3 2]
-  doubleArray: [-1.1000 2.2000 3.3000]
-  boolArray: {[0]  [1]}
-  string: 'abcdef'
-  odd: 5
-  mode: 'RISING'
-  modeArray: ['RISING' 'FALLING']
-  oddArray: [1 5]
 dev.longArray('getValue')
 ans =
-  5     4     3     2
 dev.longArray()
 ans =
-  5     4     3     2
 dev.doubleArray('getElementValue',1)
 ans =
   2.2000
