@@ -1460,6 +1460,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
 
   bool write_names_only = false;
   bool write_instance_details = false;
+
   if (&verbosity == &constants::verbosity_names)
   {
     write_names_only = true;
@@ -1467,6 +1468,12 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
   else if (&verbosity == &constants::verbosity_detailed)
   {
     write_instance_details = true;
+  }
+
+  bool write_firmware = false;
+  if (containsAllOrMoreThanOne(firmware_name_array))
+  {
+    write_firmware = true;
   }
 
   size_t functions_count = getFunctionsCount(firmware_name_array);
@@ -1481,7 +1488,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
         Function & function = functions_[function_index];
         if (function.firmwareNameInArray(firmware_name_array))
         {
-          function.writeApi(response_,write_names_only,false,false);
+          function.writeApi(response_,write_names_only,write_firmware,false);
         }
       }
     }
@@ -1498,7 +1505,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Parameter & parameter = parameters_[parameter_index];
       if (parameter.firmwareNameInArray(firmware_name_array))
       {
-        parameter.writeApi(response_,write_names_only,false,false,write_instance_details);
+        parameter.writeApi(response_,write_names_only,false,write_firmware,write_instance_details);
       }
     }
     response_.endArray();
@@ -1514,7 +1521,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Property & property = properties_[property_index];
       if (property.firmwareNameInArray(firmware_name_array))
       {
-        property.writeApi(response_,write_names_only,false,true,write_instance_details);
+        property.writeApi(response_,write_names_only,write_firmware,true,write_instance_details);
       }
     }
     response_.endArray();
@@ -1530,13 +1537,34 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Callback & callback = callbacks_[callback_index];
       if (callback.firmwareNameInArray(firmware_name_array))
       {
-        callback.writeApi(response_,write_names_only,false,true,false,write_instance_details);
+        callback.writeApi(response_,write_names_only,write_firmware,true,false,write_instance_details);
       }
     }
     response_.endArray();
   }
 
   response_.endObject();
+}
+
+bool Server::containsAllOrMoreThanOne(ArduinoJson::JsonArray & firmware_name_array)
+{
+  size_t length = 0;
+  for (ArduinoJson::JsonArray::iterator it=firmware_name_array.begin();
+       it!=firmware_name_array.end();
+       ++it)
+  {
+    ++length;
+    if (length > 1)
+    {
+      return true;
+    }
+    const char * firmware_name_to_compare = *it;
+    if (firmware_name_to_compare == constants::all_constant_string)
+    {
+      return true;
+    }
+  }
+  return false;
 }
 
 size_t Server::getPropertiesCount(ArduinoJson::JsonArray & firmware_name_array)

@@ -62,7 +62,7 @@ bool FirmwareElement::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name
        it!=firmware_name_array.end();
        ++it)
   {
-    const char* value = *it;
+    const char * value = *it;
     if (compareFirmwareName(value))
     {
       return true;
