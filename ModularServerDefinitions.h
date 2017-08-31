@@ -59,6 +59,12 @@ Property & ModularServer::createProperty(const ConstantString & property_name,
   return server_.createProperty(property_name,default_value);
 }
 
+template <typename T>
+void ModularServer::setPropertiesToDefaults(T & firmware_name_array)
+{
+  server_.setPropertiesToDefaults(firmware_name_array);
+}
+
 // Parameters
 
 // Functions

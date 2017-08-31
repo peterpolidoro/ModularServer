@@ -8,6 +8,7 @@
 #ifndef _MODULAR_SERVER_CONSTANTS_H_
 #define _MODULAR_SERVER_CONSTANTS_H_
 #include "ConstantVariable.h"
+#include "Array.h"
 
 
 namespace modular_server
@@ -203,6 +204,11 @@ extern ConstantString pin_constant_string;
 extern ConstantString mode_constant_string;
 extern ConstantString processor_constant_string;
 extern ConstantString processor_name_constant_string;
+
+enum {ALL_ARRAY_SIZE=1};
+extern ConstantString * all_c_style_array[ALL_ARRAY_SIZE];
+extern Array<ConstantString *, ALL_ARRAY_SIZE> all_array;
+
 }
 }
 #endif

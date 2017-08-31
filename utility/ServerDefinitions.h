@@ -86,6 +86,19 @@ Property & Server::createProperty(const ConstantString & property_name,
   return properties_[0]; // bad reference
 }
 
+template <typename T>
+void Server::setPropertiesToDefaults(T & firmware_name_array)
+{
+  for (size_t i=0; i<properties_.size(); ++i)
+  {
+    Property & property = properties_[i];
+    if (property.parameter().firmwareNameInArray(firmware_name_array))
+    {
+      property.setValueToDefault();
+    }
+  }
+}
+
 // Parameters
 
 // Functions

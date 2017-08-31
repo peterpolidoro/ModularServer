@@ -9,6 +9,7 @@
 #define _MODULAR_SERVER_FIRMWARE_ELEMENT_H_
 #include "ConstantVariable.h"
 #include "ArduinoJson.h"
+#include "Array.h"
 
 #include "NamedElement.h"
 #include "Constants.h"
@@ -24,8 +25,12 @@ public:
   void setFirmwareName(const ConstantString & firmware_name);
   bool compareFirmwareName(const char * firmware_name_to_compare);
   bool compareFirmwareName(const ConstantString & firmware_name_to_compare);
+  bool compareFirmwareName(const ConstantString * firmware_name_to_compare_ptr);
   bool compareFirmwareName(constants::SubsetMemberType firmware_name_to_compare);
-  bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
+  template <typename T>
+  bool firmwareNameInArray(T & firmware_name_array);
+  template <typename U, size_t MAX_SIZE>
+  bool firmwareNameInArray(Array<U,MAX_SIZE> & firmware_name_array);
   const ConstantString &  getFirmwareName();
 
 private:
@@ -33,5 +38,6 @@ private:
 
 };
 }
+#include "FirmwareElementDefinitions.h"
 
 #endif

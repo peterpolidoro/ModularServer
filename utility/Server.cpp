@@ -227,26 +227,6 @@ Property & Server::property(const ConstantString & property_name)
   return dummy_property_;
 }
 
-void Server::setPropertiesToDefaults(ArduinoJson::JsonArray & firmware_name_array)
-{
-  for (size_t i=0; i<properties_.size(); ++i)
-  {
-    Property & property = properties_[i];
-    if (property.parameter().firmwareNameInArray(firmware_name_array))
-    {
-      property.setValueToDefault();
-    }
-  }
-}
-
-void Server::setAllPropertiesToDefaults()
-{
-  for (size_t i=0; i<properties_.size(); ++i)
-  {
-    properties_[i].setValueToDefault();
-  }
-}
-
 // Parameters
 Parameter & Server::createParameter(const ConstantString & parameter_name)
 {
@@ -1094,7 +1074,7 @@ void Server::initializeEeprom()
   if (!eeprom_initialized_sv_.valueIsDefault())
   {
     eeprom_initialized_sv_.setValueToDefault();
-    setAllPropertiesToDefaults();
+    setPropertiesToDefaults(constants::all_array);
   }
   eeprom_initialized_ = true;
 }

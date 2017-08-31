@@ -17,7 +17,7 @@ const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=3,
-    .version_minor=1,
+    .version_minor=2,
     .version_patch=0,
   };
 
@@ -168,5 +168,12 @@ CONSTANT_STRING(processor_name_constant_string,"MK66FX1M0");
 #else
 CONSTANT_STRING(processor_name_constant_string,"");
 #endif
+
+ConstantString * all_c_style_array[ALL_ARRAY_SIZE] =
+  {
+   &all_constant_string,
+  };
+Array<ConstantString *, ALL_ARRAY_SIZE> all_array(all_c_style_array);
+
 }
 }
