@@ -48,6 +48,7 @@ public:
   template <size_t INTERRUPTS_MAX_SIZE>
   void addHardware(const constants::HardwareInfo & hardware_info,
                    Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
+  void removeHardware();
 
   // Interrupts
   Interrupt & createInterrupt(const ConstantString & interrupt_name,

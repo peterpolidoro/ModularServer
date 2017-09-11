@@ -165,6 +165,27 @@ void Server::setFormFactor(const ConstantString & form_factor)
 }
 
 // Hardware
+void Server::removeHardware()
+{
+  if (hardware_info_array_.size() > 0)
+  {
+    size_t index = hardware_info_array_.size() - 1;
+    Vector<Interrupt> & interrupts = interrupts_.subVector(index);
+    for (size_t j=0; j<interrupts.size(); ++j)
+    {
+      interrupt_name_array_.pop_back();
+      Interrupt & interrupt = interrupts[j];
+      Callback * callback_ptr = interrupt.getCallbackPtr();
+      if (callback_ptr)
+      {
+        callback_ptr->detachFrom(interrupt);
+      }
+    }
+
+    interrupts_.removeArray();
+    hardware_info_array_.pop_back();
+  }
+}
 
 // Interrupts
 Interrupt & Server::createInterrupt(const ConstantString & interrupt_name,

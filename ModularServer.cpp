@@ -37,6 +37,10 @@ void ModularServer::setFormFactor(const ConstantString & form_factor)
 }
 
 // Hardware
+void ModularServer::removeHardware()
+{
+  server_.removeHardware();
+}
 
 // Interrupts
 Interrupt & ModularServer::createInterrupt(const ConstantString & interrupt_name,
