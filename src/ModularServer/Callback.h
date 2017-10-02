@@ -7,12 +7,12 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_CALLBACK_H_
 #define _MODULAR_SERVER_CALLBACK_H_
-#include "Streaming.h"
-#include "Array.h"
-#include "ConstantVariable.h"
-#include "JsonStream.h"
-#include "Functor.h"
-#include "IndexedContainer.h"
+#include <Streaming.h>
+#include <Array.h>
+#include <ConstantVariable.h>
+#include <JsonStream.h>
+#include <Functor.h>
+#include <IndexedContainer.h>
 
 #include "FirmwareElement.h"
 #include "Property.h"

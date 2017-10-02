@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_CONSTANTS_H_
 #define _MODULAR_SERVER_CONSTANTS_H_
-#include "ConstantVariable.h"
-#include "Array.h"
+#include <ConstantVariable.h>
+#include <Array.h>
 
 
 namespace modular_server

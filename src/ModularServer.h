@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 #ifndef MODULAR_SERVER_H
 #define MODULAR_SERVER_H
-#include "utility/Server.h"
+#include "ModularServer/Server.h"
 
 
 namespace modular_server
@@ -90,6 +90,6 @@ private:
   Server server_;
 };
 }
-#include "ModularServerDefinitions.h"
+#include "ModularServer/ModularServerDefinitions.h"
 
 #endif

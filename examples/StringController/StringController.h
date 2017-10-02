@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 #ifndef STRING_CONTROLLER_H
 #define STRING_CONTROLLER_H
-#include "Functor.h"
-#include "ModularServer.h"
+#include <Functor.h>
+#include <ModularServer.h>
 
 #include "Constants.h"
 

@@ -7,11 +7,11 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_FUNCTION_H_
 #define _MODULAR_SERVER_FUNCTION_H_
-#include "Streaming.h"
-#include "Array.h"
-#include "ConstantVariable.h"
-#include "JsonStream.h"
-#include "Functor.h"
+#include <Streaming.h>
+#include <Array.h>
+#include <ConstantVariable.h>
+#include <JsonStream.h>
+#include <Functor.h>
 
 #include "FirmwareElement.h"
 #include "Parameter.h"

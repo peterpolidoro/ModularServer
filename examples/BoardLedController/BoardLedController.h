@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 #ifndef BOARD_LED_CONTROLLER_H
 #define BOARD_LED_CONTROLLER_H
-#include "Functor.h"
-#include "ModularServer.h"
+#include <Functor.h>
+#include <ModularServer.h>
 
 #include "Constants.h"
 #include "NonBlockBlink.h"

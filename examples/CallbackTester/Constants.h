@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 #ifndef MINIMAL_DEVICE_CONSTANTS_H
 #define MINIMAL_DEVICE_CONSTANTS_H
-#include "ConstantVariable.h"
-#include "ModularServer.h"
+#include <ConstantVariable.h>
+#include <ModularServer.h>
 
 
 namespace constants

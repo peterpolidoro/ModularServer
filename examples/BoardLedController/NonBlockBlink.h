@@ -7,12 +7,10 @@
 // ----------------------------------------------------------------------------
 #ifndef _NON_BLOCK_BLINK_H_
 #define _NON_BLOCK_BLINK_H_
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
+#include <Arduino.h>
+
 #include "Constants.h"
+
 
 class NonBlockBlink
 {

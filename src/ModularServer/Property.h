@@ -7,18 +7,14 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_PROPERTY_H_
 #define _MODULAR_SERVER_PROPERTY_H_
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-#include "SavedVariable.h"
-#include "JsonStream.h"
-#include "Array.h"
-#include "Vector.h"
-#include "ConcatenatedArray.h"
-#include "Functor.h"
-#include "ArduinoJson.h"
+#include <Arduino.h>
+#include <SavedVariable.h>
+#include <JsonStream.h>
+#include <Array.h>
+#include <Vector.h>
+#include <ConcatenatedArray.h>
+#include <Functor.h>
+#include <ArduinoJson.h>
 
 #include "Parameter.h"
 #include "Function.h"

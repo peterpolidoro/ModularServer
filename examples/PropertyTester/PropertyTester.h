@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 #ifndef PROPERTY_TESTER_H
 #define PROPERTY_TESTER_H
-#include "Functor.h"
-#include "ModularServer.h"
+#include <Functor.h>
+#include <ModularServer.h>
 
 #include "Constants.h"
 

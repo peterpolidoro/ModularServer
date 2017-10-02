@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 #ifndef MINIMAL_DEVICE_H
 #define MINIMAL_DEVICE_H
-#include "Functor.h"
-#include "ModularServer.h"
+#include <Functor.h>
+#include <ModularServer.h>
 
 #include "Constants.h"
 

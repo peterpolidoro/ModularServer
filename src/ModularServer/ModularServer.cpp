@@ -5,7 +5,7 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "ModularServer.h"
+#include "../ModularServer.h"
 
 
 namespace modular_server

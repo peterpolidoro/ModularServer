@@ -7,16 +7,12 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_PARAMETER_H_
 #define _MODULAR_SERVER_PARAMETER_H_
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-#include "ConstantVariable.h"
-#include "JsonStream.h"
-#include "Vector.h"
-#include "Functor.h"
-#include "ArduinoJson.h"
+#include <Arduino.h>
+#include <ConstantVariable.h>
+#include <JsonStream.h>
+#include <Vector.h>
+#include <Functor.h>
+#include <ArduinoJson.h>
 
 #include "FirmwareElement.h"
 #include "Response.h"

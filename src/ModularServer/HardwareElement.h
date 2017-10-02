@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_HARDWARE_ELEMENT_H_
 #define _MODULAR_SERVER_HARDWARE_ELEMENT_H_
-#include "ConstantVariable.h"
-#include "ArduinoJson.h"
+#include <ConstantVariable.h>
+#include <ArduinoJson.h>
 
 #include "NamedElement.h"
 #include "Constants.h"

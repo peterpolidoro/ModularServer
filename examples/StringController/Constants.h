@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 #ifndef STRING_CONTROLLER_CONSTANTS_H
 #define STRING_CONTROLLER_CONSTANTS_H
-#include "ConstantVariable.h"
-#include "ModularServer.h"
+#include <ConstantVariable.h>
+#include <ModularServer.h>
 
 
 namespace constants

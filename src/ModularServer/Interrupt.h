@@ -7,11 +7,11 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_INTERRUPT_H_
 #define _MODULAR_SERVER_INTERRUPT_H_
-#include "Streaming.h"
-#include "Array.h"
-#include "ConstantVariable.h"
-#include "Functor.h"
-#include "FunctorCallbacks.h"
+#include <Streaming.h>
+#include <Array.h>
+#include <ConstantVariable.h>
+#include <Functor.h>
+#include <FunctorCallbacks.h>
 
 #include "HardwareElement.h"
 #include "Callback.h"

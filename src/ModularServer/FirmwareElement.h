@@ -7,9 +7,9 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_FIRMWARE_ELEMENT_H_
 #define _MODULAR_SERVER_FIRMWARE_ELEMENT_H_
-#include "ConstantVariable.h"
-#include "ArduinoJson.h"
-#include "Array.h"
+#include <ConstantVariable.h>
+#include <ArduinoJson.h>
+#include <Array.h>
 
 #include "NamedElement.h"
 #include "Constants.h"

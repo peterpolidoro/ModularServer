@@ -7,9 +7,9 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_RESPONSE_H_
 #define _MODULAR_SERVER_RESPONSE_H_
-#include "ConstantVariable.h"
-#include "Array.h"
-#include "JsonStream.h"
+#include <ConstantVariable.h>
+#include <Array.h>
+#include <JsonStream.h>
 
 #include "Constants.h"
 

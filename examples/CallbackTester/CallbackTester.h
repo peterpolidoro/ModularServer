@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 #ifndef CALLBACK_TESTER_H
 #define CALLBACK_TESTER_H
-#include "Functor.h"
-#include "ModularServer.h"
+#include <Functor.h>
+#include <ModularServer.h>
 
 #include "Constants.h"
 #include "NonBlockBlink.h"
