@@ -100,6 +100,7 @@ Function & Property::function(const ConstantString & function_name)
 // public
 Property::Property()
 {
+  response_ptr_ = NULL;
   setup();
 }
 
@@ -1474,7 +1475,6 @@ Property::Property<const ConstantString *>(const ConstantString & name,
 
 void Property::setup()
 {
-  response_ptr_ = NULL;
   functors_enabled_ = true;
 }
 
