@@ -82,6 +82,7 @@ private:
   Vector<constants::SubsetMemberType> subset_;
   bool subset_is_set_;
   Parameter(const ConstantString & name);
+  void setup(const ConstantString & name);
   const ConstantString & getUnits();
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();

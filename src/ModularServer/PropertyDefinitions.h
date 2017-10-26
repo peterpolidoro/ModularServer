@@ -510,7 +510,7 @@ Property::Property(const ConstantString & name,
   parameter_.setTypeLong();
   parameter_.setArrayLengthRange(N,N);
   setArrayLengthRange(N,N);
-  functors_enabled_ = true;
+  setup();
 }
 
 template <size_t N>
@@ -522,7 +522,7 @@ Property::Property(const ConstantString & name,
   parameter_.setTypeDouble();
   parameter_.setArrayLengthRange(N,N);
   setArrayLengthRange(N,N);
-  functors_enabled_ = true;
+  setup();
 }
 
 template <size_t N>
@@ -534,7 +534,7 @@ Property::Property(const ConstantString & name,
   parameter_.setTypeBool();
   parameter_.setArrayLengthRange(N,N);
   setArrayLengthRange(N,N);
-  functors_enabled_ = true;
+  setup();
 }
 
 template <size_t N>
@@ -566,7 +566,7 @@ Property::Property(const ConstantString & name,
       }
     }
   }
-  functors_enabled_ = true;
+  setup();
 }
 
 template <size_t N>
@@ -578,7 +578,7 @@ Property::Property(const ConstantString & name,
   parameter_.setTypeString();
   parameter_.setArrayLengthRange(N,N);
   string_saved_as_char_array_ = false;
-  functors_enabled_ = true;
+  setup();
 }
 
 }

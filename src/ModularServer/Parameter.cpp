@@ -15,13 +15,7 @@ Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Parameter::get_va
 // public
 Parameter::Parameter()
 {
-  setName(constants::empty_constant_string);
-  setUnits(constants::empty_constant_string);
-  type_ = JsonStream::LONG_TYPE;
-  array_element_type_ = JsonStream::LONG_TYPE;
-  range_is_set_ = false;
-  array_length_range_is_set_ = false;
-  subset_is_set_ = false;
+  setup(constants::empty_constant_string);
 }
 
 void Parameter::setTypeLong()
@@ -571,6 +565,11 @@ void Parameter::writeApi(Response & response,
 
 // private
 Parameter::Parameter(const ConstantString & name)
+{
+  setup(name);
+}
+
+void Parameter::setup(const ConstantString & name)
 {
   setName(name);
   setUnits(constants::empty_constant_string);

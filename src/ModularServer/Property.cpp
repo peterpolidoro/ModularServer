@@ -10,7 +10,6 @@
 
 namespace modular_server
 {
-
 namespace property
 {
 // Parameters
@@ -101,8 +100,7 @@ Function & Property::function(const ConstantString & function_name)
 // public
 Property::Property()
 {
-  response_ptr_ = NULL;
-  functors_enabled_ = true;
+  setup();
 }
 
 template <>
@@ -1440,6 +1438,7 @@ Property::Property<long>(const ConstantString & name,
   saved_variable_(default_value)
 {
   parameter_.setTypeLong();
+  setup();
 }
 
 template <>
@@ -1449,6 +1448,7 @@ Property::Property<double>(const ConstantString & name,
   saved_variable_(default_value)
 {
   parameter_.setTypeDouble();
+  setup();
 }
 
 template <>
@@ -1458,6 +1458,7 @@ Property::Property<bool>(const ConstantString & name,
   saved_variable_(default_value)
 {
   parameter_.setTypeBool();
+  setup();
 }
 
 template <>
@@ -1468,6 +1469,13 @@ Property::Property<const ConstantString *>(const ConstantString & name,
 {
   parameter_.setTypeString();
   string_saved_as_char_array_ = false;
+  setup();
+}
+
+void Property::setup()
+{
+  response_ptr_ = NULL;
+  functors_enabled_ = true;
 }
 
 Parameter & Property::parameter()
