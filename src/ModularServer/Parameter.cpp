@@ -605,8 +605,8 @@ bool Parameter::valueInRange(const double value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    double min = getRangeMin().d;
-    double max = getRangeMax().d;
+    double min = getRangeMin().d - constants::epsilon;
+    double max = getRangeMax().d + constants::epsilon;
     if ((value < min) || (value > max))
     {
       in_range = false;
@@ -620,8 +620,8 @@ bool Parameter::valueInRange(const float value)
   bool in_range = true;
   if (rangeIsSet())
   {
-    double min = getRangeMin().d;
-    double max = getRangeMax().d;
+    double min = getRangeMin().d - constants::epsilon;
+    double max = getRangeMax().d + constants::epsilon;
     if (((double)value < min) || ((double)value > max))
     {
       in_range = false;

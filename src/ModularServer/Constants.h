@@ -77,6 +77,8 @@ extern const FirmwareInfo firmware_info;
 
 extern const long response_pipe_read_max;
 
+extern const double epsilon;
+
 // Properties
 extern ConstantString serial_number_property_name;
 extern const long serial_number_min;
