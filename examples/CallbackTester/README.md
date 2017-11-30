@@ -32,22 +32,24 @@ Response:
 
 ```json
 {
-  "id":"?",
-  "result":{
-    "device_id":{
-      "name":"callback_tester",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "?",
+  "result": {
+    "device_id": {
+      "name": "callback_tester",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["CallbackTester"],
-      "verbosity":"NAMES",
-      "properties":[
+    "api": {
+      "firmware": [
+        "CallbackTester"
+      ],
+      "verbosity": "NAMES",
+      "properties": [
         "durationOn",
         "durationOff",
         "count"
       ],
-      "callbacks":[
+      "callbacks": [
         "setLedOn",
         "setLedOff",
         "blinkLed"
@@ -74,17 +76,19 @@ Response:
 
 ```json
 {
-  "id":"??",
-  "result":{
-    "device_id":{
-      "name":"callback_tester",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "??",
+  "result": {
+    "device_id": {
+      "name": "callback_tester",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["ALL"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "ALL"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -94,17 +98,17 @@ Response:
         "getInterruptInfo",
         "detachAllInterrupts"
       ],
-      "parameters":[
+      "parameters": [
         "firmware",
         "verbosity"
       ],
-      "properties":[
+      "properties": [
         "serialNumber",
         "durationOn",
         "durationOff",
         "count"
       ],
-      "callbacks":[
+      "callbacks": [
         "setLedOn",
         "setLedOff",
         "blinkLed"
@@ -131,8 +135,8 @@ Response:
 
 ```json
 {
-  "id":"setPropertiesToDefaults",
-  "result":null
+  "id": "setPropertiesToDefaults",
+  "result": null
 }
 ```
 
@@ -146,14 +150,14 @@ Response:
 
 ```json
 {
-  "id":"getDeviceInfo",
-  "result":{
-    "processor":"MK20DX256",
-    "hardware":[
+  "id": "getDeviceInfo",
+  "result": {
+    "processor": "MK20DX256",
+    "hardware": [
       {
-        "name":"Teensy",
-        "version":"3.2",
-        "interrupts":[
+        "name": "Teensy",
+        "version": "3.2",
+        "interrupts": [
           "bnc_a",
           "bnc_b",
           "bnc_c",
@@ -163,14 +167,14 @@ Response:
         ]
       }
     ],
-    "firmware":[
+    "firmware": [
       {
-        "name":"ModularServer",
-        "version":"3.0.0"
+        "name": "ModularServer",
+        "version": "3.0.0"
       },
       {
-        "name":"CallbackTester",
-        "version":"2.0.0"
+        "name": "CallbackTester",
+        "version": "2.0.0"
       }
     ]
   }
@@ -189,43 +193,43 @@ Response:
 
 ```json
 {
-  "id":"getInterruptInfo",
-  "result":[
+  "id": "getInterruptInfo",
+  "result": [
     {
-      "name":"bnc_a",
-      "hardware":"Teensy",
-      "callback":"setLedOn",
-      "mode":"FALLING"
+      "name": "bnc_a",
+      "hardware": "Teensy",
+      "callback": "setLedOn",
+      "mode": "FALLING"
     },
     {
-      "name":"bnc_b",
-      "hardware":"Teensy",
-      "callback":"setLedOff",
-      "mode":"FALLING"
+      "name": "bnc_b",
+      "hardware": "Teensy",
+      "callback": "setLedOff",
+      "mode": "FALLING"
     },
     {
-      "name":"bnc_c",
-      "hardware":"Teensy",
-      "callback":"setLedOn",
-      "mode":"FALLING"
+      "name": "bnc_c",
+      "hardware": "Teensy",
+      "callback": "setLedOn",
+      "mode": "FALLING"
     },
     {
-      "name":"bnc_d",
-      "hardware":"Teensy",
-      "callback":"setLedOff",
-      "mode":"FALLING"
+      "name": "bnc_d",
+      "hardware": "Teensy",
+      "callback": "setLedOff",
+      "mode": "FALLING"
     },
     {
-      "name":"bnc_e",
-      "hardware":"Teensy",
-      "callback":"blinkLed",
-      "mode":"FALLING"
+      "name": "bnc_e",
+      "hardware": "Teensy",
+      "callback": "blinkLed",
+      "mode": "FALLING"
     },
     {
-      "name":"bnc_f",
-      "hardware":"Teensy",
-      "callback":"setLedOff",
-      "mode":"FALLING"
+      "name": "bnc_f",
+      "hardware": "Teensy",
+      "callback": "setLedOff",
+      "mode": "FALLING"
     }
   ]
 }
@@ -248,25 +252,25 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":{
-    "name":"blinkLed",
-    "firmware":"CallbackTester",
-    "properties":[
+  "id": "blinkLed",
+  "result": {
+    "name": "blinkLed",
+    "firmware": "CallbackTester",
+    "properties": [
       "durationOn",
       "durationOff",
       "count"
     ],
-    "interrupts":[
+    "interrupts": [
       "bnc_e"
     ],
-    "functions":[
+    "functions": [
       "trigger",
       "attachTo",
       "detachFrom",
       "detachFromAll"
     ],
-    "parameters":[
+    "parameters": [
       "interrupt",
       "mode"
     ]
@@ -284,8 +288,8 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":null
+  "id": "blinkLed",
+  "result": null
 }
 ```
 
@@ -299,8 +303,8 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":null
+  "id": "blinkLed",
+  "result": null
 }
 ```
 
@@ -314,15 +318,15 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":{
-    "name":"attachTo",
-    "firmware":"ModularServer",
-    "parameters":[
+  "id": "blinkLed",
+  "result": {
+    "name": "attachTo",
+    "firmware": "ModularServer",
+    "parameters": [
       {
-        "name":"interrupt",
-        "type":"string",
-        "subset":[
+        "name": "interrupt",
+        "type": "string",
+        "subset": [
           "bnc_a",
           "bnc_b",
           "bnc_c",
@@ -332,9 +336,9 @@ Response:
         ]
       },
       {
-        "name":"mode",
-        "type":"string",
-        "subset":[
+        "name": "mode",
+        "type": "string",
+        "subset": [
           "LOW",
           "CHANGE",
           "RISING",
@@ -356,8 +360,8 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":null
+  "id": "blinkLed",
+  "result": null
 }
 ```
 
@@ -371,26 +375,26 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":{
-    "name":"blinkLed",
-    "firmware":"CallbackTester",
-    "properties":[
+  "id": "blinkLed",
+  "result": {
+    "name": "blinkLed",
+    "firmware": "CallbackTester",
+    "properties": [
       "durationOn",
       "durationOff",
       "count"
     ],
-    "interrupts":[
+    "interrupts": [
       "bnc_e",
       "bnc_f"
     ],
-    "functions":[
+    "functions": [
       "trigger",
       "attachTo",
       "detachFrom",
       "detachFromAll"
     ],
-    "parameters":[
+    "parameters": [
       "interrupt",
       "mode"
     ]
@@ -408,11 +412,11 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":{
-    "name":"detachFrom",
-    "firmware":"ModularServer",
-    "parameters":[
+  "id": "blinkLed",
+  "result": {
+    "name": "detachFrom",
+    "firmware": "ModularServer",
+    "parameters": [
       "interrupt"
     ]
   }
@@ -429,8 +433,8 @@ Response:
 
 ```json
 {
-  "id":"count",
-  "result":2
+  "id": "count",
+  "result": 2
 }
 ```
 
@@ -444,8 +448,8 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":null
+  "id": "blinkLed",
+  "result": null
 }
 ```
 
@@ -459,8 +463,8 @@ Response:
 
 ```json
 {
-  "id":"detachAllInterrupts",
-  "result":null
+  "id": "detachAllInterrupts",
+  "result": null
 }
 ```
 
@@ -474,37 +478,37 @@ Response:
 
 ```json
 {
-  "id":"getInterruptInfo",
-  "result":[
+  "id": "getInterruptInfo",
+  "result": [
     {
-      "name":"bnc_a",
-      "hardware":"Teensy",
-      "mode":"DETACHED"
+      "name": "bnc_a",
+      "hardware": "Teensy",
+      "mode": "DETACHED"
     },
     {
-      "name":"bnc_b",
-      "hardware":"Teensy",
-      "mode":"DETACHED"
+      "name": "bnc_b",
+      "hardware": "Teensy",
+      "mode": "DETACHED"
     },
     {
-      "name":"bnc_c",
-      "hardware":"Teensy",
-      "mode":"DETACHED"
+      "name": "bnc_c",
+      "hardware": "Teensy",
+      "mode": "DETACHED"
     },
     {
-      "name":"bnc_d",
-      "hardware":"Teensy",
-      "mode":"DETACHED"
+      "name": "bnc_d",
+      "hardware": "Teensy",
+      "mode": "DETACHED"
     },
     {
-      "name":"bnc_e",
-      "hardware":"Teensy",
-      "mode":"DETACHED"
+      "name": "bnc_e",
+      "hardware": "Teensy",
+      "mode": "DETACHED"
     },
     {
-      "name":"bnc_f",
-      "hardware":"Teensy",
-      "mode":"DETACHED"
+      "name": "bnc_f",
+      "hardware": "Teensy",
+      "mode": "DETACHED"
     }
   ]
 }
@@ -520,8 +524,8 @@ Response:
 
 ```json
 {
-  "id":"setLedOn",
-  "result":null
+  "id": "setLedOn",
+  "result": null
 }
 ```
 

@@ -32,17 +32,19 @@ Response:
 
 ```json
 {
-  "id":"?",
-  "result":{
-    "device_id":{
-      "name":"property_tester",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "?",
+  "result": {
+    "device_id": {
+      "name": "property_tester",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["PropertyTester"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "PropertyTester"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "getDoubled",
         "getBool",
         "getLongArrayFixed",
@@ -62,7 +64,7 @@ Response:
         "setNewOddSubset",
         "setNewOddDefault"
       ],
-      "parameters":[
+      "parameters": [
         "long_array_parameter",
         "length_parameter",
         "count",
@@ -71,7 +73,7 @@ Response:
         "direction_array",
         "subset_index"
       ],
-      "properties":[
+      "properties": [
         "double",
         "bool",
         "longArray",
@@ -105,17 +107,19 @@ Response:
 
 ```json
 {
-  "id":"??",
-  "result":{
-    "device_id":{
-      "name":"property_tester",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "??",
+  "result": {
+    "device_id": {
+      "name": "property_tester",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["ALL"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "ALL"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -143,7 +147,7 @@ Response:
         "setNewOddSubset",
         "setNewOddDefault"
       ],
-      "parameters":[
+      "parameters": [
         "firmware",
         "verbosity",
         "long_array_parameter",
@@ -154,7 +158,7 @@ Response:
         "direction_array",
         "subset_index"
       ],
-      "properties":[
+      "properties": [
         "serialNumber",
         "double",
         "bool",
@@ -185,8 +189,8 @@ Response:
 
 ```json
 {
-  "id":"setPropertiesToDefaults",
-  "result":null
+  "id": "setPropertiesToDefaults",
+  "result": null
 }
 ```
 
@@ -200,33 +204,33 @@ Response:
 
 ```json
 {
-  "id":"getPropertyValues",
-  "result":{
-    "double":3.141590,
-    "bool":false,
-    "longArray":[
+  "id": "getPropertyValues",
+  "result": {
+    "double": 3.141590,
+    "bool": false,
+    "longArray": [
       5,
       4,
       3,
       2
     ],
-    "doubleArray":[
+    "doubleArray": [
       -1.100000,
       2.200000,
       3.300000
     ],
-    "boolArray":[
+    "boolArray": [
       false,
       true
     ],
-    "string":"abcdef",
-    "odd":5,
-    "mode":"RISING",
-    "modeArray":[
+    "string": "abcdef",
+    "odd": 5,
+    "mode": "RISING",
+    "modeArray": [
       "RISING",
       "FALLING"
     ],
-    "oddArray":[
+    "oddArray": [
       1,
       5
     ]
@@ -244,22 +248,22 @@ Response:
 
 ```json
 {
-  "id":"double",
-  "result":{
-    "name":"double",
-    "firmware":"PropertyTester",
-    "type":"double",
-    "min":1.000000,
-    "max":5.000000,
-    "value":3.141590,
-    "default_value":3.141590,
-    "functions":[
+  "id": "double",
+  "result": {
+    "name": "double",
+    "firmware": "PropertyTester",
+    "type": "double",
+    "min": 1.000000,
+    "max": 5.000000,
+    "value": 3.141590,
+    "default_value": 3.141590,
+    "functions": [
       "getValue",
       "setValue",
       "getDefaultValue",
       "setValueToDefault"
     ],
-    "parameters":[
+    "parameters": [
       "value"
     ]
   }
@@ -276,29 +280,29 @@ Response:
 
 ```json
 {
-  "id":"longArray",
-  "result":{
-    "name":"longArray",
-    "firmware":"PropertyTester",
-    "type":"array",
-    "array_element_type":"long",
-    "array_element_min":-3,
-    "array_element_max":10,
-    "array_length_min":1,
-    "array_length_max":4,
-    "value":[
+  "id": "longArray",
+  "result": {
+    "name": "longArray",
+    "firmware": "PropertyTester",
+    "type": "array",
+    "array_element_type": "long",
+    "array_element_min": -3,
+    "array_element_max": 10,
+    "array_length_min": 1,
+    "array_length_max": 4,
+    "value": [
       5,
       4,
       3,
       2
     ],
-    "default_value":[
+    "default_value": [
       5,
       4,
       3,
       2
     ],
-    "functions":[
+    "functions": [
       "getValue",
       "setValue",
       "getDefaultValue",
@@ -311,7 +315,7 @@ Response:
       "getArrayLength",
       "setArrayLength"
     ],
-    "parameters":[
+    "parameters": [
       "value",
       "element_index",
       "element_value",
@@ -331,8 +335,8 @@ Response:
 
 ```json
 {
-  "id":"longArray",
-  "result":[
+  "id": "longArray",
+  "result": [
     5,
     4,
     3,
@@ -351,8 +355,8 @@ Response:
 
 ```json
 {
-  "id":"longArray",
-  "result":[
+  "id": "longArray",
+  "result": [
     5,
     4,
     3,
@@ -371,8 +375,8 @@ Response:
 
 ```json
 {
-  "id":"longArray",
-  "result":2
+  "id": "longArray",
+  "result": 2
 }
 ```
 
@@ -384,8 +388,8 @@ Response:
 
 ```json
 {
-  "id":"longArray",
-  "result":[
+  "id": "longArray",
+  "result": [
     5,
     4
   ]
@@ -400,8 +404,8 @@ Response:
 
 ```json
 {
-  "id":"longArray",
-  "result":4
+  "id": "longArray",
+  "result": 4
 }
 ```
 
@@ -415,27 +419,27 @@ Response:
 
 ```json
 {
-  "id":"doubleArray",
-  "result":{
-    "name":"doubleArray",
-    "firmware":"PropertyTester",
-    "type":"array",
-    "array_element_type":"double",
-    "array_element_min":-33.333000,
-    "array_element_max":100.000000,
-    "array_length_min":3,
-    "array_length_max":3,
-    "value":[
+  "id": "doubleArray",
+  "result": {
+    "name": "doubleArray",
+    "firmware": "PropertyTester",
+    "type": "array",
+    "array_element_type": "double",
+    "array_element_min": -33.333000,
+    "array_element_max": 100.000000,
+    "array_length_min": 3,
+    "array_length_max": 3,
+    "value": [
       -1.100000,
       2.200000,
       3.300000
     ],
-    "default_value":[
+    "default_value": [
       -1.100000,
       2.200000,
       3.300000
     ],
-    "functions":[
+    "functions": [
       "getValue",
       "setValue",
       "getDefaultValue",
@@ -448,7 +452,7 @@ Response:
       "getArrayLength",
       "setArrayLength"
     ],
-    "parameters":[
+    "parameters": [
       "value",
       "element_index",
       "element_value",
@@ -468,8 +472,8 @@ Response:
 
 ```json
 {
-  "id":"doubleArray",
-  "result":2.200000
+  "id": "doubleArray",
+  "result": 2.200000
 }
 ```
 
@@ -483,11 +487,11 @@ Response:
 
 ```json
 {
-  "id":"doubleArray",
-  "error":{
-    "message":"Invalid params",
-    "data":"Parameter value not valid. Value not in range: 0 <= element_index <= 2",
-    "code":-32602
+  "id": "doubleArray",
+  "error": {
+    "message": "Invalid params",
+    "data": "Parameter value not valid. Value not in range: 0 <= element_index <= 2",
+    "code": -32602
   }
 }
 ```
@@ -502,8 +506,8 @@ Response:
 
 ```json
 {
-  "id":"doubleArray",
-  "result":[
+  "id": "doubleArray",
+  "result": [
     8.765400,
     8.765400,
     8.765400
@@ -521,8 +525,8 @@ Response:
 
 ```json
 {
-  "id":"doubleArray",
-  "result":[
+  "id": "doubleArray",
+  "result": [
     8.765400,
     5.678000,
     8.765400
@@ -540,8 +544,8 @@ Response:
 
 ```json
 {
-  "id":"doubleArray",
-  "result":-1.100000
+  "id": "doubleArray",
+  "result": -1.100000
 }
 ```
 
@@ -555,23 +559,23 @@ Response:
 
 ```json
 {
-  "id":"boolArray",
-  "result":{
-    "name":"boolArray",
-    "firmware":"PropertyTester",
-    "type":"array",
-    "array_element_type":"bool",
-    "array_length_min":2,
-    "array_length_max":2,
-    "value":[
+  "id": "boolArray",
+  "result": {
+    "name": "boolArray",
+    "firmware": "PropertyTester",
+    "type": "array",
+    "array_element_type": "bool",
+    "array_length_min": 2,
+    "array_length_max": 2,
+    "value": [
       false,
       true
     ],
-    "default_value":[
+    "default_value": [
       false,
       true
     ],
-    "functions":[
+    "functions": [
       "getValue",
       "setValue",
       "getDefaultValue",
@@ -584,7 +588,7 @@ Response:
       "getArrayLength",
       "setArrayLength"
     ],
-    "parameters":[
+    "parameters": [
       "value",
       "element_index",
       "element_value",
@@ -604,8 +608,8 @@ Response:
 
 ```json
 {
-  "id":"boolArray",
-  "result":[
+  "id": "boolArray",
+  "result": [
     false,
     false
   ]
@@ -622,8 +626,8 @@ Response:
 
 ```json
 {
-  "id":"string",
-  "result":"asdfghjkl"
+  "id": "string",
+  "result": "asdfghjkl"
 }
 ```
 
@@ -637,8 +641,8 @@ Response:
 
 ```json
 {
-  "id":"string",
-  "result":"f"
+  "id": "string",
+  "result": "f"
 }
 ```
 
@@ -652,8 +656,8 @@ Response:
 
 ```json
 {
-  "id":"string",
-  "result":"asdXghjkl"
+  "id": "string",
+  "result": "asdXghjkl"
 }
 ```
 
@@ -667,11 +671,11 @@ Response:
 
 ```json
 {
-  "id":"odd",
-  "error":{
-    "message":"Invalid params",
-    "data":"Parameter value not valid. Value not in subset: [1,3,5,7,9]",
-    "code":-32602
+  "id": "odd",
+  "error": {
+    "message": "Invalid params",
+    "data": "Parameter value not valid. Value not in subset: [1,3,5,7,9]",
+    "code": -32602
   }
 }
 ```
@@ -686,8 +690,8 @@ Response:
 
 ```json
 {
-  "id":"odd",
-  "result":7
+  "id": "odd",
+  "result": 7
 }
 ```
 
@@ -701,11 +705,11 @@ Response:
 
 ```json
 {
-  "id":"mode",
-  "error":{
-    "message":"Invalid params",
-    "data":"Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE]",
-    "code":-32602
+  "id": "mode",
+  "error": {
+    "message": "Invalid params",
+    "data": "Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE]",
+    "code": -32602
   }
 }
 ```
@@ -720,8 +724,8 @@ Response:
 
 ```json
 {
-  "id":"mode",
-  "result":"CHANGE"
+  "id": "mode",
+  "result": "CHANGE"
 }
 ```
 
@@ -735,11 +739,11 @@ Response:
 
 ```json
 {
-  "id":"oddArray",
-  "error":{
-    "message":"Invalid params",
-    "data":"Parameter value not valid. Value not in subset: [1,3,5,7,9]",
-    "code":-32602
+  "id": "oddArray",
+  "error": {
+    "message": "Invalid params",
+    "data": "Parameter value not valid. Value not in subset: [1,3,5,7,9]",
+    "code": -32602
   }
 }
 ```
@@ -754,8 +758,8 @@ Response:
 
 ```json
 {
-  "id":"oddArray",
-  "result":[
+  "id": "oddArray",
+  "result": [
     9,
     9
   ]
@@ -772,33 +776,33 @@ Response:
 
 ```json
 {
-  "id":"getPropertyValues",
-  "result":{
-    "double":3.141590,
-    "bool":false,
-    "longArray":[
+  "id": "getPropertyValues",
+  "result": {
+    "double": 3.141590,
+    "bool": false,
+    "longArray": [
       5,
       4,
       3,
       2
     ],
-    "doubleArray":[
+    "doubleArray": [
       8.765400,
       5.678000,
       8.765400
     ],
-    "boolArray":[
+    "boolArray": [
       false,
       false
     ],
-    "string":"asdXghjkl",
-    "odd":7,
-    "mode":"CHANGE",
-    "modeArray":[
+    "string": "asdXghjkl",
+    "odd": 7,
+    "mode": "CHANGE",
+    "modeArray": [
       "RISING",
       "FALLING"
     ],
-    "oddArray":[
+    "oddArray": [
       9,
       9
     ]
@@ -819,11 +823,11 @@ Response:
 
 ```json
 {
-  "id":"getDeviceId",
-  "result":{
-    "name":"property_tester",
-    "form_factor":"3x2",
-    "serial_number":0
+  "id": "getDeviceId",
+  "result": {
+    "name": "property_tester",
+    "form_factor": "3x2",
+    "serial_number": 0
   }
 }
 ```
@@ -844,23 +848,23 @@ Response:
 
 ```json
 {
-  "id":"getDeviceInfo",
-  "result":{
-    "processor":"MK20DX256",
-    "hardware":[
+  "id": "getDeviceInfo",
+  "result": {
+    "processor": "MK20DX256",
+    "hardware": [
       {
-        "name":"Teensy",
-        "version":"3.2"
+        "name": "Teensy",
+        "version": "3.2"
       }
     ],
-    "firmware":[
+    "firmware": [
       {
-        "name":"ModularServer",
-        "version":"3.0.0"
+        "name": "ModularServer",
+        "version": "3.0.0"
       },
       {
-        "name":"PropertyTester",
-        "version":"2.0.0"
+        "name": "PropertyTester",
+        "version": "2.0.0"
       }
     ]
   }
@@ -883,11 +887,13 @@ Response:
 ```json
 
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["PropertyTester"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "PropertyTester"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "getDoubled",
       "getBool",
       "getLongArrayFixed",
@@ -907,7 +913,7 @@ Response:
       "setNewOddSubset",
       "setNewOddDefault"
     ],
-    "parameters":[
+    "parameters": [
       "long_array_parameter",
       "length_parameter",
       "count",
@@ -916,7 +922,7 @@ Response:
       "direction_array",
       "subset_index"
     ],
-    "properties":[
+    "properties": [
       "double",
       "bool",
       "longArray",

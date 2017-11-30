@@ -1,114 +1,116 @@
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["ModularServer"],
-    "verbosity":"GENERAL",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "ModularServer"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
       {
-        "name":"getDeviceId",
-        "result_info":{
-          "type":"object"
+        "name": "getDeviceId",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getDeviceInfo",
-        "result_info":{
-          "type":"object"
+        "name": "getDeviceInfo",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getApi",
-        "parameters":[
+        "name": "getApi",
+        "parameters": [
           "verbosity",
           "firmware"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getPropertyDefaultValues",
-        "parameters":[
+        "name": "getPropertyDefaultValues",
+        "parameters": [
           "firmware"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"setPropertiesToDefaults",
-        "parameters":[
+        "name": "setPropertiesToDefaults",
+        "parameters": [
           "firmware"
         ]
       },
       {
-        "name":"getPropertyValues",
-        "parameters":[
+        "name": "getPropertyValues",
+        "parameters": [
           "firmware"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getInterruptInfo",
-        "result_info":{
-          "type":"array",
-          "array_element_type":"object"
+        "name": "getInterruptInfo",
+        "result_info": {
+          "type": "array",
+          "array_element_type": "object"
         }
       },
       {
-        "name":"detachAllInterrupts"
+        "name": "detachAllInterrupts"
       }
     ],
-    "parameters":[
+    "parameters": [
       {
-        "name":"firmware",
-        "type":"array",
-        "array_element_type":"string"
+        "name": "firmware",
+        "type": "array",
+        "array_element_type": "string"
       },
       {
-        "name":"verbosity",
-        "type":"string"
+        "name": "verbosity",
+        "type": "string"
       }
     ],
-    "properties":[
+    "properties": [
       {
-        "name":"serialNumber",
-        "type":"long",
-        "functions":[
+        "name": "serialNumber",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       }

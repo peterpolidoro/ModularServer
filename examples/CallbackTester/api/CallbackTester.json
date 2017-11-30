@@ -1,232 +1,234 @@
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["CallbackTester"],
-    "verbosity":"GENERAL",
-    "properties":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "CallbackTester"
+    ],
+    "verbosity": "GENERAL",
+    "properties": [
       {
-        "name":"durationOn",
-        "type":"double",
-        "functions":[
+        "name": "durationOn",
+        "type": "double",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"double"
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"double"
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"double"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"double"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"double"
+            "name": "value",
+            "type": "double"
           }
         ]
       },
       {
-        "name":"durationOff",
-        "type":"double",
-        "functions":[
+        "name": "durationOff",
+        "type": "double",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"double"
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"double"
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"double"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"double"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"double"
+            "name": "value",
+            "type": "double"
           }
         ]
       },
       {
-        "name":"count",
-        "type":"long",
-        "functions":[
+        "name": "count",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       }
     ],
-    "callbacks":[
+    "callbacks": [
       {
-        "name":"setLedOn",
-        "functions":[
+        "name": "setLedOn",
+        "functions": [
           {
-            "name":"trigger"
+            "name": "trigger"
           },
           {
-            "name":"attachTo",
-            "parameters":[
+            "name": "attachTo",
+            "parameters": [
               "interrupt",
               "mode"
             ]
           },
           {
-            "name":"detachFrom",
-            "parameters":[
+            "name": "detachFrom",
+            "parameters": [
               "interrupt"
             ]
           },
           {
-            "name":"detachFromAll"
+            "name": "detachFromAll"
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"interrupt",
-            "type":"string"
+            "name": "interrupt",
+            "type": "string"
           },
           {
-            "name":"mode",
-            "type":"string"
+            "name": "mode",
+            "type": "string"
           }
         ]
       },
       {
-        "name":"setLedOff",
-        "functions":[
+        "name": "setLedOff",
+        "functions": [
           {
-            "name":"trigger"
+            "name": "trigger"
           },
           {
-            "name":"attachTo",
-            "parameters":[
+            "name": "attachTo",
+            "parameters": [
               "interrupt",
               "mode"
             ]
           },
           {
-            "name":"detachFrom",
-            "parameters":[
+            "name": "detachFrom",
+            "parameters": [
               "interrupt"
             ]
           },
           {
-            "name":"detachFromAll"
+            "name": "detachFromAll"
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"interrupt",
-            "type":"string"
+            "name": "interrupt",
+            "type": "string"
           },
           {
-            "name":"mode",
-            "type":"string"
+            "name": "mode",
+            "type": "string"
           }
         ]
       },
       {
-        "name":"blinkLed",
-        "properties":[
+        "name": "blinkLed",
+        "properties": [
           "durationOn",
           "durationOff",
           "count"
         ],
-        "functions":[
+        "functions": [
           {
-            "name":"trigger"
+            "name": "trigger"
           },
           {
-            "name":"attachTo",
-            "parameters":[
+            "name": "attachTo",
+            "parameters": [
               "interrupt",
               "mode"
             ]
           },
           {
-            "name":"detachFrom",
-            "parameters":[
+            "name": "detachFrom",
+            "parameters": [
               "interrupt"
             ]
           },
           {
-            "name":"detachFromAll"
+            "name": "detachFromAll"
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"interrupt",
-            "type":"string"
+            "name": "interrupt",
+            "type": "string"
           },
           {
-            "name":"mode",
-            "type":"string"
+            "name": "mode",
+            "type": "string"
           }
         ]
       }

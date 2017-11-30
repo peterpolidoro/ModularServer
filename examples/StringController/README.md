@@ -32,17 +32,19 @@ Response:
 
 ```json
 {
-  "id":"?",
-  "result":{
-    "device_id":{
-      "name":"string_controller",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "?",
+  "result": {
+    "device_id": {
+      "name": "string_controller",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["StringController"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "StringController"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "echo",
         "length",
         "startsWith",
@@ -52,14 +54,14 @@ Response:
         "setStoredString",
         "getStoredString"
       ],
-      "parameters":[
+      "parameters": [
         "string",
         "string2",
         "count",
         "index_array",
         "double_echo"
       ],
-      "properties":[
+      "properties": [
         "startingCharsCount",
         "storedString"
       ]
@@ -85,17 +87,19 @@ Response:
 
 ```json
 {
-  "id":"??",
-  "result":{
-    "device_id":{
-      "name":"string_controller",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "??",
+  "result": {
+    "device_id": {
+      "name": "string_controller",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["ALL"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "ALL"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -113,7 +117,7 @@ Response:
         "setStoredString",
         "getStoredString"
       ],
-      "parameters":[
+      "parameters": [
         "firmware",
         "verbosity",
         "string",
@@ -122,7 +126,7 @@ Response:
         "index_array",
         "double_echo"
       ],
-      "properties":[
+      "properties": [
         "serialNumber",
         "startingCharsCount",
         "storedString"
@@ -150,8 +154,8 @@ Response:
 
 ```json
 {
-  "id":"setPropertiesToDefaults",
-  "result":null
+  "id": "setPropertiesToDefaults",
+  "result": null
 }
 ```
 
@@ -165,8 +169,8 @@ Response:
 
 ```json
 {
-  "id":"getStoredString",
-  "result":"I am a stored string."
+  "id": "getStoredString",
+  "result": "I am a stored string."
 }
 ```
 
@@ -180,11 +184,11 @@ Response:
 
 ```json
 {
-  "id":"repeat",
-  "error":{
-    "message":"Invalid params",
-    "data":"Incorrect number of parameters. 0 given. 2 needed.",
-    "code":-32602
+  "id": "repeat",
+  "error": {
+    "message": "Invalid params",
+    "data": "Incorrect number of parameters. 0 given. 2 needed.",
+    "code": -32602
   }
 }
 ```
@@ -202,17 +206,17 @@ Response:
 
 ```json
 {
-  "id":"repeat",
-  "result":{
-    "name":"repeat",
-    "firmware":"StringController",
-    "parameters":[
+  "id": "repeat",
+  "result": {
+    "name": "repeat",
+    "firmware": "StringController",
+    "parameters": [
       "string",
       "count"
     ],
-    "result_info":{
-      "type":"array",
-      "array_element_type":"string"
+    "result_info": {
+      "type": "array",
+      "array_element_type": "string"
     }
   }
 }
@@ -233,25 +237,25 @@ Response:
 
 ```json
 {
-  "id":"repeat",
-  "result":{
-    "name":"repeat",
-    "firmware":"StringController",
-    "parameters":[
+  "id": "repeat",
+  "result": {
+    "name": "repeat",
+    "firmware": "StringController",
+    "parameters": [
       {
-        "name":"string",
-        "type":"string"
+        "name": "string",
+        "type": "string"
       },
       {
-        "name":"count",
-        "type":"long",
-        "min":1,
-        "max":100
+        "name": "count",
+        "type": "long",
+        "min": 1,
+        "max": 100
       }
     ],
-    "result_info":{
-      "type":"array",
-      "array_element_type":"string"
+    "result_info": {
+      "type": "array",
+      "array_element_type": "string"
     }
   }
 }
@@ -270,13 +274,13 @@ Response:
 
 ```json
 {
-  "id":"repeat",
-  "result":{
-    "name":"count",
-    "firmware":"StringController",
-    "type":"long",
-    "min":1,
-    "max":100
+  "id": "repeat",
+  "result": {
+    "name": "count",
+    "firmware": "StringController",
+    "type": "long",
+    "min": 1,
+    "max": 100
   }
 }
 ```
@@ -291,8 +295,8 @@ Response:
 
 ```json
 {
-  "id":"repeat",
-  "result":[
+  "id": "repeat",
+  "result": [
     "I am a string to repeat.",
     "I am a string to repeat.",
     "I am a string to repeat.",
@@ -311,19 +315,19 @@ Response:
 
 ```json
 {
-  "id":"charsAt",
-  "result":[
+  "id": "charsAt",
+  "result": [
     {
-      "index":0,
-      "char":"I"
+      "index": 0,
+      "char": "I"
     },
     {
-      "index":6,
-      "char":"n"
+      "index": 6,
+      "char": "n"
     },
     {
-      "index":8,
-      "char":"i"
+      "index": 8,
+      "char": "i"
     }
   ]
 }
@@ -339,8 +343,8 @@ Response:
 
 ```json
 {
-  "id":"startingChars",
-  "result":"Fa"
+  "id": "startingChars",
+  "result": "Fa"
 }
 ```
 
@@ -354,8 +358,8 @@ Response:
 
 ```json
 {
-  "id":"startingCharsCount",
-  "result":5
+  "id": "startingCharsCount",
+  "result": 5
 }
 ```
 
@@ -369,8 +373,8 @@ Response:
 
 ```json
 {
-  "id":"startingChars",
-  "result":"Fanta"
+  "id": "startingChars",
+  "result": "Fanta"
 }
 ```
 
@@ -384,8 +388,8 @@ Response:
 
 ```json
 {
-  "id":"storedString",
-  "result":"I am a stored string."
+  "id": "storedString",
+  "result": "I am a stored string."
 }
 ```
 
@@ -399,8 +403,8 @@ Response:
 
 ```json
 {
-  "id":"storedString",
-  "result":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  "id": "storedString",
+  "result": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 ```
 
@@ -414,8 +418,8 @@ Response:
 
 ```json
 {
-  "id":"storedString",
-  "result":"I am a stored string."
+  "id": "storedString",
+  "result": "I am a stored string."
 }
 ```
 
@@ -432,11 +436,11 @@ Response:
 
 ```json
 {
-  "id":"getDeviceId",
-  "result":{
-    "name":"string_controller",
-    "form_factor":"3x2",
-    "serial_number":77
+  "id": "getDeviceId",
+  "result": {
+    "name": "string_controller",
+    "form_factor": "3x2",
+    "serial_number": 77
   }
 }
 ```
@@ -457,23 +461,23 @@ Response:
 
 ```json
 {
-  "id":"getDeviceInfo",
-  "result":{
-    "processor":"MK20DX256",
-    "hardware":[
+  "id": "getDeviceInfo",
+  "result": {
+    "processor": "MK20DX256",
+    "hardware": [
       {
-        "name":"Teensy",
-        "version":"3.2"
+        "name": "Teensy",
+        "version": "3.2"
       }
     ],
-    "firmware":[
+    "firmware": [
       {
-        "name":"ModularServer",
-        "version":"3.0.0"
+        "name": "ModularServer",
+        "version": "3.0.0"
       },
       {
-        "name":"StringController",
-        "version":"2.0.0"
+        "name": "StringController",
+        "version": "2.0.0"
       }
     ]
   }
@@ -496,11 +500,13 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["StringController"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "StringController"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "echo",
       "length",
       "startsWith",
@@ -510,14 +516,14 @@ Response:
       "setStoredString",
       "getStoredString"
     ],
-    "parameters":[
+    "parameters": [
       "string",
       "string2",
       "count",
       "index_array",
       "double_echo"
     ],
-    "properties":[
+    "properties": [
       "startingCharsCount",
       "storedString"
     ]

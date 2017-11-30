@@ -1,1019 +1,1021 @@
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["PropertyTester"],
-    "verbosity":"GENERAL",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "PropertyTester"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
       {
-        "name":"getDoubled",
-        "result_info":{
-          "type":"double"
+        "name": "getDoubled",
+        "result_info": {
+          "type": "double"
         }
       },
       {
-        "name":"getBool",
-        "result_info":{
-          "type":"bool"
+        "name": "getBool",
+        "result_info": {
+          "type": "bool"
         }
       },
       {
-        "name":"getLongArrayFixed",
-        "result_info":{
-          "type":"array",
-          "array_element_type":"long"
+        "name": "getLongArrayFixed",
+        "result_info": {
+          "type": "array",
+          "array_element_type": "long"
         }
       },
       {
-        "name":"getLongArrayVariable",
-        "result_info":{
-          "type":"array",
-          "array_element_type":"long"
+        "name": "getLongArrayVariable",
+        "result_info": {
+          "type": "array",
+          "array_element_type": "long"
         }
       },
       {
-        "name":"setLongArrayFixed",
-        "result_info":{
-          "type":"bool"
+        "name": "setLongArrayFixed",
+        "result_info": {
+          "type": "bool"
         }
       },
       {
-        "name":"setLongArrayVariable",
-        "result_info":{
-          "type":"bool"
+        "name": "setLongArrayVariable",
+        "result_info": {
+          "type": "bool"
         }
       },
       {
-        "name":"setLongArrayParameter",
-        "parameters":[
+        "name": "setLongArrayParameter",
+        "parameters": [
           "long_array_parameter"
         ],
-        "result_info":{
-          "type":"bool"
+        "result_info": {
+          "type": "bool"
         }
       },
       {
-        "name":"getStringAll",
-        "result_info":{
-          "type":"string"
+        "name": "getStringAll",
+        "result_info": {
+          "type": "string"
         }
       },
       {
-        "name":"getStringSome",
-        "parameters":[
+        "name": "getStringSome",
+        "parameters": [
           "length_parameter"
         ],
-        "result_info":{
-          "type":"string"
+        "result_info": {
+          "type": "string"
         }
       },
       {
-        "name":"getCount",
-        "parameters":[
+        "name": "getCount",
+        "parameters": [
           "count"
         ],
-        "result_info":{
-          "type":"string"
+        "result_info": {
+          "type": "string"
         }
       },
       {
-        "name":"getCountArray",
-        "parameters":[
+        "name": "getCountArray",
+        "parameters": [
           "count_array"
         ],
-        "result_info":{
-          "type":"array",
-          "array_element_type":"long"
+        "result_info": {
+          "type": "array",
+          "array_element_type": "long"
         }
       },
       {
-        "name":"getDirection",
-        "parameters":[
+        "name": "getDirection",
+        "parameters": [
           "direction"
         ],
-        "result_info":{
-          "type":"string"
+        "result_info": {
+          "type": "string"
         }
       },
       {
-        "name":"getDirectionArray",
-        "parameters":[
+        "name": "getDirectionArray",
+        "parameters": [
           "direction_array"
         ],
-        "result_info":{
-          "type":"array",
-          "array_element_type":"string"
+        "result_info": {
+          "type": "array",
+          "array_element_type": "string"
         }
       },
       {
-        "name":"checkMode",
-        "result_info":{
-          "type":"string"
+        "name": "checkMode",
+        "result_info": {
+          "type": "string"
         }
       },
       {
-        "name":"incrementMode",
-        "result_info":{
-          "type":"string"
+        "name": "incrementMode",
+        "result_info": {
+          "type": "string"
         }
       },
       {
-        "name":"setNewDoubleRange"
+        "name": "setNewDoubleRange"
       },
       {
-        "name":"setNewOddSubset"
+        "name": "setNewOddSubset"
       },
       {
-        "name":"setNewOddDefault",
-        "parameters":[
+        "name": "setNewOddDefault",
+        "parameters": [
           "subset_index"
         ]
       }
     ],
-    "parameters":[
+    "parameters": [
       {
-        "name":"long_array_parameter",
-        "type":"array",
-        "array_element_type":"long"
+        "name": "long_array_parameter",
+        "type": "array",
+        "array_element_type": "long"
       },
       {
-        "name":"length_parameter",
-        "type":"long"
+        "name": "length_parameter",
+        "type": "long"
       },
       {
-        "name":"count",
-        "type":"long"
+        "name": "count",
+        "type": "long"
       },
       {
-        "name":"count_array",
-        "type":"array",
-        "array_element_type":"long"
+        "name": "count_array",
+        "type": "array",
+        "array_element_type": "long"
       },
       {
-        "name":"direction",
-        "type":"string"
+        "name": "direction",
+        "type": "string"
       },
       {
-        "name":"direction_array",
-        "type":"array",
-        "array_element_type":"string"
+        "name": "direction_array",
+        "type": "array",
+        "array_element_type": "string"
       },
       {
-        "name":"subset_index",
-        "type":"long"
+        "name": "subset_index",
+        "type": "long"
       }
     ],
-    "properties":[
+    "properties": [
       {
-        "name":"double",
-        "type":"double",
-        "functions":[
+        "name": "double",
+        "type": "double",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"double"
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"double"
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"double"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"double"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"double"
+            "name": "value",
+            "type": "double"
           }
         ]
       },
       {
-        "name":"bool",
-        "type":"bool",
-        "functions":[
+        "name": "bool",
+        "type": "bool",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"bool"
+            "name": "getValue",
+            "result_info": {
+              "type": "bool"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"bool"
+            "result_info": {
+              "type": "bool"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"bool"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "bool"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"bool"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "bool"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"bool"
+            "name": "value",
+            "type": "bool"
           }
         ]
       },
       {
-        "name":"longArray",
-        "type":"array",
-        "array_element_type":"long",
-        "functions":[
+        "name": "longArray",
+        "type": "array",
+        "array_element_type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getElementValue",
-            "parameters":[
+            "name": "getElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setElementValue",
-            "parameters":[
+            "name": "setElementValue",
+            "parameters": [
               "element_index",
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getDefaultElementValue",
-            "parameters":[
+            "name": "getDefaultElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setElementValueToDefault",
-            "parameters":[
+            "name": "setElementValueToDefault",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"setAllElementValues",
-            "parameters":[
+            "name": "setAllElementValues",
+            "parameters": [
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getArrayLength",
-            "result_info":{
-              "type":"long"
+            "name": "getArrayLength",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setArrayLength",
-            "parameters":[
+            "name": "setArrayLength",
+            "parameters": [
               "array_length"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"array",
-            "array_element_type":"long"
+            "name": "value",
+            "type": "array",
+            "array_element_type": "long"
           },
           {
-            "name":"element_index",
-            "type":"long"
+            "name": "element_index",
+            "type": "long"
           },
           {
-            "name":"element_value",
-            "type":"long"
+            "name": "element_value",
+            "type": "long"
           },
           {
-            "name":"array_length",
-            "type":"long"
+            "name": "array_length",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"doubleArray",
-        "type":"array",
-        "array_element_type":"double",
-        "functions":[
+        "name": "doubleArray",
+        "type": "array",
+        "array_element_type": "double",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"double"
+            "name": "getValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "double"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"double"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "double"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"double"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "double"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"double"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "double"
             }
           },
           {
-            "name":"getElementValue",
-            "parameters":[
+            "name": "getElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"double"
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setElementValue",
-            "parameters":[
+            "name": "setElementValue",
+            "parameters": [
               "element_index",
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"double"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "double"
             }
           },
           {
-            "name":"getDefaultElementValue",
-            "parameters":[
+            "name": "getDefaultElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"double"
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setElementValueToDefault",
-            "parameters":[
+            "name": "setElementValueToDefault",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"double"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "double"
             }
           },
           {
-            "name":"setAllElementValues",
-            "parameters":[
+            "name": "setAllElementValues",
+            "parameters": [
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"double"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "double"
             }
           },
           {
-            "name":"getArrayLength",
-            "result_info":{
-              "type":"long"
+            "name": "getArrayLength",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setArrayLength",
-            "parameters":[
+            "name": "setArrayLength",
+            "parameters": [
               "array_length"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"array",
-            "array_element_type":"double"
+            "name": "value",
+            "type": "array",
+            "array_element_type": "double"
           },
           {
-            "name":"element_index",
-            "type":"long"
+            "name": "element_index",
+            "type": "long"
           },
           {
-            "name":"element_value",
-            "type":"double"
+            "name": "element_value",
+            "type": "double"
           },
           {
-            "name":"array_length",
-            "type":"long"
+            "name": "array_length",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"boolArray",
-        "type":"array",
-        "array_element_type":"bool",
-        "functions":[
+        "name": "boolArray",
+        "type": "array",
+        "array_element_type": "bool",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"bool"
+            "name": "getValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "bool"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"bool"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "bool"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"bool"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "bool"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"bool"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "bool"
             }
           },
           {
-            "name":"getElementValue",
-            "parameters":[
+            "name": "getElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"bool"
+            "result_info": {
+              "type": "bool"
             }
           },
           {
-            "name":"setElementValue",
-            "parameters":[
+            "name": "setElementValue",
+            "parameters": [
               "element_index",
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"bool"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "bool"
             }
           },
           {
-            "name":"getDefaultElementValue",
-            "parameters":[
+            "name": "getDefaultElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"bool"
+            "result_info": {
+              "type": "bool"
             }
           },
           {
-            "name":"setElementValueToDefault",
-            "parameters":[
+            "name": "setElementValueToDefault",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"bool"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "bool"
             }
           },
           {
-            "name":"setAllElementValues",
-            "parameters":[
+            "name": "setAllElementValues",
+            "parameters": [
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"bool"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "bool"
             }
           },
           {
-            "name":"getArrayLength",
-            "result_info":{
-              "type":"long"
+            "name": "getArrayLength",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setArrayLength",
-            "parameters":[
+            "name": "setArrayLength",
+            "parameters": [
               "array_length"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"array",
-            "array_element_type":"bool"
+            "name": "value",
+            "type": "array",
+            "array_element_type": "bool"
           },
           {
-            "name":"element_index",
-            "type":"long"
+            "name": "element_index",
+            "type": "long"
           },
           {
-            "name":"element_value",
-            "type":"bool"
+            "name": "element_value",
+            "type": "bool"
           },
           {
-            "name":"array_length",
-            "type":"long"
+            "name": "array_length",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"string",
-        "type":"string",
-        "functions":[
+        "name": "string",
+        "type": "string",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"string"
+            "name": "getValue",
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"string"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"string"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"getElementValue",
-            "parameters":[
+            "name": "getElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setElementValue",
-            "parameters":[
+            "name": "setElementValue",
+            "parameters": [
               "element_index",
               "element_value"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"getDefaultElementValue",
-            "parameters":[
+            "name": "getDefaultElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setElementValueToDefault",
-            "parameters":[
+            "name": "setElementValueToDefault",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setAllElementValues",
-            "parameters":[
+            "name": "setAllElementValues",
+            "parameters": [
               "element_value"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"string"
+            "name": "value",
+            "type": "string"
           },
           {
-            "name":"element_index",
-            "type":"long"
+            "name": "element_index",
+            "type": "long"
           },
           {
-            "name":"element_value",
-            "type":"string"
+            "name": "element_value",
+            "type": "string"
           }
         ]
       },
       {
-        "name":"odd",
-        "type":"long",
-        "functions":[
+        "name": "odd",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"mode",
-        "type":"string",
-        "functions":[
+        "name": "mode",
+        "type": "string",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"string"
+            "name": "getValue",
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"string"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"string"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "string"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"string"
+            "name": "value",
+            "type": "string"
           }
         ]
       },
       {
-        "name":"modeArray",
-        "type":"array",
-        "array_element_type":"string",
-        "functions":[
+        "name": "modeArray",
+        "type": "array",
+        "array_element_type": "string",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"string"
+            "name": "getValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "string"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"string"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "string"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"string"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "string"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"string"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "string"
             }
           },
           {
-            "name":"getElementValue",
-            "parameters":[
+            "name": "getElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setElementValue",
-            "parameters":[
+            "name": "setElementValue",
+            "parameters": [
               "element_index",
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"string"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "string"
             }
           },
           {
-            "name":"getDefaultElementValue",
-            "parameters":[
+            "name": "getDefaultElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"string"
+            "result_info": {
+              "type": "string"
             }
           },
           {
-            "name":"setElementValueToDefault",
-            "parameters":[
+            "name": "setElementValueToDefault",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"string"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "string"
             }
           },
           {
-            "name":"setAllElementValues",
-            "parameters":[
+            "name": "setAllElementValues",
+            "parameters": [
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"string"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "string"
             }
           },
           {
-            "name":"getArrayLength",
-            "result_info":{
-              "type":"long"
+            "name": "getArrayLength",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setArrayLength",
-            "parameters":[
+            "name": "setArrayLength",
+            "parameters": [
               "array_length"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"array",
-            "array_element_type":"string"
+            "name": "value",
+            "type": "array",
+            "array_element_type": "string"
           },
           {
-            "name":"element_index",
-            "type":"long"
+            "name": "element_index",
+            "type": "long"
           },
           {
-            "name":"element_value",
-            "type":"string"
+            "name": "element_value",
+            "type": "string"
           },
           {
-            "name":"array_length",
-            "type":"long"
+            "name": "array_length",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"oddArray",
-        "type":"array",
-        "array_element_type":"long",
-        "functions":[
+        "name": "oddArray",
+        "type": "array",
+        "array_element_type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getElementValue",
-            "parameters":[
+            "name": "getElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setElementValue",
-            "parameters":[
+            "name": "setElementValue",
+            "parameters": [
               "element_index",
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getDefaultElementValue",
-            "parameters":[
+            "name": "getDefaultElementValue",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setElementValueToDefault",
-            "parameters":[
+            "name": "setElementValueToDefault",
+            "parameters": [
               "element_index"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"setAllElementValues",
-            "parameters":[
+            "name": "setAllElementValues",
+            "parameters": [
               "element_value"
             ],
-            "result_info":{
-              "type":"array",
-              "array_element_type":"long"
+            "result_info": {
+              "type": "array",
+              "array_element_type": "long"
             }
           },
           {
-            "name":"getArrayLength",
-            "result_info":{
-              "type":"long"
+            "name": "getArrayLength",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setArrayLength",
-            "parameters":[
+            "name": "setArrayLength",
+            "parameters": [
               "array_length"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"array",
-            "array_element_type":"long"
+            "name": "value",
+            "type": "array",
+            "array_element_type": "long"
           },
           {
-            "name":"element_index",
-            "type":"long"
+            "name": "element_index",
+            "type": "long"
           },
           {
-            "name":"element_value",
-            "type":"long"
+            "name": "element_value",
+            "type": "long"
           },
           {
-            "name":"array_length",
-            "type":"long"
+            "name": "array_length",
+            "type": "long"
           }
         ]
       }

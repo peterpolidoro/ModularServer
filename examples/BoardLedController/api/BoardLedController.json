@@ -1,42 +1,44 @@
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["BoardLedController"],
-    "verbosity":"GENERAL",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "BoardLedController"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
       {
-        "name":"setLedOn"
+        "name": "setLedOn"
       },
       {
-        "name":"setLedOff"
+        "name": "setLedOff"
       },
       {
-        "name":"getLedPin",
-        "result_info":{
-          "type":"long"
+        "name": "getLedPin",
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"blinkLed",
-        "parameters":[
+        "name": "blinkLed",
+        "parameters": [
           "duration_on",
           "duration_off",
           "count"
         ]
       }
     ],
-    "parameters":[
+    "parameters": [
       {
-        "name":"duration_on",
-        "type":"double"
+        "name": "duration_on",
+        "type": "double"
       },
       {
-        "name":"duration_off",
-        "type":"double"
+        "name": "duration_off",
+        "type": "double"
       },
       {
-        "name":"count",
-        "type":"long"
+        "name": "count",
+        "type": "long"
       }
     ]
   }

@@ -18,11 +18,13 @@ Teensy 3.2, Teensy 3.5, and Teensy 3.6.
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["ModularServer"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "ModularServer"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
@@ -32,11 +34,11 @@ Teensy 3.2, Teensy 3.5, and Teensy 3.6.
       "getInterruptInfo",
       "detachAllInterrupts"
     ],
-    "parameters":[
+    "parameters": [
       "firmware",
       "verbosity"
     ],
-    "properties":[
+    "properties": [
       "serialNumber"
     ]
   }

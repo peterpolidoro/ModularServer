@@ -32,23 +32,25 @@ Response:
 
 ```json
 {
-  "id":"?",
-  "result":{
-    "device_id":{
-      "name":"board_led_controller",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "?",
+  "result": {
+    "device_id": {
+      "name": "board_led_controller",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["BoardLedController"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "BoardLedController"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "setLedOn",
         "setLedOff",
         "getLedPin",
         "blinkLed"
       ],
-      "parameters":[
+      "parameters": [
         "duration_on",
         "duration_off",
         "count"
@@ -75,17 +77,19 @@ Response:
 
 ```json
 {
-  "id":"??",
-  "result":{
-    "device_id":{
-      "name":"board_led_controller",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "??",
+  "result": {
+    "device_id": {
+      "name": "board_led_controller",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["ALL"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "ALL"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -99,14 +103,14 @@ Response:
         "getLedPin",
         "blinkLed"
       ],
-      "parameters":[
+      "parameters": [
         "firmware",
         "verbosity",
         "duration_on",
         "duration_off",
         "count"
       ],
-      "properties":[
+      "properties": [
         "serialNumber"
       ]
     }
@@ -131,8 +135,8 @@ Response:
 
 ```json
 {
-  "id":"setPropertiesToDefaults",
-  "result":null
+  "id": "setPropertiesToDefaults",
+  "result": null
 }
 ```
 
@@ -146,8 +150,8 @@ Response:
 
 ```json
 {
-  "id":"setLedOn",
-  "result":null
+  "id": "setLedOn",
+  "result": null
 }
 ```
 
@@ -163,11 +167,11 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "error":{
-    "message":"Invalid params",
-    "data":"Incorrect number of parameters. 0 given. 3 needed.",
-    "code":-32602
+  "id": "blinkLed",
+  "error": {
+    "message": "Invalid params",
+    "data": "Incorrect number of parameters. 0 given. 3 needed.",
+    "code": -32602
   }
 }
 ```
@@ -190,11 +194,11 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":{
-    "name":"blinkLed",
-    "firmware":"BoardLedController",
-    "parameters":[
+  "id": "blinkLed",
+  "result": {
+    "name": "blinkLed",
+    "firmware": "BoardLedController",
+    "parameters": [
       "duration_on",
       "duration_off",
       "count"
@@ -218,14 +222,14 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":{
-    "name":"duration_on",
-    "firmware":"BoardLedController",
-    "type":"double",
-    "min":0.100000,
-    "max":2.500000,
-    "units":"seconds"
+  "id": "blinkLed",
+  "result": {
+    "name": "duration_on",
+    "firmware": "BoardLedController",
+    "type": "double",
+    "min": 0.100000,
+    "max": 2.500000,
+    "units": "seconds"
   }
 }
 ```
@@ -243,30 +247,30 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":{
-    "name":"blinkLed",
-    "firmware":"BoardLedController",
-    "parameters":[
+  "id": "blinkLed",
+  "result": {
+    "name": "blinkLed",
+    "firmware": "BoardLedController",
+    "parameters": [
       {
-        "name":"duration_on",
-        "type":"double",
-        "min":0.100000,
-        "max":2.500000,
-        "units":"seconds"
+        "name": "duration_on",
+        "type": "double",
+        "min": 0.100000,
+        "max": 2.500000,
+        "units": "seconds"
       },
       {
-        "name":"duration_off",
-        "type":"double",
-        "min":0.100000,
-        "max":2.500000,
-        "units":"seconds"
+        "name": "duration_off",
+        "type": "double",
+        "min": 0.100000,
+        "max": 2.500000,
+        "units": "seconds"
       },
       {
-        "name":"count",
-        "type":"long",
-        "min":1,
-        "max":100
+        "name": "count",
+        "type": "long",
+        "min": 1,
+        "max": 100
       }
     ]
   }
@@ -292,11 +296,11 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "error":{
-    "message":"Invalid params",
-    "data":"Parameter value out of range: 0.100000 <= duration_on <= 2.500000",
-    "code":-32602
+  "id": "blinkLed",
+  "error": {
+    "message": "Invalid params",
+    "data": "Parameter value out of range: 0.100000 <= duration_on <= 2.500000",
+    "code": -32602
   }
 }
 ```
@@ -311,8 +315,8 @@ Response:
 
 ```json
 {
-  "id":"blinkLed",
-  "result":null
+  "id": "blinkLed",
+  "result": null
 }
 ```
 
@@ -329,12 +333,12 @@ Response:
 
 ```json
 {
-  "id":"getLedPin",
-  "result":{
-    "name":"getLedPin",
-    "firmware":"BoardLedController",
-    "result_info":{
-      "type":"long"
+  "id": "getLedPin",
+  "result": {
+    "name": "getLedPin",
+    "firmware": "BoardLedController",
+    "result_info": {
+      "type": "long"
     }
   }
 }
@@ -350,8 +354,8 @@ Response:
 
 ```json
 {
-  "id":"getLedPin",
-  "result":13
+  "id": "getLedPin",
+  "result": 13
 }
 ```
 
@@ -368,11 +372,11 @@ Response:
 
 ```json
 {
-  "id":"getDeviceId",
-  "result":{
-    "name":"board_led_controller",
-    "form_factor":"3x2",
-    "serial_number":0
+  "id": "getDeviceId",
+  "result": {
+    "name": "board_led_controller",
+    "form_factor": "3x2",
+    "serial_number": 0
   }
 }
 ```
@@ -393,23 +397,23 @@ Response:
 
 ```json
 {
-  "id":"getDeviceInfo",
-  "result":{
-    "processor":"MK20DX256",
-    "hardware":[
+  "id": "getDeviceInfo",
+  "result": {
+    "processor": "MK20DX256",
+    "hardware": [
       {
-        "name":"Teensy",
-        "version":"3.2"
+        "name": "Teensy",
+        "version": "3.2"
       }
     ],
-    "firmware":[
+    "firmware": [
       {
-        "name":"ModularServer",
-        "version":"3.0.0"
+        "name": "ModularServer",
+        "version": "3.0.0"
       },
       {
-        "name":"BoardLedController",
-        "version":"2.0.0"
+        "name": "BoardLedController",
+        "version": "2.0.0"
       }
     ]
   }
@@ -438,11 +442,13 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["ALL"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "ALL"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
@@ -456,14 +462,14 @@ Response:
       "getLedPin",
       "blinkLed"
     ],
-    "parameters":[
+    "parameters": [
       "firmware",
       "verbosity",
       "duration_on",
       "duration_off",
       "count"
     ],
-    "properties":[
+    "properties": [
       "serialNumber"
     ]
   }
@@ -480,17 +486,19 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["BoardLedController"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "BoardLedController"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "setLedOn",
       "setLedOff",
       "getLedPin",
       "blinkLed"
     ],
-    "parameters":[
+    "parameters": [
       "duration_on",
       "duration_off",
       "count"
@@ -509,44 +517,46 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["BoardLedController"],
-    "verbosity":"GENERAL",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "BoardLedController"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
       {
-        "name":"setLedOn"
+        "name": "setLedOn"
       },
       {
-        "name":"setLedOff"
+        "name": "setLedOff"
       },
       {
-        "name":"getLedPin",
-        "result_info":{
-          "type":"long"
+        "name": "getLedPin",
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"blinkLed",
-        "parameters":[
+        "name": "blinkLed",
+        "parameters": [
           "duration_on",
           "duration_off",
           "count"
         ]
       }
     ],
-    "parameters":[
+    "parameters": [
       {
-        "name":"duration_on",
-        "type":"double"
+        "name": "duration_on",
+        "type": "double"
       },
       {
-        "name":"duration_off",
-        "type":"double"
+        "name": "duration_off",
+        "type": "double"
       },
       {
-        "name":"count",
-        "type":"long"
+        "name": "count",
+        "type": "long"
       }
     ]
   }
@@ -563,52 +573,54 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["BoardLedController"],
-    "verbosity":"DETAILED",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "BoardLedController"
+    ],
+    "verbosity": "DETAILED",
+    "functions": [
       {
-        "name":"setLedOn"
+        "name": "setLedOn"
       },
       {
-        "name":"setLedOff"
+        "name": "setLedOff"
       },
       {
-        "name":"getLedPin",
-        "result_info":{
-          "type":"long"
+        "name": "getLedPin",
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"blinkLed",
-        "parameters":[
+        "name": "blinkLed",
+        "parameters": [
           "duration_on",
           "duration_off",
           "count"
         ]
       }
     ],
-    "parameters":[
+    "parameters": [
       {
-        "name":"duration_on",
-        "type":"double",
-        "min":0.100000,
-        "max":2.500000,
-        "units":"seconds"
+        "name": "duration_on",
+        "type": "double",
+        "min": 0.100000,
+        "max": 2.500000,
+        "units": "seconds"
       },
       {
-        "name":"duration_off",
-        "type":"double",
-        "min":0.100000,
-        "max":2.500000,
-        "units":"seconds"
+        "name": "duration_off",
+        "type": "double",
+        "min": 0.100000,
+        "max": 2.500000,
+        "units": "seconds"
       },
       {
-        "name":"count",
-        "type":"long",
-        "min":1,
-        "max":100
+        "name": "count",
+        "type": "long",
+        "min": 1,
+        "max": 100
       }
     ]
   }

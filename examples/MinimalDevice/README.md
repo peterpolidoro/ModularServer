@@ -32,16 +32,18 @@ Response:
 
 ```json
 {
-  "id":"?",
-  "result":{
-    "device_id":{
-      "name":"minimal_device",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "?",
+  "result": {
+    "device_id": {
+      "name": "minimal_device",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["MinimalDevice"],
-      "verbosity":"NAMES"
+    "api": {
+      "firmware": [
+        "MinimalDevice"
+      ],
+      "verbosity": "NAMES"
     }
   }
 }
@@ -67,17 +69,19 @@ Response:
 
 ```json
 {
-  "id":"??",
-  "result":{
-    "device_id":{
-      "name":"minimal_device",
-      "form_factor":"3x2",
-      "serial_number":0
+  "id": "??",
+  "result": {
+    "device_id": {
+      "name": "minimal_device",
+      "form_factor": "3x2",
+      "serial_number": 0
     },
-    "api":{
-      "firmware":["ALL"],
-      "verbosity":"NAMES",
-      "functions":[
+    "api": {
+      "firmware": [
+        "ALL"
+      ],
+      "verbosity": "NAMES",
+      "functions": [
         "getDeviceId",
         "getDeviceInfo",
         "getApi",
@@ -87,11 +91,11 @@ Response:
         "getInterruptInfo",
         "detachAllInterrupts"
       ],
-      "parameters":[
+      "parameters": [
         "firmware",
         "verbosity"
       ],
-      "properties":[
+      "properties": [
         "serialNumber"
       ]
     }
@@ -117,8 +121,8 @@ Response:
 
 ```json
 {
-  "id":"setPropertiesToDefaults",
-  "result":null
+  "id": "setPropertiesToDefaults",
+  "result": null
 }
 ```
 
@@ -132,11 +136,11 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "error":{
-    "message":"Invalid params",
-    "data":"Incorrect number of parameters. 0 given. 2 needed.",
-    "code":-32602
+  "id": "getApi",
+  "error": {
+    "message": "Invalid params",
+    "data": "Incorrect number of parameters. 0 given. 2 needed.",
+    "code": -32602
   }
 }
 ```
@@ -159,16 +163,16 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "name":"getApi",
-    "firmware":"ModularServer",
-    "parameters":[
+  "id": "getApi",
+  "result": {
+    "name": "getApi",
+    "firmware": "ModularServer",
+    "parameters": [
       "verbosity",
       "firmware"
     ],
-    "result_info":{
-      "type":"object"
+    "result_info": {
+      "type": "object"
     }
   }
 }
@@ -186,16 +190,16 @@ Response:
 
 ```json
 {
-  "id":"?",
-  "result":{
-    "name":"getApi",
-    "firmware":"ModularServer",
-    "parameters":[
+  "id": "?",
+  "result": {
+    "name": "getApi",
+    "firmware": "ModularServer",
+    "parameters": [
       "verbosity",
       "firmware"
     ],
-    "result_info":{
-      "type":"object"
+    "result_info": {
+      "type": "object"
     }
   }
 }
@@ -215,35 +219,35 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "name":"getApi",
-    "firmware":"ModularServer",
-    "parameters":[
+  "id": "getApi",
+  "result": {
+    "name": "getApi",
+    "firmware": "ModularServer",
+    "parameters": [
       {
-        "name":"verbosity",
-        "type":"string",
-        "subset":[
+        "name": "verbosity",
+        "type": "string",
+        "subset": [
           "NAMES",
           "GENERAL",
           "DETAILED"
         ]
       },
       {
-        "name":"firmware",
-        "type":"array",
-        "array_element_type":"string",
-        "array_element_subset":[
+        "name": "firmware",
+        "type": "array",
+        "array_element_type": "string",
+        "array_element_subset": [
           "ALL",
           "ModularServer",
           "MinimalDevice"
         ],
-        "array_length_min":1,
-        "array_length_max":2
+        "array_length_min": 1,
+        "array_length_max": 2
       }
     ],
-    "result_info":{
-      "type":"object"
+    "result_info": {
+      "type": "object"
     }
   }
 }
@@ -259,116 +263,118 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["ALL"],
-    "verbosity":"GENERAL",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "ALL"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
       {
-        "name":"getDeviceId",
-        "result_info":{
-          "type":"object"
+        "name": "getDeviceId",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getDeviceInfo",
-        "result_info":{
-          "type":"object"
+        "name": "getDeviceInfo",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getApi",
-        "parameters":[
+        "name": "getApi",
+        "parameters": [
           "verbosity",
           "firmware"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getPropertyDefaultValues",
-        "parameters":[
+        "name": "getPropertyDefaultValues",
+        "parameters": [
           "firmware"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"setPropertiesToDefaults",
-        "parameters":[
+        "name": "setPropertiesToDefaults",
+        "parameters": [
           "firmware"
         ]
       },
       {
-        "name":"getPropertyValues",
-        "parameters":[
+        "name": "getPropertyValues",
+        "parameters": [
           "firmware"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getInterruptInfo",
-        "result_info":{
-          "type":"array",
-          "array_element_type":"object"
+        "name": "getInterruptInfo",
+        "result_info": {
+          "type": "array",
+          "array_element_type": "object"
         }
       },
       {
-        "name":"detachAllInterrupts"
+        "name": "detachAllInterrupts"
       }
     ],
-    "parameters":[
+    "parameters": [
       {
-        "name":"firmware",
-        "type":"array",
-        "array_element_type":"string"
+        "name": "firmware",
+        "type": "array",
+        "array_element_type": "string"
       },
       {
-        "name":"verbosity",
-        "type":"string"
+        "name": "verbosity",
+        "type": "string"
       }
     ],
-    "properties":[
+    "properties": [
       {
-        "name":"serialNumber",
-        "type":"long",
-        "functions":[
+        "name": "serialNumber",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       }
@@ -393,22 +399,22 @@ Response:
 
 ```json
 {
-  "id":"serialNumber",
-  "result":{
-    "name":"serialNumber",
-    "firmware":"ModularServer",
-    "type":"long",
-    "min":0,
-    "max":65535,
-    "value":0,
-    "default_value":0,
-    "functions":[
+  "id": "serialNumber",
+  "result": {
+    "name": "serialNumber",
+    "firmware": "ModularServer",
+    "type": "long",
+    "min": 0,
+    "max": 65535,
+    "value": 0,
+    "default_value": 0,
+    "functions": [
       "getValue",
       "setValue",
       "getDefaultValue",
       "setValueToDefault"
     ],
-    "parameters":[
+    "parameters": [
       "value"
     ]
   }
@@ -425,15 +431,15 @@ Response:
 
 ```json
 {
-  "id":"serialNumber",
-  "result":{
-    "name":"setValue",
-    "firmware":"ModularServer",
-    "parameters":[
+  "id": "serialNumber",
+  "result": {
+    "name": "setValue",
+    "firmware": "ModularServer",
+    "parameters": [
       "value"
     ],
-    "result_info":{
-      "type":"long"
+    "result_info": {
+      "type": "long"
     }
   }
 }
@@ -449,13 +455,13 @@ Response:
 
 ```json
 {
-  "id":"serialNumber",
-  "result":{
-    "name":"value",
-    "firmware":"ModularServer",
-    "type":"long",
-    "min":0,
-    "max":65535
+  "id": "serialNumber",
+  "result": {
+    "name": "value",
+    "firmware": "ModularServer",
+    "type": "long",
+    "min": 0,
+    "max": 65535
   }
 }
 ```
@@ -470,11 +476,11 @@ Response:
 
 ```json
 {
-  "id":"serialNumber",
-  "error":{
-    "message":"Invalid params",
-    "data":"Parameter value not valid. Value not in range: 0 <= value <= 65535",
-    "code":-32602
+  "id": "serialNumber",
+  "error": {
+    "message": "Invalid params",
+    "data": "Parameter value not valid. Value not in range: 0 <= value <= 65535",
+    "code": -32602
   }
 }
 ```
@@ -489,8 +495,8 @@ Response:
 
 ```json
 {
-  "id":"serialNumber",
-  "result":32
+  "id": "serialNumber",
+  "result": 32
 }
 ```
 
@@ -508,9 +514,9 @@ Response:
 
 ```json
 {
-  "id":"getPropertyValues",
-  "result":{
-    "serialNumber":32
+  "id": "getPropertyValues",
+  "result": {
+    "serialNumber": 32
   }
 }
 ```
@@ -531,8 +537,8 @@ Response:
 
 ```json
 {
-  "id":"serialNumber",
-  "result":0
+  "id": "serialNumber",
+  "result": 0
 }
 ```
 
@@ -549,11 +555,11 @@ Response:
 
 ```json
 {
-  "id":"getDeviceId",
-  "result":{
-    "name":"minimal_device",
-    "form_factor":"3x2",
-    "serial_number":0
+  "id": "getDeviceId",
+  "result": {
+    "name": "minimal_device",
+    "form_factor": "3x2",
+    "serial_number": 0
   }
 }
 ```
@@ -574,23 +580,23 @@ Response:
 
 ```json
 {
-  "id":"getDeviceInfo",
-  "result":{
-    "processor":"MK20DX256",
-    "hardware":[
+  "id": "getDeviceInfo",
+  "result": {
+    "processor": "MK20DX256",
+    "hardware": [
       {
-        "name":"Teensy",
-        "version":"3.2"
+        "name": "Teensy",
+        "version": "3.2"
       }
     ],
-    "firmware":[
+    "firmware": [
       {
-        "name":"ModularServer",
-        "version":"3.0.0"
+        "name": "ModularServer",
+        "version": "3.0.0"
       },
       {
-        "name":"MinimalDevice",
-        "version":"2.0.0"
+        "name": "MinimalDevice",
+        "version": "2.0.0"
       }
     ]
   }
@@ -613,11 +619,13 @@ Response:
 ```json
 
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["ALL"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "ALL"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "getDeviceId",
       "getDeviceInfo",
       "getApi",
@@ -627,11 +635,11 @@ Response:
       "getInterruptInfo",
       "detachAllInterrupts"
     ],
-    "parameters":[
+    "parameters": [
       "firmware",
       "verbosity"
     ],
-    "properties":[
+    "properties": [
       "serialNumber"
     ]
   }
@@ -648,10 +656,12 @@ Response:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["MinimalDevice"],
-    "verbosity":"NAMES"
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "MinimalDevice"
+    ],
+    "verbosity": "NAMES"
   }
 }
 ```

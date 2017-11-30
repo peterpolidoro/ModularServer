@@ -1133,7 +1133,7 @@ void Server::help(bool verbose)
     response_.writeKey(constants::api_constant_string);
 
     ArduinoJson::StaticJsonBuffer<constants::FIRMWARE_NAME_JSON_BUFFER_SIZE> json_buffer;
-    ArduinoJson::JsonArray& firmware_name_array = json_buffer.createArray();
+    ArduinoJson::JsonArray & firmware_name_array = json_buffer.createArray();
 
     if (verbose)
     {
