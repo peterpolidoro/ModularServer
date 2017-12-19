@@ -191,6 +191,8 @@ extern ConstantString needed_constant_string;
 extern ConstantString less_than_equal_constant_string;
 extern ConstantString element_constant_string;
 extern ConstantString array_length_constant_string;
+extern ConstantString array_length_default_constant_string;
+extern ConstantString array_length_spaces_constant_string;
 extern ConstantString string_length_constant_string;
 extern ConstantString array_open_constant_string;
 extern ConstantString array_close_constant_string;

@@ -17,8 +17,8 @@ const FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=3,
-    .version_minor=3,
-    .version_patch=5,
+    .version_minor=4,
+    .version_patch=0,
   };
 
 const long response_pipe_read_max = 100000;
@@ -139,7 +139,9 @@ CONSTANT_STRING(given_constant_string," given. ");
 CONSTANT_STRING(needed_constant_string," needed.");
 CONSTANT_STRING(less_than_equal_constant_string," <= ");
 CONSTANT_STRING(element_constant_string," element");
-CONSTANT_STRING(array_length_constant_string," array length");
+CONSTANT_STRING(array_length_constant_string,"array_length");
+CONSTANT_STRING(array_length_default_constant_string,"array_length_default");
+CONSTANT_STRING(array_length_spaces_constant_string," array length");
 CONSTANT_STRING(string_length_constant_string,"string_length");
 CONSTANT_STRING(array_open_constant_string,"[");
 CONSTANT_STRING(array_close_constant_string,"]");

@@ -403,7 +403,7 @@ bool Property::setDefaultValue(const long (&default_value)[N])
     if (success)
     {
       parameter_.setArrayLengthRange(N,N);
-      setArrayLengthRange(N,N);
+      setArrayLengthRange(1,N);
     }
   }
   return success;
@@ -420,7 +420,7 @@ bool Property::setDefaultValue(const double (&default_value)[N])
     if (success)
     {
       parameter_.setArrayLengthRange(N,N);
-      setArrayLengthRange(N,N);
+      setArrayLengthRange(1,N);
     }
   }
   return success;
@@ -437,7 +437,7 @@ bool Property::setDefaultValue(const bool (&default_value)[N])
     if (success)
     {
       parameter_.setArrayLengthRange(N,N);
-      setArrayLengthRange(N,N);
+      setArrayLengthRange(1,N);
     }
   }
   return success;
@@ -455,7 +455,7 @@ bool Property::setDefaultValue(const char (&default_value)[N])
     if (success)
     {
       parameter_.setArrayLengthRange(N,N);
-      setArrayLengthRange(N,N);
+      setArrayLengthRange(1,N);
     }
   }
   size_t array_length = getArrayLength();
@@ -494,7 +494,7 @@ bool Property::setDefaultValue(const ConstantString * const (&default_value)[N])
     if (success)
     {
       parameter_.setArrayLengthRange(N,N);
-      setArrayLengthRange(N,N);
+      setArrayLengthRange(1,N);
     }
   }
   return success;
@@ -509,7 +509,7 @@ Property::Property(const ConstantString & name,
 {
   parameter_.setTypeLong();
   parameter_.setArrayLengthRange(N,N);
-  setArrayLengthRange(N,N);
+  setArrayLengthRange(1,N);
   setup();
 }
 
@@ -521,7 +521,7 @@ Property::Property(const ConstantString & name,
 {
   parameter_.setTypeDouble();
   parameter_.setArrayLengthRange(N,N);
-  setArrayLengthRange(N,N);
+  setArrayLengthRange(1,N);
   setup();
 }
 
@@ -533,7 +533,7 @@ Property::Property(const ConstantString & name,
 {
   parameter_.setTypeBool();
   parameter_.setArrayLengthRange(N,N);
-  setArrayLengthRange(N,N);
+  setArrayLengthRange(1,N);
   setup();
 }
 

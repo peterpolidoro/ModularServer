@@ -749,11 +749,12 @@ void Property::setValueToDefault()
   }
   else
   {
-    size_t array_length = getArrayLength();
+    size_t array_length = getArrayLengthMax();
     for (size_t i=0; i<array_length; ++i)
     {
       setElementValueToDefault(i);
     }
+    saved_variable_.setArrayLengthToDefault();
   }
   postSetValueFunctor();
 }
@@ -874,6 +875,34 @@ void Property::setArrayLengthRange(const size_t array_length_min,
     {
       setArrayLength(max);
     }
+  }
+}
+
+size_t Property::getArrayLengthDefault()
+{
+  if ((getType() == JsonStream::STRING_TYPE) &&
+      (!stringSavedAsCharArray()))
+  {
+    const ConstantString * cs_ptr;
+    getValue(cs_ptr);
+    return cs_ptr->length() + 1;
+  }
+  return saved_variable_.getArrayLengthDefault();
+}
+
+void Property::setArrayLengthDefault(const size_t array_length_default)
+{
+  if (getType() == JsonStream::ARRAY_TYPE)
+  {
+    saved_variable_.setArrayLengthDefault(array_length_default);
+  }
+}
+
+void Property::setArrayLengthToDefault()
+{
+  if (getType() == JsonStream::ARRAY_TYPE)
+  {
+    saved_variable_.setArrayLengthToDefault();
   }
 }
 
@@ -1208,6 +1237,10 @@ void Property::writeValue(Response & response,
     {
       const JsonStream::JsonTypes array_element_type = getArrayElementType();
       size_t array_length = getArrayLength();
+      if (write_default)
+      {
+        array_length = getArrayLengthDefault();
+      }
       if (element_index >= (int)array_length)
       {
         response.returnParameterInvalidError(constants::property_element_index_out_of_bounds_error_data);
@@ -1391,6 +1424,8 @@ void Property::writeApi(Response & response,
   {
     if (getType() == JsonStream::ARRAY_TYPE)
     {
+      response.write(constants::array_length_constant_string,getArrayLength());
+      response.write(constants::array_length_default_constant_string,getArrayLengthDefault());
       response.write(constants::array_length_min_constant_string,getArrayLengthMin());
       response.write(constants::array_length_max_constant_string,getArrayLengthMax());
     }

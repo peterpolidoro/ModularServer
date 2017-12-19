@@ -131,6 +131,9 @@ public:
   void setArrayLength(const size_t array_length);
   void setArrayLengthRange(const size_t array_length_min,
                            const size_t array_length_max);
+  size_t getArrayLengthDefault();
+  void setArrayLengthDefault(const size_t array_length_default);
+  void setArrayLengthToDefault();
 
   size_t getStringLength();
 

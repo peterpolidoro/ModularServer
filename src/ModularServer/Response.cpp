@@ -333,9 +333,9 @@ void Response::returnParameterArrayLengthError(const ConstantString & parameter_
     parameter_name_str[0] = '\0';
     parameter_name.copy(parameter_name_str);
     strcat(error_str,parameter_name_str);
-    char array_length_str[constants::array_length_constant_string.length()+1];
+    char array_length_str[constants::array_length_spaces_constant_string.length()+1];
     array_length_str[0] = '\0';
-    constants::array_length_constant_string.copy(array_length_str);
+    constants::array_length_spaces_constant_string.copy(array_length_str);
     strcat(error_str,array_length_str);
     strcat(error_str,less_than_equal_str);
     strcat(error_str,max_str);
