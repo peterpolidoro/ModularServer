@@ -147,40 +147,44 @@ bool Property::getValue<const ConstantString *>(const ConstantString * & value)
 }
 
 template <>
-bool Property::getElementValue<long>(const size_t element_index, long & value)
+bool Property::getElementValue<long>(const size_t element_index,
+                                     long & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE))
   {
     return false;
   }
-  return saved_variable_.getElementValue(element_index,value);
+  return saved_variable_.getElementValue(element_index,element_value);
 }
 
 template <>
-bool Property::getElementValue<double>(const size_t element_index, double & value)
+bool Property::getElementValue<double>(const size_t element_index,
+                                       double & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE))
   {
     return false;
   }
-  return saved_variable_.getElementValue(element_index,value);
+  return saved_variable_.getElementValue(element_index,element_value);
 }
 
 template <>
-bool Property::getElementValue<bool>(const size_t element_index, bool & value)
+bool Property::getElementValue<bool>(const size_t element_index,
+                                     bool & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE))
   {
     return false;
   }
-  return saved_variable_.getElementValue(element_index,value);
+  return saved_variable_.getElementValue(element_index,element_value);
 }
 
 template <>
-bool Property::getElementValue<char>(const size_t element_index, char & value)
+bool Property::getElementValue<char>(const size_t element_index,
+                                     char & element_value)
 {
   if (getType() != JsonStream::STRING_TYPE)
   {
@@ -195,7 +199,7 @@ bool Property::getElementValue<char>(const size_t element_index, char & value)
     {
       char str[str_len+1];
       cs_ptr->copy(str);
-      value = str[element_index];
+      element_value = str[element_index];
       return true;
     }
     else
@@ -203,11 +207,12 @@ bool Property::getElementValue<char>(const size_t element_index, char & value)
       return false;
     }
   }
-  return saved_variable_.getElementValue(element_index,value);
+  return saved_variable_.getElementValue(element_index,element_value);
 }
 
 template <>
-bool Property::getElementValue<const ConstantString *>(const size_t element_index, const ConstantString * & value)
+bool Property::getElementValue<const ConstantString *>(const size_t element_index,
+                                                       const ConstantString * & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::STRING_TYPE) ||
@@ -215,86 +220,90 @@ bool Property::getElementValue<const ConstantString *>(const size_t element_inde
   {
     return false;
   }
-  return saved_variable_.getElementValue(element_index,value);
+  return saved_variable_.getElementValue(element_index,element_value);
 }
 
 template <>
-bool Property::getDefaultValue<long>(long & value)
+bool Property::getDefaultValue<long>(long & default_value)
 {
   if (getType() != JsonStream::LONG_TYPE)
   {
     return false;
   }
-  return saved_variable_.getDefaultValue(value);
+  return saved_variable_.getDefaultValue(default_value);
 }
 
 template <>
-bool Property::getDefaultValue<double>(double & value)
+bool Property::getDefaultValue<double>(double & default_value)
 {
   if (getType() != JsonStream::DOUBLE_TYPE)
   {
     return false;
   }
-  return saved_variable_.getDefaultValue(value);
+  return saved_variable_.getDefaultValue(default_value);
 }
 
 template <>
-bool Property::getDefaultValue<bool>(bool & value)
+bool Property::getDefaultValue<bool>(bool & default_value)
 {
   if (getType() != JsonStream::BOOL_TYPE)
   {
     return false;
   }
-  return saved_variable_.getDefaultValue(value);
+  return saved_variable_.getDefaultValue(default_value);
 }
 
 template <>
-bool Property::getDefaultValue<const ConstantString *>(const ConstantString * & value)
+bool Property::getDefaultValue<const ConstantString *>(const ConstantString * & default_value)
 {
   if ((getType() != JsonStream::STRING_TYPE) ||
       stringSavedAsCharArray())
   {
-    value = NULL;
+    default_value = NULL;
     return false;
   }
-  return saved_variable_.getDefaultValue(value);
+  return saved_variable_.getDefaultValue(default_value);
 }
 
 template <>
-bool Property::getDefaultElementValue<long>(const size_t element_index, long & value)
+bool Property::getDefaultElementValue<long>(const size_t element_index,
+                                            long & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::LONG_TYPE))
   {
     return false;
   }
-  return saved_variable_.getDefaultElementValue(element_index,value);
+  return saved_variable_.getDefaultElementValue(element_index,default_element_value);
 }
 
 template <>
-bool Property::getDefaultElementValue<double>(const size_t element_index, double & value)
+bool Property::getDefaultElementValue<double>(const size_t element_index,
+                                              double & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::DOUBLE_TYPE))
   {
     return false;
   }
-  return saved_variable_.getDefaultElementValue(element_index,value);
+  return saved_variable_.getDefaultElementValue(element_index,default_element_value);
 }
 
 template <>
-bool Property::getDefaultElementValue<bool>(const size_t element_index, bool & value)
+bool Property::getDefaultElementValue<bool>(const size_t element_index,
+                                            bool & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::BOOL_TYPE))
   {
     return false;
   }
-  return saved_variable_.getDefaultElementValue(element_index,value);
+  return saved_variable_.getDefaultElementValue(element_index,default_element_value);
 }
 
 template <>
-bool Property::getDefaultElementValue<char>(const size_t element_index, char & value)
+bool Property::getDefaultElementValue<char>(const size_t element_index,
+                                            char & default_element_value)
 {
   if (getType() != JsonStream::STRING_TYPE)
   {
@@ -309,7 +318,7 @@ bool Property::getDefaultElementValue<char>(const size_t element_index, char & v
     {
       char str[str_len+1];
       cs_ptr->copy(str);
-      value = str[element_index];
+      default_element_value = str[element_index];
       return true;
     }
     else
@@ -317,11 +326,12 @@ bool Property::getDefaultElementValue<char>(const size_t element_index, char & v
       return false;
     }
   }
-  return saved_variable_.getDefaultElementValue(element_index,value);
+  return saved_variable_.getDefaultElementValue(element_index,default_element_value);
 }
 
 template <>
-bool Property::getDefaultElementValue<const ConstantString *>(const size_t element_index, const ConstantString * & value)
+bool Property::getDefaultElementValue<const ConstantString *>(const size_t element_index,
+                                                              const ConstantString * & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
       (getArrayElementType() != JsonStream::STRING_TYPE) ||
@@ -329,20 +339,21 @@ bool Property::getDefaultElementValue<const ConstantString *>(const size_t eleme
   {
     return false;
   }
-  return saved_variable_.getDefaultElementValue(element_index,value);
+  return saved_variable_.getDefaultElementValue(element_index,default_element_value);
 }
 
 template <>
-bool Property::setElementValue<long>(const size_t element_index, const long & value)
+bool Property::setElementValue<long>(const size_t element_index,
+                                     const long & element_value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::LONG_TYPE))
   {
-    if (parameter_.valueInRange(value) && parameter_.valueInSubset(value))
+    if (parameter_.valueInRange(element_value) && parameter_.valueInSubset(element_value))
     {
-      success = saved_variable_.setElementValue(element_index,value);
+      success = saved_variable_.setElementValue(element_index,element_value);
     }
   }
   postSetElementValueFunctor(element_index);
@@ -350,16 +361,17 @@ bool Property::setElementValue<long>(const size_t element_index, const long & va
 }
 
 template <>
-bool Property::setElementValue<double>(const size_t element_index, const double & value)
+bool Property::setElementValue<double>(const size_t element_index,
+                                       const double & element_value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::DOUBLE_TYPE))
   {
-    if (parameter_.valueInRange(value))
+    if (parameter_.valueInRange(element_value))
     {
-      success = saved_variable_.setElementValue(element_index,value);
+      success = saved_variable_.setElementValue(element_index,element_value);
     }
   }
   postSetElementValueFunctor(element_index);
@@ -367,35 +379,38 @@ bool Property::setElementValue<double>(const size_t element_index, const double 
 }
 
 template <>
-bool Property::setElementValue<bool>(const size_t element_index, const bool & value)
+bool Property::setElementValue<bool>(const size_t element_index,
+                                     const bool & element_value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::ARRAY_TYPE) &&
       (getArrayElementType() == JsonStream::BOOL_TYPE))
   {
-    success = saved_variable_.setElementValue(element_index,value);
+    success = saved_variable_.setElementValue(element_index,element_value);
   }
   postSetElementValueFunctor(element_index);
   return success;
 }
 
 template <>
-bool Property::setElementValue<char>(const size_t element_index, const char & value)
+bool Property::setElementValue<char>(const size_t element_index,
+                                     const char & element_value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
   if ((getType() == JsonStream::STRING_TYPE) &&
       (stringSavedAsCharArray()))
   {
-    success = saved_variable_.setElementValue(element_index,value);
+    success = saved_variable_.setElementValue(element_index,element_value);
   }
   postSetElementValueFunctor(element_index);
   return success;
 }
 
 template <>
-bool Property::setElementValue<const ConstantString * const>(const size_t element_index, const ConstantString * const & value)
+bool Property::setElementValue<const ConstantString * const>(const size_t element_index,
+                                                             const ConstantString * const & element_value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
@@ -403,9 +418,9 @@ bool Property::setElementValue<const ConstantString * const>(const size_t elemen
       (getArrayElementType() == JsonStream::STRING_TYPE) &&
       (!stringSavedAsCharArray()))
   {
-    if (parameter_.valueInSubset(value))
+    if (parameter_.valueInSubset(element_value))
     {
-      success = saved_variable_.setElementValue(element_index,value);
+      success = saved_variable_.setElementValue(element_index,element_value);
     }
   }
   postSetElementValueFunctor(element_index);
@@ -413,7 +428,8 @@ bool Property::setElementValue<const ConstantString * const>(const size_t elemen
 }
 
 template <>
-bool Property::setElementValue<const char *>(const size_t element_index, const char * const & value)
+bool Property::setElementValue<const char *>(const size_t element_index,
+                                             const char * const & element_value)
 {
   bool success = false;
   preSetElementValueFunctor(element_index);
@@ -421,7 +437,7 @@ bool Property::setElementValue<const char *>(const size_t element_index, const c
       (getArrayElementType() == JsonStream::STRING_TYPE) &&
       (!stringSavedAsCharArray()))
   {
-    int subset_value_index = findSubsetValueIndex(value);
+    int subset_value_index = findSubsetValueIndex(element_value);
     if (subset_value_index >= 0)
     {
       Vector<constants::SubsetMemberType> & subset = getSubset();
@@ -603,7 +619,7 @@ bool Property::setValue(ArduinoJson::JsonArray & value)
 }
 
 template <>
-bool Property::setAllElementValues<const char *>(const char * const & value)
+bool Property::setAllElementValues<const char *>(const char * const & element_value)
 {
   bool success = false;
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -616,7 +632,7 @@ bool Property::setAllElementValues<const char *>(const char * const & value)
   preSetValueFunctor();
   for (size_t i=0; i<array_length; ++i)
   {
-    success = setElementValue(i,value);
+    success = setElementValue(i,element_value);
     if (!success)
     {
       break;
@@ -815,23 +831,21 @@ void Property::setArrayLengthRange(const size_t array_length_min,
   if (getType() == JsonStream::ARRAY_TYPE)
   {
     size_t max = array_length_max;
-    if (max < 1)
-    {
-      max = 1;
-    }
-    else if (max > saved_variable_.getArrayLengthMax())
+    if (max > saved_variable_.getArrayLengthMax())
     {
       max = saved_variable_.getArrayLengthMax();
     }
 
     size_t min = array_length_min;
-    if (min < 1)
-    {
-      min = 1;
-    }
-    else if (min > max)
+
+    if (min > max)
     {
       min = max;
+    }
+
+    if (max < 1)
+    {
+      max = 1;
     }
 
     if (parameter_.rangeIsSet() && (getArrayElementType() == JsonStream::LONG_TYPE))
@@ -876,6 +890,16 @@ void Property::setArrayLengthRange(const size_t array_length_min,
       setArrayLength(max);
     }
   }
+}
+
+size_t Property::getArrayLengthMin()
+{
+  return array_length_min_;
+}
+
+size_t Property::getArrayLengthMax()
+{
+  return array_length_max_;
 }
 
 size_t Property::getArrayLengthDefault()
@@ -1561,16 +1585,6 @@ bool Property::rangeIsSet()
 bool Property::subsetIsSet()
 {
   return parameter_.subsetIsSet();
-}
-
-size_t Property::getArrayLengthMin()
-{
-  return array_length_min_;
-}
-
-size_t Property::getArrayLengthMax()
-{
-  return array_length_max_;
 }
 
 bool Property::stringSavedAsCharArray()

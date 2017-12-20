@@ -290,7 +290,7 @@ Response:
     "array_element_max": 10,
     "array_length": 4,
     "array_length_default": 4,
-    "array_length_min": 1,
+    "array_length_min": 0,
     "array_length_max": 4,
     "value": [
       5,
@@ -431,7 +431,7 @@ Response:
     "array_element_max": 100.000000,
     "array_length": 3,
     "array_length_default": 3,
-    "array_length_min": 1,
+    "array_length_min": 2,
     "array_length_max": 3,
     "value": [
       -1.100000,
@@ -571,7 +571,7 @@ Response:
     "array_element_type": "bool",
     "array_length": 2,
     "array_length_default": 2,
-    "array_length_min": 1,
+    "array_length_min": 0,
     "array_length_max": 2,
     "value": [
       false,

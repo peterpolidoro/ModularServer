@@ -65,49 +65,55 @@ public:
   template <typename T>
   bool getValue(T & value);
   template <size_t N>
-  bool getValue(long (&value)[N]);
+  bool getValue(Array<long,N> & value);
   template <size_t N>
-  bool getValue(double (&value)[N]);
+  bool getValue(Array<double,N> & value);
   template <size_t N>
-  bool getValue(bool (&value)[N]);
+  bool getValue(Array<bool,N> & value);
   template <size_t N>
-  bool getValue(const ConstantString * (&value)[N]);
+  bool getValue(Array<const ConstantString *,N> & value);
   template <typename T>
-  bool getValue(T * value, const size_t N);
+  bool getValue(T * value,
+                const size_t N);
   template <typename T>
-  bool getElementValue(const size_t element_index, T & value);
+  bool getElementValue(const size_t element_index,
+                       T & element_value);
   template <typename T>
-  bool getDefaultValue(T & value);
+  bool getDefaultValue(T & default_value);
   template <size_t N>
-  bool getDefaultValue(long (&value)[N]);
+  bool getDefaultValue(Array<long,N> & default_value);
   template <size_t N>
-  bool getDefaultValue(double (&value)[N]);
+  bool getDefaultValue(Array<double,N> & default_value);
   template <size_t N>
-  bool getDefaultValue(bool (&value)[N]);
+  bool getDefaultValue(Array<bool,N> & default_value);
   template <size_t N>
-  bool getDefaultValue(const ConstantString * (&value)[N]);
+  bool getDefaultValue(Array<const ConstantString *,N> & default_value);
   template <typename T>
-  bool getDefaultValue(T * value, const size_t N);
+  bool getDefaultValue(T * default_value,
+                       const size_t N);
   template <typename T>
-  bool getDefaultElementValue(const size_t element_index, T & value);
+  bool getDefaultElementValue(const size_t element_index,
+                              T & default_element_value);
 
   template <typename T>
-  bool setElementValue(const size_t element_index, const T & value);
+  bool setElementValue(const size_t element_index,
+                       const T & element_value);
   template <typename T>
   bool setValue(const T & value);
   template <size_t N>
-  bool setValue(const long (&value)[N]);
+  bool setValue(Array<long,N> & value);
   template <size_t N>
-  bool setValue(const double (&value)[N]);
+  bool setValue(Array<double,N> & value);
   template <size_t N>
-  bool setValue(const bool (&value)[N]);
+  bool setValue(Array<bool,N> & value);
   template <size_t N>
-  bool setValue(const ConstantString * (&value)[N]);
+  bool setValue(Array<const ConstantString *,N> & value);
   bool setValue(ArduinoJson::JsonArray & value);
   template <typename T>
-  bool setValue(T * value, const size_t N);
+  bool setValue(T * value,
+                const size_t N);
   template <typename T>
-  bool setAllElementValues(const T & value);
+  bool setAllElementValues(const T & element_value);
   template <typename T>
   bool setDefaultValue(const T & default_value);
   template <size_t N>
@@ -127,10 +133,14 @@ public:
   void setElementValueToDefault(const size_t element_index);
 
   bool valueIsDefault();
+
   size_t getArrayLength();
   void setArrayLength(const size_t array_length);
   void setArrayLengthRange(const size_t array_length_min,
                            const size_t array_length_max);
+  size_t getArrayLengthMin();
+  size_t getArrayLengthMax();
+
   size_t getArrayLengthDefault();
   void setArrayLengthDefault(const size_t array_length_default);
   void setArrayLengthToDefault();
@@ -251,8 +261,6 @@ private:
   JsonStream::JsonTypes getArrayElementType();
   bool rangeIsSet();
   bool subsetIsSet();
-  size_t getArrayLengthMin();
-  size_t getArrayLengthMax();
   bool stringSavedAsCharArray();
   int findSubsetValueIndex(const long value);
   int findSubsetValueIndex(const char * value);

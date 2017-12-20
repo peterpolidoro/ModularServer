@@ -45,10 +45,10 @@ void PropertyTester::setup()
 
   modular_server::Property & long_array_property = modular_server_.createProperty(constants::long_array_property_name,constants::long_array_default);
   long_array_property.setRange(constants::long_array_element_min,constants::long_array_element_max);
-  long_array_property.setArrayLengthRange(1,constants::LONG_ARRAY_LENGTH);
 
   modular_server::Property & double_array_property = modular_server_.createProperty(constants::double_array_property_name,constants::double_array_default);
   double_array_property.setRange(constants::double_array_element_min,constants::double_array_element_max);
+  double_array_property.setArrayLengthRange(2,constants::DOUBLE_ARRAY_LENGTH);
 
   modular_server::Property & bool_array_property = modular_server_.createProperty(constants::bool_array_property_name,constants::bool_array_default);
   bool_array_property.setDefaultValue(constants::bool_array_default_new);
@@ -234,7 +234,7 @@ void PropertyTester::getBoolHandler()
 
 void PropertyTester::getLongArrayFixedHandler()
 {
-  long long_array[constants::LONG_ARRAY_LENGTH];
+  Array<long,constants::LONG_ARRAY_LENGTH> long_array;
   modular_server_.property(constants::long_array_property_name).getValue(long_array);
   modular_server_.response().returnResult(long_array);
 }
@@ -242,32 +242,36 @@ void PropertyTester::getLongArrayFixedHandler()
 void PropertyTester::getLongArrayVariableHandler()
 {
   modular_server::Property & property = modular_server_.property(constants::long_array_property_name);
+  size_t array_length_max = property.getArrayLengthMax();
+  long long_array[array_length_max];
   size_t array_length = property.getArrayLength();
-  long long_array[array_length];
   property.getValue(long_array,array_length);
   modular_server_.response().returnResult(long_array,array_length);
 }
 
 void PropertyTester::setLongArrayFixedHandler()
 {
-  long long_array[constants::LONG_ARRAY_LENGTH];
-  long_array[0] = 1;
-  long_array[1] = 2;
-  long_array[2] = 9;
-  long_array[3] = 10;
-  bool success = modular_server_.property(constants::long_array_property_name).setValue(long_array);
+  modular_server::Property & property = modular_server_.property(constants::long_array_property_name);
+  property.setArrayLength(constants::LONG_ARRAY_LENGTH);
+  Array<long,constants::LONG_ARRAY_LENGTH> long_array;
+  long_array.push_back(1);
+  long_array.push_back(2);
+  long_array.push_back(9);
+  long_array.push_back(10);
+  bool success = property.setValue(long_array);
   modular_server_.response().returnResult(success);
 }
 
 void PropertyTester::setLongArrayVariableHandler()
 {
   modular_server::Property & property = modular_server_.property(constants::long_array_property_name);
-  size_t array_length = property.getArrayLength();
-  long long_array[array_length-1];
+  size_t array_length_new = 3;
+  property.setArrayLength(array_length_new);
+  long long_array[array_length_new];
   long_array[0] = -1;
   long_array[1] = -2;
   long_array[2] = 7;
-  bool success = property.setValue(long_array,array_length-1);
+  bool success = property.setValue(long_array,array_length_new);
   modular_server_.response().returnResult(success);
 }
 
