@@ -880,6 +880,16 @@ void Property::setArrayLengthRange(const size_t array_length_min,
     array_length_min_ = min;
     array_length_max_ = max;
 
+    size_t array_length_default = getArrayLengthDefault();
+    if (array_length_default < min)
+    {
+      setArrayLengthDefault(min);
+    }
+    else if (array_length_default > max)
+    {
+      setArrayLengthDefault(max);
+    }
+
     size_t array_length = getArrayLength();
     if (array_length < min)
     {
