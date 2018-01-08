@@ -88,7 +88,7 @@ void CallbackTester::setup()
   blink_led_callback.attachTo(bnc_e_interrupt,modular_server::interrupt::mode_falling);
 
   // Begin Streams
-  Serial.begin(constants::baudrate);
+  Serial.begin(constants::baud);
 
   // Start Modular Device Server
   modular_server_.startServer();

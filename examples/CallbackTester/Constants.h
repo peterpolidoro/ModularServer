@@ -21,7 +21,7 @@ enum{CALLBACK_COUNT_MAX=3};
 
 enum{INTERRUPT_COUNT_MAX=6};
 
-extern const long baudrate;
+extern const long baud;
 
 extern ConstantString device_name;
 

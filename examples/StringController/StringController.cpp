@@ -108,7 +108,7 @@ void StringController::setup()
   // Callbacks
 
   // Begin Streams
-  Serial.begin(constants::baudrate);
+  Serial.begin(constants::baud);
 
   // Start Modular Device Server
   modular_server_.startServer();
