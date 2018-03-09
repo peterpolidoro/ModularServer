@@ -160,7 +160,7 @@ void PropertyTester::setup()
   modular_server::Function & get_direction_function = modular_server_.createFunction(constants::get_direction_function_name);
   get_direction_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionHandler));
   get_direction_function.addParameter(direction_parameter);
-  get_direction_function.setResultTypeString();
+  get_direction_function.setResultTypeObject();
 
   modular_server::Function & get_direction_array_function = modular_server_.createFunction(constants::get_direction_array_function_name);
   get_direction_array_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::getDirectionArrayHandler));
@@ -209,6 +209,7 @@ void PropertyTester::update()
 // const char *
 // ArduinoJson::JsonArray *
 // ArduinoJson::JsonObject *
+// const ConstantString *
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
 //
@@ -360,9 +361,17 @@ void PropertyTester::getCountArrayHandler()
 
 void PropertyTester::getDirectionHandler()
 {
-  const char * direction;
-  modular_server_.parameter(constants::direction_parameter_name).getValue(direction);
-  modular_server_.response().returnResult(direction);
+  const char * direction_c_string;
+  modular_server_.parameter(constants::direction_parameter_name).getValue(direction_c_string);
+
+  const ConstantString * direction_constant_string_ptr;
+  modular_server_.parameter(constants::direction_parameter_name).getValue(direction_constant_string_ptr);
+
+  modular_server_.response().writeResultKey();
+  modular_server_.response().beginObject();
+  modular_server_.response().write("direction_c_string",direction_c_string);
+  modular_server_.response().write("direction_constant_string",direction_constant_string_ptr);
+  modular_server_.response().endObject();
 }
 
 void PropertyTester::getDirectionArrayHandler()

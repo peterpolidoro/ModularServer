@@ -60,6 +60,7 @@ public:
   bool getValue(const char * & value);
   bool getValue(ArduinoJson::JsonArray * & value);
   bool getValue(ArduinoJson::JsonObject * & value);
+  bool getValue(const ConstantString * & value);
 
   Parameter getElementParameter();
 

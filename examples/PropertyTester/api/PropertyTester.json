@@ -93,7 +93,7 @@
           "direction"
         ],
         "result_info": {
-          "type": "string"
+          "type": "object"
         }
       },
       {

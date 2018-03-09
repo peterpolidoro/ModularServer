@@ -323,6 +323,7 @@ bool Parameter::getValue(const char * & value)
 {
   if ((getType() != JsonStream::STRING_TYPE) && (getType() != JsonStream::ANY_TYPE))
   {
+    value = NULL;
     return false;
   }
   value = get_value_functor_(getName());
@@ -333,6 +334,7 @@ bool Parameter::getValue(ArduinoJson::JsonArray * & value)
 {
   if (getType() != JsonStream::ARRAY_TYPE)
   {
+    value = NULL;
     return false;
   }
   ArduinoJson::JsonArray & array = get_value_functor_(getName());
@@ -344,10 +346,29 @@ bool Parameter::getValue(ArduinoJson::JsonObject * & value)
 {
   if (getType() != JsonStream::OBJECT_TYPE)
   {
+    value = NULL;
     return false;
   }
   ArduinoJson::JsonObject & object = get_value_functor_(getName());
   value = &object;
+  return true;
+}
+
+bool Parameter::getValue(const ConstantString * & value)
+{
+  if ((getType() != JsonStream::STRING_TYPE) && (getType() != JsonStream::ANY_TYPE))
+  {
+    value = NULL;
+    return false;
+  }
+  const char * string_value = get_value_functor_(getName());
+  int subset_value_index = findSubsetValueIndex(string_value);
+  if (subset_value_index < 0)
+  {
+    value = NULL;
+    return false;
+  }
+  value = subset_[subset_value_index].cs_ptr;
   return true;
 }
 
