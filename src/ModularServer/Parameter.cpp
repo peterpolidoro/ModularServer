@@ -540,6 +540,7 @@ void Parameter::writeApi(Response & response,
           }
           case JsonStream::ANY_TYPE:
           {
+            response.write(constants::array_element_type_constant_string,JsonStream::ANY_TYPE);
             break;
           }
         }
