@@ -14,7 +14,7 @@ License:
 
 Open the Serial Monitor in the Arduino IDE.
 
-Set the baud to match the value in the Arduino sketch (115200).
+Set the baud to match the value in the Arduino sketch (2000000).
 
 Set the line ending to 'Newline'.
 

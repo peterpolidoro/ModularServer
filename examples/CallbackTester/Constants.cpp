@@ -10,7 +10,7 @@
 
 namespace constants
 {
-const long baud = 115200;
+const long baud = 2000000;
 
 CONSTANT_STRING(device_name,"callback_tester");
 
