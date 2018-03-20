@@ -10,7 +10,7 @@
 
 namespace constants
 {
-const long baud = 2000000;
+const long baud = 115200;
 
 CONSTANT_STRING(device_name,"board_led_controller");
 
