@@ -7,13 +7,11 @@
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_INTERRUPT_H_
 #define _MODULAR_SERVER_INTERRUPT_H_
-#include <Streaming.h>
-#include <Array.h>
 #include <ConstantVariable.h>
 #include <Functor.h>
 #include <FunctorCallbacks.h>
 
-#include "HardwareElement.h"
+#include "NamedElement.h"
 #include "Callback.h"
 #include "Response.h"
 #include "Constants.h"
@@ -33,30 +31,26 @@ extern ConstantString mode_falling;
 
 class Callback;
 
-class Interrupt : private HardwareElement
+class Interrupt : private NamedElement
 {
 public:
   Interrupt();
-  size_t getNumber();
-  size_t getPin();
   Callback * getCallbackPtr();
   const ConstantString & getMode();
 
   void writeApi(Response & response,
                 bool write_name_only,
-                bool write_number_pin_details);
+                bool write_details);
 
 private:
-  size_t number_;
-  size_t pin_;
+  size_t interrupt_number_;
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
   FunctorCallbacks::Callback isr_;
-  Interrupt(const ConstantString & name, const size_t pin);
+  Interrupt(const ConstantString & name, const size_t interrupt_number);
   void setup(const ConstantString & name);
-  void setPin(const size_t pin);
-  void enablePullup();
-  void disablePullup();
+  void setInterruptNumber(const size_t interrupt_number);
+  size_t getInterruptNumber();
   void setCallback(Callback & callback);
   void removeCallback();
   void setMode(const ConstantString & mode);

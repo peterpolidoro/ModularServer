@@ -26,16 +26,6 @@ Interrupt::Interrupt()
   setup(constants::empty_constant_string);
 }
 
-size_t Interrupt::getNumber()
-{
-  return number_;
-}
-
-size_t Interrupt::getPin()
-{
-  return pin_;
-}
-
 Callback * Interrupt::getCallbackPtr()
 {
   return callback_ptr_;
@@ -48,7 +38,7 @@ const ConstantString & Interrupt::getMode()
 
 void Interrupt::writeApi(Response & response,
                          bool write_name_only,
-                         bool write_number_pin_details)
+                         bool write_details)
 {
   if (response.error())
   {
@@ -66,14 +56,9 @@ void Interrupt::writeApi(Response & response,
 
   response.write(constants::name_constant_string,name);
 
-  const ConstantString & hardware_name = getHardwareName();
-  response.write(constants::hardware_constant_string,hardware_name);
-
-  if (write_number_pin_details)
+  if (write_details)
   {
-    response.write(constants::number_constant_string,getNumber());
-
-    response.write(constants::pin_constant_string,getPin());
+    response.write(constants::interrupt_number_constant_string,getInterruptNumber());
   }
 
   Callback * callback_ptr = getCallbackPtr();
@@ -90,36 +75,29 @@ void Interrupt::writeApi(Response & response,
 // protected
 
 // private
-Interrupt::Interrupt(const ConstantString & name, const size_t pin)
+Interrupt::Interrupt(const ConstantString & name, const size_t interrupt_number)
 {
   setup(name);
-  setPin(pin);
+  setInterruptNumber(interrupt_number);
 }
 
 void Interrupt::setup(const ConstantString & name)
 {
   setName(name);
-  number_ = 0;
-  pin_ = 0;
+  interrupt_number_ = 0;
   callback_ptr_ = NULL;
   mode_ptr_ = &interrupt::mode_detached;
   isr_ = NULL;
 }
 
-void Interrupt::setPin(const size_t pin)
+void Interrupt::setInterruptNumber(const size_t interrupt_number)
 {
-  number_ = digitalPinToInterrupt(pin);
-  pin_ = pin;
+  interrupt_number_ = interrupt_number;
 }
 
-void Interrupt::enablePullup()
+size_t Interrupt::getInterruptNumber()
 {
-  pinMode(pin_,INPUT_PULLUP);
-}
-
-void Interrupt::disablePullup()
-{
-  pinMode(pin_,INPUT);
+  return interrupt_number_;
 }
 
 void Interrupt::setCallback(Callback & callback)
@@ -175,36 +153,36 @@ void Interrupt::reattach()
   if (mode_ptr_ == &interrupt::mode_low)
   {
     resetIsr();
-    detachInterrupt(digitalPinToInterrupt(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachInterrupt(digitalPinToInterrupt(pin_),
+    attachInterrupt(interrupt_number_,
                     isr_,
                     LOW);
   }
   else if (mode_ptr_ == &interrupt::mode_change)
   {
     resetIsr();
-    detachInterrupt(digitalPinToInterrupt(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachInterrupt(digitalPinToInterrupt(pin_),
+    attachInterrupt(interrupt_number_,
                     isr_,
                     CHANGE);
   }
   else if (mode_ptr_ == &interrupt::mode_rising)
   {
     resetIsr();
-    detachInterrupt(digitalPinToInterrupt(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachInterrupt(digitalPinToInterrupt(pin_),
+    attachInterrupt(interrupt_number_,
                     isr_,
                     RISING);
   }
   else if (mode_ptr_ == &interrupt::mode_falling)
   {
     resetIsr();
-    detachInterrupt(digitalPinToInterrupt(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachInterrupt(digitalPinToInterrupt(pin_),
+    attachInterrupt(interrupt_number_,
                     isr_,
                     FALLING);
   }
@@ -218,7 +196,7 @@ void Interrupt::attach(Callback & callback, const ConstantString & mode)
 
 void Interrupt::detach()
 {
-  detachInterrupt(digitalPinToInterrupt(pin_));
+  detachInterrupt(interrupt_number_);
   disablePullup();
   mode_ptr_ = &interrupt::mode_detached;
 }

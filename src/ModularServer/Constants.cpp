@@ -152,8 +152,8 @@ CONSTANT_STRING(all_constant_string,"ALL");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(interrupts_constant_string,"interrupts");
 CONSTANT_STRING(interrupt_constant_string,"interrupt");
-CONSTANT_STRING(number_constant_string,"number");
-CONSTANT_STRING(pin_constant_string,"pin");
+CONSTANT_STRING(pin_number_constant_string,"pin_number");
+CONSTANT_STRING(interrupt_number_constant_string,"interrupt_number");
 CONSTANT_STRING(mode_constant_string,"mode");
 CONSTANT_STRING(processor_constant_string,"processor");
 
