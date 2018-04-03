@@ -21,7 +21,7 @@ public:
 private:
   modular_server::ModularServer modular_server_;
 
-  modular_server::Interrupt interrupts_[constants::INTERRUPT_COUNT_MAX];
+  modular_server::Pin pins_[constants::PIN_COUNT_MAX];
 
   modular_server::Property properties_[constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[constants::PARAMETER_COUNT_MAX];

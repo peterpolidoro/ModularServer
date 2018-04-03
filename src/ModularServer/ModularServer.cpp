@@ -42,16 +42,16 @@ void ModularServer::removeHardware()
   server_.removeHardware();
 }
 
-// Interrupts
-Interrupt & ModularServer::createInterrupt(const ConstantString & interrupt_name,
-                                           const size_t pin)
+// Pins
+Pin & ModularServer::createPin(const ConstantString & pin_name,
+                               const size_t pin_number)
 {
-  return server_.createInterrupt(interrupt_name,pin);
+  return server_.createPin(pin_name,pin_number);
 }
 
-Interrupt & ModularServer::interrupt(const ConstantString & interrupt_name)
+Pin & ModularServer::pin(const ConstantString & pin_name)
 {
-  return server_.interrupt(interrupt_name);
+  return server_.pin(pin_name);
 }
 
 // Firmware

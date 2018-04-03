@@ -25,7 +25,7 @@
 #include "Function.h"
 #include "Callback.h"
 #include "Response.h"
-#include "Interrupt.h"
+#include "Pin.h"
 #include "Constants.h"
 
 
@@ -45,15 +45,15 @@ public:
   void setFormFactor(const ConstantString & form_factor);
 
   // Hardware
-  template <size_t INTERRUPTS_MAX_SIZE>
+  template <size_t PINS_MAX_SIZE>
   void addHardware(const constants::HardwareInfo & hardware_info,
-                   Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
+                   Pin (&pins)[PINS_MAX_SIZE]);
   void removeHardware();
 
-  // Interrupts
-  Interrupt & createInterrupt(const ConstantString & interrupt_name,
-                              const size_t pin);
-  Interrupt & interrupt(const ConstantString & interrupt_name);
+  // Pins
+  Pin & createPin(const ConstantString & pin_name,
+                  const size_t pin_number);
+  Pin & pin(const ConstantString & pin_name);
 
   // Firmware
   template <size_t PROPERTIES_MAX_SIZE,
@@ -112,9 +112,9 @@ private:
   Response response_;
 
   Array<const constants::HardwareInfo *,constants::HARDWARE_COUNT_MAX> hardware_info_array_;
-  Interrupt dummy_interrupt_;
-  ConcatenatedArray<Interrupt,constants::HARDWARE_COUNT_MAX> interrupts_;
-  Array<constants::SubsetMemberType,constants::INTERRUPT_COUNT_MAX> interrupt_name_array_;
+  Pin dummy_pin_;
+  ConcatenatedArray<Pin,constants::HARDWARE_COUNT_MAX> pins_;
+  Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX> pin_name_array_;
 
   Property server_properties_[constants::SERVER_PROPERTY_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];
@@ -142,7 +142,7 @@ private:
   bool server_running_;
 
   template <typename T>
-  int findInterruptIndex(T const & interrupt_name);
+  int findPinIndex(T const & pin_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
   void processRequestArray();
   int findMethodIndex(const char * method_string);
@@ -174,7 +174,7 @@ private:
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
-  void writeInterruptInfoToResponse();
+  void writePinInfoToResponse();
   void writeApiToResponse(const ConstantString & verbosity,
                           ArduinoJson::JsonArray & firmware_name_array);
   bool containsAllOrMoreThanOne(ArduinoJson::JsonArray & firmware_name_array);
@@ -192,8 +192,8 @@ private:
                       const JsonStream::JsonTypes & parameter_type,
                       const JsonStream::JsonTypes & parameter_array_element_type,
                       const size_t num);
-  Interrupt * findInterruptPtrByChars(const char * interrupt_name);
-  Interrupt * findInterruptPtrByConstantString(const ConstantString & interrupt_name);
+  Pin * findPinPtrByChars(const char * pin_name);
+  Pin * findPinPtrByConstantString(const ConstantString & pin_name);
 
   // Handlers
   void getMethodIdsHandler();
@@ -201,8 +201,8 @@ private:
   void verboseHelpHandler();
   void getDeviceIdHandler();
   void getDeviceInfoHandler();
-  void getInterruptInfoHandler();
-  void detachAllInterruptsHandler();
+  void getPinInfoHandler();
+  void detachAllPinsHandler();
   void getApiHandler();
   void getMemoryFreeHandler();
   void getPropertyDefaultValuesHandler();

@@ -18,15 +18,15 @@ namespace modular_server
 // Device ID
 
 // Hardware
-template <size_t INTERRUPTS_MAX_SIZE>
+template <size_t PINS_MAX_SIZE>
 void Server::addHardware(const constants::HardwareInfo & hardware_info,
-                         Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE])
+                         Pin (&pins)[PINS_MAX_SIZE])
 {
   hardware_info_array_.push_back(&hardware_info);
-  interrupts_.addArray(interrupts);
+  pins_.addArray(pins);
 }
 
-// Interrupts
+// Pins
 
 // Firmware
 template <size_t PROPERTIES_MAX_SIZE,
@@ -109,18 +109,18 @@ void Server::setPropertiesToDefaults(T & firmware_name_array)
 
 // private
 template <typename T>
-int Server::findInterruptIndex(T const & interrupt_name)
+int Server::findPinIndex(T const & pin_name)
 {
-  int interrupt_index = -1;
-  for (size_t i=0; i<interrupts_.size(); ++i)
+  int pin_index = -1;
+  for (size_t i=0; i<pins_.size(); ++i)
   {
-    if (interrupts_[i].compareName(interrupt_name))
+    if (pins_[i].compareName(pin_name))
     {
-      interrupt_index = i;
+      pin_index = i;
       break;
     }
   }
-  return interrupt_index;
+  return pin_index;
 }
 
 template <typename T>

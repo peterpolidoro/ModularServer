@@ -64,7 +64,7 @@ const modular_server::HardwareInfo hardware_info =
 
 const size_t led_pin = 13;
 
-// Interrupts
+// Pins
 
 // Units
 CONSTANT_STRING(seconds_unit,"seconds");

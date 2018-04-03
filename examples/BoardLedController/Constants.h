@@ -19,7 +19,7 @@ enum{PARAMETER_COUNT_MAX=3};
 enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=1};
 
-enum{INTERRUPT_COUNT_MAX=1};
+enum{PIN_COUNT_MAX=1};
 
 extern const long baud;
 
@@ -34,7 +34,7 @@ extern const modular_server::HardwareInfo hardware_info;
 
 extern const size_t led_pin;
 
-// Interrupts
+// Pins
 
 // Units
 extern ConstantString seconds_unit;
