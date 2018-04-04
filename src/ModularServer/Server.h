@@ -26,6 +26,7 @@
 #include "Callback.h"
 #include "Response.h"
 #include "Pin.h"
+#include "Interrupt.h"
 #include "Constants.h"
 
 

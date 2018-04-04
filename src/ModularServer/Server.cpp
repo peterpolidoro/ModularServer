@@ -178,7 +178,7 @@ void Server::removeHardware()
       Callback * callback_ptr = pin.getCallbackPtr();
       if (callback_ptr)
       {
-        callback_ptr->detachFrom(interrupt);
+        callback_ptr->detachFrom(pin.getInterruptPtr());
       }
     }
 

@@ -43,13 +43,13 @@ public:
                 bool write_details);
 
 private:
-  size_t interrupt_number_;
+  int interrupt_number_;
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
   FunctorCallbacks::Callback isr_;
-  Interrupt(const ConstantString & name, const size_t interrupt_number);
+  Interrupt(const ConstantString & name, const int interrupt_number);
   void setup(const ConstantString & name);
-  void setInterruptNumber(const size_t interrupt_number);
+  void setInterruptNumber(const int interrupt_number);
   size_t getInterruptNumber();
   void setCallback(Callback & callback);
   void removeCallback();

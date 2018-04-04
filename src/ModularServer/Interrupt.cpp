@@ -75,7 +75,7 @@ void Interrupt::writeApi(Response & response,
 // protected
 
 // private
-Interrupt::Interrupt(const ConstantString & name, const size_t interrupt_number)
+Interrupt::Interrupt(const ConstantString & name, const int interrupt_number)
 {
   setup(name);
   setInterruptNumber(interrupt_number);
@@ -84,18 +84,18 @@ Interrupt::Interrupt(const ConstantString & name, const size_t interrupt_number)
 void Interrupt::setup(const ConstantString & name)
 {
   setName(name);
-  interrupt_number_ = 0;
+  interrupt_number_ =  NOT_AN_INTERRUPT;
   callback_ptr_ = NULL;
   mode_ptr_ = &interrupt::mode_detached;
   isr_ = NULL;
 }
 
-void Interrupt::setInterruptNumber(const size_t interrupt_number)
+void Interrupt::setInterruptNumber(const int interrupt_number)
 {
   interrupt_number_ = interrupt_number;
 }
 
-size_t Interrupt::getInterruptNumber()
+int Interrupt::getInterruptNumber()
 {
   return interrupt_number_;
 }
