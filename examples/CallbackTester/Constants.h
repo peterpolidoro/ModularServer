@@ -19,7 +19,7 @@ enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=1};
 enum{CALLBACK_COUNT_MAX=3};
 
-enum{INTERRUPT_COUNT_MAX=6};
+enum{PIN_COUNT_MAX=6};
 
 extern const long baud;
 
@@ -34,23 +34,23 @@ extern const modular_server::HardwareInfo hardware_info;
 
 extern const size_t led_pin;
 
-// Interrupts
-extern ConstantString bnc_a_interrupt_name;
+// Pins
+extern ConstantString bnc_a_pin_name;
 extern const size_t bnc_a_pin;
 
-extern ConstantString bnc_b_interrupt_name;
+extern ConstantString bnc_b_pin_name;
 extern const size_t bnc_b_pin;
 
-extern ConstantString bnc_c_interrupt_name;
+extern ConstantString bnc_c_pin_name;
 extern const size_t bnc_c_pin;
 
-extern ConstantString bnc_d_interrupt_name;
+extern ConstantString bnc_d_pin_name;
 extern const size_t bnc_d_pin;
 
-extern ConstantString bnc_e_interrupt_name;
+extern ConstantString bnc_e_pin_name;
 extern const size_t bnc_e_pin;
 
-extern ConstantString bnc_f_interrupt_name;
+extern ConstantString bnc_f_pin_name;
 extern const size_t bnc_f_pin;
 
 // Units

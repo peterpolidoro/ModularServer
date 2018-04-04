@@ -126,8 +126,8 @@ Response:
         "getPropertyDefaultValues",
         "setPropertiesToDefaults",
         "getPropertyValues",
-        "getInterruptInfo",
-        "detachAllInterrupts",
+        "getPinInfo",
+        "detachAllPins",
         "getDoubled",
         "getBool",
         "getLongArrayFixed",
@@ -976,13 +976,13 @@ dev.get_methods()
  'get_bool',
  'set_long_array_fixed',
  'get_direction_array',
- 'detach_all_interrupts',
+ 'detach_all_pins',
  'set_long_array_parameter',
  'get_string_all',
  'get_count',
  'check_mode',
  'double_array',
- 'get_interrupt_info',
+ 'get_pin_info',
  'get_api',
  'serial_number',
  'odd_array',
@@ -1070,8 +1070,8 @@ dev.getMethods()                 % get device functions
   getPropertyDefaultValues
   setPropertiesToDefaults
   getPropertyValues
-  getInterruptInfo
-  detachAllInterrupts
+  getPinInfo
+  detachAllPins
   getDoubled
   getBool
   getLongArrayFixed

@@ -26,8 +26,8 @@ enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {FUNCTION_PARAMETER_COUNT_MAX=8};
 enum {CALLBACK_PROPERTY_COUNT_MAX=8};
-enum {CALLBACK_INTERRUPT_COUNT_MAX=4};
-enum {INTERRUPT_COUNT_MAX=8};
+enum {CALLBACK_PIN_COUNT_MAX=4};
+enum {PIN_COUNT_MAX=8};
 
 enum{SERVER_STREAM_COUNT_MAX=4};
 
@@ -98,8 +98,8 @@ extern ConstantString help_function_name;
 extern ConstantString verbose_help_function_name;
 extern ConstantString get_device_id_function_name;
 extern ConstantString get_device_info_function_name;
-extern ConstantString get_interrupt_info_function_name;
-extern ConstantString detach_all_interrupts_function_name;
+extern ConstantString get_pin_info_function_name;
+extern ConstantString detach_all_pins_function_name;
 extern ConstantString get_api_function_name;
 extern ConstantString get_property_default_values_function_name;
 extern ConstantString set_properties_to_defaults_function_name;
@@ -201,8 +201,8 @@ extern ConstantString version_property_separator_constant_string;
 extern ConstantString subset_constant_string;
 extern ConstantString all_constant_string;
 extern ConstantString array_element_subset_constant_string;
-extern ConstantString interrupts_constant_string;
-extern ConstantString interrupt_constant_string;
+extern ConstantString pins_constant_string;
+extern ConstantString pin_constant_string;
 extern ConstantString number_constant_string;
 extern ConstantString pin_constant_string;
 extern ConstantString mode_constant_string;

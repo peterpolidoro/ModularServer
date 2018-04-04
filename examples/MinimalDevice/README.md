@@ -88,8 +88,8 @@ Response:
         "getPropertyDefaultValues",
         "setPropertiesToDefaults",
         "getPropertyValues",
-        "getInterruptInfo",
-        "detachAllInterrupts"
+        "getPinInfo",
+        "detachAllPins"
       ],
       "parameters": [
         "firmware",
@@ -317,14 +317,14 @@ Response:
         }
       },
       {
-        "name": "getInterruptInfo",
+        "name": "getPinInfo",
         "result_info": {
           "type": "array",
           "array_element_type": "object"
         }
       },
       {
-        "name": "detachAllInterrupts"
+        "name": "detachAllPins"
       }
     ],
     "parameters": [
@@ -632,8 +632,8 @@ Response:
       "getPropertyDefaultValues",
       "setPropertiesToDefaults",
       "getPropertyValues",
-      "getInterruptInfo",
-      "detachAllInterrupts"
+      "getPinInfo",
+      "detachAllPins"
     ],
     "parameters": [
       "firmware",
@@ -676,12 +676,12 @@ dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '3x2', 'name': 'minimal_device', 'serial_number': 0}
 dev.get_methods()
-['get_interrupt_info',
+['get_pin_info',
  'get_api',
  'serial_number',
  'get_property_values',
  'get_device_id',
- 'detach_all_interrupts',
+ 'detach_all_pins',
  'get_property_default_values',
  'set_properties_to_defaults',
  'get_device_info']
@@ -701,8 +701,8 @@ dev.get_api('NAMES',['ALL'])
   'getPropertyDefaultValues',
   'setPropertiesToDefaults',
   'getPropertyValues',
-  'getInterruptInfo',
-  'detachAllInterrupts'],
+  'getPinInfo',
+  'detachAllPins'],
  'parameters': ['firmware', 'verbosity'],
  'properties': ['serialNumber'],
  'verbosity': 'NAMES'}
@@ -757,8 +757,8 @@ dev.getMethods()                 % get device methods
   getPropertyDefaultValues
   setPropertiesToDefaults
   getPropertyValues
-  getInterruptInfo
-  detachAllInterrupts
+  getPinInfo
+  detachAllPins
   serialNumber
 dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,

@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// Interrupt.h
+// Pin.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _MODULAR_SERVER_INTERRUPT_H_
-#define _MODULAR_SERVER_INTERRUPT_H_
+#ifndef _MODULAR_SERVER_PIN_H_
+#define _MODULAR_SERVER_PIN_H_
 #include <Streaming.h>
 #include <Array.h>
 #include <ConstantVariable.h>
@@ -22,7 +22,7 @@
 namespace modular_server
 {
 
-namespace interrupt
+namespace pin
 {
 extern ConstantString mode_detached;
 extern ConstantString mode_low;
@@ -33,10 +33,10 @@ extern ConstantString mode_falling;
 
 class Callback;
 
-class Interrupt : private HardwareElement
+class Pin : private HardwareElement
 {
 public:
-  Interrupt();
+  Pin();
   size_t getNumber();
   size_t getPin();
   Callback * getCallbackPtr();
@@ -52,7 +52,7 @@ private:
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
   FunctorCallbacks::Callback isr_;
-  Interrupt(const ConstantString & name, const size_t pin);
+  Pin(const ConstantString & name, const size_t pin);
   void setup(const ConstantString & name);
   void setPin(const size_t pin);
   void enablePullup();

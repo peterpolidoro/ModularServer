@@ -17,32 +17,6 @@ Teensy 3.2, Teensy 3.5, and Teensy 3.6.
 ## API NAMES
 
 ```json
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "ModularServer"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "getDeviceId",
-      "getDeviceInfo",
-      "getApi",
-      "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "getPropertyValues",
-      "getInterruptInfo",
-      "detachAllInterrupts"
-    ],
-    "parameters": [
-      "firmware",
-      "verbosity"
-    ],
-    "properties": [
-      "serialNumber"
-    ]
-  }
-}
 ```
 
 ## API GENERAL

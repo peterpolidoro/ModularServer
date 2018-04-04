@@ -16,7 +16,7 @@
 
 #include "FirmwareElement.h"
 #include "Property.h"
-#include "Interrupt.h"
+#include "Pin.h"
 #include "Response.h"
 #include "Constants.h"
 
@@ -40,38 +40,38 @@ extern ConstantString detach_from_function_name;
 extern ConstantString detach_from_all_function_name;
 }
 
-class Interrupt;
+class Pin;
 
 class Callback : private FirmwareElement
 {
 public:
   Callback();
 
-  void attachFunctor(const Functor1<Interrupt *> & functor);
+  void attachFunctor(const Functor1<Pin *> & functor);
   void addProperty(Property & property);
-  Functor1<Interrupt *> & getFunctor();
-  void attachTo(Interrupt & interrupt, const ConstantString & mode);
-  void attachTo(const ConstantString & interrupt_name, const ConstantString & mode);
-  void attachTo(const char * interrupt_name, const char * mode_str);
-  void detachFrom(Interrupt & interrupt);
-  void detachFrom(const ConstantString & interrupt_name);
-  void detachFrom(const char * interrupt_name);
+  Functor1<Pin *> & getFunctor();
+  void attachTo(Pin & pin, const ConstantString & mode);
+  void attachTo(const ConstantString & pin_name, const ConstantString & mode);
+  void attachTo(const char * pin_name, const char * mode_str);
+  void detachFrom(Pin & pin);
+  void detachFrom(const ConstantString & pin_name);
+  void detachFrom(const char * pin_name);
   void detachFromAll();
 
   void writeApi(Response & response,
                 bool write_name_only,
                 bool write_firmware,
-                bool write_function_parameter_interrupt_details,
+                bool write_function_parameter_pin_details,
                 bool write_property_details,
                 bool write_instance_details);
 
 private:
   static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
   static Array<Function,callback::FUNCTION_COUNT_MAX> functions_;
-  static Array<constants::SubsetMemberType,constants::INTERRUPT_COUNT_MAX> * interrupt_name_array_ptr_;
-  static Functor1wRet<const char *, Interrupt *> find_interrupt_ptr_by_chars_functor_;
-  static Functor1wRet<const ConstantString &, Interrupt *> find_interrupt_ptr_by_constant_string_functor_;
-  static Functor1wRet<const char *, Interrupt *> find_interrupt_ptr_functor_;
+  static Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX> * pin_name_array_ptr_;
+  static Functor1wRet<const char *, Pin *> find_pin_ptr_by_chars_functor_;
+  static Functor1wRet<const ConstantString &, Pin *> find_pin_ptr_by_constant_string_functor_;
+  static Functor1wRet<const char *, Pin *> find_pin_ptr_functor_;
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
 
   template <typename T>
@@ -109,18 +109,18 @@ private:
   static Function & createFunction(const ConstantString & function_name);
   static Function & function(const ConstantString & function_name);
 
-  Functor1<Interrupt *> functor_;
+  Functor1<Pin *> functor_;
   Array<Property *,constants::CALLBACK_PROPERTY_COUNT_MAX> property_ptrs_;
-  IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> interrupt_ptrs_;
+  IndexedContainer<Pin *,constants::CALLBACK_PIN_COUNT_MAX> pin_ptrs_;
 
   Callback(const ConstantString & name);
   void setup(const ConstantString & name);
   int findPropertyIndex(const ConstantString & property_name);
   size_t getPropertyCount();
-  int findInterruptPtrIndex(Interrupt & interrupt);
-  int findInterruptPtrIndex(const ConstantString & interrupt_name);
-  int findInterruptPtrIndex(const char * interrupt_name);
-  void functor(Interrupt * interrupt_ptr);
+  int findPinPtrIndex(Pin & pin);
+  int findPinPtrIndex(const ConstantString & pin_name);
+  int findPinPtrIndex(const char * pin_name);
+  void functor(Pin * pin_ptr);
   void updateFunctionsAndParameters();
 
   // Handlers
@@ -130,7 +130,7 @@ private:
   void detachFromAllHandler();
 
   friend class Server;
-  friend class Interrupt;
+  friend class Pin;
 };
 }
 #endif

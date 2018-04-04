@@ -30,15 +30,15 @@ public:
   void setFormFactor(const ConstantString & form_factor);
 
   // Hardware
-  template <size_t INTERRUPTS_MAX_SIZE>
+  template <size_t PINS_MAX_SIZE>
   void addHardware(const HardwareInfo & hardware_info,
-                   Interrupt (&interrupts)[INTERRUPTS_MAX_SIZE]);
+                   Pin (&pins)[PINS_MAX_SIZE]);
   void removeHardware();
 
-  // Interrupts
-  Interrupt & createInterrupt(const ConstantString & interrupt_name,
-                              const size_t pin);
-  Interrupt & interrupt(const ConstantString & interrupt_name);
+  // Pins
+  Pin & createPin(const ConstantString & pin_name,
+                  const size_t pin);
+  Pin & pin(const ConstantString & pin_name);
 
   // Firmware
   template <size_t PROPERTIES_MAX_SIZE,

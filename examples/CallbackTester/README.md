@@ -95,8 +95,8 @@ Response:
         "getPropertyDefaultValues",
         "setPropertiesToDefaults",
         "getPropertyValues",
-        "getInterruptInfo",
-        "detachAllInterrupts"
+        "getPinInfo",
+        "detachAllPins"
       ],
       "parameters": [
         "firmware",
@@ -157,7 +157,7 @@ Response:
       {
         "name": "Teensy",
         "version": "3.2",
-        "interrupts": [
+        "pins": [
           "bnc_a",
           "bnc_b",
           "bnc_c",
@@ -181,19 +181,19 @@ Response:
 }
 ```
 
-Each hardware layer may add zero or more interrupts.
+Each hardware layer may add zero or more pins.
 
 Request:
 
 ```shell
-getInterruptInfo
+getPinInfo
 ```
 
 Response:
 
 ```json
 {
-  "id": "getInterruptInfo",
+  "id": "getPinInfo",
   "result": [
     {
       "name": "bnc_a",
@@ -235,11 +235,11 @@ Response:
 }
 ```
 
-Each interrupt may be dynamically assigned to a callback with a trigger mode or
-the interrupt can be detached and inactive.
+Each pin may be dynamically assigned to a callback with a trigger mode or
+the pin can be detached and inactive.
 
-Use callbacks to attach or detach callbacks to interrupts. Callbacks may be
-attached to one or more interrupts, but each interrupt can only have a single
+Use callbacks to attach or detach callbacks to pins. Callbacks may be
+attached to one or more pins, but each pin can only have a single
 callback attached.
 
 Request:
@@ -261,7 +261,7 @@ Response:
       "durationOff",
       "count"
     ],
-    "interrupts": [
+    "pins": [
       "bnc_e"
     ],
     "functions": [
@@ -271,7 +271,7 @@ Response:
       "detachFromAll"
     ],
     "parameters": [
-      "interrupt",
+      "pin",
       "mode"
     ]
   }
@@ -324,7 +324,7 @@ Response:
     "firmware": "ModularServer",
     "parameters": [
       {
-        "name": "interrupt",
+        "name": "pin",
         "type": "string",
         "subset": [
           "bnc_a",
@@ -384,7 +384,7 @@ Response:
       "durationOff",
       "count"
     ],
-    "interrupts": [
+    "pins": [
       "bnc_e",
       "bnc_f"
     ],
@@ -395,7 +395,7 @@ Response:
       "detachFromAll"
     ],
     "parameters": [
-      "interrupt",
+      "pin",
       "mode"
     ]
   }
@@ -417,7 +417,7 @@ Response:
     "name": "detachFrom",
     "firmware": "ModularServer",
     "parameters": [
-      "interrupt"
+      "pin"
     ]
   }
 }
@@ -456,14 +456,14 @@ Response:
 Request:
 
 ```shell
-detachAllInterrupts
+detachAllPins
 ```
 
 Response:
 
 ```json
 {
-  "id": "detachAllInterrupts",
+  "id": "detachAllPins",
   "result": null
 }
 ```
@@ -471,14 +471,14 @@ Response:
 Request:
 
 ```shell
-getInterruptInfo
+getPinInfo
 ```
 
 Response:
 
 ```json
 {
-  "id": "getInterruptInfo",
+  "id": "getPinInfo",
   "result": [
     {
       "name": "bnc_a",
@@ -541,7 +541,7 @@ dev.get_device_id()
 dev.get_methods()
 ['count',
  'set_led_on',
- 'get_interrupt_info',
+ 'get_pin_info',
  'get_api',
  'serial_number',
  'duration_off',
@@ -552,13 +552,13 @@ dev.get_methods()
  'duration_on',
  'get_property_default_values',
  'set_properties_to_defaults',
- 'detach_all_interrupts',
+ 'detach_all_pins',
  'get_device_info']
 dev.set_properties_to_defaults(['ALL'])
 dev.get_device_info()
 {'firmware': [{'name': 'ModularServer', 'version': '3.0.0'},
   {'name': 'CallbackTester', 'version': '2.0.0'}],
- 'hardware': [{'interrupts': ['bnc_a',
+ 'hardware': [{'pins': ['bnc_a',
     'bnc_b',
     'bnc_c',
     'bnc_d',
@@ -570,16 +570,16 @@ dev.get_device_info()
 dev.blink_led('?')
 {'firmware': 'CallbackTester',
  'functions': ['trigger', 'attachTo', 'detachFrom', 'detachFromAll'],
- 'interrupts': [],
+ 'pins': [],
  'name': 'blinkLed',
- 'parameters': ['interrupt', 'mode'],
+ 'parameters': ['pin', 'mode'],
  'properties': ['durationOn', 'durationOff', 'count']}
 dev.blink_led('trigger')
 dev.blink_led()
 dev.blink_led('attachTo','??')
 {'firmware': 'ModularServer',
  'name': 'attachTo',
- 'parameters': [{'name': 'interrupt',
+ 'parameters': [{'name': 'pin',
    'subset': ['bnc_a', 'bnc_b', 'bnc_c', 'bnc_d', 'bnc_e', 'bnc_f'],
    'type': 'string'},
   {'name': 'mode',
@@ -627,8 +627,8 @@ ans =
   getPropertyDefaultValues
   setPropertiesToDefaults
   getPropertyValues
-  getInterruptInfo
-  detachAllInterrupts
+  getPinInfo
+  detachAllPins
   setLedOn
   setLedOff
   blinkLed
@@ -642,9 +642,9 @@ ans =
   name: 'blinkLed'
   firmware: 'CallbackTester'
   properties: {'durationOn'  'durationOff'  'count'}
-  interrupts: {'bnc_e'}
+  pins: {'bnc_e'}
   functions: {'trigger'  'attachTo'  'detachFrom'  'detachFromAll'}
-  parameters: {'interrupt'  'mode'}
+  parameters: {'pin'  'mode'}
 dev.blinkLed('trigger');
 dev.blinkLed();
 dev.blinkLed('attachTo','??')

@@ -106,8 +106,8 @@ Response:
         "getPropertyDefaultValues",
         "setPropertiesToDefaults",
         "getPropertyValues",
-        "getInterruptInfo",
-        "detachAllInterrupts",
+        "getPinInfo",
+        "detachAllPins",
         "echo",
         "length",
         "startsWith",
@@ -547,14 +547,14 @@ dev.get_methods()
  'get_stored_string',
  'starting_chars',
  'set_stored_string',
- 'get_interrupt_info',
+ 'get_pin_info',
  'get_api',
  'serial_number',
  'length',
  'echo',
  'get_property_values',
  'get_device_id',
- 'detach_all_interrupts',
+ 'detach_all_pins',
  'chars_at',
  'starting_chars_count',
  'get_property_default_values',
@@ -655,8 +655,8 @@ dev.getMethods()
   getPropertyDefaultValues
   setPropertiesToDefaults
   getPropertyValues
-  getInterruptInfo
-  detachAllInterrupts
+  getPinInfo
+  detachAllPins
   echo
   length
   startsWith

@@ -12,7 +12,7 @@ namespace modular_server
 {
 // public
 Server::Server() :
-  eeprom_initialized_sv_(constants::eeprom_initialized_default_value)
+eeprom_initialized_sv_(constants::eeprom_initialized_default_value)
 {
 }
 
@@ -38,7 +38,7 @@ void Server::setup()
 
   // Hardware
 
-  // Interrupts
+  // Pins
 
   // Firmware
   addFirmware(constants::firmware_info,
@@ -112,13 +112,13 @@ void Server::setup()
   get_property_values_function.addParameter(firmware_parameter);
   get_property_values_function.setResultTypeObject();
 
-  Function & get_interrupt_info_function = createFunction(constants::get_interrupt_info_function_name);
-  get_interrupt_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getInterruptInfoHandler));
-  get_interrupt_info_function.setResultTypeArray();
-  get_interrupt_info_function.setResultTypeObject();
+  Function & get_pin_info_function = createFunction(constants::get_pin_info_function_name);
+  get_pin_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPinInfoHandler));
+  get_pin_info_function.setResultTypeArray();
+  get_pin_info_function.setResultTypeObject();
 
-  Function & detach_all_interrupts_function = createFunction(constants::detach_all_interrupts_function_name);
-  detach_all_interrupts_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllInterruptsHandler));
+  Function & detach_all_pins_function = createFunction(constants::detach_all_pins_function_name);
+  detach_all_pins_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllPinsHandler));
 
 #ifdef __AVR__
   Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
@@ -127,9 +127,9 @@ void Server::setup()
 #endif
 
   // Callbacks
-  Callback::interrupt_name_array_ptr_ = &interrupt_name_array_;
-  Callback::find_interrupt_ptr_by_chars_functor_ = makeFunctor((Functor1wRet<const char *, Interrupt *> *)0,*this,&Server::findInterruptPtrByChars);
-  Callback::find_interrupt_ptr_by_constant_string_functor_ = makeFunctor((Functor1wRet<const ConstantString &, Interrupt *> *)0,*this,&Server::findInterruptPtrByConstantString);
+  Callback::pin_name_array_ptr_ = &pin_name_array_;
+  Callback::find_pin_ptr_by_chars_functor_ = makeFunctor((Functor1wRet<const char *, Pin *> *)0,*this,&Server::findPinPtrByChars);
+  Callback::find_pin_ptr_by_constant_string_functor_ = makeFunctor((Functor1wRet<const ConstantString &, Pin *> *)0,*this,&Server::findPinPtrByConstantString);
   Callback::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   // Server
@@ -170,67 +170,67 @@ void Server::removeHardware()
   if (hardware_info_array_.size() > 0)
   {
     size_t index = hardware_info_array_.size() - 1;
-    Vector<Interrupt> & interrupts = interrupts_.subVector(index);
-    for (size_t j=0; j<interrupts.size(); ++j)
+    Vector<Pin> & pins = pins_.subVector(index);
+    for (size_t j=0; j<pins.size(); ++j)
     {
-      interrupt_name_array_.pop_back();
-      Interrupt & interrupt = interrupts[j];
-      Callback * callback_ptr = interrupt.getCallbackPtr();
+      pin_name_array_.pop_back();
+      Pin & pin = pins[j];
+      Callback * callback_ptr = pin.getCallbackPtr();
       if (callback_ptr)
       {
-        callback_ptr->detachFrom(interrupt);
+        callback_ptr->detachFrom(pin);
       }
     }
 
-    interrupts_.removeArray();
+    pins_.removeArray();
     hardware_info_array_.pop_back();
   }
 }
 
-// Interrupts
-Interrupt & Server::createInterrupt(const ConstantString & interrupt_name,
-                                    const size_t pin)
+// Pins
+Pin & Server::createPin(const ConstantString & pin_name,
+                        const size_t pin)
 {
-  int interrupt_index = findInterruptIndex(interrupt_name);
-  if (interrupt_index < 0)
+  int pin_index = findPinIndex(pin_name);
+  if (pin_index < 0)
   {
     constants::SubsetMemberType int_name;
-    int_name.cs_ptr = &interrupt_name;
-    interrupt_name_array_.push_back(int_name);
-    interrupts_.push_back(Interrupt(interrupt_name,pin));
+    int_name.cs_ptr = &pin_name;
+    pin_name_array_.push_back(int_name);
+    pins_.push_back(Pin(pin_name,pin));
     const ConstantString * hardware_name_ptr = hardware_info_array_.back()->name_ptr;
-    interrupts_.back().setHardwareName(*hardware_name_ptr);
-    return interrupts_.back();
+    pins_.back().setHardwareName(*hardware_name_ptr);
+    return pins_.back();
   }
-  return dummy_interrupt_;
+  return dummy_pin_;
 }
 
-Interrupt & Server::interrupt(const ConstantString & interrupt_name)
+Pin & Server::pin(const ConstantString & pin_name)
 {
-  int interrupt_index = findInterruptIndex(interrupt_name);
-  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  int pin_index = findPinIndex(pin_name);
+  if ((pin_index >= 0) && (pin_index < (int)pins_.size()))
   {
-    return interrupts_[interrupt_index];
+    return pins_[pin_index];
   }
-  return dummy_interrupt_;
+  return dummy_pin_;
 }
 
-Interrupt * Server::findInterruptPtrByChars(const char * interrupt_name)
+Pin * Server::findPinPtrByChars(const char * pin_name)
 {
-  int interrupt_index = findInterruptIndex(interrupt_name);
-  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  int pin_index = findPinIndex(pin_name);
+  if ((pin_index >= 0) && (pin_index < (int)pins_.size()))
   {
-    return &interrupts_[interrupt_index];
+    return &pins_[pin_index];
   }
   return NULL;
 }
 
-Interrupt * Server::findInterruptPtrByConstantString(const ConstantString & interrupt_name)
+Pin * Server::findPinPtrByConstantString(const ConstantString & pin_name)
 {
-  int interrupt_index = findInterruptIndex(interrupt_name);
-  if ((interrupt_index >= 0) && (interrupt_index < (int)interrupts_.size()))
+  int pin_index = findPinIndex(pin_name);
+  if ((pin_index >= 0) && (pin_index < (int)pins_.size()))
   {
-    return &interrupts_[interrupt_index];
+    return &pins_[pin_index];
   }
   return NULL;
 }
@@ -1391,15 +1391,15 @@ void Server::writeHardwareInfoToResponse()
       response_.write(constants::version_constant_string,version_str);
     }
 
-    Vector<Interrupt> & interrupts = interrupts_.subVector(i);
-    if (interrupts.size() > 0)
+    Vector<Pin> & pins = pins_.subVector(i);
+    if (pins.size() > 0)
     {
-      response_.writeKey(constants::interrupts_constant_string);
+      response_.writeKey(constants::pins_constant_string);
       response_.beginArray();
-      for (size_t j=0; j<interrupts.size(); ++j)
+      for (size_t j=0; j<pins.size(); ++j)
       {
-        Interrupt & interrupt = interrupts[j];
-        interrupt.writeApi(response_,true,false);
+        Pin & pin = pins[j];
+        pin.writeApi(response_,true,false);
       }
       response_.endArray();
     }
@@ -1429,7 +1429,7 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::writeInterruptInfoToResponse()
+void Server::writePinInfoToResponse()
 {
   if (response_.error())
   {
@@ -1437,10 +1437,10 @@ void Server::writeInterruptInfoToResponse()
   }
 
   response_.beginArray();
-  for (size_t i=0; i<interrupts_.size(); ++i)
+  for (size_t i=0; i<pins_.size(); ++i)
   {
-    Interrupt & interrupt = interrupts_[i];
-    interrupt.writeApi(response_,false,false);
+    Pin & pin = pins_[i];
+    pin.writeApi(response_,false,false);
   }
   response_.endArray();
 }
@@ -1813,13 +1813,13 @@ void Server::getDeviceInfoHandler()
   writeDeviceInfoToResponse();
 }
 
-void Server::getInterruptInfoHandler()
+void Server::getPinInfoHandler()
 {
   response_.writeResultKey();
-  writeInterruptInfoToResponse();
+  writePinInfoToResponse();
 }
 
-void Server::detachAllInterruptsHandler()
+void Server::detachAllPinsHandler()
 {
   for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
   {

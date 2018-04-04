@@ -96,8 +96,8 @@ Response:
         "getPropertyDefaultValues",
         "setPropertiesToDefaults",
         "getPropertyValues",
-        "getInterruptInfo",
-        "detachAllInterrupts",
+        "getPinInfo",
+        "detachAllPins",
         "setLedOn",
         "setLedOff",
         "getLedPin",
@@ -455,8 +455,8 @@ Response:
       "getPropertyDefaultValues",
       "setPropertiesToDefaults",
       "getPropertyValues",
-      "getInterruptInfo",
-      "detachAllInterrupts",
+      "getPinInfo",
+      "detachAllPins",
       "setLedOn",
       "setLedOff",
       "getLedPin",
@@ -638,7 +638,7 @@ dev.get_device_id()
 {'form_factor': '3x2', 'name': 'board_led_controller', 'serial_number': 0}
 dev.get_methods()
 ['set_led_on',
- 'get_interrupt_info',
+ 'get_pin_info',
  'get_api',
  'serial_number',
  'get_property_values',
@@ -648,7 +648,7 @@ dev.get_methods()
  'get_led_pin',
  'get_property_default_values',
  'set_properties_to_defaults',
- 'detach_all_interrupts',
+ 'detach_all_pins',
  'get_device_info']
 dev.set_properties_to_defaults(['ALL'])
 dev.set_led_on()
@@ -736,8 +736,8 @@ dev.getMethods()                 % get device methods
   getPropertyDefaultValues
   setPropertiesToDefaults
   getPropertyValues
-  getInterruptInfo
-  detachAllInterrupts
+  getPinInfo
+  detachAllPins
   setLedOn
   setLedOff
   getLedPin

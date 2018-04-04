@@ -19,7 +19,7 @@ enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=1};
 enum{CALLBACK_COUNT_MAX=1};
 
-enum{INTERRUPT_COUNT_MAX=1};
+enum{PIN_COUNT_MAX=1};
 
 extern const long baud;
 
@@ -32,7 +32,7 @@ extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
-// Interrupts
+// Pins
 
 // Units
 

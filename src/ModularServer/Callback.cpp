@@ -15,12 +15,12 @@ namespace callback
 {
 // Parameters
 constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
-  {
-   {.cs_ptr=&interrupt::mode_low},
-   {.cs_ptr=&interrupt::mode_change},
-   {.cs_ptr=&interrupt::mode_rising},
-   {.cs_ptr=&interrupt::mode_falling},
-  };
+{
+  {.cs_ptr=&pin::mode_low},
+  {.cs_ptr=&pin::mode_change},
+  {.cs_ptr=&pin::mode_rising},
+  {.cs_ptr=&pin::mode_falling},
+};
 
 // Functions
 CONSTANT_STRING(trigger_function_name,"trigger");
@@ -31,9 +31,9 @@ CONSTANT_STRING(detach_from_all_function_name,"detachFromAll");
 
 Array<Parameter,callback::PARAMETER_COUNT_MAX> Callback::parameters_;
 Array<Function,callback::FUNCTION_COUNT_MAX> Callback::functions_;
-Array<constants::SubsetMemberType,constants::INTERRUPT_COUNT_MAX> * Callback::interrupt_name_array_ptr_;
-Functor1wRet<const char *, Interrupt *> Callback::find_interrupt_ptr_by_chars_functor_;
-Functor1wRet<const ConstantString &, Interrupt *> Callback::find_interrupt_ptr_by_constant_string_functor_;
+Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX> * Callback::pin_name_array_ptr_;
+Functor1wRet<const char *, Pin *> Callback::find_pin_ptr_by_chars_functor_;
+Functor1wRet<const ConstantString &, Pin *> Callback::find_pin_ptr_by_constant_string_functor_;
 Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Callback::get_parameter_value_functor_;
 
 Parameter & Callback::createParameter(const ConstantString & parameter_name)
@@ -93,14 +93,14 @@ Callback::Callback()
   setup(constants::empty_constant_string);
 }
 
-void Callback::attachFunctor(const Functor1<Interrupt *> & functor)
+void Callback::attachFunctor(const Functor1<Pin *> & functor)
 {
   functor_ = functor;
-  for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+  for (size_t i=0; i<pin_ptrs_.max_size(); ++i)
   {
-    if (interrupt_ptrs_.indexHasValue(i))
+    if (pin_ptrs_.indexHasValue(i))
     {
-      interrupt_ptrs_[i]->reattach();
+      pin_ptrs_[i]->reattach();
     }
   }
 }
@@ -115,118 +115,118 @@ void Callback::addProperty(Property & property)
   }
 }
 
-Functor1<Interrupt *> & Callback::getFunctor()
+Functor1<Pin *> & Callback::getFunctor()
 {
   return functor_;
 }
 
-void Callback::attachTo(Interrupt & interrupt, const ConstantString & mode)
+void Callback::attachTo(Pin & pin, const ConstantString & mode)
 {
-  if ((&mode == &interrupt::mode_low) ||
-      (&mode == &interrupt::mode_change) ||
-      (&mode == &interrupt::mode_rising) ||
-      (&mode == &interrupt::mode_falling))
+  if ((&mode == &pin::mode_low) ||
+      (&mode == &pin::mode_change) ||
+      (&mode == &pin::mode_rising) ||
+      (&mode == &pin::mode_falling))
   {
-    int index = interrupt_ptrs_.add(&interrupt);
+    int index = pin_ptrs_.add(&pin);
     if (index >= 0)
     {
-      interrupt.attach(*this,mode);
+      pin.attach(*this,mode);
     }
   }
 }
 
-void Callback::attachTo(const ConstantString & interrupt_name, const ConstantString & mode)
+void Callback::attachTo(const ConstantString & pin_name, const ConstantString & mode)
 {
-  if ((&mode == &interrupt::mode_low) ||
-      (&mode == &interrupt::mode_change) ||
-      (&mode == &interrupt::mode_rising) ||
-      (&mode == &interrupt::mode_falling))
+  if ((&mode == &pin::mode_low) ||
+      (&mode == &pin::mode_change) ||
+      (&mode == &pin::mode_rising) ||
+      (&mode == &pin::mode_falling))
   {
-    Interrupt * interrupt_ptr = find_interrupt_ptr_by_constant_string_functor_(interrupt_name);
-    if (!interrupt_ptr)
+    Pin * pin_ptr = find_pin_ptr_by_constant_string_functor_(pin_name);
+    if (!pin_ptr)
     {
       return;
     }
-    int index = interrupt_ptrs_.add(interrupt_ptr);
+    int index = pin_ptrs_.add(pin_ptr);
     if (index >= 0)
     {
-      interrupt_ptr->attach(*this,mode);
+      pin_ptr->attach(*this,mode);
     }
   }
 }
 
-void Callback::attachTo(const char * interrupt_name, const char * mode_str)
+void Callback::attachTo(const char * pin_name, const char * mode_str)
 {
-  Interrupt * interrupt_ptr = find_interrupt_ptr_by_chars_functor_(interrupt_name);
-  if (!interrupt_ptr)
+  Pin * pin_ptr = find_pin_ptr_by_chars_functor_(pin_name);
+  if (!pin_ptr)
   {
     return;
   }
   const ConstantString * mode_ptr = NULL;
-  if (mode_str == interrupt::mode_low)
+  if (mode_str == pin::mode_low)
   {
-    mode_ptr = &interrupt::mode_low;
+    mode_ptr = &pin::mode_low;
   }
-  else if (mode_str == interrupt::mode_change)
+  else if (mode_str == pin::mode_change)
   {
-    mode_ptr = &interrupt::mode_change;
+    mode_ptr = &pin::mode_change;
   }
-  else if (mode_str == interrupt::mode_rising)
+  else if (mode_str == pin::mode_rising)
   {
-    mode_ptr = &interrupt::mode_rising;
+    mode_ptr = &pin::mode_rising;
   }
-  else if (mode_str == interrupt::mode_falling)
+  else if (mode_str == pin::mode_falling)
   {
-    mode_ptr = &interrupt::mode_falling;
+    mode_ptr = &pin::mode_falling;
   }
   else
   {
     return;
   }
-  int index = interrupt_ptrs_.add(interrupt_ptr);
+  int index = pin_ptrs_.add(pin_ptr);
   if (index >= 0)
   {
-    interrupt_ptr->attach(*this,*mode_ptr);
+    pin_ptr->attach(*this,*mode_ptr);
   }
 }
 
-void Callback::detachFrom(Interrupt & interrupt)
+void Callback::detachFrom(Pin & pin)
 {
-  int interrupt_ptr_index = findInterruptPtrIndex(interrupt);
-  if (interrupt_ptr_index >= 0)
+  int pin_ptr_index = findPinPtrIndex(pin);
+  if (pin_ptr_index >= 0)
   {
-    interrupt.removeCallback();
-    interrupt_ptrs_.remove(interrupt_ptr_index);
+    pin.removeCallback();
+    pin_ptrs_.remove(pin_ptr_index);
   }
 }
 
-void Callback::detachFrom(const ConstantString & interrupt_name)
+void Callback::detachFrom(const ConstantString & pin_name)
 {
-  int interrupt_ptr_index = findInterruptPtrIndex(interrupt_name);
-  if (interrupt_ptr_index >= 0)
+  int pin_ptr_index = findPinPtrIndex(pin_name);
+  if (pin_ptr_index >= 0)
   {
-    interrupt_ptrs_[interrupt_ptr_index]->removeCallback();
-    interrupt_ptrs_.remove(interrupt_ptr_index);
+    pin_ptrs_[pin_ptr_index]->removeCallback();
+    pin_ptrs_.remove(pin_ptr_index);
   }
 }
 
-void Callback::detachFrom(const char * interrupt_name)
+void Callback::detachFrom(const char * pin_name)
 {
-  int interrupt_ptr_index = findInterruptPtrIndex(interrupt_name);
-  if (interrupt_ptr_index >= 0)
+  int pin_ptr_index = findPinPtrIndex(pin_name);
+  if (pin_ptr_index >= 0)
   {
-    interrupt_ptrs_[interrupt_ptr_index]->removeCallback();
-    interrupt_ptrs_.remove(interrupt_ptr_index);
+    pin_ptrs_[pin_ptr_index]->removeCallback();
+    pin_ptrs_.remove(pin_ptr_index);
   }
 }
 
 void Callback::detachFromAll()
 {
-  for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+  for (size_t i=0; i<pin_ptrs_.max_size(); ++i)
   {
-    if (interrupt_ptrs_.indexHasValue(i))
+    if (pin_ptrs_.indexHasValue(i))
     {
-      detachFrom(*interrupt_ptrs_[i]);
+      detachFrom(*pin_ptrs_[i]);
     }
   }
 }
@@ -234,7 +234,7 @@ void Callback::detachFromAll()
 void Callback::writeApi(Response & response,
                         bool write_name_only,
                         bool write_firmware,
-                        bool write_function_parameter_interrupt_details,
+                        bool write_function_parameter_pin_details,
                         bool write_property_details,
                         bool write_instance_details)
 {
@@ -277,16 +277,16 @@ void Callback::writeApi(Response & response,
 
   if (write_instance_details)
   {
-    response.writeKey(constants::interrupts_constant_string);
+    response.writeKey(constants::pins_constant_string);
     response.beginArray();
-    IndexedContainer<Interrupt *,constants::CALLBACK_INTERRUPT_COUNT_MAX> * interrupt_ptrs_ptr = NULL;
-    interrupt_ptrs_ptr = &interrupt_ptrs_;
-    for (size_t i=0; i<interrupt_ptrs_ptr->max_size(); ++i)
+    IndexedContainer<Pin *,constants::CALLBACK_PIN_COUNT_MAX> * pin_ptrs_ptr = NULL;
+    pin_ptrs_ptr = &pin_ptrs_;
+    for (size_t i=0; i<pin_ptrs_ptr->max_size(); ++i)
     {
-      if (interrupt_ptrs_ptr->indexHasValue(i))
+      if (pin_ptrs_ptr->indexHasValue(i))
       {
-        Interrupt & interrupt = *((*interrupt_ptrs_ptr)[i]);
-        interrupt.writeApi(response,!write_function_parameter_interrupt_details,false);
+        Pin & pin = *((*pin_ptrs_ptr)[i]);
+        pin.writeApi(response,!write_function_parameter_pin_details,false);
       }
     }
     response.endArray();
@@ -297,7 +297,7 @@ void Callback::writeApi(Response & response,
   for (size_t i=0; i<Callback::functions_.size(); ++i)
   {
     Function & function = Callback::functions_[i];
-    function.writeApi(response,!write_function_parameter_interrupt_details,false,false);
+    function.writeApi(response,!write_function_parameter_pin_details,false,false);
   }
   response.endArray();
 
@@ -306,7 +306,7 @@ void Callback::writeApi(Response & response,
   for (size_t i=0; i<Callback::parameters_.size(); ++i)
   {
     Parameter & parameter = Callback::parameters_[i];
-    parameter.writeApi(response,!write_function_parameter_interrupt_details,false,false,write_instance_details);
+    parameter.writeApi(response,!write_function_parameter_pin_details,false,false,write_instance_details);
   }
   response.endArray();
 
@@ -345,62 +345,62 @@ size_t Callback::getPropertyCount()
   return property_ptrs_.size();
 }
 
-int Callback::findInterruptPtrIndex(Interrupt & interrupt)
+int Callback::findPinPtrIndex(Pin & pin)
 {
-  int interrupt_ptr_index = -1;
-  for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+  int pin_ptr_index = -1;
+  for (size_t i=0; i<pin_ptrs_.max_size(); ++i)
   {
-    if (interrupt_ptrs_.indexHasValue(i))
+    if (pin_ptrs_.indexHasValue(i))
     {
-      if (interrupt_ptrs_[i] == &interrupt)
+      if (pin_ptrs_[i] == &pin)
       {
-        interrupt_ptr_index = i;
+        pin_ptr_index = i;
         break;
       }
     }
   }
-  return interrupt_ptr_index;
+  return pin_ptr_index;
 }
 
-int Callback::findInterruptPtrIndex(const ConstantString & interrupt_name)
+int Callback::findPinPtrIndex(const ConstantString & pin_name)
 {
-  int interrupt_ptr_index = -1;
-  for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+  int pin_ptr_index = -1;
+  for (size_t i=0; i<pin_ptrs_.max_size(); ++i)
   {
-    if (interrupt_ptrs_.indexHasValue(i))
+    if (pin_ptrs_.indexHasValue(i))
     {
-      if (interrupt_ptrs_[i]->compareName(interrupt_name))
+      if (pin_ptrs_[i]->compareName(pin_name))
       {
-        interrupt_ptr_index = i;
+        pin_ptr_index = i;
         break;
       }
     }
   }
-  return interrupt_ptr_index;
+  return pin_ptr_index;
 }
 
-int Callback::findInterruptPtrIndex(const char * interrupt_name)
+int Callback::findPinPtrIndex(const char * pin_name)
 {
-  int interrupt_ptr_index = -1;
-  for (size_t i=0; i<interrupt_ptrs_.max_size(); ++i)
+  int pin_ptr_index = -1;
+  for (size_t i=0; i<pin_ptrs_.max_size(); ++i)
   {
-    if (interrupt_ptrs_.indexHasValue(i))
+    if (pin_ptrs_.indexHasValue(i))
     {
-      if (interrupt_ptrs_[i]->compareName(interrupt_name))
+      if (pin_ptrs_[i]->compareName(pin_name))
       {
-        interrupt_ptr_index = i;
+        pin_ptr_index = i;
         break;
       }
     }
   }
-  return interrupt_ptr_index;
+  return pin_ptr_index;
 }
 
-void Callback::functor(Interrupt * interrupt_ptr)
+void Callback::functor(Pin * pin_ptr)
 {
   if (functor_)
   {
-    functor_(interrupt_ptr);
+    functor_(pin_ptr);
   }
 }
 
@@ -409,11 +409,11 @@ void Callback::updateFunctionsAndParameters()
   // Parameters
   parameters_.clear();
 
-  Parameter & interrupt_parameter = createParameter(constants::interrupt_constant_string);
-  interrupt_parameter.setTypeString();
-  interrupt_parameter.setSubset(interrupt_name_array_ptr_->data(),
-                                interrupt_name_array_ptr_->max_size(),
-                                interrupt_name_array_ptr_->size());
+  Parameter & pin_parameter = createParameter(constants::pin_constant_string);
+  pin_parameter.setTypeString();
+  pin_parameter.setSubset(pin_name_array_ptr_->data(),
+                          pin_name_array_ptr_->max_size(),
+                          pin_name_array_ptr_->size());
 
   Parameter & mode_parameter = createParameter(constants::mode_constant_string);
   mode_parameter.setTypeString();
@@ -427,12 +427,12 @@ void Callback::updateFunctionsAndParameters()
 
   Function & attach_to_function = createFunction(callback::attach_to_function_name);
   attach_to_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::attachToHandler));
-  attach_to_function.addParameter(interrupt_parameter);
+  attach_to_function.addParameter(pin_parameter);
   attach_to_function.addParameter(mode_parameter);
 
   Function & detach_from_function = createFunction(callback::detach_from_function_name);
   detach_from_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::detachFromHandler));
-  detach_from_function.addParameter(interrupt_parameter);
+  detach_from_function.addParameter(pin_parameter);
 
   Function & detach_from_all_function = createFunction(callback::detach_from_all_function_name);
   detach_from_all_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::detachFromAllHandler));
@@ -445,15 +445,15 @@ void Callback::callHandler()
 
 void Callback::attachToHandler()
 {
-  const char * interrupt_str = get_parameter_value_functor_(constants::interrupt_constant_string);
+  const char * pin_str = get_parameter_value_functor_(constants::pin_constant_string);
   const char * mode_str = get_parameter_value_functor_(constants::mode_constant_string);
-  attachTo(interrupt_str,mode_str);
+  attachTo(pin_str,mode_str);
 }
 
 void Callback::detachFromHandler()
 {
-  const char * interrupt_str = get_parameter_value_functor_(constants::interrupt_constant_string);
-  detachFrom(interrupt_str);
+  const char * pin_str = get_parameter_value_functor_(constants::pin_constant_string);
+  detachFrom(pin_str);
 }
 
 void Callback::detachFromAllHandler()

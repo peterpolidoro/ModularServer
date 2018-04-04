@@ -14,12 +14,12 @@ namespace constants
 CONSTANT_STRING(firmware_name,"ModularServer");
 // Use semantic versioning http://semver.org/
 const FirmwareInfo firmware_info =
-  {
-    .name_ptr=&firmware_name,
-    .version_major=4,
-    .version_minor=1,
-    .version_patch=2,
-  };
+{
+  .name_ptr=&firmware_name,
+  .version_major=4,
+  .version_minor=1,
+  .version_patch=2,
+};
 
 const long response_pipe_read_max = 100000;
 
@@ -36,11 +36,11 @@ CONSTANT_STRING(verbosity_names,"NAMES");
 CONSTANT_STRING(verbosity_general,"GENERAL");
 CONSTANT_STRING(verbosity_detailed,"DETAILED");
 SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH] =
-  {
-    {.cs_ptr=&verbosity_names},
-    {.cs_ptr=&verbosity_general},
-    {.cs_ptr=&verbosity_detailed},
-  };
+{
+  {.cs_ptr=&verbosity_names},
+  {.cs_ptr=&verbosity_general},
+  {.cs_ptr=&verbosity_detailed},
+};
 
 // Functions
 CONSTANT_STRING(get_method_ids_function_name,"getMethodIds");
@@ -48,8 +48,8 @@ CONSTANT_STRING(help_function_name,"?");
 CONSTANT_STRING(verbose_help_function_name,"??");
 CONSTANT_STRING(get_device_id_function_name,"getDeviceId");
 CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
-CONSTANT_STRING(get_interrupt_info_function_name,"getInterruptInfo");
-CONSTANT_STRING(detach_all_interrupts_function_name,"detachAllInterrupts");
+CONSTANT_STRING(get_pin_info_function_name,"getPinInfo");
+CONSTANT_STRING(detach_all_pins_function_name,"detachAllPins");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
 CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefaults");
@@ -150,10 +150,9 @@ CONSTANT_STRING(version_property_separator_constant_string,".");
 CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(all_constant_string,"ALL");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
-CONSTANT_STRING(interrupts_constant_string,"interrupts");
-CONSTANT_STRING(interrupt_constant_string,"interrupt");
-CONSTANT_STRING(number_constant_string,"number");
+CONSTANT_STRING(pins_constant_string,"pins");
 CONSTANT_STRING(pin_constant_string,"pin");
+CONSTANT_STRING(number_constant_string,"number");
 CONSTANT_STRING(mode_constant_string,"mode");
 CONSTANT_STRING(processor_constant_string,"processor");
 
@@ -174,9 +173,9 @@ CONSTANT_STRING(processor_name_constant_string,"");
 #endif
 
 ConstantString * all_c_style_array[ALL_ARRAY_SIZE] =
-  {
-   &all_constant_string,
-  };
+{
+  &all_constant_string,
+};
 Array<ConstantString *, ALL_ARRAY_SIZE> all_array(all_c_style_array);
 
 }

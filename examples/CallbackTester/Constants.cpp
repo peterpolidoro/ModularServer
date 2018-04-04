@@ -17,24 +17,24 @@ CONSTANT_STRING(device_name,"callback_tester");
 CONSTANT_STRING(firmware_name,"CallbackTester");
 // Use semantic versioning http://semver.org/
 const modular_server::FirmwareInfo firmware_info =
-  {
-    .name_ptr=&firmware_name,
-    .version_major=2,
-    .version_minor=0,
-    .version_patch=0,
-  };
+{
+  .name_ptr=&firmware_name,
+  .version_major=2,
+  .version_minor=0,
+  .version_patch=0,
+};
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 CONSTANT_STRING(form_factor,"5x3");
 CONSTANT_STRING(hardware_name,"Mega2560");
 const modular_server::HardwareInfo hardware_info =
-  {
-    .name_ptr=&hardware_name,
-    .part_number=0,
-    .version_major=0,
-    .version_minor=0,
-  };
+{
+  .name_ptr=&hardware_name,
+  .part_number=0,
+  .version_major=0,
+  .version_minor=0,
+};
 
 const size_t bnc_a_pin = 2;
 const size_t bnc_b_pin = 3;
@@ -48,12 +48,12 @@ const size_t bnc_f_pin = 21;
 CONSTANT_STRING(form_factor,"3x2");
 CONSTANT_STRING(hardware_name,"Teensy");
 const modular_server::HardwareInfo hardware_info =
-  {
-    .name_ptr=&hardware_name,
-    .part_number=0,
-    .version_major=3,
-    .version_minor=2,
-  };
+{
+  .name_ptr=&hardware_name,
+  .part_number=0,
+  .version_major=3,
+  .version_minor=2,
+};
 
 const size_t bnc_a_pin = 33;
 const size_t bnc_b_pin = 32;
@@ -67,12 +67,12 @@ const size_t bnc_f_pin = 5;
 CONSTANT_STRING(form_factor,"");
 CONSTANT_STRING(hardware_name,"");
 const modular_server::HardwareInfo hardware_info =
-  {
-    .name_ptr=&hardware_name,
-    .part_number=0,
-    .version_major=0,
-    .version_minor=0,
-  };
+{
+  .name_ptr=&hardware_name,
+  .part_number=0,
+  .version_major=0,
+  .version_minor=0,
+};
 
 const size_t bnc_a_pin = 0;
 const size_t bnc_b_pin = 1;
@@ -85,13 +85,13 @@ const size_t bnc_f_pin = 5;
 
 const size_t led_pin = 13;
 
-// Interrupts
-CONSTANT_STRING(bnc_a_interrupt_name,"bnc_a");
-CONSTANT_STRING(bnc_b_interrupt_name,"bnc_b");
-CONSTANT_STRING(bnc_c_interrupt_name,"bnc_c");
-CONSTANT_STRING(bnc_d_interrupt_name,"bnc_d");
-CONSTANT_STRING(bnc_e_interrupt_name,"bnc_e");
-CONSTANT_STRING(bnc_f_interrupt_name,"bnc_f");
+// Pins
+CONSTANT_STRING(bnc_a_pin_name,"bnc_a");
+CONSTANT_STRING(bnc_b_pin_name,"bnc_b");
+CONSTANT_STRING(bnc_c_pin_name,"bnc_c");
+CONSTANT_STRING(bnc_d_pin_name,"bnc_d");
+CONSTANT_STRING(bnc_e_pin_name,"bnc_e");
+CONSTANT_STRING(bnc_f_pin_name,"bnc_f");
 
 // Units
 CONSTANT_STRING(seconds_unit,"seconds");
