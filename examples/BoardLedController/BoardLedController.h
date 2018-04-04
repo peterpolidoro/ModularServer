@@ -32,7 +32,7 @@ private:
   // Handlers
   void setLedOnHandler();
   void setLedOffHandler();
-  void getLedPinHandler();
+  void getLedPinNumberHandler();
   void blinkLedHandler();
 
 };

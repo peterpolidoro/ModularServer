@@ -32,26 +32,26 @@ extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
-extern const size_t led_pin;
+extern const size_t led_pin_number;
 
 // Pins
 extern ConstantString bnc_a_pin_name;
-extern const size_t bnc_a_pin;
+extern const size_t bnc_a_pin_number;
 
 extern ConstantString bnc_b_pin_name;
-extern const size_t bnc_b_pin;
+extern const size_t bnc_b_pin_number;
 
 extern ConstantString bnc_c_pin_name;
-extern const size_t bnc_c_pin;
+extern const size_t bnc_c_pin_number;
 
 extern ConstantString bnc_d_pin_name;
-extern const size_t bnc_d_pin;
+extern const size_t bnc_d_pin_number;
 
 extern ConstantString bnc_e_pin_name;
-extern const size_t bnc_e_pin;
+extern const size_t bnc_e_pin_number;
 
 extern ConstantString bnc_f_pin_name;
-extern const size_t bnc_f_pin;
+extern const size_t bnc_f_pin_number;
 
 // Units
 extern ConstantString seconds_unit;

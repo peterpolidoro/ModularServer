@@ -26,14 +26,14 @@ Pin::Pin()
   setup(constants::empty_constant_string);
 }
 
-size_t Pin::getNumber()
+int Pin::getInterruptNumber()
 {
-  return number_;
+  return interrupt_number_;
 }
 
-size_t Pin::getPin()
+size_t Pin::getPinNumber()
 {
-  return pin_;
+  return pin_number_;
 }
 
 Callback * Pin::getCallbackPtr()
@@ -48,7 +48,7 @@ const ConstantString & Pin::getMode()
 
 void Pin::writeApi(Response & response,
                    bool write_name_only,
-                   bool write_number_pin_details)
+                   bool write_details)
 {
   if (response.error())
   {
@@ -69,11 +69,11 @@ void Pin::writeApi(Response & response,
   const ConstantString & hardware_name = getHardwareName();
   response.write(constants::hardware_constant_string,hardware_name);
 
-  if (write_number_pin_details)
+  if (write_details)
   {
-    response.write(constants::number_constant_string,getNumber());
+    response.write(constants::pin_number_constant_string,getPinNumber());
 
-    response.write(constants::pin_constant_string,getPin());
+    response.write(constants::interrupt_number_constant_string,getInterruptNumber());
   }
 
   Callback * callback_ptr = getCallbackPtr();
@@ -90,36 +90,36 @@ void Pin::writeApi(Response & response,
 // protected
 
 // private
-Pin::Pin(const ConstantString & name, const size_t pin)
+Pin::Pin(const ConstantString & name, const size_t pin_number)
 {
   setup(name);
-  setPin(pin);
+  setPinNumber(pin_number);
 }
 
 void Pin::setup(const ConstantString & name)
 {
   setName(name);
-  number_ = 0;
-  pin_ = 0;
+  interrupt_number_ = NOT_AN_INTERRUPT;
+  pin_number_ = 0;
   callback_ptr_ = NULL;
   mode_ptr_ = &pin::mode_detached;
   isr_ = NULL;
 }
 
-void Pin::setPin(const size_t pin)
+void Pin::setPinNumber(const size_t pin_number)
 {
-  number_ = digitalPinToPin(pin);
-  pin_ = pin;
+  interrupt_number_ = digitalPinToInterrupt(pin_number);
+  pin_number_ = pin_number;
 }
 
 void Pin::enablePullup()
 {
-  pinMode(pin_,INPUT_PULLUP);
+  pinMode(pin_number_,INPUT_PULLUP);
 }
 
 void Pin::disablePullup()
 {
-  pinMode(pin_,INPUT);
+  pinMode(pin_number_,INPUT);
 }
 
 void Pin::setCallback(Callback & callback)
@@ -172,41 +172,45 @@ void Pin::reattach()
   {
     return;
   }
+  if (interrupt_number_ == NOT_AN_INTERRUPT)
+  {
+    return;
+  }
   if (mode_ptr_ == &pin::mode_low)
   {
     resetIsr();
-    detachPin(digitalPinToPin(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachPin(digitalPinToPin(pin_),
-              isr_,
-              LOW);
+    attachInterrupt(interrupt_number_,
+                    isr_,
+                    LOW);
   }
   else if (mode_ptr_ == &pin::mode_change)
   {
     resetIsr();
-    detachPin(digitalPinToPin(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachPin(digitalPinToPin(pin_),
-              isr_,
-              CHANGE);
+    attachInterrupt(interrupt_number_,
+                    isr_,
+                    CHANGE);
   }
   else if (mode_ptr_ == &pin::mode_rising)
   {
     resetIsr();
-    detachPin(digitalPinToPin(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachPin(digitalPinToPin(pin_),
-              isr_,
-              RISING);
+    attachInterrupt(interrupt_number_,
+                    isr_,
+                    RISING);
   }
   else if (mode_ptr_ == &pin::mode_falling)
   {
     resetIsr();
-    detachPin(digitalPinToPin(pin_));
+    detachInterrupt(interrupt_number_);
     enablePullup();
-    attachPin(digitalPinToPin(pin_),
-              isr_,
-              FALLING);
+    attachInterrupt(interrupt_number_,
+                    isr_,
+                    FALLING);
   }
 }
 
@@ -218,7 +222,11 @@ void Pin::attach(Callback & callback, const ConstantString & mode)
 
 void Pin::detach()
 {
-  detachPin(digitalPinToPin(pin_));
+  if (interrupt_number_ == NOT_AN_INTERRUPT)
+  {
+    return;
+  }
+  detachInterrupt(interrupt_number_);
   disablePullup();
   mode_ptr_ = &pin::mode_detached;
 }

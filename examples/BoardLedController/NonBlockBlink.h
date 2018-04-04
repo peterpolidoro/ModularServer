@@ -15,7 +15,7 @@
 class NonBlockBlink
 {
 public:
-  NonBlockBlink(int led_pin);
+  NonBlockBlink(int led_pin_number);
   void start();
   void stop();
   void update();
@@ -26,7 +26,7 @@ private:
   int duration_on_;
   int duration_off_;
   int count_;
-  int led_pin_;
+  int led_pin_number_;
   int led_state_;
   bool enabled_;
   size_t interval_;

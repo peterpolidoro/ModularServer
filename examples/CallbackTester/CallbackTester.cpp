@@ -13,7 +13,7 @@ void CallbackTester::setup()
   modular_server_.setup();
 
   // Pin Setup
-  pinMode(constants::led_pin, OUTPUT);
+  pinMode(constants::led_pin_number, OUTPUT);
 
   // Add Server Streams
   modular_server_.addServerStream(Serial);
@@ -28,22 +28,22 @@ void CallbackTester::setup()
 
   // Pins
   modular_server::Pin & bnc_a_pin = modular_server_.createPin(constants::bnc_a_pin_name,
-                                                                                constants::bnc_a_pin);
+                                                              constants::bnc_a_pin_number);
 
   modular_server::Pin & bnc_b_pin = modular_server_.createPin(constants::bnc_b_pin_name,
-                                                                                constants::bnc_b_pin);
+                                                              constants::bnc_b_pin_number);
 
   modular_server::Pin & bnc_c_pin = modular_server_.createPin(constants::bnc_c_pin_name,
-                                                                                constants::bnc_c_pin);
+                                                              constants::bnc_c_pin_number);
 
   modular_server::Pin & bnc_d_pin = modular_server_.createPin(constants::bnc_d_pin_name,
-                                                                                constants::bnc_d_pin);
+                                                              constants::bnc_d_pin_number);
 
   modular_server::Pin & bnc_e_pin = modular_server_.createPin(constants::bnc_e_pin_name,
-                                                                                constants::bnc_e_pin);
+                                                              constants::bnc_e_pin_number);
 
   modular_server::Pin & bnc_f_pin = modular_server_.createPin(constants::bnc_f_pin_name,
-                                                                                constants::bnc_f_pin);
+                                                              constants::bnc_f_pin_number);
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
@@ -121,13 +121,13 @@ void CallbackTester::update()
 void CallbackTester::setLedOnHandler(modular_server::Pin * pin_ptr)
 {
   non_block_blink.stop();
-  digitalWrite(constants::led_pin, HIGH);
+  digitalWrite(constants::led_pin_number, HIGH);
 }
 
 void CallbackTester::setLedOffHandler(modular_server::Pin * pin_ptr)
 {
   non_block_blink.stop();
-  digitalWrite(constants::led_pin, LOW);
+  digitalWrite(constants::led_pin_number, LOW);
 }
 
 void CallbackTester::blinkLedHandler(modular_server::Pin * pin_ptr)

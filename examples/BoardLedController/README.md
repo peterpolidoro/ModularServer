@@ -47,7 +47,7 @@ Response:
       "functions": [
         "setLedOn",
         "setLedOff",
-        "getLedPin",
+        "getLedPinNumber",
         "blinkLed"
       ],
       "parameters": [
@@ -100,7 +100,7 @@ Response:
         "detachAllPins",
         "setLedOn",
         "setLedOff",
-        "getLedPin",
+        "getLedPinNumber",
         "blinkLed"
       ],
       "parameters": [
@@ -326,16 +326,16 @@ on duration of 500ms and an off duration of 200ms.
 Request:
 
 ```shell
-getLedPin ?
+getLedPinNumber ?
 ```
 
 Response:
 
 ```json
 {
-  "id": "getLedPin",
+  "id": "getLedPinNumber",
   "result": {
-    "name": "getLedPin",
+    "name": "getLedPinNumber",
     "firmware": "BoardLedController",
     "result_info": {
       "type": "long"
@@ -347,14 +347,14 @@ Response:
 Request:
 
 ```shell
-getLedPin
+getLedPinNumber
 ```
 
 Response:
 
 ```json
 {
-  "id": "getLedPin",
+  "id": "getLedPinNumber",
   "result": 13
 }
 ```
@@ -459,7 +459,7 @@ Response:
       "detachAllPins",
       "setLedOn",
       "setLedOff",
-      "getLedPin",
+      "getLedPinNumber",
       "blinkLed"
     ],
     "parameters": [
@@ -495,7 +495,7 @@ Response:
     "functions": [
       "setLedOn",
       "setLedOff",
-      "getLedPin",
+      "getLedPinNumber",
       "blinkLed"
     ],
     "parameters": [
@@ -531,7 +531,7 @@ Response:
         "name": "setLedOff"
       },
       {
-        "name": "getLedPin",
+        "name": "getLedPinNumber",
         "result_info": {
           "type": "long"
         }
@@ -587,7 +587,7 @@ Response:
         "name": "setLedOff"
       },
       {
-        "name": "getLedPin",
+        "name": "getLedPinNumber",
         "result_info": {
           "type": "long"
         }
@@ -645,7 +645,7 @@ dev.get_methods()
  'get_device_id',
  'blink_led',
  'set_led_off',
- 'get_led_pin',
+ 'get_led_pin_number',
  'get_property_default_values',
  'set_properties_to_defaults',
  'detach_all_pins',
@@ -683,20 +683,20 @@ dev.blink_led('??')
 dev.blink_led(3.0,0.2,20)
 IOError: (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.blink_led(0.5,0.2,20)
-result = dev.get_led_pin('?')
+result = dev.get_led_pin_number('?')
 dev.convert_to_json(result)
-'{"firmware":"BoardLedController","name":"getLedPin","result_info":{"type":"long"}}'
-dev.get_led_pin()
+'{"firmware":"BoardLedController","name":"getLedPinNumber","result_info":{"type":"long"}}'
+dev.get_led_pin_number()
 13
-dev.call_get_result("get_led_pin")
+dev.call_get_result("get_led_pin_number")
 13
-dev.send_json_request('["get_led_pin"]')
+dev.send_json_request('["get_led_pin_number"]')
 13
 dev.call("blink_led",0.5,0.2,20)
 dev.send_json_request('["blink_led",0.5,0.2,20]')
 dev.get_api('NAMES',["BoardLedController"])
 {'firmware': ['BoardLedController'],
- 'functions': ['setLedOn', 'setLedOff', 'getLedPin', 'blinkLed'],
+ 'functions': ['setLedOn', 'setLedOff', 'getLedPinNumber', 'blinkLed'],
  'parameters': ['duration_on', 'duration_off', 'count'],
  'verbosity': 'NAMES'}
 ```
@@ -740,7 +740,7 @@ dev.getMethods()                 % get device methods
   detachAllPins
   setLedOn
   setLedOff
-  getLedPin
+  getLedPinNumber
   blinkLed
   serialNumber
 dev.setPropertiesToDefaults({'ALL'});
@@ -763,13 +763,13 @@ parameter_info =
 dev.blinkLed(3.0,0.2,20)
 (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.blinkLed(0.5,0.2,20);
-led_pin = dev.getLedPin()
+led_pin = dev.getLedPinNumber()
 led_pin =
   13
-led_pin = dev.callGetResult('getLedPin')
+led_pin = dev.callGetResult('getLedPinNumber')
 led_pin =
   13
-led_pin = dev.sendJsonRequest('["getLedPin"]')
+led_pin = dev.sendJsonRequest('["getLedPinNumber"]')
 led_pin =
   13
 dev.call('blinkLed',0.5,0.2,20)
@@ -778,7 +778,7 @@ dev.getApi('NAMES',{'BoardLedController'})
 ans =
   firmware: {'BoardLedController'}
   verbosity: 'NAMES'
-  functions: {'setLedOn'  'setLedOff'  'getLedPin'  'blinkLed'}
+  functions: {'setLedOn'  'setLedOff'  'getLedPinNumber'  'blinkLed'}
   parameters: {'duration_on'  'duration_off'  'count'}
 dev.close()
 clear dev

@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 #include "NonBlockBlink.h"
 
-NonBlockBlink::NonBlockBlink(int led_pin) :
-  led_pin_(led_pin)
+NonBlockBlink::NonBlockBlink(int led_pin_number) :
+  led_pin_number_(led_pin_number)
 {
   duration_on_ = 300;
   duration_off_ = 500;
@@ -21,7 +21,7 @@ void NonBlockBlink::start()
   {
     previous_time_ = millis();
     led_state_ = HIGH;
-    digitalWrite(led_pin_, led_state_);
+    digitalWrite(led_pin_number_, led_state_);
     interval_ = duration_on_;
     counter_ = 0;
     enabled_ = true;
@@ -58,7 +58,7 @@ void NonBlockBlink::update()
         }
       }
 
-      digitalWrite(led_pin_, led_state_);
+      digitalWrite(led_pin_number_, led_state_);
     }
   }
 }
@@ -78,4 +78,4 @@ void NonBlockBlink::setCount(long value)
   count_ = (long)value;
 }
 
-NonBlockBlink non_block_blink(constants::led_pin);
+NonBlockBlink non_block_blink(constants::led_pin_number);

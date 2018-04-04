@@ -62,7 +62,7 @@ const modular_server::HardwareInfo hardware_info =
 
 #endif
 
-const size_t led_pin = 13;
+const size_t led_pin_number = 13;
 
 // Pins
 
@@ -85,7 +85,7 @@ const long count_max = 100;
 // Functions
 CONSTANT_STRING(led_on_function_name,"setLedOn");
 CONSTANT_STRING(led_off_function_name,"setLedOff");
-CONSTANT_STRING(get_led_pin_function_name,"getLedPin");
+CONSTANT_STRING(get_led_pin_number_function_name,"getLedPinNumber");
 CONSTANT_STRING(blink_led_function_name,"blinkLed");
 
 // Callbacks

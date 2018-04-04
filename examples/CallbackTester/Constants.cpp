@@ -36,12 +36,12 @@ const modular_server::HardwareInfo hardware_info =
   .version_minor=0,
 };
 
-const size_t bnc_a_pin = 2;
-const size_t bnc_b_pin = 3;
-const size_t bnc_c_pin = 18;
-const size_t bnc_d_pin = 19;
-const size_t bnc_e_pin = 20;
-const size_t bnc_f_pin = 21;
+const size_t bnc_a_pin_number = 2;
+const size_t bnc_b_pin_number = 3;
+const size_t bnc_c_pin_number = 18;
+const size_t bnc_d_pin_number = 19;
+const size_t bnc_e_pin_number = 20;
+const size_t bnc_f_pin_number = 21;
 
 #elif defined(__MK20DX128__) || defined(__MK20DX256__)
 
@@ -55,12 +55,12 @@ const modular_server::HardwareInfo hardware_info =
   .version_minor=2,
 };
 
-const size_t bnc_a_pin = 33;
-const size_t bnc_b_pin = 32;
-const size_t bnc_c_pin = 2;
-const size_t bnc_d_pin = 3;
-const size_t bnc_e_pin = 4;
-const size_t bnc_f_pin = 5;
+const size_t bnc_a_pin_number = 33;
+const size_t bnc_b_pin_number = 32;
+const size_t bnc_c_pin_number = 2;
+const size_t bnc_d_pin_number = 3;
+const size_t bnc_e_pin_number = 4;
+const size_t bnc_f_pin_number = 5;
 
 #else
 
@@ -74,16 +74,16 @@ const modular_server::HardwareInfo hardware_info =
   .version_minor=0,
 };
 
-const size_t bnc_a_pin = 0;
-const size_t bnc_b_pin = 1;
-const size_t bnc_c_pin = 2;
-const size_t bnc_d_pin = 3;
-const size_t bnc_e_pin = 4;
-const size_t bnc_f_pin = 5;
+const size_t bnc_a_pin_number = 0;
+const size_t bnc_b_pin_number = 1;
+const size_t bnc_c_pin_number = 2;
+const size_t bnc_d_pin_number = 3;
+const size_t bnc_e_pin_number = 4;
+const size_t bnc_f_pin_number = 5;
 
 #endif
 
-const size_t led_pin = 13;
+const size_t led_pin_number = 13;
 
 // Pins
 CONSTANT_STRING(bnc_a_pin_name,"bnc_a");

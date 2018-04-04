@@ -189,7 +189,7 @@ void Server::removeHardware()
 
 // Pins
 Pin & Server::createPin(const ConstantString & pin_name,
-                        const size_t pin)
+                        const size_t pin_number)
 {
   int pin_index = findPinIndex(pin_name);
   if (pin_index < 0)
@@ -197,7 +197,7 @@ Pin & Server::createPin(const ConstantString & pin_name,
     constants::SubsetMemberType int_name;
     int_name.cs_ptr = &pin_name;
     pin_name_array_.push_back(int_name);
-    pins_.push_back(Pin(pin_name,pin));
+    pins_.push_back(Pin(pin_name,pin_number));
     const ConstantString * hardware_name_ptr = hardware_info_array_.back()->name_ptr;
     pins_.back().setHardwareName(*hardware_name_ptr);
     return pins_.back();

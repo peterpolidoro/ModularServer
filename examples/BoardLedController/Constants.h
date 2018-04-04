@@ -32,7 +32,7 @@ extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
-extern const size_t led_pin;
+extern const size_t led_pin_number;
 
 // Pins
 
@@ -56,7 +56,7 @@ extern const long count_max;
 // Functions
 extern ConstantString led_on_function_name;
 extern ConstantString led_off_function_name;
-extern ConstantString get_led_pin_function_name;
+extern ConstantString get_led_pin_number_function_name;
 extern ConstantString blink_led_function_name;
 
 // Callbacks

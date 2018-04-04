@@ -44,9 +44,9 @@ void ModularServer::removeHardware()
 
 // Pins
 Pin & ModularServer::createPin(const ConstantString & pin_name,
-                               const size_t pin)
+                               const size_t pin_number)
 {
-  return server_.createPin(pin_name,pin);
+  return server_.createPin(pin_name,pin_number);
 }
 
 Pin & ModularServer::pin(const ConstantString & pin_name)

@@ -13,7 +13,7 @@
         "name": "setLedOff"
       },
       {
-        "name": "getLedPin",
+        "name": "getLedPinNumber",
         "result_info": {
           "type": "long"
         }

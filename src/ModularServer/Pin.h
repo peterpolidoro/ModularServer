@@ -37,24 +37,24 @@ class Pin : private HardwareElement
 {
 public:
   Pin();
-  size_t getNumber();
-  size_t getPin();
+  int getInterruptNumber();
+  size_t getPinNumber();
   Callback * getCallbackPtr();
   const ConstantString & getMode();
 
   void writeApi(Response & response,
                 bool write_name_only,
-                bool write_number_pin_details);
+                bool write_details);
 
 private:
-  size_t number_;
-  size_t pin_;
+  int interrupt_number_;
+  size_t pin_number_;
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
   FunctorCallbacks::Callback isr_;
-  Pin(const ConstantString & name, const size_t pin);
+  Pin(const ConstantString & name, const size_t pin_number);
   void setup(const ConstantString & name);
-  void setPin(const size_t pin);
+  void setPinNumber(const size_t pin_number);
   void enablePullup();
   void disablePullup();
   void setCallback(Callback & callback);

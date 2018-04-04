@@ -13,7 +13,7 @@ void BoardLedController::setup()
   modular_server_.setup();
 
   // Pin Setup
-  pinMode(constants::led_pin, OUTPUT);
+  pinMode(constants::led_pin_number, OUTPUT);
 
   // Add Server Streams
   modular_server_.addServerStream(Serial);
@@ -54,9 +54,9 @@ void BoardLedController::setup()
   modular_server::Function & led_off_function = modular_server_.createFunction(constants::led_off_function_name);
   led_off_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::setLedOffHandler));
 
-  modular_server::Function & get_led_pin_function = modular_server_.createFunction(constants::get_led_pin_function_name);
-  get_led_pin_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinHandler));
-  get_led_pin_function.setResultTypeLong();
+  modular_server::Function & get_led_pin_number_function = modular_server_.createFunction(constants::get_led_pin_number_function_name);
+  get_led_pin_number_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::getLedPinNumberHandler));
+  get_led_pin_number_function.setResultTypeLong();
 
   modular_server::Function & blink_led_function = modular_server_.createFunction(constants::blink_led_function_name);
   blink_led_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&BoardLedController::blinkLedHandler));
@@ -102,18 +102,18 @@ void BoardLedController::update()
 void BoardLedController::setLedOnHandler()
 {
   non_block_blink.stop();
-  digitalWrite(constants::led_pin, HIGH);
+  digitalWrite(constants::led_pin_number, HIGH);
 }
 
 void BoardLedController::setLedOffHandler()
 {
   non_block_blink.stop();
-  digitalWrite(constants::led_pin, LOW);
+  digitalWrite(constants::led_pin_number, LOW);
 }
 
-void BoardLedController::getLedPinHandler()
+void BoardLedController::getLedPinNumberHandler()
 {
-  modular_server_.response().returnResult(constants::led_pin);
+  modular_server_.response().returnResult(constants::led_pin_number);
 }
 
 void BoardLedController::blinkLedHandler()

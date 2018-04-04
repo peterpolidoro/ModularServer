@@ -37,7 +37,7 @@ public:
 
   // Pins
   Pin & createPin(const ConstantString & pin_name,
-                  const size_t pin);
+                  const size_t pin_number);
   Pin & pin(const ConstantString & pin_name);
 
   // Firmware
