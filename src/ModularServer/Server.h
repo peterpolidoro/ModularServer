@@ -114,7 +114,7 @@ private:
   Array<const constants::HardwareInfo *,constants::HARDWARE_COUNT_MAX> hardware_info_array_;
   Pin dummy_pin_;
   ConcatenatedArray<Pin,constants::HARDWARE_COUNT_MAX> pins_;
-  Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX> pin_name_array_;
+  Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX+1> pin_name_array_;
 
   Property server_properties_[constants::SERVER_PROPERTY_COUNT_MAX];
   Parameter server_parameters_[constants::SERVER_PARAMETER_COUNT_MAX];

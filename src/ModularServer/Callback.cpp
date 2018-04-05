@@ -26,12 +26,11 @@ constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
 CONSTANT_STRING(trigger_function_name,"trigger");
 CONSTANT_STRING(attach_to_function_name,"attachTo");
 CONSTANT_STRING(detach_from_function_name,"detachFrom");
-CONSTANT_STRING(detach_from_all_function_name,"detachFromAll");
 }
 
 Array<Parameter,callback::PARAMETER_COUNT_MAX> Callback::parameters_;
 Array<Function,callback::FUNCTION_COUNT_MAX> Callback::functions_;
-Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX> * Callback::pin_name_array_ptr_;
+Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX+1> * Callback::pin_name_array_ptr_;
 Functor1wRet<const char *, Pin *> Callback::find_pin_ptr_by_chars_functor_;
 Functor1wRet<const ConstantString &, Pin *> Callback::find_pin_ptr_by_constant_string_functor_;
 Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Callback::get_parameter_value_functor_;
@@ -127,6 +126,7 @@ void Callback::attachTo(Pin & pin, const ConstantString & mode)
       (&mode == &pin::mode_rising) ||
       (&mode == &pin::mode_falling))
   {
+    detachFrom(pin);
     int index = pin_ptrs_.add(&pin);
     if (index >= 0)
     {
@@ -137,31 +137,21 @@ void Callback::attachTo(Pin & pin, const ConstantString & mode)
 
 void Callback::attachTo(const ConstantString & pin_name, const ConstantString & mode)
 {
-  if ((&mode == &pin::mode_low) ||
-      (&mode == &pin::mode_change) ||
-      (&mode == &pin::mode_rising) ||
-      (&mode == &pin::mode_falling))
+  if (pin_name == constants::all_constant_string)
   {
-    Pin * pin_ptr = find_pin_ptr_by_constant_string_functor_(pin_name);
-    if (!pin_ptr)
-    {
-      return;
-    }
-    int index = pin_ptrs_.add(pin_ptr);
-    if (index >= 0)
-    {
-      pin_ptr->attach(*this,mode);
-    }
+    attachToAll(mode);
+    return;
   }
-}
-
-void Callback::attachTo(const char * pin_name, const char * mode_str)
-{
-  Pin * pin_ptr = find_pin_ptr_by_chars_functor_(pin_name);
+  Pin * pin_ptr = find_pin_ptr_by_constant_string_functor_(pin_name);
   if (!pin_ptr)
   {
     return;
   }
+  attachTo(*pin_ptr,mode);
+}
+
+void Callback::attachTo(const char * pin_name, const char * mode_str)
+{
   const ConstantString * mode_ptr = NULL;
   if (mode_str == pin::mode_low)
   {
@@ -183,10 +173,28 @@ void Callback::attachTo(const char * pin_name, const char * mode_str)
   {
     return;
   }
-  int index = pin_ptrs_.add(pin_ptr);
-  if (index >= 0)
+  if (pin_name == constants::all_constant_string)
   {
-    pin_ptr->attach(*this,*mode_ptr);
+    attachToAll(*mode_ptr);
+    return;
+  }
+  Pin * pin_ptr = find_pin_ptr_by_chars_functor_(pin_name);
+  if (!pin_ptr)
+  {
+    return;
+  }
+  attachTo(*pin_ptr,*mode_ptr);
+}
+
+void Callback::attachToAll(const char * mode_str)
+{
+  for (size_t i=0; i<pin_name_array_ptr_->size(); ++i)
+  {
+    const ConstantString * name_ptr = pin_name_array_ptr_->at(i).cs_ptr;
+    if (name_ptr != &constants::all_constant_string)
+    {
+      attachTo(*name_ptr,mode_str);
+    }
   }
 }
 
@@ -202,6 +210,11 @@ void Callback::detachFrom(Pin & pin)
 
 void Callback::detachFrom(const ConstantString & pin_name)
 {
+  if (pin_name == constants::all_constant_string)
+  {
+    detachFromAll();
+    return;
+  }
   int pin_ptr_index = findPinPtrIndex(pin_name);
   if (pin_ptr_index >= 0)
   {
@@ -212,6 +225,11 @@ void Callback::detachFrom(const ConstantString & pin_name)
 
 void Callback::detachFrom(const char * pin_name)
 {
+  if (pin_name == constants::all_constant_string)
+  {
+    detachFromAll();
+    return;
+  }
   int pin_ptr_index = findPinPtrIndex(pin_name);
   if (pin_ptr_index >= 0)
   {
@@ -423,7 +441,7 @@ void Callback::updateFunctionsAndParameters()
   functions_.clear();
 
   Function & trigger_function = createFunction(callback::trigger_function_name);
-  trigger_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::callHandler));
+  trigger_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::triggerHandler));
 
   Function & attach_to_function = createFunction(callback::attach_to_function_name);
   attach_to_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::attachToHandler));
@@ -433,12 +451,9 @@ void Callback::updateFunctionsAndParameters()
   Function & detach_from_function = createFunction(callback::detach_from_function_name);
   detach_from_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::detachFromHandler));
   detach_from_function.addParameter(pin_parameter);
-
-  Function & detach_from_all_function = createFunction(callback::detach_from_all_function_name);
-  detach_from_all_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::detachFromAllHandler));
 }
 
-void Callback::callHandler()
+void Callback::triggerHandler()
 {
   functor(NULL);
 }
@@ -454,11 +469,6 @@ void Callback::detachFromHandler()
 {
   const char * pin_str = get_parameter_value_functor_(constants::pin_constant_string);
   detachFrom(pin_str);
-}
-
-void Callback::detachFromAllHandler()
-{
-  detachFromAll();
 }
 
 }

@@ -274,6 +274,10 @@ void Pin::reattach()
 
 void Pin::attach(Callback & callback, const ConstantString & mode)
 {
+  if (interrupt_number_ == NOT_AN_INTERRUPT)
+  {
+    return;
+  }
   setCallback(callback);
   setModeInterrupt(mode);
 }

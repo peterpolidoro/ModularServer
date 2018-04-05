@@ -25,9 +25,10 @@ void Server::setup()
 
   eeprom_initialized_ = false;
 
-  constants::SubsetMemberType firmware_name;
-  firmware_name.cs_ptr = &constants::all_constant_string;
-  firmware_name_array_.push_back(firmware_name);
+  constants::SubsetMemberType all;
+  all.cs_ptr = &constants::all_constant_string;
+  pin_name_array_.push_back(all);
+  firmware_name_array_.push_back(all);
 
   // Streams
   response_.setJsonStream(server_json_stream_);

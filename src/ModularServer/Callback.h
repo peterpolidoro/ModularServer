@@ -27,7 +27,7 @@ namespace modular_server
 namespace callback
 {
 enum{PARAMETER_COUNT_MAX=2};
-enum{FUNCTION_COUNT_MAX=4};
+enum{FUNCTION_COUNT_MAX=3};
 
 // Parameters
 enum{MODE_SUBSET_LENGTH=4};
@@ -37,7 +37,6 @@ extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
 extern ConstantString trigger_function_name;
 extern ConstantString attach_to_function_name;
 extern ConstantString detach_from_function_name;
-extern ConstantString detach_from_all_function_name;
 }
 
 class Pin;
@@ -53,6 +52,7 @@ public:
   void attachTo(Pin & pin, const ConstantString & mode);
   void attachTo(const ConstantString & pin_name, const ConstantString & mode);
   void attachTo(const char * pin_name, const char * mode_str);
+  void attachToAll(const char * mode_str);
   void detachFrom(Pin & pin);
   void detachFrom(const ConstantString & pin_name);
   void detachFrom(const char * pin_name);
@@ -68,7 +68,7 @@ public:
 private:
   static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
   static Array<Function,callback::FUNCTION_COUNT_MAX> functions_;
-  static Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX> * pin_name_array_ptr_;
+  static Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX+1> * pin_name_array_ptr_;
   static Functor1wRet<const char *, Pin *> find_pin_ptr_by_chars_functor_;
   static Functor1wRet<const ConstantString &, Pin *> find_pin_ptr_by_constant_string_functor_;
   static Functor1wRet<const char *, Pin *> find_pin_ptr_functor_;
@@ -124,10 +124,9 @@ private:
   void updateFunctionsAndParameters();
 
   // Handlers
-  void callHandler();
+  void triggerHandler();
   void attachToHandler();
   void detachFromHandler();
-  void detachFromAllHandler();
 
   friend class Server;
   friend class Pin;
