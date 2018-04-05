@@ -32,9 +32,9 @@ extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
-extern const size_t led_pin_number;
-
 // Pins
+extern ConstantString led_pin_name;
+extern const size_t led_pin_number;
 
 // Units
 extern ConstantString seconds_unit;

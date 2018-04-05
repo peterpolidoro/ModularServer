@@ -1145,6 +1145,175 @@ void Property::reenableFunctors()
   functors_enabled_ = true;
 }
 
+// private
+template <>
+Property::Property<long>(const ConstantString & name,
+                         const long & default_value) :
+  parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeLong();
+  setup();
+}
+
+template <>
+Property::Property<double>(const ConstantString & name,
+                           const double & default_value) :
+  parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeDouble();
+  setup();
+}
+
+template <>
+Property::Property<bool>(const ConstantString & name,
+                         const bool & default_value) :
+  parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeBool();
+  setup();
+}
+
+template <>
+Property::Property<const ConstantString *>(const ConstantString & name,
+                                           const ConstantString * const & default_value) :
+  parameter_(name),
+  saved_variable_(default_value)
+{
+  parameter_.setTypeString();
+  string_saved_as_char_array_ = false;
+  setup();
+}
+
+void Property::setup()
+{
+  functors_enabled_ = true;
+}
+
+Parameter & Property::parameter()
+{
+  return parameter_;
+}
+
+bool Property::compareName(const char * name_to_compare)
+{
+  return parameter_.compareName(name_to_compare);
+}
+
+bool Property::compareName(const ConstantString & name_to_compare)
+{
+  return parameter_.compareName(name_to_compare);
+}
+
+const ConstantString & Property::getName()
+{
+  return parameter_.getName();
+}
+
+const ConstantString & Property::getFirmwareName()
+{
+  return parameter_.getFirmwareName();
+}
+
+bool Property::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array)
+{
+  return parameter_.firmwareNameInArray(firmware_name_array);
+}
+
+JsonStream::JsonTypes Property::getType()
+{
+  return parameter_.getType();
+}
+
+JsonStream::JsonTypes Property::getArrayElementType()
+{
+  return parameter_.getArrayElementType();
+}
+
+bool Property::rangeIsSet()
+{
+  return parameter_.rangeIsSet();
+}
+
+bool Property::subsetIsSet()
+{
+  return parameter_.subsetIsSet();
+}
+
+bool Property::stringSavedAsCharArray()
+{
+  return string_saved_as_char_array_;
+}
+
+int Property::findSubsetValueIndex(const long value)
+{
+  return parameter_.findSubsetValueIndex(value);
+}
+
+int Property::findSubsetValueIndex(const char * value)
+{
+  return parameter_.findSubsetValueIndex(value);
+}
+
+int Property::findSubsetValueIndex(const ConstantString * value)
+{
+  return parameter_.findSubsetValueIndex(value);
+}
+
+bool Property::valueInSubset(const long value)
+{
+  return parameter_.valueInSubset(value);
+}
+
+bool Property::valueInSubset(const char * value)
+{
+  return parameter_.valueInSubset(value);
+}
+
+bool Property::valueInSubset(const ConstantString * value)
+{
+  return parameter_.valueInSubset(value);
+}
+
+Vector<constants::SubsetMemberType> & Property::getSubset()
+{
+  return parameter_.getSubset();
+}
+
+void Property::preSetValueFunctor()
+{
+  if (pre_set_value_functor_ && functors_enabled_)
+  {
+    pre_set_value_functor_();
+  }
+}
+
+void Property::preSetElementValueFunctor(const size_t element_index)
+{
+  if (pre_set_element_value_functor_ && functors_enabled_)
+  {
+    pre_set_element_value_functor_(element_index);
+  }
+}
+
+void Property::postSetValueFunctor()
+{
+  if (post_set_value_functor_ && functors_enabled_)
+  {
+    post_set_value_functor_();
+  }
+}
+
+void Property::postSetElementValueFunctor(const size_t element_index)
+{
+  if (post_set_element_value_functor_ && functors_enabled_)
+  {
+    post_set_element_value_functor_(element_index);
+  }
+}
+
 void Property::writeValue(Response & response,
                           bool write_key,
                           bool write_default,
@@ -1498,175 +1667,6 @@ void Property::writeApi(Response & response,
   response.endArray();
 
   response.endObject();
-}
-
-// private
-template <>
-Property::Property<long>(const ConstantString & name,
-                         const long & default_value) :
-  parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeLong();
-  setup();
-}
-
-template <>
-Property::Property<double>(const ConstantString & name,
-                           const double & default_value) :
-  parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeDouble();
-  setup();
-}
-
-template <>
-Property::Property<bool>(const ConstantString & name,
-                         const bool & default_value) :
-  parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeBool();
-  setup();
-}
-
-template <>
-Property::Property<const ConstantString *>(const ConstantString & name,
-                                           const ConstantString * const & default_value) :
-  parameter_(name),
-  saved_variable_(default_value)
-{
-  parameter_.setTypeString();
-  string_saved_as_char_array_ = false;
-  setup();
-}
-
-void Property::setup()
-{
-  functors_enabled_ = true;
-}
-
-Parameter & Property::parameter()
-{
-  return parameter_;
-}
-
-bool Property::compareName(const char * name_to_compare)
-{
-  return parameter_.compareName(name_to_compare);
-}
-
-bool Property::compareName(const ConstantString & name_to_compare)
-{
-  return parameter_.compareName(name_to_compare);
-}
-
-const ConstantString & Property::getName()
-{
-  return parameter_.getName();
-}
-
-const ConstantString & Property::getFirmwareName()
-{
-  return parameter_.getFirmwareName();
-}
-
-bool Property::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array)
-{
-  return parameter_.firmwareNameInArray(firmware_name_array);
-}
-
-JsonStream::JsonTypes Property::getType()
-{
-  return parameter_.getType();
-}
-
-JsonStream::JsonTypes Property::getArrayElementType()
-{
-  return parameter_.getArrayElementType();
-}
-
-bool Property::rangeIsSet()
-{
-  return parameter_.rangeIsSet();
-}
-
-bool Property::subsetIsSet()
-{
-  return parameter_.subsetIsSet();
-}
-
-bool Property::stringSavedAsCharArray()
-{
-  return string_saved_as_char_array_;
-}
-
-int Property::findSubsetValueIndex(const long value)
-{
-  return parameter_.findSubsetValueIndex(value);
-}
-
-int Property::findSubsetValueIndex(const char * value)
-{
-  return parameter_.findSubsetValueIndex(value);
-}
-
-int Property::findSubsetValueIndex(const ConstantString * value)
-{
-  return parameter_.findSubsetValueIndex(value);
-}
-
-bool Property::valueInSubset(const long value)
-{
-  return parameter_.valueInSubset(value);
-}
-
-bool Property::valueInSubset(const char * value)
-{
-  return parameter_.valueInSubset(value);
-}
-
-bool Property::valueInSubset(const ConstantString * value)
-{
-  return parameter_.valueInSubset(value);
-}
-
-Vector<constants::SubsetMemberType> & Property::getSubset()
-{
-  return parameter_.getSubset();
-}
-
-void Property::preSetValueFunctor()
-{
-  if (pre_set_value_functor_ && functors_enabled_)
-  {
-    pre_set_value_functor_();
-  }
-}
-
-void Property::preSetElementValueFunctor(const size_t element_index)
-{
-  if (pre_set_element_value_functor_ && functors_enabled_)
-  {
-    pre_set_element_value_functor_(element_index);
-  }
-}
-
-void Property::postSetValueFunctor()
-{
-  if (post_set_value_functor_ && functors_enabled_)
-  {
-    post_set_value_functor_();
-  }
-}
-
-void Property::postSetElementValueFunctor(const size_t element_index)
-{
-  if (post_set_element_value_functor_ && functors_enabled_)
-  {
-    post_set_element_value_functor_(element_index);
-  }
 }
 
 void Property::updateFunctionsAndParameters()

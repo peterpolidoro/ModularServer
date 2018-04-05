@@ -44,11 +44,6 @@ public:
   void setResultUnits(const ConstantString & units);
   const ConstantString & getResultUnits();
 
-  void writeApi(Response & response,
-                bool write_name_only,
-                bool write_firmware,
-                bool write_parameter_details);
-
 private:
   Functor0 functor_;
   Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> parameter_ptrs_;
@@ -61,6 +56,10 @@ private:
   int findParameterIndex(const ConstantString & parameter_name);
   size_t getParameterCount();
   void functor();
+  void writeApi(Response & response,
+                bool write_name_only,
+                bool write_firmware,
+                bool write_parameter_details);
 
   friend class Property;
   friend class Callback;

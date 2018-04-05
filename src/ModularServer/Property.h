@@ -162,16 +162,6 @@ public:
   void disableFunctors();
   void reenableFunctors();
 
-  void writeValue(Response & response,
-                  bool write_key=false,
-                  bool write_default=false,
-                  int element_index=-1);
-  void writeApi(Response & response,
-                bool write_name_only,
-                bool write_firmware,
-                bool write_function_parameter_details,
-                bool write_instance_details);
-
 private:
   static Parameter property_parameters_[property::PARAMETER_COUNT_MAX];
   static Function property_functions_[property::FUNCTION_COUNT_MAX];
@@ -273,6 +263,15 @@ private:
   void preSetElementValueFunctor(const size_t element_index);
   void postSetValueFunctor();
   void postSetElementValueFunctor(const size_t element_index);
+  void writeValue(Response & response,
+                  bool write_key=false,
+                  bool write_default=false,
+                  int element_index=-1);
+  void writeApi(Response & response,
+                bool write_name_only,
+                bool write_firmware,
+                bool write_function_parameter_details,
+                bool write_instance_details);
   void updateFunctionsAndParameters();
 
   // Handlers

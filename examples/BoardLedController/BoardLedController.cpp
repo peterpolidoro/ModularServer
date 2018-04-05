@@ -12,9 +12,6 @@ void BoardLedController::setup()
   // Server Setup
   modular_server_.setup();
 
-  // Pin Setup
-  pinMode(constants::led_pin_number, OUTPUT);
-
   // Add Server Streams
   modular_server_.addServerStream(Serial);
 
@@ -27,6 +24,10 @@ void BoardLedController::setup()
                               pins_);
 
   // Pins
+  // Pin Setup
+  pinMode(constants::led_pin_number, OUTPUT);
+
+  modular_server::Pin & led_pin = modular_server_.createPin(constants::led_pin_name,constants::led_pin_number);
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,

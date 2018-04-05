@@ -62,9 +62,9 @@ const modular_server::HardwareInfo hardware_info =
 
 #endif
 
-const size_t led_pin_number = 13;
-
 // Pins
+CONSTANT_STRING(led_pin_name,"led");
+const size_t led_pin_number = 13;
 
 // Units
 CONSTANT_STRING(seconds_unit,"seconds");

@@ -13,7 +13,8 @@ namespace modular_server
 
 namespace pin
 {
-CONSTANT_STRING(mode_detached,"DETACHED");
+CONSTANT_STRING(mode_input,"INPUT");
+CONSTANT_STRING(mode_output,"OUTPUT");
 CONSTANT_STRING(mode_low,"LOW");
 CONSTANT_STRING(mode_change,"CHANGE");
 CONSTANT_STRING(mode_rising,"RISING");
@@ -26,14 +27,23 @@ Pin::Pin()
   setup(constants::empty_constant_string);
 }
 
-int Pin::getInterruptNumber()
+// protected
+
+// private
+Pin::Pin(const ConstantString & name, const size_t pin_number)
 {
-  return interrupt_number_;
+  setup(name);
+  setPinNumber(pin_number);
 }
 
-size_t Pin::getPinNumber()
+void Pin::setup(const ConstantString & name)
 {
-  return pin_number_;
+  setName(name);
+  interrupt_number_ = NOT_AN_INTERRUPT;
+  pin_number_ = 0;
+  callback_ptr_ = NULL;
+  mode_ptr_ = &pin::mode_input;
+  isr_ = NULL;
 }
 
 Callback * Pin::getCallbackPtr()
@@ -87,29 +97,20 @@ void Pin::writeApi(Response & response,
   response.endObject();
 }
 
-// protected
-
-// private
-Pin::Pin(const ConstantString & name, const size_t pin_number)
-{
-  setup(name);
-  setPinNumber(pin_number);
-}
-
-void Pin::setup(const ConstantString & name)
-{
-  setName(name);
-  interrupt_number_ = NOT_AN_INTERRUPT;
-  pin_number_ = 0;
-  callback_ptr_ = NULL;
-  mode_ptr_ = &pin::mode_detached;
-  isr_ = NULL;
-}
-
 void Pin::setPinNumber(const size_t pin_number)
 {
   interrupt_number_ = digitalPinToInterrupt(pin_number);
   pin_number_ = pin_number;
+}
+
+size_t Pin::getPinNumber()
+{
+  return pin_number_;
+}
+
+int Pin::getInterruptNumber()
+{
+  return interrupt_number_;
 }
 
 void Pin::enablePullup()
@@ -228,7 +229,7 @@ void Pin::detach()
   }
   detachInterrupt(interrupt_number_);
   disablePullup();
-  mode_ptr_ = &pin::mode_detached;
+  mode_ptr_ = &pin::mode_input;
 }
 
 void Pin::resetIsr()

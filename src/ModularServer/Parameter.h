@@ -64,12 +64,6 @@ public:
 
   Parameter getElementParameter();
 
-  void writeApi(Response & response,
-                bool write_name_only,
-                bool is_property,
-                bool write_firmware,
-                bool write_instance_details);
-
 private:
   const ConstantString * units_ptr_;
   JsonStream::JsonTypes type_;
@@ -106,6 +100,11 @@ private:
   bool valueInSubset(const char * value);
   bool valueInSubset(const ConstantString * value);
   Vector<constants::SubsetMemberType> & getSubset();
+  void writeApi(Response & response,
+                bool write_name_only,
+                bool is_property,
+                bool write_firmware,
+                bool write_instance_details);
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
   friend class Property;
   friend class Function;

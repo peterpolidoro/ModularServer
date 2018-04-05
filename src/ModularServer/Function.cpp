@@ -151,6 +151,49 @@ const ConstantString & Function::getResultUnits()
   return *result_units_ptr_;
 }
 
+// protected
+
+// private
+Function::Function(const ConstantString & name)
+{
+  setup(name);
+}
+
+void Function::setup(const ConstantString & name)
+{
+  setName(name);
+  result_type_ = JsonStream::NULL_TYPE;
+  result_array_element_type_ = JsonStream::NULL_TYPE;
+  setResultUnits(constants::empty_constant_string);
+}
+
+int Function::findParameterIndex(const ConstantString & parameter_name)
+{
+  int parameter_index = -1;
+  for (size_t i=0; i<parameter_ptrs_.size(); ++i)
+  {
+    if (parameter_ptrs_[i]->compareName(parameter_name))
+    {
+      parameter_index = i;
+      break;
+    }
+  }
+  return parameter_index;
+}
+
+size_t Function::getParameterCount()
+{
+  return parameter_ptrs_.size();
+}
+
+void Function::functor()
+{
+  if (functor_)
+  {
+    functor_();
+  }
+}
+
 void Function::writeApi(Response & response,
                         bool write_name_only,
                         bool write_firmware,
@@ -216,49 +259,6 @@ void Function::writeApi(Response & response,
   }
 
   response.endObject();
-}
-
-// protected
-
-// private
-Function::Function(const ConstantString & name)
-{
-  setup(name);
-}
-
-void Function::setup(const ConstantString & name)
-{
-  setName(name);
-  result_type_ = JsonStream::NULL_TYPE;
-  result_array_element_type_ = JsonStream::NULL_TYPE;
-  setResultUnits(constants::empty_constant_string);
-}
-
-int Function::findParameterIndex(const ConstantString & parameter_name)
-{
-  int parameter_index = -1;
-  for (size_t i=0; i<parameter_ptrs_.size(); ++i)
-  {
-    if (parameter_ptrs_[i]->compareName(parameter_name))
-    {
-      parameter_index = i;
-      break;
-    }
-  }
-  return parameter_index;
-}
-
-size_t Function::getParameterCount()
-{
-  return parameter_ptrs_.size();
-}
-
-void Function::functor()
-{
-  if (functor_)
-  {
-    functor_();
-  }
 }
 
 }
