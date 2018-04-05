@@ -24,10 +24,10 @@ void BoardLedController::setup()
                               pins_);
 
   // Pins
-  // Pin Setup
-  pinMode(constants::led_pin_number, OUTPUT);
-
   modular_server::Pin & led_pin = modular_server_.createPin(constants::led_pin_name,constants::led_pin_number);
+  led_pin.setModeOutput();
+
+  blinker_.setup(led_pin);
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
@@ -79,7 +79,7 @@ void BoardLedController::setup()
 void BoardLedController::update()
 {
   modular_server_.handleServerRequests();
-  non_block_blink.update();
+  blinker_.update();
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -102,19 +102,20 @@ void BoardLedController::update()
 
 void BoardLedController::setLedOnHandler()
 {
-  non_block_blink.stop();
-  digitalWrite(constants::led_pin_number, HIGH);
+  blinker_.stop();
+  modular_server_.pin(constants::led_pin_name).digitalWrite(HIGH);
 }
 
 void BoardLedController::setLedOffHandler()
 {
-  non_block_blink.stop();
-  digitalWrite(constants::led_pin_number, LOW);
+  blinker_.stop();
+  modular_server_.pin(constants::led_pin_name).digitalWrite(LOW);
 }
 
 void BoardLedController::getLedPinNumberHandler()
 {
-  modular_server_.response().returnResult(constants::led_pin_number);
+  size_t led_pin_number = modular_server_.pin(constants::led_pin_name).getPinNumber();
+  modular_server_.response().returnResult(led_pin_number);
 }
 
 void BoardLedController::blinkLedHandler()
@@ -125,9 +126,9 @@ void BoardLedController::blinkLedHandler()
   modular_server_.parameter(constants::duration_off_parameter_name).getValue(duration_off);
   int count;
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
-  non_block_blink.stop();
-  non_block_blink.setDurationOn(duration_on);
-  non_block_blink.setDurationOff(duration_off);
-  non_block_blink.setCount(count);
-  non_block_blink.start();
+  blinker_.stop();
+  blinker_.setDurationOn(duration_on);
+  blinker_.setDurationOff(duration_off);
+  blinker_.setCount(count);
+  blinker_.start();
 }

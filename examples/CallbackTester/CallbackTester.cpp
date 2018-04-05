@@ -12,9 +12,6 @@ void CallbackTester::setup()
   // Server Setup
   modular_server_.setup();
 
-  // Pin Setup
-  pinMode(constants::led_pin_number, OUTPUT);
-
   // Add Server Streams
   modular_server_.addServerStream(Serial);
 
@@ -27,6 +24,11 @@ void CallbackTester::setup()
                               pins_);
 
   // Pins
+  modular_server::Pin & led_pin = modular_server_.createPin(constants::led_pin_name,constants::led_pin_number);
+  led_pin.setModeOutput();
+
+  blinker_.setup(led_pin);
+
   modular_server::Pin & bnc_a_pin = modular_server_.createPin(constants::bnc_a_pin_name,
                                                               constants::bnc_a_pin_number);
 
@@ -97,7 +99,7 @@ void CallbackTester::setup()
 void CallbackTester::update()
 {
   modular_server_.handleServerRequests();
-  non_block_blink.update();
+  blinker_.update();
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -120,14 +122,14 @@ void CallbackTester::update()
 
 void CallbackTester::setLedOnHandler(modular_server::Pin * pin_ptr)
 {
-  non_block_blink.stop();
-  digitalWrite(constants::led_pin_number, HIGH);
+  blinker_.stop();
+  modular_server_.pin(constants::led_pin_name).digitalWrite(HIGH);
 }
 
 void CallbackTester::setLedOffHandler(modular_server::Pin * pin_ptr)
 {
-  non_block_blink.stop();
-  digitalWrite(constants::led_pin_number, LOW);
+  blinker_.stop();
+  modular_server_.pin(constants::led_pin_name).digitalWrite(LOW);
 }
 
 void CallbackTester::blinkLedHandler(modular_server::Pin * pin_ptr)
@@ -138,9 +140,9 @@ void CallbackTester::blinkLedHandler(modular_server::Pin * pin_ptr)
   modular_server_.property(constants::duration_off_property_name).getValue(duration_off);
   long count;
   modular_server_.property(constants::count_property_name).getValue(count);
-  non_block_blink.stop();
-  non_block_blink.setDurationOn(duration_on);
-  non_block_blink.setDurationOff(duration_off);
-  non_block_blink.setCount(count);
-  non_block_blink.start();
+  blinker_.stop();
+  blinker_.setDurationOn(duration_on);
+  blinker_.setDurationOff(duration_off);
+  blinker_.setCount(count);
+  blinker_.start();
 }

@@ -19,7 +19,7 @@ enum{PARAMETER_COUNT_MAX=1};
 enum{FUNCTION_COUNT_MAX=1};
 enum{CALLBACK_COUNT_MAX=3};
 
-enum{PIN_COUNT_MAX=6};
+enum{PIN_COUNT_MAX=7};
 
 extern const long baud;
 
@@ -32,9 +32,10 @@ extern ConstantString form_factor;
 extern ConstantString hardware_name;
 extern const modular_server::HardwareInfo hardware_info;
 
+// Pins
+extern ConstantString led_pin_name;
 extern const size_t led_pin_number;
 
-// Pins
 extern ConstantString bnc_a_pin_name;
 extern const size_t bnc_a_pin_number;
 

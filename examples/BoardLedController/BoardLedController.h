@@ -10,7 +10,7 @@
 #include <ModularServer.h>
 
 #include "Constants.h"
-#include "NonBlockBlink.h"
+#include "Blinker.h"
 
 
 class BoardLedController
@@ -28,6 +28,8 @@ private:
   modular_server::Parameter parameters_[constants::PARAMETER_COUNT_MAX];
   modular_server::Function functions_[constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[constants::CALLBACK_COUNT_MAX];
+
+  Blinker blinker_;
 
   // Handlers
   void setLedOnHandler();

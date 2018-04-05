@@ -14,6 +14,7 @@ namespace modular_server
 namespace pin
 {
 CONSTANT_STRING(mode_input,"INPUT");
+CONSTANT_STRING(mode_input_pullup,"INPUT_PULLUP");
 CONSTANT_STRING(mode_output,"OUTPUT");
 CONSTANT_STRING(mode_low,"LOW");
 CONSTANT_STRING(mode_change,"CHANGE");
@@ -25,6 +26,72 @@ CONSTANT_STRING(mode_falling,"FALLING");
 Pin::Pin()
 {
   setup(constants::empty_constant_string);
+}
+
+void Pin::setModeInput()
+{
+  if (callback_ptr_)
+  {
+    callback_ptr_->detachFrom(*this);
+  }
+  mode_ptr_ = &pin::mode_input;
+  disablePullup();
+}
+
+void Pin::setModeInputPullup()
+{
+  if (callback_ptr_)
+  {
+    callback_ptr_->detachFrom(*this);
+  }
+  mode_ptr_ = &pin::mode_input_pullup;
+  enablePullup();
+}
+
+void Pin::setModeOutput()
+{
+  if (callback_ptr_)
+  {
+    callback_ptr_->detachFrom(*this);
+  }
+  mode_ptr_ = &pin::mode_output;
+  pinMode(pin_number_,OUTPUT);
+}
+
+int Pin::digitalRead()
+{
+  return ::digitalRead(pin_number_);
+}
+
+void Pin::digitalWrite(uint8_t value)
+{
+  if (mode_ptr_ == &pin::mode_output)
+  {
+    ::digitalWrite(pin_number_,value);
+  }
+}
+
+int Pin::analogRead()
+{
+  return ::analogRead(pin_number_);
+}
+
+void Pin::analogWrite(int value)
+{
+  if (mode_ptr_ == &pin::mode_output)
+  {
+    ::analogWrite(pin_number_,value);
+  }
+}
+
+size_t Pin::getPinNumber()
+{
+  return pin_number_;
+}
+
+int Pin::getInterruptNumber()
+{
+  return interrupt_number_;
 }
 
 // protected
@@ -103,16 +170,6 @@ void Pin::setPinNumber(const size_t pin_number)
   pin_number_ = pin_number;
 }
 
-size_t Pin::getPinNumber()
-{
-  return pin_number_;
-}
-
-int Pin::getInterruptNumber()
-{
-  return interrupt_number_;
-}
-
 void Pin::enablePullup()
 {
   pinMode(pin_number_,INPUT_PULLUP);
@@ -135,7 +192,7 @@ void Pin::removeCallback()
   callback_ptr_ = NULL;
 }
 
-void Pin::setMode(const ConstantString & mode)
+void Pin::setModeInterrupt(const ConstantString & mode)
 {
   if (&mode == &pin::mode_low)
   {
@@ -218,11 +275,19 @@ void Pin::reattach()
 void Pin::attach(Callback & callback, const ConstantString & mode)
 {
   setCallback(callback);
-  setMode(mode);
+  setModeInterrupt(mode);
 }
 
 void Pin::detach()
 {
+  if (!callback_ptr_)
+  {
+    return;
+  }
+  if (!callback_ptr_->getFunctor())
+  {
+    return;
+  }
   if (interrupt_number_ == NOT_AN_INTERRUPT)
   {
     return;

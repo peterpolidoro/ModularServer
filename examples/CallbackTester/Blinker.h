@@ -1,21 +1,21 @@
 // ----------------------------------------------------------------------------
-// NonBlockBlink.h
+// Blinker.h
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef _NON_BLOCK_BLINK_H_
-#define _NON_BLOCK_BLINK_H_
-#include <Arduino.h>
+#ifndef _BLINKER_H_
+#define _BLINKER_H_
+#include <ModularServer.h>
 
 #include "Constants.h"
 
 
-class NonBlockBlink
+class Blinker
 {
 public:
-  NonBlockBlink(int led_pin_number);
+  void setup(modular_server::Pin & pin);
   void start();
   void stop();
   void update();
@@ -26,7 +26,7 @@ private:
   int duration_on_;
   int duration_off_;
   int count_;
-  int led_pin_number_;
+  modular_server::Pin * led_pin_ptr_;
   int led_state_;
   bool enabled_;
   size_t interval_;
@@ -35,5 +35,4 @@ private:
   unsigned long previous_time_;
 };
 
-extern NonBlockBlink non_block_blink;
 #endif

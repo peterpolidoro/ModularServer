@@ -83,9 +83,9 @@ const size_t bnc_f_pin_number = 5;
 
 #endif
 
-const size_t led_pin_number = 13;
-
 // Pins
+CONSTANT_STRING(led_pin_name,"led");
+const size_t led_pin_number = 13;
 CONSTANT_STRING(bnc_a_pin_name,"bnc_a");
 CONSTANT_STRING(bnc_b_pin_name,"bnc_b");
 CONSTANT_STRING(bnc_c_pin_name,"bnc_c");

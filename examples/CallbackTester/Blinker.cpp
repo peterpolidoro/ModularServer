@@ -1,39 +1,39 @@
 // ----------------------------------------------------------------------------
-// NonBlockBlink.cpp
+// Blinker.cpp
 //
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "NonBlockBlink.h"
+#include "Blinker.h"
 
-NonBlockBlink::NonBlockBlink(int led_pin_number) :
-  led_pin_number_(led_pin_number)
+void Blinker::setup(modular_server::Pin & pin)
 {
+  led_pin_ptr_ = &pin;
   duration_on_ = 300;
   duration_off_ = 500;
   count_ = 10;
 }
 
-void NonBlockBlink::start()
+void Blinker::start()
 {
   if (count_ > 0)
   {
     previous_time_ = millis();
     led_state_ = HIGH;
-    digitalWrite(led_pin_number_, led_state_);
+    led_pin_ptr_->digitalWrite(led_state_);
     interval_ = duration_on_;
     counter_ = 0;
     enabled_ = true;
   }
 }
 
-void NonBlockBlink::stop()
+void Blinker::stop()
 {
   enabled_ = false;
 }
 
-void NonBlockBlink::update()
+void Blinker::update()
 {
   if (enabled_)
   {
@@ -58,24 +58,22 @@ void NonBlockBlink::update()
         }
       }
 
-      digitalWrite(led_pin_number_, led_state_);
+      led_pin_ptr_->digitalWrite(led_state_);
     }
   }
 }
 
-void NonBlockBlink::setDurationOn(double value)
+void Blinker::setDurationOn(double value)
 {
   duration_on_ = (int)(value*1000);
 }
 
-void NonBlockBlink::setDurationOff(double value)
+void Blinker::setDurationOff(double value)
 {
   duration_off_ = (int)(value*1000);
 }
 
-void NonBlockBlink::setCount(long value)
+void Blinker::setCount(long value)
 {
   count_ = (long)value;
 }
-
-NonBlockBlink non_block_blink(constants::led_pin_number);
