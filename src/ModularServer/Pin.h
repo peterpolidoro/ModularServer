@@ -35,7 +35,7 @@ public:
   void setModeAnalogOutput();
 
   int read();
-  void write(int value);
+  void write(const int value);
 
   size_t getPinNumber();
   int getInterruptNumber();

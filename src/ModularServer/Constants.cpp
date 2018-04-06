@@ -16,9 +16,9 @@ CONSTANT_STRING(firmware_name,"ModularServer");
 const FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=4,
-  .version_minor=1,
-  .version_patch=2,
+  .version_major=5,
+  .version_minor=0,
+  .version_patch=0,
 };
 
 const long response_pipe_read_max = 100000;
@@ -64,18 +64,24 @@ SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH] =
   {.cs_ptr=&pin_mode_analog_output},
 };
 
+CONSTANT_STRING(pin_value_parameter_name,"pin_value");
+const long pin_value_min = 0;
+const long pin_value_max = 255;
+
 // Functions
 CONSTANT_STRING(get_method_ids_function_name,"getMethodIds");
 CONSTANT_STRING(help_function_name,"?");
 CONSTANT_STRING(verbose_help_function_name,"??");
 CONSTANT_STRING(get_device_id_function_name,"getDeviceId");
 CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
-CONSTANT_STRING(get_pin_info_function_name,"getPinInfo");
-CONSTANT_STRING(set_pin_mode_function_name,"setPinMode");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
 CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefaults");
 CONSTANT_STRING(get_property_values_function_name,"getPropertyValues");
+CONSTANT_STRING(get_pin_info_function_name,"getPinInfo");
+CONSTANT_STRING(set_pin_mode_function_name,"setPinMode");
+CONSTANT_STRING(pin_read_function_name,"pinRead");
+CONSTANT_STRING(pin_write_function_name,"pinWrite");
 CONSTANT_STRING(get_memory_free_function_name,"getMemoryFree");
 
 // Callbacks

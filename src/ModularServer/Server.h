@@ -196,6 +196,9 @@ private:
   Pin * findPinPtrByConstantString(const ConstantString & pin_name);
   void setPinMode(const ConstantString & pin_name,
                   const ConstantString & pin_mode);
+  int pinRead(const ConstantString & pin_name);
+  void pinWrite(const ConstantString & pin_name,
+                const int pin_value);
 
   // Handlers
   void getMethodIdsHandler();
@@ -203,13 +206,15 @@ private:
   void verboseHelpHandler();
   void getDeviceIdHandler();
   void getDeviceInfoHandler();
-  void getPinInfoHandler();
-  void setPinModeHandler();
   void getApiHandler();
   void getMemoryFreeHandler();
   void getPropertyDefaultValuesHandler();
   void getPropertyValuesHandler();
   void setPropertiesToDefaultsHandler();
+  void getPinInfoHandler();
+  void setPinModeHandler();
+  void pinReadHandler();
+  void pinWriteHandler();
 
 };
 }

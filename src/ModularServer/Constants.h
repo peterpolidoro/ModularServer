@@ -22,8 +22,8 @@ enum {HARDWARE_COUNT_MAX=4};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
-enum{SERVER_PARAMETER_COUNT_MAX=4};
-enum{SERVER_FUNCTION_COUNT_MAX=12};
+enum{SERVER_PARAMETER_COUNT_MAX=5};
+enum{SERVER_FUNCTION_COUNT_MAX=14};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
 enum {FUNCTION_PARAMETER_COUNT_MAX=8};
@@ -110,18 +110,24 @@ extern ConstantString pin_name_parameter_name;
 enum{PIN_MODE_SUBSET_LENGTH=5};
 extern SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH];
 
+extern ConstantString pin_value_parameter_name;
+extern const long pin_value_min;
+extern const long pin_value_max;
+
 // Functions
 extern ConstantString get_method_ids_function_name;
 extern ConstantString help_function_name;
 extern ConstantString verbose_help_function_name;
 extern ConstantString get_device_id_function_name;
 extern ConstantString get_device_info_function_name;
-extern ConstantString get_pin_info_function_name;
-extern ConstantString set_pin_mode_function_name;
 extern ConstantString get_api_function_name;
 extern ConstantString get_property_default_values_function_name;
 extern ConstantString set_properties_to_defaults_function_name;
+extern ConstantString get_pin_info_function_name;
 extern ConstantString get_property_values_function_name;
+extern ConstantString set_pin_mode_function_name;
+extern ConstantString pin_read_function_name;
+extern ConstantString pin_write_function_name;
 extern ConstantString get_memory_free_function_name;
 
 // Callbacks

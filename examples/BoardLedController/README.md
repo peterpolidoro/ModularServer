@@ -97,7 +97,9 @@ Response:
         "setPropertiesToDefaults",
         "getPropertyValues",
         "getPinInfo",
-        "detachAllPins",
+        "setPinMode",
+        "pinRead",
+        "pinWrite",
         "setLedOn",
         "setLedOff",
         "getLedPinNumber",
@@ -106,6 +108,9 @@ Response:
       "parameters": [
         "firmware",
         "verbosity",
+        "pin_name",
+        "pin_mode",
+        "pin_value",
         "duration_on",
         "duration_off",
         "count"
@@ -403,13 +408,16 @@ Response:
     "hardware": [
       {
         "name": "Teensy",
-        "version": "3.2"
+        "version": "3.2",
+        "pins": [
+          "led"
+        ]
       }
     ],
     "firmware": [
       {
         "name": "ModularServer",
-        "version": "3.0.0"
+        "version": "5.0.0"
       },
       {
         "name": "BoardLedController",
@@ -456,7 +464,9 @@ Response:
       "setPropertiesToDefaults",
       "getPropertyValues",
       "getPinInfo",
-      "detachAllPins",
+      "setPinMode",
+      "pinRead",
+      "pinWrite",
       "setLedOn",
       "setLedOff",
       "getLedPinNumber",
@@ -465,6 +475,9 @@ Response:
     "parameters": [
       "firmware",
       "verbosity",
+      "pin_name",
+      "pin_mode",
+      "pin_value",
       "duration_on",
       "duration_off",
       "count"
@@ -627,6 +640,63 @@ Response:
 }
 ```
 
+Another way to turn off and on the LED is to use the pin functions.
+
+Request:
+
+```shell
+getPinInfo ALL
+```
+
+Response:
+
+```json
+{
+  "id": "getPinInfo",
+  "result": [
+    {
+      "name": "led",
+      "hardware": "Teensy",
+      "pin_mode": "DIGITAL_OUTPUT"
+    }
+  ]
+}
+```
+
+Request:
+
+```shell
+pinWrite led 1
+```
+
+Response:
+
+```json
+{
+  "id": "pinWrite",
+  "result": 1
+}
+```
+
+Notice the LED has turned ON.
+
+Request:
+
+```shell
+pinWrite led 0
+```
+
+Response:
+
+```json
+{
+  "id": "pinWrite",
+  "result": 0
+}
+```
+
+Notice the LED has turned OFF.
+
 ### Python
 
 Example Python session:
@@ -648,7 +718,9 @@ dev.get_methods()
  'get_led_pin_number',
  'get_property_default_values',
  'set_properties_to_defaults',
- 'detach_all_pins',
+ 'set_pin_mode',
+ 'pin_read',
+ 'pin_write',
  'get_device_info']
 dev.set_properties_to_defaults(['ALL'])
 dev.set_led_on()
@@ -737,7 +809,9 @@ dev.getMethods()                 % get device methods
   setPropertiesToDefaults
   getPropertyValues
   getPinInfo
-  detachAllPins
+  setPinMode
+  pinRead
+  pinWrite
   setLedOn
   setLedOff
   getLedPinNumber

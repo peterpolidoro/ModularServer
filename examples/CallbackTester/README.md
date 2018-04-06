@@ -96,11 +96,16 @@ Response:
         "setPropertiesToDefaults",
         "getPropertyValues",
         "getPinInfo",
-        "detachAllPins"
+        "setPinMode",
+        "pinRead",
+        "pinWrite"
       ],
       "parameters": [
         "firmware",
-        "verbosity"
+        "verbosity",
+        "pin_name",
+        "pin_mode",
+        "pin_value"
       ],
       "properties": [
         "serialNumber",
@@ -158,6 +163,7 @@ Response:
         "name": "Teensy",
         "version": "3.2",
         "pins": [
+          "led",
           "bnc_a",
           "bnc_b",
           "bnc_c",
@@ -170,7 +176,7 @@ Response:
     "firmware": [
       {
         "name": "ModularServer",
-        "version": "3.0.0"
+        "version": "5.0.0"
       },
       {
         "name": "CallbackTester",

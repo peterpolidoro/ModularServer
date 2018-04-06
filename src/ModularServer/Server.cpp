@@ -79,6 +79,9 @@ void Server::setup()
   pin_mode_parameter.setTypeString();
   pin_mode_parameter.setSubset(constants::pin_mode_ptr_subset);
 
+  Parameter & pin_value_parameter = createParameter(constants::pin_value_parameter_name);
+  pin_value_parameter.setRange(constants::pin_value_min,constants::pin_value_max);
+
   // Functions
   Function & get_method_ids_function = createFunction(constants::get_method_ids_function_name);
   get_method_ids_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsHandler));
@@ -133,6 +136,17 @@ void Server::setup()
   set_pin_mode_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPinModeHandler));
   set_pin_mode_function.addParameter(pin_name_parameter);
   set_pin_mode_function.addParameter(pin_mode_parameter);
+
+  Function & pin_read_function = createFunction(constants::pin_read_function_name);
+  pin_read_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::pinReadHandler));
+  pin_read_function.addParameter(pin_name_parameter);
+  pin_read_function.setResultTypeLong();
+
+  Function & pin_write_function = createFunction(constants::pin_write_function_name);
+  pin_write_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::pinWriteHandler));
+  pin_write_function.addParameter(pin_name_parameter);
+  pin_write_function.addParameter(pin_value_parameter);
+  pin_write_function.setResultTypeLong();
 
 #ifdef __AVR__
   Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
@@ -274,6 +288,35 @@ void Server::setPinMode(const ConstantString & pin_name,
   {
     pin_ptr->setMode(pin_mode);
   }
+}
+
+int Server::pinRead(const ConstantString & pin_name)
+{
+  if (pin_name == constants::all_constant_string)
+  {
+    return constants::pin_value_min;
+  }
+  Pin * pin_ptr = findPinPtrByConstantString(pin_name);
+  if (!pin_ptr)
+  {
+    return constants::pin_value_min;
+  }
+  return pin_ptr->read();
+}
+
+void Server::pinWrite(const ConstantString & pin_name,
+                      const int pin_value)
+{
+  if (pin_name == constants::all_constant_string)
+  {
+    return;
+  }
+  Pin * pin_ptr = findPinPtrByConstantString(pin_name);
+  if (!pin_ptr)
+  {
+    return;
+  }
+  return pin_ptr->write(pin_value);
 }
 
 // Firmware
@@ -1865,26 +1908,6 @@ void Server::getDeviceInfoHandler()
   writeDeviceInfoToResponse();
 }
 
-void Server::getPinInfoHandler()
-{
-  const ConstantString * pin_name_ptr;
-  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
-
-  response_.writeResultKey();
-  writePinInfoToResponse(*pin_name_ptr);
-}
-
-void Server::setPinModeHandler()
-{
-  const ConstantString * pin_name_ptr;
-  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
-
-  const ConstantString * pin_mode_ptr;
-  parameter(constants::pin_mode_constant_string).getValue(pin_mode_ptr);
-
-  setPinMode(*pin_name_ptr,*pin_mode_ptr);
-}
-
 void Server::getApiHandler()
 {
   const char * verbosity;
@@ -1957,6 +1980,51 @@ void Server::setPropertiesToDefaultsHandler()
   parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
 
   setPropertiesToDefaults(*firmware_name_array_ptr);
+}
+
+void Server::getPinInfoHandler()
+{
+  const ConstantString * pin_name_ptr;
+  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
+
+  response_.writeResultKey();
+  writePinInfoToResponse(*pin_name_ptr);
+}
+
+void Server::setPinModeHandler()
+{
+  const ConstantString * pin_name_ptr;
+  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
+
+  const ConstantString * pin_mode_ptr;
+  parameter(constants::pin_mode_constant_string).getValue(pin_mode_ptr);
+
+  setPinMode(*pin_name_ptr,*pin_mode_ptr);
+}
+
+void Server::pinReadHandler()
+{
+  const ConstantString * pin_name_ptr;
+  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
+
+  int pin_value = pinRead(*pin_name_ptr);
+
+  response_.returnResult(pin_value);
+}
+
+void Server::pinWriteHandler()
+{
+  const ConstantString * pin_name_ptr;
+  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
+
+  int pin_value;
+  parameter(constants::pin_value_parameter_name).getValue(pin_value);
+
+  pinWrite(*pin_name_ptr,pin_value);
+
+  pin_value = pinRead(*pin_name_ptr);
+
+  response_.returnResult(pin_value);
 }
 
 }

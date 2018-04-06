@@ -80,7 +80,7 @@ int Pin::read()
   return value;
 }
 
-void Pin::write(int value)
+void Pin::write(const int value)
 {
   if (mode_ptr_ == &constants::pin_mode_digital_output)
   {
