@@ -174,7 +174,7 @@ private:
   void writeFirmwareInfoToResponse();
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
-  void writePinInfoToResponse();
+  void writePinInfoToResponse(const ConstantString & pin_name);
   void writeApiToResponse(const ConstantString & verbosity,
                           ArduinoJson::JsonArray & firmware_name_array);
   bool containsAllOrMoreThanOne(ArduinoJson::JsonArray & firmware_name_array);

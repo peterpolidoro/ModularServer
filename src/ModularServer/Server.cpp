@@ -125,6 +125,7 @@ void Server::setup()
 
   Function & get_pin_info_function = createFunction(constants::get_pin_info_function_name);
   get_pin_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPinInfoHandler));
+  get_pin_info_function.addParameter(pin_name_parameter);
   get_pin_info_function.setResultTypeArray();
   get_pin_info_function.setResultTypeObject();
 
@@ -1469,7 +1470,7 @@ void Server::writeDeviceInfoToResponse()
   response_.endObject();
 }
 
-void Server::writePinInfoToResponse()
+void Server::writePinInfoToResponse(const ConstantString & pin_name)
 {
   if (response_.error())
   {
@@ -1477,10 +1478,21 @@ void Server::writePinInfoToResponse()
   }
 
   response_.beginArray();
-  for (size_t i=0; i<pins_.size(); ++i)
+  if (pin_name == constants::all_constant_string)
   {
-    Pin & pin = pins_[i];
-    pin.writeApi(response_,false,false);
+    for (size_t i=0; i<pins_.size(); ++i)
+    {
+      Pin & pin = pins_[i];
+      pin.writeApi(response_,false,false);
+    }
+  }
+  else
+  {
+    Pin * pin_ptr = findPinPtrByConstantString(pin_name);
+    if (pin_ptr)
+    {
+      pin_ptr->writeApi(response_,false,false);
+    }
   }
   response_.endArray();
 }
@@ -1855,19 +1867,22 @@ void Server::getDeviceInfoHandler()
 
 void Server::getPinInfoHandler()
 {
+  const ConstantString * pin_name_ptr;
+  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
+
   response_.writeResultKey();
-  writePinInfoToResponse();
+  writePinInfoToResponse(*pin_name_ptr);
 }
 
 void Server::setPinModeHandler()
 {
-  const ConstantString * pin_name;
-  parameter(constants::pin_name_parameter_name).getValue(pin_name);
+  const ConstantString * pin_name_ptr;
+  parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
 
-  const ConstantString * pin_mode;
-  parameter(constants::pin_mode_constant_string).getValue(pin_mode);
+  const ConstantString * pin_mode_ptr;
+  parameter(constants::pin_mode_constant_string).getValue(pin_mode_ptr);
 
-  setPinMode(*pin_name,*pin_mode);
+  setPinMode(*pin_name_ptr,*pin_mode_ptr);
 }
 
 void Server::getApiHandler()
