@@ -52,6 +52,7 @@ public:
   void attachTo(Pin & pin, const ConstantString & mode);
   void attachTo(const ConstantString & pin_name, const ConstantString & mode);
   void attachTo(const char * pin_name, const char * mode_str);
+  void attachToAll(const ConstantString & mode);
   void attachToAll(const char * mode_str);
   void detachFrom(Pin & pin);
   void detachFrom(const ConstantString & pin_name);

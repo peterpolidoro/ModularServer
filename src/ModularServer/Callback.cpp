@@ -126,7 +126,11 @@ void Callback::attachTo(Pin & pin, const ConstantString & mode)
       (&mode == &pin::mode_rising) ||
       (&mode == &pin::mode_falling))
   {
-    detachFrom(pin);
+    Callback * pin_callback_ptr = pin.getCallbackPtr();
+    if (pin_callback_ptr)
+    {
+      pin_callback_ptr->detachFrom(pin);
+    }
     int index = pin_ptrs_.add(&pin);
     if (index >= 0)
     {
@@ -184,6 +188,18 @@ void Callback::attachTo(const char * pin_name, const char * mode_str)
     return;
   }
   attachTo(*pin_ptr,*mode_ptr);
+}
+
+void Callback::attachToAll(const ConstantString & mode)
+{
+  for (size_t i=0; i<pin_name_array_ptr_->size(); ++i)
+  {
+    const ConstantString * name_ptr = pin_name_array_ptr_->at(i).cs_ptr;
+    if (name_ptr != &constants::all_constant_string)
+    {
+      attachTo(*name_ptr,mode);
+    }
+  }
 }
 
 void Callback::attachToAll(const char * mode_str)
