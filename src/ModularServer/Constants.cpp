@@ -25,6 +25,17 @@ const long response_pipe_read_max = 100000;
 
 const double epsilon = 0.000000001;
 
+// Pins
+CONSTANT_STRING(pin_mode_digital_input,"DIGITAL_INPUT");
+CONSTANT_STRING(pin_mode_digital_input_pullup,"DIGITAL_INPUT_PULLUP");
+CONSTANT_STRING(pin_mode_digital_output,"DIGITAL_OUTPUT");
+CONSTANT_STRING(pin_mode_analog_input,"ANALOG_INPUT");
+CONSTANT_STRING(pin_mode_analog_output,"ANALOG_OUTPUT");
+CONSTANT_STRING(pin_mode_interrupt_low,"INTERRUPT_LOW");
+CONSTANT_STRING(pin_mode_interrupt_change,"INTERRUPT_CHANGE");
+CONSTANT_STRING(pin_mode_interrupt_rising,"INTERRUPT_RISING");
+CONSTANT_STRING(pin_mode_interrupt_falling,"INTERRUPT_FALLING");
+
 // Properties
 CONSTANT_STRING(serial_number_property_name,"serialNumber");
 const long serial_number_min = 0;
@@ -42,6 +53,17 @@ SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH] =
   {.cs_ptr=&verbosity_detailed},
 };
 
+CONSTANT_STRING(pin_name_parameter_name,"pin_name");
+
+SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH] =
+{
+  {.cs_ptr=&pin_mode_digital_input},
+  {.cs_ptr=&pin_mode_digital_input_pullup},
+  {.cs_ptr=&pin_mode_digital_output},
+  {.cs_ptr=&pin_mode_analog_input},
+  {.cs_ptr=&pin_mode_analog_output},
+};
+
 // Functions
 CONSTANT_STRING(get_method_ids_function_name,"getMethodIds");
 CONSTANT_STRING(help_function_name,"?");
@@ -49,7 +71,7 @@ CONSTANT_STRING(verbose_help_function_name,"??");
 CONSTANT_STRING(get_device_id_function_name,"getDeviceId");
 CONSTANT_STRING(get_device_info_function_name,"getDeviceInfo");
 CONSTANT_STRING(get_pin_info_function_name,"getPinInfo");
-CONSTANT_STRING(detach_all_pins_function_name,"detachAllPins");
+CONSTANT_STRING(set_pin_mode_function_name,"setPinMode");
 CONSTANT_STRING(get_api_function_name,"getApi");
 CONSTANT_STRING(get_property_default_values_function_name,"getPropertyDefaultValues");
 CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefaults");
@@ -151,10 +173,9 @@ CONSTANT_STRING(subset_constant_string,"subset");
 CONSTANT_STRING(all_constant_string,"ALL");
 CONSTANT_STRING(array_element_subset_constant_string,"array_element_subset");
 CONSTANT_STRING(pins_constant_string,"pins");
-CONSTANT_STRING(pin_constant_string,"pin");
 CONSTANT_STRING(interrupt_number_constant_string,"interrupt_number");
 CONSTANT_STRING(pin_number_constant_string,"pin_number");
-CONSTANT_STRING(mode_constant_string,"mode");
+CONSTANT_STRING(pin_mode_constant_string,"pin_mode");
 CONSTANT_STRING(processor_constant_string,"processor");
 
 #if defined(__AVR_ATmega1280__)

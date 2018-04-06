@@ -763,14 +763,14 @@ parameter_info =
 dev.blinkLed(3.0,0.2,20)
 (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
 dev.blinkLed(0.5,0.2,20);
-led_pin = dev.getLedPinNumber()
-led_pin =
+led_pin_number = dev.getLedPinNumber()
+led_pin_number =
   13
-led_pin = dev.callGetResult('getLedPinNumber')
-led_pin =
+led_pin_number = dev.callGetResult('getLedPinNumber')
+led_pin_number =
   13
-led_pin = dev.sendJsonRequest('["getLedPinNumber"]')
-led_pin =
+led_pin_number = dev.sendJsonRequest('["getLedPinNumber"]')
+led_pin_number =
   13
 dev.call('blinkLed',0.5,0.2,20)
 dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')

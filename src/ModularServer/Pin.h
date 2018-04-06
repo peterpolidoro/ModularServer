@@ -21,18 +21,6 @@
 
 namespace modular_server
 {
-
-namespace pin
-{
-extern ConstantString mode_input;
-extern ConstantString mode_input_pullup;
-extern ConstantString mode_output;
-extern ConstantString mode_low;
-extern ConstantString mode_change;
-extern ConstantString mode_rising;
-extern ConstantString mode_falling;
-}
-
 class Callback;
 
 class Pin : private HardwareElement
@@ -40,14 +28,14 @@ class Pin : private HardwareElement
 public:
   Pin();
 
-  void setModeInput();
-  void setModeInputPullup();
-  void setModeOutput();
+  void setModeDigitalInput();
+  void setModeDigitalInputPullup();
+  void setModeDigitalOutput();
+  void setModeAnalogInput();
+  void setModeAnalogOutput();
 
-  int digitalRead();
-  void digitalWrite(uint8_t value);
-  int analogRead();
-  void analogWrite(int value);
+  int read();
+  void write(int value);
 
   size_t getPinNumber();
   int getInterruptNumber();
@@ -63,6 +51,7 @@ private:
   void setup(const ConstantString & name);
   Callback * getCallbackPtr();
   const ConstantString & getMode();
+  void setMode(const ConstantString & pin_mode);
 
   void writeApi(Response & response,
                 bool write_name_only,
@@ -72,7 +61,6 @@ private:
   void disablePullup();
   void setCallback(Callback & callback);
   void removeCallback();
-  void setModeInterrupt(const ConstantString & mode);
   void reattach();
   void attach(Callback & callback, const ConstantString & mode);
   void detach();

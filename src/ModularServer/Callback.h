@@ -30,8 +30,8 @@ enum{PARAMETER_COUNT_MAX=2};
 enum{FUNCTION_COUNT_MAX=3};
 
 // Parameters
-enum{MODE_SUBSET_LENGTH=4};
-extern constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH];
+enum{PIN_MODE_SUBSET_LENGTH=4};
+extern constants::SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH];
 
 // Functions
 extern ConstantString trigger_function_name;
@@ -49,11 +49,11 @@ public:
   void attachFunctor(const Functor1<Pin *> & functor);
   void addProperty(Property & property);
   Functor1<Pin *> & getFunctor();
-  void attachTo(Pin & pin, const ConstantString & mode);
-  void attachTo(const ConstantString & pin_name, const ConstantString & mode);
-  void attachTo(const char * pin_name, const char * mode_str);
-  void attachToAll(const ConstantString & mode);
-  void attachToAll(const char * mode_str);
+  void attachTo(Pin & pin, const ConstantString & pin_mode);
+  void attachTo(const ConstantString & pin_name, const ConstantString & pin_mode);
+  void attachTo(const char * pin_name, const char * pin_mode);
+  void attachToAll(const ConstantString & pin_mode);
+  void attachToAll(const char * pin_mode);
   void detachFrom(Pin & pin);
   void detachFrom(const ConstantString & pin_name);
   void detachFrom(const char * pin_name);

@@ -25,7 +25,7 @@ void BoardLedController::setup()
 
   // Pins
   modular_server::Pin & led_pin = modular_server_.createPin(constants::led_pin_name,constants::led_pin_number);
-  led_pin.setModeOutput();
+  led_pin.setModeDigitalOutput();
 
   blinker_.setup(led_pin);
 
@@ -103,13 +103,13 @@ void BoardLedController::update()
 void BoardLedController::setLedOnHandler()
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).digitalWrite(HIGH);
+  modular_server_.pin(constants::led_pin_name).write(HIGH);
 }
 
 void BoardLedController::setLedOffHandler()
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).digitalWrite(LOW);
+  modular_server_.pin(constants::led_pin_name).write(LOW);
 }
 
 void BoardLedController::getLedPinNumberHandler()

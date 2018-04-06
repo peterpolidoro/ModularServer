@@ -194,6 +194,8 @@ private:
                       const size_t num);
   Pin * findPinPtrByChars(const char * pin_name);
   Pin * findPinPtrByConstantString(const ConstantString & pin_name);
+  void setPinMode(const ConstantString & pin_name,
+                  const ConstantString & pin_mode);
 
   // Handlers
   void getMethodIdsHandler();
@@ -202,7 +204,7 @@ private:
   void getDeviceIdHandler();
   void getDeviceInfoHandler();
   void getPinInfoHandler();
-  void detachAllPinsHandler();
+  void setPinModeHandler();
   void getApiHandler();
   void getMemoryFreeHandler();
   void getPropertyDefaultValuesHandler();

@@ -69,6 +69,16 @@ void Server::setup()
   verbosity_parameter.setTypeString();
   verbosity_parameter.setSubset(constants::verbosity_ptr_subset);
 
+  Parameter & pin_name_parameter = createParameter(constants::pin_name_parameter_name);
+  pin_name_parameter.setTypeString();
+  pin_name_parameter.setSubset(pin_name_array_.data(),
+                               pin_name_array_.max_size(),
+                               pin_name_array_.size());
+
+  Parameter & pin_mode_parameter = createParameter(constants::pin_mode_constant_string);
+  pin_mode_parameter.setTypeString();
+  pin_mode_parameter.setSubset(constants::pin_mode_ptr_subset);
+
   // Functions
   Function & get_method_ids_function = createFunction(constants::get_method_ids_function_name);
   get_method_ids_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getMethodIdsHandler));
@@ -118,8 +128,10 @@ void Server::setup()
   get_pin_info_function.setResultTypeArray();
   get_pin_info_function.setResultTypeObject();
 
-  Function & detach_all_pins_function = createFunction(constants::detach_all_pins_function_name);
-  detach_all_pins_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::detachAllPinsHandler));
+  Function & set_pin_mode_function = createFunction(constants::set_pin_mode_function_name);
+  set_pin_mode_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPinModeHandler));
+  set_pin_mode_function.addParameter(pin_name_parameter);
+  set_pin_mode_function.addParameter(pin_mode_parameter);
 
 #ifdef __AVR__
   Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
@@ -175,6 +187,10 @@ void Server::removeHardware()
     for (size_t j=0; j<pins.size(); ++j)
     {
       pin_name_array_.pop_back();
+      Parameter & pin_name_parameter = parameter(constants::pin_name_parameter_name);
+      pin_name_parameter.setSubset(pin_name_array_.data(),
+                                   pin_name_array_.max_size(),
+                                   pin_name_array_.size());
       Pin & pin = pins[j];
       Callback * callback_ptr = pin.getCallbackPtr();
       if (callback_ptr)
@@ -198,6 +214,10 @@ Pin & Server::createPin(const ConstantString & pin_name,
     constants::SubsetMemberType int_name;
     int_name.cs_ptr = &pin_name;
     pin_name_array_.push_back(int_name);
+    Parameter & pin_name_parameter = parameter(constants::pin_name_parameter_name);
+    pin_name_parameter.setSubset(pin_name_array_.data(),
+                                 pin_name_array_.max_size(),
+                                 pin_name_array_.size());
     pins_.push_back(Pin(pin_name,pin_number));
     const ConstantString * hardware_name_ptr = hardware_info_array_.back()->name_ptr;
     pins_.back().setHardwareName(*hardware_name_ptr);
@@ -234,6 +254,25 @@ Pin * Server::findPinPtrByConstantString(const ConstantString & pin_name)
     return &pins_[pin_index];
   }
   return NULL;
+}
+
+void Server::setPinMode(const ConstantString & pin_name,
+                        const ConstantString & pin_mode)
+{
+  if (pin_name == constants::all_constant_string)
+  {
+    for (size_t pin_index=0; pin_index<pins_.size(); ++pin_index)
+    {
+      Pin & pin = pins_[pin_index];
+      pin.setMode(pin_mode);
+    }
+    return;
+  }
+  Pin * pin_ptr = findPinPtrByConstantString(pin_name);
+  if (pin_ptr)
+  {
+    pin_ptr->setMode(pin_mode);
+  }
 }
 
 // Firmware
@@ -1820,12 +1859,15 @@ void Server::getPinInfoHandler()
   writePinInfoToResponse();
 }
 
-void Server::detachAllPinsHandler()
+void Server::setPinModeHandler()
 {
-  for (size_t callback_index=0; callback_index<callbacks_.size(); ++callback_index)
-  {
-    callbacks_[callback_index].detachFromAll();
-  }
+  const ConstantString * pin_name;
+  parameter(constants::pin_name_parameter_name).getValue(pin_name);
+
+  const ConstantString * pin_mode;
+  parameter(constants::pin_mode_constant_string).getValue(pin_mode);
+
+  setPinMode(*pin_name,*pin_mode);
 }
 
 void Server::getApiHandler()

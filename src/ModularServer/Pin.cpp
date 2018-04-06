@@ -10,75 +10,90 @@
 
 namespace modular_server
 {
-
-namespace pin
-{
-CONSTANT_STRING(mode_input,"INPUT");
-CONSTANT_STRING(mode_input_pullup,"INPUT_PULLUP");
-CONSTANT_STRING(mode_output,"OUTPUT");
-CONSTANT_STRING(mode_low,"LOW");
-CONSTANT_STRING(mode_change,"CHANGE");
-CONSTANT_STRING(mode_rising,"RISING");
-CONSTANT_STRING(mode_falling,"FALLING");
-}
-
 // public
 Pin::Pin()
 {
   setup(constants::empty_constant_string);
 }
 
-void Pin::setModeInput()
+void Pin::setModeDigitalInput()
 {
   if (callback_ptr_)
   {
     callback_ptr_->detachFrom(*this);
   }
-  mode_ptr_ = &pin::mode_input;
+  mode_ptr_ = &constants::pin_mode_digital_input;
   disablePullup();
 }
 
-void Pin::setModeInputPullup()
+void Pin::setModeDigitalInputPullup()
 {
   if (callback_ptr_)
   {
     callback_ptr_->detachFrom(*this);
   }
-  mode_ptr_ = &pin::mode_input_pullup;
+  mode_ptr_ = &constants::pin_mode_digital_input_pullup;
   enablePullup();
 }
 
-void Pin::setModeOutput()
+void Pin::setModeDigitalOutput()
 {
   if (callback_ptr_)
   {
     callback_ptr_->detachFrom(*this);
   }
-  mode_ptr_ = &pin::mode_output;
+  mode_ptr_ = &constants::pin_mode_digital_output;
   pinMode(pin_number_,OUTPUT);
 }
 
-int Pin::digitalRead()
+void Pin::setModeAnalogInput()
 {
-  return ::digitalRead(pin_number_);
-}
-
-void Pin::digitalWrite(uint8_t value)
-{
-  if (mode_ptr_ == &pin::mode_output)
+  if (callback_ptr_)
   {
-    ::digitalWrite(pin_number_,value);
+    callback_ptr_->detachFrom(*this);
   }
+  mode_ptr_ = &constants::pin_mode_analog_input;
+  disablePullup();
 }
 
-int Pin::analogRead()
+void Pin::setModeAnalogOutput()
 {
-  return ::analogRead(pin_number_);
+  if (callback_ptr_)
+  {
+    callback_ptr_->detachFrom(*this);
+  }
+  mode_ptr_ = &constants::pin_mode_analog_output;
+  pinMode(pin_number_,OUTPUT);
 }
 
-void Pin::analogWrite(int value)
+int Pin::read()
 {
-  if (mode_ptr_ == &pin::mode_output)
+  int value = 0;
+  if (mode_ptr_ != &constants::pin_mode_analog_input)
+  {
+    value = ::digitalRead(pin_number_);
+  }
+  else
+  {
+    value = ::analogRead(pin_number_);
+  }
+  return value;
+}
+
+void Pin::write(int value)
+{
+  if (mode_ptr_ == &constants::pin_mode_digital_output)
+  {
+    if (value <= 0)
+    {
+      ::digitalWrite(pin_number_,LOW);
+    }
+    else
+    {
+      ::digitalWrite(pin_number_,HIGH);
+    }
+  }
+  else if (mode_ptr_ == &constants::pin_mode_analog_output)
   {
     ::analogWrite(pin_number_,value);
   }
@@ -109,7 +124,7 @@ void Pin::setup(const ConstantString & name)
   interrupt_number_ = NOT_AN_INTERRUPT;
   pin_number_ = 0;
   callback_ptr_ = NULL;
-  mode_ptr_ = &pin::mode_input;
+  mode_ptr_ = &constants::pin_mode_digital_input;
   isr_ = NULL;
 }
 
@@ -121,6 +136,38 @@ Callback * Pin::getCallbackPtr()
 const ConstantString & Pin::getMode()
 {
   return *mode_ptr_;
+}
+
+void Pin::setMode(const ConstantString & pin_mode)
+{
+  if ((&pin_mode == &constants::pin_mode_interrupt_low) ||
+      (&pin_mode == &constants::pin_mode_interrupt_change) ||
+      (&pin_mode == &constants::pin_mode_interrupt_rising) ||
+      (&pin_mode == &constants::pin_mode_interrupt_falling))
+  {
+    mode_ptr_ = &pin_mode;
+    reattach();
+  }
+  else if (&pin_mode == &constants::pin_mode_digital_input)
+  {
+    setModeDigitalInput();
+  }
+  else if (&pin_mode == &constants::pin_mode_digital_input_pullup)
+  {
+    setModeDigitalInputPullup();
+  }
+  else if (&pin_mode == &constants::pin_mode_digital_output)
+  {
+    setModeDigitalOutput();
+  }
+  else if (&pin_mode == &constants::pin_mode_analog_input)
+  {
+    setModeAnalogInput();
+  }
+  else if (&pin_mode == &constants::pin_mode_analog_output)
+  {
+    setModeAnalogOutput();
+  }
 }
 
 void Pin::writeApi(Response & response,
@@ -159,7 +206,7 @@ void Pin::writeApi(Response & response,
     response.write(constants::callback_constant_string,callback_ptr->getName());
   }
 
-  response.write(constants::mode_constant_string,getMode());
+  response.write(constants::pin_mode_constant_string,getMode());
 
   response.endObject();
 }
@@ -192,34 +239,6 @@ void Pin::removeCallback()
   callback_ptr_ = NULL;
 }
 
-void Pin::setModeInterrupt(const ConstantString & mode)
-{
-  if (&mode == &pin::mode_low)
-  {
-    mode_ptr_ = &pin::mode_low;
-    reattach();
-  }
-  else if (&mode == &pin::mode_change)
-  {
-    mode_ptr_ = &pin::mode_change;
-    reattach();
-  }
-  else if (&mode == &pin::mode_rising)
-  {
-    mode_ptr_ = &pin::mode_rising;
-    reattach();
-  }
-  else if (&mode == &pin::mode_falling)
-  {
-    mode_ptr_ = &pin::mode_falling;
-    reattach();
-  }
-  else
-  {
-    detach();
-  }
-}
-
 void Pin::reattach()
 {
   if (!callback_ptr_)
@@ -234,7 +253,7 @@ void Pin::reattach()
   {
     return;
   }
-  if (mode_ptr_ == &pin::mode_low)
+  if (mode_ptr_ == &constants::pin_mode_interrupt_low)
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
@@ -243,7 +262,7 @@ void Pin::reattach()
                     isr_,
                     LOW);
   }
-  else if (mode_ptr_ == &pin::mode_change)
+  else if (mode_ptr_ == &constants::pin_mode_interrupt_change)
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
@@ -252,7 +271,7 @@ void Pin::reattach()
                     isr_,
                     CHANGE);
   }
-  else if (mode_ptr_ == &pin::mode_rising)
+  else if (mode_ptr_ == &constants::pin_mode_interrupt_rising)
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
@@ -261,7 +280,7 @@ void Pin::reattach()
                     isr_,
                     RISING);
   }
-  else if (mode_ptr_ == &pin::mode_falling)
+  else if (mode_ptr_ == &constants::pin_mode_interrupt_falling)
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
@@ -279,7 +298,7 @@ void Pin::attach(Callback & callback, const ConstantString & mode)
     return;
   }
   setCallback(callback);
-  setModeInterrupt(mode);
+  setMode(mode);
 }
 
 void Pin::detach()
@@ -298,7 +317,7 @@ void Pin::detach()
   }
   detachInterrupt(interrupt_number_);
   disablePullup();
-  mode_ptr_ = &pin::mode_input;
+  mode_ptr_ = &constants::pin_mode_digital_input;
 }
 
 void Pin::resetIsr()

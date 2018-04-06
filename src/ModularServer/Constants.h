@@ -10,6 +10,8 @@
 #include <ConstantVariable.h>
 #include <Array.h>
 
+// #include "Pin.h"
+
 
 namespace modular_server
 {
@@ -20,7 +22,7 @@ enum {HARDWARE_COUNT_MAX=4};
 
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{SERVER_PROPERTY_COUNT_MAX=1};
-enum{SERVER_PARAMETER_COUNT_MAX=2};
+enum{SERVER_PARAMETER_COUNT_MAX=4};
 enum{SERVER_FUNCTION_COUNT_MAX=12};
 enum{SERVER_CALLBACK_COUNT_MAX=1};
 
@@ -79,6 +81,17 @@ extern const long response_pipe_read_max;
 
 extern const double epsilon;
 
+// Pins
+extern ConstantString pin_mode_digital_input;
+extern ConstantString pin_mode_digital_input_pullup;
+extern ConstantString pin_mode_digital_output;
+extern ConstantString pin_mode_analog_input;
+extern ConstantString pin_mode_analog_output;
+extern ConstantString pin_mode_interrupt_low;
+extern ConstantString pin_mode_interrupt_change;
+extern ConstantString pin_mode_interrupt_rising;
+extern ConstantString pin_mode_interrupt_falling;
+
 // Properties
 extern ConstantString serial_number_property_name;
 extern const long serial_number_min;
@@ -92,6 +105,11 @@ extern ConstantString verbosity_general;
 extern ConstantString verbosity_detailed;
 extern SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH];
 
+extern ConstantString pin_name_parameter_name;
+
+enum{PIN_MODE_SUBSET_LENGTH=5};
+extern SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH];
+
 // Functions
 extern ConstantString get_method_ids_function_name;
 extern ConstantString help_function_name;
@@ -99,7 +117,7 @@ extern ConstantString verbose_help_function_name;
 extern ConstantString get_device_id_function_name;
 extern ConstantString get_device_info_function_name;
 extern ConstantString get_pin_info_function_name;
-extern ConstantString detach_all_pins_function_name;
+extern ConstantString set_pin_mode_function_name;
 extern ConstantString get_api_function_name;
 extern ConstantString get_property_default_values_function_name;
 extern ConstantString set_properties_to_defaults_function_name;
@@ -202,10 +220,9 @@ extern ConstantString subset_constant_string;
 extern ConstantString all_constant_string;
 extern ConstantString array_element_subset_constant_string;
 extern ConstantString pins_constant_string;
-extern ConstantString pin_constant_string;
 extern ConstantString interrupt_number_constant_string;
 extern ConstantString pin_number_constant_string;
-extern ConstantString mode_constant_string;
+extern ConstantString pin_mode_constant_string;
 extern ConstantString processor_constant_string;
 extern ConstantString processor_name_constant_string;
 

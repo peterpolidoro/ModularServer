@@ -14,12 +14,12 @@ namespace modular_server
 namespace callback
 {
 // Parameters
-constants::SubsetMemberType mode_ptr_subset[MODE_SUBSET_LENGTH] =
+constants::SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH] =
 {
-  {.cs_ptr=&pin::mode_low},
-  {.cs_ptr=&pin::mode_change},
-  {.cs_ptr=&pin::mode_rising},
-  {.cs_ptr=&pin::mode_falling},
+  {.cs_ptr=&constants::pin_mode_interrupt_low},
+  {.cs_ptr=&constants::pin_mode_interrupt_change},
+  {.cs_ptr=&constants::pin_mode_interrupt_rising},
+  {.cs_ptr=&constants::pin_mode_interrupt_falling},
 };
 
 // Functions
@@ -119,12 +119,12 @@ Functor1<Pin *> & Callback::getFunctor()
   return functor_;
 }
 
-void Callback::attachTo(Pin & pin, const ConstantString & mode)
+void Callback::attachTo(Pin & pin, const ConstantString & pin_mode)
 {
-  if ((&mode == &pin::mode_low) ||
-      (&mode == &pin::mode_change) ||
-      (&mode == &pin::mode_rising) ||
-      (&mode == &pin::mode_falling))
+  if ((&pin_mode == &constants::pin_mode_interrupt_low) ||
+      (&pin_mode == &constants::pin_mode_interrupt_change) ||
+      (&pin_mode == &constants::pin_mode_interrupt_rising) ||
+      (&pin_mode == &constants::pin_mode_interrupt_falling))
   {
     Callback * pin_callback_ptr = pin.getCallbackPtr();
     if (pin_callback_ptr)
@@ -134,16 +134,16 @@ void Callback::attachTo(Pin & pin, const ConstantString & mode)
     int index = pin_ptrs_.add(&pin);
     if (index >= 0)
     {
-      pin.attach(*this,mode);
+      pin.attach(*this,pin_mode);
     }
   }
 }
 
-void Callback::attachTo(const ConstantString & pin_name, const ConstantString & mode)
+void Callback::attachTo(const ConstantString & pin_name, const ConstantString & pin_mode)
 {
   if (pin_name == constants::all_constant_string)
   {
-    attachToAll(mode);
+    attachToAll(pin_mode);
     return;
   }
   Pin * pin_ptr = find_pin_ptr_by_constant_string_functor_(pin_name);
@@ -151,27 +151,27 @@ void Callback::attachTo(const ConstantString & pin_name, const ConstantString & 
   {
     return;
   }
-  attachTo(*pin_ptr,mode);
+  attachTo(*pin_ptr,pin_mode);
 }
 
-void Callback::attachTo(const char * pin_name, const char * mode_str)
+void Callback::attachTo(const char * pin_name, const char * pin_mode)
 {
-  const ConstantString * mode_ptr = NULL;
-  if (mode_str == pin::mode_low)
+  const ConstantString * pin_mode_ptr = NULL;
+  if (pin_mode == constants::pin_mode_interrupt_low)
   {
-    mode_ptr = &pin::mode_low;
+    pin_mode_ptr = &constants::pin_mode_interrupt_low;
   }
-  else if (mode_str == pin::mode_change)
+  else if (pin_mode == constants::pin_mode_interrupt_change)
   {
-    mode_ptr = &pin::mode_change;
+    pin_mode_ptr = &constants::pin_mode_interrupt_change;
   }
-  else if (mode_str == pin::mode_rising)
+  else if (pin_mode == constants::pin_mode_interrupt_rising)
   {
-    mode_ptr = &pin::mode_rising;
+    pin_mode_ptr = &constants::pin_mode_interrupt_rising;
   }
-  else if (mode_str == pin::mode_falling)
+  else if (pin_mode == constants::pin_mode_interrupt_falling)
   {
-    mode_ptr = &pin::mode_falling;
+    pin_mode_ptr = &constants::pin_mode_interrupt_falling;
   }
   else
   {
@@ -179,7 +179,7 @@ void Callback::attachTo(const char * pin_name, const char * mode_str)
   }
   if (pin_name == constants::all_constant_string)
   {
-    attachToAll(*mode_ptr);
+    attachToAll(*pin_mode_ptr);
     return;
   }
   Pin * pin_ptr = find_pin_ptr_by_chars_functor_(pin_name);
@@ -187,29 +187,29 @@ void Callback::attachTo(const char * pin_name, const char * mode_str)
   {
     return;
   }
-  attachTo(*pin_ptr,*mode_ptr);
+  attachTo(*pin_ptr,*pin_mode_ptr);
 }
 
-void Callback::attachToAll(const ConstantString & mode)
+void Callback::attachToAll(const ConstantString & pin_mode)
 {
   for (size_t i=0; i<pin_name_array_ptr_->size(); ++i)
   {
     const ConstantString * name_ptr = pin_name_array_ptr_->at(i).cs_ptr;
     if (name_ptr != &constants::all_constant_string)
     {
-      attachTo(*name_ptr,mode);
+      attachTo(*name_ptr,pin_mode);
     }
   }
 }
 
-void Callback::attachToAll(const char * mode_str)
+void Callback::attachToAll(const char * pin_mode)
 {
   for (size_t i=0; i<pin_name_array_ptr_->size(); ++i)
   {
     const ConstantString * name_ptr = pin_name_array_ptr_->at(i).cs_ptr;
     if (name_ptr != &constants::all_constant_string)
     {
-      attachTo(*name_ptr,mode_str);
+      attachTo(*name_ptr,pin_mode);
     }
   }
 }
@@ -443,15 +443,15 @@ void Callback::updateFunctionsAndParameters()
   // Parameters
   parameters_.clear();
 
-  Parameter & pin_parameter = createParameter(constants::pin_constant_string);
-  pin_parameter.setTypeString();
-  pin_parameter.setSubset(pin_name_array_ptr_->data(),
-                          pin_name_array_ptr_->max_size(),
-                          pin_name_array_ptr_->size());
+  Parameter & pin_name_parameter = createParameter(constants::pin_name_parameter_name);
+  pin_name_parameter.setTypeString();
+  pin_name_parameter.setSubset(pin_name_array_ptr_->data(),
+                               pin_name_array_ptr_->max_size(),
+                               pin_name_array_ptr_->size());
 
-  Parameter & mode_parameter = createParameter(constants::mode_constant_string);
-  mode_parameter.setTypeString();
-  mode_parameter.setSubset(callback::mode_ptr_subset);
+  Parameter & pin_mode_parameter = createParameter(constants::pin_mode_constant_string);
+  pin_mode_parameter.setTypeString();
+  pin_mode_parameter.setSubset(callback::pin_mode_ptr_subset);
 
   // Functions
   functions_.clear();
@@ -461,12 +461,12 @@ void Callback::updateFunctionsAndParameters()
 
   Function & attach_to_function = createFunction(callback::attach_to_function_name);
   attach_to_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::attachToHandler));
-  attach_to_function.addParameter(pin_parameter);
-  attach_to_function.addParameter(mode_parameter);
+  attach_to_function.addParameter(pin_name_parameter);
+  attach_to_function.addParameter(pin_mode_parameter);
 
   Function & detach_from_function = createFunction(callback::detach_from_function_name);
   detach_from_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Callback::detachFromHandler));
-  detach_from_function.addParameter(pin_parameter);
+  detach_from_function.addParameter(pin_name_parameter);
 }
 
 void Callback::triggerHandler()
@@ -476,14 +476,14 @@ void Callback::triggerHandler()
 
 void Callback::attachToHandler()
 {
-  const char * pin_str = get_parameter_value_functor_(constants::pin_constant_string);
-  const char * mode_str = get_parameter_value_functor_(constants::mode_constant_string);
-  attachTo(pin_str,mode_str);
+  const char * pin_name = get_parameter_value_functor_(constants::pin_name_parameter_name);
+  const char * pin_mode = get_parameter_value_functor_(constants::pin_mode_constant_string);
+  attachTo(pin_name,pin_mode);
 }
 
 void Callback::detachFromHandler()
 {
-  const char * pin_str = get_parameter_value_functor_(constants::pin_constant_string);
+  const char * pin_str = get_parameter_value_functor_(constants::pin_name_parameter_name);
   detachFrom(pin_str);
 }
 

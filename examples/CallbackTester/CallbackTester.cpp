@@ -25,7 +25,7 @@ void CallbackTester::setup()
 
   // Pins
   modular_server::Pin & led_pin = modular_server_.createPin(constants::led_pin_name,constants::led_pin_number);
-  led_pin.setModeOutput();
+  led_pin.setModeDigitalOutput();
 
   blinker_.setup(led_pin);
 
@@ -73,21 +73,21 @@ void CallbackTester::setup()
   // Callbacks
   modular_server::Callback & set_led_on_callback = modular_server_.createCallback(constants::set_led_on_callback_name);
   set_led_on_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&CallbackTester::setLedOnHandler));
-  set_led_on_callback.attachTo(bnc_a_pin,modular_server::pin::mode_falling);
-  set_led_on_callback.attachTo(bnc_c_pin,modular_server::pin::mode_falling);
+  set_led_on_callback.attachTo(bnc_a_pin,modular_server::constants::pin_mode_interrupt_falling);
+  set_led_on_callback.attachTo(bnc_c_pin,modular_server::constants::pin_mode_interrupt_falling);
 
   modular_server::Callback & set_led_off_callback = modular_server_.createCallback(constants::set_led_off_callback_name);
   set_led_off_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&CallbackTester::setLedOffHandler));
-  set_led_off_callback.attachTo(bnc_b_pin,modular_server::pin::mode_falling);
-  set_led_off_callback.attachTo(bnc_d_pin,modular_server::pin::mode_falling);
-  set_led_off_callback.attachTo(bnc_f_pin,modular_server::pin::mode_falling);
+  set_led_off_callback.attachTo(bnc_b_pin,modular_server::constants::pin_mode_interrupt_falling);
+  set_led_off_callback.attachTo(bnc_d_pin,modular_server::constants::pin_mode_interrupt_falling);
+  set_led_off_callback.attachTo(bnc_f_pin,modular_server::constants::pin_mode_interrupt_falling);
 
   modular_server::Callback & blink_led_callback = modular_server_.createCallback(constants::blink_led_callback_name);
   blink_led_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&CallbackTester::blinkLedHandler));
   blink_led_callback.addProperty(duration_on_property);
   blink_led_callback.addProperty(duration_off_property);
   blink_led_callback.addProperty(count_property);
-  blink_led_callback.attachTo(bnc_e_pin,modular_server::pin::mode_falling);
+  blink_led_callback.attachTo(bnc_e_pin,modular_server::constants::pin_mode_interrupt_falling);
 
   // Begin Streams
   Serial.begin(constants::baud);
@@ -123,13 +123,13 @@ void CallbackTester::update()
 void CallbackTester::setLedOnHandler(modular_server::Pin * pin_ptr)
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).digitalWrite(HIGH);
+  modular_server_.pin(constants::led_pin_name).write(HIGH);
 }
 
 void CallbackTester::setLedOffHandler(modular_server::Pin * pin_ptr)
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).digitalWrite(LOW);
+  modular_server_.pin(constants::led_pin_name).write(LOW);
 }
 
 void CallbackTester::blinkLedHandler(modular_server::Pin * pin_ptr)

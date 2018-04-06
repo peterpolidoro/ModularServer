@@ -199,37 +199,37 @@ Response:
       "name": "bnc_a",
       "hardware": "Teensy",
       "callback": "setLedOn",
-      "mode": "FALLING"
+      "pin_mode": "INTERRUPT_FALLING"
     },
     {
       "name": "bnc_b",
       "hardware": "Teensy",
       "callback": "setLedOff",
-      "mode": "FALLING"
+      "pin_mode": "INTERRUPT_FALLING"
     },
     {
       "name": "bnc_c",
       "hardware": "Teensy",
       "callback": "setLedOn",
-      "mode": "FALLING"
+      "pin_mode": "INTERRUPT_FALLING"
     },
     {
       "name": "bnc_d",
       "hardware": "Teensy",
       "callback": "setLedOff",
-      "mode": "FALLING"
+      "pin_mode": "INTERRUPT_FALLING"
     },
     {
       "name": "bnc_e",
       "hardware": "Teensy",
       "callback": "blinkLed",
-      "mode": "FALLING"
+      "pin_mode": "INTERRUPT_FALLING"
     },
     {
       "name": "bnc_f",
       "hardware": "Teensy",
       "callback": "setLedOff",
-      "mode": "FALLING"
+      "pin_mode": "INTERRUPT_FALLING"
     }
   ]
 }
@@ -271,8 +271,8 @@ Response:
       "detachFromAll"
     ],
     "parameters": [
-      "pin",
-      "mode"
+      "pin_name",
+      "pin_mode"
     ]
   }
 }
@@ -324,7 +324,7 @@ Response:
     "firmware": "ModularServer",
     "parameters": [
       {
-        "name": "pin",
+        "name": "pin_name",
         "type": "string",
         "subset": [
           "bnc_a",
@@ -336,13 +336,13 @@ Response:
         ]
       },
       {
-        "name": "mode",
+        "name": "pin_mode",
         "type": "string",
         "subset": [
           "LOW",
           "CHANGE",
           "RISING",
-          "FALLING"
+          "INTERRUPT_FALLING"
         ]
       }
     ]
@@ -353,7 +353,7 @@ Response:
 Request:
 
 ```shell
-blinkLed attachTo bnc_f FALLING
+blinkLed attachTo bnc_f INTERRUPT_FALLING
 ```
 
 Response:
@@ -395,8 +395,8 @@ Response:
       "detachFromAll"
     ],
     "parameters": [
-      "pin",
-      "mode"
+      "pin_name",
+      "pin_mode"
     ]
   }
 }
@@ -417,7 +417,7 @@ Response:
     "name": "detachFrom",
     "firmware": "ModularServer",
     "parameters": [
-      "pin"
+      "pin_name"
     ]
   }
 }
@@ -483,32 +483,32 @@ Response:
     {
       "name": "bnc_a",
       "hardware": "Teensy",
-      "mode": "DETACHED"
+      "pin_mode": "DETACHED"
     },
     {
       "name": "bnc_b",
       "hardware": "Teensy",
-      "mode": "DETACHED"
+      "pin_mode": "DETACHED"
     },
     {
       "name": "bnc_c",
       "hardware": "Teensy",
-      "mode": "DETACHED"
+      "pin_mode": "DETACHED"
     },
     {
       "name": "bnc_d",
       "hardware": "Teensy",
-      "mode": "DETACHED"
+      "pin_mode": "DETACHED"
     },
     {
       "name": "bnc_e",
       "hardware": "Teensy",
-      "mode": "DETACHED"
+      "pin_mode": "DETACHED"
     },
     {
       "name": "bnc_f",
       "hardware": "Teensy",
-      "mode": "DETACHED"
+      "pin_mode": "DETACHED"
     }
   ]
 }
@@ -572,20 +572,20 @@ dev.blink_led('?')
  'functions': ['trigger', 'attachTo', 'detachFrom', 'detachFromAll'],
  'pins': [],
  'name': 'blinkLed',
- 'parameters': ['pin', 'mode'],
+ 'parameters': ['pin_name', 'pin_mode'],
  'properties': ['durationOn', 'durationOff', 'count']}
 dev.blink_led('trigger')
 dev.blink_led()
 dev.blink_led('attachTo','??')
 {'firmware': 'ModularServer',
  'name': 'attachTo',
- 'parameters': [{'name': 'pin',
+ 'parameters': [{'name': 'pin_name',
    'subset': ['bnc_a', 'bnc_b', 'bnc_c', 'bnc_d', 'bnc_e', 'bnc_f'],
    'type': 'string'},
-  {'name': 'mode',
-   'subset': ['LOW', 'CHANGE', 'RISING', 'FALLING'],
+  {'name': 'pin_mode',
+   'subset': ['LOW', 'CHANGE', 'RISING', 'INTERRUPT_FALLING'],
    'type': 'string'}]}
-dev.blink_led('attachTo','bnc_f','FALLING')
+dev.blink_led('attachTo','bnc_f','INTERRUPT_FALLING')
 dev.count('setValue',2)
 2
 dev.blink_led()
@@ -644,7 +644,7 @@ ans =
   properties: {'durationOn'  'durationOff'  'count'}
   pins: {'bnc_e'}
   functions: {'trigger'  'attachTo'  'detachFrom'  'detachFromAll'}
-  parameters: {'pin'  'mode'}
+  parameters: {'pin_name'  'pin_mode'}
 dev.blinkLed('trigger');
 dev.blinkLed();
 dev.blinkLed('attachTo','??')
@@ -652,7 +652,7 @@ ans =
   name: 'attachTo'
   firmware: 'ModularServer'
   parameters: {[1x1 struct]  [1x1 struct]}
-dev.blinkLed('attachTo','bnc_f','FALLING');
+dev.blinkLed('attachTo','bnc_f','INTERRUPT_FALLING');
 dev.count('setValue',2)
 ans =
   2
