@@ -192,7 +192,7 @@ Each hardware layer may add zero or more pins.
 Request:
 
 ```shell
-getPinInfo
+getPinInfo ALL
 ```
 
 Response:
@@ -201,6 +201,11 @@ Response:
 {
   "id": "getPinInfo",
   "result": [
+    {
+      "name": "led",
+      "hardware": "Teensy",
+      "pin_mode": "DIGITAL_OUTPUT"
+    },
     {
       "name": "bnc_a",
       "hardware": "Teensy",
@@ -241,12 +246,12 @@ Response:
 }
 ```
 
-Each pin may be dynamically assigned to a callback with a trigger mode or
-the pin can be detached and inactive.
+Each pin may be dynamically assigned to a callback with an interrupt mode or the
+pin can be in input or output modes and controlled separately from callbacks.
 
-Use callbacks to attach or detach callbacks to pins. Callbacks may be
-attached to one or more pins, but each pin can only have a single
-callback attached.
+Use callback functions to attach or detach callbacks to pins. Callbacks may be
+attached to one or more pins, but each pin can only have a single callback
+attached.
 
 Request:
 

@@ -16,6 +16,37 @@ Teensy 3.2, Teensy 3.5, and Teensy 3.6.
 ## API NAMES
 
 ```json
+{
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "ModularServer"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
+      "getDeviceId",
+      "getDeviceInfo",
+      "getApi",
+      "getPropertyDefaultValues",
+      "setPropertiesToDefaults",
+      "getPropertyValues",
+      "getPinInfo",
+      "setPinMode",
+      "getPinValue",
+      "setPinValue"
+    ],
+    "parameters": [
+      "firmware",
+      "verbosity",
+      "pin_name",
+      "pin_mode",
+      "pin_value"
+    ],
+    "properties": [
+      "serialNumber"
+    ]
+  }
+}
 ```
 
 ## API GENERAL
