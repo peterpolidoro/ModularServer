@@ -98,8 +98,8 @@ Response:
         "getPropertyValues",
         "getPinInfo",
         "setPinMode",
-        "pinRead",
-        "pinWrite",
+        "getPinValue",
+        "setPinValue",
         "setLedOn",
         "setLedOff",
         "getLedPinNumber",
@@ -465,8 +465,8 @@ Response:
       "getPropertyValues",
       "getPinInfo",
       "setPinMode",
-      "pinRead",
-      "pinWrite",
+      "getPinValue",
+      "setPinValue",
       "setLedOn",
       "setLedOff",
       "getLedPinNumber",
@@ -666,14 +666,14 @@ Response:
 Request:
 
 ```shell
-pinWrite led 1
+setPinValue led 1
 ```
 
 Response:
 
 ```json
 {
-  "id": "pinWrite",
+  "id": "setPinValue",
   "result": 1
 }
 ```
@@ -683,14 +683,14 @@ Notice the LED has turned ON.
 Request:
 
 ```shell
-pinWrite led 0
+setPinValue led 0
 ```
 
 Response:
 
 ```json
 {
-  "id": "pinWrite",
+  "id": "setPinValue",
   "result": 0
 }
 ```
@@ -719,8 +719,8 @@ dev.get_methods()
  'get_property_default_values',
  'set_properties_to_defaults',
  'set_pin_mode',
- 'pin_read',
- 'pin_write',
+ 'get_pin_value',
+ 'set_pin_value',
  'get_device_info']
 dev.set_properties_to_defaults(['ALL'])
 dev.set_led_on()
@@ -810,8 +810,8 @@ dev.getMethods()                 % get device methods
   getPropertyValues
   getPinInfo
   setPinMode
-  pinRead
-  pinWrite
+  getPinValue
+  setPinValue
   setLedOn
   setLedOff
   getLedPinNumber

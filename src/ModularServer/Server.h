@@ -196,9 +196,9 @@ private:
   Pin * findPinPtrByConstantString(const ConstantString & pin_name);
   void setPinMode(const ConstantString & pin_name,
                   const ConstantString & pin_mode);
-  int pinRead(const ConstantString & pin_name);
-  void pinWrite(const ConstantString & pin_name,
-                const int pin_value);
+  int getPinValue(const ConstantString & pin_name);
+  void setPinValue(const ConstantString & pin_name,
+                   const int pin_value);
 
   // Handlers
   void getMethodIdsHandler();
@@ -213,8 +213,8 @@ private:
   void setPropertiesToDefaultsHandler();
   void getPinInfoHandler();
   void setPinModeHandler();
-  void pinReadHandler();
-  void pinWriteHandler();
+  void getPinValueHandler();
+  void setPinValueHandler();
 
 };
 }

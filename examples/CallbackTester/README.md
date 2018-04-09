@@ -97,8 +97,8 @@ Response:
         "getPropertyValues",
         "getPinInfo",
         "setPinMode",
-        "pinRead",
-        "pinWrite"
+        "getPinValue",
+        "setPinValue"
       ],
       "parameters": [
         "firmware",

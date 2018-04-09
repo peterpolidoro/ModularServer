@@ -126,8 +126,8 @@ extern ConstantString set_properties_to_defaults_function_name;
 extern ConstantString get_pin_info_function_name;
 extern ConstantString get_property_values_function_name;
 extern ConstantString set_pin_mode_function_name;
-extern ConstantString pin_read_function_name;
-extern ConstantString pin_write_function_name;
+extern ConstantString get_pin_value_function_name;
+extern ConstantString set_pin_value_function_name;
 extern ConstantString get_memory_free_function_name;
 
 // Callbacks

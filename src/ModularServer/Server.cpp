@@ -137,16 +137,16 @@ void Server::setup()
   set_pin_mode_function.addParameter(pin_name_parameter);
   set_pin_mode_function.addParameter(pin_mode_parameter);
 
-  Function & pin_read_function = createFunction(constants::pin_read_function_name);
-  pin_read_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::pinReadHandler));
-  pin_read_function.addParameter(pin_name_parameter);
-  pin_read_function.setResultTypeLong();
+  Function & get_pin_value_function = createFunction(constants::get_pin_value_function_name);
+  get_pin_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::getPinValueHandler));
+  get_pin_value_function.addParameter(pin_name_parameter);
+  get_pin_value_function.setResultTypeLong();
 
-  Function & pin_write_function = createFunction(constants::pin_write_function_name);
-  pin_write_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::pinWriteHandler));
-  pin_write_function.addParameter(pin_name_parameter);
-  pin_write_function.addParameter(pin_value_parameter);
-  pin_write_function.setResultTypeLong();
+  Function & set_pin_value_function = createFunction(constants::set_pin_value_function_name);
+  set_pin_value_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&Server::setPinValueHandler));
+  set_pin_value_function.addParameter(pin_name_parameter);
+  set_pin_value_function.addParameter(pin_value_parameter);
+  set_pin_value_function.setResultTypeLong();
 
 #ifdef __AVR__
   Function & get_memory_free_function = createFunction(constants::get_memory_free_function_name);
@@ -290,7 +290,7 @@ void Server::setPinMode(const ConstantString & pin_name,
   }
 }
 
-int Server::pinRead(const ConstantString & pin_name)
+int Server::getPinValue(const ConstantString & pin_name)
 {
   if (pin_name == constants::all_constant_string)
   {
@@ -304,8 +304,8 @@ int Server::pinRead(const ConstantString & pin_name)
   return pin_ptr->read();
 }
 
-void Server::pinWrite(const ConstantString & pin_name,
-                      const int pin_value)
+void Server::setPinValue(const ConstantString & pin_name,
+                         const int pin_value)
 {
   if (pin_name == constants::all_constant_string)
   {
@@ -2002,17 +2002,17 @@ void Server::setPinModeHandler()
   setPinMode(*pin_name_ptr,*pin_mode_ptr);
 }
 
-void Server::pinReadHandler()
+void Server::getPinValueHandler()
 {
   const ConstantString * pin_name_ptr;
   parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
 
-  int pin_value = pinRead(*pin_name_ptr);
+  int pin_value = getPinValue(*pin_name_ptr);
 
   response_.returnResult(pin_value);
 }
 
-void Server::pinWriteHandler()
+void Server::setPinValueHandler()
 {
   const ConstantString * pin_name_ptr;
   parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
@@ -2020,9 +2020,9 @@ void Server::pinWriteHandler()
   int pin_value;
   parameter(constants::pin_value_parameter_name).getValue(pin_value);
 
-  pinWrite(*pin_name_ptr,pin_value);
+  setPinValue(*pin_name_ptr,pin_value);
 
-  pin_value = pinRead(*pin_name_ptr);
+  pin_value = getPinValue(*pin_name_ptr);
 
   response_.returnResult(pin_value);
 }

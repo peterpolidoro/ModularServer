@@ -80,8 +80,8 @@ CONSTANT_STRING(set_properties_to_defaults_function_name,"setPropertiesToDefault
 CONSTANT_STRING(get_property_values_function_name,"getPropertyValues");
 CONSTANT_STRING(get_pin_info_function_name,"getPinInfo");
 CONSTANT_STRING(set_pin_mode_function_name,"setPinMode");
-CONSTANT_STRING(pin_read_function_name,"pinRead");
-CONSTANT_STRING(pin_write_function_name,"pinWrite");
+CONSTANT_STRING(get_pin_value_function_name,"getPinValue");
+CONSTANT_STRING(set_pin_value_function_name,"setPinValue");
 CONSTANT_STRING(get_memory_free_function_name,"getMemoryFree");
 
 // Callbacks
