@@ -278,8 +278,7 @@ Response:
     "functions": [
       "trigger",
       "attachTo",
-      "detachFrom",
-      "detachFromAll"
+      "detachFrom"
     ],
     "parameters": [
       "pin_name",
@@ -338,6 +337,8 @@ Response:
         "name": "pin_name",
         "type": "string",
         "subset": [
+          "ALL",
+          "led",
           "bnc_a",
           "bnc_b",
           "bnc_c",
@@ -350,9 +351,9 @@ Response:
         "name": "pin_mode",
         "type": "string",
         "subset": [
-          "LOW",
-          "CHANGE",
-          "RISING",
+          "INTERRUPT_LOW",
+          "INTERRUPT_CHANGE",
+          "INTERRUPT_RISING",
           "INTERRUPT_FALLING"
         ]
       }
@@ -402,8 +403,7 @@ Response:
     "functions": [
       "trigger",
       "attachTo",
-      "detachFrom",
-      "detachFromAll"
+      "detachFrom"
     ],
     "parameters": [
       "pin_name",
@@ -467,14 +467,61 @@ Response:
 Request:
 
 ```shell
-detachAllPins
+setPinMode ??
 ```
 
 Response:
 
 ```json
 {
-  "id": "detachAllPins",
+  "id": "setPinMode",
+  "result": {
+    "name": "setPinMode",
+    "firmware": "ModularServer",
+    "parameters": [
+      {
+        "name": "pin_name",
+        "type": "string",
+        "subset": [
+          "ALL",
+          "led",
+          "bnc_a",
+          "bnc_b",
+          "bnc_c",
+          "bnc_d",
+          "bnc_e",
+          "bnc_f"
+        ]
+      },
+      {
+        "name": "pin_mode",
+        "type": "string",
+        "subset": [
+          "DIGITAL_INPUT",
+          "DIGITAL_INPUT_PULLUP",
+          "DIGITAL_OUTPUT",
+          "ANALOG_INPUT",
+          "ANALOG_OUTPUT",
+          "PULSE_RISING",
+          "PULSE_FALLING"
+        ]
+      }
+    ]
+  }
+}
+```
+
+Request:
+
+```shell
+setPinMode ALL DIGITAL_INPUT
+```
+
+Response:
+
+```json
+{
+  "id": "setPinMode",
   "result": null
 }
 ```
@@ -482,7 +529,7 @@ Response:
 Request:
 
 ```shell
-getPinInfo
+getPinInfo ALL
 ```
 
 Response:
@@ -492,51 +539,41 @@ Response:
   "id": "getPinInfo",
   "result": [
     {
+      "name": "led",
+      "hardware": "Teensy",
+      "pin_mode": "DIGITAL_INPUT"
+    },
+    {
       "name": "bnc_a",
       "hardware": "Teensy",
-      "pin_mode": "DETACHED"
+      "pin_mode": "DIGITAL_INPUT"
     },
     {
       "name": "bnc_b",
       "hardware": "Teensy",
-      "pin_mode": "DETACHED"
+      "pin_mode": "DIGITAL_INPUT"
     },
     {
       "name": "bnc_c",
       "hardware": "Teensy",
-      "pin_mode": "DETACHED"
+      "pin_mode": "DIGITAL_INPUT"
     },
     {
       "name": "bnc_d",
       "hardware": "Teensy",
-      "pin_mode": "DETACHED"
+      "pin_mode": "DIGITAL_INPUT"
     },
     {
       "name": "bnc_e",
       "hardware": "Teensy",
-      "pin_mode": "DETACHED"
+      "pin_mode": "DIGITAL_INPUT"
     },
     {
       "name": "bnc_f",
       "hardware": "Teensy",
-      "pin_mode": "DETACHED"
+      "pin_mode": "DIGITAL_INPUT"
     }
   ]
-}
-```
-
-Request:
-
-```shell
-setLedOn
-```
-
-Response:
-
-```json
-{
-  "id": "setLedOn",
-  "result": null
 }
 ```
 
@@ -550,40 +587,37 @@ dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '3x2', 'name': 'callback_tester', 'serial_number': 0}
 dev.get_methods()
-['count',
- 'set_led_on',
- 'get_pin_info',
- 'get_api',
- 'serial_number',
- 'duration_off',
- 'get_property_values',
- 'get_device_id',
- 'blink_led',
- 'set_led_off',
- 'duration_on',
+['duration_off',
  'get_property_default_values',
+ 'set_led_on',
+ 'blink_led',
  'set_properties_to_defaults',
- 'detach_all_pins',
- 'get_device_info']
+ 'get_device_id',
+ 'serial_number',
+ 'duration_on',
+ 'get_pin_value',
+ 'get_device_info',
+ 'set_pin_mode',
+ 'get_api',
+ 'set_led_off',
+ 'get_pin_info',
+ 'set_pin_value',
+ 'count',
+ 'get_property_values']
 dev.set_properties_to_defaults(['ALL'])
 dev.get_device_info()
-{'firmware': [{'name': 'ModularServer', 'version': '3.0.0'},
+{'firmware': [{'name': 'ModularServer', 'version': '5.0.0'},
   {'name': 'CallbackTester', 'version': '2.0.0'}],
- 'hardware': [{'pins': ['bnc_a',
-    'bnc_b',
-    'bnc_c',
-    'bnc_d',
-    'bnc_e',
-    'bnc_f'],
-   'name': 'Teensy',
+ 'hardware': [{'name': 'Teensy',
+   'pins': ['led', 'bnc_a', 'bnc_b', 'bnc_c', 'bnc_d', 'bnc_e', 'bnc_f'],
    'version': '3.2'}],
  'processor': 'MK20DX256'}
 dev.blink_led('?')
 {'firmware': 'CallbackTester',
- 'functions': ['trigger', 'attachTo', 'detachFrom', 'detachFromAll'],
- 'pins': [],
+ 'functions': ['trigger', 'attachTo', 'detachFrom'],
  'name': 'blinkLed',
  'parameters': ['pin_name', 'pin_mode'],
+ 'pins': ['bnc_e'],
  'properties': ['durationOn', 'durationOff', 'count']}
 dev.blink_led('trigger')
 dev.blink_led()
@@ -591,10 +625,20 @@ dev.blink_led('attachTo','??')
 {'firmware': 'ModularServer',
  'name': 'attachTo',
  'parameters': [{'name': 'pin_name',
-   'subset': ['bnc_a', 'bnc_b', 'bnc_c', 'bnc_d', 'bnc_e', 'bnc_f'],
+   'subset': ['ALL',
+    'led',
+    'bnc_a',
+    'bnc_b',
+    'bnc_c',
+    'bnc_d',
+    'bnc_e',
+    'bnc_f'],
    'type': 'string'},
   {'name': 'pin_mode',
-   'subset': ['LOW', 'CHANGE', 'RISING', 'INTERRUPT_FALLING'],
+   'subset': ['INTERRUPT_LOW',
+    'INTERRUPT_CHANGE',
+    'INTERRUPT_RISING',
+    'INTERRUPT_FALLING'],
    'type': 'string'}]}
 dev.blink_led('attachTo','bnc_f','INTERRUPT_FALLING')
 dev.count('setValue',2)
@@ -639,7 +683,9 @@ ans =
   setPropertiesToDefaults
   getPropertyValues
   getPinInfo
-  detachAllPins
+  setPinMode
+  getPinValue
+  setPinValue
   setLedOn
   setLedOff
   blinkLed
@@ -654,7 +700,7 @@ ans =
   firmware: 'CallbackTester'
   properties: {'durationOn'  'durationOff'  'count'}
   pins: {'bnc_e'}
-  functions: {'trigger'  'attachTo'  'detachFrom'  'detachFromAll'}
+  functions: {'trigger'  'attachTo'  'detachFrom'}
   parameters: {'pin_name'  'pin_mode'}
 dev.blinkLed('trigger');
 dev.blinkLed();

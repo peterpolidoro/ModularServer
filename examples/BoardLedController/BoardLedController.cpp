@@ -71,7 +71,10 @@ void BoardLedController::setup()
 
   // Begin Streams
   Serial.begin(constants::baud);
+}
 
+void BoardLedController::startServer()
+{
   // Start Modular Device Server
   modular_server_.startServer();
 }
@@ -103,13 +106,13 @@ void BoardLedController::update()
 void BoardLedController::setLedOnHandler()
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).write(HIGH);
+  modular_server_.pin(constants::led_pin_name).setValue(HIGH);
 }
 
 void BoardLedController::setLedOffHandler()
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).write(LOW);
+  modular_server_.pin(constants::led_pin_name).setValue(LOW);
 }
 
 void BoardLedController::getLedPinNumberHandler()

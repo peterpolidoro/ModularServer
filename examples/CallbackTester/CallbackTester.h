@@ -17,6 +17,7 @@ class CallbackTester
 {
 public:
   void setup();
+  void startServer();
   void update();
 
 private:

@@ -16,6 +16,7 @@ class MinimalDevice
 {
 public:
   void setup();
+  void startServer();
   void update();
 
 private:

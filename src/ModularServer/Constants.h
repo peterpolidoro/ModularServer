@@ -82,11 +82,17 @@ extern const long response_pipe_read_max;
 extern const double epsilon;
 
 // Pins
+enum{PIN_PULSE_EVENT_COUNT_MAX=8};
+extern const size_t pin_pulse_timer_number;
+extern const uint32_t pin_pulse_delay;
+extern const uint32_t pin_pulse_count;
 extern ConstantString pin_mode_digital_input;
 extern ConstantString pin_mode_digital_input_pullup;
 extern ConstantString pin_mode_digital_output;
 extern ConstantString pin_mode_analog_input;
 extern ConstantString pin_mode_analog_output;
+extern ConstantString pin_mode_pulse_rising;
+extern ConstantString pin_mode_pulse_falling;
 extern ConstantString pin_mode_interrupt_low;
 extern ConstantString pin_mode_interrupt_change;
 extern ConstantString pin_mode_interrupt_rising;
@@ -107,7 +113,7 @@ extern SubsetMemberType verbosity_ptr_subset[VERBOSITY_SUBSET_LENGTH];
 
 extern ConstantString pin_name_parameter_name;
 
-enum{PIN_MODE_SUBSET_LENGTH=5};
+enum{PIN_MODE_SUBSET_LENGTH=7};
 extern SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH];
 
 extern ConstantString pin_value_parameter_name;

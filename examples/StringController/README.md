@@ -107,7 +107,9 @@ Response:
         "setPropertiesToDefaults",
         "getPropertyValues",
         "getPinInfo",
-        "detachAllPins",
+        "setPinMode",
+        "getPinValue",
+        "setPinValue",
         "echo",
         "length",
         "startsWith",
@@ -120,6 +122,9 @@ Response:
       "parameters": [
         "firmware",
         "verbosity",
+        "pin_name",
+        "pin_mode",
+        "pin_value",
         "string",
         "string2",
         "count",
@@ -473,7 +478,7 @@ Response:
     "firmware": [
       {
         "name": "ModularServer",
-        "version": "3.0.0"
+        "version": "5.0.0"
       },
       {
         "name": "StringController",
@@ -541,25 +546,27 @@ dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '3x2', 'name': 'string_controller', 'serial_number': 77}
 dev.get_methods()
-['starts_with',
- 'stored_string',
- 'repeat',
- 'get_stored_string',
- 'starting_chars',
- 'set_stored_string',
- 'get_pin_info',
- 'get_api',
- 'serial_number',
- 'length',
- 'echo',
- 'get_property_values',
- 'get_device_id',
- 'detach_all_pins',
+['stored_string',
+ 'get_device_info',
+ 'starts_with',
  'chars_at',
- 'starting_chars_count',
- 'get_property_default_values',
+ 'starting_chars',
+ 'get_api',
+ 'get_device_id',
+ 'get_property_values',
+ 'echo',
+ 'set_pin_value',
+ 'get_pin_value',
  'set_properties_to_defaults',
- 'get_device_info']
+ 'get_property_default_values',
+ 'get_stored_string',
+ 'starting_chars_count',
+ 'length',
+ 'serial_number',
+ 'set_stored_string',
+ 'repeat',
+ 'set_pin_mode',
+ 'get_pin_info']
 dev.set_properties_to_defaults(['ALL'])
 dev.repeat()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
@@ -656,7 +663,9 @@ dev.getMethods()
   setPropertiesToDefaults
   getPropertyValues
   getPinInfo
-  detachAllPins
+  setPinMode
+  getPinValue
+  setPinValue
   echo
   length
   startsWith

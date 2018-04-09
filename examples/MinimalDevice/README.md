@@ -89,11 +89,16 @@ Response:
         "setPropertiesToDefaults",
         "getPropertyValues",
         "getPinInfo",
-        "detachAllPins"
+        "setPinMode",
+        "getPinValue",
+        "setPinValue"
       ],
       "parameters": [
         "firmware",
-        "verbosity"
+        "verbosity",
+        "pin_name",
+        "pin_mode",
+        "pin_value"
       ],
       "properties": [
         "serialNumber"
@@ -272,18 +277,21 @@ Response:
     "functions": [
       {
         "name": "getDeviceId",
+        "firmware": "ModularServer",
         "result_info": {
           "type": "object"
         }
       },
       {
         "name": "getDeviceInfo",
+        "firmware": "ModularServer",
         "result_info": {
           "type": "object"
         }
       },
       {
         "name": "getApi",
+        "firmware": "ModularServer",
         "parameters": [
           "verbosity",
           "firmware"
@@ -294,6 +302,7 @@ Response:
       },
       {
         "name": "getPropertyDefaultValues",
+        "firmware": "ModularServer",
         "parameters": [
           "firmware"
         ],
@@ -303,12 +312,14 @@ Response:
       },
       {
         "name": "setPropertiesToDefaults",
+        "firmware": "ModularServer",
         "parameters": [
           "firmware"
         ]
       },
       {
         "name": "getPropertyValues",
+        "firmware": "ModularServer",
         "parameters": [
           "firmware"
         ],
@@ -318,29 +329,77 @@ Response:
       },
       {
         "name": "getPinInfo",
+        "firmware": "ModularServer",
+        "parameters": [
+          "pin_name"
+        ],
         "result_info": {
           "type": "array",
           "array_element_type": "object"
         }
       },
       {
-        "name": "detachAllPins"
+        "name": "setPinMode",
+        "firmware": "ModularServer",
+        "parameters": [
+          "pin_name",
+          "pin_mode"
+        ]
+      },
+      {
+        "name": "getPinValue",
+        "firmware": "ModularServer",
+        "parameters": [
+          "pin_name"
+        ],
+        "result_info": {
+          "type": "long"
+        }
+      },
+      {
+        "name": "setPinValue",
+        "firmware": "ModularServer",
+        "parameters": [
+          "pin_name",
+          "pin_value"
+        ],
+        "result_info": {
+          "type": "long"
+        }
       }
     ],
     "parameters": [
       {
         "name": "firmware",
+        "firmware": "ModularServer",
         "type": "array",
         "array_element_type": "string"
       },
       {
         "name": "verbosity",
+        "firmware": "ModularServer",
         "type": "string"
+      },
+      {
+        "name": "pin_name",
+        "firmware": "ModularServer",
+        "type": "string"
+      },
+      {
+        "name": "pin_mode",
+        "firmware": "ModularServer",
+        "type": "string"
+      },
+      {
+        "name": "pin_value",
+        "firmware": "ModularServer",
+        "type": "long"
       }
     ],
     "properties": [
       {
         "name": "serialNumber",
+        "firmware": "ModularServer",
         "type": "long",
         "functions": [
           {
@@ -592,7 +651,7 @@ Response:
     "firmware": [
       {
         "name": "ModularServer",
-        "version": "3.0.0"
+        "version": "5.0.0"
       },
       {
         "name": "MinimalDevice",
@@ -617,7 +676,6 @@ getApi NAMES ["ALL"]
 Response:
 
 ```json
-
 {
   "id": "getApi",
   "result": {
@@ -633,11 +691,16 @@ Response:
       "setPropertiesToDefaults",
       "getPropertyValues",
       "getPinInfo",
-      "detachAllPins"
+      "setPinMode",
+      "getPinValue",
+      "setPinValue"
     ],
     "parameters": [
       "firmware",
-      "verbosity"
+      "verbosity",
+      "pin_name",
+      "pin_mode",
+      "pin_value"
     ],
     "properties": [
       "serialNumber"
@@ -676,15 +739,17 @@ dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
 {'form_factor': '3x2', 'name': 'minimal_device', 'serial_number': 0}
 dev.get_methods()
-['get_pin_info',
- 'get_api',
+['get_property_default_values',
+ 'get_device_info',
+ 'set_pin_mode',
  'serial_number',
  'get_property_values',
+ 'get_pin_value',
+ 'get_pin_info',
+ 'set_pin_value',
  'get_device_id',
- 'detach_all_pins',
- 'get_property_default_values',
- 'set_properties_to_defaults',
- 'get_device_info']
+ 'get_api',
+ 'set_properties_to_defaults']
 dev.set_properties_to_defaults(['ALL'])
 dev.get_api()
 IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
@@ -702,8 +767,10 @@ dev.get_api('NAMES',['ALL'])
   'setPropertiesToDefaults',
   'getPropertyValues',
   'getPinInfo',
-  'detachAllPins'],
- 'parameters': ['firmware', 'verbosity'],
+  'setPinMode',
+  'getPinValue',
+  'setPinValue'],
+ 'parameters': ['firmware', 'verbosity', 'pin_name', 'pin_mode', 'pin_value'],
  'properties': ['serialNumber'],
  'verbosity': 'NAMES'}
 dev.serial_number('setValue',-1)
@@ -758,7 +825,9 @@ dev.getMethods()                 % get device methods
   setPropertiesToDefaults
   getPropertyValues
   getPinInfo
-  detachAllPins
+  setPinMode
+  getPinValue
+  setPinValue
   serialNumber
 dev.getApi()
 (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 1 needed.,

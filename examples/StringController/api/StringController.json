@@ -1,0 +1,241 @@
+{
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "StringController"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
+      {
+        "name": "echo",
+        "parameters": [
+          "string",
+          "double_echo"
+        ],
+        "result_info": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "length",
+        "parameters": [
+          "string"
+        ],
+        "result_info": {
+          "type": "long",
+          "units": "characters"
+        }
+      },
+      {
+        "name": "startsWith",
+        "parameters": [
+          "string",
+          "string2"
+        ],
+        "result_info": {
+          "type": "bool"
+        }
+      },
+      {
+        "name": "repeat",
+        "parameters": [
+          "string",
+          "count"
+        ],
+        "result_info": {
+          "type": "array",
+          "array_element_type": "string"
+        }
+      },
+      {
+        "name": "charsAt",
+        "parameters": [
+          "string",
+          "index_array"
+        ],
+        "result_info": {
+          "type": "array",
+          "array_element_type": "string"
+        }
+      },
+      {
+        "name": "startingChars",
+        "parameters": [
+          "string"
+        ],
+        "result_info": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "setStoredString",
+        "parameters": [
+          "string"
+        ]
+      },
+      {
+        "name": "getStoredString",
+        "result_info": {
+          "type": "string"
+        }
+      }
+    ],
+    "parameters": [
+      {
+        "name": "string",
+        "type": "string"
+      },
+      {
+        "name": "string2",
+        "type": "string"
+      },
+      {
+        "name": "count",
+        "type": "long"
+      },
+      {
+        "name": "index_array",
+        "type": "array",
+        "array_element_type": "long"
+      },
+      {
+        "name": "double_echo",
+        "type": "bool"
+      }
+    ],
+    "properties": [
+      {
+        "name": "startingCharsCount",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "storedString",
+        "type": "string",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "getElementValue",
+            "parameters": [
+              "element_index"
+            ],
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "setElementValue",
+            "parameters": [
+              "element_index",
+              "element_value"
+            ],
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "getDefaultElementValue",
+            "parameters": [
+              "element_index"
+            ],
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "setElementValueToDefault",
+            "parameters": [
+              "element_index"
+            ],
+            "result_info": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "setAllElementValues",
+            "parameters": [
+              "element_value"
+            ],
+            "result_info": {
+              "type": "string"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "string"
+          },
+          {
+            "name": "element_index",
+            "type": "long"
+          },
+          {
+            "name": "element_value",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -127,7 +127,9 @@ Response:
         "setPropertiesToDefaults",
         "getPropertyValues",
         "getPinInfo",
-        "detachAllPins",
+        "setPinMode",
+        "getPinValue",
+        "setPinValue",
         "getDoubled",
         "getBool",
         "getLongArrayFixed",
@@ -150,6 +152,9 @@ Response:
       "parameters": [
         "firmware",
         "verbosity",
+        "pin_name",
+        "pin_mode",
+        "pin_value",
         "long_array_parameter",
         "length_parameter",
         "count",
@@ -866,7 +871,7 @@ Response:
     "firmware": [
       {
         "name": "ModularServer",
-        "version": "3.0.0"
+        "version": "5.0.0"
       },
       {
         "name": "PropertyTester",
@@ -955,42 +960,44 @@ dev.get_device_id()
 {'form_factor': '3x2', 'name': 'property_tester', 'serial_number': 0}
 dev.get_methods()
 ['long_array',
- 'get_count_array',
- 'get_long_array_fixed',
- 'get_property_values',
- 'get_direction',
- 'get_long_array_variable',
- 'odd',
- 'get_string_some',
- 'get_device_info',
- 'set_new_odd_subset',
  'bool_array',
- 'set_long_array_variable',
- 'get_device_id',
- 'bool',
+ 'get_pin_info',
+ 'get_long_array_fixed',
+ 'get_direction',
  'set_new_odd_default',
  'increment_mode',
- 'string',
- 'mode_array',
  'set_new_double_range',
- 'get_bool',
- 'set_long_array_fixed',
- 'get_direction_array',
- 'detach_all_pins',
- 'set_long_array_parameter',
- 'get_string_all',
- 'get_count',
- 'check_mode',
- 'double_array',
- 'get_pin_info',
- 'get_api',
- 'serial_number',
- 'odd_array',
- 'get_doubled',
  'mode',
- 'double',
+ 'set_pin_value',
+ 'get_long_array_variable',
+ 'get_doubled',
+ 'get_string_some',
+ 'get_bool',
+ 'set_long_array_variable',
+ 'mode_array',
+ 'set_new_odd_subset',
+ 'get_count',
+ 'set_long_array_parameter',
+ 'serial_number',
+ 'get_pin_value',
  'get_property_default_values',
- 'set_properties_to_defaults']
+ 'get_api',
+ 'odd',
+ 'string',
+ 'double_array',
+ 'odd_array',
+ 'check_mode',
+ 'bool',
+ 'get_string_all',
+ 'get_device_info',
+ 'set_long_array_fixed',
+ 'double',
+ 'get_count_array',
+ 'set_properties_to_defaults',
+ 'get_direction_array',
+ 'get_device_id',
+ 'get_property_values',
+ 'set_pin_mode']
 dev.set_properties_to_defaults(['ALL'])
 dev.get_property_values(['PropertyTester'])
 {'bool': False,
@@ -1071,7 +1078,9 @@ dev.getMethods()                 % get device functions
   setPropertiesToDefaults
   getPropertyValues
   getPinInfo
-  detachAllPins
+  setPinMode
+  getPinValue
+  setPinValue
   getDoubled
   getBool
   getLongArrayFixed

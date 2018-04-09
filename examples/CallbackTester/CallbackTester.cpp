@@ -91,7 +91,10 @@ void CallbackTester::setup()
 
   // Begin Streams
   Serial.begin(constants::baud);
+}
 
+void CallbackTester::startServer()
+{
   // Start Modular Device Server
   modular_server_.startServer();
 }
@@ -123,13 +126,13 @@ void CallbackTester::update()
 void CallbackTester::setLedOnHandler(modular_server::Pin * pin_ptr)
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).write(HIGH);
+  modular_server_.pin(constants::led_pin_name).setValue(HIGH);
 }
 
 void CallbackTester::setLedOffHandler(modular_server::Pin * pin_ptr)
 {
   blinker_.stop();
-  modular_server_.pin(constants::led_pin_name).write(LOW);
+  modular_server_.pin(constants::led_pin_name).setValue(LOW);
 }
 
 void CallbackTester::blinkLedHandler(modular_server::Pin * pin_ptr)

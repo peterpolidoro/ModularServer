@@ -301,7 +301,7 @@ int Server::getPinValue(const ConstantString & pin_name)
   {
     return constants::pin_value_min;
   }
-  return pin_ptr->read();
+  return pin_ptr->getValue();
 }
 
 void Server::setPinValue(const ConstantString & pin_name,
@@ -316,7 +316,7 @@ void Server::setPinValue(const ConstantString & pin_name,
   {
     return;
   }
-  return pin_ptr->write(pin_value);
+  return pin_ptr->setValue(pin_value);
 }
 
 // Firmware
@@ -433,6 +433,10 @@ void Server::startServer()
   {
     initializeEeprom();
   }
+
+  // Pin Pulse Event Controller
+  Pin::setupPinPulseEventController();
+
   server_running_ = true;
 }
 

@@ -16,6 +16,7 @@ class PropertyTester
 {
 public:
   void setup();
+  void startServer();
   void update();
 
 private:

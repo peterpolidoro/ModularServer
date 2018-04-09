@@ -1,0 +1,9 @@
+{
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "MinimalDevice"
+    ],
+    "verbosity": "GENERAL"
+  }
+}

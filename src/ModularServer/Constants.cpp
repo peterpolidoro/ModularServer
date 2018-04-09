@@ -26,11 +26,16 @@ const long response_pipe_read_max = 100000;
 const double epsilon = 0.000000001;
 
 // Pins
+const size_t pin_pulse_timer_number = 3;
+const uint32_t pin_pulse_delay = 0;
+const uint32_t pin_pulse_count = 1;
 CONSTANT_STRING(pin_mode_digital_input,"DIGITAL_INPUT");
 CONSTANT_STRING(pin_mode_digital_input_pullup,"DIGITAL_INPUT_PULLUP");
 CONSTANT_STRING(pin_mode_digital_output,"DIGITAL_OUTPUT");
 CONSTANT_STRING(pin_mode_analog_input,"ANALOG_INPUT");
 CONSTANT_STRING(pin_mode_analog_output,"ANALOG_OUTPUT");
+CONSTANT_STRING(pin_mode_pulse_rising,"PULSE_RISING");
+CONSTANT_STRING(pin_mode_pulse_falling,"PULSE_FALLING");
 CONSTANT_STRING(pin_mode_interrupt_low,"INTERRUPT_LOW");
 CONSTANT_STRING(pin_mode_interrupt_change,"INTERRUPT_CHANGE");
 CONSTANT_STRING(pin_mode_interrupt_rising,"INTERRUPT_RISING");
@@ -62,6 +67,8 @@ SubsetMemberType pin_mode_ptr_subset[PIN_MODE_SUBSET_LENGTH] =
   {.cs_ptr=&pin_mode_digital_output},
   {.cs_ptr=&pin_mode_analog_input},
   {.cs_ptr=&pin_mode_analog_output},
+  {.cs_ptr=&pin_mode_pulse_rising},
+  {.cs_ptr=&pin_mode_pulse_falling},
 };
 
 CONSTANT_STRING(pin_value_parameter_name,"pin_value");

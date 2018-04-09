@@ -190,7 +190,10 @@ void PropertyTester::setup()
 
   // Begin Streams
   Serial.begin(constants::baud);
+}
 
+void PropertyTester::startServer()
+{
   // Start Modular Device Server
   modular_server_.startServer();
 }

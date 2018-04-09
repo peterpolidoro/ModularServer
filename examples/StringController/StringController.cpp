@@ -109,7 +109,10 @@ void StringController::setup()
 
   // Begin Streams
   Serial.begin(constants::baud);
+}
 
+void StringController::startServer()
+{
   // Start Modular Device Server
   modular_server_.startServer();
 }

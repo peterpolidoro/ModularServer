@@ -697,6 +697,79 @@ Response:
 
 Notice the LED has turned OFF.
 
+Request:
+
+```shell
+setPinMode ??
+```
+
+Response:
+
+```json
+{
+  "id": "setPinMode",
+  "result": {
+    "name": "setPinMode",
+    "firmware": "ModularServer",
+    "parameters": [
+      {
+        "name": "pin_name",
+        "type": "string",
+        "subset": [
+          "ALL",
+          "led"
+        ]
+      },
+      {
+        "name": "pin_mode",
+        "type": "string",
+        "subset": [
+          "DIGITAL_INPUT",
+          "DIGITAL_INPUT_PULLUP",
+          "DIGITAL_OUTPUT",
+          "ANALOG_INPUT",
+          "ANALOG_OUTPUT",
+          "PULSE_RISING",
+          "PULSE_FALLING"
+        ]
+      }
+    ]
+  }
+}
+```
+
+Request:
+
+```shell
+setPinMode led PULSE_RISING
+```
+
+Response:
+
+```json
+{
+  "id": "setPinMode",
+  "result": null
+}
+```
+
+Request:
+
+```shell
+setPinValue led 100
+```
+
+Response:
+
+```json
+{
+  "id": "setPinValue",
+  "result": 0
+}
+```
+
+Notice the LED has pulsed ON for 100ms.
+
 ### Python
 
 Example Python session:

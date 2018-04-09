@@ -44,7 +44,10 @@ void MinimalDevice::setup()
 
   // Begin Streams
   Serial.begin(constants::baud);
+}
 
+void MinimalDevice::startServer()
+{
   // Start Modular Device Server
   modular_server_.startServer();
 }

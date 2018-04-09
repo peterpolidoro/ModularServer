@@ -10,6 +10,8 @@
 
 namespace modular_server
 {
+EventController<modular_server::constants::PIN_PULSE_EVENT_COUNT_MAX> Pin::pin_pulse_event_controller_;
+
 // public
 Pin::Pin()
 {
@@ -66,7 +68,29 @@ void Pin::setModeAnalogOutput()
   pinMode(pin_number_,OUTPUT);
 }
 
-int Pin::read()
+void Pin::setModePulseRising()
+{
+  if (callback_ptr_)
+  {
+    callback_ptr_->detachFrom(*this);
+  }
+  mode_ptr_ = &constants::pin_mode_pulse_rising;
+  pinMode(pin_number_,OUTPUT);
+  ::digitalWrite(pin_number_,LOW);
+}
+
+void Pin::setModePulseFalling()
+{
+  if (callback_ptr_)
+  {
+    callback_ptr_->detachFrom(*this);
+  }
+  mode_ptr_ = &constants::pin_mode_pulse_falling;
+  pinMode(pin_number_,OUTPUT);
+  ::digitalWrite(pin_number_,HIGH);
+}
+
+int Pin::getValue()
 {
   int value = 0;
   if (mode_ptr_ != &constants::pin_mode_analog_input)
@@ -80,7 +104,7 @@ int Pin::read()
   return value;
 }
 
-void Pin::write(const int value)
+void Pin::setValue(const int value)
 {
   if (mode_ptr_ == &constants::pin_mode_digital_output)
   {
@@ -96,6 +120,26 @@ void Pin::write(const int value)
   else if (mode_ptr_ == &constants::pin_mode_analog_output)
   {
     ::analogWrite(pin_number_,value);
+  }
+  else if (mode_ptr_ == &constants::pin_mode_pulse_rising)
+  {
+    EventIdPair event_id_pair = pin_pulse_event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&Pin::setPinHighHandler),
+                                                                             makeFunctor((Functor1<int> *)0,*this,&Pin::setPinLowHandler),
+                                                                             constants::pin_pulse_delay,
+                                                                             value*2,
+                                                                             value,
+                                                                             constants::pin_pulse_count);
+    pin_pulse_event_controller_.enable(event_id_pair);
+  }
+  else if (mode_ptr_ == &constants::pin_mode_pulse_falling)
+  {
+    EventIdPair event_id_pair = pin_pulse_event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&Pin::setPinLowHandler),
+                                                                             makeFunctor((Functor1<int> *)0,*this,&Pin::setPinHighHandler),
+                                                                             constants::pin_pulse_delay,
+                                                                             value*2,
+                                                                             value,
+                                                                             constants::pin_pulse_count);
+    pin_pulse_event_controller_.enable(event_id_pair);
   }
 }
 
@@ -167,6 +211,14 @@ void Pin::setMode(const ConstantString & pin_mode)
   else if (&pin_mode == &constants::pin_mode_analog_output)
   {
     setModeAnalogOutput();
+  }
+  else if (&pin_mode == &constants::pin_mode_pulse_rising)
+  {
+    setModePulseRising();
+  }
+  else if (&pin_mode == &constants::pin_mode_pulse_falling)
+  {
+    setModePulseFalling();
   }
 }
 
@@ -326,6 +378,11 @@ void Pin::resetIsr()
   isr_ = FunctorCallbacks::add(makeFunctor((Functor0 *)0,*this,&Pin::isrHandler));
 }
 
+void Pin::setupPinPulseEventController()
+{
+  pin_pulse_event_controller_.setup(constants::pin_pulse_timer_number);
+}
+
 void Pin::isrHandler()
 {
   if (!callback_ptr_)
@@ -337,6 +394,16 @@ void Pin::isrHandler()
     return;
   }
   callback_ptr_->functor(this);
+}
+
+void Pin::setPinHighHandler(int index)
+{
+  ::digitalWrite(pin_number_,HIGH);
+}
+
+void Pin::setPinLowHandler(int index)
+{
+  ::digitalWrite(pin_number_,LOW);
 }
 
 }

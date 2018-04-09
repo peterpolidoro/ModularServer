@@ -12,6 +12,7 @@
 #include <ConstantVariable.h>
 #include <Functor.h>
 #include <FunctorCallbacks.h>
+#include <EventController.h>
 
 #include "HardwareElement.h"
 #include "Callback.h"
@@ -33,9 +34,11 @@ public:
   void setModeDigitalOutput();
   void setModeAnalogInput();
   void setModeAnalogOutput();
+  void setModePulseRising();
+  void setModePulseFalling();
 
-  int read();
-  void write(const int value);
+  int getValue();
+  void setValue(const int value);
 
   size_t getPinNumber();
   int getInterruptNumber();
@@ -46,6 +49,7 @@ private:
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
   FunctorCallbacks::Callback isr_;
+  static EventController<modular_server::constants::PIN_PULSE_EVENT_COUNT_MAX> pin_pulse_event_controller_;
 
   Pin(const ConstantString & name, const size_t pin_number);
   void setup(const ConstantString & name);
@@ -65,9 +69,12 @@ private:
   void attach(Callback & callback, const ConstantString & mode);
   void detach();
   void resetIsr();
+  static void setupPinPulseEventController();
 
   // Handlers
   void isrHandler();
+  void setPinHighHandler(int index);
+  void setPinLowHandler(int index);
 
   friend class Server;
   friend class Callback;

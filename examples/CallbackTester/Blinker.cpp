@@ -21,7 +21,7 @@ void Blinker::start()
   {
     previous_time_ = millis();
     led_state_ = HIGH;
-    led_pin_ptr_->write(led_state_);
+    led_pin_ptr_->setValue(led_state_);
     interval_ = duration_on_;
     counter_ = 0;
     enabled_ = true;
@@ -58,7 +58,7 @@ void Blinker::update()
         }
       }
 
-      led_pin_ptr_->write(led_state_);
+      led_pin_ptr_->setValue(led_state_);
     }
   }
 }
