@@ -1,36 +1,33 @@
-# PropertyTester
+#+TITLE: PropertyTester
+#+AUTHOR: Peter Polidoro
+#+EMAIL: peterpolidoro@gmail.com
 
-Authors:
+* Library Information
+  - Author :: Peter Polidoro
+  - License :: BSD
 
-    Peter Polidoro <polidorop@janelia.hhmi.org>
+* Host Computer Interface
+** Arduino Serial Monitor
 
-License:
+   Open the Serial Monitor in the Arduino IDE.
 
-    BSD
+   Set the baud to match the value in the Arduino sketch (115200).
 
-## Host Computer Interface
+   Set the line ending to 'Newline'.
 
-### Arduino Serial Monitor
+   To get help information about the modular device, type a single
+   question mark ? into the input property and press the 'Send' button or
+   press the 'Enter' key.
 
-Open the Serial Monitor in the Arduino IDE.
+   Request:
 
-Set the baud to match the value in the Arduino sketch (115200).
-
-Set the line ending to 'Newline'.
-
-To get help information about the modular device, type a single
-question mark ? into the input property and press the 'Send' button or
-press the 'Enter' key.
-
-Request:
-
-```shell
+   #+BEGIN_SRC sh
 ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "?",
   "result": {
@@ -88,24 +85,24 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-The form\_factor and serial\_number may be different on your board than the ones
-shown above.
+   The form_factor and serial_number may be different on your board than the ones
+   shown above.
 
-To get more verbose help about the modular device, including all API firmware,
-type two question marks ?? into the input property and press the 'Send' button
-or press the 'Enter' key.
+   To get more verbose help about the modular device, including all API firmware,
+   type two question marks ?? into the input property and press the 'Send' button
+   or press the 'Enter' key.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "??",
   "result": {
@@ -179,35 +176,35 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-"functions" is an array of user functions. To execute a function, simply type it
-into the input property and press the 'Send' button or press the 'Enter' key.
+   "functions" is an array of user functions. To execute a function, simply type it
+   into the input property and press the 'Send' button or press the 'Enter' key.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 setPropertiesToDefaults ["ALL"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "setPropertiesToDefaults",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getPropertyValues ["PropertyTester"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getPropertyValues",
   "result": {
@@ -241,17 +238,17 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 double ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "double",
   "result": {
@@ -273,17 +270,17 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 longArray ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "longArray",
   "result": {
@@ -330,17 +327,17 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 longArray getValue
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "longArray",
   "result": [
@@ -350,17 +347,17 @@ Response:
     2
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 longArray
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "longArray",
   "result": [
@@ -370,30 +367,30 @@ Response:
     2
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 longArray setArrayLength 2
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "longArray",
   "result": 2
 }
-```
+   #+END_SRC
 
-```shell
+   #+BEGIN_SRC sh
 longArray
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "longArray",
   "result": [
@@ -401,30 +398,30 @@ Response:
     4
   ]
 }
-```
+   #+END_SRC
 
-```shell
+   #+BEGIN_SRC sh
 longArray setArrayLength 4
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "longArray",
   "result": 4
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 doubleArray ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "doubleArray",
   "result": {
@@ -469,32 +466,32 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 doubleArray getElementValue 1
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "doubleArray",
   "result": 2.200000
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 doubleArray getElementValue 10
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "doubleArray",
   "error": {
@@ -503,17 +500,17 @@ Response:
     "code": -32602
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 doubleArray setAllElementValues 8.7654
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "doubleArray",
   "result": [
@@ -522,17 +519,17 @@ Response:
     8.765400
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 doubleArray setElementValue 1 5.678
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "doubleArray",
   "result": [
@@ -541,32 +538,32 @@ Response:
     8.765400
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 doubleArray getDefaultElementValue 0
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "doubleArray",
   "result": -1.100000
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 boolArray ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "boolArray",
   "result": {
@@ -607,17 +604,17 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 boolArray setValue [false,false]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "boolArray",
   "result": [
@@ -625,62 +622,62 @@ Response:
     false
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 string setValue asdfghjkl
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "string",
   "result": "asdfghjkl"
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 string getElementValue 3
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "string",
   "result": "f"
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 string setElementValue 3 X
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "string",
   "result": "asdXghjkl"
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 odd setValue 2
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "odd",
   "error": {
@@ -689,32 +686,32 @@ Response:
     "code": -32602
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 odd setValue 7
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "odd",
   "result": 7
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 mode setValue test
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "mode",
   "error": {
@@ -723,32 +720,32 @@ Response:
     "code": -32602
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 mode setValue CHANGE
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "mode",
   "result": "CHANGE"
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 oddArray setAllElementValues 2
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "oddArray",
   "error": {
@@ -757,17 +754,17 @@ Response:
     "code": -32602
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 oddArray setAllElementValues 9
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "oddArray",
   "result": [
@@ -775,17 +772,17 @@ Response:
     9
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getPropertyValues ["PropertyTester"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getPropertyValues",
   "result": {
@@ -819,20 +816,20 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Use the getDeviceId function to get a unique set of values to identify
-the device.
+   Use the getDeviceId function to get a unique set of values to identify
+   the device.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getDeviceId
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getDeviceId",
   "result": {
@@ -841,23 +838,23 @@ Response:
     "serial_number": 0
   }
 }
-```
+   #+END_SRC
 
-The serial\_number property can be changed to uniquely identify devices
-with the same name and form\_factor.
+   The serial_number property can be changed to uniquely identify devices
+   with the same name and form_factor.
 
-Use the getDeviceInfo function to get information about the hardware and
-firmware of the device.
+   Use the getDeviceInfo function to get information about the hardware and
+   firmware of the device.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getDeviceInfo
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getDeviceInfo",
   "result": {
@@ -880,22 +877,22 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Every function, parameter, property, and callback belongs to one firmware set.
+   Every function, parameter, property, and callback belongs to one firmware set.
 
-To get the API limited to one or more firmware sets, use the getApi
-function.
+   To get the API limited to one or more firmware sets, use the getApi
+   function.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi NAMES ["PropertyTester"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 
 {
   "id": "getApi",
@@ -947,13 +944,13 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-### Python
+** Python
 
-Example Python session:
+   Example Python session:
 
-```python
+   #+BEGIN_SRC python
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
@@ -1040,17 +1037,17 @@ dev.mode('setValue','test')
 IOError: (from server) message: Invalid params, data: Parameter value not valid. Value not in subset: [RISING,FALLING,CHANGE], code: -32602
 dev.mode('setValue','CHANGE')
 'CHANGE'
-```
+   #+END_SRC
 
-For more details on the Python interface:
+   For more details on the Python interface:
 
-<https://github.com/janelia-pypi/modular_client_python>
+   [[https://github.com/janelia-pypi/modular_client_python]]
 
-### Matlab
+** Matlab
 
-Example Matlab session:
+   Example Matlab session:
 
-```matlab
+   #+BEGIN_SRC matlab
 % Linux and Mac OS X
 ls /dev/tty*
 serial_port = '/dev/ttyACM0'     % example Linux serial port
@@ -1170,12 +1167,12 @@ ans =
   CHANGE
 dev.close()
 clear dev
-```
+   #+END_SRC
 
-For more details on the Matlab interface:
+   For more details on the Matlab interface:
 
-<https://github.com/janelia-matlab/modular_client_matlab>
+   [[https://github.com/janelia-matlab/modular_client_matlab]]
 
-## Installation
+* Installation
 
-<https://github.com/janelia-arduino/arduino-libraries>
+  [[https://github.com/janelia-arduino/arduino-libraries]]

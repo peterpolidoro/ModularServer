@@ -1,36 +1,33 @@
-# StringController
+#+TITLE: StringController
+#+AUTHOR: Peter Polidoro
+#+EMAIL: peterpolidoro@gmail.com
 
-Authors:
+* Library Information
+  - Author :: Peter Polidoro
+  - License :: BSD
 
-    Peter Polidoro <polidorop@janelia.hhmi.org>
+* Host Computer Interface
+** Arduino Serial Monitor
 
-License:
+   Open the Serial Monitor in the Arduino IDE.
 
-    BSD
+   Set the baud to match the value in the Arduino sketch (115200).
 
-## Host Computer Interface
+   Set the line ending to 'Newline'.
 
-### Arduino Serial Monitor
+   To get help information about the modular device, type a single
+   question mark ? into the input property and press the 'Send' button or
+   press the 'Enter' key.
 
-Open the Serial Monitor in the Arduino IDE.
+   Request:
 
-Set the baud to match the value in the Arduino sketch (115200).
-
-Set the line ending to 'Newline'.
-
-To get help information about the modular device, type a single
-question mark ? into the input property and press the 'Send' button or
-press the 'Enter' key.
-
-Request:
-
-```shell
+   #+BEGIN_SRC sh
 ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "?",
   "result": {
@@ -68,24 +65,24 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-The form\_factor and serial\_number may be different on your board than the ones
-shown above.
+   The form_factor and serial_number may be different on your board than the ones
+   shown above.
 
-To get more verbose help about the modular device, including all API firmware,
-type two question marks ?? into the input property and press the 'Send' button
-or press the 'Enter' key.
+   To get more verbose help about the modular device, including all API firmware,
+   type two question marks ?? into the input property and press the 'Send' button
+   or press the 'Enter' key.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "??",
   "result": {
@@ -139,55 +136,55 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-"functions" is an array of user functions. To execute a function, simply
-type it into the input property and press the 'Send' button or press the
-'Enter' key.
+   "functions" is an array of user functions. To execute a function, simply
+   type it into the input property and press the 'Send' button or press the
+   'Enter' key.
 
-After uploading new firmware to the device for the first time, usually you want
-to set all properties to their default values, so the values will be known and
-valid.
+   After uploading new firmware to the device for the first time, usually you want
+   to set all properties to their default values, so the values will be known and
+   valid.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 setPropertiesToDefaults ["ALL"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "setPropertiesToDefaults",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getStoredString
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getStoredString",
   "result": "I am a stored string."
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 repeat
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "repeat",
   "error": {
@@ -196,20 +193,20 @@ Response:
     "code": -32602
   }
 }
-```
+   #+END_SRC
 
-To get more information about a function, enter the function followed by
-a question mark ?
+   To get more information about a function, enter the function followed by
+   a question mark ?
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 repeat ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "repeat",
   "result": {
@@ -225,22 +222,22 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-The repeat function requires 2 parameters.
+   The repeat function requires 2 parameters.
 
-To get more information about all of the parameters a function takes,
-enter the function followed by two questions marks ??:
+   To get more information about all of the parameters a function takes,
+   enter the function followed by two questions marks ??:
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 repeat ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "repeat",
   "result": {
@@ -264,20 +261,20 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-To get more information about just one of the parameters a function takes,
-enter the function followed by the parameter followed by one question mark ?:
+   To get more information about just one of the parameters a function takes,
+   enter the function followed by the parameter followed by one question mark ?:
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 repeat count ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "repeat",
   "result": {
@@ -288,17 +285,17 @@ Response:
     "max": 100
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 repeat "I am a string to repeat." 4
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "repeat",
   "result": [
@@ -308,17 +305,17 @@ Response:
     "I am a string to repeat."
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 charsAt "I am an input string!" [0,6,8]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "charsAt",
   "result": [
@@ -336,110 +333,110 @@ Response:
     }
   ]
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 startingChars "Fantastic!"
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "startingChars",
   "result": "Fa"
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 startingCharsCount setValue 5
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "startingCharsCount",
   "result": 5
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 startingChars "Fantastic!"
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "startingChars",
   "result": "Fanta"
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 storedString
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "storedString",
   "result": "I am a stored string."
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 storedString setAllElementValues x
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "storedString",
   "result": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 storedString setValueToDefault
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "storedString",
   "result": "I am a stored string."
 }
-```
+   #+END_SRC
 
-Use the getDeviceId function to get a unique set of values to identify
-the device.
+   Use the getDeviceId function to get a unique set of values to identify
+   the device.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getDeviceId
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getDeviceId",
   "result": {
@@ -448,23 +445,23 @@ Response:
     "serial_number": 77
   }
 }
-```
+   #+END_SRC
 
-The serial\_number property can be changed to uniquely identify devices
-with the same name and form\_factor.
+   The serial_number property can be changed to uniquely identify devices
+   with the same name and form_factor.
 
-Use the getDeviceInfo function to get information about the hardware and
-firmware of the device.
+   Use the getDeviceInfo function to get information about the hardware and
+   firmware of the device.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getDeviceInfo
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getDeviceInfo",
   "result": {
@@ -487,23 +484,23 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Every function, parameter, property, and callback belongs to one
-firmware set.
+   Every function, parameter, property, and callback belongs to one
+   firmware set.
 
-To get the API limited to one or more firmware sets, use the getApi
-function.
+   To get the API limited to one or more firmware sets, use the getApi
+   function.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi NAMES ["StringController"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getApi",
   "result": {
@@ -534,13 +531,13 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-### Python
+** Python
 
-Example Python session:
+   Example Python session:
 
-```python
+   #+BEGIN_SRC python
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
@@ -625,17 +622,17 @@ dev.get_api('NAMES',["StringController"])
  'parameters': ['string', 'string2', 'count', 'index_array', 'double_echo'],
  'properties': ['startingCharsCount', 'storedString'],
  'verbosity': 'NAMES'}
-```
+   #+END_SRC
 
-For more details on the Python interface:
+   For more details on the Python interface:
 
-<https://github.com/janelia-pypi/modular_client_python>
+   [[https://github.com/janelia-pypi/modular_client_python]]
 
-### Matlab
+** Matlab
 
-Example Matlab session:
+   Example Matlab session:
 
-```matlab
+   #+BEGIN_SRC matlab
 % Linux and Mac OS X
 ls /dev/tty*
 serial_port = '/dev/ttyACM0'     % example Linux serial port
@@ -719,12 +716,12 @@ result =
   Fanta
 dev.close()
 clear dev
-```
+   #+END_SRC
 
-For more details on the Matlab interface:
+   For more details on the Matlab interface:
 
-<https://github.com/janelia-matlab/modular_client_matlab>
+   [[https://github.com/janelia-matlab/modular_client_matlab]]
 
-## Installation
+* Installation
 
-<https://github.com/janelia-arduino/arduino-libraries>
+  [[https://github.com/janelia-arduino/arduino-libraries]]

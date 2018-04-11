@@ -1,36 +1,33 @@
-# CallbackTester
+#+TITLE: CallbackTester
+#+AUTHOR: Peter Polidoro
+#+EMAIL: peterpolidoro@gmail.com
 
-Authors:
+* Library Information
+  - Author :: Peter Polidoro
+  - License :: BSD
 
-    Peter Polidoro <polidorop@janelia.hhmi.org>
+* Host Computer Interface
+** Arduino Serial Monitor
 
-License:
+   Open the Serial Monitor in the Arduino IDE.
 
-    BSD
+   Set the baud to match the value in the Arduino sketch (115200).
 
-## Host Computer Interface
+   Set the line ending to 'Newline'.
 
-### Arduino Serial Monitor
+   To get help information about the modular device, type a single
+   question mark ? into the input property and press the 'Send' button or
+   press the 'Enter' key.
 
-Open the Serial Monitor in the Arduino IDE.
+   Request:
 
-Set the baud to match the value in the Arduino sketch (115200).
-
-Set the line ending to 'Newline'.
-
-To get help information about the modular device, type a single
-question mark ? into the input property and press the 'Send' button or
-press the 'Enter' key.
-
-Request:
-
-```shell
+   #+BEGIN_SRC sh
 ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "?",
   "result": {
@@ -57,24 +54,24 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-The form\_factor and serial\_number may be different on your board than the ones
-shown above.
+   The form_factor and serial_number may be different on your board than the ones
+   shown above.
 
-To get more verbose help about the modular device, including all API firmware,
-type two question marks ?? into the input property and press the 'Send' button
-or press the 'Enter' key.
+   To get more verbose help about the modular device, including all API firmware,
+   type two question marks ?? into the input property and press the 'Send' button
+   or press the 'Enter' key.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "??",
   "result": {
@@ -121,39 +118,39 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-"functions" is an array of user functions. To execute a function, simply type it
-into the input property and press the 'Send' button or press the 'Enter' key.
+   "functions" is an array of user functions. To execute a function, simply type it
+   into the input property and press the 'Send' button or press the 'Enter' key.
 
-After uploading new firmware to the device for the first time, usually you want
-to set all properties to their default values, so the values will be known and
-valid.
+   After uploading new firmware to the device for the first time, usually you want
+   to set all properties to their default values, so the values will be known and
+   valid.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 setPropertiesToDefaults ["ALL"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "setPropertiesToDefaults",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getDeviceInfo
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getDeviceInfo",
   "result": {
@@ -185,19 +182,19 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Each hardware layer may add zero or more pins.
+   Each hardware layer may add zero or more pins.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getPinInfo ALL
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getPinInfo",
   "result": [
@@ -244,24 +241,24 @@ Response:
     }
   ]
 }
-```
+   #+END_SRC
 
-Each pin may be dynamically assigned to a callback with an interrupt mode or the
-pin can be in input or output modes and controlled separately from callbacks.
+   Each pin may be dynamically assigned to a callback with an interrupt mode or the
+   pin can be in input or output modes and controlled separately from callbacks.
 
-Use callback functions to attach or detach callbacks to pins. Callbacks may be
-attached to one or more pins, but each pin can only have a single callback
-attached.
+   Use callback functions to attach or detach callbacks to pins. Callbacks may be
+   attached to one or more pins, but each pin can only have a single callback
+   attached.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": {
@@ -286,47 +283,47 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed trigger
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed attachTo ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": {
@@ -360,32 +357,32 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed attachTo bnc_f INTERRUPT_FALLING
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": {
@@ -411,17 +408,17 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed detachFrom ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": {
@@ -432,47 +429,47 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 count setValue 2
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "count",
   "result": 2
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 blinkLed
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "blinkLed",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 setPinMode ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "setPinMode",
   "result": {
@@ -509,32 +506,32 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 setPinMode ALL DIGITAL_INPUT
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "setPinMode",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getPinInfo ALL
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getPinInfo",
   "result": [
@@ -575,13 +572,13 @@ Response:
     }
   ]
 }
-```
+   #+END_SRC
 
-### Python
+** Python
 
-Example Python session:
+   Example Python session:
 
-```python
+   #+BEGIN_SRC python
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
@@ -644,17 +641,17 @@ dev.blink_led('attachTo','bnc_f','INTERRUPT_FALLING')
 dev.count('setValue',2)
 2
 dev.blink_led()
-```
+   #+END_SRC
 
-For more details on the Python interface:
+   For more details on the Python interface:
 
-<https://github.com/janelia-pypi/modular_client_python>
+   [[https://github.com/janelia-pypi/modular_client_python]]
 
-### Matlab
+** Matlab
 
-Example Matlab session:
+   Example Matlab session:
 
-```matlab
+   #+BEGIN_SRC matlab
 % Linux and Mac OS X
 ls /dev/tty*
 serial_port = '/dev/ttyACM0'     % example Linux serial port
@@ -716,12 +713,12 @@ ans =
 dev.blinkLed();
 dev.close()
 clear dev
-```
+   #+END_SRC
 
-For more details on the Matlab interface:
+   For more details on the Matlab interface:
 
-<https://github.com/janelia-matlab/modular_client_matlab>
+   [[https://github.com/janelia-matlab/modular_client_matlab]]
 
-## Installation
+* Installation
 
-<https://github.com/janelia-arduino/arduino-libraries>
+  [[https://github.com/janelia-arduino/arduino-libraries]]

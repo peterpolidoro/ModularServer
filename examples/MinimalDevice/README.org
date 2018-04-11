@@ -1,36 +1,33 @@
-# MinimalDevice
+#+TITLE: MinimalDevice
+#+AUTHOR: Peter Polidoro
+#+EMAIL: peterpolidoro@gmail.com
 
-Authors:
+* Library Information
+  - Author :: Peter Polidoro
+  - License :: BSD
 
-    Peter Polidoro <polidorop@janelia.hhmi.org>
+* Host Computer Interface
+** Arduino Serial Monitor
 
-License:
+   Open the Serial Monitor in the Arduino IDE.
 
-    BSD
+   Set the baud to match the value in the Arduino sketch (115200).
 
-## Host Computer Interface
+   Set the line ending to 'Newline'.
 
-### Arduino Serial Monitor
+   To get help information about the modular device, type a single
+   question mark ? into the input property and press the 'Send' button or
+   press the 'Enter' key.
 
-Open the Serial Monitor in the Arduino IDE.
+   Request:
 
-Set the baud to match the value in the Arduino sketch (115200).
-
-Set the line ending to 'Newline'.
-
-To get help information about the modular device, type a single
-question mark ? into the input property and press the 'Send' button or
-press the 'Enter' key.
-
-Request:
-
-```shell
+   #+BEGIN_SRC sh
 ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "?",
   "result": {
@@ -47,27 +44,27 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-The form\_factor and serial\_number may be different on your board than the ones
-shown above.
+   The form_factor and serial_number may be different on your board than the ones
+   shown above.
 
-The minimal device adds no functions, parameters, properties, or callbacks to
-the ones provided by the parent class ModularServer.
+   The minimal device adds no functions, parameters, properties, or callbacks to
+   the ones provided by the parent class ModularServer.
 
-To get more verbose help about the modular device, including all API firmware,
-type two question marks ?? into the input property and press the 'Send' button
-or press the 'Enter' key.
+   To get more verbose help about the modular device, including all API firmware,
+   type two question marks ?? into the input property and press the 'Send' button
+   or press the 'Enter' key.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "??",
   "result": {
@@ -106,40 +103,40 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-"functions" is an array of user functions. To execute a function, simply
-type it into the input property and press the 'Send' button or press the
-'Enter' key.
+   "functions" is an array of user functions. To execute a function, simply
+   type it into the input property and press the 'Send' button or press the
+   'Enter' key.
 
-After uploading new firmware to the device for the first time, usually you want
-to set all properties to their default values, so the values will be known and
-valid.
+   After uploading new firmware to the device for the first time, usually you want
+   to set all properties to their default values, so the values will be known and
+   valid.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 setPropertiesToDefaults ["ALL"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "setPropertiesToDefaults",
   "result": null
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getApi",
   "error": {
@@ -148,25 +145,25 @@ Response:
     "code": -32602
   }
 }
-```
+   #+END_SRC
 
-When a function executes successfully, the response will contain a
-"result" property. In some cases the result may be null, but the function
-execution was still successful. When there is an error, there will not
-exist a "result" property, but there will exist an "error" property.
+   When a function executes successfully, the response will contain a
+   "result" property. In some cases the result may be null, but the function
+   execution was still successful. When there is an error, there will not
+   exist a "result" property, but there will exist an "error" property.
 
-To get more information about a function, enter the function followed by
-a question mark.
+   To get more information about a function, enter the function followed by
+   a question mark.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getApi",
   "result": {
@@ -181,19 +178,19 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-Or you can enter a question mark followed by the function.
+   Or you can enter a question mark followed by the function.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 ? getApi
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "?",
   "result": {
@@ -209,20 +206,20 @@ Response:
   }
 }
 
-```
+   #+END_SRC
 
-To get more verbose information about all of the parameters a function
-takes, enter the function followed by two questions marks.
+   To get more verbose information about all of the parameters a function
+   takes, enter the function followed by two questions marks.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi ??
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getApi",
   "result": {
@@ -256,17 +253,17 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi GENERAL ["ALL"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getApi",
   "result": {
@@ -440,23 +437,23 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Properties are special functions that get and set field values that are
-stored on the device, even after the device is powered off.
+   Properties are special functions that get and set field values that are
+   stored on the device, even after the device is powered off.
 
-Properties have their own set of functions with their own set of
-property function parameters.
+   Properties have their own set of functions with their own set of
+   property function parameters.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 serialNumber ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "serialNumber",
   "result": {
@@ -478,17 +475,17 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 serialNumber setValue ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "serialNumber",
   "result": {
@@ -502,17 +499,17 @@ Response:
     }
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 serialNumber setValue value ?
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "serialNumber",
   "result": {
@@ -523,17 +520,17 @@ Response:
     "max": 65535
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 serialNumber setValue -1
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "serialNumber",
   "error": {
@@ -542,77 +539,77 @@ Response:
     "code": -32602
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 serialNumber setValue 32
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "serialNumber",
   "result": 32
 }
-```
+   #+END_SRC
 
-The serial number setting persists even after the device is powered
-off. The serial number is used to differentiate several identical
-devices connected to a single host machine at one time.
+   The serial number setting persists even after the device is powered
+   off. The serial number is used to differentiate several identical
+   devices connected to a single host machine at one time.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getPropertyValues ["ALL"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getPropertyValues",
   "result": {
     "serialNumber": 32
   }
 }
-```
+   #+END_SRC
 
-Use the setPropertiesToDefault function to set all properties to their default
-values.
+   Use the setPropertiesToDefault function to set all properties to their default
+   values.
 
-Or to reset the just one property to the default value, use the
-setValueToDefault property function.
+   Or to reset the just one property to the default value, use the
+   setValueToDefault property function.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 serialNumber setValueToDefault
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "serialNumber",
   "result": 0
 }
-```
+   #+END_SRC
 
-Use the getDeviceId function to get a unique set of values to identify
-the device.
+   Use the getDeviceId function to get a unique set of values to identify
+   the device.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getDeviceId
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getDeviceId",
   "result": {
@@ -621,23 +618,23 @@ Response:
     "serial_number": 0
   }
 }
-```
+   #+END_SRC
 
-The serial\_number property can be changed to uniquely identify devices
-with the same name and form\_factor.
+   The serial_number property can be changed to uniquely identify devices
+   with the same name and form_factor.
 
-Use the getDeviceInfo function to get information about the hardware and
-firmware of the device.
+   Use the getDeviceInfo function to get information about the hardware and
+   firmware of the device.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getDeviceInfo
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getDeviceInfo",
   "result": {
@@ -660,22 +657,22 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Every function, parameter, property, and callback belongs to one firmware set.
+   Every function, parameter, property, and callback belongs to one firmware set.
 
-To get the API limited to one or more firmware sets, use the getApi
-function.
+   To get the API limited to one or more firmware sets, use the getApi
+   function.
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi NAMES ["ALL"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getApi",
   "result": {
@@ -707,17 +704,17 @@ Response:
     ]
   }
 }
-```
+   #+END_SRC
 
-Request:
+   Request:
 
-```shell
+   #+BEGIN_SRC sh
 getApi NAMES ["MinimalDevice"]
-```
+   #+END_SRC
 
-Response:
+   Response:
 
-```json
+   #+BEGIN_SRC js
 {
   "id": "getApi",
   "result": {
@@ -727,13 +724,13 @@ Response:
     "verbosity": "NAMES"
   }
 }
-```
+   #+END_SRC
 
-### Python
+** Python
 
-Example Python session:
+   Example Python session:
 
-```python
+   #+BEGIN_SRC python
 from modular_client import ModularClient
 dev = ModularClient() # Automatically finds device if one available
 dev.get_device_id()
@@ -787,17 +784,17 @@ dev.convert_to_json(result['device_id'])
 dev.send_json_request('["set_properties_to_defaults",["ALL"]]')
 dev.serial_number('getValue')
 0
-```
+   #+END_SRC
 
-For more details on the Python interface:
+   For more details on the Python interface:
 
-<https://github.com/janelia-pypi/modular_client_python>
+   [[https://github.com/janelia-pypi/modular_client_python]]
 
-### Matlab
+** Matlab
 
-Example Matlab session:
+   Example Matlab session:
 
-```matlab
+   #+BEGIN_SRC matlab
 % Linux and Mac OS X
 ls /dev/tty*
 serial_port = '/dev/ttyACM0'     % example Linux serial port
@@ -875,12 +872,12 @@ ans =
   0
 dev.close()
 clear dev
-```
+   #+END_SRC
 
-For more details on the Matlab interface:
+   For more details on the Matlab interface:
 
-<https://github.com/janelia-matlab/modular_client_matlab>
+   [[https://github.com/janelia-matlab/modular_client_matlab]]
 
-## Installation
+* Installation
 
-<https://github.com/janelia-arduino/arduino-libraries>
+  [[https://github.com/janelia-arduino/arduino-libraries]]
