@@ -843,11 +843,6 @@ void Property::setArrayLengthRange(const size_t array_length_min,
       min = max;
     }
 
-    if (max < 1)
-    {
-      max = 1;
-    }
-
     if (parameter_.rangeIsSet() && (getArrayElementType() == JsonStream::LONG_TYPE))
     {
       const long & range_min = parameter_.getRangeMin().l;

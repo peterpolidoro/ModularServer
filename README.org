@@ -14,37 +14,37 @@
 * API NAMES
 
   #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "ModularServer"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "getDeviceId",
-      "getDeviceInfo",
-      "getApi",
-      "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "getPropertyValues",
-      "getPinInfo",
-      "setPinMode",
-      "getPinValue",
-      "setPinValue"
-    ],
-    "parameters": [
-      "firmware",
-      "verbosity",
-      "pin_name",
-      "pin_mode",
-      "pin_value"
-    ],
-    "properties": [
-      "serialNumber"
-    ]
-  }
-}
+    {
+      "id": "getApi",
+      "result": {
+        "firmware": [
+          "ModularServer"
+        ],
+        "verbosity": "NAMES",
+        "functions": [
+          "getDeviceId",
+          "getDeviceInfo",
+          "getApi",
+          "getPropertyDefaultValues",
+          "setPropertiesToDefaults",
+          "getPropertyValues",
+          "getPinInfo",
+          "setPinMode",
+          "getPinValue",
+          "setPinValue"
+        ],
+        "parameters": [
+          "firmware",
+          "verbosity",
+          "pin_name",
+          "pin_mode",
+          "pin_value"
+        ],
+        "properties": [
+          "serialNumber"
+        ]
+      }
+    }
   #+END_SRC
 
 * API GENERAL
