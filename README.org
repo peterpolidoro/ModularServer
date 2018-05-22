@@ -3,13 +3,19 @@
 #+EMAIL: peterpolidoro@gmail.com
 
 * Library Information
-  - Author :: Peter Polidoro
+  - Name :: ModularServer
+  - Version :: 5.0.1
   - License :: BSD
+  - URL :: https://github.com/janelia-arduino/ModularServer
+  - Author :: Peter Polidoro
+  - Email :: peterpolidoro@gmail.com
 
-  Modular device server library.
+** Description
 
-  This firmware requires at least Teensy 3.x level resources. Known to work with
-  Teensy 3.2, Teensy 3.5, and Teensy 3.6.
+   Modular device server library.
+
+   This firmware requires at least Teensy 3.x level resources. Known to work with
+   Teensy 3.2, Teensy 3.5, and Teensy 3.6.
 
 * API NAMES
 
@@ -49,12 +55,12 @@
 
 * API GENERAL
 
-  [[./api/][API GENERAL]]
+  [[./api/]]
 
 * More Detailed Modular Device Information
 
-  [[https://github.com/janelia-modular-devices/modular-devices][modular-devices]]
+  [[https://github.com/janelia-modular-devices/modular-devices]]
 
-* Library Dependencies
+* Installation Instructions
 
-  [[https://github.com/janelia-arduino/arduino-libraries][arduino-libraries]]
+  [[https://github.com/janelia-arduino/arduino-libraries]]
