@@ -846,7 +846,7 @@ void Property::setArrayLengthRange(const size_t array_length_min,
     if (parameter_.rangeIsSet() && (getArrayElementType() == JsonStream::LONG_TYPE))
     {
       const long & range_min = parameter_.getRangeMin().l;
-      const long & range_max = parameter_.getRangeMin().l;
+      const long & range_max = parameter_.getRangeMax().l;
 
       size_t max_value_count = abs(range_max - range_min) + 1;
       if (array_length_min_ > max_value_count)
@@ -874,6 +874,7 @@ void Property::setArrayLengthRange(const size_t array_length_min,
 
     array_length_min_ = min;
     array_length_max_ = max;
+    parameter_.setArrayLengthRange(min,max);
 
     size_t array_length_default = getArrayLengthDefault();
     if (array_length_default < min)
