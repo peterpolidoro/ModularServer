@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro polidorop@janelia.hhmi.org
+// Peter Polidoro peterpolidoro@gmail.com
 // ----------------------------------------------------------------------------
 #ifndef PROPERTY_TESTER_CONSTANTS_H
 #define PROPERTY_TESTER_CONSTANTS_H

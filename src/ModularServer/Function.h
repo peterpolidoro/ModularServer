@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro polidorop@janelia.hhmi.org
+// Peter Polidoro peterpolidoro@gmail.com
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_FUNCTION_H_
 #define _MODULAR_SERVER_FUNCTION_H_

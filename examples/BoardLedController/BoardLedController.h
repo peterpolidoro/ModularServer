@@ -2,7 +2,7 @@
 // BoardLedController.h
 //
 // Authors:
-// Peter Polidoro polidorop@janelia.hhmi.org
+// Peter Polidoro peterpolidoro@gmail.com
 // ----------------------------------------------------------------------------
 #ifndef BOARD_LED_CONTROLLER_H
 #define BOARD_LED_CONTROLLER_H

@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro polidorop@janelia.hhmi.org
+// Peter Polidoro peterpolidoro@gmail.com
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_NAMED_ELEMENT_H_
 #define _MODULAR_SERVER_NAMED_ELEMENT_H_
