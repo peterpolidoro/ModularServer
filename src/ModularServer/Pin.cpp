@@ -104,7 +104,7 @@ int Pin::getValue()
   return value;
 }
 
-void Pin::setValue(const int value)
+void Pin::setValue(int value)
 {
   if (mode_ptr_ == &constants::pin_mode_digital_output)
   {
@@ -156,7 +156,8 @@ int Pin::getInterruptNumber()
 // protected
 
 // private
-Pin::Pin(const ConstantString & name, const size_t pin_number)
+Pin::Pin(const ConstantString & name,
+  size_t pin_number)
 {
   setup(name);
   setPinNumber(pin_number);
@@ -263,7 +264,7 @@ void Pin::writeApi(Response & response,
   response.endObject();
 }
 
-void Pin::setPinNumber(const size_t pin_number)
+void Pin::setPinNumber(size_t pin_number)
 {
   interrupt_number_ = digitalPinToInterrupt(pin_number);
   pin_number_ = pin_number;
@@ -343,7 +344,8 @@ void Pin::reattach()
   }
 }
 
-void Pin::attach(Callback & callback, const ConstantString & mode)
+void Pin::attach(Callback & callback,
+  const ConstantString & mode)
 {
   if (interrupt_number_ == NOT_AN_INTERRUPT)
   {

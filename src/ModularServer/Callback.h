@@ -49,9 +49,12 @@ public:
   void attachFunctor(const Functor1<Pin *> & functor);
   void addProperty(Property & property);
   Functor1<Pin *> & getFunctor();
-  void attachTo(Pin & pin, const ConstantString & pin_mode);
-  void attachTo(const ConstantString & pin_name, const ConstantString & pin_mode);
-  void attachTo(const char * pin_name, const char * pin_mode);
+  void attachTo(Pin & pin,
+    const ConstantString & pin_mode);
+  void attachTo(const ConstantString & pin_name,
+    const ConstantString & pin_mode);
+  void attachTo(const char * pin_name,
+    const char * pin_mode);
   void attachToAll(const ConstantString & pin_mode);
   void attachToAll(const char * pin_mode);
   void detachFrom(Pin & pin);
@@ -70,10 +73,10 @@ private:
   static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;
   static Array<Function,callback::FUNCTION_COUNT_MAX> functions_;
   static Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX+1> * pin_name_array_ptr_;
-  static Functor1wRet<const char *, Pin *> find_pin_ptr_by_chars_functor_;
-  static Functor1wRet<const ConstantString &, Pin *> find_pin_ptr_by_constant_string_functor_;
-  static Functor1wRet<const char *, Pin *> find_pin_ptr_functor_;
-  static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
+  static Functor1wRet<const char *,Pin *> find_pin_ptr_by_chars_functor_;
+  static Functor1wRet<const ConstantString &,Pin *> find_pin_ptr_by_constant_string_functor_;
+  static Functor1wRet<const char *,Pin *> find_pin_ptr_functor_;
+  static Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> get_parameter_value_functor_;
 
   template <typename T>
   static int findParameterIndex(T const & parameter_name)
@@ -91,7 +94,8 @@ private:
   };
   static Parameter & createParameter(const ConstantString & parameter_name);
   static Parameter & parameter(const ConstantString & parameter_name);
-  static Parameter & copyParameter(Parameter parameter, const ConstantString & parameter_name);
+  static Parameter & copyParameter(Parameter parameter,
+    const ConstantString & parameter_name);
 
   template <typename T>
   static int findFunctionIndex(T const & function_name)

@@ -31,9 +31,9 @@ CONSTANT_STRING(detach_from_function_name,"detachFrom");
 Array<Parameter,callback::PARAMETER_COUNT_MAX> Callback::parameters_;
 Array<Function,callback::FUNCTION_COUNT_MAX> Callback::functions_;
 Array<constants::SubsetMemberType,constants::PIN_COUNT_MAX+1> * Callback::pin_name_array_ptr_;
-Functor1wRet<const char *, Pin *> Callback::find_pin_ptr_by_chars_functor_;
-Functor1wRet<const ConstantString &, Pin *> Callback::find_pin_ptr_by_constant_string_functor_;
-Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Callback::get_parameter_value_functor_;
+Functor1wRet<const char *,Pin *> Callback::find_pin_ptr_by_chars_functor_;
+Functor1wRet<const ConstantString &,Pin *> Callback::find_pin_ptr_by_constant_string_functor_;
+Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> Callback::get_parameter_value_functor_;
 
 Parameter & Callback::createParameter(const ConstantString & parameter_name)
 {
@@ -57,7 +57,8 @@ Parameter & Callback::parameter(const ConstantString & parameter_name)
   return parameters_[0]; // bad reference
 }
 
-Parameter & Callback::copyParameter(Parameter parameter, const ConstantString & parameter_name)
+Parameter & Callback::copyParameter(Parameter parameter,
+  const ConstantString & parameter_name)
 {
   parameters_.push_back(parameter);
   parameters_.back().setName(parameter_name);
@@ -119,7 +120,8 @@ Functor1<Pin *> & Callback::getFunctor()
   return functor_;
 }
 
-void Callback::attachTo(Pin & pin, const ConstantString & pin_mode)
+void Callback::attachTo(Pin & pin,
+  const ConstantString & pin_mode)
 {
   if ((&pin_mode == &constants::pin_mode_interrupt_low) ||
     (&pin_mode == &constants::pin_mode_interrupt_change) ||
@@ -139,7 +141,8 @@ void Callback::attachTo(Pin & pin, const ConstantString & pin_mode)
   }
 }
 
-void Callback::attachTo(const ConstantString & pin_name, const ConstantString & pin_mode)
+void Callback::attachTo(const ConstantString & pin_name,
+  const ConstantString & pin_mode)
 {
   if (pin_name == constants::all_constant_string)
   {
@@ -154,7 +157,8 @@ void Callback::attachTo(const ConstantString & pin_name, const ConstantString & 
   attachTo(*pin_ptr,pin_mode);
 }
 
-void Callback::attachTo(const char * pin_name, const char * pin_mode)
+void Callback::attachTo(const char * pin_name,
+  const char * pin_mode)
 {
   const ConstantString * pin_mode_ptr = NULL;
   if (pin_mode == constants::pin_mode_interrupt_low)

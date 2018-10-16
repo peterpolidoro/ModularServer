@@ -37,7 +37,7 @@ public:
 
   // Pins
   Pin & createPin(const ConstantString & pin_name,
-    const size_t pin_number);
+    size_t pin_number);
   Pin & pin(const ConstantString & pin_name);
 
   // Firmware
@@ -55,7 +55,8 @@ public:
   template <typename T>
   Property & createProperty(const ConstantString & property_name,
     const T & default_value);
-  template <typename T, size_t N>
+  template <typename T,
+    size_t N>
   Property & createProperty(const ConstantString & property_name,
     const T (&default_value)[N]);
   Property & property(const ConstantString & property_name);

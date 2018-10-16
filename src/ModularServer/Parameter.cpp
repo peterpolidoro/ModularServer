@@ -10,7 +10,7 @@
 
 namespace modular_server
 {
-Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Parameter::get_value_functor_;
+Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> Parameter::get_value_functor_;
 
 // public
 Parameter::Parameter()
@@ -117,7 +117,8 @@ void Parameter::setUnits(const ConstantString & units)
   units_ptr_ = &units;
 }
 
-void Parameter::setRange(const double min, const double max)
+void Parameter::setRange(double min,
+  double max)
 {
   min_.d = min;
   max_.d = max;
@@ -125,7 +126,8 @@ void Parameter::setRange(const double min, const double max)
   range_is_set_ = true;
 }
 
-void Parameter::setRange(const float min, const float max)
+void Parameter::setRange(float min,
+  float max)
 {
   min_.d = (double)min;
   max_.d = (double)max;
@@ -133,7 +135,8 @@ void Parameter::setRange(const float min, const float max)
   range_is_set_ = true;
 }
 
-void Parameter::setRange(const constants::NumberType min, const constants::NumberType max)
+void Parameter::setRange(constants::NumberType min,
+  constants::NumberType max)
 {
   min_ = min;
   max_ = max;
@@ -158,8 +161,8 @@ void Parameter::removeRange()
   range_is_set_ = false;
 }
 
-void Parameter::setArrayLengthRange(const size_t array_length_min,
-  const size_t array_length_max)
+void Parameter::setArrayLengthRange(size_t array_length_min,
+  size_t array_length_max)
 {
   setTypeArray();
   array_length_min_ = array_length_min;
@@ -198,7 +201,9 @@ void Parameter::removeArrayLengthRange()
   array_length_range_is_set_ = false;
 }
 
-void Parameter::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
+void Parameter::setSubset(constants::SubsetMemberType * subset,
+  size_t max_size,
+  size_t size)
 {
   subset_.setStorage(subset,max_size,size);
   subset_is_set_ = true;
@@ -425,7 +430,7 @@ bool Parameter::rangeIsSet()
   return range_is_set_;
 }
 
-bool Parameter::valueInRange(const double value)
+bool Parameter::valueInRange(double value)
 {
   bool in_range = true;
   if (rangeIsSet())
@@ -440,7 +445,7 @@ bool Parameter::valueInRange(const double value)
   return in_range;
 }
 
-bool Parameter::valueInRange(const float value)
+bool Parameter::valueInRange(float value)
 {
   bool in_range = true;
   if (rangeIsSet())
@@ -480,7 +485,7 @@ bool Parameter::arrayLengthRangeIsSet()
   return array_length_range_is_set_;
 }
 
-bool Parameter::arrayLengthInRange(const size_t array_length)
+bool Parameter::arrayLengthInRange(size_t array_length)
 {
   bool in_range = true;
   if (arrayLengthRangeIsSet())
@@ -500,7 +505,7 @@ bool Parameter::subsetIsSet()
   return subset_is_set_;
 }
 
-int Parameter::findSubsetValueIndex(const long value)
+int Parameter::findSubsetValueIndex(long value)
 {
   int value_index = -1;
   if (subsetIsSet())
@@ -551,7 +556,7 @@ int Parameter::findSubsetValueIndex(const ConstantString * value)
   return value_index;
 }
 
-bool Parameter::valueInSubset(const long value)
+bool Parameter::valueInSubset(long value)
 {
   bool in_subset = true;
   if (subsetIsSet())

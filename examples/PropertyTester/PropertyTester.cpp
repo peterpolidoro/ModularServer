@@ -54,14 +54,14 @@ void PropertyTester::setup()
   bool_array_property.setDefaultValue(constants::bool_array_default_new);
   bool_array_property.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::preSetPropertyValueHandler));
   bool_array_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::postSetPropertyValueHandler));
-  bool_array_property.attachPreSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&PropertyTester::preSetPropertyElementValueHandler));
-  bool_array_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&PropertyTester::postSetPropertyElementValueHandler));
+  bool_array_property.attachPreSetElementValueFunctor(makeFunctor((Functor1<size_t> *)0,*this,&PropertyTester::preSetPropertyElementValueHandler));
+  bool_array_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<size_t> *)0,*this,&PropertyTester::postSetPropertyElementValueHandler));
 
   modular_server::Property & string_property = modular_server_.createProperty(constants::string_property_name,constants::string_default);
   string_property.attachPreSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::preSetPropertyValueHandler));
   string_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&PropertyTester::postSetPropertyValueHandler));
-  string_property.attachPreSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&PropertyTester::preSetPropertyElementValueHandler));
-  string_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&PropertyTester::postSetPropertyElementValueHandler));
+  string_property.attachPreSetElementValueFunctor(makeFunctor((Functor1<size_t> *)0,*this,&PropertyTester::preSetPropertyElementValueHandler));
+  string_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<size_t> *)0,*this,&PropertyTester::postSetPropertyElementValueHandler));
 
   modular_server::Property & odd_property = modular_server_.createProperty(constants::odd_property_name,constants::odd_default);
   odd_property.setSubset(constants::odd_subset);
@@ -467,7 +467,7 @@ void PropertyTester::postSetPropertyValueHandler()
   // Serial << " set property value! ";
 }
 
-void PropertyTester::preSetPropertyElementValueHandler(const size_t element_index)
+void PropertyTester::preSetPropertyElementValueHandler(size_t element_index)
 {
   // Writing to Serial like this makes response invalid!
   // Do not do this in a real device!
@@ -476,7 +476,7 @@ void PropertyTester::preSetPropertyElementValueHandler(const size_t element_inde
   // Serial << " setting property element value at index " << element_index << "! ";
 }
 
-void PropertyTester::postSetPropertyElementValueHandler(const size_t element_index)
+void PropertyTester::postSetPropertyElementValueHandler(size_t element_index)
 {
   // Writing to Serial like this makes response invalid!
   // Do not do this in a real device!

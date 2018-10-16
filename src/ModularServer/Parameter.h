@@ -38,17 +38,24 @@ public:
   void setUnits(const ConstantString & units);
 
   template <typename T>
-  void setRange(const T min, const T max);
-  void setRange(const double min, const double max);
-  void setRange(const float min, const float max);
-  void setRange(const constants::NumberType min, const constants::NumberType max);
+  void setRange(T min,
+    T max);
+  void setRange(double min,
+    double max);
+  void setRange(float min,
+    float max);
+  void setRange(constants::NumberType min,
+    constants::NumberType max);
   void removeRange();
-  void setArrayLengthRange(const size_t array_length_min,
-    const size_t array_length_max);
+  void setArrayLengthRange(size_t array_length_min,
+    size_t array_length_max);
   void removeArrayLengthRange();
   template <size_t MAX_SIZE>
-  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
-  void setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size);
+  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE],
+    size_t size=MAX_SIZE);
+  void setSubset(constants::SubsetMemberType * subset,
+    size_t max_size,
+    size_t size);
   void setSubset(Vector<constants::SubsetMemberType> & subset);
   void addValueToSubset(constants::SubsetMemberType & value);
   void removeSubset();
@@ -83,20 +90,20 @@ private:
   JsonStream::JsonTypes getArrayElementType();
   bool rangeIsSet();
   template <typename T>
-  bool valueInRange(const T value);
-  bool valueInRange(const double value);
-  bool valueInRange(const float value);
+  bool valueInRange(T value);
+  bool valueInRange(double value);
+  bool valueInRange(float value);
   const constants::NumberType & getRangeMin();
   const constants::NumberType & getRangeMax();
   size_t getArrayLengthMin();
   size_t getArrayLengthMax();
   bool arrayLengthRangeIsSet();
-  bool arrayLengthInRange(const size_t array_length);
+  bool arrayLengthInRange(size_t array_length);
   bool subsetIsSet();
-  int findSubsetValueIndex(const long value);
+  int findSubsetValueIndex(long value);
   int findSubsetValueIndex(const char * value);
   int findSubsetValueIndex(const ConstantString * value);
-  bool valueInSubset(const long value);
+  bool valueInSubset(long value);
   bool valueInSubset(const char * value);
   bool valueInSubset(const ConstantString * value);
   Vector<constants::SubsetMemberType> & getSubset();
@@ -105,7 +112,7 @@ private:
     bool is_property,
     bool write_firmware,
     bool write_instance_details);
-  static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
+  static Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> get_value_functor_;
   friend class Property;
   friend class Function;
   friend class Callback;

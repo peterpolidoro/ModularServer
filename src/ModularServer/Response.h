@@ -21,10 +21,12 @@ class Response
 public:
   template <typename T>
   void returnResult(T value);
-  template <typename T, size_t N>
+  template <typename T,
+    size_t N>
   void returnResult(T (&value)[N]);
   template <typename T>
-  void returnResult(T * value, size_t N);
+  void returnResult(T * value,
+    size_t N);
 
   template <typename T>
   void returnError(T error);
@@ -34,17 +36,28 @@ public:
   void writeKey(K key);
   template <typename T>
   void write(T value);
-  template <typename T, size_t N>
+  template <typename T,
+    size_t N>
   void write(T (&value)[N]);
-  void write(Vector<constants::SubsetMemberType> & value, JsonStream::JsonTypes type);
-  template <typename K, typename T>
-  void write(K key, T value);
-  template <typename K, typename T, size_t N>
-  void write(K key, T (&value)[N]);
+  void write(Vector<constants::SubsetMemberType> & value,
+    JsonStream::JsonTypes type);
+  template <typename K,
+    typename T>
+  void write(K key,
+    T value);
+  template <typename K,
+    typename T,
+    size_t N>
+  void write(K key,
+    T (&value)[N]);
   template <typename T>
-  void writeArray(T * value, size_t N);
-  template <typename K, typename T>
-  void writeArray(K key, T * value, size_t N);
+  void writeArray(T * value,
+    size_t N);
+  template <typename K,
+    typename T>
+  void writeArray(K key,
+    T * value,
+    size_t N);
   void writeNull();
   template <typename K>
   void writeNull(K key);
@@ -72,7 +85,8 @@ private:
   void setCompactPrint();
   void setPrettyPrint();
   void returnRequestParseError(const char * const request);
-  void returnParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
+  void returnParameterCountError(size_t parameter_count,
+    size_t parameter_count_needed);
   void returnMethodNotFoundError();
   void returnParameterNotFoundError();
   void returnParameterArrayLengthError(const ConstantString & parameter_name,
@@ -88,9 +102,11 @@ private:
     const char * const min_str,
     const char * const max_str);
   void returnPropertyFunctionNotFoundError();
-  void returnPropertyParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
+  void returnPropertyParameterCountError(size_t parameter_count,
+    size_t parameter_count_needed);
   void returnCallbackFunctionNotFoundError();
-  void returnCallbackParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
+  void returnCallbackParameterCountError(size_t parameter_count,
+    size_t parameter_count_needed);
   friend class Server;
   friend class Property;
 };

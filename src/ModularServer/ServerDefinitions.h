@@ -70,7 +70,8 @@ Property & Server::createProperty(const ConstantString & property_name,
   return properties_[0]; // bad reference
 }
 
-template <typename T, size_t N>
+template <typename T,
+  size_t N>
 Property & Server::createProperty(const ConstantString & property_name,
   const T (&default_value)[N])
 {

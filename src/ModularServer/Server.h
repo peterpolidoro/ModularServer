@@ -52,7 +52,7 @@ public:
 
   // Pins
   Pin & createPin(const ConstantString & pin_name,
-    const size_t pin_number);
+    size_t pin_number);
   Pin & pin(const ConstantString & pin_name);
 
   // Firmware
@@ -70,7 +70,8 @@ public:
   template <typename T>
   Property & createProperty(const ConstantString & property_name,
     const T & default_value);
-  template <typename T, size_t N>
+  template <typename T,
+    size_t N>
   Property & createProperty(const ConstantString & property_name,
     const T (&default_value)[N]);
   Property & property(const ConstantString & property_name);
@@ -183,22 +184,22 @@ private:
   size_t getFunctionsCount(ArduinoJson::JsonArray & firmware_name_array);
   size_t getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array);
   void versionToString(char * destination,
-    const long major,
-    const long minor,
-    const long patch,
-    const size_t num);
+    long major,
+    long minor,
+    long patch,
+    size_t num);
   void subsetToString(char * destination,
     Vector<constants::SubsetMemberType> & subset,
     const JsonStream::JsonTypes & parameter_type,
     const JsonStream::JsonTypes & parameter_array_element_type,
-    const size_t num);
+    size_t num);
   Pin * findPinPtrByChars(const char * pin_name);
   Pin * findPinPtrByConstantString(const ConstantString & pin_name);
   void setPinMode(const ConstantString & pin_name,
     const ConstantString & pin_mode);
   int getPinValue(const ConstantString & pin_name);
   void setPinValue(const ConstantString & pin_name,
-    const int pin_value);
+    int pin_value);
 
   // Handlers
   void getMethodIdsHandler();

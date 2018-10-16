@@ -50,13 +50,13 @@ void Server::setup()
 
   // Properties
   Property::response_ptr_ = &response_;
-  Property::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+  Property::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   Property & serial_number_property = createProperty(constants::serial_number_property_name,constants::serial_number_default);
   serial_number_property.setRange(constants::serial_number_min,constants::serial_number_max);
 
   // Parameters
-  Parameter::get_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+  Parameter::get_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   Parameter & firmware_parameter = createParameter(constants::firmware_constant_string);
   firmware_parameter.setTypeString();
@@ -156,9 +156,9 @@ void Server::setup()
 
   // Callbacks
   Callback::pin_name_array_ptr_ = &pin_name_array_;
-  Callback::find_pin_ptr_by_chars_functor_ = makeFunctor((Functor1wRet<const char *, Pin *> *)0,*this,&Server::findPinPtrByChars);
-  Callback::find_pin_ptr_by_constant_string_functor_ = makeFunctor((Functor1wRet<const ConstantString &, Pin *> *)0,*this,&Server::findPinPtrByConstantString);
-  Callback::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
+  Callback::find_pin_ptr_by_chars_functor_ = makeFunctor((Functor1wRet<const char *,Pin *> *)0,*this,&Server::findPinPtrByChars);
+  Callback::find_pin_ptr_by_constant_string_functor_ = makeFunctor((Functor1wRet<const ConstantString &,Pin *> *)0,*this,&Server::findPinPtrByConstantString);
+  Callback::get_parameter_value_functor_ = makeFunctor((Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> *)0,*this,&Server::getParameterValue);
 
   // Server
   server_running_ = false;
@@ -221,7 +221,7 @@ void Server::removeHardware()
 
 // Pins
 Pin & Server::createPin(const ConstantString & pin_name,
-  const size_t pin_number)
+  size_t pin_number)
 {
   int pin_index = findPinIndex(pin_name);
   if (pin_index < 0)
@@ -305,7 +305,7 @@ int Server::getPinValue(const ConstantString & pin_name)
 }
 
 void Server::setPinValue(const ConstantString & pin_name,
-  const int pin_value)
+  int pin_value)
 {
   if (pin_name == constants::all_constant_string)
   {
@@ -1720,10 +1720,10 @@ size_t Server::getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array)
 }
 
 void Server::versionToString(char* destination,
-  const long major,
-  const long minor,
-  const long patch,
-  const size_t num)
+  long major,
+  long minor,
+  long patch,
+  size_t num)
 {
   size_t length_left = num;
   if (length_left == 0)
@@ -1768,7 +1768,7 @@ void Server::subsetToString(char * destination,
   Vector<constants::SubsetMemberType> & subset,
   const JsonStream::JsonTypes & parameter_type,
   const JsonStream::JsonTypes & parameter_array_element_type,
-  const size_t num)
+  size_t num)
 {
   JsonStream::JsonTypes type = parameter_type;
   if (type == JsonStream::ARRAY_TYPE)

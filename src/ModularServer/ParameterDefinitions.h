@@ -13,7 +13,8 @@ namespace modular_server
 {
 // public
 template <typename T>
-void Parameter::setRange(const T min, const T max)
+void Parameter::setRange(T min,
+  T max)
 {
   min_.l = (long)min;
   max_.l = (long)max;
@@ -35,7 +36,8 @@ void Parameter::setRange(const T min, const T max)
 }
 
 template <size_t MAX_SIZE>
-void Parameter::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
+void Parameter::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE],
+  size_t size)
 {
   subset_.setStorage(subset,size);
   subset_is_set_ = true;
@@ -80,7 +82,7 @@ bool Parameter::getValue(T & value)
 
 // private
 template <typename T>
-bool Parameter::valueInRange(const T value)
+bool Parameter::valueInRange(T value)
 {
   bool in_range = true;
   if (rangeIsSet())

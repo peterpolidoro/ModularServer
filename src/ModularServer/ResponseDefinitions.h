@@ -23,7 +23,8 @@ void Response::returnResult(T value)
   }
 }
 
-template <typename T, size_t N>
+template <typename T,
+  size_t N>
 void Response::returnResult(T (&value)[N])
 {
   // Prevent multiple results in one response
@@ -35,7 +36,8 @@ void Response::returnResult(T (&value)[N])
 }
 
 template <typename T>
-void Response::returnResult(T * value, size_t N)
+void Response::returnResult(T * value,
+  size_t N)
 {
   // Prevent multiple results in one response
   if (!result_key_in_response_ && !error_)
@@ -81,7 +83,8 @@ void Response::write(T value)
   json_stream_ptr_->write(value);
 }
 
-template <typename T, size_t N>
+template <typename T,
+  size_t N>
 void Response::write(T (&value)[N])
 {
   if (error_)
@@ -91,8 +94,10 @@ void Response::write(T (&value)[N])
   json_stream_ptr_->write(value);
 }
 
-template <typename K, typename T>
-void Response::write(K key, T value)
+template <typename K,
+  typename T>
+void Response::write(K key,
+  T value)
 {
   if (error_)
   {
@@ -101,8 +106,11 @@ void Response::write(K key, T value)
   json_stream_ptr_->write(key,value);
 }
 
-template <typename K, typename T, size_t N>
-void Response::write(K key, T (&value)[N])
+template <typename K,
+  typename T,
+  size_t N>
+void Response::write(K key,
+  T (&value)[N])
 {
   if (error_)
   {
@@ -112,7 +120,8 @@ void Response::write(K key, T (&value)[N])
 }
 
 template <typename T>
-void Response::writeArray(T * value, size_t N)
+void Response::writeArray(T * value,
+  size_t N)
 {
   if (error_)
   {
@@ -121,8 +130,11 @@ void Response::writeArray(T * value, size_t N)
   json_stream_ptr_->writeArray(value,N);
 }
 
-template <typename K, typename T>
-void Response::writeArray(K key, T * value, size_t N)
+template <typename K,
+  typename T>
+void Response::writeArray(K key,
+  T * value,
+  size_t N)
 {
   if (error_)
   {

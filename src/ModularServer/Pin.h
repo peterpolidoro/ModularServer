@@ -38,7 +38,7 @@ public:
   void setModePulseFalling();
 
   int getValue();
-  void setValue(const int value);
+  void setValue(int value);
 
   size_t getPinNumber();
   int getInterruptNumber();
@@ -51,7 +51,8 @@ private:
   FunctorCallbacks::Callback isr_;
   static EventController<modular_server::constants::PIN_PULSE_EVENT_COUNT_MAX> pin_pulse_event_controller_;
 
-  Pin(const ConstantString & name, const size_t pin_number);
+  Pin(const ConstantString & name,
+    size_t pin_number);
   void setup(const ConstantString & name);
   Callback * getCallbackPtr();
   const ConstantString & getMode();
@@ -60,13 +61,14 @@ private:
   void writeApi(Response & response,
     bool write_name_only,
     bool write_details);
-  void setPinNumber(const size_t pin_number);
+  void setPinNumber(size_t pin_number);
   void enablePullup();
   void disablePullup();
   void setCallback(Callback & callback);
   void removeCallback();
   void reattach();
-  void attach(Callback & callback, const ConstantString & mode);
+  void attach(Callback & callback,
+    const ConstantString & mode);
   void detach();
   void resetIsr();
   static void setupPinPulseEventController();

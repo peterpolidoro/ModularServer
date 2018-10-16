@@ -21,7 +21,8 @@ void Response::writeResultKey()
   }
 }
 
-void Response::write(Vector<constants::SubsetMemberType> & value, JsonStream::JsonTypes type)
+void Response::write(Vector<constants::SubsetMemberType> & value,
+  JsonStream::JsonTypes type)
 {
   if (error_)
   {
@@ -244,7 +245,8 @@ void Response::returnRequestParseError(const char * const request)
   }
 }
 
-void Response::returnParameterCountError(const size_t parameter_count, const size_t parameter_count_needed)
+void Response::returnParameterCountError(size_t parameter_count,
+  size_t parameter_count_needed)
 {
   // Prevent multiple errors in one response
   if (!error_)
@@ -507,7 +509,8 @@ void Response::returnPropertyFunctionNotFoundError()
   }
 }
 
-void Response::returnPropertyParameterCountError(const size_t parameter_count, const size_t parameter_count_needed)
+void Response::returnPropertyParameterCountError(size_t parameter_count,
+  size_t parameter_count_needed)
 {
   // Prevent multiple errors in one response
   if (!error_)
@@ -556,7 +559,8 @@ void Response::returnCallbackFunctionNotFoundError()
   }
 }
 
-void Response::returnCallbackParameterCountError(const size_t parameter_count, const size_t parameter_count_needed)
+void Response::returnCallbackParameterCountError(size_t parameter_count,
+  size_t parameter_count_needed)
 {
   // Prevent multiple errors in one response
   if (!error_)

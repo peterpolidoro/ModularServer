@@ -50,8 +50,8 @@ private:
   void setNewOddDefaultHandler();
   void preSetPropertyValueHandler();
   void postSetPropertyValueHandler();
-  void preSetPropertyElementValueHandler(const size_t element_index);
-  void postSetPropertyElementValueHandler(const size_t element_index);
+  void preSetPropertyElementValueHandler(size_t element_index);
+  void postSetPropertyElementValueHandler(size_t element_index);
 
 };
 

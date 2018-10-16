@@ -240,7 +240,7 @@ extern ConstantString processor_name_constant_string;
 
 enum {ALL_ARRAY_SIZE=1};
 extern ConstantString * all_c_style_array[ALL_ARRAY_SIZE];
-extern Array<ConstantString *, ALL_ARRAY_SIZE> all_array;
+extern Array<ConstantString *,ALL_ARRAY_SIZE> all_array;
 
 }
 }

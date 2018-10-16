@@ -52,7 +52,8 @@ Property & ModularServer::createProperty(const ConstantString & property_name,
   return server_.createProperty(property_name,default_value);
 }
 
-template <typename T, size_t N>
+template <typename T,
+  size_t N>
 Property & ModularServer::createProperty(const ConstantString & property_name,
   const T (&default_value)[N])
 {

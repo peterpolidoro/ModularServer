@@ -18,7 +18,7 @@ const FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=5,
   .version_minor=0,
-  .version_patch=2,
+  .version_patch=3,
 };
 
 const long response_pipe_read_max = 100000;
@@ -211,7 +211,7 @@ ConstantString * all_c_style_array[ALL_ARRAY_SIZE] =
 {
   &all_constant_string,
 };
-Array<ConstantString *, ALL_ARRAY_SIZE> all_array(all_c_style_array);
+Array<ConstantString *,ALL_ARRAY_SIZE> all_array(all_c_style_array);
 
 }
 }

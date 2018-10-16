@@ -13,7 +13,8 @@ namespace modular_server
 {
 // public
 template <size_t MAX_SIZE>
-void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size)
+void Property::setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE],
+  size_t size)
 {
   parameter_.setSubset(subset);
   if (getType() == JsonStream::LONG_TYPE)
@@ -139,7 +140,7 @@ bool Property::getValue(Array<const ConstantString *,N> & value)
 
 template <typename T>
 bool Property::getValue(T * value,
-  const size_t N)
+  size_t N)
 {
   JsonStream::JsonTypes type = getType();
   size_t array_length = getArrayLength();
@@ -228,7 +229,7 @@ bool Property::getDefaultValue(Array<const ConstantString *,N> & default_value)
 
 template <typename T>
 bool Property::getDefaultValue(T * default_value,
-  const size_t N)
+  size_t N)
 {
   size_t array_length_default = getArrayLengthDefault();
   size_t array_length_min = min(array_length_default,N);
@@ -337,7 +338,7 @@ bool Property::setValue(Array<const ConstantString *,N> & value)
 
 template <typename T>
 bool Property::setValue(T * value,
-  const size_t N)
+  size_t N)
 {
   bool success = false;
   JsonStream::JsonTypes type = getType();

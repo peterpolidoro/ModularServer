@@ -74,9 +74,9 @@ public:
   bool getValue(Array<const ConstantString *,N> & value);
   template <typename T>
   bool getValue(T * value,
-    const size_t N);
+    size_t N);
   template <typename T>
-  bool getElementValue(const size_t element_index,
+  bool getElementValue(size_t element_index,
     T & element_value);
   template <typename T>
   bool getDefaultValue(T & default_value);
@@ -90,13 +90,13 @@ public:
   bool getDefaultValue(Array<const ConstantString *,N> & default_value);
   template <typename T>
   bool getDefaultValue(T * default_value,
-    const size_t N);
+    size_t N);
   template <typename T>
-  bool getDefaultElementValue(const size_t element_index,
+  bool getDefaultElementValue(size_t element_index,
     T & default_element_value);
 
   template <typename T>
-  bool setElementValue(const size_t element_index,
+  bool setElementValue(size_t element_index,
     const T & element_value);
   template <typename T>
   bool setValue(const T & value);
@@ -111,7 +111,7 @@ public:
   bool setValue(ArduinoJson::JsonArray & value);
   template <typename T>
   bool setValue(T * value,
-    const size_t N);
+    size_t N);
   template <typename T>
   bool setAllElementValues(const T & element_value);
   template <typename T>
@@ -128,37 +128,42 @@ public:
   bool setDefaultValue(const ConstantString * const (&default_value)[N]);
   bool setDefaultToRangeMin();
   bool setDefaultToRangeMax();
-  bool setDefaultToSubsetElement(const size_t element_index);
+  bool setDefaultToSubsetElement(size_t element_index);
   void setValueToDefault();
-  void setElementValueToDefault(const size_t element_index);
+  void setElementValueToDefault(size_t element_index);
 
   bool valueIsDefault();
 
   size_t getArrayLength();
-  void setArrayLength(const size_t array_length);
-  void setArrayLengthRange(const size_t array_length_min,
-    const size_t array_length_max);
+  void setArrayLength(size_t array_length);
+  void setArrayLengthRange(size_t array_length_min,
+    size_t array_length_max);
   size_t getArrayLengthMin();
   size_t getArrayLengthMax();
 
   size_t getArrayLengthDefault();
-  void setArrayLengthDefault(const size_t array_length_default);
+  void setArrayLengthDefault(size_t array_length_default);
   void setArrayLengthToDefault();
 
   size_t getStringLength();
 
   void setUnits(const ConstantString & name);
-  void setRange(const long min, const long max);
-  void setRange(const double min, const double max);
+  void setRange(long min,
+    long max);
+  void setRange(double min,
+    double max);
   template <size_t MAX_SIZE>
-  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
-  void setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size);
+  void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE],
+    size_t size=MAX_SIZE);
+  void setSubset(constants::SubsetMemberType * subset,
+    size_t max_size,
+    size_t size);
   void addValueToSubset(constants::SubsetMemberType & value);
 
   void attachPreSetValueFunctor(const Functor0 & functor);
-  void attachPreSetElementValueFunctor(const Functor1<const size_t> & functor);
+  void attachPreSetElementValueFunctor(const Functor1<size_t> & functor);
   void attachPostSetValueFunctor(const Functor0 & functor);
-  void attachPostSetElementValueFunctor(const Functor1<const size_t> & functor);
+  void attachPostSetElementValueFunctor(const Functor1<size_t> & functor);
   void disableFunctors();
   void reenableFunctors();
 
@@ -170,7 +175,8 @@ private:
   static ConcatenatedArray<Parameter,property::FUNCTION_PARAMETER_TYPE_COUNT> parameters_;
   static ConcatenatedArray<Function,property::FUNCTION_PARAMETER_TYPE_COUNT> functions_;
   static Response * response_ptr_;
-  static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_parameter_value_functor_;
+  static Functor1wRet<const ConstantString &,
+    ArduinoJson::JsonVariant> get_parameter_value_functor_;
 
   template <typename T>
   static int findParameterIndex(T const & parameter_name)
@@ -188,7 +194,8 @@ private:
   };
   static Parameter & createParameter(const ConstantString & parameter_name);
   static Parameter & parameter(const ConstantString & parameter_name);
-  static Parameter & copyParameter(Parameter parameter, const ConstantString & parameter_name);
+  static Parameter & copyParameter(Parameter parameter,
+    const ConstantString & parameter_name);
 
   template <typename T>
   static int findFunctionIndex(T const & function_name)
@@ -211,9 +218,9 @@ private:
   SavedVariable saved_variable_;
 
   Functor0 pre_set_value_functor_;
-  Functor1<const size_t> pre_set_element_value_functor_;
+  Functor1<size_t> pre_set_element_value_functor_;
   Functor0 post_set_value_functor_;
-  Functor1<const size_t> post_set_element_value_functor_;
+  Functor1<size_t> post_set_element_value_functor_;
   bool functors_enabled_;
 
   bool string_saved_as_char_array_;
@@ -252,17 +259,17 @@ private:
   bool rangeIsSet();
   bool subsetIsSet();
   bool stringSavedAsCharArray();
-  int findSubsetValueIndex(const long value);
+  int findSubsetValueIndex(long value);
   int findSubsetValueIndex(const char * value);
   int findSubsetValueIndex(const ConstantString * value);
-  bool valueInSubset(const long value);
+  bool valueInSubset(long value);
   bool valueInSubset(const char * value);
   bool valueInSubset(const ConstantString * value);
   Vector<constants::SubsetMemberType> & getSubset();
   void preSetValueFunctor();
-  void preSetElementValueFunctor(const size_t element_index);
+  void preSetElementValueFunctor(size_t element_index);
   void postSetValueFunctor();
-  void postSetElementValueFunctor(const size_t element_index);
+  void postSetElementValueFunctor(size_t element_index);
   void writeValue(Response & response,
     bool write_key=false,
     bool write_default=false,

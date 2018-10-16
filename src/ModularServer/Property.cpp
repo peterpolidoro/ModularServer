@@ -44,7 +44,7 @@ Function Property::property_array_functions_[property::ARRAY_FUNCTION_COUNT_MAX]
 ConcatenatedArray<Parameter,property::FUNCTION_PARAMETER_TYPE_COUNT> Property::parameters_;
 ConcatenatedArray<Function,property::FUNCTION_PARAMETER_TYPE_COUNT> Property::functions_;
 Response * Property::response_ptr_;
-Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> Property::get_parameter_value_functor_;
+Functor1wRet<const ConstantString &,ArduinoJson::JsonVariant> Property::get_parameter_value_functor_;
 
 Parameter & Property::createParameter(const ConstantString & parameter_name)
 {
@@ -68,7 +68,8 @@ Parameter & Property::parameter(const ConstantString & parameter_name)
   return parameters_[0]; // bad reference
 }
 
-Parameter & Property::copyParameter(Parameter parameter, const ConstantString & parameter_name)
+Parameter & Property::copyParameter(Parameter parameter,
+  const ConstantString & parameter_name)
 {
   parameters_.push_back(parameter);
   parameters_.back().setName(parameter_name);
@@ -147,7 +148,7 @@ bool Property::getValue<const ConstantString *>(const ConstantString * & value)
 }
 
 template <>
-bool Property::getElementValue<long>(const size_t element_index,
+bool Property::getElementValue<long>(size_t element_index,
   long & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -159,7 +160,7 @@ bool Property::getElementValue<long>(const size_t element_index,
 }
 
 template <>
-bool Property::getElementValue<double>(const size_t element_index,
+bool Property::getElementValue<double>(size_t element_index,
   double & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -171,7 +172,7 @@ bool Property::getElementValue<double>(const size_t element_index,
 }
 
 template <>
-bool Property::getElementValue<bool>(const size_t element_index,
+bool Property::getElementValue<bool>(size_t element_index,
   bool & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -183,7 +184,7 @@ bool Property::getElementValue<bool>(const size_t element_index,
 }
 
 template <>
-bool Property::getElementValue<char>(const size_t element_index,
+bool Property::getElementValue<char>(size_t element_index,
   char & element_value)
 {
   if (getType() != JsonStream::STRING_TYPE)
@@ -211,7 +212,7 @@ bool Property::getElementValue<char>(const size_t element_index,
 }
 
 template <>
-bool Property::getElementValue<const ConstantString *>(const size_t element_index,
+bool Property::getElementValue<const ConstantString *>(size_t element_index,
   const ConstantString * & element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -266,7 +267,7 @@ bool Property::getDefaultValue<const ConstantString *>(const ConstantString * & 
 }
 
 template <>
-bool Property::getDefaultElementValue<long>(const size_t element_index,
+bool Property::getDefaultElementValue<long>(size_t element_index,
   long & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -278,7 +279,7 @@ bool Property::getDefaultElementValue<long>(const size_t element_index,
 }
 
 template <>
-bool Property::getDefaultElementValue<double>(const size_t element_index,
+bool Property::getDefaultElementValue<double>(size_t element_index,
   double & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -290,7 +291,7 @@ bool Property::getDefaultElementValue<double>(const size_t element_index,
 }
 
 template <>
-bool Property::getDefaultElementValue<bool>(const size_t element_index,
+bool Property::getDefaultElementValue<bool>(size_t element_index,
   bool & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -302,7 +303,7 @@ bool Property::getDefaultElementValue<bool>(const size_t element_index,
 }
 
 template <>
-bool Property::getDefaultElementValue<char>(const size_t element_index,
+bool Property::getDefaultElementValue<char>(size_t element_index,
   char & default_element_value)
 {
   if (getType() != JsonStream::STRING_TYPE)
@@ -330,7 +331,7 @@ bool Property::getDefaultElementValue<char>(const size_t element_index,
 }
 
 template <>
-bool Property::getDefaultElementValue<const ConstantString *>(const size_t element_index,
+bool Property::getDefaultElementValue<const ConstantString *>(size_t element_index,
   const ConstantString * & default_element_value)
 {
   if ((getType() != JsonStream::ARRAY_TYPE) ||
@@ -343,7 +344,7 @@ bool Property::getDefaultElementValue<const ConstantString *>(const size_t eleme
 }
 
 template <>
-bool Property::setElementValue<long>(const size_t element_index,
+bool Property::setElementValue<long>(size_t element_index,
   const long & element_value)
 {
   bool success = false;
@@ -361,7 +362,7 @@ bool Property::setElementValue<long>(const size_t element_index,
 }
 
 template <>
-bool Property::setElementValue<double>(const size_t element_index,
+bool Property::setElementValue<double>(size_t element_index,
   const double & element_value)
 {
   bool success = false;
@@ -379,7 +380,7 @@ bool Property::setElementValue<double>(const size_t element_index,
 }
 
 template <>
-bool Property::setElementValue<bool>(const size_t element_index,
+bool Property::setElementValue<bool>(size_t element_index,
   const bool & element_value)
 {
   bool success = false;
@@ -394,7 +395,7 @@ bool Property::setElementValue<bool>(const size_t element_index,
 }
 
 template <>
-bool Property::setElementValue<char>(const size_t element_index,
+bool Property::setElementValue<char>(size_t element_index,
   const char & element_value)
 {
   bool success = false;
@@ -409,7 +410,7 @@ bool Property::setElementValue<char>(const size_t element_index,
 }
 
 template <>
-bool Property::setElementValue<const ConstantString * const>(const size_t element_index,
+bool Property::setElementValue<const ConstantString * const>(size_t element_index,
   const ConstantString * const & element_value)
 {
   bool success = false;
@@ -428,7 +429,7 @@ bool Property::setElementValue<const ConstantString * const>(const size_t elemen
 }
 
 template <>
-bool Property::setElementValue<const char *>(const size_t element_index,
+bool Property::setElementValue<const char *>(size_t element_index,
   const char * const & element_value)
 {
   bool success = false;
@@ -735,7 +736,7 @@ bool Property::setDefaultToRangeMax()
   return false;
 }
 
-bool Property::setDefaultToSubsetElement(const size_t element_index)
+bool Property::setDefaultToSubsetElement(size_t element_index)
 {
   if (subsetIsSet() &&
     (parameter_.getSubset().size() > 0) &&
@@ -775,7 +776,7 @@ void Property::setValueToDefault()
   postSetValueFunctor();
 }
 
-void Property::setElementValueToDefault(const size_t element_index)
+void Property::setElementValueToDefault(size_t element_index)
 {
   preSetElementValueFunctor(element_index);
   saved_variable_.setElementValueToDefault(element_index);
@@ -799,7 +800,7 @@ size_t Property::getArrayLength()
   return saved_variable_.getArrayLength();
 }
 
-void Property::setArrayLength(const size_t array_length)
+void Property::setArrayLength(size_t array_length)
 {
   if (getType() == JsonStream::ARRAY_TYPE)
   {
@@ -825,8 +826,8 @@ void Property::setArrayLength(const size_t array_length)
   }
 }
 
-void Property::setArrayLengthRange(const size_t array_length_min,
-  const size_t array_length_max)
+void Property::setArrayLengthRange(size_t array_length_min,
+  size_t array_length_max)
 {
   if (getType() == JsonStream::ARRAY_TYPE)
   {
@@ -920,7 +921,7 @@ size_t Property::getArrayLengthDefault()
   return saved_variable_.getArrayLengthDefault();
 }
 
-void Property::setArrayLengthDefault(const size_t array_length_default)
+void Property::setArrayLengthDefault(size_t array_length_default)
 {
   if (getType() == JsonStream::ARRAY_TYPE)
   {
@@ -964,7 +965,8 @@ void Property::setUnits(const ConstantString & name)
   parameter_.setUnits(name);
 }
 
-void Property::setRange(const long min, const long max)
+void Property::setRange(long min,
+  long max)
 {
   parameter_.setRange(min,max);
   if (getType() == JsonStream::LONG_TYPE)
@@ -1008,7 +1010,8 @@ void Property::setRange(const long min, const long max)
   }
 }
 
-void Property::setRange(const double min, const double max)
+void Property::setRange(double min,
+  double max)
 {
   parameter_.setRange(min,max);
   if (getType() == JsonStream::DOUBLE_TYPE)
@@ -1051,7 +1054,9 @@ void Property::setRange(const double min, const double max)
   }
 }
 
-void Property::setSubset(constants::SubsetMemberType * subset, size_t max_size, size_t size)
+void Property::setSubset(constants::SubsetMemberType * subset,
+  size_t max_size,
+  size_t size)
 {
   parameter_.setSubset(subset,max_size,size);
   if (getType() == JsonStream::LONG_TYPE)
@@ -1116,7 +1121,7 @@ void Property::attachPreSetValueFunctor(const Functor0 & functor)
   pre_set_value_functor_ = functor;
 }
 
-void Property::attachPreSetElementValueFunctor(const Functor1<const size_t> & functor)
+void Property::attachPreSetElementValueFunctor(const Functor1<size_t> & functor)
 {
   pre_set_element_value_functor_ = functor;
 }
@@ -1126,7 +1131,7 @@ void Property::attachPostSetValueFunctor(const Functor0 & functor)
   post_set_value_functor_ = functor;
 }
 
-void Property::attachPostSetElementValueFunctor(const Functor1<const size_t> & functor)
+void Property::attachPostSetElementValueFunctor(const Functor1<size_t> & functor)
 {
   post_set_element_value_functor_ = functor;
 }
@@ -1243,7 +1248,7 @@ bool Property::stringSavedAsCharArray()
   return string_saved_as_char_array_;
 }
 
-int Property::findSubsetValueIndex(const long value)
+int Property::findSubsetValueIndex(long value)
 {
   return parameter_.findSubsetValueIndex(value);
 }
@@ -1258,7 +1263,7 @@ int Property::findSubsetValueIndex(const ConstantString * value)
   return parameter_.findSubsetValueIndex(value);
 }
 
-bool Property::valueInSubset(const long value)
+bool Property::valueInSubset(long value)
 {
   return parameter_.valueInSubset(value);
 }
@@ -1286,7 +1291,7 @@ void Property::preSetValueFunctor()
   }
 }
 
-void Property::preSetElementValueFunctor(const size_t element_index)
+void Property::preSetElementValueFunctor(size_t element_index)
 {
   if (pre_set_element_value_functor_ && functors_enabled_)
   {
@@ -1302,7 +1307,7 @@ void Property::postSetValueFunctor()
   }
 }
 
-void Property::postSetElementValueFunctor(const size_t element_index)
+void Property::postSetElementValueFunctor(size_t element_index)
 {
   if (post_set_element_value_functor_ && functors_enabled_)
   {

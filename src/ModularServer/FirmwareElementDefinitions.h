@@ -12,7 +12,8 @@
 namespace modular_server
 {
 // public
-template <typename U, size_t MAX_SIZE>
+template <typename U,
+  size_t MAX_SIZE>
 bool FirmwareElement::firmwareNameInArray(Array<U,MAX_SIZE> & firmware_name_array)
 {
   for (size_t i=0; i<firmware_name_array.size(); ++i)
