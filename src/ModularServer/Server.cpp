@@ -43,10 +43,10 @@ void Server::setup()
 
   // Firmware
   addFirmware(constants::firmware_info,
-              server_properties_,
-              server_parameters_,
-              server_functions_,
-              server_callbacks_);
+    server_properties_,
+    server_parameters_,
+    server_functions_,
+    server_callbacks_);
 
   // Properties
   Property::response_ptr_ = &response_;
@@ -62,8 +62,8 @@ void Server::setup()
   firmware_parameter.setTypeString();
   firmware_parameter.setArrayLengthRange(1,constants::FIRMWARE_COUNT_MAX);
   firmware_parameter.setSubset(firmware_name_array_.data(),
-                               firmware_name_array_.max_size(),
-                               firmware_name_array_.size());
+    firmware_name_array_.max_size(),
+    firmware_name_array_.size());
 
   Parameter & verbosity_parameter = createParameter(constants::verbosity_constant_string);
   verbosity_parameter.setTypeString();
@@ -72,8 +72,8 @@ void Server::setup()
   Parameter & pin_name_parameter = createParameter(constants::pin_name_parameter_name);
   pin_name_parameter.setTypeString();
   pin_name_parameter.setSubset(pin_name_array_.data(),
-                               pin_name_array_.max_size(),
-                               pin_name_array_.size());
+    pin_name_array_.max_size(),
+    pin_name_array_.size());
 
   Parameter & pin_mode_parameter = createParameter(constants::pin_mode_constant_string);
   pin_mode_parameter.setTypeString();
@@ -204,8 +204,8 @@ void Server::removeHardware()
       pin_name_array_.pop_back();
       Parameter & pin_name_parameter = parameter(constants::pin_name_parameter_name);
       pin_name_parameter.setSubset(pin_name_array_.data(),
-                                   pin_name_array_.max_size(),
-                                   pin_name_array_.size());
+        pin_name_array_.max_size(),
+        pin_name_array_.size());
       Pin & pin = pins[j];
       Callback * callback_ptr = pin.getCallbackPtr();
       if (callback_ptr)
@@ -221,7 +221,7 @@ void Server::removeHardware()
 
 // Pins
 Pin & Server::createPin(const ConstantString & pin_name,
-                        const size_t pin_number)
+  const size_t pin_number)
 {
   int pin_index = findPinIndex(pin_name);
   if (pin_index < 0)
@@ -231,8 +231,8 @@ Pin & Server::createPin(const ConstantString & pin_name,
     pin_name_array_.push_back(int_name);
     Parameter & pin_name_parameter = parameter(constants::pin_name_parameter_name);
     pin_name_parameter.setSubset(pin_name_array_.data(),
-                                 pin_name_array_.max_size(),
-                                 pin_name_array_.size());
+      pin_name_array_.max_size(),
+      pin_name_array_.size());
     pins_.push_back(Pin(pin_name,pin_number));
     const ConstantString * hardware_name_ptr = hardware_info_array_.back()->name_ptr;
     pins_.back().setHardwareName(*hardware_name_ptr);
@@ -272,7 +272,7 @@ Pin * Server::findPinPtrByConstantString(const ConstantString & pin_name)
 }
 
 void Server::setPinMode(const ConstantString & pin_name,
-                        const ConstantString & pin_mode)
+  const ConstantString & pin_mode)
 {
   if (pin_name == constants::all_constant_string)
   {
@@ -305,7 +305,7 @@ int Server::getPinValue(const ConstantString & pin_name)
 }
 
 void Server::setPinValue(const ConstantString & pin_name,
-                         const int pin_value)
+  const int pin_value)
 {
   if (pin_name == constants::all_constant_string)
   {
@@ -357,7 +357,7 @@ Parameter & Server::parameter(const ConstantString & parameter_name)
 }
 
 Parameter & Server::copyParameter(Parameter parameter,
-                                  const ConstantString & parameter_name)
+  const ConstantString & parameter_name)
 {
   parameters_.push_back(parameter);
   parameters_.back().setName(parameter_name);
@@ -389,7 +389,7 @@ Function & Server::function(const ConstantString & function_name)
 }
 
 Function & Server::copyFunction(Function function,
-                                const ConstantString & function_name)
+  const ConstantString & function_name)
 {
   functions_.push_back(function);
   functions_.back().setName(function_name);
@@ -562,8 +562,8 @@ void Server::processRequestArray()
       // function parameter ?
       // function parameter ??
       else if ((parameter_count == 2) &&
-               ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
-                (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
+        ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
+          (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
       {
         int parameter_index = processParameterString(function,(*request_json_array_ptr_)[1]);
         if (parameter_index >= 0)
@@ -654,8 +654,8 @@ void Server::processRequestArray()
         // callback function parameter ?
         // callback function parameter ??
         else if ((callback_parameter_count == 2) &&
-                 ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
-                  (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
+          ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
+            (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
         {
           int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
           if (parameter_index >= 0)
@@ -745,8 +745,8 @@ void Server::processRequestArray()
         // property function parameter ?
         // property function parameter ??
         else if ((property_parameter_count == 2) &&
-                 ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
-                  (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
+          ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
+            (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
         {
           int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
           if (parameter_index >= 0)
@@ -841,7 +841,7 @@ size_t Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
 }
 
 int Server::processParameterString(Function & function,
-                                   const char * parameter_string)
+  const char * parameter_string)
 {
   int parameter_index = -1;
   int parameter_id = atoi(parameter_string);
@@ -870,7 +870,7 @@ int Server::processParameterString(Function & function,
 }
 
 bool Server::checkParameters(Function & function,
-                             ArduinoJson::JsonArray::iterator iterator)
+  ArduinoJson::JsonArray::iterator iterator)
 {
   int parameter_index = 0;
   for (ArduinoJson::JsonArray::iterator it=iterator;
@@ -892,7 +892,7 @@ bool Server::checkParameters(Function & function,
 }
 
 bool Server::checkParameter(Parameter & parameter,
-                            ArduinoJson::JsonVariant & json_value)
+  ArduinoJson::JsonVariant & json_value)
 {
   bool in_subset = true;
   bool in_range = true;
@@ -1008,19 +1008,19 @@ bool Server::checkParameter(Parameter & parameter,
     char subset_str[constants::STRING_LENGTH_ERROR];
     subset_str[0] = '\0';
     subsetToString(subset_str,
-                   subset,
-                   parameter.getType(),
-                   parameter.getArrayElementType(),
-                   constants::STRING_LENGTH_ERROR-1);
+      subset,
+      parameter.getType(),
+      parameter.getArrayElementType(),
+      constants::STRING_LENGTH_ERROR-1);
     response_.returnParameterNotInSubsetError(subset_str,
-                                              parameter.getType());
+      parameter.getType());
   }
   else if (!in_range)
   {
     response_.returnParameterNotInRangeError(parameter.getName(),
-                                             parameter.getType(),
-                                             min_str,
-                                             max_str);
+      parameter.getType(),
+      min_str,
+      max_str);
   }
   else if (!array_length_in_range)
   {
@@ -1039,7 +1039,7 @@ bool Server::checkParameter(Parameter & parameter,
 }
 
 bool Server::checkArrayParameterElement(Parameter & parameter,
-                                        ArduinoJson::JsonVariant & json_value)
+  ArduinoJson::JsonVariant & json_value)
 {
   bool in_subset = true;
   bool in_range = true;
@@ -1153,19 +1153,19 @@ bool Server::checkArrayParameterElement(Parameter & parameter,
     char subset_str[constants::STRING_LENGTH_ERROR];
     subset_str[0] = '\0';
     subsetToString(subset_str,
-                   subset,
-                   parameter.getType(),
-                   parameter.getArrayElementType(),
-                   constants::STRING_LENGTH_ERROR-1);
+      subset,
+      parameter.getType(),
+      parameter.getArrayElementType(),
+      constants::STRING_LENGTH_ERROR-1);
     response_.returnParameterNotInSubsetError(subset_str,
-                                              parameter.getType());
+      parameter.getType());
   }
   else if (!in_range)
   {
     response_.returnParameterNotInRangeError(parameter.getName(),
-                                             parameter.getType(),
-                                             min_str,
-                                             max_str);
+      parameter.getType(),
+      min_str,
+      max_str);
   }
   bool parameter_ok = in_subset && in_range;
   return parameter_ok;
@@ -1437,10 +1437,10 @@ void Server::writeFirmwareInfoToResponse()
     response_.beginObject();
     response_.write(constants::name_constant_string,firmware_info_ptr->name_ptr);
     versionToString(version_str,
-                    firmware_info_ptr->version_major,
-                    firmware_info_ptr->version_minor,
-                    firmware_info_ptr->version_patch,
-                    constants::STRING_LENGTH_VERSION-1);
+      firmware_info_ptr->version_major,
+      firmware_info_ptr->version_minor,
+      firmware_info_ptr->version_patch,
+      constants::STRING_LENGTH_VERSION-1);
     if (strlen(version_str) > 0)
     {
       response_.write(constants::version_constant_string,version_str);
@@ -1470,10 +1470,10 @@ void Server::writeHardwareInfoToResponse()
       response_.write(constants::part_number_constant_string,hardware_info_ptr->part_number);
     }
     versionToString(version_str,
-                    hardware_info_ptr->version_major,
-                    hardware_info_ptr->version_minor,
-                    -1,
-                    constants::STRING_LENGTH_VERSION-1);
+      hardware_info_ptr->version_major,
+      hardware_info_ptr->version_minor,
+      -1,
+      constants::STRING_LENGTH_VERSION-1);
     if (strlen(version_str) > 0)
     {
       response_.write(constants::version_constant_string,version_str);
@@ -1545,7 +1545,7 @@ void Server::writePinInfoToResponse(const ConstantString & pin_name)
 }
 
 void Server::writeApiToResponse(const ConstantString & verbosity,
-                                ArduinoJson::JsonArray & firmware_name_array)
+  ArduinoJson::JsonArray & firmware_name_array)
 {
   if (response_.error())
   {
@@ -1720,10 +1720,10 @@ size_t Server::getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array)
 }
 
 void Server::versionToString(char* destination,
-                             const long major,
-                             const long minor,
-                             const long patch,
-                             const size_t num)
+  const long major,
+  const long minor,
+  const long patch,
+  const size_t num)
 {
   size_t length_left = num;
   if (length_left == 0)
@@ -1765,10 +1765,10 @@ void Server::versionToString(char* destination,
 }
 
 void Server::subsetToString(char * destination,
-                            Vector<constants::SubsetMemberType> & subset,
-                            const JsonStream::JsonTypes & parameter_type,
-                            const JsonStream::JsonTypes & parameter_array_element_type,
-                            const size_t num)
+  Vector<constants::SubsetMemberType> & subset,
+  const JsonStream::JsonTypes & parameter_type,
+  const JsonStream::JsonTypes & parameter_array_element_type,
+  const size_t num)
 {
   JsonStream::JsonTypes type = parameter_type;
   if (type == JsonStream::ARRAY_TYPE)

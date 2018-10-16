@@ -122,9 +122,9 @@ Functor1<Pin *> & Callback::getFunctor()
 void Callback::attachTo(Pin & pin, const ConstantString & pin_mode)
 {
   if ((&pin_mode == &constants::pin_mode_interrupt_low) ||
-      (&pin_mode == &constants::pin_mode_interrupt_change) ||
-      (&pin_mode == &constants::pin_mode_interrupt_rising) ||
-      (&pin_mode == &constants::pin_mode_interrupt_falling))
+    (&pin_mode == &constants::pin_mode_interrupt_change) ||
+    (&pin_mode == &constants::pin_mode_interrupt_rising) ||
+    (&pin_mode == &constants::pin_mode_interrupt_falling))
   {
     Callback * pin_callback_ptr = pin.getCallbackPtr();
     if (pin_callback_ptr)
@@ -266,11 +266,11 @@ void Callback::detachFromAll()
 }
 
 void Callback::writeApi(Response & response,
-                        bool write_name_only,
-                        bool write_firmware,
-                        bool write_function_parameter_pin_details,
-                        bool write_property_details,
-                        bool write_instance_details)
+  bool write_name_only,
+  bool write_firmware,
+  bool write_function_parameter_pin_details,
+  bool write_property_details,
+  bool write_instance_details)
 {
   if (response.error())
   {
@@ -446,8 +446,8 @@ void Callback::updateFunctionsAndParameters()
   Parameter & pin_name_parameter = createParameter(constants::pin_name_parameter_name);
   pin_name_parameter.setTypeString();
   pin_name_parameter.setSubset(pin_name_array_ptr_->data(),
-                               pin_name_array_ptr_->max_size(),
-                               pin_name_array_ptr_->size());
+    pin_name_array_ptr_->max_size(),
+    pin_name_array_ptr_->size());
 
   Parameter & pin_mode_parameter = createParameter(constants::pin_mode_constant_string);
   pin_mode_parameter.setTypeString();

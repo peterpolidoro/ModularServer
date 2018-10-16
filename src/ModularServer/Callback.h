@@ -60,11 +60,11 @@ public:
   void detachFromAll();
 
   void writeApi(Response & response,
-                bool write_name_only,
-                bool write_firmware,
-                bool write_function_parameter_pin_details,
-                bool write_property_details,
-                bool write_instance_details);
+    bool write_name_only,
+    bool write_firmware,
+    bool write_function_parameter_pin_details,
+    bool write_property_details,
+    bool write_instance_details);
 
 private:
   static Array<Parameter,callback::PARAMETER_COUNT_MAX> parameters_;

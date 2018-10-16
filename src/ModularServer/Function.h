@@ -57,9 +57,9 @@ private:
   size_t getParameterCount();
   void functor();
   void writeApi(Response & response,
-                bool write_name_only,
-                bool write_firmware,
-                bool write_parameter_details);
+    bool write_name_only,
+    bool write_firmware,
+    bool write_parameter_details);
 
   friend class Property;
   friend class Callback;

@@ -58,8 +58,8 @@ private:
   void setMode(const ConstantString & pin_mode);
 
   void writeApi(Response & response,
-                bool write_name_only,
-                bool write_details);
+    bool write_name_only,
+    bool write_details);
   void setPinNumber(const size_t pin_number);
   void enablePullup();
   void disablePullup();

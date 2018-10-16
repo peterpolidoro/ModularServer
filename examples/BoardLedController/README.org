@@ -22,39 +22,39 @@
    Request:
 
    #+BEGIN_SRC sh
-?
+     ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "?",
-  "result": {
-    "device_id": {
-      "name": "board_led_controller",
-      "form_factor": "3x2",
-      "serial_number": 0
-    },
-    "api": {
-      "firmware": [
-        "BoardLedController"
-      ],
-      "verbosity": "NAMES",
-      "functions": [
-        "setLedOn",
-        "setLedOff",
-        "getLedPinNumber",
-        "blinkLed"
-      ],
-      "parameters": [
-        "duration_on",
-        "duration_off",
-        "count"
-      ]
-    }
-  }
-}
+     {
+       "id": "?",
+       "result": {
+         "device_id": {
+           "name": "board_led_controller",
+           "form_factor": "3x2",
+           "serial_number": 0
+         },
+         "api": {
+           "firmware": [
+             "BoardLedController"
+           ],
+           "verbosity": "NAMES",
+           "functions": [
+             "setLedOn",
+             "setLedOff",
+             "getLedPinNumber",
+             "blinkLed"
+           ],
+           "parameters": [
+             "duration_on",
+             "duration_off",
+             "count"
+           ]
+         }
+       }
+     }
    #+END_SRC
 
    The form_factor and serial_number may be different on your board than the ones
@@ -67,57 +67,57 @@
    Request:
 
    #+BEGIN_SRC sh
-??
+     ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "??",
-  "result": {
-    "device_id": {
-      "name": "board_led_controller",
-      "form_factor": "3x2",
-      "serial_number": 0
-    },
-    "api": {
-      "firmware": [
-        "ALL"
-      ],
-      "verbosity": "NAMES",
-      "functions": [
-        "getDeviceId",
-        "getDeviceInfo",
-        "getApi",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getPinInfo",
-        "setPinMode",
-        "getPinValue",
-        "setPinValue",
-        "setLedOn",
-        "setLedOff",
-        "getLedPinNumber",
-        "blinkLed"
-      ],
-      "parameters": [
-        "firmware",
-        "verbosity",
-        "pin_name",
-        "pin_mode",
-        "pin_value",
-        "duration_on",
-        "duration_off",
-        "count"
-      ],
-      "properties": [
-        "serialNumber"
-      ]
-    }
-  }
-}
+     {
+       "id": "??",
+       "result": {
+         "device_id": {
+           "name": "board_led_controller",
+           "form_factor": "3x2",
+           "serial_number": 0
+         },
+         "api": {
+           "firmware": [
+             "ALL"
+           ],
+           "verbosity": "NAMES",
+           "functions": [
+             "getDeviceId",
+             "getDeviceInfo",
+             "getApi",
+             "getPropertyDefaultValues",
+             "setPropertiesToDefaults",
+             "getPropertyValues",
+             "getPinInfo",
+             "setPinMode",
+             "getPinValue",
+             "setPinValue",
+             "setLedOn",
+             "setLedOff",
+             "getLedPinNumber",
+             "blinkLed"
+           ],
+           "parameters": [
+             "firmware",
+             "verbosity",
+             "pin_name",
+             "pin_mode",
+             "pin_value",
+             "duration_on",
+             "duration_off",
+             "count"
+           ],
+           "properties": [
+             "serialNumber"
+           ]
+         }
+       }
+     }
    #+END_SRC
 
    "functions" is an array of user functions. To execute a function, simply type it
@@ -130,31 +130,31 @@
    Request:
 
    #+BEGIN_SRC sh
-setPropertiesToDefaults ["ALL"]
+     setPropertiesToDefaults ["ALL"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPropertiesToDefaults",
-  "result": null
-}
+     {
+       "id": "setPropertiesToDefaults",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-setLedOn
+     setLedOn
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setLedOn",
-  "result": null
-}
+     {
+       "id": "setLedOn",
+       "result": null
+     }
    #+END_SRC
 
    Notice that the LED on the Arduino board has turned ON.
@@ -162,20 +162,20 @@ setLedOn
    Request:
 
    #+BEGIN_SRC sh
-blinkLed
+     blinkLed
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "error": {
-    "message": "Invalid params",
-    "data": "Incorrect number of parameters. 0 given. 3 needed.",
-    "code": -32602
-  }
-}
+     {
+       "id": "blinkLed",
+       "error": {
+         "message": "Invalid params",
+         "data": "Incorrect number of parameters. 0 given. 3 needed.",
+         "code": -32602
+       }
+     }
    #+END_SRC
 
    When a function executes successfully, the response will contain a
@@ -189,24 +189,24 @@ blinkLed
    Request:
 
    #+BEGIN_SRC sh
-blinkLed ?
+     blinkLed ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": {
-    "name": "blinkLed",
-    "firmware": "BoardLedController",
-    "parameters": [
-      "duration_on",
-      "duration_off",
-      "count"
-    ]
-  }
-}
+     {
+       "id": "blinkLed",
+       "result": {
+         "name": "blinkLed",
+         "firmware": "BoardLedController",
+         "parameters": [
+           "duration_on",
+           "duration_off",
+           "count"
+         ]
+       }
+     }
    #+END_SRC
 
    The blinkLed function requires 3 parameters.
@@ -217,23 +217,23 @@ blinkLed ?
    Request:
 
    #+BEGIN_SRC sh
-blinkLed duration_on ?
+     blinkLed duration_on ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": {
-    "name": "duration_on",
-    "firmware": "BoardLedController",
-    "type": "double",
-    "min": 0.100000,
-    "max": 2.500000,
-    "units": "seconds"
-  }
-}
+     {
+       "id": "blinkLed",
+       "result": {
+         "name": "duration_on",
+         "firmware": "BoardLedController",
+         "type": "double",
+         "min": 0.100000,
+         "max": 2.500000,
+         "units": "seconds"
+       }
+     }
    #+END_SRC
 
    To get more information about all of the parameters a function takes,
@@ -242,41 +242,41 @@ blinkLed duration_on ?
    Request:
 
    #+BEGIN_SRC sh
-blinkLed ??
+     blinkLed ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": {
-    "name": "blinkLed",
-    "firmware": "BoardLedController",
-    "parameters": [
-      {
-        "name": "duration_on",
-        "type": "double",
-        "min": 0.100000,
-        "max": 2.500000,
-        "units": "seconds"
-      },
-      {
-        "name": "duration_off",
-        "type": "double",
-        "min": 0.100000,
-        "max": 2.500000,
-        "units": "seconds"
-      },
-      {
-        "name": "count",
-        "type": "long",
-        "min": 1,
-        "max": 100
-      }
-    ]
-  }
-}
+     {
+       "id": "blinkLed",
+       "result": {
+         "name": "blinkLed",
+         "firmware": "BoardLedController",
+         "parameters": [
+           {
+             "name": "duration_on",
+             "type": "double",
+             "min": 0.100000,
+             "max": 2.500000,
+             "units": "seconds"
+           },
+           {
+             "name": "duration_off",
+             "type": "double",
+             "min": 0.100000,
+             "max": 2.500000,
+             "units": "seconds"
+           },
+           {
+             "name": "count",
+             "type": "long",
+             "min": 1,
+             "max": 100
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    It works the same if the question marks are before or after the
@@ -285,41 +285,41 @@ blinkLed ??
    Request:
 
    #+BEGIN_SRC sh
-?? blinkLed
+     ?? blinkLed
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed 3.0 0.2 20
+     blinkLed 3.0 0.2 20
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "error": {
-    "message": "Invalid params",
-    "data": "Parameter value out of range: 0.100000 <= duration_on <= 2.500000",
-    "code": -32602
-  }
-}
+     {
+       "id": "blinkLed",
+       "error": {
+         "message": "Invalid params",
+         "data": "Parameter value out of range: 0.100000 <= duration_on <= 2.500000",
+         "code": -32602
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed 0.5 0.2 20
+     blinkLed 0.5 0.2 20
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": null
-}
+     {
+       "id": "blinkLed",
+       "result": null
+     }
    #+END_SRC
 
    Notice that the LED on the Arduino board has blinked 20 times, with an
@@ -328,37 +328,37 @@ blinkLed 0.5 0.2 20
    Request:
 
    #+BEGIN_SRC sh
-getLedPinNumber ?
+     getLedPinNumber ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getLedPinNumber",
-  "result": {
-    "name": "getLedPinNumber",
-    "firmware": "BoardLedController",
-    "result_info": {
-      "type": "long"
-    }
-  }
-}
+     {
+       "id": "getLedPinNumber",
+       "result": {
+         "name": "getLedPinNumber",
+         "firmware": "BoardLedController",
+         "result_info": {
+           "type": "long"
+         }
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-getLedPinNumber
+     getLedPinNumber
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getLedPinNumber",
-  "result": 13
-}
+     {
+       "id": "getLedPinNumber",
+       "result": 13
+     }
    #+END_SRC
 
    Use the getDeviceId function to get a unique set of values to identify
@@ -367,20 +367,20 @@ getLedPinNumber
    Request:
 
    #+BEGIN_SRC sh
-getDeviceId
+     getDeviceId
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getDeviceId",
-  "result": {
-    "name": "board_led_controller",
-    "form_factor": "3x2",
-    "serial_number": 0
-  }
-}
+     {
+       "id": "getDeviceId",
+       "result": {
+         "name": "board_led_controller",
+         "form_factor": "3x2",
+         "serial_number": 0
+       }
+     }
    #+END_SRC
 
    The serial_number property can be changed to uniquely identify devices
@@ -392,37 +392,37 @@ getDeviceId
    Request:
 
    #+BEGIN_SRC sh
-getDeviceInfo
+     getDeviceInfo
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getDeviceInfo",
-  "result": {
-    "processor": "MK20DX256",
-    "hardware": [
-      {
-        "name": "Teensy",
-        "version": "3.2",
-        "pins": [
-          "led"
-        ]
-      }
-    ],
-    "firmware": [
-      {
-        "name": "ModularServer",
-        "version": "5.0.0"
-      },
-      {
-        "name": "BoardLedController",
-        "version": "2.0.0"
-      }
-    ]
-  }
-}
+     {
+       "id": "getDeviceInfo",
+       "result": {
+         "processor": "MK20DX256",
+         "hardware": [
+           {
+             "name": "Teensy",
+             "version": "3.2",
+             "pins": [
+               "led"
+             ]
+           }
+         ],
+         "firmware": [
+           {
+             "name": "ModularServer",
+             "version": "5.0.0"
+           },
+           {
+             "name": "BoardLedController",
+             "version": "2.0.0"
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Every function, parameter, property, and callback belongs to one
@@ -440,201 +440,201 @@ getDeviceInfo
    Request:
 
    #+BEGIN_SRC sh
-getApi NAMES ["ALL"]
+     getApi NAMES ["ALL"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "ALL"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "getDeviceId",
-      "getDeviceInfo",
-      "getApi",
-      "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "getPropertyValues",
-      "getPinInfo",
-      "setPinMode",
-      "getPinValue",
-      "setPinValue",
-      "setLedOn",
-      "setLedOff",
-      "getLedPinNumber",
-      "blinkLed"
-    ],
-    "parameters": [
-      "firmware",
-      "verbosity",
-      "pin_name",
-      "pin_mode",
-      "pin_value",
-      "duration_on",
-      "duration_off",
-      "count"
-    ],
-    "properties": [
-      "serialNumber"
-    ]
-  }
-}
+     {
+       "id": "getApi",
+       "result": {
+         "firmware": [
+           "ALL"
+         ],
+         "verbosity": "NAMES",
+         "functions": [
+           "getDeviceId",
+           "getDeviceInfo",
+           "getApi",
+           "getPropertyDefaultValues",
+           "setPropertiesToDefaults",
+           "getPropertyValues",
+           "getPinInfo",
+           "setPinMode",
+           "getPinValue",
+           "setPinValue",
+           "setLedOn",
+           "setLedOff",
+           "getLedPinNumber",
+           "blinkLed"
+         ],
+         "parameters": [
+           "firmware",
+           "verbosity",
+           "pin_name",
+           "pin_mode",
+           "pin_value",
+           "duration_on",
+           "duration_off",
+           "count"
+         ],
+         "properties": [
+           "serialNumber"
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-getApi NAMES ["BoardLedController"]
+     getApi NAMES ["BoardLedController"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "BoardLedController"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "setLedOn",
-      "setLedOff",
-      "getLedPinNumber",
-      "blinkLed"
-    ],
-    "parameters": [
-      "duration_on",
-      "duration_off",
-      "count"
-    ]
-  }
-}
+     {
+       "id": "getApi",
+       "result": {
+         "firmware": [
+           "BoardLedController"
+         ],
+         "verbosity": "NAMES",
+         "functions": [
+           "setLedOn",
+           "setLedOff",
+           "getLedPinNumber",
+           "blinkLed"
+         ],
+         "parameters": [
+           "duration_on",
+           "duration_off",
+           "count"
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-getApi GENERAL ["BoardLedController"]
+     getApi GENERAL ["BoardLedController"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "BoardLedController"
-    ],
-    "verbosity": "GENERAL",
-    "functions": [
-      {
-        "name": "setLedOn"
-      },
-      {
-        "name": "setLedOff"
-      },
-      {
-        "name": "getLedPinNumber",
-        "result_info": {
-          "type": "long"
-        }
-      },
-      {
-        "name": "blinkLed",
-        "parameters": [
-          "duration_on",
-          "duration_off",
-          "count"
-        ]
-      }
-    ],
-    "parameters": [
-      {
-        "name": "duration_on",
-        "type": "double"
-      },
-      {
-        "name": "duration_off",
-        "type": "double"
-      },
-      {
-        "name": "count",
-        "type": "long"
-      }
-    ]
-  }
-}
+     {
+       "id": "getApi",
+       "result": {
+         "firmware": [
+           "BoardLedController"
+         ],
+         "verbosity": "GENERAL",
+         "functions": [
+           {
+             "name": "setLedOn"
+           },
+           {
+             "name": "setLedOff"
+           },
+           {
+             "name": "getLedPinNumber",
+             "result_info": {
+               "type": "long"
+             }
+           },
+           {
+             "name": "blinkLed",
+             "parameters": [
+               "duration_on",
+               "duration_off",
+               "count"
+             ]
+           }
+         ],
+         "parameters": [
+           {
+             "name": "duration_on",
+             "type": "double"
+           },
+           {
+             "name": "duration_off",
+             "type": "double"
+           },
+           {
+             "name": "count",
+             "type": "long"
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-getApi DETAILED ["BoardLedController"]
+     getApi DETAILED ["BoardLedController"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "BoardLedController"
-    ],
-    "verbosity": "DETAILED",
-    "functions": [
-      {
-        "name": "setLedOn"
-      },
-      {
-        "name": "setLedOff"
-      },
-      {
-        "name": "getLedPinNumber",
-        "result_info": {
-          "type": "long"
-        }
-      },
-      {
-        "name": "blinkLed",
-        "parameters": [
-          "duration_on",
-          "duration_off",
-          "count"
-        ]
-      }
-    ],
-    "parameters": [
-      {
-        "name": "duration_on",
-        "type": "double",
-        "min": 0.100000,
-        "max": 2.500000,
-        "units": "seconds"
-      },
-      {
-        "name": "duration_off",
-        "type": "double",
-        "min": 0.100000,
-        "max": 2.500000,
-        "units": "seconds"
-      },
-      {
-        "name": "count",
-        "type": "long",
-        "min": 1,
-        "max": 100
-      }
-    ]
-  }
-}
+     {
+       "id": "getApi",
+       "result": {
+         "firmware": [
+           "BoardLedController"
+         ],
+         "verbosity": "DETAILED",
+         "functions": [
+           {
+             "name": "setLedOn"
+           },
+           {
+             "name": "setLedOff"
+           },
+           {
+             "name": "getLedPinNumber",
+             "result_info": {
+               "type": "long"
+             }
+           },
+           {
+             "name": "blinkLed",
+             "parameters": [
+               "duration_on",
+               "duration_off",
+               "count"
+             ]
+           }
+         ],
+         "parameters": [
+           {
+             "name": "duration_on",
+             "type": "double",
+             "min": 0.100000,
+             "max": 2.500000,
+             "units": "seconds"
+           },
+           {
+             "name": "duration_off",
+             "type": "double",
+             "min": 0.100000,
+             "max": 2.500000,
+             "units": "seconds"
+           },
+           {
+             "name": "count",
+             "type": "long",
+             "min": 1,
+             "max": 100
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Another way to turn off and on the LED is to use the pin functions.
@@ -642,37 +642,37 @@ getApi DETAILED ["BoardLedController"]
    Request:
 
    #+BEGIN_SRC sh
-getPinInfo ALL
+     getPinInfo ALL
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getPinInfo",
-  "result": [
-    {
-      "name": "led",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_OUTPUT"
-    }
-  ]
-}
+     {
+       "id": "getPinInfo",
+       "result": [
+         {
+           "name": "led",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_OUTPUT"
+         }
+       ]
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-setPinValue led 1
+     setPinValue led 1
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPinValue",
-  "result": 1
-}
+     {
+       "id": "setPinValue",
+       "result": 1
+     }
    #+END_SRC
 
    Notice the LED has turned ON.
@@ -680,16 +680,16 @@ setPinValue led 1
    Request:
 
    #+BEGIN_SRC sh
-setPinValue led 0
+     setPinValue led 0
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPinValue",
-  "result": 0
-}
+     {
+       "id": "setPinValue",
+       "result": 0
+     }
    #+END_SRC
 
    Notice the LED has turned OFF.
@@ -697,72 +697,72 @@ setPinValue led 0
    Request:
 
    #+BEGIN_SRC sh
-setPinMode ??
+     setPinMode ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPinMode",
-  "result": {
-    "name": "setPinMode",
-    "firmware": "ModularServer",
-    "parameters": [
-      {
-        "name": "pin_name",
-        "type": "string",
-        "subset": [
-          "ALL",
-          "led"
-        ]
-      },
-      {
-        "name": "pin_mode",
-        "type": "string",
-        "subset": [
-          "DIGITAL_INPUT",
-          "DIGITAL_INPUT_PULLUP",
-          "DIGITAL_OUTPUT",
-          "ANALOG_INPUT",
-          "ANALOG_OUTPUT",
-          "PULSE_RISING",
-          "PULSE_FALLING"
-        ]
-      }
-    ]
-  }
-}
+     {
+       "id": "setPinMode",
+       "result": {
+         "name": "setPinMode",
+         "firmware": "ModularServer",
+         "parameters": [
+           {
+             "name": "pin_name",
+             "type": "string",
+             "subset": [
+               "ALL",
+               "led"
+             ]
+           },
+           {
+             "name": "pin_mode",
+             "type": "string",
+             "subset": [
+               "DIGITAL_INPUT",
+               "DIGITAL_INPUT_PULLUP",
+               "DIGITAL_OUTPUT",
+               "ANALOG_INPUT",
+               "ANALOG_OUTPUT",
+               "PULSE_RISING",
+               "PULSE_FALLING"
+             ]
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-setPinMode led PULSE_RISING
+     setPinMode led PULSE_RISING
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPinMode",
-  "result": null
-}
+     {
+       "id": "setPinMode",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-setPinValue led 100
+     setPinValue led 100
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPinValue",
-  "result": 0
-}
+     {
+       "id": "setPinValue",
+       "result": 0
+     }
    #+END_SRC
 
    Notice the LED has pulsed ON for 100ms.
@@ -772,75 +772,75 @@ setPinValue led 100
    Example Python session:
 
    #+BEGIN_SRC python
-from modular_client import ModularClient
-dev = ModularClient() # Automatically finds device if one available
-dev.get_device_id()
-{'form_factor': '3x2', 'name': 'board_led_controller', 'serial_number': 0}
-dev.get_methods()
-['set_led_on',
- 'get_pin_info',
- 'get_api',
- 'serial_number',
- 'get_property_values',
- 'get_device_id',
- 'blink_led',
- 'set_led_off',
- 'get_led_pin_number',
- 'get_property_default_values',
- 'set_properties_to_defaults',
- 'set_pin_mode',
- 'get_pin_value',
- 'set_pin_value',
- 'get_device_info']
-dev.set_properties_to_defaults(['ALL'])
-dev.set_led_on()
-dev.set_led_off()
-dev.blink_led()
-IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
-dev.blink_led('?')
-{'firmware': 'BoardLedController',
- 'name': 'blinkLed',
- 'parameters': ['duration_on', 'duration_off', 'count']}
-dev.blink_led('duration_on','?')
-{'firmware': 'BoardLedController',
- 'max': 2.5,
- 'min': 0.1,
- 'name': 'duration_on',
- 'type': 'double',
- 'units': 'seconds'}
-dev.blink_led('??')
-{'firmware': 'BoardLedController',
- 'name': 'blinkLed',
- 'parameters': [{'max': 2.5,
-   'min': 0.1,
-   'name': 'duration_on',
-   'type': 'double',
-   'units': 'seconds'},
-  {'max': 2.5,
-   'min': 0.1,
-   'name': 'duration_off',
-   'type': 'double',
-   'units': 'seconds'},
-  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}]}
-dev.blink_led(3.0,0.2,20)
-IOError: (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
-dev.blink_led(0.5,0.2,20)
-result = dev.get_led_pin_number('?')
-dev.convert_to_json(result)
-'{"firmware":"BoardLedController","name":"getLedPinNumber","result_info":{"type":"long"}}'
-dev.get_led_pin_number()
-13
-dev.call_get_result("get_led_pin_number")
-13
-dev.send_json_request('["get_led_pin_number"]')
-13
-dev.call("blink_led",0.5,0.2,20)
-dev.send_json_request('["blink_led",0.5,0.2,20]')
-dev.get_api('NAMES',["BoardLedController"])
-{'firmware': ['BoardLedController'],
- 'functions': ['setLedOn', 'setLedOff', 'getLedPinNumber', 'blinkLed'],
- 'parameters': ['duration_on', 'duration_off', 'count'],
- 'verbosity': 'NAMES'}
+     from modular_client import ModularClient
+     dev = ModularClient() # Automatically finds device if one available
+     dev.get_device_id()
+     {'form_factor': '3x2', 'name': 'board_led_controller', 'serial_number': 0}
+     dev.get_methods()
+     ['set_led_on',
+      'get_pin_info',
+      'get_api',
+      'serial_number',
+      'get_property_values',
+      'get_device_id',
+      'blink_led',
+      'set_led_off',
+      'get_led_pin_number',
+      'get_property_default_values',
+      'set_properties_to_defaults',
+      'set_pin_mode',
+      'get_pin_value',
+      'set_pin_value',
+      'get_device_info']
+     dev.set_properties_to_defaults(['ALL'])
+     dev.set_led_on()
+     dev.set_led_off()
+     dev.blink_led()
+     IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
+     dev.blink_led('?')
+     {'firmware': 'BoardLedController',
+      'name': 'blinkLed',
+      'parameters': ['duration_on', 'duration_off', 'count']}
+     dev.blink_led('duration_on','?')
+     {'firmware': 'BoardLedController',
+      'max': 2.5,
+      'min': 0.1,
+      'name': 'duration_on',
+      'type': 'double',
+      'units': 'seconds'}
+     dev.blink_led('??')
+     {'firmware': 'BoardLedController',
+      'name': 'blinkLed',
+      'parameters': [{'max': 2.5,
+                      'min': 0.1,
+                      'name': 'duration_on',
+                      'type': 'double',
+                      'units': 'seconds'},
+                     {'max': 2.5,
+                      'min': 0.1,
+                      'name': 'duration_off',
+                      'type': 'double',
+                      'units': 'seconds'},
+                     {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}]}
+     dev.blink_led(3.0,0.2,20)
+     IOError: (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
+     dev.blink_led(0.5,0.2,20)
+     result = dev.get_led_pin_number('?')
+     dev.convert_to_json(result)
+     '{"firmware":"BoardLedController","name":"getLedPinNumber","result_info":{"type":"long"}}'
+     dev.get_led_pin_number()
+     13
+     dev.call_get_result("get_led_pin_number")
+     13
+     dev.send_json_request('["get_led_pin_number"]')
+     13
+     dev.call("blink_led",0.5,0.2,20)
+     dev.send_json_request('["blink_led",0.5,0.2,20]')
+     dev.get_api('NAMES',["BoardLedController"])
+     {'firmware': ['BoardLedController'],
+      'functions': ['setLedOn', 'setLedOff', 'getLedPinNumber', 'blinkLed'],
+      'parameters': ['duration_on', 'duration_off', 'count'],
+      'verbosity': 'NAMES'}
    #+END_SRC
 
    For more details on the Python interface:
@@ -852,80 +852,80 @@ dev.get_api('NAMES',["BoardLedController"])
    Example Matlab session:
 
    #+BEGIN_SRC matlab
-% Linux and Mac OS X
-ls /dev/tty*
-serial_port = '/dev/ttyACM0';    % example Linux serial port
-serial_port = '/dev/tty.usbmodem262471';% example Mac OS X serial port
-% Windows
-getAvailableComPorts()
-ans =
-  'COM1'
-  'COM4'
-serial_port = 'COM4';            % example Windows serial port
-dev = ModularClient(serial_port);% creates a device object
-dev.open()                       % opens a serial connection to the device
-dev.getDeviceId()
-ans =
-  name: 'board_led_controller'
-  form_factor: '3x2'
-  serial_number: 0
-dev.getMethods()                 % get device methods
-  Modular Device Methods
-  ---------------------
-  getDeviceId
-  getDeviceInfo
-  getApi
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getPinInfo
-  setPinMode
-  getPinValue
-  setPinValue
-  setLedOn
-  setLedOff
-  getLedPinNumber
-  blinkLed
-  serialNumber
-dev.setPropertiesToDefaults({'ALL'});
-dev.blinkLed()
-Error using ModularClient/sendRequest (line 301)
-(from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
-method_info = dev.blinkLed('?')
-method_info =
-  name: 'blinkLed'
-  firmware: 'BoardLedController'
-  parameters: {'duration_on'  'duration_off'  'count'}
-parameter_info = dev.blinkLed('duration_on','?')
-parameter_info =
-  name: 'duration_on'
-  firmware: 'BoardLedController'
-  type: 'double'
-  min: 0.1000
-  max: 2.5000
-  units: 'seconds'
-dev.blinkLed(3.0,0.2,20)
-(from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
-dev.blinkLed(0.5,0.2,20);
-led_pin_number = dev.getLedPinNumber()
-led_pin_number =
-  13
-led_pin_number = dev.callGetResult('getLedPinNumber')
-led_pin_number =
-  13
-led_pin_number = dev.sendJsonRequest('["getLedPinNumber"]')
-led_pin_number =
-  13
-dev.call('blinkLed',0.5,0.2,20)
-dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')
-dev.getApi('NAMES',{'BoardLedController'})
-ans =
-  firmware: {'BoardLedController'}
-  verbosity: 'NAMES'
-  functions: {'setLedOn'  'setLedOff'  'getLedPinNumber'  'blinkLed'}
-  parameters: {'duration_on'  'duration_off'  'count'}
-dev.close()
-clear dev
+     % Linux and Mac OS X
+     ls /dev/tty*
+     serial_port = '/dev/ttyACM0';    % example Linux serial port
+     serial_port = '/dev/tty.usbmodem262471';% example Mac OS X serial port
+                                             % Windows
+     getAvailableComPorts()
+     ans =
+     'COM1'
+     'COM4'
+     serial_port = 'COM4';            % example Windows serial port
+     dev = ModularClient(serial_port);% creates a device object
+     dev.open()                       % opens a serial connection to the device
+     dev.getDeviceId()
+     ans =
+     name: 'board_led_controller'
+     form_factor: '3x2'
+     serial_number: 0
+     dev.getMethods()                 % get device methods
+     Modular Device Methods
+     ---------------------
+     getDeviceId
+     getDeviceInfo
+     getApi
+     getPropertyDefaultValues
+     setPropertiesToDefaults
+     getPropertyValues
+     getPinInfo
+     setPinMode
+     getPinValue
+     setPinValue
+     setLedOn
+     setLedOff
+     getLedPinNumber
+     blinkLed
+     serialNumber
+     dev.setPropertiesToDefaults({'ALL'});
+     dev.blinkLed()
+     Error using ModularClient/sendRequest (line 301)
+     (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 3 needed., code: -32602
+     method_info = dev.blinkLed('?')
+     method_info =
+     name: 'blinkLed'
+     firmware: 'BoardLedController'
+     parameters: {'duration_on'  'duration_off'  'count'}
+     parameter_info = dev.blinkLed('duration_on','?')
+     parameter_info =
+     name: 'duration_on'
+     firmware: 'BoardLedController'
+     type: 'double'
+     min: 0.1000
+     max: 2.5000
+     units: 'seconds'
+     dev.blinkLed(3.0,0.2,20)
+     (from server) message: Invalid params, data: Parameter value out of range: 0.100000 <= duration_on <= 2.500000, code: -32602
+     dev.blinkLed(0.5,0.2,20);
+     led_pin_number = dev.getLedPinNumber()
+     led_pin_number =
+     13
+     led_pin_number = dev.callGetResult('getLedPinNumber')
+     led_pin_number =
+     13
+     led_pin_number = dev.sendJsonRequest('["getLedPinNumber"]')
+     led_pin_number =
+     13
+     dev.call('blinkLed',0.5,0.2,20)
+     dev.sendJsonRequest('["blinkLed",0.5,0.2,20]')
+     dev.getApi('NAMES',{'BoardLedController'})
+     ans =
+     firmware: {'BoardLedController'}
+     verbosity: 'NAMES'
+     functions: {'setLedOn'  'setLedOff'  'getLedPinNumber'  'blinkLed'}
+     parameters: {'duration_on'  'duration_off'  'count'}
+     dev.close()
+     clear dev
    #+END_SRC
 
    For more details on the Matlab interface:

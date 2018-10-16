@@ -44,7 +44,7 @@ void ModularServer::removeHardware()
 
 // Pins
 Pin & ModularServer::createPin(const ConstantString & pin_name,
-                               const size_t pin_number)
+  const size_t pin_number)
 {
   return server_.createPin(pin_name,pin_number);
 }
@@ -74,7 +74,7 @@ Parameter & ModularServer::parameter(const ConstantString & parameter_name)
 }
 
 Parameter & ModularServer::copyParameter(Parameter & parameter,
-                                         const ConstantString & parameter_name)
+  const ConstantString & parameter_name)
 {
   return server_.copyParameter(parameter,parameter_name);
 }
@@ -91,7 +91,7 @@ Function & ModularServer::function(const ConstantString & function_name)
 }
 
 Function & ModularServer::copyFunction(Function & function,
-                                       const ConstantString & function_name)
+  const ConstantString & function_name)
 {
   return server_.copyFunction(function,function_name);
 }

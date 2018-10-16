@@ -44,7 +44,7 @@ public:
   void setRange(const constants::NumberType min, const constants::NumberType max);
   void removeRange();
   void setArrayLengthRange(const size_t array_length_min,
-                           const size_t array_length_max);
+    const size_t array_length_max);
   void removeArrayLengthRange();
   template <size_t MAX_SIZE>
   void setSubset(constants::SubsetMemberType (&subset)[MAX_SIZE], size_t size=MAX_SIZE);
@@ -101,10 +101,10 @@ private:
   bool valueInSubset(const ConstantString * value);
   Vector<constants::SubsetMemberType> & getSubset();
   void writeApi(Response & response,
-                bool write_name_only,
-                bool is_property,
-                bool write_firmware,
-                bool write_instance_details);
+    bool write_name_only,
+    bool is_property,
+    bool write_firmware,
+    bool write_instance_details);
   static Functor1wRet<const ConstantString &, ArduinoJson::JsonVariant> get_value_functor_;
   friend class Property;
   friend class Function;

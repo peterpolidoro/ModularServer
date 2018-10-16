@@ -20,7 +20,7 @@ namespace modular_server
 // Hardware
 template <size_t PINS_MAX_SIZE>
 void Server::addHardware(const constants::HardwareInfo & hardware_info,
-                         Pin (&pins)[PINS_MAX_SIZE])
+  Pin (&pins)[PINS_MAX_SIZE])
 {
   hardware_info_array_.push_back(&hardware_info);
   pins_.addArray(pins);
@@ -30,14 +30,14 @@ void Server::addHardware(const constants::HardwareInfo & hardware_info,
 
 // Firmware
 template <size_t PROPERTIES_MAX_SIZE,
-          size_t PARAMETERS_MAX_SIZE,
-          size_t FUNCTIONS_MAX_SIZE,
-          size_t CALLBACKS_MAX_SIZE>
+  size_t PARAMETERS_MAX_SIZE,
+  size_t FUNCTIONS_MAX_SIZE,
+  size_t CALLBACKS_MAX_SIZE>
 void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
-                         Property (&properties)[PROPERTIES_MAX_SIZE],
-                         Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                         Function (&functions)[FUNCTIONS_MAX_SIZE],
-                         Callback (&callbacks)[CALLBACKS_MAX_SIZE])
+  Property (&properties)[PROPERTIES_MAX_SIZE],
+  Parameter (&parameters)[PARAMETERS_MAX_SIZE],
+  Function (&functions)[FUNCTIONS_MAX_SIZE],
+  Callback (&callbacks)[CALLBACKS_MAX_SIZE])
 {
   firmware_info_array_.push_back(&firmware_info);
   constants::SubsetMemberType firmware_name;
@@ -56,13 +56,13 @@ void Server::addFirmware(const constants::FirmwareInfo & firmware_info,
 // Properties
 template <typename T>
 Property & Server::createProperty(const ConstantString & property_name,
-                                  const T & default_value)
+  const T & default_value)
 {
   int property_index = findPropertyIndex(property_name);
   if (property_index < 0)
   {
     properties_.push_back(Property(property_name,
-                                   default_value));
+        default_value));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
     properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return properties_.back();
@@ -72,13 +72,13 @@ Property & Server::createProperty(const ConstantString & property_name,
 
 template <typename T, size_t N>
 Property & Server::createProperty(const ConstantString & property_name,
-                                  const T (&default_value)[N])
+  const T (&default_value)[N])
 {
   int property_index = findPropertyIndex(property_name);
   if (property_index < 0)
   {
     properties_.push_back(Property(property_name,
-                                   default_value));
+        default_value));
     const ConstantString * firmware_name_ptr = firmware_info_array_.back()->name_ptr;
     properties_.back().parameter().setFirmwareName(*firmware_name_ptr);
     return properties_.back();
@@ -155,7 +155,7 @@ int Server::findParameterIndex(T const & parameter_name)
 
 template <typename T>
 int Server::findFunctionParameterIndex(Function & function,
-                                       T const & parameter_name)
+  T const & parameter_name)
 {
   int parameter_index = -1;
   Array<Parameter *,constants::FUNCTION_PARAMETER_COUNT_MAX> * parameter_ptrs_ptr = NULL;

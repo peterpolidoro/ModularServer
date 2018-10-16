@@ -195,9 +195,9 @@ void Function::functor()
 }
 
 void Function::writeApi(Response & response,
-                        bool write_name_only,
-                        bool write_firmware,
-                        bool write_parameter_details)
+  bool write_name_only,
+  bool write_firmware,
+  bool write_parameter_details)
 {
   if (response.error())
   {

@@ -74,10 +74,10 @@ public:
   bool getValue(Array<const ConstantString *,N> & value);
   template <typename T>
   bool getValue(T * value,
-                const size_t N);
+    const size_t N);
   template <typename T>
   bool getElementValue(const size_t element_index,
-                       T & element_value);
+    T & element_value);
   template <typename T>
   bool getDefaultValue(T & default_value);
   template <size_t N>
@@ -90,14 +90,14 @@ public:
   bool getDefaultValue(Array<const ConstantString *,N> & default_value);
   template <typename T>
   bool getDefaultValue(T * default_value,
-                       const size_t N);
+    const size_t N);
   template <typename T>
   bool getDefaultElementValue(const size_t element_index,
-                              T & default_element_value);
+    T & default_element_value);
 
   template <typename T>
   bool setElementValue(const size_t element_index,
-                       const T & element_value);
+    const T & element_value);
   template <typename T>
   bool setValue(const T & value);
   template <size_t N>
@@ -111,7 +111,7 @@ public:
   bool setValue(ArduinoJson::JsonArray & value);
   template <typename T>
   bool setValue(T * value,
-                const size_t N);
+    const size_t N);
   template <typename T>
   bool setAllElementValues(const T & element_value);
   template <typename T>
@@ -137,7 +137,7 @@ public:
   size_t getArrayLength();
   void setArrayLength(const size_t array_length);
   void setArrayLengthRange(const size_t array_length_min,
-                           const size_t array_length_max);
+    const size_t array_length_max);
   size_t getArrayLengthMin();
   size_t getArrayLengthMax();
 
@@ -223,22 +223,22 @@ private:
 
   template <typename T>
   Property(const ConstantString & name,
-           const T & default_value);
+    const T & default_value);
   template <size_t N>
   Property(const ConstantString & name,
-           const long (&default_value)[N]);
+    const long (&default_value)[N]);
   template <size_t N>
   Property(const ConstantString & name,
-           const double (&default_value)[N]);
+    const double (&default_value)[N]);
   template <size_t N>
   Property(const ConstantString & name,
-           const bool (&default_value)[N]);
+    const bool (&default_value)[N]);
   template <size_t N>
   Property(const ConstantString & name,
-           const char (&default_value)[N]);
+    const char (&default_value)[N]);
   template <size_t N>
   Property(const ConstantString & name,
-           const ConstantString * const (&default_value)[N]);
+    const ConstantString * const (&default_value)[N]);
 
   void setup();
   Parameter & parameter();
@@ -264,14 +264,14 @@ private:
   void postSetValueFunctor();
   void postSetElementValueFunctor(const size_t element_index);
   void writeValue(Response & response,
-                  bool write_key=false,
-                  bool write_default=false,
-                  int element_index=-1);
+    bool write_key=false,
+    bool write_default=false,
+    int element_index=-1);
   void writeApi(Response & response,
-                bool write_name_only,
-                bool write_firmware,
-                bool write_function_parameter_details,
-                bool write_instance_details);
+    bool write_name_only,
+    bool write_firmware,
+    bool write_function_parameter_details,
+    bool write_instance_details);
   void updateFunctionsAndParameters();
 
   // Handlers

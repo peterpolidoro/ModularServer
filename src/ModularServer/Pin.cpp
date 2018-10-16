@@ -124,21 +124,21 @@ void Pin::setValue(const int value)
   else if (mode_ptr_ == &constants::pin_mode_pulse_rising)
   {
     EventIdPair event_id_pair = pin_pulse_event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&Pin::setPinHighHandler),
-                                                                             makeFunctor((Functor1<int> *)0,*this,&Pin::setPinLowHandler),
-                                                                             constants::pin_pulse_delay,
-                                                                             value*2,
-                                                                             value,
-                                                                             constants::pin_pulse_count);
+      makeFunctor((Functor1<int> *)0,*this,&Pin::setPinLowHandler),
+      constants::pin_pulse_delay,
+      value*2,
+      value,
+      constants::pin_pulse_count);
     pin_pulse_event_controller_.enable(event_id_pair);
   }
   else if (mode_ptr_ == &constants::pin_mode_pulse_falling)
   {
     EventIdPair event_id_pair = pin_pulse_event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&Pin::setPinLowHandler),
-                                                                             makeFunctor((Functor1<int> *)0,*this,&Pin::setPinHighHandler),
-                                                                             constants::pin_pulse_delay,
-                                                                             value*2,
-                                                                             value,
-                                                                             constants::pin_pulse_count);
+      makeFunctor((Functor1<int> *)0,*this,&Pin::setPinHighHandler),
+      constants::pin_pulse_delay,
+      value*2,
+      value,
+      constants::pin_pulse_count);
     pin_pulse_event_controller_.enable(event_id_pair);
   }
 }
@@ -185,9 +185,9 @@ const ConstantString & Pin::getMode()
 void Pin::setMode(const ConstantString & pin_mode)
 {
   if ((&pin_mode == &constants::pin_mode_interrupt_low) ||
-      (&pin_mode == &constants::pin_mode_interrupt_change) ||
-      (&pin_mode == &constants::pin_mode_interrupt_rising) ||
-      (&pin_mode == &constants::pin_mode_interrupt_falling))
+    (&pin_mode == &constants::pin_mode_interrupt_change) ||
+    (&pin_mode == &constants::pin_mode_interrupt_rising) ||
+    (&pin_mode == &constants::pin_mode_interrupt_falling))
   {
     mode_ptr_ = &pin_mode;
     reattach();
@@ -223,8 +223,8 @@ void Pin::setMode(const ConstantString & pin_mode)
 }
 
 void Pin::writeApi(Response & response,
-                   bool write_name_only,
-                   bool write_details)
+  bool write_name_only,
+  bool write_details)
 {
   if (response.error())
   {
@@ -311,8 +311,8 @@ void Pin::reattach()
     detachInterrupt(interrupt_number_);
     enablePullup();
     attachInterrupt(interrupt_number_,
-                    isr_,
-                    LOW);
+      isr_,
+      LOW);
   }
   else if (mode_ptr_ == &constants::pin_mode_interrupt_change)
   {
@@ -320,8 +320,8 @@ void Pin::reattach()
     detachInterrupt(interrupt_number_);
     enablePullup();
     attachInterrupt(interrupt_number_,
-                    isr_,
-                    CHANGE);
+      isr_,
+      CHANGE);
   }
   else if (mode_ptr_ == &constants::pin_mode_interrupt_rising)
   {
@@ -329,8 +329,8 @@ void Pin::reattach()
     detachInterrupt(interrupt_number_);
     enablePullup();
     attachInterrupt(interrupt_number_,
-                    isr_,
-                    RISING);
+      isr_,
+      RISING);
   }
   else if (mode_ptr_ == &constants::pin_mode_interrupt_falling)
   {
@@ -338,8 +338,8 @@ void Pin::reattach()
     detachInterrupt(interrupt_number_);
     enablePullup();
     attachInterrupt(interrupt_number_,
-                    isr_,
-                    FALLING);
+      isr_,
+      FALLING);
   }
 }
 

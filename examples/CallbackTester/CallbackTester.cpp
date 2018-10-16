@@ -21,7 +21,7 @@ void CallbackTester::setup()
 
   // Add Hardware
   modular_server_.addHardware(constants::hardware_info,
-                              pins_);
+    pins_);
 
   // Pins
   modular_server::Pin & led_pin = modular_server_.createPin(constants::led_pin_name,constants::led_pin_number);
@@ -30,29 +30,29 @@ void CallbackTester::setup()
   blinker_.setup(led_pin);
 
   modular_server::Pin & bnc_a_pin = modular_server_.createPin(constants::bnc_a_pin_name,
-                                                              constants::bnc_a_pin_number);
+    constants::bnc_a_pin_number);
 
   modular_server::Pin & bnc_b_pin = modular_server_.createPin(constants::bnc_b_pin_name,
-                                                              constants::bnc_b_pin_number);
+    constants::bnc_b_pin_number);
 
   modular_server::Pin & bnc_c_pin = modular_server_.createPin(constants::bnc_c_pin_name,
-                                                              constants::bnc_c_pin_number);
+    constants::bnc_c_pin_number);
 
   modular_server::Pin & bnc_d_pin = modular_server_.createPin(constants::bnc_d_pin_name,
-                                                              constants::bnc_d_pin_number);
+    constants::bnc_d_pin_number);
 
   modular_server::Pin & bnc_e_pin = modular_server_.createPin(constants::bnc_e_pin_name,
-                                                              constants::bnc_e_pin_number);
+    constants::bnc_e_pin_number);
 
   modular_server::Pin & bnc_f_pin = modular_server_.createPin(constants::bnc_f_pin_name,
-                                                              constants::bnc_f_pin_number);
+    constants::bnc_f_pin_number);
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
-                              properties_,
-                              parameters_,
-                              functions_,
-                              callbacks_);
+    properties_,
+    parameters_,
+    functions_,
+    callbacks_);
 
   // Properties
   modular_server::Property & duration_on_property = modular_server_.createProperty(constants::duration_on_property_name,constants::duration_on_default);

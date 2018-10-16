@@ -22,49 +22,49 @@
    Request:
 
    #+BEGIN_SRC sh
-?
+     ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "?",
-  "result": {
-    "device_id": {
-      "name": "string_controller",
-      "form_factor": "3x2",
-      "serial_number": 0
-    },
-    "api": {
-      "firmware": [
-        "StringController"
-      ],
-      "verbosity": "NAMES",
-      "functions": [
-        "echo",
-        "length",
-        "startsWith",
-        "repeat",
-        "charsAt",
-        "startingChars",
-        "setStoredString",
-        "getStoredString"
-      ],
-      "parameters": [
-        "string",
-        "string2",
-        "count",
-        "index_array",
-        "double_echo"
-      ],
-      "properties": [
-        "startingCharsCount",
-        "storedString"
-      ]
-    }
-  }
-}
+     {
+       "id": "?",
+       "result": {
+         "device_id": {
+           "name": "string_controller",
+           "form_factor": "3x2",
+           "serial_number": 0
+         },
+         "api": {
+           "firmware": [
+             "StringController"
+           ],
+           "verbosity": "NAMES",
+           "functions": [
+             "echo",
+             "length",
+             "startsWith",
+             "repeat",
+             "charsAt",
+             "startingChars",
+             "setStoredString",
+             "getStoredString"
+           ],
+           "parameters": [
+             "string",
+             "string2",
+             "count",
+             "index_array",
+             "double_echo"
+           ],
+           "properties": [
+             "startingCharsCount",
+             "storedString"
+           ]
+         }
+       }
+     }
    #+END_SRC
 
    The form_factor and serial_number may be different on your board than the ones
@@ -77,65 +77,65 @@
    Request:
 
    #+BEGIN_SRC sh
-??
+     ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "??",
-  "result": {
-    "device_id": {
-      "name": "string_controller",
-      "form_factor": "3x2",
-      "serial_number": 0
-    },
-    "api": {
-      "firmware": [
-        "ALL"
-      ],
-      "verbosity": "NAMES",
-      "functions": [
-        "getDeviceId",
-        "getDeviceInfo",
-        "getApi",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getPinInfo",
-        "setPinMode",
-        "getPinValue",
-        "setPinValue",
-        "echo",
-        "length",
-        "startsWith",
-        "repeat",
-        "charsAt",
-        "startingChars",
-        "setStoredString",
-        "getStoredString"
-      ],
-      "parameters": [
-        "firmware",
-        "verbosity",
-        "pin_name",
-        "pin_mode",
-        "pin_value",
-        "string",
-        "string2",
-        "count",
-        "index_array",
-        "double_echo"
-      ],
-      "properties": [
-        "serialNumber",
-        "startingCharsCount",
-        "storedString"
-      ]
-    }
-  }
-}
+     {
+       "id": "??",
+       "result": {
+         "device_id": {
+           "name": "string_controller",
+           "form_factor": "3x2",
+           "serial_number": 0
+         },
+         "api": {
+           "firmware": [
+             "ALL"
+           ],
+           "verbosity": "NAMES",
+           "functions": [
+             "getDeviceId",
+             "getDeviceInfo",
+             "getApi",
+             "getPropertyDefaultValues",
+             "setPropertiesToDefaults",
+             "getPropertyValues",
+             "getPinInfo",
+             "setPinMode",
+             "getPinValue",
+             "setPinValue",
+             "echo",
+             "length",
+             "startsWith",
+             "repeat",
+             "charsAt",
+             "startingChars",
+             "setStoredString",
+             "getStoredString"
+           ],
+           "parameters": [
+             "firmware",
+             "verbosity",
+             "pin_name",
+             "pin_mode",
+             "pin_value",
+             "string",
+             "string2",
+             "count",
+             "index_array",
+             "double_echo"
+           ],
+           "properties": [
+             "serialNumber",
+             "startingCharsCount",
+             "storedString"
+           ]
+         }
+       }
+     }
    #+END_SRC
 
    "functions" is an array of user functions. To execute a function, simply
@@ -149,50 +149,50 @@
    Request:
 
    #+BEGIN_SRC sh
-setPropertiesToDefaults ["ALL"]
+     setPropertiesToDefaults ["ALL"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPropertiesToDefaults",
-  "result": null
-}
+     {
+       "id": "setPropertiesToDefaults",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-getStoredString
+     getStoredString
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getStoredString",
-  "result": "I am a stored string."
-}
+     {
+       "id": "getStoredString",
+       "result": "I am a stored string."
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-repeat
+     repeat
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "repeat",
-  "error": {
-    "message": "Invalid params",
-    "data": "Incorrect number of parameters. 0 given. 2 needed.",
-    "code": -32602
-  }
-}
+     {
+       "id": "repeat",
+       "error": {
+         "message": "Invalid params",
+         "data": "Incorrect number of parameters. 0 given. 2 needed.",
+         "code": -32602
+       }
+     }
    #+END_SRC
 
    To get more information about a function, enter the function followed by
@@ -201,27 +201,27 @@ repeat
    Request:
 
    #+BEGIN_SRC sh
-repeat ?
+     repeat ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "repeat",
-  "result": {
-    "name": "repeat",
-    "firmware": "StringController",
-    "parameters": [
-      "string",
-      "count"
-    ],
-    "result_info": {
-      "type": "array",
-      "array_element_type": "string"
-    }
-  }
-}
+     {
+       "id": "repeat",
+       "result": {
+         "name": "repeat",
+         "firmware": "StringController",
+         "parameters": [
+           "string",
+           "count"
+         ],
+         "result_info": {
+           "type": "array",
+           "array_element_type": "string"
+         }
+       }
+     }
    #+END_SRC
 
    The repeat function requires 2 parameters.
@@ -232,35 +232,35 @@ repeat ?
    Request:
 
    #+BEGIN_SRC sh
-repeat ??
+     repeat ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "repeat",
-  "result": {
-    "name": "repeat",
-    "firmware": "StringController",
-    "parameters": [
-      {
-        "name": "string",
-        "type": "string"
-      },
-      {
-        "name": "count",
-        "type": "long",
-        "min": 1,
-        "max": 100
-      }
-    ],
-    "result_info": {
-      "type": "array",
-      "array_element_type": "string"
-    }
-  }
-}
+     {
+       "id": "repeat",
+       "result": {
+         "name": "repeat",
+         "firmware": "StringController",
+         "parameters": [
+           {
+             "name": "string",
+             "type": "string"
+           },
+           {
+             "name": "count",
+             "type": "long",
+             "min": 1,
+             "max": 100
+           }
+         ],
+         "result_info": {
+           "type": "array",
+           "array_element_type": "string"
+         }
+       }
+     }
    #+END_SRC
 
    To get more information about just one of the parameters a function takes,
@@ -269,160 +269,160 @@ repeat ??
    Request:
 
    #+BEGIN_SRC sh
-repeat count ?
+     repeat count ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "repeat",
-  "result": {
-    "name": "count",
-    "firmware": "StringController",
-    "type": "long",
-    "min": 1,
-    "max": 100
-  }
-}
+     {
+       "id": "repeat",
+       "result": {
+         "name": "count",
+         "firmware": "StringController",
+         "type": "long",
+         "min": 1,
+         "max": 100
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-repeat "I am a string to repeat." 4
+     repeat "I am a string to repeat." 4
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "repeat",
-  "result": [
-    "I am a string to repeat.",
-    "I am a string to repeat.",
-    "I am a string to repeat.",
-    "I am a string to repeat."
-  ]
-}
+     {
+       "id": "repeat",
+       "result": [
+         "I am a string to repeat.",
+         "I am a string to repeat.",
+         "I am a string to repeat.",
+         "I am a string to repeat."
+       ]
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-charsAt "I am an input string!" [0,6,8]
+     charsAt "I am an input string!" [0,6,8]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "charsAt",
-  "result": [
-    {
-      "index": 0,
-      "char": "I"
-    },
-    {
-      "index": 6,
-      "char": "n"
-    },
-    {
-      "index": 8,
-      "char": "i"
-    }
-  ]
-}
+     {
+       "id": "charsAt",
+       "result": [
+         {
+           "index": 0,
+           "char": "I"
+         },
+         {
+           "index": 6,
+           "char": "n"
+         },
+         {
+           "index": 8,
+           "char": "i"
+         }
+       ]
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-startingChars "Fantastic!"
+     startingChars "Fantastic!"
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "startingChars",
-  "result": "Fa"
-}
+     {
+       "id": "startingChars",
+       "result": "Fa"
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-startingCharsCount setValue 5
+     startingCharsCount setValue 5
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "startingCharsCount",
-  "result": 5
-}
+     {
+       "id": "startingCharsCount",
+       "result": 5
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-startingChars "Fantastic!"
+     startingChars "Fantastic!"
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "startingChars",
-  "result": "Fanta"
-}
+     {
+       "id": "startingChars",
+       "result": "Fanta"
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-storedString
+     storedString
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "storedString",
-  "result": "I am a stored string."
-}
+     {
+       "id": "storedString",
+       "result": "I am a stored string."
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-storedString setAllElementValues x
+     storedString setAllElementValues x
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "storedString",
-  "result": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-}
+     {
+       "id": "storedString",
+       "result": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-storedString setValueToDefault
+     storedString setValueToDefault
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "storedString",
-  "result": "I am a stored string."
-}
+     {
+       "id": "storedString",
+       "result": "I am a stored string."
+     }
    #+END_SRC
 
    Use the getDeviceId function to get a unique set of values to identify
@@ -431,20 +431,20 @@ storedString setValueToDefault
    Request:
 
    #+BEGIN_SRC sh
-getDeviceId
+     getDeviceId
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getDeviceId",
-  "result": {
-    "name": "string_controller",
-    "form_factor": "3x2",
-    "serial_number": 77
-  }
-}
+     {
+       "id": "getDeviceId",
+       "result": {
+         "name": "string_controller",
+         "form_factor": "3x2",
+         "serial_number": 77
+       }
+     }
    #+END_SRC
 
    The serial_number property can be changed to uniquely identify devices
@@ -456,34 +456,34 @@ getDeviceId
    Request:
 
    #+BEGIN_SRC sh
-getDeviceInfo
+     getDeviceInfo
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getDeviceInfo",
-  "result": {
-    "processor": "MK20DX256",
-    "hardware": [
-      {
-        "name": "Teensy",
-        "version": "3.2"
-      }
-    ],
-    "firmware": [
-      {
-        "name": "ModularServer",
-        "version": "5.0.0"
-      },
-      {
-        "name": "StringController",
-        "version": "2.0.0"
-      }
-    ]
-  }
-}
+     {
+       "id": "getDeviceInfo",
+       "result": {
+         "processor": "MK20DX256",
+         "hardware": [
+           {
+             "name": "Teensy",
+             "version": "3.2"
+           }
+         ],
+         "firmware": [
+           {
+             "name": "ModularServer",
+             "version": "5.0.0"
+           },
+           {
+             "name": "StringController",
+             "version": "2.0.0"
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Every function, parameter, property, and callback belongs to one
@@ -495,42 +495,42 @@ getDeviceInfo
    Request:
 
    #+BEGIN_SRC sh
-getApi NAMES ["StringController"]
+     getApi NAMES ["StringController"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "StringController"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "echo",
-      "length",
-      "startsWith",
-      "repeat",
-      "charsAt",
-      "startingChars",
-      "setStoredString",
-      "getStoredString"
-    ],
-    "parameters": [
-      "string",
-      "string2",
-      "count",
-      "index_array",
-      "double_echo"
-    ],
-    "properties": [
-      "startingCharsCount",
-      "storedString"
-    ]
-  }
-}
+     {
+       "id": "getApi",
+       "result": {
+         "firmware": [
+           "StringController"
+         ],
+         "verbosity": "NAMES",
+         "functions": [
+           "echo",
+           "length",
+           "startsWith",
+           "repeat",
+           "charsAt",
+           "startingChars",
+           "setStoredString",
+           "getStoredString"
+         ],
+         "parameters": [
+           "string",
+           "string2",
+           "count",
+           "index_array",
+           "double_echo"
+         ],
+         "properties": [
+           "startingCharsCount",
+           "storedString"
+         ]
+       }
+     }
    #+END_SRC
 
 ** Python
@@ -538,90 +538,90 @@ getApi NAMES ["StringController"]
    Example Python session:
 
    #+BEGIN_SRC python
-from modular_client import ModularClient
-dev = ModularClient() # Automatically finds device if one available
-dev.get_device_id()
-{'form_factor': '3x2', 'name': 'string_controller', 'serial_number': 77}
-dev.get_methods()
-['stored_string',
- 'get_device_info',
- 'starts_with',
- 'chars_at',
- 'starting_chars',
- 'get_api',
- 'get_device_id',
- 'get_property_values',
- 'echo',
- 'set_pin_value',
- 'get_pin_value',
- 'set_properties_to_defaults',
- 'get_property_default_values',
- 'get_stored_string',
- 'starting_chars_count',
- 'length',
- 'serial_number',
- 'set_stored_string',
- 'repeat',
- 'set_pin_mode',
- 'get_pin_info']
-dev.set_properties_to_defaults(['ALL'])
-dev.repeat()
-IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
-dev.repeat('?')
-{'firmware': 'StringController',
- 'name': 'repeat',
- 'parameters': ['string', 'count'],
- 'result_info': {'array_element_type': 'string', 'type': 'array'}}
-dev.repeat('??')
-{'firmware': 'StringController',
- 'name': 'repeat',
- 'parameters': [{'name': 'string', 'type': 'string'},
-  {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
- 'result_info': {'array_element_type': 'string', 'type': 'array'}}
-dev.repeat('count','?')
-{'firmware': 'StringController',
- 'max': 100,
- 'min': 1,
- 'name': 'count',
- 'type': 'long'}
-dev.repeat('"I am a string to repeat."',-1)
-IOError: (from server) message: Invalid params, data: Parameter value out of range: 1 <= count <= 100, code: -32602
-dev.repeat('I am a string to repeat.',4)
-['I am a string to repeat.',
- 'I am a string to repeat.',
- 'I am a string to repeat.',
- 'I am a string to repeat.']
-dev.chars_at('I am an input string!',[0,6,8])
-[{'char': 'I', 'index': 0},
- {'char': 'n', 'index': 6},
- {'char': 'i', 'index': 8}]
-dev.starting_chars_count('getValue')
-2
-dev.starting_chars_count('setValue',3)
-3
-dev.call_get_result('starting_chars_count','setValue',7)
-7
-dev.send_json_request('["startingCharsCount","setValue",3]')
-3
-dev.starting_chars('Fantastic!')
-'Fan'
-dev.call_get_result('starting_chars','Fantastic!')
-'Fan'
-dev.send_json_request('["startingChars","Fantastic!"]')
-'Fan'
-dev.get_api('NAMES',["StringController"])
-{'firmware': ['StringController'],
- 'functions': ['echo',
-  'length',
-  'startsWith',
-  'repeat',
-  'charsAt',
-  'startingChars',
-  'setStoredString',
-  'getStoredString'],
- 'parameters': ['string', 'string2', 'count', 'index_array', 'double_echo'],
- 'properties': ['startingCharsCount', 'storedString'],
- 'verbosity': 'NAMES'}
+     from modular_client import ModularClient
+     dev = ModularClient() # Automatically finds device if one available
+     dev.get_device_id()
+     {'form_factor': '3x2', 'name': 'string_controller', 'serial_number': 77}
+     dev.get_methods()
+     ['stored_string',
+      'get_device_info',
+      'starts_with',
+      'chars_at',
+      'starting_chars',
+      'get_api',
+      'get_device_id',
+      'get_property_values',
+      'echo',
+      'set_pin_value',
+      'get_pin_value',
+      'set_properties_to_defaults',
+      'get_property_default_values',
+      'get_stored_string',
+      'starting_chars_count',
+      'length',
+      'serial_number',
+      'set_stored_string',
+      'repeat',
+      'set_pin_mode',
+      'get_pin_info']
+     dev.set_properties_to_defaults(['ALL'])
+     dev.repeat()
+     IOError: (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
+     dev.repeat('?')
+     {'firmware': 'StringController',
+      'name': 'repeat',
+      'parameters': ['string', 'count'],
+      'result_info': {'array_element_type': 'string', 'type': 'array'}}
+     dev.repeat('??')
+     {'firmware': 'StringController',
+      'name': 'repeat',
+      'parameters': [{'name': 'string', 'type': 'string'},
+                     {'max': 100, 'min': 1, 'name': 'count', 'type': 'long'}],
+      'result_info': {'array_element_type': 'string', 'type': 'array'}}
+     dev.repeat('count','?')
+     {'firmware': 'StringController',
+      'max': 100,
+      'min': 1,
+      'name': 'count',
+      'type': 'long'}
+     dev.repeat('"I am a string to repeat."',-1)
+     IOError: (from server) message: Invalid params, data: Parameter value out of range: 1 <= count <= 100, code: -32602
+     dev.repeat('I am a string to repeat.',4)
+     ['I am a string to repeat.',
+      'I am a string to repeat.',
+      'I am a string to repeat.',
+      'I am a string to repeat.']
+     dev.chars_at('I am an input string!',[0,6,8])
+     [{'char': 'I', 'index': 0},
+      {'char': 'n', 'index': 6},
+      {'char': 'i', 'index': 8}]
+     dev.starting_chars_count('getValue')
+     2
+     dev.starting_chars_count('setValue',3)
+     3
+     dev.call_get_result('starting_chars_count','setValue',7)
+     7
+     dev.send_json_request('["startingCharsCount","setValue",3]')
+     3
+     dev.starting_chars('Fantastic!')
+     'Fan'
+     dev.call_get_result('starting_chars','Fantastic!')
+     'Fan'
+     dev.send_json_request('["startingChars","Fantastic!"]')
+     'Fan'
+     dev.get_api('NAMES',["StringController"])
+     {'firmware': ['StringController'],
+      'functions': ['echo',
+                    'length',
+                    'startsWith',
+                    'repeat',
+                    'charsAt',
+                    'startingChars',
+                    'setStoredString',
+                    'getStoredString'],
+      'parameters': ['string', 'string2', 'count', 'index_array', 'double_echo'],
+      'properties': ['startingCharsCount', 'storedString'],
+      'verbosity': 'NAMES'}
    #+END_SRC
 
    For more details on the Python interface:
@@ -633,89 +633,89 @@ dev.get_api('NAMES',["StringController"])
    Example Matlab session:
 
    #+BEGIN_SRC matlab
-% Linux and Mac OS X
-ls /dev/tty*
-serial_port = '/dev/ttyACM0'     % example Linux serial port
-serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
-% Windows
-getAvailableComPorts()
-ans =
-  'COM1'
-  'COM4'
-serial_port = 'COM4'             % example Windows serial port
-dev = ModularClient(serial_port) % creates a device object
-dev.open()                       % opens a serial connection to the device
-dev.getDeviceId()
-ans =
-  name: 'string_controller'
-  form_factor: '3x2'
-  serial_number: 77
-dev.getMethods()
-  Modular Device Methods
-  ---------------------
-  getDeviceId
-  getDeviceInfo
-  getApi
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getPinInfo
-  setPinMode
-  getPinValue
-  setPinValue
-  echo
-  length
-  startsWith
-  repeat
-  charsAt
-  startingChars
-  setStoredString
-  getStoredString
-  serialNumber
-  startingCharsCount
-  storedString
-dev.setPropertiesToDefaults({'ALL'});
-dev.repeat()
-(from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
-dev.repeat('?')
-ans =
-  name: 'repeat'
-  firmware: 'StringController'
-  parameters: {'string'  'count'}
-  result_info: [1x1 struct]
-dev.repeat('count','?')
-ans =
-  name: 'count'
-  firmware: 'StringController'
-  type: 'long'
-  min: 1
-  max: 100
-dev.repeat('I am a string to repeat.',-1)
-device responded with error, Parameter value out of range: 1 <= count <= 100
-repeated = dev.repeat('I am a string to repeat.',4);
-json = dev.convertToJson(repeated)
-  ["I am a string to repeat.","I am a string to repeat.","I am a string to repeat.","I am a string to repeat."]
-chars_at = dev.charsAt('I am an input string!',[0,6,8]);
-json = dev.convertToJson(chars_at)
-json =
-  [{"index": 0,"char": "I"},{"index": 6,"char": "n"},{"index": 8,"char": "i"}]
-dev.startingCharsCount('getValue')
-ans =
-  2
-dev.startingCharsCount('setValue',5)
-ans =
-  5
-dev.startingChars('Fantastic!')
-ans =
-  Fanta
-result = dev.callGetResult('startingChars','Fantastic!')
-result =
-  Fanta
-result = dev.sendJsonRequest('["startingChars","Fantastic!"]')
-result =
-  Fanta
-dev.close()
-clear dev
+     % Linux and Mac OS X
+     ls /dev/tty*
+     serial_port = '/dev/ttyACM0'     % example Linux serial port
+     serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
+                                             % Windows
+     getAvailableComPorts()
+     ans =
+     'COM1'
+     'COM4'
+     serial_port = 'COM4'             % example Windows serial port
+     dev = ModularClient(serial_port) % creates a device object
+     dev.open()                       % opens a serial connection to the device
+     dev.getDeviceId()
+     ans =
+     name: 'string_controller'
+     form_factor: '3x2'
+     serial_number: 77
+     dev.getMethods()
+     Modular Device Methods
+     ---------------------
+     getDeviceId
+     getDeviceInfo
+     getApi
+     getPropertyDefaultValues
+     setPropertiesToDefaults
+     getPropertyValues
+     getPinInfo
+     setPinMode
+     getPinValue
+     setPinValue
+     echo
+     length
+     startsWith
+     repeat
+     charsAt
+     startingChars
+     setStoredString
+     getStoredString
+     serialNumber
+     startingCharsCount
+     storedString
+     dev.setPropertiesToDefaults({'ALL'});
+     dev.repeat()
+     (from server) message: Invalid params, data: Incorrect number of parameters. 0 given. 2 needed., code: -32602
+     dev.repeat('?')
+     ans =
+     name: 'repeat'
+     firmware: 'StringController'
+     parameters: {'string'  'count'}
+     result_info: [1x1 struct]
+     dev.repeat('count','?')
+     ans =
+     name: 'count'
+     firmware: 'StringController'
+     type: 'long'
+     min: 1
+     max: 100
+     dev.repeat('I am a string to repeat.',-1)
+     device responded with error, Parameter value out of range: 1 <= count <= 100
+     repeated = dev.repeat('I am a string to repeat.',4);
+     json = dev.convertToJson(repeated)
+     ["I am a string to repeat.","I am a string to repeat.","I am a string to repeat.","I am a string to repeat."]
+     chars_at = dev.charsAt('I am an input string!',[0,6,8]);
+     json = dev.convertToJson(chars_at)
+     json =
+     [{"index": 0,"char": "I"},{"index": 6,"char": "n"},{"index": 8,"char": "i"}]
+     dev.startingCharsCount('getValue')
+     ans =
+     2
+     dev.startingCharsCount('setValue',5)
+     ans =
+     5
+     dev.startingChars('Fantastic!')
+     ans =
+     Fanta
+     result = dev.callGetResult('startingChars','Fantastic!')
+     result =
+     Fanta
+     result = dev.sendJsonRequest('["startingChars","Fantastic!"]')
+     result =
+     Fanta
+     dev.close()
+     clear dev
    #+END_SRC
 
    For more details on the Matlab interface:

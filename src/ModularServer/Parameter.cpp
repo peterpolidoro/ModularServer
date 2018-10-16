@@ -159,7 +159,7 @@ void Parameter::removeRange()
 }
 
 void Parameter::setArrayLengthRange(const size_t array_length_min,
-                                    const size_t array_length_max)
+  const size_t array_length_max)
 {
   setTypeArray();
   array_length_min_ = array_length_min;
@@ -263,9 +263,9 @@ template <>
 bool Parameter::getValue<long>(long & value)
 {
   if ((getType() == JsonStream::LONG_TYPE) ||
-      (getType() == JsonStream::DOUBLE_TYPE) ||
-      (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::ANY_TYPE))
+    (getType() == JsonStream::DOUBLE_TYPE) ||
+    (getType() == JsonStream::BOOL_TYPE) ||
+    (getType() == JsonStream::ANY_TYPE))
   {
     long v = get_value_functor_(getName());
     value = v;
@@ -278,9 +278,9 @@ template <>
 bool Parameter::getValue<double>(double & value)
 {
   if ((getType() == JsonStream::LONG_TYPE) ||
-      (getType() == JsonStream::DOUBLE_TYPE) ||
-      (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::ANY_TYPE))
+    (getType() == JsonStream::DOUBLE_TYPE) ||
+    (getType() == JsonStream::BOOL_TYPE) ||
+    (getType() == JsonStream::ANY_TYPE))
   {
     double v = get_value_functor_(getName());
     value = v;
@@ -293,9 +293,9 @@ template <>
 bool Parameter::getValue<float>(float & value)
 {
   if ((getType() == JsonStream::LONG_TYPE) ||
-      (getType() == JsonStream::DOUBLE_TYPE) ||
-      (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::ANY_TYPE))
+    (getType() == JsonStream::DOUBLE_TYPE) ||
+    (getType() == JsonStream::BOOL_TYPE) ||
+    (getType() == JsonStream::ANY_TYPE))
   {
     double v = get_value_functor_(getName());
     value = v;
@@ -308,9 +308,9 @@ template <>
 bool Parameter::getValue<bool>(bool & value)
 {
   if ((getType() == JsonStream::LONG_TYPE) ||
-      (getType() == JsonStream::DOUBLE_TYPE) ||
-      (getType() == JsonStream::BOOL_TYPE) ||
-      (getType() == JsonStream::ANY_TYPE))
+    (getType() == JsonStream::DOUBLE_TYPE) ||
+    (getType() == JsonStream::BOOL_TYPE) ||
+    (getType() == JsonStream::ANY_TYPE))
   {
     bool v = get_value_functor_(getName());
     value = v;
@@ -590,10 +590,10 @@ Vector<constants::SubsetMemberType> & Parameter::getSubset()
 }
 
 void Parameter::writeApi(Response & response,
-                         bool write_name_only,
-                         bool is_property,
-                         bool write_firmware,
-                         bool write_instance_details)
+  bool write_name_only,
+  bool is_property,
+  bool write_firmware,
+  bool write_instance_details)
 {
   if (response.error())
   {

@@ -47,32 +47,32 @@ public:
   // Hardware
   template <size_t PINS_MAX_SIZE>
   void addHardware(const constants::HardwareInfo & hardware_info,
-                   Pin (&pins)[PINS_MAX_SIZE]);
+    Pin (&pins)[PINS_MAX_SIZE]);
   void removeHardware();
 
   // Pins
   Pin & createPin(const ConstantString & pin_name,
-                  const size_t pin_number);
+    const size_t pin_number);
   Pin & pin(const ConstantString & pin_name);
 
   // Firmware
   template <size_t PROPERTIES_MAX_SIZE,
-            size_t PARAMETERS_MAX_SIZE,
-            size_t FUNCTIONS_MAX_SIZE,
-            size_t CALLBACKS_MAX_SIZE>
+    size_t PARAMETERS_MAX_SIZE,
+    size_t FUNCTIONS_MAX_SIZE,
+    size_t CALLBACKS_MAX_SIZE>
   void addFirmware(const constants::FirmwareInfo & firmware_info,
-                   Property (&properties)[PROPERTIES_MAX_SIZE],
-                   Parameter (&parameters)[PARAMETERS_MAX_SIZE],
-                   Function (&functions)[FUNCTIONS_MAX_SIZE],
-                   Callback (&callbacks)[CALLBACKS_MAX_SIZE]);
+    Property (&properties)[PROPERTIES_MAX_SIZE],
+    Parameter (&parameters)[PARAMETERS_MAX_SIZE],
+    Function (&functions)[FUNCTIONS_MAX_SIZE],
+    Callback (&callbacks)[CALLBACKS_MAX_SIZE]);
 
   // Properties
   template <typename T>
   Property & createProperty(const ConstantString & property_name,
-                            const T & default_value);
+    const T & default_value);
   template <typename T, size_t N>
   Property & createProperty(const ConstantString & property_name,
-                            const T (&default_value)[N]);
+    const T (&default_value)[N]);
   Property & property(const ConstantString & property_name);
   template <typename T>
   void setPropertiesToDefaults(T & firmware_name_array);
@@ -81,13 +81,13 @@ public:
   Parameter & createParameter(const ConstantString & parameter_name);
   Parameter & parameter(const ConstantString & parameter_name);
   Parameter & copyParameter(Parameter parameter,
-                            const ConstantString & parameter_name);
+    const ConstantString & parameter_name);
 
   // Functions
   Function & createFunction(const ConstantString & function_name);
   Function & function(const ConstantString & function_name);
   Function & copyFunction(Function function,
-                          const ConstantString & function_name);
+    const ConstantString & function_name);
 
   // Callbacks
   Callback & createCallback(const ConstantString & callback_name);
@@ -152,20 +152,20 @@ private:
   int findParameterIndex(T const & parameter_name);
   template <typename T>
   int findFunctionParameterIndex(Function & function,
-                                 T const & parameter_name);
+    T const & parameter_name);
   template <typename T>
   int findFunctionIndex(T const & function_name);
   template <typename T>
   int findCallbackIndex(T const & callback_name);
   size_t countJsonArrayElements(ArduinoJson::JsonArray & json_array);
   int processParameterString(Function & function,
-                             const char * parameter_string);
+    const char * parameter_string);
   bool checkParameters(Function & function,
-                       ArduinoJson::JsonArray::iterator iterator);
+    ArduinoJson::JsonArray::iterator iterator);
   bool checkParameter(Parameter & parameter,
-                      ArduinoJson::JsonVariant & json_value);
+    ArduinoJson::JsonVariant & json_value);
   bool checkArrayParameterElement(Parameter & parameter,
-                                  ArduinoJson::JsonVariant & json_value);
+    ArduinoJson::JsonVariant & json_value);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
@@ -176,29 +176,29 @@ private:
   void writeDeviceInfoToResponse();
   void writePinInfoToResponse(const ConstantString & pin_name);
   void writeApiToResponse(const ConstantString & verbosity,
-                          ArduinoJson::JsonArray & firmware_name_array);
+    ArduinoJson::JsonArray & firmware_name_array);
   bool containsAllOrMoreThanOne(ArduinoJson::JsonArray & firmware_name_array);
   size_t getPropertiesCount(ArduinoJson::JsonArray & firmware_name_array);
   size_t getParametersCount(ArduinoJson::JsonArray & firmware_name_array);
   size_t getFunctionsCount(ArduinoJson::JsonArray & firmware_name_array);
   size_t getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array);
   void versionToString(char * destination,
-                       const long major,
-                       const long minor,
-                       const long patch,
-                       const size_t num);
+    const long major,
+    const long minor,
+    const long patch,
+    const size_t num);
   void subsetToString(char * destination,
-                      Vector<constants::SubsetMemberType> & subset,
-                      const JsonStream::JsonTypes & parameter_type,
-                      const JsonStream::JsonTypes & parameter_array_element_type,
-                      const size_t num);
+    Vector<constants::SubsetMemberType> & subset,
+    const JsonStream::JsonTypes & parameter_type,
+    const JsonStream::JsonTypes & parameter_array_element_type,
+    const size_t num);
   Pin * findPinPtrByChars(const char * pin_name);
   Pin * findPinPtrByConstantString(const ConstantString & pin_name);
   void setPinMode(const ConstantString & pin_name,
-                  const ConstantString & pin_mode);
+    const ConstantString & pin_mode);
   int getPinValue(const ConstantString & pin_name);
   void setPinValue(const ConstantString & pin_name,
-                   const int pin_value);
+    const int pin_value);
 
   // Handlers
   void getMethodIdsHandler();

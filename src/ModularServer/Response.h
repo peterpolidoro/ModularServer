@@ -76,17 +76,17 @@ private:
   void returnMethodNotFoundError();
   void returnParameterNotFoundError();
   void returnParameterArrayLengthError(const ConstantString & parameter_name,
-                                       const char * const min_str,
-                                       const char * const max_str);
+    const char * const min_str,
+    const char * const max_str);
   void returnParameterObjectParseError(const ConstantString & parameter_name);
   void returnParameterArrayParseError(const ConstantString & parameter_name);
   void returnParameterInvalidError(const ConstantString & error);
   void returnParameterNotInSubsetError(const char * const subset_str,
-                                       const JsonStream::JsonTypes & parameter_type);
+    const JsonStream::JsonTypes & parameter_type);
   void returnParameterNotInRangeError(const ConstantString & parameter_name,
-                                      const JsonStream::JsonTypes & parameter_type,
-                                      const char * const min_str,
-                                      const char * const max_str);
+    const JsonStream::JsonTypes & parameter_type,
+    const char * const min_str,
+    const char * const max_str);
   void returnPropertyFunctionNotFoundError();
   void returnPropertyParameterCountError(const size_t parameter_count, const size_t parameter_count_needed);
   void returnCallbackFunctionNotFoundError();

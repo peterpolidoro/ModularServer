@@ -309,8 +309,8 @@ void Response::returnParameterNotFoundError()
 }
 
 void Response::returnParameterArrayLengthError(const ConstantString & parameter_name,
-                                               const char * const min_str,
-                                               const char * const max_str)
+  const char * const min_str,
+  const char * const max_str)
 {
   // Prevent multiple errors in one response
   if (!error_)
@@ -412,7 +412,7 @@ void Response::returnParameterInvalidError(const ConstantString & error)
 }
 
 void Response::returnParameterNotInSubsetError(const char * const subset_str,
-                                               const JsonStream::JsonTypes & parameter_type)
+  const JsonStream::JsonTypes & parameter_type)
 {
   // Prevent multiple errors in one response
   if (!error_)
@@ -444,9 +444,9 @@ void Response::returnParameterNotInSubsetError(const char * const subset_str,
 }
 
 void Response::returnParameterNotInRangeError(const ConstantString & parameter_name,
-                                              const JsonStream::JsonTypes & parameter_type,
-                                              const char * const min_str,
-                                              const char * const max_str)
+  const JsonStream::JsonTypes & parameter_type,
+  const char * const min_str,
+  const char * const max_str)
 {
   // Prevent multiple errors in one response
   if (!error_)

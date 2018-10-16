@@ -22,38 +22,38 @@
    Request:
 
    #+BEGIN_SRC sh
-?
+     ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "?",
-  "result": {
-    "device_id": {
-      "name": "callback_tester",
-      "form_factor": "3x2",
-      "serial_number": 0
-    },
-    "api": {
-      "firmware": [
-        "CallbackTester"
-      ],
-      "verbosity": "NAMES",
-      "properties": [
-        "durationOn",
-        "durationOff",
-        "count"
-      ],
-      "callbacks": [
-        "setLedOn",
-        "setLedOff",
-        "blinkLed"
-      ]
-    }
-  }
-}
+     {
+       "id": "?",
+       "result": {
+         "device_id": {
+           "name": "callback_tester",
+           "form_factor": "3x2",
+           "serial_number": 0
+         },
+         "api": {
+           "firmware": [
+             "CallbackTester"
+           ],
+           "verbosity": "NAMES",
+           "properties": [
+             "durationOn",
+             "durationOff",
+             "count"
+           ],
+           "callbacks": [
+             "setLedOn",
+             "setLedOff",
+             "blinkLed"
+           ]
+         }
+       }
+     }
    #+END_SRC
 
    The form_factor and serial_number may be different on your board than the ones
@@ -66,58 +66,58 @@
    Request:
 
    #+BEGIN_SRC sh
-??
+     ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "??",
-  "result": {
-    "device_id": {
-      "name": "callback_tester",
-      "form_factor": "3x2",
-      "serial_number": 0
-    },
-    "api": {
-      "firmware": [
-        "ALL"
-      ],
-      "verbosity": "NAMES",
-      "functions": [
-        "getDeviceId",
-        "getDeviceInfo",
-        "getApi",
-        "getPropertyDefaultValues",
-        "setPropertiesToDefaults",
-        "getPropertyValues",
-        "getPinInfo",
-        "setPinMode",
-        "getPinValue",
-        "setPinValue"
-      ],
-      "parameters": [
-        "firmware",
-        "verbosity",
-        "pin_name",
-        "pin_mode",
-        "pin_value"
-      ],
-      "properties": [
-        "serialNumber",
-        "durationOn",
-        "durationOff",
-        "count"
-      ],
-      "callbacks": [
-        "setLedOn",
-        "setLedOff",
-        "blinkLed"
-      ]
-    }
-  }
-}
+     {
+       "id": "??",
+       "result": {
+         "device_id": {
+           "name": "callback_tester",
+           "form_factor": "3x2",
+           "serial_number": 0
+         },
+         "api": {
+           "firmware": [
+             "ALL"
+           ],
+           "verbosity": "NAMES",
+           "functions": [
+             "getDeviceId",
+             "getDeviceInfo",
+             "getApi",
+             "getPropertyDefaultValues",
+             "setPropertiesToDefaults",
+             "getPropertyValues",
+             "getPinInfo",
+             "setPinMode",
+             "getPinValue",
+             "setPinValue"
+           ],
+           "parameters": [
+             "firmware",
+             "verbosity",
+             "pin_name",
+             "pin_mode",
+             "pin_value"
+           ],
+           "properties": [
+             "serialNumber",
+             "durationOn",
+             "durationOff",
+             "count"
+           ],
+           "callbacks": [
+             "setLedOn",
+             "setLedOff",
+             "blinkLed"
+           ]
+         }
+       }
+     }
    #+END_SRC
 
    "functions" is an array of user functions. To execute a function, simply type it
@@ -130,58 +130,58 @@
    Request:
 
    #+BEGIN_SRC sh
-setPropertiesToDefaults ["ALL"]
+     setPropertiesToDefaults ["ALL"]
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPropertiesToDefaults",
-  "result": null
-}
+     {
+       "id": "setPropertiesToDefaults",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-getDeviceInfo
+     getDeviceInfo
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getDeviceInfo",
-  "result": {
-    "processor": "MK20DX256",
-    "hardware": [
-      {
-        "name": "Teensy",
-        "version": "3.2",
-        "pins": [
-          "led",
-          "bnc_a",
-          "bnc_b",
-          "bnc_c",
-          "bnc_d",
-          "bnc_e",
-          "bnc_f"
-        ]
-      }
-    ],
-    "firmware": [
-      {
-        "name": "ModularServer",
-        "version": "5.0.0"
-      },
-      {
-        "name": "CallbackTester",
-        "version": "2.0.0"
-      }
-    ]
-  }
-}
+     {
+       "id": "getDeviceInfo",
+       "result": {
+         "processor": "MK20DX256",
+         "hardware": [
+           {
+             "name": "Teensy",
+             "version": "3.2",
+             "pins": [
+               "led",
+               "bnc_a",
+               "bnc_b",
+               "bnc_c",
+               "bnc_d",
+               "bnc_e",
+               "bnc_f"
+             ]
+           }
+         ],
+         "firmware": [
+           {
+             "name": "ModularServer",
+             "version": "5.0.0"
+           },
+           {
+             "name": "CallbackTester",
+             "version": "2.0.0"
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Each hardware layer may add zero or more pins.
@@ -189,58 +189,58 @@ getDeviceInfo
    Request:
 
    #+BEGIN_SRC sh
-getPinInfo ALL
+     getPinInfo ALL
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getPinInfo",
-  "result": [
-    {
-      "name": "led",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_OUTPUT"
-    },
-    {
-      "name": "bnc_a",
-      "hardware": "Teensy",
-      "callback": "setLedOn",
-      "pin_mode": "INTERRUPT_FALLING"
-    },
-    {
-      "name": "bnc_b",
-      "hardware": "Teensy",
-      "callback": "setLedOff",
-      "pin_mode": "INTERRUPT_FALLING"
-    },
-    {
-      "name": "bnc_c",
-      "hardware": "Teensy",
-      "callback": "setLedOn",
-      "pin_mode": "INTERRUPT_FALLING"
-    },
-    {
-      "name": "bnc_d",
-      "hardware": "Teensy",
-      "callback": "setLedOff",
-      "pin_mode": "INTERRUPT_FALLING"
-    },
-    {
-      "name": "bnc_e",
-      "hardware": "Teensy",
-      "callback": "blinkLed",
-      "pin_mode": "INTERRUPT_FALLING"
-    },
-    {
-      "name": "bnc_f",
-      "hardware": "Teensy",
-      "callback": "setLedOff",
-      "pin_mode": "INTERRUPT_FALLING"
-    }
-  ]
-}
+     {
+       "id": "getPinInfo",
+       "result": [
+         {
+           "name": "led",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_OUTPUT"
+         },
+         {
+           "name": "bnc_a",
+           "hardware": "Teensy",
+           "callback": "setLedOn",
+           "pin_mode": "INTERRUPT_FALLING"
+         },
+         {
+           "name": "bnc_b",
+           "hardware": "Teensy",
+           "callback": "setLedOff",
+           "pin_mode": "INTERRUPT_FALLING"
+         },
+         {
+           "name": "bnc_c",
+           "hardware": "Teensy",
+           "callback": "setLedOn",
+           "pin_mode": "INTERRUPT_FALLING"
+         },
+         {
+           "name": "bnc_d",
+           "hardware": "Teensy",
+           "callback": "setLedOff",
+           "pin_mode": "INTERRUPT_FALLING"
+         },
+         {
+           "name": "bnc_e",
+           "hardware": "Teensy",
+           "callback": "blinkLed",
+           "pin_mode": "INTERRUPT_FALLING"
+         },
+         {
+           "name": "bnc_f",
+           "hardware": "Teensy",
+           "callback": "setLedOff",
+           "pin_mode": "INTERRUPT_FALLING"
+         }
+       ]
+     }
    #+END_SRC
 
    Each pin may be dynamically assigned to a callback with an interrupt mode or the
@@ -253,325 +253,325 @@ getPinInfo ALL
    Request:
 
    #+BEGIN_SRC sh
-blinkLed ?
+     blinkLed ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": {
-    "name": "blinkLed",
-    "firmware": "CallbackTester",
-    "properties": [
-      "durationOn",
-      "durationOff",
-      "count"
-    ],
-    "pins": [
-      "bnc_e"
-    ],
-    "functions": [
-      "trigger",
-      "attachTo",
-      "detachFrom"
-    ],
-    "parameters": [
-      "pin_name",
-      "pin_mode"
-    ]
-  }
-}
+     {
+       "id": "blinkLed",
+       "result": {
+         "name": "blinkLed",
+         "firmware": "CallbackTester",
+         "properties": [
+           "durationOn",
+           "durationOff",
+           "count"
+         ],
+         "pins": [
+           "bnc_e"
+         ],
+         "functions": [
+           "trigger",
+           "attachTo",
+           "detachFrom"
+         ],
+         "parameters": [
+           "pin_name",
+           "pin_mode"
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed trigger
+     blinkLed trigger
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": null
-}
+     {
+       "id": "blinkLed",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed
+     blinkLed
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": null
-}
+     {
+       "id": "blinkLed",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed attachTo ??
+     blinkLed attachTo ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": {
-    "name": "attachTo",
-    "firmware": "ModularServer",
-    "parameters": [
-      {
-        "name": "pin_name",
-        "type": "string",
-        "subset": [
-          "ALL",
-          "led",
-          "bnc_a",
-          "bnc_b",
-          "bnc_c",
-          "bnc_d",
-          "bnc_e",
-          "bnc_f"
-        ]
-      },
-      {
-        "name": "pin_mode",
-        "type": "string",
-        "subset": [
-          "INTERRUPT_LOW",
-          "INTERRUPT_CHANGE",
-          "INTERRUPT_RISING",
-          "INTERRUPT_FALLING"
-        ]
-      }
-    ]
-  }
-}
+     {
+       "id": "blinkLed",
+       "result": {
+         "name": "attachTo",
+         "firmware": "ModularServer",
+         "parameters": [
+           {
+             "name": "pin_name",
+             "type": "string",
+             "subset": [
+               "ALL",
+               "led",
+               "bnc_a",
+               "bnc_b",
+               "bnc_c",
+               "bnc_d",
+               "bnc_e",
+               "bnc_f"
+             ]
+           },
+           {
+             "name": "pin_mode",
+             "type": "string",
+             "subset": [
+               "INTERRUPT_LOW",
+               "INTERRUPT_CHANGE",
+               "INTERRUPT_RISING",
+               "INTERRUPT_FALLING"
+             ]
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed attachTo bnc_f INTERRUPT_FALLING
+     blinkLed attachTo bnc_f INTERRUPT_FALLING
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": null
-}
+     {
+       "id": "blinkLed",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed ?
+     blinkLed ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": {
-    "name": "blinkLed",
-    "firmware": "CallbackTester",
-    "properties": [
-      "durationOn",
-      "durationOff",
-      "count"
-    ],
-    "pins": [
-      "bnc_e",
-      "bnc_f"
-    ],
-    "functions": [
-      "trigger",
-      "attachTo",
-      "detachFrom"
-    ],
-    "parameters": [
-      "pin_name",
-      "pin_mode"
-    ]
-  }
-}
+     {
+       "id": "blinkLed",
+       "result": {
+         "name": "blinkLed",
+         "firmware": "CallbackTester",
+         "properties": [
+           "durationOn",
+           "durationOff",
+           "count"
+         ],
+         "pins": [
+           "bnc_e",
+           "bnc_f"
+         ],
+         "functions": [
+           "trigger",
+           "attachTo",
+           "detachFrom"
+         ],
+         "parameters": [
+           "pin_name",
+           "pin_mode"
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed detachFrom ?
+     blinkLed detachFrom ?
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": {
-    "name": "detachFrom",
-    "firmware": "ModularServer",
-    "parameters": [
-      "pin_name"
-    ]
-  }
-}
+     {
+       "id": "blinkLed",
+       "result": {
+         "name": "detachFrom",
+         "firmware": "ModularServer",
+         "parameters": [
+           "pin_name"
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-count setValue 2
+     count setValue 2
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "count",
-  "result": 2
-}
+     {
+       "id": "count",
+       "result": 2
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-blinkLed
+     blinkLed
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "blinkLed",
-  "result": null
-}
+     {
+       "id": "blinkLed",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-setPinMode ??
+     setPinMode ??
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPinMode",
-  "result": {
-    "name": "setPinMode",
-    "firmware": "ModularServer",
-    "parameters": [
-      {
-        "name": "pin_name",
-        "type": "string",
-        "subset": [
-          "ALL",
-          "led",
-          "bnc_a",
-          "bnc_b",
-          "bnc_c",
-          "bnc_d",
-          "bnc_e",
-          "bnc_f"
-        ]
-      },
-      {
-        "name": "pin_mode",
-        "type": "string",
-        "subset": [
-          "DIGITAL_INPUT",
-          "DIGITAL_INPUT_PULLUP",
-          "DIGITAL_OUTPUT",
-          "ANALOG_INPUT",
-          "ANALOG_OUTPUT",
-          "PULSE_RISING",
-          "PULSE_FALLING"
-        ]
-      }
-    ]
-  }
-}
+     {
+       "id": "setPinMode",
+       "result": {
+         "name": "setPinMode",
+         "firmware": "ModularServer",
+         "parameters": [
+           {
+             "name": "pin_name",
+             "type": "string",
+             "subset": [
+               "ALL",
+               "led",
+               "bnc_a",
+               "bnc_b",
+               "bnc_c",
+               "bnc_d",
+               "bnc_e",
+               "bnc_f"
+             ]
+           },
+           {
+             "name": "pin_mode",
+             "type": "string",
+             "subset": [
+               "DIGITAL_INPUT",
+               "DIGITAL_INPUT_PULLUP",
+               "DIGITAL_OUTPUT",
+               "ANALOG_INPUT",
+               "ANALOG_OUTPUT",
+               "PULSE_RISING",
+               "PULSE_FALLING"
+             ]
+           }
+         ]
+       }
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-setPinMode ALL DIGITAL_INPUT
+     setPinMode ALL DIGITAL_INPUT
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "setPinMode",
-  "result": null
-}
+     {
+       "id": "setPinMode",
+       "result": null
+     }
    #+END_SRC
 
    Request:
 
    #+BEGIN_SRC sh
-getPinInfo ALL
+     getPinInfo ALL
    #+END_SRC
 
    Response:
 
    #+BEGIN_SRC js
-{
-  "id": "getPinInfo",
-  "result": [
-    {
-      "name": "led",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_INPUT"
-    },
-    {
-      "name": "bnc_a",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_INPUT"
-    },
-    {
-      "name": "bnc_b",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_INPUT"
-    },
-    {
-      "name": "bnc_c",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_INPUT"
-    },
-    {
-      "name": "bnc_d",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_INPUT"
-    },
-    {
-      "name": "bnc_e",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_INPUT"
-    },
-    {
-      "name": "bnc_f",
-      "hardware": "Teensy",
-      "pin_mode": "DIGITAL_INPUT"
-    }
-  ]
-}
+     {
+       "id": "getPinInfo",
+       "result": [
+         {
+           "name": "led",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_INPUT"
+         },
+         {
+           "name": "bnc_a",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_INPUT"
+         },
+         {
+           "name": "bnc_b",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_INPUT"
+         },
+         {
+           "name": "bnc_c",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_INPUT"
+         },
+         {
+           "name": "bnc_d",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_INPUT"
+         },
+         {
+           "name": "bnc_e",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_INPUT"
+         },
+         {
+           "name": "bnc_f",
+           "hardware": "Teensy",
+           "pin_mode": "DIGITAL_INPUT"
+         }
+       ]
+     }
    #+END_SRC
 
 ** Python
@@ -579,68 +579,68 @@ getPinInfo ALL
    Example Python session:
 
    #+BEGIN_SRC python
-from modular_client import ModularClient
-dev = ModularClient() # Automatically finds device if one available
-dev.get_device_id()
-{'form_factor': '3x2', 'name': 'callback_tester', 'serial_number': 0}
-dev.get_methods()
-['duration_off',
- 'get_property_default_values',
- 'set_led_on',
- 'blink_led',
- 'set_properties_to_defaults',
- 'get_device_id',
- 'serial_number',
- 'duration_on',
- 'get_pin_value',
- 'get_device_info',
- 'set_pin_mode',
- 'get_api',
- 'set_led_off',
- 'get_pin_info',
- 'set_pin_value',
- 'count',
- 'get_property_values']
-dev.set_properties_to_defaults(['ALL'])
-dev.get_device_info()
-{'firmware': [{'name': 'ModularServer', 'version': '5.0.0'},
-  {'name': 'CallbackTester', 'version': '2.0.0'}],
- 'hardware': [{'name': 'Teensy',
-   'pins': ['led', 'bnc_a', 'bnc_b', 'bnc_c', 'bnc_d', 'bnc_e', 'bnc_f'],
-   'version': '3.2'}],
- 'processor': 'MK20DX256'}
-dev.blink_led('?')
-{'firmware': 'CallbackTester',
- 'functions': ['trigger', 'attachTo', 'detachFrom'],
- 'name': 'blinkLed',
- 'parameters': ['pin_name', 'pin_mode'],
- 'pins': ['bnc_e'],
- 'properties': ['durationOn', 'durationOff', 'count']}
-dev.blink_led('trigger')
-dev.blink_led()
-dev.blink_led('attachTo','??')
-{'firmware': 'ModularServer',
- 'name': 'attachTo',
- 'parameters': [{'name': 'pin_name',
-   'subset': ['ALL',
-    'led',
-    'bnc_a',
-    'bnc_b',
-    'bnc_c',
-    'bnc_d',
-    'bnc_e',
-    'bnc_f'],
-   'type': 'string'},
-  {'name': 'pin_mode',
-   'subset': ['INTERRUPT_LOW',
-    'INTERRUPT_CHANGE',
-    'INTERRUPT_RISING',
-    'INTERRUPT_FALLING'],
-   'type': 'string'}]}
-dev.blink_led('attachTo','bnc_f','INTERRUPT_FALLING')
-dev.count('setValue',2)
-2
-dev.blink_led()
+     from modular_client import ModularClient
+     dev = ModularClient() # Automatically finds device if one available
+     dev.get_device_id()
+     {'form_factor': '3x2', 'name': 'callback_tester', 'serial_number': 0}
+     dev.get_methods()
+     ['duration_off',
+      'get_property_default_values',
+      'set_led_on',
+      'blink_led',
+      'set_properties_to_defaults',
+      'get_device_id',
+      'serial_number',
+      'duration_on',
+      'get_pin_value',
+      'get_device_info',
+      'set_pin_mode',
+      'get_api',
+      'set_led_off',
+      'get_pin_info',
+      'set_pin_value',
+      'count',
+      'get_property_values']
+     dev.set_properties_to_defaults(['ALL'])
+     dev.get_device_info()
+     {'firmware': [{'name': 'ModularServer', 'version': '5.0.0'},
+                   {'name': 'CallbackTester', 'version': '2.0.0'}],
+      'hardware': [{'name': 'Teensy',
+                    'pins': ['led', 'bnc_a', 'bnc_b', 'bnc_c', 'bnc_d', 'bnc_e', 'bnc_f'],
+                    'version': '3.2'}],
+      'processor': 'MK20DX256'}
+     dev.blink_led('?')
+     {'firmware': 'CallbackTester',
+      'functions': ['trigger', 'attachTo', 'detachFrom'],
+      'name': 'blinkLed',
+      'parameters': ['pin_name', 'pin_mode'],
+      'pins': ['bnc_e'],
+      'properties': ['durationOn', 'durationOff', 'count']}
+     dev.blink_led('trigger')
+     dev.blink_led()
+     dev.blink_led('attachTo','??')
+     {'firmware': 'ModularServer',
+      'name': 'attachTo',
+      'parameters': [{'name': 'pin_name',
+                      'subset': ['ALL',
+                                 'led',
+                                 'bnc_a',
+                                 'bnc_b',
+                                 'bnc_c',
+                                 'bnc_d',
+                                 'bnc_e',
+                                 'bnc_f'],
+                      'type': 'string'},
+                     {'name': 'pin_mode',
+                      'subset': ['INTERRUPT_LOW',
+                                 'INTERRUPT_CHANGE',
+                                 'INTERRUPT_RISING',
+                                 'INTERRUPT_FALLING'],
+                      'type': 'string'}]}
+     dev.blink_led('attachTo','bnc_f','INTERRUPT_FALLING')
+     dev.count('setValue',2)
+     2
+     dev.blink_led()
    #+END_SRC
 
    For more details on the Python interface:
@@ -652,67 +652,67 @@ dev.blink_led()
    Example Matlab session:
 
    #+BEGIN_SRC matlab
-% Linux and Mac OS X
-ls /dev/tty*
-serial_port = '/dev/ttyACM0'     % example Linux serial port
-serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
-% Windows
-getAvailableComPorts()
-ans =
-  'COM1'
-  'COM4'
-serial_port = 'COM4'             % example Windows serial port
-dev = ModularClient(serial_port) % creates a device object
-dev.open()                       % opens a serial connection to the device
-dev.getDeviceId()
-ans =
-  name: 'callback_tester'
-  form_factor: '3x2'
-  serial_number: 0
-dev.getMethods()                 % get device methods
-ans =
-  Modular Device Methods
-  ---------------------
-  getDeviceId
-  getDeviceInfo
-  getApi
-  getPropertyDefaultValues
-  setPropertiesToDefaults
-  getPropertyValues
-  getPinInfo
-  setPinMode
-  getPinValue
-  setPinValue
-  setLedOn
-  setLedOff
-  blinkLed
-  serialNumber
-  durationOn
-  durationOff
-  count
-dev.setPropertiesToDefaults({'ALL'});
-dev.blinkLed('?')
-ans =
-  name: 'blinkLed'
-  firmware: 'CallbackTester'
-  properties: {'durationOn'  'durationOff'  'count'}
-  pins: {'bnc_e'}
-  functions: {'trigger'  'attachTo'  'detachFrom'}
-  parameters: {'pin_name'  'pin_mode'}
-dev.blinkLed('trigger');
-dev.blinkLed();
-dev.blinkLed('attachTo','??')
-ans =
-  name: 'attachTo'
-  firmware: 'ModularServer'
-  parameters: {[1x1 struct]  [1x1 struct]}
-dev.blinkLed('attachTo','bnc_f','INTERRUPT_FALLING');
-dev.count('setValue',2)
-ans =
-  2
-dev.blinkLed();
-dev.close()
-clear dev
+     % Linux and Mac OS X
+     ls /dev/tty*
+     serial_port = '/dev/ttyACM0'     % example Linux serial port
+     serial_port = '/dev/tty.usbmodem262471' % example Mac OS X serial port
+                                             % Windows
+     getAvailableComPorts()
+     ans =
+     'COM1'
+     'COM4'
+     serial_port = 'COM4'             % example Windows serial port
+     dev = ModularClient(serial_port) % creates a device object
+     dev.open()                       % opens a serial connection to the device
+     dev.getDeviceId()
+     ans =
+     name: 'callback_tester'
+     form_factor: '3x2'
+     serial_number: 0
+     dev.getMethods()                 % get device methods
+     ans =
+     Modular Device Methods
+     ---------------------
+     getDeviceId
+     getDeviceInfo
+     getApi
+     getPropertyDefaultValues
+     setPropertiesToDefaults
+     getPropertyValues
+     getPinInfo
+     setPinMode
+     getPinValue
+     setPinValue
+     setLedOn
+     setLedOff
+     blinkLed
+     serialNumber
+     durationOn
+     durationOff
+     count
+     dev.setPropertiesToDefaults({'ALL'});
+     dev.blinkLed('?')
+     ans =
+     name: 'blinkLed'
+     firmware: 'CallbackTester'
+     properties: {'durationOn'  'durationOff'  'count'}
+         pins: {'bnc_e'}
+         functions: {'trigger'  'attachTo'  'detachFrom'}
+         parameters: {'pin_name'  'pin_mode'}
+         dev.blinkLed('trigger');
+         dev.blinkLed();
+         dev.blinkLed('attachTo','??')
+         ans =
+         name: 'attachTo'
+         firmware: 'ModularServer'
+         parameters: {[1x1 struct]  [1x1 struct]}
+         dev.blinkLed('attachTo','bnc_f','INTERRUPT_FALLING');
+         dev.count('setValue',2)
+         ans =
+         2
+         dev.blinkLed();
+         dev.close()
+         clear dev
    #+END_SRC
 
    For more details on the Matlab interface:
