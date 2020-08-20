@@ -310,6 +310,35 @@ void Response::returnParameterNotFoundError()
   }
 }
 
+void Response::returnParameterIncorrectTypeError(const ConstantString & parameter_name)
+{
+  // Prevent multiple errors in one response
+  if (!error_)
+  {
+    writeKey(constants::error_constant_string);
+    beginObject();
+    write(constants::message_constant_string,constants::invalid_params_error_message);
+
+    char parameter_name_str[parameter_name.length()+1];
+    parameter_name_str[0] = '\0';
+    parameter_name.copy(parameter_name_str);
+
+    char parameter_incorrect_type_error_str[constants::parameter_incorrect_type_error_data.length()+1];
+    parameter_incorrect_type_error_str[0] = '\0';
+    constants::parameter_incorrect_type_error_data.copy(parameter_incorrect_type_error_str);
+
+    char error_str[constants::STRING_LENGTH_ERROR];
+    error_str[0] = '\0';
+    strcat(error_str,parameter_name_str);
+    strcat(error_str,parameter_incorrect_type_error_str);
+    write(constants::data_constant_string,error_str);
+
+    write(constants::code_constant_string,constants::invalid_params_error_code);
+    endObject();
+    error_ = true;
+  }
+}
+
 void Response::returnParameterArrayLengthError(const ConstantString & parameter_name,
   const char * const min_str,
   const char * const max_str)

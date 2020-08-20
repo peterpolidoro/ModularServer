@@ -89,6 +89,7 @@ private:
     size_t parameter_count_needed);
   void returnMethodNotFoundError();
   void returnParameterNotFoundError();
+  void returnParameterIncorrectTypeError(const ConstantString & parameter_name);
   void returnParameterArrayLengthError(const ConstantString & parameter_name,
     const char * const min_str,
     const char * const max_str);

@@ -103,6 +103,7 @@ CONSTANT_STRING(server_error_error_message,"Server error");
 CONSTANT_STRING(object_request_error_data,"JSON object requests not supported. Must use compact JSON array format for requests.");
 CONSTANT_STRING(request_length_error_data,"Request length too long.");
 CONSTANT_STRING(parameter_not_found_error_data,"Parameter not found");
+CONSTANT_STRING(parameter_incorrect_type_error_data," parameter has incorrect type.");
 CONSTANT_STRING(property_not_found_error_data,"Property not found");
 CONSTANT_STRING(property_not_array_type_error_data,"Property not array type");
 CONSTANT_STRING(property_element_index_out_of_bounds_error_data,"property_element_index out of bounds");

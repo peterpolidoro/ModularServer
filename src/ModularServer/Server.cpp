@@ -912,6 +912,7 @@ bool Server::checkParameters(Function & function,
 bool Server::checkParameter(Parameter & parameter,
   ArduinoJson::JsonVariant & json_value)
 {
+  bool correct_type = true;
   bool in_subset = true;
   bool in_range = true;
   bool array_length_in_range = true;
@@ -927,7 +928,12 @@ bool Server::checkParameter(Parameter & parameter,
   {
     case JsonStream::LONG_TYPE:
     {
-      long value = (long)json_value;
+      if (!json_value.is<unsigned long>())
+      {
+        correct_type = false;
+        break;
+      }
+      long value = json_value.as<unsigned long>();
       if (!parameter.valueInSubset(value))
       {
         in_subset = false;
@@ -945,7 +951,12 @@ bool Server::checkParameter(Parameter & parameter,
     }
     case JsonStream::DOUBLE_TYPE:
     {
-      double value = (double)json_value;
+      if (!json_value.is<double>())
+      {
+        correct_type = false;
+        break;
+      }
+      double value = json_value.as<double>();
       if (!parameter.valueInRange(value))
       {
         in_range = false;
@@ -958,6 +969,10 @@ bool Server::checkParameter(Parameter & parameter,
     }
     case JsonStream::BOOL_TYPE:
     {
+      if (!json_value.is<bool>())
+      {
+        correct_type = false;
+      }
       break;
     }
     case JsonStream::NULL_TYPE:
@@ -966,7 +981,12 @@ bool Server::checkParameter(Parameter & parameter,
     }
     case JsonStream::STRING_TYPE:
     {
-      const char * value = (const char *)json_value;
+      if (!json_value.is<const char *>())
+      {
+        correct_type = false;
+        break;
+      }
+      const char * value = json_value.as<const char *>();
       if (!parameter.valueInSubset(value))
       {
         in_subset = false;
@@ -975,6 +995,11 @@ bool Server::checkParameter(Parameter & parameter,
     }
     case JsonStream::OBJECT_TYPE:
     {
+      if (!json_value.is<ArduinoJson::JsonObject>())
+      {
+        correct_type = false;
+        break;
+      }
       ArduinoJson::JsonObject & json_object = json_value;
       if (!json_object.success())
       {
@@ -984,6 +1009,11 @@ bool Server::checkParameter(Parameter & parameter,
     }
     case JsonStream::ARRAY_TYPE:
     {
+      if (!json_value.is<ArduinoJson::JsonArray>())
+      {
+        correct_type = false;
+        break;
+      }
       ArduinoJson::JsonArray & json_array = json_value;
       if (!json_array.success())
       {
@@ -1020,7 +1050,11 @@ bool Server::checkParameter(Parameter & parameter,
       break;
     }
   }
-  if (!in_subset)
+  if (!correct_type)
+  {
+    response_.returnParameterIncorrectTypeError(parameter.getName());
+  }
+  else if (!in_subset)
   {
     Vector<constants::SubsetMemberType> & subset = parameter.getSubset();
     char subset_str[constants::STRING_LENGTH_ERROR];
@@ -1099,7 +1133,7 @@ bool Server::checkArrayParameterElement(Parameter & parameter,
       {
         case JsonStream::LONG_TYPE:
         {
-          long value = (long)json_value;
+          long value = json_value.as<long>();
           if (!parameter.valueInSubset(value))
           {
             in_subset = false;
@@ -1117,7 +1151,7 @@ bool Server::checkArrayParameterElement(Parameter & parameter,
         }
         case JsonStream::DOUBLE_TYPE:
         {
-          double value = (double)json_value;
+          double value = json_value.as<double>();
           if (!parameter.valueInRange(value))
           {
             in_range = false;
@@ -1138,7 +1172,7 @@ bool Server::checkArrayParameterElement(Parameter & parameter,
         }
         case JsonStream::STRING_TYPE:
         {
-          const char * value = (const char *)json_value;
+          const char * value = json_value.as<const char *>();
           if (!parameter.valueInSubset(value))
           {
             in_subset = false;
@@ -1356,7 +1390,7 @@ void Server::help(bool verbose)
       {
         Property & property = properties_[property_index];
         property.updateFunctionsAndParameters();
-        int property_function_index = property.findFunctionIndex((const char *)parameter1_string);
+        int property_function_index = property.findFunctionIndex(parameter1_string);
         if (property_function_index >= 0)
         {
           param_error = false;
@@ -1388,7 +1422,7 @@ void Server::help(bool verbose)
     {
       Property & property = properties_[property_index];
       property.updateFunctionsAndParameters();
-      int property_function_index = property.findFunctionIndex((const char *)parameter1_string);
+      int property_function_index = property.findFunctionIndex(parameter1_string);
       if (property_function_index >= 0)
       {
         Function & function = property.functions_[property_function_index];

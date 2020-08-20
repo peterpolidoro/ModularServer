@@ -149,6 +149,7 @@ extern ConstantString server_error_error_message;
 extern ConstantString object_request_error_data;
 extern ConstantString request_length_error_data;
 extern ConstantString parameter_not_found_error_data;
+extern ConstantString parameter_incorrect_type_error_data;
 extern ConstantString property_not_found_error_data;
 extern ConstantString property_not_array_type_error_data;
 extern ConstantString property_element_index_out_of_bounds_error_data;
