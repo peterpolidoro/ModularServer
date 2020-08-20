@@ -531,14 +531,32 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
   return (*request_json_array_ptr_)[parameter_index];
 }
 
+const char * Server::getRequestElementAsString(size_t element_index,
+  size_t element_count)
+{
+  if ((element_index < element_count) && (*request_json_array_ptr_)[element_index].is<const char *>())
+  {
+    return (*request_json_array_ptr_)[element_index].as<const char *>();
+  }
+  else
+  {
+    return empty_string_;
+  }
+}
+
 void Server::processRequestArray()
 {
-  const char * method_string = (*request_json_array_ptr_)[0];
+  size_t request_element_count = countJsonArrayElements((*request_json_array_ptr_));
+
+  const char * method_string = getRequestElementAsString(0,request_element_count);
+  const char * parameter0_string = getRequestElementAsString(1,request_element_count);
+  const char * parameter1_string = getRequestElementAsString(2,request_element_count);
+  const char * parameter2_string = getRequestElementAsString(3,request_element_count);
+
   request_method_index_ = findMethodIndex(method_string);
   if (request_method_index_ >= 0)
   {
-    size_t array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
-    size_t parameter_count = (array_elements_count > 0) ? (array_elements_count - 1) : 0;
+    size_t parameter_count = (request_element_count > 0) ? (request_element_count - 1) : 0;
     char question_str[constants::question_constant_string.length()+1];
     constants::question_constant_string.copy(question_str);
     char question_double_str[constants::question_double_constant_string.length()+1];
@@ -548,13 +566,13 @@ void Server::processRequestArray()
       int function_index = request_method_index_;
       Function & function = functions_[function_index];
       // function ?
-      if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
+      if ((parameter_count == 1) && (strcmp(parameter0_string,question_str) == 0))
       {
         response_.writeResultKey();
         function.writeApi(response_,false,true,false);
       }
       // function ??
-      else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
+      else if ((parameter_count == 1) && (strcmp(parameter0_string,question_double_str) == 0))
       {
         response_.writeResultKey();
         function.writeApi(response_,false,true,true);
@@ -562,10 +580,10 @@ void Server::processRequestArray()
       // function parameter ?
       // function parameter ??
       else if ((parameter_count == 2) &&
-        ((strcmp((*request_json_array_ptr_)[2],question_str) == 0) ||
-          (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0)))
+        ((strcmp(parameter1_string,question_str) == 0) ||
+          (strcmp(parameter1_string,question_double_str) == 0)))
       {
-        int parameter_index = processParameterString(function,(*request_json_array_ptr_)[1]);
+        int parameter_index = processParameterString(function,parameter0_string);
         if (parameter_index >= 0)
         {
           Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
@@ -601,13 +619,13 @@ void Server::processRequestArray()
       int callback_index = request_method_index_ - functions_.size();
       Callback & callback = callbacks_[callback_index];
       // callback ?
-      if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
+      if ((parameter_count == 1) && (strcmp(parameter0_string,question_str) == 0))
       {
         response_.writeResultKey();
         callback.writeApi(response_,false,true,false,false,true);
       }
       // callback ??
-      else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
+      else if ((parameter_count == 1) && (strcmp(parameter0_string,question_double_str) == 0))
       {
         response_.writeResultKey();
         callback.writeApi(response_,false,true,true,true,true);
@@ -627,7 +645,7 @@ void Server::processRequestArray()
         callback.updateFunctionsAndParameters();
 
         // index 0 is the request method, index 1 is the callback function
-        const char * callback_function_name = (*request_json_array_ptr_)[1];
+        const char * callback_function_name = parameter0_string;
         callback_function_index_ = callback.findFunctionIndex(callback_function_name);
         if (callback_function_index_ < 0)
         {
@@ -640,13 +658,13 @@ void Server::processRequestArray()
         size_t callback_parameter_count = (parameter_count > 0) ? (parameter_count - 1) : 0;
 
         // callback function ?
-        if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
+        if ((callback_parameter_count == 1) && (strcmp(parameter1_string,question_str) == 0))
         {
           response_.writeResultKey();
           function.writeApi(response_,false,true,false);
         }
         // callback function ??
-        else if ((callback_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
+        else if ((callback_parameter_count == 1) && (strcmp(parameter1_string,question_double_str) == 0))
         {
           response_.writeResultKey();
           function.writeApi(response_,false,true,true);
@@ -654,10 +672,10 @@ void Server::processRequestArray()
         // callback function parameter ?
         // callback function parameter ??
         else if ((callback_parameter_count == 2) &&
-          ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
-            (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
+          ((strcmp(parameter2_string,question_str) == 0) ||
+            (strcmp(parameter2_string,question_double_str) == 0)))
         {
-          int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
+          int parameter_index = processParameterString(function,parameter1_string);
           if (parameter_index >= 0)
           {
             Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
@@ -692,13 +710,13 @@ void Server::processRequestArray()
       int property_index = request_method_index_ - functions_.size() - callbacks_.size();
       Property & property = properties_[property_index];
       // property ?
-      if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_str) == 0))
+      if ((parameter_count == 1) && (strcmp(parameter0_string,question_str) == 0))
       {
         response_.writeResultKey();
         property.writeApi(response_,false,true,false,true);
       }
       // property ??
-      else if ((parameter_count == 1) && (strcmp((*request_json_array_ptr_)[1],question_double_str) == 0))
+      else if ((parameter_count == 1) && (strcmp(parameter0_string,question_double_str) == 0))
       {
         response_.writeResultKey();
         property.writeApi(response_,false,true,true,true);
@@ -718,7 +736,7 @@ void Server::processRequestArray()
         property.updateFunctionsAndParameters();
 
         // index 0 is the request method, index 1 is the property function
-        const char * property_function_name = (*request_json_array_ptr_)[1];
+        const char * property_function_name = parameter0_string;
         property_function_index_ = property.findFunctionIndex(property_function_name);
         if (property_function_index_ < 0)
         {
@@ -731,13 +749,13 @@ void Server::processRequestArray()
         size_t property_parameter_count = (parameter_count > 0) ? (parameter_count - 1) : 0;
 
         // property function ?
-        if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_str) == 0))
+        if ((property_parameter_count == 1) && (strcmp(parameter1_string,question_str) == 0))
         {
           response_.writeResultKey();
           function.writeApi(response_,false,true,false);
         }
         // property function ??
-        else if ((property_parameter_count == 1) && (strcmp((*request_json_array_ptr_)[2],question_double_str) == 0))
+        else if ((property_parameter_count == 1) && (strcmp(parameter1_string,question_double_str) == 0))
         {
           response_.writeResultKey();
           function.writeApi(response_,false,true,true);
@@ -745,10 +763,10 @@ void Server::processRequestArray()
         // property function parameter ?
         // property function parameter ??
         else if ((property_parameter_count == 2) &&
-          ((strcmp((*request_json_array_ptr_)[3],question_str) == 0) ||
-            (strcmp((*request_json_array_ptr_)[3],question_double_str) == 0)))
+          ((strcmp(parameter2_string,question_str) == 0) ||
+            (strcmp(parameter2_string,question_double_str) == 0)))
         {
-          int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
+          int parameter_index = processParameterString(function,parameter1_string);
           if (parameter_index >= 0)
           {
             Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
@@ -1204,8 +1222,13 @@ void Server::help(bool verbose)
     return;
   }
 
-  int array_elements_count = countJsonArrayElements((*request_json_array_ptr_));
-  int parameter_count = array_elements_count - 1;
+  size_t request_element_count = countJsonArrayElements((*request_json_array_ptr_));
+
+  const char * parameter0_string = getRequestElementAsString(1,request_element_count);
+  const char * parameter1_string = getRequestElementAsString(2,request_element_count);
+  const char * parameter2_string = getRequestElementAsString(3,request_element_count);
+
+  int parameter_count = request_element_count - 1;
   bool param_error = true;
   // ?
   // ??
@@ -1255,7 +1278,7 @@ void Server::help(bool verbose)
   // ?? callback
   else if (parameter_count == 1)
   {
-    const char * param_string = (*request_json_array_ptr_)[1];
+    const char * param_string = parameter0_string;
     int function_index = findFunctionIndex(param_string);
     if ((function_index >= 0) && (function_index < (int)functions_.size()))
     {
@@ -1311,13 +1334,13 @@ void Server::help(bool verbose)
   // ?? property function
   else if (parameter_count == 2)
   {
-    const char * method_string = (*request_json_array_ptr_)[1];
+    const char * method_string = parameter0_string;
     int function_index = findFunctionIndex(method_string);
     if (function_index >= 0)
     {
       Function & function = functions_[function_index];
 
-      int parameter_index = processParameterString(function,(*request_json_array_ptr_)[2]);
+      int parameter_index = processParameterString(function,parameter1_string);
       if (parameter_index >= 0)
       {
         param_error = false;
@@ -1333,7 +1356,7 @@ void Server::help(bool verbose)
       {
         Property & property = properties_[property_index];
         property.updateFunctionsAndParameters();
-        int property_function_index = property.findFunctionIndex((const char *)(*request_json_array_ptr_)[2]);
+        int property_function_index = property.findFunctionIndex((const char *)parameter1_string);
         if (property_function_index >= 0)
         {
           param_error = false;
@@ -1359,17 +1382,17 @@ void Server::help(bool verbose)
   // ?? property function parameter
   else if (parameter_count == 3)
   {
-    const char * method_string = (*request_json_array_ptr_)[1];
+    const char * method_string = parameter0_string;
     int property_index = findPropertyIndex(method_string);
     if (property_index >= 0)
     {
       Property & property = properties_[property_index];
       property.updateFunctionsAndParameters();
-      int property_function_index = property.findFunctionIndex((const char *)(*request_json_array_ptr_)[2]);
+      int property_function_index = property.findFunctionIndex((const char *)parameter1_string);
       if (property_function_index >= 0)
       {
         Function & function = property.functions_[property_function_index];
-        int parameter_index = processParameterString(function,(*request_json_array_ptr_)[3]);
+        int parameter_index = processParameterString(function,parameter2_string);
         if (parameter_index >= 0)
         {
           param_error = false;

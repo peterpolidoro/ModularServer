@@ -141,10 +141,13 @@ private:
   bool eeprom_initialized_;
   SavedVariable eeprom_initialized_sv_;
   bool server_running_;
+  const char * empty_string_ = "";
 
   template <typename T>
   int findPinIndex(T const & pin_name);
   ArduinoJson::JsonVariant getParameterValue(const ConstantString & parameter_name);
+  const char * getRequestElementAsString(size_t element_index,
+    size_t element_count);
   void processRequestArray();
   int findMethodIndex(const char * method_string);
   template <typename T>
