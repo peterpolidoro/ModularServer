@@ -203,6 +203,8 @@ CONSTANT_STRING(processor_name_constant_string,"MK20DX256");
 CONSTANT_STRING(processor_name_constant_string,"MK64FX512");
 #elif defined(__MK66FX1M0__)
 CONSTANT_STRING(processor_name_constant_string,"MK66FX1M0");
+#elif defined(__IMXRT1062__)
+CONSTANT_STRING(processor_name_constant_string,"IMXRT1062");
 #else
 CONSTANT_STRING(processor_name_constant_string,"");
 #endif
