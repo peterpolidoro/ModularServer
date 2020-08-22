@@ -529,7 +529,7 @@ bool Property::setValue<ConstantString *>(ConstantString * const & value)
   return success;
 }
 
-bool Property::setValue(ArduinoJson::JsonArray & value)
+bool Property::setValue(ArduinoJson::JsonArray value)
 {
   bool success = false;
   JsonStream::JsonTypes property_type = getType();
@@ -1218,7 +1218,7 @@ const ConstantString & Property::getFirmwareName()
   return parameter_.getFirmwareName();
 }
 
-bool Property::firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array)
+bool Property::firmwareNameInArray(ArduinoJson::JsonArray firmware_name_array)
 {
   return parameter_.firmwareNameInArray(firmware_name_array);
 }
@@ -1832,7 +1832,7 @@ void Property::setValueHandler()
     }
     case JsonStream::ARRAY_TYPE:
     {
-      ArduinoJson::JsonArray & value = get_parameter_value_functor_(property::value_parameter_name);
+      ArduinoJson::JsonArray value = get_parameter_value_functor_(property::value_parameter_name);
       setValue(value);
       break;
     }

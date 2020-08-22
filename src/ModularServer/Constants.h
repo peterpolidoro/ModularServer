@@ -33,6 +33,8 @@ enum {PIN_COUNT_MAX=64};
 
 enum{SERVER_STREAM_COUNT_MAX=4};
 
+enum{JSON_DOCUMENT_SIZE=1024};
+
 enum{STRING_LENGTH_REQUEST=257};
 enum{STRING_LENGTH_ERROR=257};
 enum{STRING_LENGTH_PARAMETER_COUNT=3};
@@ -44,7 +46,7 @@ enum{SUBSET_ELEMENT_COUNT_MAX=20};
 
 enum {JSON_TOKEN_MAX=32};
 
-enum {FIRMWARE_NAME_JSON_BUFFER_SIZE=128};
+enum {FIRMWARE_NAME_JSON_DOCUMENT_SIZE=128};
 
 struct FirmwareInfo
 {
@@ -155,8 +157,6 @@ extern ConstantString property_not_array_type_error_data;
 extern ConstantString property_element_index_out_of_bounds_error_data;
 extern ConstantString cannot_set_element_in_string_property_with_subset_error_data;
 extern ConstantString incorrect_parameter_number_error_data;
-extern ConstantString invalid_json_object_error_data;
-extern ConstantString invalid_json_array_error_data;
 extern ConstantString parameter_error_error_data;
 extern ConstantString array_parameter_error_error_data;
 extern ConstantString array_parameter_length_error_error_data;

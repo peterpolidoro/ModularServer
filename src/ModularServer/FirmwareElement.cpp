@@ -62,14 +62,12 @@ bool FirmwareElement::compareFirmwareName(constants::SubsetMemberType firmware_n
 }
 
 template <>
-bool FirmwareElement::firmwareNameInArray<ArduinoJson::JsonArray>(ArduinoJson::JsonArray & firmware_name_array)
+bool FirmwareElement::firmwareNameInArray<ArduinoJson::JsonArray>(ArduinoJson::JsonArray firmware_name_array)
 {
-  for (ArduinoJson::JsonArray::iterator it=firmware_name_array.begin();
-       it!=firmware_name_array.end();
-       ++it)
+  for (ArduinoJson::JsonVariant value : firmware_name_array)
   {
-    const char * value = *it;
-    if (compareFirmwareName(value))
+    const char * name = value.as<const char *>();
+    if (compareFirmwareName(name))
     {
       return true;
     }

@@ -377,56 +377,6 @@ void Response::returnParameterArrayLengthError(const ConstantString & parameter_
   }
 }
 
-void Response::returnParameterObjectParseError(const ConstantString & parameter_name)
-{
-  // Prevent multiple errors in one response
-  if (!error_)
-  {
-    writeKey(constants::error_constant_string);
-    beginObject();
-    write(constants::message_constant_string,constants::invalid_params_error_message);
-    char parameter_name_str[parameter_name.length()+1];
-    parameter_name_str[0] = '\0';
-    parameter_name.copy(parameter_name_str);
-    char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = '\0';
-    strcat(error_str,parameter_name_str);
-    char invalid_json_object_str[constants::invalid_json_object_error_data.length()+1];
-    invalid_json_object_str[0] = '\0';
-    constants::invalid_json_object_error_data.copy(invalid_json_object_str);
-    strcat(error_str,invalid_json_object_str);
-    write(constants::data_constant_string,error_str);
-    write(constants::code_constant_string,constants::invalid_params_error_code);
-    endObject();
-    error_ = true;
-  }
-}
-
-void Response::returnParameterArrayParseError(const ConstantString & parameter_name)
-{
-  // Prevent multiple errors in one response
-  if (!error_)
-  {
-    writeKey(constants::error_constant_string);
-    beginObject();
-    write(constants::message_constant_string,constants::invalid_params_error_message);
-    char parameter_name_str[parameter_name.length()+1];
-    parameter_name_str[0] = '\0';
-    parameter_name.copy(parameter_name_str);
-    char error_str[constants::STRING_LENGTH_ERROR];
-    error_str[0] = '\0';
-    strcat(error_str,parameter_name_str);
-    char invalid_json_array_str[constants::invalid_json_array_error_data.length()+1];
-    invalid_json_array_str[0] = '\0';
-    constants::invalid_json_array_error_data.copy(invalid_json_array_str);
-    strcat(error_str,invalid_json_array_str);
-    write(constants::data_constant_string,error_str);
-    write(constants::code_constant_string,constants::invalid_params_error_code);
-    endObject();
-    error_ = true;
-  }
-}
-
 void Response::returnParameterInvalidError(const ConstantString & error)
 {
   // Prevent multiple errors in one response

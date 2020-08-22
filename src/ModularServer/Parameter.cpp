@@ -342,7 +342,7 @@ bool Parameter::getValue(ArduinoJson::JsonArray * & value)
     value = NULL;
     return false;
   }
-  ArduinoJson::JsonArray & array = get_value_functor_(getName());
+  ArduinoJson::JsonArray array = get_value_functor_(getName()).as<ArduinoJson::JsonArray>();
   value = &array;
   return true;
 }
@@ -354,7 +354,7 @@ bool Parameter::getValue(ArduinoJson::JsonObject * & value)
     value = NULL;
     return false;
   }
-  ArduinoJson::JsonObject & object = get_value_functor_(getName());
+  ArduinoJson::JsonObject object = get_value_functor_(getName()).as<ArduinoJson::JsonObject>();
   value = &object;
   return true;
 }

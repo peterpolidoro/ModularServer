@@ -194,33 +194,40 @@ void StringController::charsAtHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
-  ArduinoJson::JsonArray * index_array_ptr;
-  modular_server_.parameter(constants::index_array_parameter_name).getValue(index_array_ptr);
+  // ArduinoJson::JsonArray * index_array_ptr;
+  // modular_server_.parameter(constants::index_array_parameter_name).getValue(index_array_ptr);
   modular_server::Response & response = modular_server_.response();
-  for (ArduinoJson::JsonArray::iterator it=index_array_ptr->begin();
-       it != index_array_ptr->end();
-       ++it)
-  {
-    size_t index = *it;
-    if (index >= String(string).length())
-    {
-      response.returnError(constants::index_error);
-      return;
-    }
-  }
+    // Serial << "index_array_ptr->size() = " << index_array_ptr->size() << "\n";
+    // delay(500);
+  // for (ArduinoJson::JsonVariant value : *index_array_ptr)
+  // {
+  //   size_t index = value.as<long>();
+  //   Serial << "index first time: " << index << "\n";
+  //   delay(500);
+  //   // if (index >= String(string).length())
+  //   // {
+  //   //   response.returnError(constants::index_error);
+  //   //   return;
+  //   // }
+  // }
   response.writeResultKey();
   response.beginArray();
-  for (ArduinoJson::JsonArray::iterator it=index_array_ptr->begin();
-       it != index_array_ptr->end();
-       ++it)
-  {
-    response.beginObject();
-    long index = *it;
-    response.write("index",index);
-    char c = string[index];
-    response.write("char",c);
-    response.endObject();
-  }
+  // Serial << "about to enter second loop\n";
+  //   delay(500);
+    // Serial << "index_array_ptr->size() = " << index_array_ptr->size() << "\n";
+    // delay(500);
+  // for (ArduinoJson::JsonVariant value : *index_array_ptr)
+  // {
+  //   // response.beginObject();
+  //   // size_t index = 2;
+  //   long index = value.as<long>();
+  //   Serial << "index second time: " << index << "\n";
+  //   delay(500);
+  //   // response.write("index",index);
+  //   // char c = string[index];
+  //   // response.write("char",c);
+  //   // response.endObject();
+  // }
   response.endArray();
 }
 

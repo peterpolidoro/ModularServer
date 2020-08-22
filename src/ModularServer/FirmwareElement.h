@@ -28,7 +28,7 @@ public:
   bool compareFirmwareName(const ConstantString * firmware_name_to_compare_ptr);
   bool compareFirmwareName(constants::SubsetMemberType firmware_name_to_compare);
   template <typename T>
-  bool firmwareNameInArray(T & firmware_name_array);
+  bool firmwareNameInArray(T firmware_name_array);
   template <typename U,
     size_t MAX_SIZE>
   bool firmwareNameInArray(Array<U,MAX_SIZE> & firmware_name_array);

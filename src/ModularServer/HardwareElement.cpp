@@ -42,14 +42,12 @@ bool HardwareElement::compareHardwareName(const ConstantString & hardware_name_t
   return (&hardware_name_to_compare == hardware_name_ptr_);
 }
 
-bool HardwareElement::hardwareNameInArray(ArduinoJson::JsonArray & hardware_name_array)
+bool HardwareElement::hardwareNameInArray(ArduinoJson::JsonArray hardware_name_array)
 {
-  for (ArduinoJson::JsonArray::iterator it=hardware_name_array.begin();
-       it!=hardware_name_array.end();
-       ++it)
+  for (ArduinoJson::JsonVariant value : hardware_name_array)
   {
-    const char* value = *it;
-    if (compareHardwareName(value))
+    const char * name = value.as<const char *>();
+    if (compareHardwareName(name))
     {
       return true;
     }

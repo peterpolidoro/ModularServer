@@ -449,11 +449,12 @@ void Server::handleRequest()
 {
   if (server_running_ && (server_stream_ptrs_.size() > 0) && (server_json_stream_.available() > 0))
   {
-    long bytes_read = server_json_stream_.readJsonIntoBuffer(request_);
+    char request[constants::STRING_LENGTH_REQUEST];
+    long bytes_read = server_json_stream_.readJsonIntoBuffer(request);
     if (bytes_read > 0)
     {
       JsonSanitizer<constants::JSON_TOKEN_MAX> sanitizer;
-      if (sanitizer.firstCharIsValidJson(request_))
+      if (sanitizer.firstCharIsValidJson(request))
       {
         response_.setCompactPrint();
       }
@@ -462,22 +463,23 @@ void Server::handleRequest()
         response_.setPrettyPrint();
       }
       response_.begin();
-      sanitizer.sanitizeBuffer(request_);
-      StaticJsonBuffer<constants::STRING_LENGTH_REQUEST> json_buffer;
-      if (sanitizer.firstCharIsValidJsonObject(request_))
+      sanitizer.sanitizeBuffer(request);
+      StaticJsonDocument<constants::JSON_DOCUMENT_SIZE> json_document;
+      if (sanitizer.firstCharIsValidJsonObject(request))
       {
         response_.returnError(constants::object_request_error_data);
       }
       else
       {
-        request_json_array_ptr_ = &(json_buffer.parseArray(request_));
-        if (request_json_array_ptr_->success())
+        ArduinoJson::DeserializationError error = deserializeJson(json_document,request);
+        if (!error)
         {
+          request_json_array_ = json_document.as<ArduinoJson::JsonArray>();
           processRequestArray();
         }
         else
         {
-          response_.returnRequestParseError(request_);
+          response_.returnRequestParseError(request);
         }
       }
       response_.end();
@@ -528,15 +530,15 @@ ArduinoJson::JsonVariant Server::getParameterValue(const ConstantString & parame
       parameter_index += findFunctionParameterIndex(function,parameter_name) + 1;
     }
   }
-  return (*request_json_array_ptr_)[parameter_index];
+  return request_json_array_[parameter_index];
 }
 
 const char * Server::getRequestElementAsString(size_t element_index,
   size_t element_count)
 {
-  if ((element_index < element_count) && (*request_json_array_ptr_)[element_index].is<const char *>())
+  if ((element_index < element_count) && request_json_array_[element_index].is<const char *>())
   {
-    return (*request_json_array_ptr_)[element_index].as<const char *>();
+    return request_json_array_[element_index].as<const char *>();
   }
   else
   {
@@ -546,8 +548,7 @@ const char * Server::getRequestElementAsString(size_t element_index,
 
 void Server::processRequestArray()
 {
-  size_t request_element_count = countJsonArrayElements((*request_json_array_ptr_));
-
+  size_t request_element_count = request_json_array_.size();
   const char * method_string = getRequestElementAsString(0,request_element_count);
   const char * parameter0_string = getRequestElementAsString(1,request_element_count);
   const char * parameter1_string = getRequestElementAsString(2,request_element_count);
@@ -605,9 +606,8 @@ void Server::processRequestArray()
       // check parameters and call function functor
       else
       {
-        ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
-        ++iterator;
-        bool parameters_ok = checkParameters(function,iterator);
+        size_t request_array_start_index = 1; // skip none
+        bool parameters_ok = checkParameters(function,request_array_start_index);
         if (parameters_ok)
         {
           function.functor();
@@ -692,12 +692,8 @@ void Server::processRequestArray()
         // check callback parameters and call callback function functor
         else
         {
-          ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
-          // do not check callback at begin
-          ++iterator;
-          // do not check callback method at begin + 1
-          ++iterator;
-          bool parameters_ok = checkParameters(function,iterator);
+          size_t request_array_start_index = 2; // skip callback and callback method
+          bool parameters_ok = checkParameters(function,request_array_start_index);
           if (parameters_ok)
           {
             function.functor();
@@ -783,12 +779,8 @@ void Server::processRequestArray()
         // check property parameters and call property function functor
         else
         {
-          ArduinoJson::JsonArray::iterator iterator = request_json_array_ptr_->begin();
-          // do not check property at begin
-          ++iterator;
-          // do not check property method at begin + 1
-          ++iterator;
-          bool parameters_ok = checkParameters(function,iterator);
+          size_t request_array_start_index = 2; // skip property and property method
+          bool parameters_ok = checkParameters(function,request_array_start_index);
           if (parameters_ok)
           {
             function.functor();
@@ -846,18 +838,6 @@ int Server::findMethodIndex(const char * method_string)
   return method_index;
 }
 
-size_t Server::countJsonArrayElements(ArduinoJson::JsonArray & json_array)
-{
-  size_t elements_count = 0;
-  for (ArduinoJson::JsonArray::iterator it=json_array.begin();
-       it!=json_array.end();
-       ++it)
-  {
-    ++elements_count;
-  }
-  return elements_count;
-}
-
 int Server::processParameterString(Function & function,
   const char * parameter_string)
 {
@@ -888,18 +868,21 @@ int Server::processParameterString(Function & function,
 }
 
 bool Server::checkParameters(Function & function,
-  ArduinoJson::JsonArray::iterator iterator)
+  size_t request_array_start_index)
 {
-  int parameter_index = 0;
-  for (ArduinoJson::JsonArray::iterator it=iterator;
-       it!=request_json_array_ptr_->end();
-       ++it)
+  size_t parameter_index = 0;
+  size_t request_array_index = 0;
+  for (ArduinoJson::JsonVariant value : request_json_array_)
   {
+    if (request_array_index < request_array_start_index)
+    {
+      break;
+    }
     Parameter * parameter_ptr = NULL;
     parameter_ptr = function.parameter_ptrs_[parameter_index];
-    if (checkParameter(*parameter_ptr,*it))
+    if (checkParameter(*parameter_ptr,value))
     {
-      parameter_index++;
+      ++parameter_index;
     }
     else
     {
@@ -910,15 +893,13 @@ bool Server::checkParameters(Function & function,
 }
 
 bool Server::checkParameter(Parameter & parameter,
-  ArduinoJson::JsonVariant & json_value)
+  ArduinoJson::JsonVariant json_value)
 {
   bool correct_type = true;
   bool in_subset = true;
   bool in_range = true;
   bool array_length_in_range = true;
   bool array_elements_ok = true;
-  bool object_parse_unsuccessful = false;
-  bool array_parse_unsuccessful = false;
   char min_str[JsonStream::STRING_LENGTH_DOUBLE];
   min_str[0] = '\0';
   char max_str[JsonStream::STRING_LENGTH_DOUBLE];
@@ -1000,11 +981,6 @@ bool Server::checkParameter(Parameter & parameter,
         correct_type = false;
         break;
       }
-      ArduinoJson::JsonObject & json_object = json_value;
-      if (!json_object.success())
-      {
-        object_parse_unsuccessful = true;
-      }
       break;
     }
     case JsonStream::ARRAY_TYPE:
@@ -1014,33 +990,24 @@ bool Server::checkParameter(Parameter & parameter,
         correct_type = false;
         break;
       }
-      ArduinoJson::JsonArray & json_array = json_value;
-      if (!json_array.success())
+      ArduinoJson::JsonArray json_array = json_value.as<ArduinoJson::JsonArray>();
+      size_t array_length = json_array.size();
+      if (!parameter.arrayLengthInRange(array_length))
       {
-        array_parse_unsuccessful = true;
+        array_length_in_range = false;
+        size_t array_length_min = parameter.getArrayLengthMin();
+        size_t array_length_max = parameter.getArrayLengthMax();
+        dtostrf(array_length_min,0,0,min_str);
+        dtostrf(array_length_max,0,0,max_str);
+        break;
       }
-      else
+      for (ArduinoJson::JsonVariant value : json_array)
       {
-        size_t array_length = json_array.size();
-        if (!parameter.arrayLengthInRange(array_length))
+        bool parameter_ok = checkArrayParameterElement(parameter,value);
+        if (!parameter_ok)
         {
-          array_length_in_range = false;
-          size_t array_length_min = parameter.getArrayLengthMin();
-          size_t array_length_max = parameter.getArrayLengthMax();
-          dtostrf(array_length_min,0,0,min_str);
-          dtostrf(array_length_max,0,0,max_str);
+          array_elements_ok = false;
           break;
-        }
-        for (ArduinoJson::JsonArray::iterator it=json_array.begin();
-             it!=json_array.end();
-             ++it)
-        {
-          bool parameter_ok = checkArrayParameterElement(parameter,*it);
-          if (!parameter_ok)
-          {
-            array_elements_ok = false;
-            break;
-          }
         }
       }
       break;
@@ -1078,20 +1045,12 @@ bool Server::checkParameter(Parameter & parameter,
   {
     response_.returnParameterArrayLengthError(parameter.getName(),min_str,max_str);
   }
-  else if (object_parse_unsuccessful)
-  {
-    response_.returnParameterObjectParseError(parameter.getName());
-  }
-  else if (array_parse_unsuccessful)
-  {
-    response_.returnParameterArrayParseError(parameter.getName());
-  }
-  bool parameter_ok = in_subset && in_range && array_length_in_range && array_elements_ok && (!object_parse_unsuccessful) && (!array_parse_unsuccessful);
+  bool parameter_ok = in_subset && in_range && array_length_in_range && array_elements_ok;
   return parameter_ok;
 }
 
 bool Server::checkArrayParameterElement(Parameter & parameter,
-  ArduinoJson::JsonVariant & json_value)
+  ArduinoJson::JsonVariant json_value)
 {
   bool in_subset = true;
   bool in_range = true;
@@ -1256,7 +1215,7 @@ void Server::help(bool verbose)
     return;
   }
 
-  size_t request_element_count = countJsonArrayElements((*request_json_array_ptr_));
+  size_t request_element_count = request_json_array_.size();
 
   const char * parameter0_string = getRequestElementAsString(1,request_element_count);
   const char * parameter1_string = getRequestElementAsString(2,request_element_count);
@@ -1277,8 +1236,8 @@ void Server::help(bool verbose)
 
     response_.writeKey(constants::api_constant_string);
 
-    ArduinoJson::StaticJsonBuffer<constants::FIRMWARE_NAME_JSON_BUFFER_SIZE> json_buffer;
-    ArduinoJson::JsonArray & firmware_name_array = json_buffer.createArray();
+    ArduinoJson::StaticJsonDocument<constants::FIRMWARE_NAME_JSON_DOCUMENT_SIZE> json_document;
+    ArduinoJson::JsonArray firmware_name_array = json_document.to<ArduinoJson::JsonArray>();
 
     if (verbose)
     {
@@ -1602,7 +1561,7 @@ void Server::writePinInfoToResponse(const ConstantString & pin_name)
 }
 
 void Server::writeApiToResponse(const ConstantString & verbosity,
-  ArduinoJson::JsonArray & firmware_name_array)
+  ArduinoJson::JsonArray firmware_name_array)
 {
   if (response_.error())
   {
@@ -1703,19 +1662,17 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
   response_.endObject();
 }
 
-bool Server::containsAllOrMoreThanOne(ArduinoJson::JsonArray & firmware_name_array)
+bool Server::containsAllOrMoreThanOne(ArduinoJson::JsonArray firmware_name_array)
 {
   size_t length = 0;
-  for (ArduinoJson::JsonArray::iterator it=firmware_name_array.begin();
-       it!=firmware_name_array.end();
-       ++it)
+  for (ArduinoJson::JsonVariant value : firmware_name_array)
   {
     ++length;
     if (length > 1)
     {
       return true;
     }
-    const char * firmware_name_to_compare = *it;
+    const char * firmware_name_to_compare = value.as<const char *>();
     if (firmware_name_to_compare == constants::all_constant_string)
     {
       return true;
@@ -1724,7 +1681,7 @@ bool Server::containsAllOrMoreThanOne(ArduinoJson::JsonArray & firmware_name_arr
   return false;
 }
 
-size_t Server::getPropertiesCount(ArduinoJson::JsonArray & firmware_name_array)
+size_t Server::getPropertiesCount(ArduinoJson::JsonArray firmware_name_array)
 {
   size_t count = 0;
   for (size_t property_index=0; property_index<properties_.size(); ++property_index)
@@ -1737,7 +1694,7 @@ size_t Server::getPropertiesCount(ArduinoJson::JsonArray & firmware_name_array)
   return count;
 }
 
-size_t Server::getParametersCount(ArduinoJson::JsonArray & firmware_name_array)
+size_t Server::getParametersCount(ArduinoJson::JsonArray firmware_name_array)
 {
   size_t count = 0;
   for (size_t property_index=0; property_index<parameters_.size(); ++property_index)
@@ -1750,7 +1707,7 @@ size_t Server::getParametersCount(ArduinoJson::JsonArray & firmware_name_array)
   return count;
 }
 
-size_t Server::getFunctionsCount(ArduinoJson::JsonArray & firmware_name_array)
+size_t Server::getFunctionsCount(ArduinoJson::JsonArray firmware_name_array)
 {
   size_t count = 0;
   for (size_t property_index=0; property_index<functions_.size(); ++property_index)
@@ -1763,7 +1720,7 @@ size_t Server::getFunctionsCount(ArduinoJson::JsonArray & firmware_name_array)
   return count;
 }
 
-size_t Server::getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array)
+size_t Server::getCallbacksCount(ArduinoJson::JsonArray firmware_name_array)
 {
   size_t count = 0;
   for (size_t property_index=0; property_index<callbacks_.size(); ++property_index)

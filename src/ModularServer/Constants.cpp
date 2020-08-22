@@ -109,8 +109,6 @@ CONSTANT_STRING(property_not_array_type_error_data,"Property not array type");
 CONSTANT_STRING(property_element_index_out_of_bounds_error_data,"property_element_index out of bounds");
 CONSTANT_STRING(cannot_set_element_in_string_property_with_subset_error_data,"Cannot set element in string property with subset.");
 CONSTANT_STRING(incorrect_parameter_number_error_data,"Incorrect number of parameters. ")
-CONSTANT_STRING(invalid_json_object_error_data," is not a valid JSON object.")
-CONSTANT_STRING(invalid_json_array_error_data," is not a valid JSON array.")
 CONSTANT_STRING(parameter_error_error_data,"Parameter value not valid. ");
 CONSTANT_STRING(array_parameter_error_error_data,"Array parameter element value not valid. ");
 CONSTANT_STRING(array_parameter_length_error_error_data,"Array parameter length not valid. ");

@@ -93,8 +93,6 @@ private:
   void returnParameterArrayLengthError(const ConstantString & parameter_name,
     const char * const min_str,
     const char * const max_str);
-  void returnParameterObjectParseError(const ConstantString & parameter_name);
-  void returnParameterArrayParseError(const ConstantString & parameter_name);
   void returnParameterInvalidError(const ConstantString & error);
   void returnParameterNotInSubsetError(const char * const subset_str,
     const JsonStream::JsonTypes & parameter_type);

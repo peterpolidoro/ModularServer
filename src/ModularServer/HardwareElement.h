@@ -24,7 +24,7 @@ public:
   void setHardwareName(const ConstantString & hardware_name);
   bool compareHardwareName(const char * hardware_name_to_compare);
   bool compareHardwareName(const ConstantString & hardware_name_to_compare);
-  bool hardwareNameInArray(ArduinoJson::JsonArray & hardware_name_array);
+  bool hardwareNameInArray(ArduinoJson::JsonArray hardware_name_array);
   const ConstantString &  getHardwareName();
 
 private:

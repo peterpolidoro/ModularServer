@@ -107,8 +107,7 @@ private:
   size_t server_stream_index_;
   JsonStream server_json_stream_;
 
-  char request_[constants::STRING_LENGTH_REQUEST];
-  ArduinoJson::JsonArray  * request_json_array_ptr_;
+  ArduinoJson::JsonArray request_json_array_;
 
   Response response_;
 
@@ -161,15 +160,14 @@ private:
   int findFunctionIndex(T const & function_name);
   template <typename T>
   int findCallbackIndex(T const & callback_name);
-  size_t countJsonArrayElements(ArduinoJson::JsonArray & json_array);
   int processParameterString(Function & function,
     const char * parameter_string);
   bool checkParameters(Function & function,
-    ArduinoJson::JsonArray::iterator iterator);
+    size_t request_array_start_index);
   bool checkParameter(Parameter & parameter,
-    ArduinoJson::JsonVariant & json_value);
+    ArduinoJson::JsonVariant json_value);
   bool checkArrayParameterElement(Parameter & parameter,
-    ArduinoJson::JsonVariant & json_value);
+    ArduinoJson::JsonVariant json_value);
   long getSerialNumber();
   void initializeEeprom();
   void incrementServerStream();
@@ -180,12 +178,12 @@ private:
   void writeDeviceInfoToResponse();
   void writePinInfoToResponse(const ConstantString & pin_name);
   void writeApiToResponse(const ConstantString & verbosity,
-    ArduinoJson::JsonArray & firmware_name_array);
-  bool containsAllOrMoreThanOne(ArduinoJson::JsonArray & firmware_name_array);
-  size_t getPropertiesCount(ArduinoJson::JsonArray & firmware_name_array);
-  size_t getParametersCount(ArduinoJson::JsonArray & firmware_name_array);
-  size_t getFunctionsCount(ArduinoJson::JsonArray & firmware_name_array);
-  size_t getCallbacksCount(ArduinoJson::JsonArray & firmware_name_array);
+    ArduinoJson::JsonArray firmware_name_array);
+  bool containsAllOrMoreThanOne(ArduinoJson::JsonArray firmware_name_array);
+  size_t getPropertiesCount(ArduinoJson::JsonArray firmware_name_array);
+  size_t getParametersCount(ArduinoJson::JsonArray firmware_name_array);
+  size_t getFunctionsCount(ArduinoJson::JsonArray firmware_name_array);
+  size_t getCallbacksCount(ArduinoJson::JsonArray firmware_name_array);
   void versionToString(char * destination,
     long major,
     long minor,

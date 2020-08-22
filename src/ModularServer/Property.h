@@ -108,7 +108,7 @@ public:
   bool setValue(Array<bool,N> & value);
   template <size_t N>
   bool setValue(Array<const ConstantString *,N> & value);
-  bool setValue(ArduinoJson::JsonArray & value);
+  bool setValue(ArduinoJson::JsonArray value);
   template <typename T>
   bool setValue(T * value,
     size_t N);
@@ -253,7 +253,7 @@ private:
   bool compareName(const ConstantString & name_to_compare);
   const ConstantString & getName();
   const ConstantString &  getFirmwareName();
-  bool firmwareNameInArray(ArduinoJson::JsonArray & firmware_name_array);
+  bool firmwareNameInArray(ArduinoJson::JsonArray firmware_name_array);
   JsonStream::JsonTypes getType();
   JsonStream::JsonTypes getArrayElementType();
   bool rangeIsSet();
