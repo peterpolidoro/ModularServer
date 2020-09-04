@@ -1570,7 +1570,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
 
   response_.beginObject();
 
-  response_.write(constants::firmware_constant_string,&firmware_name_array);
+  response_.write(constants::firmware_constant_string,firmware_name_array);
 
   response_.write(constants::verbosity_constant_string,verbosity);
 
@@ -1931,21 +1931,21 @@ void Server::getApiHandler()
   const char * verbosity;
   parameter(constants::verbosity_constant_string).getValue(verbosity);
 
-  ArduinoJson::JsonArray * firmware_name_array_ptr;
-  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
+  ArduinoJson::JsonArray firmware_name_array;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array);
   response_.writeResultKey();
 
   if (verbosity == constants::verbosity_names)
   {
-    writeApiToResponse(constants::verbosity_names,*firmware_name_array_ptr);
+    writeApiToResponse(constants::verbosity_names,firmware_name_array);
   }
   else if (verbosity == constants::verbosity_general)
   {
-    writeApiToResponse(constants::verbosity_general,*firmware_name_array_ptr);
+    writeApiToResponse(constants::verbosity_general,firmware_name_array);
   }
   else if (verbosity == constants::verbosity_detailed)
   {
-    writeApiToResponse(constants::verbosity_detailed,*firmware_name_array_ptr);
+    writeApiToResponse(constants::verbosity_detailed,firmware_name_array);
   }
 }
 
@@ -1958,15 +1958,15 @@ void Server::getMemoryFreeHandler()
 
 void Server::getPropertyDefaultValuesHandler()
 {
-  ArduinoJson::JsonArray * firmware_name_array_ptr;
-  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
+  ArduinoJson::JsonArray firmware_name_array;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array);
 
   response_.writeResultKey();
   response_.beginObject();
   for (size_t i=0; i<properties_.size(); ++i)
   {
     Property & property = properties_[i];
-    if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
+    if (property.parameter().firmwareNameInArray(firmware_name_array))
     {
       property.writeValue(response_,true,true);
     }
@@ -1976,15 +1976,15 @@ void Server::getPropertyDefaultValuesHandler()
 
 void Server::getPropertyValuesHandler()
 {
-  ArduinoJson::JsonArray * firmware_name_array_ptr;
-  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
+  ArduinoJson::JsonArray firmware_name_array;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array);
 
   response_.writeResultKey();
   response_.beginObject();
   for (size_t i=0; i<properties_.size(); ++i)
   {
     Property & property = properties_[i];
-    if (property.parameter().firmwareNameInArray(*firmware_name_array_ptr))
+    if (property.parameter().firmwareNameInArray(firmware_name_array))
     {
       property.writeValue(response_,true,false);
     }
@@ -1994,10 +1994,10 @@ void Server::getPropertyValuesHandler()
 
 void Server::setPropertiesToDefaultsHandler()
 {
-  ArduinoJson::JsonArray * firmware_name_array_ptr;
-  parameter(constants::firmware_constant_string).getValue(firmware_name_array_ptr);
+  ArduinoJson::JsonArray firmware_name_array;
+  parameter(constants::firmware_constant_string).getValue(firmware_name_array);
 
-  setPropertiesToDefaults(*firmware_name_array_ptr);
+  setPropertiesToDefaults(firmware_name_array);
 }
 
 void Server::getPinInfoHandler()

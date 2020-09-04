@@ -16,9 +16,9 @@ CONSTANT_STRING(firmware_name,"ModularServer");
 const FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=5,
+  .version_major=6,
   .version_minor=0,
-  .version_patch=4,
+  .version_patch=0,
 };
 
 const long response_pipe_read_max = 100000;

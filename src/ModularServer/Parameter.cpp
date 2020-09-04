@@ -335,27 +335,23 @@ bool Parameter::getValue(const char * & value)
   return true;
 }
 
-bool Parameter::getValue(ArduinoJson::JsonArray * & value)
+bool Parameter::getValue(ArduinoJson::JsonArray & value)
 {
   if (getType() != JsonStream::ARRAY_TYPE)
   {
-    value = NULL;
     return false;
   }
-  ArduinoJson::JsonArray array = get_value_functor_(getName()).as<ArduinoJson::JsonArray>();
-  value = &array;
+  value = get_value_functor_(getName());
   return true;
 }
 
-bool Parameter::getValue(ArduinoJson::JsonObject * & value)
+bool Parameter::getValue(ArduinoJson::JsonObject & value)
 {
   if (getType() != JsonStream::OBJECT_TYPE)
   {
-    value = NULL;
     return false;
   }
-  ArduinoJson::JsonObject object = get_value_functor_(getName()).as<ArduinoJson::JsonObject>();
-  value = &object;
+  value = get_value_functor_(getName());
   return true;
 }
 
@@ -510,7 +506,7 @@ int Parameter::findSubsetValueIndex(long value)
   int value_index = -1;
   if (subsetIsSet())
   {
-    for(size_t i=0; i<subset_.size(); ++i)
+    for (size_t i=0; i<subset_.size(); ++i)
     {
       if (value == subset_[i].l)
       {
@@ -527,7 +523,7 @@ int Parameter::findSubsetValueIndex(const char * value)
   int value_index = -1;
   if (subsetIsSet())
   {
-    for(size_t i=0; i<subset_.size(); ++i)
+    for (size_t i=0; i<subset_.size(); ++i)
     {
       if (value == *subset_[i].cs_ptr)
       {
@@ -544,7 +540,7 @@ int Parameter::findSubsetValueIndex(const ConstantString * value)
   int value_index = -1;
   if (subsetIsSet())
   {
-    for(size_t i=0; i<subset_.size(); ++i)
+    for (size_t i=0; i<subset_.size(); ++i)
     {
       if (value == subset_[i].cs_ptr)
       {

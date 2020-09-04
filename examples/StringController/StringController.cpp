@@ -129,8 +129,8 @@ void StringController::update()
 // floating-point number (float, double)
 // bool
 // const char *
-// ArduinoJson::JsonArray *
-// ArduinoJson::JsonObject *
+// ArduinoJson::JsonArray
+// ArduinoJson::JsonObject
 // const ConstantString *
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
@@ -194,40 +194,29 @@ void StringController::charsAtHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
-  // ArduinoJson::JsonArray * index_array_ptr;
-  // modular_server_.parameter(constants::index_array_parameter_name).getValue(index_array_ptr);
+  ArduinoJson::JsonArray index_array;
+  modular_server_.parameter(constants::index_array_parameter_name).getValue(index_array);
   modular_server::Response & response = modular_server_.response();
-    // Serial << "index_array_ptr->size() = " << index_array_ptr->size() << "\n";
-    // delay(500);
-  // for (ArduinoJson::JsonVariant value : *index_array_ptr)
-  // {
-  //   size_t index = value.as<long>();
-  //   Serial << "index first time: " << index << "\n";
-  //   delay(500);
-  //   // if (index >= String(string).length())
-  //   // {
-  //   //   response.returnError(constants::index_error);
-  //   //   return;
-  //   // }
-  // }
+  for (ArduinoJson::JsonVariant value : index_array)
+  {
+    size_t index = value.as<long>();
+    if (index >= String(string).length())
+    {
+      response.returnError(constants::index_error);
+      return;
+    }
+  }
   response.writeResultKey();
   response.beginArray();
-  // Serial << "about to enter second loop\n";
-  //   delay(500);
-    // Serial << "index_array_ptr->size() = " << index_array_ptr->size() << "\n";
-    // delay(500);
-  // for (ArduinoJson::JsonVariant value : *index_array_ptr)
-  // {
-  //   // response.beginObject();
-  //   // size_t index = 2;
-  //   long index = value.as<long>();
-  //   Serial << "index second time: " << index << "\n";
-  //   delay(500);
-  //   // response.write("index",index);
-  //   // char c = string[index];
-  //   // response.write("char",c);
-  //   // response.endObject();
-  // }
+  for (ArduinoJson::JsonVariant value : index_array)
+  {
+    response.beginObject();
+    long index = value.as<long>();
+    response.write("index",index);
+    char c = string[index];
+    response.write("char",c);
+    response.endObject();
+  }
   response.endArray();
 }
 

@@ -210,8 +210,8 @@ void PropertyTester::update()
 // floating-point number (float, double)
 // bool
 // const char *
-// ArduinoJson::JsonArray *
-// ArduinoJson::JsonObject *
+// ArduinoJson::JsonArray
+// ArduinoJson::JsonObject
 // const ConstantString *
 //
 // For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
@@ -281,9 +281,9 @@ void PropertyTester::setLongArrayVariableHandler()
 
 void PropertyTester::setLongArrayParameterHandler()
 {
-  ArduinoJson::JsonArray * long_array_ptr;
-  modular_server_.parameter(constants::long_array_parameter_name).getValue(long_array_ptr);
-  bool success = modular_server_.property(constants::long_array_property_name).setValue(*long_array_ptr);
+  ArduinoJson::JsonArray long_array;
+  modular_server_.parameter(constants::long_array_parameter_name).getValue(long_array);
+  bool success = modular_server_.property(constants::long_array_property_name).setValue(long_array);
   modular_server_.response().returnResult(success);
 }
 
@@ -357,9 +357,9 @@ void PropertyTester::getCountHandler()
 
 void PropertyTester::getCountArrayHandler()
 {
-  ArduinoJson::JsonArray * count_array_ptr;
-  modular_server_.parameter(constants::count_array_parameter_name).getValue(count_array_ptr);
-  modular_server_.response().returnResult(count_array_ptr);
+  ArduinoJson::JsonArray count_array;
+  modular_server_.parameter(constants::count_array_parameter_name).getValue(count_array);
+  modular_server_.response().returnResult(count_array);
 }
 
 void PropertyTester::getDirectionHandler()
@@ -379,9 +379,9 @@ void PropertyTester::getDirectionHandler()
 
 void PropertyTester::getDirectionArrayHandler()
 {
-  ArduinoJson::JsonArray * direction_array_ptr;
-  modular_server_.parameter(constants::direction_array_parameter_name).getValue(direction_array_ptr);
-  modular_server_.response().returnResult(direction_array_ptr);
+  ArduinoJson::JsonArray direction_array;
+  modular_server_.parameter(constants::direction_array_parameter_name).getValue(direction_array);
+  modular_server_.response().returnResult(direction_array);
 }
 
 void PropertyTester::checkModeHandler()
