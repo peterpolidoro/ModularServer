@@ -874,9 +874,9 @@ bool Server::checkParameters(Function & function,
   size_t request_array_index = 0;
   for (ArduinoJson::JsonVariant value : request_json_array_)
   {
-    if (request_array_index < request_array_start_index)
+    if (request_array_index++ < request_array_start_index)
     {
-      break;
+      continue;
     }
     Parameter * parameter_ptr = NULL;
     parameter_ptr = function.parameter_ptrs_[parameter_index];
@@ -1664,14 +1664,12 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
 
 bool Server::containsAllOrMoreThanOne(ArduinoJson::JsonArray firmware_name_array)
 {
-  size_t length = 0;
+  if (firmware_name_array.size() > 1)
+  {
+    return true;
+  }
   for (ArduinoJson::JsonVariant value : firmware_name_array)
   {
-    ++length;
-    if (length > 1)
-    {
-      return true;
-    }
     const char * firmware_name_to_compare = value.as<const char *>();
     if (firmware_name_to_compare == constants::all_constant_string)
     {
