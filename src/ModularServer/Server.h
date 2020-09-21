@@ -149,6 +149,7 @@ private:
     size_t element_count);
   void processRequestArray();
   int findMethodIndex(const char * method_string);
+  int findMethodIndex(int method_id);
   template <typename T>
   int findPropertyIndex(T const & property_name);
   template <typename T>

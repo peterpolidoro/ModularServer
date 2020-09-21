@@ -549,12 +549,19 @@ const char * Server::getRequestElementAsString(size_t element_index,
 void Server::processRequestArray()
 {
   size_t request_element_count = request_json_array_.size();
-  const char * method_string = getRequestElementAsString(0,request_element_count);
+  if ((0 < request_element_count) && request_json_array_[0].is<signed int>())
+  {
+    int method_id = request_json_array_[0].as<signed int>();
+    request_method_index_ = findMethodIndex(method_id);
+  }
+  else
+  {
+    const char * method_string = getRequestElementAsString(0,request_element_count);
+    request_method_index_ = findMethodIndex(method_string);
+  }
   const char * parameter0_string = getRequestElementAsString(1,request_element_count);
   const char * parameter1_string = getRequestElementAsString(2,request_element_count);
   const char * parameter2_string = getRequestElementAsString(3,request_element_count);
-
-  request_method_index_ = findMethodIndex(method_string);
   if (request_method_index_ >= 0)
   {
     size_t parameter_count = (request_element_count > 0) ? (request_element_count - 1) : 0;
@@ -798,42 +805,36 @@ void Server::processRequestArray()
 
 int Server::findMethodIndex(const char * method_string)
 {
-  int method_index = -1;
-  int method_id = atoi(method_string);
-  char zero_str[constants::zero_constant_string.length()+1];
-  constants::zero_constant_string.copy(zero_str);
-  if (strcmp(method_string,zero_str) == 0)
+  int method_index = findFunctionIndex(method_string);
+  if (method_index >= 0)
   {
-    method_index = 0;
-    response_.write(constants::id_constant_string,0);
+    response_.write(constants::id_constant_string,method_string);
+    return method_index;
   }
-  else if (method_id > 0)
+  method_index = findCallbackIndex(method_string);
+  if (method_index >= 0)
+  {
+    response_.write(constants::id_constant_string,method_string);
+    method_index += functions_.size();
+    return method_index;
+  }
+  method_index = findPropertyIndex(method_string);
+  if (method_index >= 0)
+  {
+    response_.write(constants::id_constant_string,method_string);
+    method_index += functions_.size() + callbacks_.size();
+    return method_index;
+  }
+  return method_index;
+}
+
+int Server::findMethodIndex(int method_id)
+{
+  int method_index = -1;
+  if (method_id >= 0)
   {
     method_index = method_id;
     response_.write(constants::id_constant_string,method_id);
-  }
-  else
-  {
-    method_index = findFunctionIndex(method_string);
-    if (method_index >= 0)
-    {
-      response_.write(constants::id_constant_string,method_string);
-      return method_index;
-    }
-    method_index = findCallbackIndex(method_string);
-    if (method_index >= 0)
-    {
-      response_.write(constants::id_constant_string,method_string);
-      method_index += functions_.size();
-      return method_index;
-    }
-    method_index = findPropertyIndex(method_string);
-    if (method_index >= 0)
-    {
-      response_.write(constants::id_constant_string,method_string);
-      method_index += functions_.size() + callbacks_.size();
-      return method_index;
-    }
   }
   return method_index;
 }
