@@ -148,29 +148,10 @@ bool Property::getValue<const ConstantString *>(const ConstantString * & value)
 }
 
 template <>
-bool Property::getValue<const ConstantString *>(const ConstantString * value,
+bool Property::getValue<const ConstantString>(const ConstantString * value,
   size_t N)
 {
-  JsonStream::JsonTypes type = getType();
-  size_t array_length = getArrayLength();
-  size_t array_length_min = min(array_length,N);
-  bool success;
-  for (size_t i=0; i<array_length_min; ++i)
-  {
-    T v;
-    success = getElementValue(i,v);
-    if (!success)
-    {
-      return false;
-    }
-    value[i] = v;
-  }
-  if ((type == JsonStream::STRING_TYPE) &&
-    (array_length_min >= 1))
-  {
-    return false;
-  }
-  return true;
+  return getValue(value);
 }
 
 template <>
