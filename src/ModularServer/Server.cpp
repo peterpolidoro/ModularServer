@@ -910,12 +910,12 @@ bool Server::checkParameter(Parameter & parameter,
   {
     case JsonStream::LONG_TYPE:
     {
-      if (!json_value.is<unsigned long>())
+      if (!json_value.is<signed long>())
       {
         correct_type = false;
         break;
       }
-      long value = json_value.as<unsigned long>();
+      long value = json_value.as<signed long>();
       if (!parameter.valueInSubset(value))
       {
         in_subset = false;
