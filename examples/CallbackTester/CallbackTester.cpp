@@ -2,7 +2,7 @@
 // CallbackTester.cpp
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #include "CallbackTester.h"
 

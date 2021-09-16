@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef BOARD_LED_CONTROLLER_CONSTANTS_H
 #define BOARD_LED_CONTROLLER_CONSTANTS_H

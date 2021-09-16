@@ -2,7 +2,7 @@
 // StringController.h
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef STRING_CONTROLLER_H
 #define STRING_CONTROLLER_H

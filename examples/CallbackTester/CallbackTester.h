@@ -2,7 +2,7 @@
 // CallbackTester.h
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef CALLBACK_TESTER_H
 #define CALLBACK_TESTER_H

@@ -2,7 +2,7 @@
 // MinimalDevice.h
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef MINIMAL_DEVICE_H
 #define MINIMAL_DEVICE_H

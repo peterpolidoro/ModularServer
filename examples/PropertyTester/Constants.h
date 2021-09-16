@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef PROPERTY_TESTER_CONSTANTS_H
 #define PROPERTY_TESTER_CONSTANTS_H

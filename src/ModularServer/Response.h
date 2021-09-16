@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef _MODULAR_SERVER_RESPONSE_H_
 #define _MODULAR_SERVER_RESPONSE_H_

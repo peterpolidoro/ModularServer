@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef MINIMAL_DEVICE_CONSTANTS_H
 #define MINIMAL_DEVICE_CONSTANTS_H
