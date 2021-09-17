@@ -95,6 +95,8 @@ const size_t index_array_length_max = 3;
 
 CONSTANT_STRING(double_echo_parameter_name,"double_echo");
 
+CONSTANT_STRING(array_to_echo_parameter_name,"array_to_echo");
+
 // Functions
 CONSTANT_STRING(echo_function_name,"echo");
 CONSTANT_STRING(length_function_name,"length");
@@ -104,6 +106,7 @@ CONSTANT_STRING(chars_at_function_name,"charsAt");
 CONSTANT_STRING(starting_chars_function_name,"startingChars");
 CONSTANT_STRING(set_stored_string_function_name,"setStoredString");
 CONSTANT_STRING(get_stored_string_function_name,"getStoredString");
+CONSTANT_STRING(echo_array_function_name,"echoArray");
 
 // Callbacks
 

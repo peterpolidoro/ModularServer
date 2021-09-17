@@ -15,8 +15,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=2};
-enum{PARAMETER_COUNT_MAX=5};
-enum{FUNCTION_COUNT_MAX=8};
+enum{PARAMETER_COUNT_MAX=6};
+enum{FUNCTION_COUNT_MAX=9};
 enum{CALLBACK_COUNT_MAX=1};
 
 enum{PIN_COUNT_MAX=1};
@@ -65,6 +65,10 @@ extern const size_t index_array_length_max;
 
 extern ConstantString double_echo_parameter_name;
 
+extern ConstantString array_to_echo_parameter_name;
+constexpr size_t array_to_echo_length_min = 1;
+constexpr size_t array_to_echo_length_max = 20;
+
 // Functions
 extern ConstantString echo_function_name;
 extern ConstantString length_function_name;
@@ -74,6 +78,7 @@ extern ConstantString chars_at_function_name;
 extern ConstantString starting_chars_function_name;
 extern ConstantString set_stored_string_function_name;
 extern ConstantString get_stored_string_function_name;
+extern ConstantString echo_array_function_name;
 
 // Errors
 extern ConstantString index_error;

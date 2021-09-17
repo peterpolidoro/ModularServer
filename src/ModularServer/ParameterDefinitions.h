@@ -80,6 +80,41 @@ bool Parameter::getValue(T & value)
   return false;
 }
 
+template <typename U,
+  size_t N>
+bool Parameter::getValue(Array<U,N> & value)
+{
+  if (getType() != JsonStream::ARRAY_TYPE)
+  {
+    return false;
+  }
+  ArduinoJson::JsonArray json_array = get_value_functor_(getName());
+  value.clear();
+  for (ArduinoJson::JsonVariant variant : json_array)
+  {
+    U element = variant.as<U>();
+    value.push_back(element);
+  }
+  return true;
+}
+
+template <typename U>
+bool Parameter::getValue(Vector<U> & value)
+{
+  if (getType() != JsonStream::ARRAY_TYPE)
+  {
+    return false;
+  }
+  ArduinoJson::JsonArray json_array = get_value_functor_(getName());
+  value.clear();
+  for (ArduinoJson::JsonVariant variant : json_array)
+  {
+    U element = variant.as<U>();
+    value.push_back(element);
+  }
+  return true;
+}
+
 // private
 template <typename T>
 bool Parameter::valueInRange(T value)

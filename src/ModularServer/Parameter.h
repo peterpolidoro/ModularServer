@@ -65,6 +65,11 @@ public:
   template <typename T>
   bool getValue(T & value);
   bool getValue(const char * & value);
+  template <typename U,
+    size_t N>
+  bool getValue(Array<U,N> & value);
+  template <typename U>
+  bool getValue(Vector<U> & value);
   bool getValue(ArduinoJson::JsonArray & value);
   bool getValue(ArduinoJson::JsonObject & value);
   bool getValue(const ConstantString * & value);

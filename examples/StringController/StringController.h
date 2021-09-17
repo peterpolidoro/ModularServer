@@ -38,6 +38,7 @@ private:
   void startingCharsHandler();
   void setStoredStringHandler();
   void getStoredStringHandler();
+  void echoArrayHandler();
 
 };
 

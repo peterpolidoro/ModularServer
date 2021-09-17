@@ -59,6 +59,9 @@ void StringController::setup()
   modular_server::Parameter & double_echo_parameter = modular_server_.createParameter(constants::double_echo_parameter_name);
   double_echo_parameter.setTypeBool();
 
+  modular_server::Parameter & array_to_echo_parameter = modular_server_.createParameter(constants::array_to_echo_parameter_name);
+  array_to_echo_parameter.setArrayLengthRange(constants::array_to_echo_length_min,constants::array_to_echo_length_max);
+
   // Functions
   modular_server::Function & echo_function = modular_server_.createFunction(constants::echo_function_name);
   echo_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::echoHandler));
@@ -104,6 +107,12 @@ void StringController::setup()
   modular_server::Function & get_stored_string_function = modular_server_.createFunction(constants::get_stored_string_function_name);
   get_stored_string_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::getStoredStringHandler));
   get_stored_string_function.setResultTypeString();
+
+  modular_server::Function & echo_array_function = modular_server_.createFunction(constants::echo_array_function_name);
+  echo_array_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&StringController::echoArrayHandler));
+  echo_array_function.addParameter(array_to_echo_parameter);
+  echo_array_function.setResultTypeArray();
+  echo_array_function.setResultTypeLong();
 
   // Callbacks
 
@@ -226,4 +235,23 @@ void StringController::getStoredStringHandler()
   char stored_string[array_length];
   property.getValue(stored_string,array_length);
   modular_server_.response().returnResult(stored_string);
+}
+
+void StringController::echoArrayHandler()
+{
+  Array<uint8_t,constants::array_to_echo_length_max> array_to_echo;
+
+  // test vector too
+  // uint8_t storage_array[constants::array_to_echo_length_max];
+  // Vector<uint8_t> array_to_echo(storage_array);
+
+  modular_server_.parameter(constants::array_to_echo_parameter_name).getValue(array_to_echo);
+  modular_server::Response & response = modular_server_.response();
+  response.writeResultKey();
+  response.beginArray();
+  for (uint8_t value : array_to_echo)
+  {
+    response.write(value);
+  }
+  response.endArray();
 }
