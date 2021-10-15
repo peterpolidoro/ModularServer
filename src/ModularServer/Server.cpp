@@ -577,13 +577,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp(parameter0_string,question_str) == 0))
       {
         response_.writeResultKey();
-        function.writeApi(response_,false,true,false);
+        function.writeApi(response_,false,true,true,false);
       }
       // function ??
       else if ((parameter_count == 1) && (strcmp(parameter0_string,question_double_str) == 0))
       {
         response_.writeResultKey();
-        function.writeApi(response_,false,true,true);
+        function.writeApi(response_,false,true,true,true);
       }
       // function parameter ?
       // function parameter ??
@@ -596,7 +596,7 @@ void Server::processRequestArray()
         {
           Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
           response_.writeResultKey();
-          parameter.writeApi(response_,false,false,true,true);
+          parameter.writeApi(response_,false,false,false,true,true);
         }
       }
       // execute private function without checking parameters
@@ -629,13 +629,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp(parameter0_string,question_str) == 0))
       {
         response_.writeResultKey();
-        callback.writeApi(response_,false,true,false,false,true);
+        callback.writeApi(response_,false,true,true,false,false,true);
       }
       // callback ??
       else if ((parameter_count == 1) && (strcmp(parameter0_string,question_double_str) == 0))
       {
         response_.writeResultKey();
-        callback.writeApi(response_,false,true,true,true,true);
+        callback.writeApi(response_,false,true,true,true,true,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -668,13 +668,13 @@ void Server::processRequestArray()
         if ((callback_parameter_count == 1) && (strcmp(parameter1_string,question_str) == 0))
         {
           response_.writeResultKey();
-          function.writeApi(response_,false,true,false);
+          function.writeApi(response_,false,false,true,false);
         }
         // callback function ??
         else if ((callback_parameter_count == 1) && (strcmp(parameter1_string,question_double_str) == 0))
         {
           response_.writeResultKey();
-          function.writeApi(response_,false,true,true);
+          function.writeApi(response_,false,false,true,true);
         }
         // callback function parameter ?
         // callback function parameter ??
@@ -687,7 +687,7 @@ void Server::processRequestArray()
           {
             Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
             response_.writeResultKey();
-            parameter.writeApi(response_,false,false,true,true);
+            parameter.writeApi(response_,false,false,false,true,true);
           }
         }
         // check callback parameter count
@@ -716,13 +716,13 @@ void Server::processRequestArray()
       if ((parameter_count == 1) && (strcmp(parameter0_string,question_str) == 0))
       {
         response_.writeResultKey();
-        property.writeApi(response_,false,true,false,true);
+        property.writeApi(response_,false,true,true,false,true);
       }
       // property ??
       else if ((parameter_count == 1) && (strcmp(parameter0_string,question_double_str) == 0))
       {
         response_.writeResultKey();
-        property.writeApi(response_,false,true,true,true);
+        property.writeApi(response_,false,true,true,true,true);
       }
       // check parameter count
       else if (parameter_count == 0)
@@ -755,13 +755,13 @@ void Server::processRequestArray()
         if ((property_parameter_count == 1) && (strcmp(parameter1_string,question_str) == 0))
         {
           response_.writeResultKey();
-          function.writeApi(response_,false,true,false);
+          function.writeApi(response_,false,false,true,false);
         }
         // property function ??
         else if ((property_parameter_count == 1) && (strcmp(parameter1_string,question_double_str) == 0))
         {
           response_.writeResultKey();
-          function.writeApi(response_,false,true,true);
+          function.writeApi(response_,false,false,true,true);
         }
         // property function parameter ?
         // property function parameter ??
@@ -774,7 +774,7 @@ void Server::processRequestArray()
           {
             Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
             response_.writeResultKey();
-            parameter.writeApi(response_,false,false,true,true);
+            parameter.writeApi(response_,false,false,false,true,true);
           }
         }
         // check property parameter count
@@ -1280,7 +1280,7 @@ void Server::help(bool verbose)
       param_error = false;
       response_.writeResultKey();
       Function & function = functions_[function_index];
-      function.writeApi(response_,false,true,verbose);
+      function.writeApi(response_,false,true,true,verbose);
     }
     else
     {
@@ -1292,7 +1292,7 @@ void Server::help(bool verbose)
         param_error = false;
         response_.writeResultKey();
         Parameter & parameter = parameters_[parameter_index];
-        parameter.writeApi(response_,false,false,true,true);
+        parameter.writeApi(response_,false,false,false,true,true);
       }
       else
       {
@@ -1304,7 +1304,7 @@ void Server::help(bool verbose)
           param_error = false;
           response_.writeResultKey();
           Property & property = properties_[property_index];
-          property.writeApi(response_,false,true,verbose,true);
+          property.writeApi(response_,false,true,true,verbose,true);
         }
         else
         {
@@ -1316,7 +1316,7 @@ void Server::help(bool verbose)
             param_error = false;
             response_.writeResultKey();
             Callback & callback = callbacks_[callback_index];
-            callback.writeApi(response_,false,true,verbose,verbose,true);
+            callback.writeApi(response_,false,true,true,verbose,verbose,true);
           }
         }
       }
@@ -1340,7 +1340,7 @@ void Server::help(bool verbose)
         param_error = false;
         Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
         response_.writeResultKey();
-        parameter.writeApi(response_,false,false,true,true);
+        parameter.writeApi(response_,false,false,false,true,true);
       }
     }
     else
@@ -1357,7 +1357,7 @@ void Server::help(bool verbose)
           Function & function = property.functions_[property_function_index];
 
           response_.writeResultKey();
-          function.writeApi(response_,false,true,verbose);
+          function.writeApi(response_,false,false,true,verbose);
         }
         else
         {
@@ -1392,7 +1392,7 @@ void Server::help(bool verbose)
           param_error = false;
           Parameter & parameter = *(function.parameter_ptrs_[parameter_index]);
           response_.writeResultKey();
-          parameter.writeApi(response_,false,false,true,true);
+          parameter.writeApi(response_,false,false,false,true,true);
         }
       }
       else
@@ -1438,7 +1438,58 @@ void Server::writeDeviceIdToResponse()
   response_.endObject();
 }
 
-void Server::writeFirmwareInfoToResponse()
+void Server::writeAncestorsToResponse(ArduinoJson::JsonArray firmware_name_array)
+{
+  if (response_.error())
+  {
+    return;
+  }
+
+  for (ArduinoJson::JsonVariant value : firmware_name_array)
+  {
+    const char * firmware_name = value.as<const char *>();
+    if (firmware_name == constants::all_constant_string)
+    {
+      return;
+    }
+  }
+  if (firmware_name_array.size() == firmware_info_array_.size())
+  {
+    return;
+  }
+  if ((firmware_name_array.size() == 1) &&
+    (firmware_name_array[0].as<const char *>() == *firmware_info_array_[0]->name_ptr))
+  {
+    return;
+  }
+
+  response_.writeKey(constants::ancestors_constant_string);
+  response_.beginArray();
+  size_t firmware_count = 0;
+  for (size_t i=0; i<firmware_info_array_.size(); ++i)
+  {
+    const constants::FirmwareInfo * firmware_info_ptr = firmware_info_array_[i];
+    for (ArduinoJson::JsonVariant value : firmware_name_array)
+    {
+      const char * firmware_name = value.as<const char *>();
+      if (firmware_name == *firmware_info_ptr->name_ptr)
+      {
+        firmware_count += 1;
+      }
+    }
+    if (firmware_count < firmware_name_array.size())
+    {
+      response_.write(firmware_info_ptr->name_ptr);
+    }
+    else
+    {
+      break;
+    }
+  }
+  response_.endArray();
+}
+
+void Server::writeFirmwareInfoToResponse(ArduinoJson::JsonArray firmware_name_array)
 {
   if (response_.error())
   {
@@ -1447,22 +1498,32 @@ void Server::writeFirmwareInfoToResponse()
 
   char version_str[constants::STRING_LENGTH_VERSION];
 
+  response_.writeKey(constants::firmware_constant_string);
   response_.beginArray();
   for (size_t i=0; i<firmware_info_array_.size(); ++i)
   {
     const constants::FirmwareInfo * firmware_info_ptr = firmware_info_array_[i];
-    response_.beginObject();
-    response_.write(constants::name_constant_string,firmware_info_ptr->name_ptr);
-    versionToString(version_str,
-      firmware_info_ptr->version_major,
-      firmware_info_ptr->version_minor,
-      firmware_info_ptr->version_patch,
-      constants::STRING_LENGTH_VERSION-1);
-    if (strlen(version_str) > 0)
+    for (ArduinoJson::JsonVariant value : firmware_name_array)
     {
-      response_.write(constants::version_constant_string,version_str);
+      const char * firmware_name = value.as<const char *>();
+      if ((firmware_name == constants::all_constant_string) ||
+        (firmware_name == *firmware_info_ptr->name_ptr))
+      {
+        response_.beginObject();
+        response_.write(constants::name_constant_string,firmware_info_ptr->name_ptr);
+        versionToString(version_str,
+          firmware_info_ptr->version_major,
+          firmware_info_ptr->version_minor,
+          firmware_info_ptr->version_patch,
+          constants::STRING_LENGTH_VERSION-1);
+        if (strlen(version_str) > 0)
+        {
+          response_.write(constants::version_constant_string,version_str);
+        }
+        response_.endObject();
+        break;
+      }
     }
-    response_.endObject();
   }
   response_.endArray();
 }
@@ -1528,8 +1589,14 @@ void Server::writeDeviceInfoToResponse()
   response_.writeKey(constants::hardware_constant_string);
   writeHardwareInfoToResponse();
 
-  response_.writeKey(constants::firmware_constant_string);
-  writeFirmwareInfoToResponse();
+  // Write ALL firmware API to response
+  ArduinoJson::StaticJsonDocument<constants::FIRMWARE_NAME_JSON_DOCUMENT_SIZE> json_document;
+  ArduinoJson::JsonArray firmware_name_array = json_document.to<ArduinoJson::JsonArray>();
+  char all_str[constants::all_constant_string.length() + 1];
+  all_str[0] = '\0';
+  constants::all_constant_string.copy(all_str);
+  firmware_name_array.add<char *>(all_str);
+  writeFirmwareInfoToResponse(firmware_name_array);
 
   response_.endObject();
 }
@@ -1571,7 +1638,8 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
 
   response_.beginObject();
 
-  response_.write(constants::firmware_constant_string,firmware_name_array);
+  writeAncestorsToResponse(firmware_name_array);
+  writeFirmwareInfoToResponse(firmware_name_array);
 
   response_.write(constants::verbosity_constant_string,verbosity);
 
@@ -1605,7 +1673,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
         Function & function = functions_[function_index];
         if (function.firmwareNameInArray(firmware_name_array))
         {
-          function.writeApi(response_,write_names_only,write_firmware,false);
+          function.writeApi(response_,write_names_only,false,write_firmware,false);
         }
       }
     }
@@ -1622,7 +1690,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Parameter & parameter = parameters_[parameter_index];
       if (parameter.firmwareNameInArray(firmware_name_array))
       {
-        parameter.writeApi(response_,write_names_only,false,write_firmware,write_instance_details);
+        parameter.writeApi(response_,write_names_only,false,false,write_firmware,write_instance_details);
       }
     }
     response_.endArray();
@@ -1638,7 +1706,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Property & property = properties_[property_index];
       if (property.firmwareNameInArray(firmware_name_array))
       {
-        property.writeApi(response_,write_names_only,write_firmware,true,write_instance_details);
+        property.writeApi(response_,write_names_only,false,write_firmware,true,write_instance_details);
       }
     }
     response_.endArray();
@@ -1654,7 +1722,7 @@ void Server::writeApiToResponse(const ConstantString & verbosity,
       Callback & callback = callbacks_[callback_index];
       if (callback.firmwareNameInArray(firmware_name_array))
       {
-        callback.writeApi(response_,write_names_only,write_firmware,true,false,write_instance_details);
+        callback.writeApi(response_,write_names_only,false,write_firmware,true,false,write_instance_details);
       }
     }
     response_.endArray();

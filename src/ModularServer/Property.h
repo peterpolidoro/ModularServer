@@ -276,6 +276,7 @@ private:
     int element_index=-1);
   void writeApi(Response & response,
     bool write_name_only,
+    bool write_method_type,
     bool write_firmware,
     bool write_function_parameter_details,
     bool write_instance_details);

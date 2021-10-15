@@ -592,6 +592,7 @@ Vector<constants::SubsetMemberType> & Parameter::getSubset()
 
 void Parameter::writeApi(Response & response,
   bool write_name_only,
+  bool write_method_type,
   bool is_property,
   bool write_firmware,
   bool write_instance_details)
@@ -611,6 +612,11 @@ void Parameter::writeApi(Response & response,
   response.beginObject();
 
   response.write(constants::name_constant_string,name);
+
+  if (is_property && write_method_type)
+  {
+    response.write(constants::method_type_constant_string,constants::property_constant_string);
+  }
 
   if (write_firmware)
   {

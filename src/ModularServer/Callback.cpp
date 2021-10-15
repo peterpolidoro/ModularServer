@@ -271,6 +271,7 @@ void Callback::detachFromAll()
 
 void Callback::writeApi(Response & response,
   bool write_name_only,
+  bool write_method_type,
   bool write_firmware,
   bool write_function_parameter_pin_details,
   bool write_property_details,
@@ -293,6 +294,12 @@ void Callback::writeApi(Response & response,
   response.beginObject();
 
   response.write(constants::name_constant_string,name);
+
+  if (write_method_type)
+  {
+    response.write(constants::method_type_constant_string,constants::callback_constant_string);
+  }
+
   if (write_firmware)
   {
     const ConstantString & firmware_name = getFirmwareName();
@@ -308,7 +315,7 @@ void Callback::writeApi(Response & response,
     for (size_t i=0; i<property_ptrs_ptr->size(); ++i)
     {
       Property & property = *((*property_ptrs_ptr)[i]);
-      property.writeApi(response,!write_property_details,false,true,write_instance_details);
+      property.writeApi(response,!write_property_details,false,false,true,write_instance_details);
     }
     response.endArray();
   }
@@ -335,7 +342,7 @@ void Callback::writeApi(Response & response,
   for (size_t i=0; i<Callback::functions_.size(); ++i)
   {
     Function & function = Callback::functions_[i];
-    function.writeApi(response,!write_function_parameter_pin_details,false,false);
+    function.writeApi(response,!write_function_parameter_pin_details,false,false,false);
   }
   response.endArray();
 
@@ -344,7 +351,7 @@ void Callback::writeApi(Response & response,
   for (size_t i=0; i<Callback::parameters_.size(); ++i)
   {
     Parameter & parameter = Callback::parameters_[i];
-    parameter.writeApi(response,!write_function_parameter_pin_details,false,false,write_instance_details);
+    parameter.writeApi(response,!write_function_parameter_pin_details,false,false,false,write_instance_details);
   }
   response.endArray();
 

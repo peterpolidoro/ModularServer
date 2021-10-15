@@ -16,8 +16,8 @@ CONSTANT_STRING(firmware_name,"ModularServer");
 const FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=6,
-  .version_minor=1,
+  .version_major=7,
+  .version_minor=0,
   .version_patch=0,
 };
 
@@ -138,19 +138,23 @@ CONSTANT_STRING(data_constant_string,"data");
 CONSTANT_STRING(code_constant_string,"code");
 CONSTANT_STRING(form_factor_constant_string,"form_factor");
 CONSTANT_STRING(serial_number_constant_string,"serial_number");
+CONSTANT_STRING(ancestors_constant_string,"ancestors");
 CONSTANT_STRING(firmware_constant_string,"firmware");
 CONSTANT_STRING(hardware_constant_string,"hardware");
 CONSTANT_STRING(name_constant_string,"name");
 CONSTANT_STRING(type_constant_string,"type");
+CONSTANT_STRING(method_type_constant_string,"method_type");
 CONSTANT_STRING(units_constant_string,"units");
 CONSTANT_STRING(result_constant_string,"result");
 CONSTANT_STRING(result_info_constant_string,"result_info");
 CONSTANT_STRING(array_element_type_constant_string,"array_element_type");
+CONSTANT_STRING(property_constant_string,"property");
 CONSTANT_STRING(properties_constant_string,"properties");
 CONSTANT_STRING(parameters_constant_string,"parameters");
+CONSTANT_STRING(function_constant_string,"function");
 CONSTANT_STRING(functions_constant_string,"functions");
-CONSTANT_STRING(callbacks_constant_string,"callbacks");
 CONSTANT_STRING(callback_constant_string,"callback");
+CONSTANT_STRING(callbacks_constant_string,"callbacks");
 CONSTANT_STRING(min_constant_string,"min");
 CONSTANT_STRING(max_constant_string,"max");
 CONSTANT_STRING(array_element_min_constant_string,"array_element_min");

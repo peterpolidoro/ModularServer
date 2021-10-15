@@ -2,7 +2,10 @@
   "id": "getApi",
   "result": {
     "firmware": [
-      "ModularServer"
+      {
+        "name": "ModularServer",
+        "version": "7.0.0"
+      }
     ],
     "verbosity": "GENERAL",
     "functions": [

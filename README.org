@@ -3,28 +3,36 @@
 #+EMAIL: peter@polidoro.io
 
 * Library Information
-  - Name :: ModularServer
-  - Version :: 6.1.0
-  - License :: BSD
-  - URL :: https://github.com/janelia-arduino/ModularServer
-  - Author :: Peter Polidoro
-  - Email :: peter@polidoro.io
+- Name :: ModularServer
+- Version :: 7.0.0
+- License :: BSD
+- URL :: https://github.com/janelia-arduino/ModularServer
+- Author :: Peter Polidoro
+- Email :: peter@polidoro.io
 
 ** Description
 
-   Modular device server library.
+Modular device server library.
 
-   This firmware requires at least Teensy 3.x level resources. Known to work with
-   Teensy 3.2, Teensy 3.5, and Teensy 3.6.
+This firmware requires at least Teensy 3.x level resources. Known to work with
+Teensy 3.2, Teensy 3.5, Teensy 3.6, Teensy 4.0, and Teensy 4.1.
+
+* Webpage Documentation
+
+[[https://janelia-arduino.github.io/ModularServer/]]
 
 * API NAMES
 
-  #+BEGIN_SRC js
+#+BEGIN_SRC js
+
 {
   "id": "getApi",
   "result": {
     "firmware": [
-      "ModularServer"
+      {
+        "name": "ModularServer",
+        "version": "7.0.0"
+      }
     ],
     "verbosity": "NAMES",
     "functions": [
@@ -51,40 +59,5 @@
     ]
   }
 }
-  #+END_SRC
 
-* Handlers
-
-  #+BEGIN_SRC c++
-
-// Handlers must be non-blocking (avoid 'delay')
-
-// modular_server_.parameter(parameter_name).getValue(value) value type must be either:
-// fixed-point number (int, long, etc.)
-// floating-point number (float, double)
-// bool
-// const char *
-// ArduinoJson::JsonArray
-// ArduinoJson::JsonObject
-// const ConstantString *
-
-// For more info read about ArduinoJson parsing https://github.com/janelia-arduino/ArduinoJson
-
-// modular_server_.property(property_name).getValue(value) value type must match the property default type
-// modular_server_.property(property_name).setValue(value) value type must match the property default type
-// modular_server_.property(property_name).getElementValue(element_index,value) value type must match the property array element default type
-// modular_server_.property(property_name).setElementValue(element_index,value) value type must match the property array element default type
-
-  #+END_SRC
-
-* API GENERAL
-
-  [[./api/]]
-
-* More Detailed Modular Device Information
-
-  [[https://github.com/janelia-modular-devices/modular-devices]]
-
-* Installation Instructions
-
-  [[https://github.com/janelia-arduino/arduino-libraries]]
+#+END_SRC

@@ -196,6 +196,7 @@ void Function::functor()
 
 void Function::writeApi(Response & response,
   bool write_name_only,
+  bool write_method_type,
   bool write_firmware,
   bool write_parameter_details)
 {
@@ -215,6 +216,11 @@ void Function::writeApi(Response & response,
 
   response.write(constants::name_constant_string,name);
 
+  if (write_method_type)
+  {
+    response.write(constants::method_type_constant_string,constants::function_constant_string);
+  }
+
   if (write_firmware)
   {
     const ConstantString & firmware_name = getFirmwareName();
@@ -230,7 +236,7 @@ void Function::writeApi(Response & response,
     for (size_t i=0; i<parameter_ptrs_ptr->size(); ++i)
     {
       Parameter & parameter = *((*parameter_ptrs_ptr)[i]);
-      parameter.writeApi(response,!write_parameter_details,false,false,true);
+      parameter.writeApi(response,!write_parameter_details,false,false,false,true);
     }
     response.endArray();
   }

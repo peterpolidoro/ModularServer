@@ -174,7 +174,8 @@ private:
   void incrementServerStream();
   void help(bool verbose);
   void writeDeviceIdToResponse();
-  void writeFirmwareInfoToResponse();
+  void writeAncestorsToResponse(ArduinoJson::JsonArray firmware_name_array);
+  void writeFirmwareInfoToResponse(ArduinoJson::JsonArray firmware_name_array);
   void writeHardwareInfoToResponse();
   void writeDeviceInfoToResponse();
   void writePinInfoToResponse(const ConstantString & pin_name);

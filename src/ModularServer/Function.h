@@ -58,6 +58,7 @@ private:
   void functor();
   void writeApi(Response & response,
     bool write_name_only,
+    bool write_method_type,
     bool write_firmware,
     bool write_parameter_details);
 
