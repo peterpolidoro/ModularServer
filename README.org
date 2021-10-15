@@ -26,38 +26,35 @@ Teensy 3.2, Teensy 3.5, Teensy 3.6, Teensy 4.0, and Teensy 4.1.
 #+BEGIN_SRC js
 
 {
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      {
-        "name": "ModularServer",
-        "version": "7.0.0"
-      }
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "getDeviceId",
-      "getDeviceInfo",
-      "getApi",
-      "getPropertyDefaultValues",
-      "setPropertiesToDefaults",
-      "getPropertyValues",
-      "getPinInfo",
-      "setPinMode",
-      "getPinValue",
-      "setPinValue"
-    ],
-    "parameters": [
-      "firmware",
-      "verbosity",
-      "pin_name",
-      "pin_mode",
-      "pin_value"
-    ],
-    "properties": [
-      "serialNumber"
-    ]
-  }
+  "firmware": [
+    {
+      "name": "ModularServer",
+      "version": "7.0.0"
+    }
+  ],
+  "verbosity": "NAMES",
+  "functions": [
+    "getDeviceId",
+    "getDeviceInfo",
+    "getApi",
+    "getPropertyDefaultValues",
+    "setPropertiesToDefaults",
+    "getPropertyValues",
+    "getPinInfo",
+    "setPinMode",
+    "getPinValue",
+    "setPinValue"
+  ],
+  "parameters": [
+    "firmware",
+    "verbosity",
+    "pin_name",
+    "pin_mode",
+    "pin_value"
+  ],
+  "properties": [
+    "serialNumber"
+  ]
 }
 
 #+END_SRC

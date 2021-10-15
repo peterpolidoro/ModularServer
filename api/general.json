@@ -1,0 +1,157 @@
+{
+  "firmware": [
+    {
+      "name": "ModularServer",
+      "version": "7.0.0"
+    }
+  ],
+  "verbosity": "GENERAL",
+  "functions": [
+    {
+      "name": "getDeviceId",
+      "result_info": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "getDeviceInfo",
+      "result_info": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "getApi",
+      "parameters": [
+        "verbosity",
+        "firmware"
+      ],
+      "result_info": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "getPropertyDefaultValues",
+      "parameters": [
+        "firmware"
+      ],
+      "result_info": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "setPropertiesToDefaults",
+      "parameters": [
+        "firmware"
+      ]
+    },
+    {
+      "name": "getPropertyValues",
+      "parameters": [
+        "firmware"
+      ],
+      "result_info": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "getPinInfo",
+      "parameters": [
+        "pin_name"
+      ],
+      "result_info": {
+        "type": "array",
+        "array_element_type": "object"
+      }
+    },
+    {
+      "name": "setPinMode",
+      "parameters": [
+        "pin_name",
+        "pin_mode"
+      ]
+    },
+    {
+      "name": "getPinValue",
+      "parameters": [
+        "pin_name"
+      ],
+      "result_info": {
+        "type": "long"
+      }
+    },
+    {
+      "name": "setPinValue",
+      "parameters": [
+        "pin_name",
+        "pin_value"
+      ],
+      "result_info": {
+        "type": "long"
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "firmware",
+      "type": "array",
+      "array_element_type": "string"
+    },
+    {
+      "name": "verbosity",
+      "type": "string"
+    },
+    {
+      "name": "pin_name",
+      "type": "string"
+    },
+    {
+      "name": "pin_mode",
+      "type": "string"
+    },
+    {
+      "name": "pin_value",
+      "type": "long"
+    }
+  ],
+  "properties": [
+    {
+      "name": "serialNumber",
+      "type": "long",
+      "functions": [
+        {
+          "name": "getValue",
+          "result_info": {
+            "type": "long"
+          }
+        },
+        {
+          "name": "setValue",
+          "parameters": [
+            "value"
+          ],
+          "result_info": {
+            "type": "long"
+          }
+        },
+        {
+          "name": "getDefaultValue",
+          "result_info": {
+            "type": "long"
+          }
+        },
+        {
+          "name": "setValueToDefault",
+          "result_info": {
+            "type": "long"
+          }
+        }
+      ],
+      "parameters": [
+        {
+          "name": "value",
+          "type": "long"
+        }
+      ]
+    }
+  ]
+}
