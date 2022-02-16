@@ -29,7 +29,7 @@ Teensy 3.2, Teensy 3.5, Teensy 3.6, Teensy 4.0, and Teensy 4.1.
   "firmware": [
     {
       "name": "ModularServer",
-      "version": "7.0.0"
+      "version": "7.2.0"
     }
   ],
   "verbosity": "NAMES",
