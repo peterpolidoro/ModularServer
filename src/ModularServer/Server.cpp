@@ -1614,7 +1614,7 @@ void Server::writePinInfoToResponse(const ConstantString & pin_name)
     for (size_t i=0; i<pins_.size(); ++i)
     {
       Pin & pin = pins_[i];
-      pin.writeApi(response_,false,false);
+      pin.writeApi(response_,false,true);
     }
   }
   else
@@ -1622,7 +1622,7 @@ void Server::writePinInfoToResponse(const ConstantString & pin_name)
     Pin * pin_ptr = findPinPtrByConstantString(pin_name);
     if (pin_ptr)
     {
-      pin_ptr->writeApi(response_,false,false);
+      pin_ptr->writeApi(response_,false,true);
     }
   }
   response_.endArray();
