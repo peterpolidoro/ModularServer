@@ -310,7 +310,6 @@ void Pin::reattach()
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
-    enablePullup();
     attachInterrupt(interrupt_number_,
       isr_,
       LOW);
@@ -319,7 +318,6 @@ void Pin::reattach()
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
-    enablePullup();
     attachInterrupt(interrupt_number_,
       isr_,
       CHANGE);
@@ -328,7 +326,6 @@ void Pin::reattach()
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
-    enablePullup();
     attachInterrupt(interrupt_number_,
       isr_,
       RISING);
@@ -337,7 +334,6 @@ void Pin::reattach()
   {
     resetIsr();
     detachInterrupt(interrupt_number_);
-    enablePullup();
     attachInterrupt(interrupt_number_,
       isr_,
       FALLING);
@@ -370,7 +366,6 @@ void Pin::detach()
     return;
   }
   detachInterrupt(interrupt_number_);
-  disablePullup();
   mode_ptr_ = &constants::pin_mode_digital_input;
 }
 
