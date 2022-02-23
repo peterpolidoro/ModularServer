@@ -36,9 +36,14 @@ public:
   void setModeAnalogOutput();
   void setModePulseRising();
   void setModePulseFalling();
+  void setModePwmRising();
+  void setModePwmFalling();
 
   int getValue();
   void setValue(int value);
+  void addPwm(uint32_t period_ms,
+    uint32_t on_duration_ms,
+    int32_t count);
 
   size_t getPinNumber();
   int getInterruptNumber();
@@ -49,7 +54,7 @@ private:
   Callback * callback_ptr_;
   const ConstantString * mode_ptr_;
   FunctorCallbacks::Callback isr_;
-  static EventController<modular_server::constants::PIN_PULSE_EVENT_COUNT_MAX> pin_pulse_event_controller_;
+  static EventController<modular_server::constants::PIN_PWM_EVENT_COUNT_MAX> pin_pwm_event_controller_;
 
   Pin(const ConstantString & name,
     size_t pin_number);
