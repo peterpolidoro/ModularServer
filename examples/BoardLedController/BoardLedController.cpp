@@ -105,11 +105,11 @@ void BoardLedController::getLedPinNumberHandler()
 
 void BoardLedController::blinkLedHandler()
 {
-  float duration_on;
+  float duration_on = 0.0;
   modular_server_.parameter(constants::duration_on_parameter_name).getValue(duration_on);
-  double duration_off;
+  double duration_off = 0.0;
   modular_server_.parameter(constants::duration_off_parameter_name).getValue(duration_off);
-  int count;
+  int count = 0;
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
   blinker_.stop();
   blinker_.setDurationOn(duration_on);

@@ -135,7 +135,7 @@ void StringController::echoHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
-  bool double_echo;
+  bool double_echo = false;
   modular_server_.parameter(constants::double_echo_parameter_name).getValue(double_echo);
   modular_server::Response & response = modular_server_.response();
   if (!double_echo)
@@ -169,7 +169,7 @@ void StringController::repeatHandler()
 {
   const char * string;
   modular_server_.parameter(constants::string_parameter_name).getValue(string);
-  long count;
+  long count = 0;
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
   modular_server::Response & response = modular_server_.response();
   response.writeResultKey();

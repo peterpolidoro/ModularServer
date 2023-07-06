@@ -2102,7 +2102,7 @@ void Server::setPinValueHandler()
   const ConstantString * pin_name_ptr;
   parameter(constants::pin_name_parameter_name).getValue(pin_name_ptr);
 
-  int pin_value;
+  int pin_value = 0;
   parameter(constants::pin_value_parameter_name).getValue(pin_value);
 
   setPinValue(*pin_name_ptr,pin_value);
