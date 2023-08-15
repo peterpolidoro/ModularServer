@@ -148,6 +148,13 @@ bool Property::getValue<const ConstantString *>(const ConstantString * & value)
 }
 
 template <>
+bool Property::getValue<const ConstantString *>(const ConstantString ** value,
+  size_t N)
+{
+  return getValue(*value);
+}
+
+template <>
 bool Property::getValue<const ConstantString>(const ConstantString * value,
   size_t N)
 {
