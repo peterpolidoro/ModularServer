@@ -40,3 +40,4 @@
 main.cpp
 /.pio
 /.vscode
+*venv*
